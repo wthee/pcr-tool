@@ -97,9 +97,8 @@ data class SkillActionPro(
      * 作用对象数量
      */
     private fun getTargetCount() = when (target_count) {
-        0, 1 -> ""
-        99 -> "全体"
-        else -> "($target_count 名)"
+        0, 1, 99 -> ""
+        else -> "（$target_count 名）"
     }
 
     /**
@@ -207,11 +206,11 @@ data class SkillActionPro(
                 "对${getTarget()}造成 $value 的${atkType}伤害" + if (action_value_6 > 0) {
                     //暴伤倍率
                     val multiple = if (action_value_6 > 1) {
-                        "[1 ~ ${action_value_6}]"
+                        "[${action_value_6 * 2}]"
                     } else {
-                        "[1]"
+                        "[2]"
                     }
-                    "；暴击时，造成 {6}$multiple * 2 倍伤害 "
+                    "；暴击时，造成 {6}$multiple 倍伤害 "
                 } else {
                     ""
                 }
@@ -599,7 +598,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 1000) {
                             "上一个动作击杀了单位时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 1001) {
-                            "本技能触发暴击时，使用动作(${action_detail_2 % 10})"
+                            "技能暴击时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 1200..1299) {
                             "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
                         } else {
@@ -631,7 +630,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 1000) {
                             "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 1001) {
-                            "本技能未触发暴击时，使用动作(${action_detail_3 % 10})"
+                            "技能未暴击时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 in 1200..1299) {
                             "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
                         } else {

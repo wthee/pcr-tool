@@ -111,7 +111,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
-    <string name="tool_more">全部工具</string>
+    <string name="tool_more">全部功能</string>
     <string name="read_news">查看公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
@@ -192,4 +192,6 @@
     <string name="to_summon">查看召唤物 ></string>
     <string name="tip_random_drop">暂无信息，区域 37 开始追加额外装备掉落</string>
     <string name="db_downloading">数据下载中...</string>
+    <string name="activity_info">活动信息</string>
+    <string name="basic_info">基本信息</string>
 </resources>

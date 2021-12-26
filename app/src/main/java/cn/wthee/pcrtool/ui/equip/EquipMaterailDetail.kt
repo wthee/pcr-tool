@@ -326,7 +326,11 @@ fun AreaItem(
                             if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
                                 SelectText(
                                     selected = selected,
-                                    text = if (it.odd > 0) "${it.odd}%" else "? %"
+                                    text = if (it.odd > 0) {
+                                        "${it.odd}%"
+                                    } else {
+                                        if (selected) "✓" else ""
+                                    }
                                 )
                             }
                         }

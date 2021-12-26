@@ -57,22 +57,22 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     dataList.add(ToolMenuData(R.string.character, MainIconType.CHARACTER))
     dataList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP))
     dataList.add(ToolMenuData(R.string.tool_guild, MainIconType.GUILD))
-    list.add(ToolMenuGroup("数据", dataList))
+    dataList.add(ToolMenuData(R.string.tool_clan, MainIconType.CLAN))
+    dataList.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
+    list.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //游戏信息
     val infoList = arrayListOf<ToolMenuData>()
     infoList.add(ToolMenuData(R.string.tool_gacha, MainIconType.GACHA))
     infoList.add(ToolMenuData(R.string.tool_event, MainIconType.EVENT))
-    infoList.add(ToolMenuData(R.string.tool_clan, MainIconType.CLAN))
-    infoList.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
     infoList.add(ToolMenuData(R.string.tool_news, MainIconType.NEWS))
-    infoList.add(ToolMenuData(R.string.tool_leader, MainIconType.LEADER))
-    list.add(ToolMenuGroup("信息", infoList))
+    list.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询
     val searchList = arrayListOf<ToolMenuData>()
     searchList.add(ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH))
-    list.add(ToolMenuGroup("查询", searchList))
+    searchList.add(ToolMenuData(R.string.tool_leader, MainIconType.LEADER))
+    list.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
@@ -83,7 +83,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
         otherList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
     }
     otherList.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
-    list.add(ToolMenuGroup("其它", otherList))
+    list.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
 
     LazyColumn(
