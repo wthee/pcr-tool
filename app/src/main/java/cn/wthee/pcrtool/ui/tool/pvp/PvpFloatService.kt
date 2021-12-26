@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.ui.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -103,7 +102,6 @@ class PvpFloatService : LifecycleService() {
     }
 
     private fun getParam(min: Boolean) = WindowManager.LayoutParams().apply {
-        mFloatingWindowHeight = getFloatWindowHeight()
         type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.view.CharacterPromotionEquip
 import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -29,7 +30,7 @@ class EquipmentViewModel @Inject constructor(
     fun getEquips(params: FilterEquipment) = flow {
         val typeName =
             if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
-        val data = equipmentRepository.getEquipments(params, typeName)
+        val data = equipmentRepository.getEquipments(params, typeName, Int.MAX_VALUE)
         emit(data)
     }
 
@@ -58,7 +59,23 @@ class EquipmentViewModel @Inject constructor(
      */
     fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
         if (startRank > 0 && endRank > 0 && startRank <= endRank) {
-            val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
+            val data = if (unitId != -1) {
+                equipmentRepository.getEquipByRank(unitId, startRank, endRank)
+            } else {
+                val d = CharacterPromotionEquip(
+                    "", "", "", "", "", ""
+                )
+                equipmentRepository.getAllEquip().forEach {
+                    d.equipIds1 += "-${it.equipIds1}"
+                    d.equipIds2 += "-${it.equipIds2}"
+                    d.equipIds3 += "-${it.equipIds3}"
+                    d.equipIds4 += "-${it.equipIds4}"
+                    d.equipIds5 += "-${it.equipIds5}"
+                    d.equipIds6 += "-${it.equipIds6}"
+                }
+                d
+            }
+            //计算倍数
             val materials = arrayListOf<EquipmentMaterial>()
             data.getAllEquipId().forEach { map ->
                 val equip = equipmentRepository.getEquipmentData(map.key)

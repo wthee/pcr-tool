@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.utils.Constants.SQLITE_VERSION
 
 /**
  * 数据库远程版本信息
@@ -10,6 +10,6 @@ data class DatabaseVersion(
     val hash: String
 ) {
     override fun toString(): String {
-        return "$TruthVersion/$hash/${BuildConfig.SQLITE_VERSION}"
+        return "$TruthVersion/$hash/${SQLITE_VERSION}"
     }
 }

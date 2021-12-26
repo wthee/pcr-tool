@@ -15,9 +15,8 @@ hilt {
 }
 
 val composeVersion = "1.1.0-beta04"
-val appVersionCode = 301
-val appVersionName = "3.0.1"
-val sql = 301
+val appVersionCode = 310
+val appVersionName = "3.1.0"
 
 android {
 
@@ -32,8 +31,6 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
-
-        buildConfigField("int", "SQLITE_VERSION", sql.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -72,7 +69,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@mipmap/ic_launcher"
             resValue("string", "app_name", "PCR Tool")
-            buildConfigField("boolean", "debug", "false")
+            buildConfigField("boolean", "DEBUG", "false")
         }
 
         create("beta") {
@@ -80,7 +77,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@drawable/ic_star"
             resValue("string", "app_name", "PCR Tool βeta")
-            buildConfigField("boolean", "debug", "true")
+            buildConfigField("boolean", "DEBUG", "true")
         }
     }
 
@@ -134,14 +131,14 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha05"
+    val coilVersion = "2.0.0-alpha06"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-rc01")
 
     //Lifecycle
     val lifecycleVersion = "2.4.0"
@@ -152,7 +149,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.1.0")
@@ -164,7 +161,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-rc01"
+    val roomVersion = "2.4.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

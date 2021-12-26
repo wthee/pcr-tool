@@ -23,7 +23,7 @@ data class EquipmentDropInfo(
         return list2[list1.indexOf(eid)]
     }
 
-    fun getAllOdd(): ArrayList<EquipmentIdWithOdd> {
+    fun getAllOdd(): List<EquipmentIdWithOdd> {
         val list1 = rewards.split('-') as MutableList
         val list2 = odds.split('-') as MutableList
         val result = arrayListOf<EquipmentIdWithOdd>()
@@ -37,8 +37,20 @@ data class EquipmentDropInfo(
                 )
             }
         }
-        result.sortByDescending { it.odd }
-        return result
+        return result.sortedWith(equipCompare())
+    }
+}
+
+/**
+ * 排序
+ */
+fun equipCompare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
+    if (o1.odd > o2.odd) {
+        -1
+    } else if (o1.odd < o2.odd) {
+        1
+    } else {
+        if (o1.eid / 100 % 100 < o2.eid / 100 % 100) 1 else -1
     }
 }
 
@@ -56,3 +68,4 @@ data class EquipmentMaterial(
     var name: String = "???",
     var count: Int = 0
 ) : Serializable
+

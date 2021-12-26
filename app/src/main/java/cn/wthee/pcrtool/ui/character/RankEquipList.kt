@@ -46,7 +46,7 @@ fun RankEquipList(
     val allRankEquip =
         equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
     val selectedRank = remember {
-        mutableStateOf(navViewModel.selectRank.value ?: 2)
+        mutableStateOf(navViewModel.currentValue.value?.rank ?: 2)
     }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -85,7 +85,8 @@ fun RankEquipListItem(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
             selectedRank.value = unitPromotion.promotionLevel
-            navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
+            val value = navViewModel.currentValue.value
+            navViewModel.currentValue.postValue(value?.update(rank = unitPromotion.promotionLevel))
         }
     ) {
         //图标列表

@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_ERROR
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -56,7 +55,6 @@ class DatabaseDownloadWorker(
             //通知更新数据
             handler.sendEmptyMessage(region)
         } else if (result == Result.failure()) {
-            ToastUtil.short(DOWNLOAD_ERROR)
             WorkManager.getInstance(MyApplication.context).cancelAllWork()
         }
         return@coroutineScope result
@@ -72,8 +70,12 @@ class DatabaseDownloadWorker(
                 ApiUtil.downloadClientBuild(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
-                        //更新下载进度
-                        navViewModel.downloadProgress.postValue(progress)
+                        try {
+                            //更新下载进度
+                            navViewModel.downloadProgress.postValue(progress)
+                        } catch (e: Exception) {
+
+                        }
                         //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
@@ -105,10 +107,14 @@ class DatabaseDownloadWorker(
             val db = File(dbZipPath)
             if (db.exists()) {
                 //删除已有数据库文件
-                FileUtil.deleteMainDatabase(region)
+                FileUtil.deleteBr(region)
             }
             //保存
             FileUtil.save(response!!.body()!!.byteStream(), db)
+            //关闭数据库
+            AppDatabaseCN.close()
+            AppDatabaseTW.close()
+            AppDatabaseJP.close()
             //删除旧的wal
             FileUtil.apply {
                 delete(getDatabaseBackupWalPath(2))
@@ -118,17 +124,12 @@ class DatabaseDownloadWorker(
                 delete(getDatabaseWalPath(3))
                 delete(getDatabaseWalPath(4))
             }
-            //关闭数据库
-            AppDatabaseCN.close()
-            AppDatabaseTW.close()
-            AppDatabaseJP.close()
             //解压
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
-            ToastUtil.short("数据解析失败，请关闭应用后重试")
             UMengLogUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
             return Result.failure()
         }

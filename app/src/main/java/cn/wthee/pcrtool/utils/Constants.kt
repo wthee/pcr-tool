@@ -7,6 +7,9 @@ import cn.wthee.pcrtool.BuildConfig
  */
 object Constants {
 
+    //本地数据库版本
+    const val SQLITE_VERSION = 301
+
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION_CN = "database_version_cn"
@@ -16,7 +19,6 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
-
 
     //数据库资源地址
     const val DATABASE_URL = "https://wthee.xyz/db/"
@@ -31,7 +33,6 @@ object Constants {
     const val DATABASE_WAL_CN = "redive_cn.db-wal"
     const val DATABASE_SHM_CN = "redive_cn.db-shm"
 
-
     //国服备份数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN =
         BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_CN
@@ -44,7 +45,6 @@ object Constants {
     const val DATABASE_NAME_TW = "redive_tw.db"
     const val DATABASE_WAL_TW = "redive_tw.db-wal"
     const val DATABASE_SHM_TW = "redive_tw.db-shm"
-
 
     //台服备份数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW =
@@ -70,7 +70,6 @@ object Constants {
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
     const val DATABASE_PVP = "pvp.db"
-
 
 
     const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"

@@ -1,16 +1,14 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.settingSP
-import cn.wthee.pcrtool.utils.Constants.SP_DATABASE_TYPE
 
 class ImageResourceHelper() {
 
-    val sp = settingSP()
     var type = "cn"
 
     init {
-        type = when (sp.getInt(SP_DATABASE_TYPE, 2)) {
+        type = when (getRegion()) {
             2 -> "cn"
             3 -> "tw"
             else -> "jp"

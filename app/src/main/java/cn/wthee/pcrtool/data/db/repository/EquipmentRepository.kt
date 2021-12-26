@@ -15,14 +15,17 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
-    suspend fun getEquipments(filter: FilterEquipment, typeName: String) =
+    suspend fun getEquipments(filter: FilterEquipment, typeName: String, limit: Int) =
         equipmentDao.getEquipments(
             filter.craft,
             typeName,
             filter.name,
             if (filter.all) 1 else 0,
-            filter.starIds
+            filter.starIds,
+            limit
         )
+
+    suspend fun getCount() = equipmentDao.getCount()
 
     suspend fun getEquipDropAreas(equipId: Int) = equipmentDao.getEquipDropAreas(equipId)
 
@@ -33,6 +36,8 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 
+    suspend fun getAllEquip() = equipmentDao.getAllEquip()
+
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) =
         equipmentDao.getEquipByRank(unitId, startRank, endRank)
 
@@ -40,4 +45,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * 获取角色各 RANK 装备信息
      */
     suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
+
+    suspend fun getMaxArea() = equipmentDao.getMaxArea()
+
 }

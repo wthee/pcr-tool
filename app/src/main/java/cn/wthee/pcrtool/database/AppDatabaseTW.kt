@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
@@ -59,7 +58,7 @@ import cn.wthee.pcrtool.utils.Constants
         GuildAdditionalMember::class,
         UnitStatusCoefficient::class,
     ],
-    version = BuildConfig.SQLITE_VERSION,
+    version = Constants.SQLITE_VERSION,
     exportSchema = false
 )
 /**

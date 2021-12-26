@@ -9,6 +9,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -56,7 +57,7 @@ private fun CharacterSummonDetail(
     val basicInfo = summonViewModel.getSummonData(unitId).collectAsState(initial = null).value
 
     //数值信息
-    val currValue = navViewModel.currentValue.observeAsState().value
+    val currValue = navViewModel.currentValue.value ?: CharacterProperty()
     val attrs =
         attrViewModel.getCharacterInfo(unitId, currValue).collectAsState(initial = null).value
 
@@ -81,7 +82,7 @@ private fun CharacterSummonDetail(
             )
             //等级等属性
             CaptionText(
-                text = "等级：${currValue?.level ?: "0"} / Rank：${currValue?.rank ?: "0"} / 星级：${currValue?.rarity ?: "0"}",
+                text = "等级：${currValue.level} / Rank：${currValue.rank} / 星级：${currValue.rarity}",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //位置
@@ -114,7 +115,7 @@ private fun CharacterSummonDetail(
                 SkillCompose(
                     unitId = unitId,
                     cutinId = 0,
-                    level = currValue?.level ?: 0,
+                    level = currValue.level,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
                     unitType = 1
                 )

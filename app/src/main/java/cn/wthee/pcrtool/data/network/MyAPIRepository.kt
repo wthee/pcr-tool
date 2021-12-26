@@ -279,4 +279,32 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         }
         return error()
     }
+
+
+    /**
+     * 查询额外装备掉落信息
+     */
+    suspend fun getEquipArea(equipId: Int): ResponseData<List<RandomEquipDropArea>> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("equipId", equipId)
+            val body =
+                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
+            val response = service.getEquipArea(body)
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+            }
+        }
+        return error()
+    }
 }

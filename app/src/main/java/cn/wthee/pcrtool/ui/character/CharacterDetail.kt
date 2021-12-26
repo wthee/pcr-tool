@@ -75,21 +75,9 @@ fun CharacterDetail(
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
         .collectAsState(initial = CharacterProperty()).value
     val currentValueState = navViewModel.currentValue.observeAsState()
-    //选择的 RANK
-    val selectRank = navViewModel.selectRank.observeAsState().value ?: 0
     //数值信息
-    if (maxValue.isInit()) {
-        if (currentValueState.value == null) {
-            navViewModel.currentValue.postValue(maxValue)
-        } else {
-            //更新星级
-            val temp = currentValueState.value!!
-            temp.rarity = maxValue.rarity
-            navViewModel.currentValue.postValue(temp)
-        }
-        if (selectRank == 0) {
-            navViewModel.selectRank.postValue(maxValue.rank)
-        }
+    if (currentValueState.value == null && maxValue.isInit()) {
+        navViewModel.currentValue.postValue(maxValue)
     }
     // bottomsheet 状态
     val state = rememberModalBottomSheetState(
@@ -160,10 +148,6 @@ fun CharacterDetail(
             //专武等级滑动条
             val uniqueEquipLevel = remember {
                 mutableStateOf(currentValue.uniqueEquipmentLevel)
-            }
-            //Rank 选择
-            if (selectRank != 0 && selectRank != currentValue.rank) {
-                navViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
             }
 
             //关闭
@@ -263,7 +247,7 @@ fun CharacterDetail(
                             StarSelect(
                                 currentValue = currentValue,
                                 max = maxValue.rarity,
-                                modifier = Modifier.padding(top = Dimen.mediumPadding)
+                                modifier = Modifier.padding(top = Dimen.mediumPadding),
                             )
 
                             //等级
@@ -375,7 +359,7 @@ fun CharacterDetail(
                                 currentValue = currentValue,
                                 uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
                                 uniqueEquipLevel = uniqueEquipLevel,
-                                uniqueEquipmentMaxData = allData.uniqueEquip
+                                uniqueEquipmentMaxData = allData.uniqueEquip,
                             )
                         }
                         //技能
@@ -622,7 +606,8 @@ private fun CharacterEquip(
                         .clip(Shape.medium)
                         .clickable(enabled = rank < maxRank) {
                             VibrateUtil(context).single()
-                            navViewModel.selectRank.postValue(rank + 1)
+                            val value = navViewModel.currentValue.value
+                            navViewModel.currentValue.postValue(value?.update(rank = rank + 1))
                         }
                 )
                 //跳转至所有 RANK 装备列表
@@ -649,7 +634,8 @@ private fun CharacterEquip(
                         .clip(Shape.medium)
                         .clickable(enabled = rank > 1) {
                             VibrateUtil(context).single()
-                            navViewModel.selectRank.postValue(rank - 1)
+                            val value = navViewModel.currentValue.value
+                            navViewModel.currentValue.postValue(value?.update(rank = rank - 1))
                         }
                 )
             }
@@ -836,7 +822,7 @@ private fun UniqueEquip(
 private fun StarSelect(
     currentValue: CharacterProperty,
     max: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
     Row(modifier) {

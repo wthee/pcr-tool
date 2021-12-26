@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -25,7 +23,6 @@ import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -46,7 +43,6 @@ data class ToolMenuData(
 fun ToolMenu(actions: NavActions) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
 
     val list = arrayListOf(
         ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
@@ -55,19 +51,15 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-        ToolMenuData(R.string.tweet, MainIconType.TWEET),
-        ToolMenuData(R.string.comic, MainIconType.COMIC),
+        ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA),
+        ToolMenuData(R.string.tool_more, MainIconType.TOOL_MORE),
     )
-    if (BuildConfig.debug) {
-        list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
-        list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
-    }
+
 
     VerticalGrid(
         maxColumnWidth = Dimen.toolMenuWidth,
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
-
         list.forEach {
             Box(
                 modifier = Modifier
@@ -80,28 +72,14 @@ fun ToolMenu(actions: NavActions) {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                when (it.iconType) {
-                    MainIconType.DB_DOWNLOAD -> {
-                        FadeAnimation(downloadState == -2) {
-                            MenuItem(coroutineScope, context, actions, it)
-                        }
-                    }
-                    MainIconType.SKILL_LOOP -> {
-                        if (BuildConfig.DEBUG) {
-                            MenuItem(coroutineScope, context, actions, it)
-                        }
-                    }
-                    else -> {
-                        MenuItem(coroutineScope, context, actions, it)
-                    }
-                }
-
+                MenuItem(coroutineScope, context, actions, it)
             }
 
         }
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,
@@ -126,7 +104,7 @@ private fun MenuItem(
     }
 }
 
-private fun getAction(
+fun getAction(
     coroutineScope: CoroutineScope,
     context: Context,
     actions: NavActions,
@@ -145,18 +123,18 @@ private fun getAction(
             MainIconType.LEADER -> actions.toLeader()
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
-            MainIconType.CHANGE_DATA -> {
-                navViewModel.openChangeDataDialog.postValue(true)
-            }
+            MainIconType.CHANGE_DATA -> navViewModel.openChangeDataDialog.postValue(true)
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {
                 coroutineScope.launch {
                     DatabaseUpdater.checkDBVersion(0)
                 }
             }
-            MainIconType.SKILL_LOOP -> {
-                actions.toAllSkillList()
-            }
+            MainIconType.SKILL_LOOP -> actions.toAllSkillList()
+            MainIconType.EQUIP_CALC -> actions.toAllEquipList()
+            MainIconType.RANDOM_AREA -> actions.toRandomEquipArea(0)
+            MainIconType.TOOL_MORE -> actions.toToolMore()
+            MainIconType.NEWS -> actions.toNews()
             else -> {
             }
         }

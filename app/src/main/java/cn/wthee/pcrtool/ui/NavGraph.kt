@@ -61,6 +61,7 @@ object Navigation {
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
+    const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
@@ -75,6 +76,8 @@ object Navigation {
     const val TOOL_NEWS_KEY = "toolNewsKey"
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
+    const val TOOL_EQUIP_AREA = "toolArea"
+    const val TOOL_MORE = "toolMore"
 }
 
 
@@ -535,6 +538,51 @@ fun NavGraph(
                 unitType = arguments.getInt(Navigation.UNIT_TYPE),
             )
         }
+
+        //所有角色所需装备统计
+        composable(
+            route = Navigation.ALL_EQUIP,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            AllCharacterRankEquipCount(actions.toEquipMaterial)
+        }
+
+        //额外随机装备掉落地区
+        composable(
+            route = "${Navigation.TOOL_EQUIP_AREA}/{${Navigation.EQUIP_ID}}",
+            arguments = listOf(navArgument(Navigation.EQUIP_ID) {
+                type = NavType.IntType
+            }),
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+            val arguments = requireNotNull(it.arguments)
+            RandomEquipArea(
+                arguments.getInt(Navigation.EQUIP_ID),
+                scrollState
+            )
+        }
+
+        //更多工具
+        composable(
+            route = Navigation.TOOL_MORE,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+            AllToolMenu(scrollState, actions)
+        }
     }
 }
 
@@ -734,6 +782,27 @@ class NavActions(navController: NavHostController) {
     val toSummonDetail: (Int, Int) -> Unit = { unitId, unitType ->
         navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${unitType}")
     }
+
+    /**
+     * 装备统计
+     */
+    val toAllEquipList = {
+        navController.navigate(Navigation.ALL_EQUIP)
+    }
+
+    /**
+     * 额外随机装备掉落地区
+     */
+    val toRandomEquipArea: (Int) -> Unit = { equipId ->
+        navController.navigate("${Navigation.TOOL_EQUIP_AREA}/${equipId}")
+    }
+
+    /**
+     * 更多工具
+     */
+    val toToolMore = {
+        navController.navigate(Navigation.TOOL_MORE)
+    }
 }
 
 /**
@@ -756,11 +825,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 关闭
      */
     val fabCloseClick = MutableLiveData(false)
-
-    /**
-     * 选择的 RANK
-     */
-    val selectRank = MutableLiveData(0)
 
     /**
      * 下载状态

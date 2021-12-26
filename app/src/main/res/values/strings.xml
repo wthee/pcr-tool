@@ -33,7 +33,8 @@
     <string name="unknown_area">暂无掉落信息</string>
 
     <!-- 设置页面   -->
-    <string name="redownload_db">数据重载</string>
+    <string name="random_area">额外掉落</string>
+    <string name="redownload_db">重新下载数据</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
@@ -110,6 +111,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
+    <string name="tool_more">全部功能</string>
     <string name="read_news">查看公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
@@ -188,4 +190,8 @@
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="to_summon">查看召唤物 ></string>
+    <string name="tip_random_drop">暂无信息，区域 37 开始追加额外装备掉落</string>
+    <string name="db_downloading">数据下载中...</string>
+    <string name="activity_info">活动信息</string>
+    <string name="basic_info">基本信息</string>
 </resources>

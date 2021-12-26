@@ -60,7 +60,8 @@ const val equipWhere = """
         AND 1 = CASE
             WHEN  a.craft_flg = :craft  THEN 1 
         END
-        ORDER BY  a.require_level DESC
+    ORDER BY  a.require_level DESC
+    LIMIT :limit
     """
 
 /**
@@ -90,8 +91,26 @@ interface EquipmentDao {
         type: String,
         name: String,
         showAll: Int,
-        starIds: List<Int>
+        starIds: List<Int>,
+        limit: Int
     ): List<EquipmentMaxData>
+
+    /**
+     * 获取数量
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COUNT(*)
+        FROM
+            equipment_data AS a
+        LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
+        LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
+        WHERE a.equipment_id < 140000 AND a.craft_flg = 1
+    """
+    )
+    suspend fun getCount(): Int
 
     /**
      * 获取装备提升属性
@@ -232,9 +251,39 @@ interface EquipmentDao {
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
 
     /**
+     * 获取所有角色  Rank 范围所需的装备
+     * @param unitId 角色编号
+     */
+    @Query(
+        """
+        SELECT
+            GROUP_CONCAT( equip_slot_1, '-' ) AS equip_1,
+            GROUP_CONCAT( equip_slot_2, '-' ) AS equip_2,
+            GROUP_CONCAT( equip_slot_3, '-' ) AS equip_3,
+            GROUP_CONCAT( equip_slot_4, '-' ) AS equip_4,
+            GROUP_CONCAT( equip_slot_5, '-' ) AS equip_5,
+            GROUP_CONCAT( equip_slot_6, '-' ) AS equip_6 
+        FROM
+            unit_promotion 
+        WHERE
+            promotion_level >= 1 AND equip_slot_1 != 0
+        GROUP BY
+            unit_id
+    """
+    )
+    suspend fun getAllEquip(): List<CharacterPromotionEquip>
+
+
+    /**
      * 获取角色各 RANK 装备信息
      * @param unitId 角色编号
      */
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
     suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
+
+    /**
+     * 获取已开放的最新区域
+     */
+    @Query("SELECT MAX(area_id) FROM quest_data WHERE area_id < 12000")
+    suspend fun getMaxArea(): Int
 }
