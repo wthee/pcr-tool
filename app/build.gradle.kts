@@ -15,8 +15,8 @@ hilt {
 }
 
 val composeVersion = "1.1.0-beta04"
-val appVersionCode = 310
-val appVersionName = "3.1.0"
+val appVersionCode = 311
+val appVersionName = "3.1.1"
 
 android {
 
@@ -131,7 +131,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha06"
+    val coilVersion = "2.0.0-alpha05"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
