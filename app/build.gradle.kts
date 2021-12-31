@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.1.0-beta04"
+val composeVersion = "1.1.0-rc01"
 val appVersionCode = 311
 val appVersionName = "3.1.1"
 
@@ -75,8 +75,8 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            manifestPlaceholders["icon"] = "@drawable/ic_star"
-            resValue("string", "app_name", "PCR Tool βeta")
+            manifestPlaceholders["icon"] = "@drawable/ic_star_pink"
+            resValue("string", "app_name", "PCR Tool β")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -103,6 +103,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.fragment:fragment:1.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
@@ -116,7 +117,8 @@ dependencies {
 //    implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
+//    implementation("androidx.compose.compiler:compiler:$composeVersion")
+    implementation("androidx.compose.compiler:compiler:1.1.0-rc02")
     //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
