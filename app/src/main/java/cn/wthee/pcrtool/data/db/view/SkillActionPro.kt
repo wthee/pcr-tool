@@ -201,9 +201,13 @@ data class SkillActionPro(
                     3 -> "必定命中的物理"
                     else -> UNKNOWN
                 }
+                val adaptive = when (action_detail_2) {
+                    1 -> "（适应物理/魔法防御中较低的防御）"
+                    else -> ""
+                }
 
                 val value = getValueText(1, action_value_1, action_value_2, action_value_3)
-                "对${getTarget()}造成 $value 的${atkType}伤害" + if (action_value_6 > 0) {
+                "对${getTarget()}造成 $value 的${atkType}伤害${adaptive}" + if (action_value_6 > 0) {
                     //暴伤倍率
                     val multiple = if (action_value_6 > 1) {
                         "[${action_value_6 * 2}]"
