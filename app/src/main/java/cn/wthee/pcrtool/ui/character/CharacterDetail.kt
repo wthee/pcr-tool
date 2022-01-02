@@ -140,6 +140,9 @@ fun CharacterDetail(
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
+            if (currentValue.rarity > maxValue.rarity) {
+                navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
+            }
             val unknown = maxValue.level == -1
             //角色等级滑动条
             val characterLevel = remember {
@@ -342,7 +345,7 @@ fun CharacterDetail(
                             )
                         }
                         //属性
-                        AttrLists(allData)
+                        AttrLists(unitId, allData, actions)
                         //RANK 装备
                         CharacterEquip(
                             unitId = unitId,
@@ -506,17 +509,29 @@ private fun CharacterCard(
  */
 @ExperimentalComposeUiApi
 @Composable
-private fun AttrLists(allData: AllAttrData) {
+private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
     //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
-    MainText(
-        text = stringResource(id = R.string.title_story_attr),
+    Row(
         modifier = Modifier.padding(
             top = Dimen.largePadding,
             bottom = Dimen.smallPadding
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MainText(
+            text = stringResource(id = R.string.title_story_attr),
+            modifier = Modifier.padding(end = Dimen.smallPadding)
         )
-    )
+        IconCompose(
+            data = MainIconType.HELP.icon,
+            size = Dimen.smallIconSize
+        ) {
+            actions.toCharacteStoryDetail(unitId)
+        }
+    }
+
     AttrList(attrs = allData.storyAttr.allNotZero())
     //Rank 奖励
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()

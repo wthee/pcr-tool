@@ -41,6 +41,7 @@ object Navigation {
     const val CHARACTER_DETAIL = "characterDetail"
     const val CHARACTER_PICS = "characterPics"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
+    const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
     const val EQUIP_LIST = "equipList"
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
@@ -171,6 +172,21 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             val scrollState = rememberScrollState()
             CharacterBasicInfo(scrollState, unitId = arguments.getInt(Navigation.UNIT_ID))
+        }
+
+        //角色资料
+        composable(
+            route = "${Navigation.CHARACTER_STORY_DETAIL}/{${Navigation.UNIT_ID}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            }),
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            CharacterStoryDetail(unitId = arguments.getInt(Navigation.UNIT_ID))
         }
 
         //装备列表
@@ -631,6 +647,13 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterBasicInfo: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_BASIC_INFO}/${unitId}")
+    }
+
+    /**
+     * 角色剧情属性详情
+     */
+    val toCharacteStoryDetail: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.CHARACTER_STORY_DETAIL}/${unitId}")
     }
 
     /**
