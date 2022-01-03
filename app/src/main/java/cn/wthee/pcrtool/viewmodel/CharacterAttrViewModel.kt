@@ -160,6 +160,16 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
+     * 获取角色剧情属性详情
+     *
+     * @param unitId 角色编号
+     */
+    fun getStoryAttrDetail(unitId: Int) = flow {
+        val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
+        emit(storyInfo)
+    }
+
+    /**
      * 获取被动技能数据
      */
     private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {

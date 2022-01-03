@@ -185,12 +185,12 @@
     <string name="title_ub_add">连结爆发+ 额外数值</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
     <string name="attr_all_value">战力：</string>
-    <string name="title_attr_tip">属性说明</string>
-    <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
+    <string name="title_attr_tip">属性数值说明</string>
+    <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="to_summon">查看召唤物 ></string>
-    <string name="tip_random_drop">暂无信息，区域 37 开始追加额外装备掉落</string>
+    <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="db_downloading">数据下载中...</string>
     <string name="activity_info">活动信息</string>
     <string name="basic_info">基本信息</string>

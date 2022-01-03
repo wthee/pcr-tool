@@ -4,14 +4,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -85,24 +83,22 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     FabMain()
                 }
             }
-            val modifier = if (min) {
-                Modifier.size(0.dp)
-            } else {
-                Modifier
+
+            if (!min) {
+                MainCard(modifier = Modifier) {
+                    PvpSearchCompose(
+                        floatWindow = true,
+                        initSpanCount = spanCount,
+                        pagerState = pagerState,
+                        selectListState = selectListState,
+                        resultListState = resultListState,
+                        favoritesListState = favoritesListState,
+                        historyListState = historyListState,
+                        toCharacter = actions.toCharacterDetail
+                    )
+                }
             }
 
-            MainCard(modifier = modifier) {
-                PvpSearchCompose(
-                    floatWindow = true,
-                    initSpanCount = spanCount,
-                    pagerState = pagerState,
-                    selectListState = selectListState,
-                    resultListState = resultListState,
-                    favoritesListState = favoritesListState,
-                    historyListState = historyListState,
-                    toCharacter = actions.toCharacterDetail
-                )
-            }
         }
     }
 }

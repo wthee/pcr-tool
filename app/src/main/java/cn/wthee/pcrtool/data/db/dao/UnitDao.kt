@@ -253,7 +253,7 @@ interface UnitDao {
     /**
      * 获取所有公会信息
      */
-    @Query("SELECT * FROM guild")
+    @Query("SELECT * FROM guild WHERE guild.guild_master != 0")
     suspend fun getGuilds(): List<GuildData>
 
     /**
@@ -286,27 +286,33 @@ interface UnitDao {
     @Query(
         """
         SELECT
-            * 
+            a.story_id,
+	        a.unlock_story_name,
+            a.status_type_1,
+            a.status_rate_1,
+            a.status_type_2,
+            a.status_rate_2,
+            a.status_type_3,
+            a.status_rate_3,
+            a.status_type_4,
+            a.status_rate_4,
+            a.status_type_5,
+            a.status_rate_5 
         FROM
-            (
-            SELECT
-                b.chara_type,
-                a.status_type_1,
-                a.status_rate_1,
-                a.status_type_2,
-                a.status_rate_2,
-                a.status_type_3,
-                a.status_rate_3,
-                a.status_type_4,
-                a.status_rate_4,
-                a.status_type_5,
-                a.status_rate_5 
-            FROM
-                chara_story_status AS a
-                LEFT JOIN chara_identity AS b ON a.chara_id_1 = b.unit_id / 100 
-            ) AS c 
-        WHERE
-            c.chara_type = ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
+            chara_story_status AS a
+            LEFT JOIN chara_identity AS b ON b.unit_id / 100 IN (
+                a.chara_id_1,
+                a.chara_id_2,
+                a.chara_id_3,
+                a.chara_id_4,
+                a.chara_id_5,
+                a.chara_id_6,
+                a.chara_id_7,
+                a.chara_id_8,
+                a.chara_id_9,
+                a.chara_id_10
+            )
+        WHERE b.unit_id = :unitId
     """
     )
     suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>

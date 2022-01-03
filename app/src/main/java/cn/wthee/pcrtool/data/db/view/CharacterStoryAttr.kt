@@ -6,7 +6,8 @@ import androidx.room.ColumnInfo
  * 角色剧情属性视图
  */
 data class CharacterStoryAttr(
-    @ColumnInfo(name = "chara_type") val chara_type: Int,
+    @ColumnInfo(name = "story_id") val storyId: Int,
+    @ColumnInfo(name = "unlock_story_name") val storyName: String,
     @ColumnInfo(name = "status_type_1") val status_type_1: Int,
     @ColumnInfo(name = "status_rate_1") val status_rate_1: Int,
     @ColumnInfo(name = "status_type_2") val status_type_2: Int,

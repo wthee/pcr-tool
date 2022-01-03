@@ -413,7 +413,11 @@ private fun SkillLoopIconList(
                         2003 -> iconTypes[103]
                         else -> null
                     }
-                    url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType ?: 1001)
+                    url = if (iconType == null) {
+                        ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
+                    } else {
+                        ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
+                    }
                 }
                 IconCompose(data = url)
                 Text(
