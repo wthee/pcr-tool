@@ -35,6 +35,9 @@ class ImageResourceHelper() {
         //现实角色卡面
         var CARD_ACTUAL_PROFILE = "card/actual_profile/"
 
+        //角色剧情卡面
+        val CARD_STORY = "card/story/"
+
         //装备图标
         var UNKNOWN_EQUIP_ID = 999999
         var ICON_EQUIPMENT = "icon/equipment/"
@@ -47,6 +50,9 @@ class ImageResourceHelper() {
 
         //剧情活动 banner
         var EVENT_BANNER = "event/banner/"
+
+        //剧情活动剧情
+        var EVENT_STORY = "event/story/"
 
         //图片资源地址
         private const val OTHER_RESOURCE_URL = "https://wthee.xyz/resource/"
@@ -81,11 +87,10 @@ class ImageResourceHelper() {
      * 获取角色卡面 urls
      *
      * @param unitId 角色编号
-     * @param r6Id 是否已解放六星
      */
-    fun getAllPicUrl(unitId: Int, r6Id: Boolean): ArrayList<String> {
+    fun getAllPicUrl(unitId: Int): ArrayList<String> {
         val list = arrayListOf<String>()
-        if (r6Id) {
+        if (r6Ids.contains(unitId)) {
             list.add(getUrl(CARD_FULL, getStarId(unitId, 6)))
         }
         list.add(getUrl(CARD_FULL, getStarId(unitId, 3)))

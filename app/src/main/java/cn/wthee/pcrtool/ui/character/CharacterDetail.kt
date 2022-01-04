@@ -499,7 +499,7 @@ private fun CharacterCard(
             numberStyle = MaterialTheme.typography.bodyMedium,
             size = Dimen.fabIconSize
         ) {
-            actions.toCharacterPics(unitId)
+            actions.toAllPics(unitId)
         }
     }
 }

@@ -86,4 +86,11 @@ interface MyAPIService {
     @POST("equip/area")
     suspend fun getEquipArea(@Body body: RequestBody): ResponseData<List<RandomEquipDropArea>>
 
+
+    /**
+     * 剧情立绘
+     */
+    @POST("story/list")
+    suspend fun getStoryList(@Body body: RequestBody): ResponseData<String>
+
 }
