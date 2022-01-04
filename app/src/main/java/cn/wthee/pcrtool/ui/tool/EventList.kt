@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
 fun EventList(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
+    toAllPics: (Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
@@ -55,7 +57,7 @@ fun EventList(
                 cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
-                    EventItem(it, toCharacterDetail)
+                    EventItem(it, toCharacterDetail, toAllPics)
                 }
                 item {
                     CommonSpacer()
@@ -88,7 +90,11 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
+private fun EventItem(
+    event: EventData,
+    toCharacterDetail: (Int) -> Unit,
+    toAllPics: (Int) -> Unit
+) {
     val type: String
     val typeColor: Color
     var showDays = true
@@ -231,17 +237,28 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     textAlign = TextAlign.Start,
                     selectable = true
                 )
-                //结束日期
-                CaptionText(
-                    text = if (event.eventId / 10000 != 2) {
-                        ed
-                    } else {
-                        "无期限"
-                    },
+                Row(
                     modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(end = Dimen.mediumPadding)
-                )
+                        .padding(horizontal = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Subtitle2(
+                        text = stringResource(R.string.story_pic),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            toAllPics(event.storyId)
+                        })
+                    //结束日期
+                    CaptionText(
+                        text = if (event.eventId / 10000 != 2) {
+                            ed
+                        } else {
+                            stringResource(R.string.no_limit)
+                        }
+                    )
+                }
+
             }
         }
     }
@@ -255,7 +272,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
 private fun EventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), toCharacterDetail = {})
+            EventItem(event = EventData(), toCharacterDetail = {}, toAllPics = {})
         }
     }
 }

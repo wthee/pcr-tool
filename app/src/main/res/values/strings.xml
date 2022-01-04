@@ -194,4 +194,6 @@
     <string name="db_downloading">数据下载中...</string>
     <string name="activity_info">活动信息</string>
     <string name="basic_info">基本信息</string>
+    <string name="story_pic">查看剧情立绘</string>
+    <string name="no_limit">无限制</string>
 </resources>

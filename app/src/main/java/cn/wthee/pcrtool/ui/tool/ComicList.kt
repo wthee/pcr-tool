@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ComicData
@@ -45,7 +44,6 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
-@ExperimentalPagingApi
 @ExperimentalMaterialApi
 @Composable
 fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel()) {
