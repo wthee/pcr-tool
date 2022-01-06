@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色所有卡面/剧情故事图片
+ * //TODO 优化获取已加载图片的方法
  */
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -62,7 +63,7 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                     ) {
                         ImageCompose(
                             data = R.drawable.load,
-                            ratio = -1f,
+                            ratio = RATIO,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -100,7 +101,7 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                             //图片
                             ImageCompose(
                                 data = picUrls[index],
-                                ratio = RATIO,
+                                ratio = -1f,
                                 contentScale = ContentScale.Crop,
                                 loadingId = R.drawable.load,
                                 errorId = R.drawable.error,

@@ -139,6 +139,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             )
             Row(
                 horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(0.35f)
             ) {
                 PositionIcon(position = info.position)
@@ -179,11 +180,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.guild,
-            modifier = Modifier.padding(
-                top = Dimen.mediumPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start,
             selectable = true
         )

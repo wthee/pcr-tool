@@ -491,13 +491,12 @@ private fun CharacterCard(
         characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
     if (basicInfo != null) {
         CharacterItem(
-            basicInfo,
-            loved,
+            character = basicInfo,
+            loved = loved,
             modifier = Modifier
                 .padding(Dimen.largePadding)
                 .width(getItemWidth()),
-            numberStyle = MaterialTheme.typography.bodyMedium,
-            size = Dimen.fabIconSize
+            isLargerCard = true
         ) {
             actions.toAllPics(unitId)
         }

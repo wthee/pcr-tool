@@ -183,8 +183,8 @@ data class SkillActionPro(
             501 -> "诅咒状态"
             502 -> "中毒状态"
             503 -> "猛毒状态"
-            504 -> "恶咒状态"
-            511 -> "诅咒或恶咒状态"
+            504 -> "咒术状态"
+            511 -> "诅咒或咒术状态"
             512 -> "中毒或猛毒状态"
             710 -> "BREAK 状态"
             1400 -> "变身状态"
@@ -325,7 +325,7 @@ data class SkillActionPro(
                     2 -> "烧伤"
                     3, 8 -> "诅咒"
                     4 -> "猛毒"
-                    5 -> "恶咒"
+                    5 -> "咒术"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -374,8 +374,8 @@ data class SkillActionPro(
             SkillActionType.CHANGE_MODE -> {
                 when (action_detail_1) {
                     1 -> "技能循环改变${getTimeText(1, action_value_1)}"
-                    2 -> "技能循环改变，每秒降低 TP[${action_value_1}]"
-                    3 -> "效果结束后，切换回技能循环"
+                    2 -> "技能循环改变，每秒降低 [${action_value_1}] TP"
+                    3 -> "效果结束后，切换回原技能循环"
                     else -> UNKNOWN
                 }
             }
@@ -407,7 +407,7 @@ data class SkillActionPro(
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
                     2 -> "受到伤害时 [${action_value_1.toInt()}%] 概率"
-                    3 -> "HP[${action_value_3.toInt()}%] 以下"
+                    3 -> "HP [${action_value_3.toInt()}%] 以下"
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"

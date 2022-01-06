@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.insets.navigationBarsPadding
@@ -74,7 +74,7 @@ fun MainContentText(
             textAlign = textAlign,
             color = color,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -88,7 +88,7 @@ fun MainText(
     text: String,
     textAlign: TextAlign = TextAlign.Center,
     color: Color = MaterialTheme.colorScheme.primary,
-    selectable: Boolean = false
+    selectable: Boolean = false,
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -121,7 +121,8 @@ fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    selectable: Boolean = false
+    selectable: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -130,6 +131,8 @@ fun Subtitle1(
                 color = color,
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.titleMedium,
+                maxLines = maxLines,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     } else {
@@ -138,7 +141,9 @@ fun Subtitle1(
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleMedium,
-            modifier = modifier
+            modifier = modifier,
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -151,7 +156,8 @@ fun Subtitle2(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    selectable: Boolean = false
+    selectable: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -160,6 +166,8 @@ fun Subtitle2(
                 color = color,
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.titleSmall,
+                maxLines = maxLines,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     } else {
@@ -168,7 +176,9 @@ fun Subtitle2(
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
-            modifier = modifier
+            modifier = modifier,
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -181,14 +191,17 @@ fun CaptionText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    textAlign: TextAlign = TextAlign.End
+    textAlign: TextAlign = TextAlign.End,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     Text(
         text = text,
         textAlign = textAlign,
         color = color,
         style = MaterialTheme.typography.bodySmall,
-        modifier = modifier
+        modifier = modifier,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 
@@ -456,7 +469,8 @@ fun CharacterLimitText(
             color = colorResource(id = R.color.color_rank_7_10)
         }
     }
-    MainTitleText(modifier = modifier, text = type, backgroundColor = color, textStyle = textStyle)
+    Subtitle2(modifier = modifier, text = type, color = color)
+//    MainTitleText(modifier = modifier, text = type, backgroundColor = color, textStyle = textStyle)
 
 }
 
@@ -468,8 +482,8 @@ fun CharacterLimitText(
 fun CharacterPositionText(
     modifier: Modifier = Modifier,
     showColor: Boolean = true,
+    showText: Boolean = false,
     position: Int,
-    padding: Dp = 0.dp,
     textAlign: TextAlign = TextAlign.Center,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
@@ -485,14 +499,38 @@ fun CharacterPositionText(
     } else {
         Color.Unspecified
     }
+    var text = position.toString()
+    if (showText) {
+        val pos = when (position) {
+            in 1..299 -> stringResource(id = R.string.position_0)
+            in 300..599 -> stringResource(id = R.string.position_1)
+            in 600..9999 -> stringResource(id = R.string.position_2)
+            else -> Constants.UNKNOWN
+        }
+        if (pos != Constants.UNKNOWN) {
+            text = "$pos($position)"
+        }
+    }
 
     Text(
-        text = position.toString(),
+        text = text,
         color = color,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,
         overflow = TextOverflow.Ellipsis,
-        modifier = modifier.padding(top = padding)
+        modifier = modifier
     )
+}
+
+
+//攻击颜色
+@Composable
+fun getAtkColor(atkType: Int): Color {
+    val colorId = when (atkType) {
+        1 -> R.color.color_rank_7_10
+        2 -> R.color.color_rank_11_17
+        else -> R.color.color_rank_2_3
+    }
+    return colorResource(id = colorId)
 }
