@@ -18,15 +18,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -43,6 +42,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -110,9 +110,10 @@ fun CharacterList(
                 ) {
                     items(list) {
                         CharacterItem(
-                            it,
-                            filter.value!!.starIds.contains(it.id),
-                            modifier = Modifier.padding(Dimen.mediumPadding)
+                            character = it,
+                            loved = filter.value!!.starIds.contains(it.id),
+                            modifier = Modifier.padding(Dimen.mediumPadding),
+                            isLargerCard = false
                         ) {
                             toDetail(it.id)
                         }
@@ -182,90 +183,105 @@ fun CharacterItem(
     character: CharacterInfo,
     loved: Boolean,
     modifier: Modifier = Modifier,
-    numberStyle: TextStyle = MaterialTheme.typography.bodySmall,
-    size: Dp = Dimen.smallIconSize,
+    isLargerCard: Boolean,
     onClick: () -> Unit
 ) {
+    val str =
+        character.getFixedAge() + "  " + character.getFixedHeight() + "CM" + "  " + character.getFixedWeight() + "KG"
+
     MainCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        Column {
+        Column(modifier = Modifier.fillMaxSize()) {
             //图片
-            Box(contentAlignment = Alignment.BottomEnd) {
-                ImageCompose(
-                    data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
-                    ratio = RATIO,
-                    loadingId = R.drawable.load,
-                    errorId = R.drawable.error,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                //位置
+            ImageCompose(
+                data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
+                ratio = RATIO,
+                loadingId = R.drawable.load,
+                errorId = R.drawable.error,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier.heightIn(max = getItemWidth())
+            )
+
+            Row(
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //位置图标
                 PositionIcon(
-                    modifier = Modifier.padding(Dimen.smallPadding),
-                    character.position,
-                    size = size
+                    position = character.position,
+                    size = Dimen.smallIconSize
+                )
+                //名称
+                Subtitle1(
+                    text = if (isLargerCard) character.name else character.getNameF(),
+                    color = if (loved) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                    selectable = true,
+                    maxLines = if (isLargerCard) Int.MAX_VALUE else 1,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
 
+
             Row(
-                modifier = Modifier.padding(
-                    start = Dimen.smallPadding,
-                    end = Dimen.smallPadding,
-                    top = Dimen.smallPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                //限定类型
+                //获取方式
                 CharacterLimitText(
                     characterInfo = character,
                     modifier = Modifier.padding(end = Dimen.smallPadding)
                 )
-                //名字
-                SelectText(
-                    selected = loved,
-                    text = character.getNameF(),
-                    textAlign = TextAlign.Start,
-                    margin = 0.dp,
-                    padding = Dimen.smallPadding,
+                //攻击
+                Subtitle2(
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                    text = character.getAtkType(),
+                    color = getAtkColor(atkType = character.atkType)
                 )
+                //位置
+                CharacterPositionText(position = character.position, showText = true)
             }
-            //其它属性
+
             Row(
-                modifier = Modifier
-                    .padding(Dimen.smallPadding)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CharacterNumberText(text = character.getFixedAge(), style = numberStyle)
-                CharacterNumberText(text = character.getFixedHeight() + "CM", style = numberStyle)
-                CharacterNumberText(text = character.getFixedWeight() + "KG", style = numberStyle)
-                CharacterPositionText(
-                    position = character.position,
-                    textAlign = TextAlign.End,
-                    textStyle = numberStyle
+                Text(
+                    text = str,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible
                 )
+                if (isLargerCard) {
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = Dimen.mediumPadding)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Subtitle2(text = character.startTime.formatTime)
+                    }
+                }
+            }
+            if (!isLargerCard) {
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding,
+                            bottom = Dimen.mediumPadding,
+                            top = Dimen.smallPadding
+                        )
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Subtitle2(text = character.startTime.formatTime)
+                }
             }
         }
     }
-}
-
-/**
- * 蓝色字体
- */
-@Composable
-private fun CharacterNumberText(
-    modifier: Modifier = Modifier,
-    text: String,
-    style: TextStyle = MaterialTheme.typography.bodySmall,
-) {
-    Text(
-        text = text,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        style = style,
-        modifier = modifier.padding(end = Dimen.smallPadding),
-        textAlign = TextAlign.End
-    )
 }
 
 /**

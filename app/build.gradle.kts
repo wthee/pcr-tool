@@ -15,8 +15,8 @@ hilt {
 }
 
 val composeVersion = "1.1.0-rc01"
-val appVersionCode = 312
-val appVersionName = "3.1.2"
+val appVersionCode = 313
+val appVersionName = "3.1.3"
 
 android {
 
@@ -107,14 +107,13 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.fragment:fragment:1.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     //compose
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-//    implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
 //    implementation("androidx.compose.compiler:compiler:$composeVersion")
@@ -123,7 +122,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.21.4-beta"
+    val accompanistVersion = "0.22.0-rc"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -133,7 +132,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha05"
+    val coilVersion = "2.0.0-alpha06"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 

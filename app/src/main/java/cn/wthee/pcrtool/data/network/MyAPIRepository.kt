@@ -307,4 +307,33 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         }
         return error()
     }
+
+    /**
+     * 查询剧情立绘信息
+     */
+    suspend fun getStoryList(id: Int): ResponseData<String> {
+        //请求
+        try {
+            val region = getRegion()
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("id", id)
+            json.addProperty("region", region)
+            val body =
+                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
+            val response = service.getStoryList(body)
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+            }
+        }
+        return error()
+    }
 }

@@ -509,7 +509,7 @@ fun PvpIconItem(
             CharacterPositionText(
                 showColor = selected,
                 position = position,
-                padding = textTopPadding,
+                modifier = Modifier.padding(top = textTopPadding),
             )
         }
     }

@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
+import cn.wthee.pcrtool.ui.common.AllPics
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
@@ -39,7 +40,7 @@ object Navigation {
     const val HOME = "home"
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
-    const val CHARACTER_PICS = "characterPics"
+    const val ALL_PICS = "allPics"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
     const val EQUIP_LIST = "equipList"
@@ -144,7 +145,7 @@ fun NavGraph(
 
         //角色图片详情
         composable(
-            route = "${Navigation.CHARACTER_PICS}/{${Navigation.UNIT_ID}}",
+            route = "${Navigation.ALL_PICS}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
@@ -155,7 +156,7 @@ fun NavGraph(
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            CharacterAllPics(arguments.getInt(Navigation.UNIT_ID))
+            AllPics(arguments.getInt(Navigation.UNIT_ID))
         }
 
         //角色资料
@@ -343,7 +344,7 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            EventList(scrollState, actions.toCharacterDetail)
+            EventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
         }
 
         //角色公会
@@ -624,8 +625,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色图片详情
      */
-    val toCharacterPics: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${Navigation.CHARACTER_PICS}/${unitId}")
+    val toAllPics: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.ALL_PICS}/${unitId}")
     }
 
     /**

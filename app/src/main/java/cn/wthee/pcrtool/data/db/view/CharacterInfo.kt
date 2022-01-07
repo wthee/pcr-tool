@@ -51,4 +51,24 @@ data class CharacterInfo(
         }
     }
 
+    /**
+     * 获取限定类型
+     */
+    fun getNameL(): String {
+        val index = this.name.indexOf("（")
+        return if (index == -1) {
+            this.kana
+        } else {
+            this.name.substring(index + 1, this.name.length)
+        }
+    }
+
+    /**
+     * 攻击
+     */
+    fun getAtkType() = when (atkType) {
+        1 -> "物理"
+        2 -> "魔法"
+        else -> "未知"
+    }
 }

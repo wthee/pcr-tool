@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.entityjp.*
 import cn.wthee.pcrtool.data.db.entitytw.UnitCommentsTW
+import cn.wthee.pcrtool.data.db.entitytw.WaveGroupDataTW
 import cn.wthee.pcrtool.utils.Constants
 
 
@@ -34,7 +35,7 @@ import cn.wthee.pcrtool.utils.Constants
         QuestDataJP::class,
         SkillAction::class,
         SkillDataJP::class,
-        WaveGroupDataJP::class,
+        WaveGroupDataTW::class,
         AttackPattern::class,
         GuildData::class,
         UnitCommentsTW::class,

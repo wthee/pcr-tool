@@ -140,7 +140,7 @@ fun CharacterDetail(
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
-            if (currentValue.rarity > maxValue.rarity) {
+            if (maxValue.isInit() && currentValue.rarity > maxValue.rarity) {
                 navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
             }
             val unknown = maxValue.level == -1
@@ -491,15 +491,14 @@ private fun CharacterCard(
         characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
     if (basicInfo != null) {
         CharacterItem(
-            basicInfo,
-            loved,
+            character = basicInfo,
+            loved = loved,
             modifier = Modifier
                 .padding(Dimen.largePadding)
                 .width(getItemWidth()),
-            numberStyle = MaterialTheme.typography.bodyMedium,
-            size = Dimen.fabIconSize
+            isLargerCard = true
         ) {
-            actions.toCharacterPics(unitId)
+            actions.toAllPics(unitId)
         }
     }
 }
