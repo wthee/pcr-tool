@@ -140,7 +140,7 @@ fun CharacterDetail(
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
-            if (currentValue.rarity > maxValue.rarity) {
+            if (maxValue.isInit() && currentValue.rarity > maxValue.rarity) {
                 navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
             }
             val unknown = maxValue.level == -1

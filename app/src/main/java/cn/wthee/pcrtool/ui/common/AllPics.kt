@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -102,10 +101,8 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                             ImageCompose(
                                 data = picUrls[index],
                                 ratio = -1f,
-                                contentScale = ContentScale.Crop,
                                 loadingId = R.drawable.load,
                                 errorId = R.drawable.error,
-                                modifier = Modifier.fillMaxSize()
                             ) {
                                 loaded[index] = true
                             }

@@ -63,7 +63,12 @@ fun ImageCompose(
                 model = loadingId,
                 contentDescription = null,
                 contentScale = contentScale,
-                modifier = mModifier
+                modifier = if (ratio > 0) {
+                    modifier.aspectRatio(ratio)
+                } else {
+                    modifier
+                        .aspectRatio(RATIO)
+                }
             )
         },
         error = {
@@ -71,7 +76,12 @@ fun ImageCompose(
                 model = errorId,
                 contentDescription = null,
                 contentScale = contentScale,
-                modifier = mModifier
+                modifier = if (ratio > 0) {
+                    modifier.aspectRatio(ratio)
+                } else {
+                    modifier
+                        .aspectRatio(RATIO)
+                }
             )
         },
         modifier = mModifier
