@@ -140,7 +140,9 @@ private fun MenuGroup(
                 when (it.iconType) {
                     MainIconType.DB_DOWNLOAD -> {
                         if (downloadState > -2) {
-                            MainCard {
+                            MainCard(
+                                modifier = Modifier.padding(Dimen.mediumPadding)
+                            ) {
                                 Row(
                                     modifier = Modifier
                                         .clip(Shape.medium)
@@ -159,7 +161,7 @@ private fun MenuGroup(
                                     Box(contentAlignment = Alignment.Center) {
                                         CircularProgressIndicator(
                                             modifier = Modifier
-                                                .size(Dimen.iconSize)
+                                                .size(Dimen.mediumIconSize)
                                                 .padding(Dimen.smallPadding),
                                             color = MaterialTheme.colorScheme.primary,
                                             strokeWidth = 2.dp
