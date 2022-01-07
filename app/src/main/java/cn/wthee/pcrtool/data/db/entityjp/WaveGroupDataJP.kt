@@ -30,4 +30,5 @@ class WaveGroupDataJP(
     @ColumnInfo(name = "drop_reward_id_5") val drop_reward_id_5: Int,
     //jp
     @ColumnInfo(name = "guest_enemy_id") val guest_enemy_id: Int,
+    @ColumnInfo(name = "guest_lane") val guest_lane: Int,
 )

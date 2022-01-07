@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.BuildConfig
 object Constants {
 
     //本地数据库版本
-    const val SQLITE_VERSION = 301
+    const val SQLITE_VERSION = 313
 
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
