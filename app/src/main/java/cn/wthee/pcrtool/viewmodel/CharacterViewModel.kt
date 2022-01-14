@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
@@ -50,14 +51,30 @@ class CharacterViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getCharacter(unitId: Int) = flow {
-        val data = unitRepository.getInfoPro(unitId)
-        if (data == null) {
-            UMengLogUtil.upload(
-                NullPointerException(),
-                Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
-            )
+        //校验是否未多角色卡
+        val ids = arrayListOf(unitId)
+        try {
+            val multiIds = unitRepository.getMultiIds(unitId)
+            if (multiIds.isNotEmpty()) {
+                ids.addAll(multiIds)
+            }
+        } catch (e: Exception) {
+
         }
-        emit(unitRepository.getInfoPro(unitId))
+        val infoList = arrayListOf<CharacterInfoPro>()
+        ids.forEach {
+            val data = unitRepository.getInfoPro(it)
+            if (data == null) {
+                UMengLogUtil.upload(
+                    NullPointerException(),
+                    Constants.EXCEPTION_UNIT_NULL + "unit_id:$it"
+                )
+            } else {
+                infoList.add(data)
+            }
+        }
+
+        emit(infoList)
     }
 
     /**

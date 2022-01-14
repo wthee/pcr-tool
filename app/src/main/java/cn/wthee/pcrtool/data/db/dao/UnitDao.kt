@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.view.*
@@ -196,6 +197,13 @@ interface UnitDao {
         GROUP BY unit_profile.unit_id """
     )
     suspend fun getInfoPro(unitId: Int): CharacterInfoPro?
+
+    /**
+     * 获取多角色卡关联角色编号
+     */
+    @SkipQueryVerification
+    @Query("""SELECT unit_data.unit_id FROM unit_data WHERE unit_data.original_unit_id = :unitId """)
+    suspend fun getMultiIds(unitId: Int): List<Int>
 
     /**
      * 根据位置范围 [start] <= x <= [end] 获取角色列表
