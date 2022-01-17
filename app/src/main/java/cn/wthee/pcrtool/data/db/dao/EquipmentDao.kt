@@ -2,14 +2,9 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.EquipmentCraft
-import cn.wthee.pcrtool.data.db.entity.EquipmentEnhanceRate
-import cn.wthee.pcrtool.data.db.entity.UnitPromotion
-import cn.wthee.pcrtool.data.db.view.CharacterPromotionEquip
-import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
-import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.*
 
 //装备满属性视图
 const val viewEquipmentMaxData = """
@@ -73,6 +68,7 @@ interface EquipmentDao {
     /**
      * 获取装备所有类型列表
      */
+    @SkipQueryVerification
     @Query("""SELECT description as type FROM equipment_enhance_rate GROUP BY description""")
     suspend fun getEquipTypes(): List<String>
 
@@ -84,6 +80,7 @@ interface EquipmentDao {
      * @param showAll 0: 仅收藏，1：全部
      * @param starIds 收藏的装备编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
     suspend fun getEquipments(
@@ -98,6 +95,7 @@ interface EquipmentDao {
     /**
      * 获取数量
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -116,6 +114,7 @@ interface EquipmentDao {
      * 获取装备提升属性
      * @param equipId 装备编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :equipId ")
     suspend fun getEquipmentEnhanceData(equipId: Int): EquipmentEnhanceRate
 
@@ -123,6 +122,7 @@ interface EquipmentDao {
      * 获取装备合成信息
      * @param equipId 装备编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :equipId ")
     suspend fun getEquipmentCraft(equipId: Int): EquipmentCraft
 
@@ -130,6 +130,7 @@ interface EquipmentDao {
      * 获取装备掉落区域信息
      * @param equipId 装备编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -174,6 +175,7 @@ interface EquipmentDao {
      * 获取装备数值信息
      * @param equipId 装备编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query("$viewEquipmentMaxData WHERE a.equipment_id =:equipId")
     suspend fun getEquipInfos(equipId: Int): EquipmentMaxData
@@ -183,6 +185,7 @@ interface EquipmentDao {
      * @param unitId 角色编号
      * @param lv 装备等级
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -223,6 +226,7 @@ interface EquipmentDao {
     /**
      * 根获取专武最大强化等级
      */
+    @SkipQueryVerification
     @Transaction
     @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data")
     suspend fun getUniqueEquipMaxLv(): Int
@@ -231,6 +235,7 @@ interface EquipmentDao {
      * 获取角色  Rank 范围所需的装备
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query(
         """
         SELECT
@@ -254,6 +259,7 @@ interface EquipmentDao {
      * 获取所有角色  Rank 范围所需的装备
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query(
         """
         SELECT
@@ -278,12 +284,14 @@ interface EquipmentDao {
      * 获取角色各 RANK 装备信息
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
     suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
 
     /**
      * 获取已开放的最新区域
      */
+    @SkipQueryVerification
     @Query("SELECT MAX(area_id) FROM quest_data WHERE area_id < 12000")
     suspend fun getMaxArea(): Int
 }

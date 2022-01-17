@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.*
+import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.db.view.*
 
 /**
@@ -26,6 +26,7 @@ interface UnitDao {
      * @param r6 0：全部，1：仅六星解放
      * @param starIds 收藏的角色编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -105,6 +106,7 @@ interface UnitDao {
     /**
      * 角色数量
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -125,6 +127,7 @@ interface UnitDao {
     /**
      * 角色信息
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -158,6 +161,7 @@ interface UnitDao {
      * 获取角色详情基本资料
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -200,6 +204,7 @@ interface UnitDao {
      * 获取角色小屋对话
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -229,6 +234,7 @@ interface UnitDao {
      * @param start 开始位置
      * @param end 结束位置
      */
+    @SkipQueryVerification
     @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
@@ -236,6 +242,7 @@ interface UnitDao {
      * 获取角色列表
      * @param unitIds 角色编号
      */
+    @SkipQueryVerification
     @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByIds(unitIds: List<Int>): List<PvpCharacterData>
 
@@ -244,6 +251,7 @@ interface UnitDao {
      * @param unitId 角色编号
      * @param rank 角色rank
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")
     suspend fun getRankEquipment(unitId: Int, rank: Int): UnitPromotion
 
@@ -252,6 +260,7 @@ interface UnitDao {
      * @param unitId 角色编号
      * @param rank 角色rank
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_promotion_status WHERE unit_promotion_status.unit_id = :unitId AND unit_promotion_status.promotion_level = :rank ")
     suspend fun getRankStatus(unitId: Int, rank: Int): UnitPromotionStatus?
 
@@ -260,6 +269,7 @@ interface UnitDao {
      * @param unitId 角色编号
      * @param rarity 角色星级
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_rarity WHERE unit_rarity.unit_id = :unitId AND unit_rarity.rarity = :rarity ")
     suspend fun getRarity(unitId: Int, rarity: Int): UnitRarity
 
@@ -267,6 +277,7 @@ interface UnitDao {
      * 获取角色 Rank 最大值
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query("SELECT MAX( promotion_level ) FROM unit_promotion WHERE unit_id = :unitId")
     suspend fun getMaxRank(unitId: Int): Int
 
@@ -274,24 +285,28 @@ interface UnitDao {
      * 获取角色星级最大值
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query("SELECT MAX( rarity ) FROM unit_rarity  WHERE unit_id = :unitId")
     suspend fun getMaxRarity(unitId: Int): Int
 
     /**
      * 获取所有公会信息
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM guild WHERE guild.guild_master != 0")
     suspend fun getGuilds(): List<GuildData>
 
     /**
      * 获取所有公会信息
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
     suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
 
     /**
      * 获取已六星角色 id 列表
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -309,6 +324,7 @@ interface UnitDao {
      * 获取角色剧情属性
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -347,30 +363,35 @@ interface UnitDao {
     /**
      * 获取角色最大等级
      */
+    @SkipQueryVerification
     @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
     suspend fun getMaxLevel(): Int
 
     /**
      * 获取角色 Rank 奖励
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM promotion_bonus WHERE unit_id = :unitId AND promotion_level = :rank")
     suspend fun getRankBonus(rank: Int, unitId: Int): UnitPromotionBonus?
 
     /**
      * 获取战力系数
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
     suspend fun getCoefficient(): UnitStatusCoefficient
 
     /**
      * 获取特殊六星 id
      */
+    @SkipQueryVerification
     @Query("SELECT cutin1_star6 FROM unit_data WHERE cutin_1 = :unitId AND cutin1_star6 <> :unitId")
     suspend fun getCutinId(unitId: Int): Int?
 
     /**
      * 获取召唤物基本信息
      */
+    @SkipQueryVerification
     @Query("SELECT unit_id, unit_name, search_area_width, normal_atk_cast_time, atk_type  FROM unit_data WHERE unit_id = :unitId ")
     suspend fun getSummonData(unitId: Int): SummonData
 }

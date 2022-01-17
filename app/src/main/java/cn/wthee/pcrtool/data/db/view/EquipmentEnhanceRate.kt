@@ -1,16 +1,13 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.data.db.view.Attr
 
 /**
- * 专武强化提升
+ * 装备强化提升属性
  */
-@Entity(tableName = "unique_equipment_enhance_rate")
-data class UniqueEquipmentEnhanceRate(
+data class EquipmentEnhanceRate(
     @PrimaryKey
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,

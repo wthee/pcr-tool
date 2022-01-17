@@ -76,6 +76,7 @@ interface ClanBattleDao {
     /**
      * 获取所有团队战信息
      */
+    @SkipQueryVerification
     @Query("$query GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
     suspend fun getAllClanBattleData(): List<ClanBattleInfo>
 
@@ -83,6 +84,7 @@ interface ClanBattleDao {
      * 获取单期团队战信息
      * @param clanId 团队战编号
      */
+    @SkipQueryVerification
     @Query(" $query  WHERE a.clan_battle_id = :clanId GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
     suspend fun getClanInfo(clanId: Int): ClanBattleInfo
 }

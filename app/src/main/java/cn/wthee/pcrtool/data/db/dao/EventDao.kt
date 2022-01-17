@@ -2,10 +2,11 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.EventStoryDetail
 
 /**
  * 活动记录 DAO
@@ -16,6 +17,7 @@ interface EventDao {
     /**
      * 获取所有活动记录
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -67,6 +69,7 @@ interface EventDao {
      * 获取活动剧情列表
      * @param storyId 剧情活动编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
     suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>
 
@@ -74,6 +77,7 @@ interface EventDao {
     /**
      * 获取加倍活动信息
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -100,6 +104,7 @@ interface EventDao {
     /**
      * 获取露娜塔信息
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """

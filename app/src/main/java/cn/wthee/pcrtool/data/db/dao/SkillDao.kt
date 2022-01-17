@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
-import cn.wthee.pcrtool.data.db.entity.AttackPattern
-import cn.wthee.pcrtool.data.db.entity.UnitSkillData
-import cn.wthee.pcrtool.data.db.entityjp.SkillDataJP
+import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.SkillData
+import cn.wthee.pcrtool.data.db.view.UnitSkillData
 
 /**
  * 技能数据 DAO
@@ -22,12 +22,20 @@ interface SkillDao {
     suspend fun getUnitSkill(unitId: Int): UnitSkillData?
 
     /**
+     * 获取特殊UB信息
+     * @param unitId 角色编号
+     */
+    @SkipQueryVerification
+    @Query("SELECT sp_union_burst FROM unit_skill_data  WHERE unit_id = :unitId")
+    suspend fun getUnitSpUBSkill(unitId: Int): Int?
+
+    /**
      * 获取技能数值数据
      * @param skillId 技能编号
      */
     @SkipQueryVerification
     @Query("SELECT * FROM skill_data  WHERE skill_id = :skillId")
-    suspend fun getSkillData(skillId: Int): SkillDataJP?
+    suspend fun getSkillData(skillId: Int): SkillData?
 
     /**
      * 获取角色技能动作效果列表
@@ -35,6 +43,7 @@ interface SkillDao {
      * @param atk 角色攻击力
      * @param actionIds 技能动作编号
      */
+    @SkipQueryVerification
     @Query(
         """
         SELECT
@@ -54,6 +63,7 @@ interface SkillDao {
      * 获取角色动作循环列表
      * @param unitId 角色编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
     suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
 }

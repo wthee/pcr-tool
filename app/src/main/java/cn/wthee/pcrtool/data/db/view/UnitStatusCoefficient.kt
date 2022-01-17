@@ -1,13 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
  * 战力系数
  */
-@Entity(tableName = "unit_status_coefficient")
 data class UnitStatusCoefficient(
     @PrimaryKey
     @ColumnInfo(name = "coefficient_id") val coefficient_id: Int = 1,

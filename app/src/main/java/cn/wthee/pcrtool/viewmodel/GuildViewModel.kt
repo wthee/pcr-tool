@@ -24,16 +24,19 @@ class GuildViewModel @Inject constructor(
         val data = unitRepository.getGuilds()
         val list = arrayListOf<GuildAllMember>()
         data.forEach {
-            val add = unitRepository.getGuildAddMembers(it.guildId)
-            list.add(
-                GuildAllMember(
-                    it.guildId,
-                    it.guildName,
-                    it.getDesc(),
-                    it.getMemberIds(),
-                    add?.getMemberIds() ?: listOf()
-                )
+            val allMember = GuildAllMember(
+                it.guildId,
+                it.guildName,
+                it.getDesc(),
+                it.getMemberIds()
             )
+            try {
+                val add = unitRepository.getGuildAddMembers(it.guildId)
+                allMember.newMemberIds = add?.getMemberIds() ?: arrayListOf()
+            } catch (e: Exception) {
+
+            }
+            list.add(allMember)
         }
         emit(list)
     }

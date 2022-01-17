@@ -1,27 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Index
-import cn.wthee.pcrtool.data.db.view.Attr
 
 /**
  * 角色星级属性
  */
-@Entity(
-    tableName = "unit_rarity",
-    indices = [Index(
-        value = arrayOf("unit_id"),
-        unique = false,
-        name = "unit_rarity_0_unit_id"
-    ), Index(
-        value = arrayOf("unit_material_id"),
-        unique = false,
-        name = "unit_rarity_0_unit_material_id"
-    )],
-    primaryKeys = ["unit_id", "rarity"]
-)
 data class UnitRarity(
     @ColumnInfo(name = "unit_id") val unitid: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,

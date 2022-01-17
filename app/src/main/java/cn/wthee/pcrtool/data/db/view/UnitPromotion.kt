@@ -1,21 +1,10 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
 
 /**
  * 角色 Rank 装备信息
  */
-@Entity(
-    tableName = "unit_promotion",
-    indices = [Index(
-        value = arrayOf("unit_id"),
-        unique = false,
-        name = "unit_promotion_0_unit_id"
-    )],
-    primaryKeys = ["unit_id", "promotion_level"]
-)
 data class UnitPromotion(
     @ColumnInfo(name = "unit_id") val unitId: Int = 100101,
     @ColumnInfo(name = "promotion_level") val promotionLevel: Int = 10,

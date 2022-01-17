@@ -67,32 +67,41 @@ class CharacterAttrViewModel @Inject constructor(
         val info = Attr()
         val allData = AllAttrData()
         try {
-            val rankData = unitRepository.getRankStatus(unitId, rank)
-            val rarityData = unitRepository.getRarity(unitId, rarity)
-            val bonus = unitRepository.getRankBonus(rank, unitId)
-            val ids = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
+            //RANK 奖励属性
+            try {
+                val bonus = unitRepository.getRankBonus(rank, unitId)
+                bonus?.let {
+                    info.add(it.attr)
+                    allData.bonus = it
+                }
+            } catch (e: Exception) {
+
+            }
+
             //星级属性
+            val rarityData = unitRepository.getRarity(unitId, rarity)
             info.add(rarityData.attr)
+
             //成长属性
             info.add(Attr.setGrowthValue(rarityData).multiply((level + rank).toDouble()))
-            //rank属性
+
+            //RANK 属性
+            val rankData = unitRepository.getRankStatus(unitId, rank)
             rankData?.let {
                 info.add(rankData.attr)
             }
-            //奖励属性
-            bonus?.let {
-                info.add(it.attr)
-                allData.bonus = it
-            }
+
             //装备
+            val equipIds = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
             val eqs = arrayListOf<EquipmentMaxData>()
-            ids.forEach {
+            equipIds.forEach {
                 if (it == UNKNOWN_EQUIP_ID || it == 0)
                     eqs.add(EquipmentMaxData.unknown())
                 else
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
             allData.equips = eqs
+
             //装备属性
             eqs.forEach { eq ->
                 if (eq.equipmentId != UNKNOWN_EQUIP_ID) {

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
+import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
@@ -42,19 +42,32 @@ class SkillViewModel @Inject constructor(
      */
     fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, cutinId: Int) {
         viewModelScope.launch {
+            var spUB = 0
+            var cutinSpUB = 0
+            try {
+                spUB = skillRepository.getUnitSpUBSkill(unitId) ?: 0
+            } catch (e: Exception) {
+
+            }
+            try {
+                cutinSpUB = skillRepository.getUnitSpUBSkill(cutinId) ?: 0
+            } catch (e: Exception) {
+
+            }
+
             try {
                 val data = skillRepository.getUnitSkill(unitId)
                 val spData = skillRepository.getUnitSkill(cutinId)
                 if (data != null && spData != null) {
                     getSkillInfo(
-                        data.joinCutinSkillId(spData),
+                        data.joinCutinSkillId(spUB, cutinSpUB, spData),
                         atk,
                         arrayListOf(lv)
                     )
                 } else {
                     data?.let {
                         getSkillInfo(
-                            data.getAllSkillId(),
+                            data.getAllSkillId(spUB),
                             atk,
                             arrayListOf(lv)
                         )
@@ -75,8 +88,9 @@ class SkillViewModel @Inject constructor(
                 val skillIds = arrayListOf<Int>()
                 unitIds.forEach {
                     val data = skillRepository.getUnitSkill(it)
+                    val spUB = skillRepository.getUnitSpUBSkill(it) ?: 0
                     if (data != null) {
-                        skillIds.addAll(data.getAllSkillId())
+                        skillIds.addAll(data.getAllSkillId(spUB))
                     }
                 }
                 getSkillInfo(skillIds, atk, arrayListOf(lv))
