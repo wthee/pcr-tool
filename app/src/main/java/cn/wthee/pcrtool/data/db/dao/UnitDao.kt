@@ -183,20 +183,39 @@ interface UnitDao {
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-            COALESCE(cts.comments, "......") AS comments,
-            COALESCE(GROUP_CONCAT(r.description, "-"), "......") AS room_comments
+            COALESCE(cts.comments, "......") AS comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
             LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
-            LEFT JOIN room_unit_comments AS r ON unit_profile.unit_id = r.unit_id
         WHERE 
             unit_profile.unit_id = :unitId 
         GROUP BY unit_profile.unit_id """
     )
     suspend fun getInfoPro(unitId: Int): CharacterInfoPro?
+
+    /**
+     * 获取角色小屋对话
+     * @param unitId 角色编号
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            b.unit_id,
+            b.unit_name,
+            COALESCE( GROUP_CONCAT( a.description, '-' ), '......') AS room_comments 
+        FROM
+            room_unit_comments AS a
+            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+        WHERE
+            a.unit_id = :unitId 
+        GROUP BY
+            a.unit_id """
+    )
+    suspend fun getRoomComments(unitId: Int): RoomCommentData?
 
     /**
      * 获取多角色卡关联角色编号

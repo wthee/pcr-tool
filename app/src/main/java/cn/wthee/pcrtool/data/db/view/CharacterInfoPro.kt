@@ -29,7 +29,6 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int = 0,
     @ColumnInfo(name = "rarity") val rarity: Int = 3,
     @ColumnInfo(name = "comments") val comments: String = "???",
-    @ColumnInfo(name = "room_comments") val roomComments: String = "???",
 ) {
 
     /**
@@ -69,11 +68,5 @@ data class CharacterInfoPro(
     fun getCommentsText() =
         comments.replace("\\n", "").replace("-", "\n\n")
 
-
-    /**
-     * 小屋交流
-     */
-    fun getRoomCommentsText() =
-        roomComments.replace("\\n", "").replace("-", "\n\n")
 
 }

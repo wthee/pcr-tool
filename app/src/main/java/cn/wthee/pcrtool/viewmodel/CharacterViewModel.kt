@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
@@ -52,6 +52,23 @@ class CharacterViewModel @Inject constructor(
      */
     fun getCharacter(unitId: Int) = flow {
         //校验是否未多角色卡
+        val data = unitRepository.getInfoPro(unitId)
+        if (data == null) {
+            UMengLogUtil.upload(
+                NullPointerException(),
+                Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
+            )
+        }
+        emit(data)
+    }
+
+    /**
+     * 获取角色小屋对话
+     *
+     * @param unitId 角色编号
+     */
+    fun getRoomComments(unitId: Int) = flow {
+        //校验是否未多角色卡
         val ids = arrayListOf(unitId)
         try {
             val multiIds = unitRepository.getMultiIds(unitId)
@@ -61,20 +78,15 @@ class CharacterViewModel @Inject constructor(
         } catch (e: Exception) {
 
         }
-        val infoList = arrayListOf<CharacterInfoPro>()
+        val commentList = arrayListOf<RoomCommentData>()
         ids.forEach {
-            val data = unitRepository.getInfoPro(it)
-            if (data == null) {
-                UMengLogUtil.upload(
-                    NullPointerException(),
-                    Constants.EXCEPTION_UNIT_NULL + "unit_id:$it"
-                )
-            } else {
-                infoList.add(data)
+            val data = unitRepository.getRoomComments(it)
+            if (data != null) {
+                commentList.add(data)
             }
         }
 
-        emit(infoList)
+        emit(commentList)
     }
 
     /**
