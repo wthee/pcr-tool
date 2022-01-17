@@ -150,9 +150,6 @@ fun EquipMaterialDeatil(
                                 TabRowDefaults.Indicator(
                                     Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                                 )
-                            },
-                            divider = {
-                                TabRowDefaults.Divider(color = Color.Transparent)
                             }
                         ) {
                             tabs.forEachIndexed { index, s ->

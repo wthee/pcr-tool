@@ -3,9 +3,6 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -24,14 +20,11 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息
@@ -63,67 +56,40 @@ fun CharacterBasicInfo(
                 BasicInfo(info = info)
                 roomComments?.let {
                     if (roomComments.size > 1) {
-                        //显示指示器
-                        Box {
-                            TabRow(
-                                modifier = Modifier
-                                    .padding(top = Dimen.largePadding),
-                                selectedTabIndex = pagerState.currentPage,
-                                backgroundColor = Color.Transparent,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                indicator = { tabPositions ->
-                                    TabRowDefaults.Indicator(
-                                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                                    )
-                                },
-                                divider = {
-                                    TabRowDefaults.Divider(color = Color.Transparent)
-                                },
-                            ) {
-                                for (tabIndex in 0 until roomComments.size) {
-                                    Tab(
-                                        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                                        icon = {
-                                            IconCompose(
-                                                data = ImageResourceHelper.getInstance()
-                                                    .getMaxIconUrl(
-                                                        roomComments[tabIndex].unitId,
-                                                        r6Ids.contains(roomComments[tabIndex].unitId)
-                                                    )
-                                            )
-                                        },
-                                        selected = pagerState.currentPage == tabIndex,
-                                        onClick = {
-                                            scope.launch {
-                                                pagerState.scrollToPage(tabIndex)
-                                            }
-                                            VibrateUtil(context).single()
-                                        },
-                                    )
-                                }
-                            }
+                        val urls = arrayListOf<String>()
+                        roomComments.forEach { roomComment ->
+                            urls.add(
+                                ImageResourceHelper.getInstance().getMaxIconUrl(
+                                    roomComment.unitId,
+                                    r6Ids.contains(roomComment.unitId)
+                                )
+                            )
                         }
+                        IconHorizontalPagerIndicator(pagerState, urls)
                     }
                     HorizontalPager(
                         state = pagerState,
-                        count = if (roomComments.size == 1) 1 else roomComments.size
+                        count = if (roomComments.size == 1) 1 else roomComments.size,
+                        verticalAlignment = Alignment.Top
                     ) { index ->
-                        if (roomComments.size == 1) {
-                            MainContentText(
-                                text = roomComments[0].getComment(),
-                                modifier = Modifier.padding(Dimen.mediumPadding),
-                                textAlign = TextAlign.Start,
-                                selectable = true
-                            )
-                        } else {
-                            MainContentText(
-                                text = roomComments[index].getComment(),
-                                modifier = Modifier.padding(Dimen.mediumPadding),
-                                textAlign = TextAlign.Start,
-                                selectable = true
-                            )
+                        Column {
+                            if (roomComments.size == 1) {
+                                MainContentText(
+                                    text = roomComments[0].getComment(),
+                                    modifier = Modifier.padding(Dimen.mediumPadding),
+                                    textAlign = TextAlign.Start,
+                                    selectable = true
+                                )
+                            } else {
+                                MainContentText(
+                                    text = roomComments[index].getComment(),
+                                    modifier = Modifier.padding(Dimen.mediumPadding),
+                                    textAlign = TextAlign.Start,
+                                    selectable = true
+                                )
+                            }
+                            CommonSpacer()
                         }
-                        CommonSpacer()
                     }
                 }
 
