@@ -26,8 +26,5 @@ data class UnitRarity(
     @ColumnInfo(name = "hp_recovery_rate_growth") val hpRecoveryRateGrowth: Double,
     @ColumnInfo(name = "energy_recovery_rate_growth") val energyRecoveryRateGrowth: Double,
     @ColumnInfo(name = "energy_reduce_rate_growth") val energyReduceRateGrowth: Double,
-    @ColumnInfo(name = "unit_material_id") val unitMaterialId: Int,
-    @ColumnInfo(name = "consume_num") val consumeNum: Int,
-    @ColumnInfo(name = "consume_gold") val consumeGold: Int,
     @ColumnInfo(name = "accuracy_growth") val accuracyGrowth: Double
 )

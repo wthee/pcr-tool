@@ -29,7 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.AppDatabaseCN
@@ -58,13 +57,13 @@ import kotlinx.coroutines.launch
  * 本地存储：收藏信息
  */
 fun mainSP(): SharedPreferences =
-    MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
+    context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
 
 /**
  * 本地存储：版本、设置信息
  */
 fun settingSP(): SharedPreferences =
-    MyApplication.context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+    context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 fun settingSP(context: Context): SharedPreferences =
     context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
@@ -125,7 +124,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        WorkManager.getInstance(MyApplication.context).cancelAllWork()
+        WorkManager.getInstance(context).cancelAllWork()
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll()

@@ -40,7 +40,6 @@ data class SkillActionPro(
     @ColumnInfo(name = "target_number") var target_number: Int = 0,
     @ColumnInfo(name = "target_count") var target_count: Int = 0,
     @ColumnInfo(name = "description") var description: String = "",
-    @ColumnInfo(name = "level_up_disp") var level_up_disp: String = "",
     @ColumnInfo(name = "ailment_name") var tag: String,
     @Ignore
     var dependId: Int = 0
@@ -69,7 +68,6 @@ data class SkillActionPro(
         0,
         0,
         "",
-        "0",
         "0",
         0
     )

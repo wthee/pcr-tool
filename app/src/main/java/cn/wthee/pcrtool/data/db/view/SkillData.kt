@@ -29,7 +29,6 @@ data class SkillData(
     @ColumnInfo(name = "depend_action_7") val depend_action_7: Int,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "icon_type") val icon_type: Int,
-    //jp
     @ColumnInfo(name = "boss_ub_cool_time") val boss_ub_cool_time: Double,
 ) {
     fun getAllActionId() = arrayListOf(

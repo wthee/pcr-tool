@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.db.view.*
 
 /**

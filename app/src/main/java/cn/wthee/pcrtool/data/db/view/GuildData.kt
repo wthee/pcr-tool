@@ -1,13 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
  * 公会信息
  */
-@Entity(tableName = "guild")
 data class GuildData(
     @PrimaryKey
     @ColumnInfo(name = "guild_id") val guildId: Int,

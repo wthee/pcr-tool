@@ -23,7 +23,7 @@ import javax.inject.Inject
  */
 class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
-    val MediaType = "application/json; charset=utf-8"
+    private val MediaType = "application/json; charset=utf-8"
 
     /**
      * 查询竞技场对战信息

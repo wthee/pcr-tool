@@ -27,38 +27,38 @@ class ImageResourceHelper() {
         const val PNG = ".png"
 
         //角色卡面
-        val CARD_PROFILE = "card/profile/"
+        const val CARD_PROFILE = "card/profile/"
 
         //角色完整卡面
-        val CARD_FULL = "card/full/"
+        const val CARD_FULL = "card/full/"
 
         //现实角色卡面
-        var CARD_ACTUAL_PROFILE = "card/actual_profile/"
+        const val CARD_ACTUAL_PROFILE = "card/actual_profile/"
 
         //角色剧情卡面
-        val CARD_STORY = "card/story/"
+        const val CARD_STORY = "card/story/"
 
         //装备图标
-        var UNKNOWN_EQUIP_ID = 999999
-        var ICON_EQUIPMENT = "icon/equipment/"
+        const val UNKNOWN_EQUIP_ID = 999999
+        const val ICON_EQUIPMENT = "icon/equipment/"
 
         //角色图标
-        var ICON_UNIT = "icon/unit/"
+        const val ICON_UNIT = "icon/unit/"
 
         //技能图标
-        var ICON_SKILL = "icon/skill/"
+        const val ICON_SKILL = "icon/skill/"
 
         //剧情活动 banner
-        var EVENT_BANNER = "event/banner/"
+        const val EVENT_BANNER = "event/banner/"
 
         //剧情活动剧情
-        var EVENT_STORY = "event/story/"
+        const val EVENT_STORY = "event/story/"
 
         //图片资源地址
         private const val OTHER_RESOURCE_URL = "https://wthee.xyz/resource/"
 
         //漫画地址
-        val COMIC4 = OTHER_RESOURCE_URL + "comic/"
+        const val COMIC4 = OTHER_RESOURCE_URL + "comic/"
 
         //现实图片有误的角色编号
         val errorIDs = arrayListOf(

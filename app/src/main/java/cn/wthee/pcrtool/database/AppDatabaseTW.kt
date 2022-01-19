@@ -6,13 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
-import cn.wthee.pcrtool.data.db.entity.GuildData
+import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
 import cn.wthee.pcrtool.utils.Constants
 
 
 @Database(
     entities = [
-        GuildData::class
+        ExperienceUnit::class
     ],
     version = Constants.SQLITE_VERSION,
     exportSchema = false

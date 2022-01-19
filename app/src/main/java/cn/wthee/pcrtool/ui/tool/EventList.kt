@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -95,6 +96,7 @@ private fun EventItem(
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int) -> Unit
 ) {
+    val context = LocalContext.current
     val type: String
     val typeColor: Color
     var showDays = true
@@ -247,6 +249,7 @@ private fun EventItem(
                         text = stringResource(R.string.story_pic),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
+                            VibrateUtil(context).single()
                             toAllPics(event.storyId)
                         })
                     //结束日期

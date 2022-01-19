@@ -221,7 +221,6 @@ fun ClanBossInfoPager(
     val pagerState =
         rememberPagerState(initialPage = index)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
@@ -271,7 +270,7 @@ fun ClanBossInfoPager(
                 )
                 //图标
                 val urls = arrayListOf<String>()
-                list.forEachIndexed { index, clanBossTargetInfo ->
+                list.forEach { clanBossTargetInfo ->
                     urls.add(
                         ImageResourceHelper.getInstance()
                             .getUrl(ICON_UNIT, clanBossTargetInfo.unitId)

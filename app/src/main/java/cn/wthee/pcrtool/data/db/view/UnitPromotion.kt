@@ -26,17 +26,6 @@ data class UnitPromotion(
         ids.add(equipSlot6)
         return ids
     }
-
-    fun getRowIds(): ArrayList<Int> {
-        val ids = arrayListOf<Int>()
-        ids.add(equipSlot1)
-        ids.add(equipSlot3)
-        ids.add(equipSlot5)
-        ids.add(equipSlot2)
-        ids.add(equipSlot4)
-        ids.add(equipSlot6)
-        return ids
-    }
 }
 
 
