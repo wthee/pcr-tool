@@ -41,16 +41,20 @@ class CharacterAttrViewModel @Inject constructor(
      */
     fun getCharacterInfo(unitId: Int, property: CharacterProperty?) =
         flow {
-            if (property != null && property.isInit()) {
-                emit(
-                    getAttrs(
-                        unitId,
-                        property.level,
-                        property.rank,
-                        property.rarity,
-                        property.uniqueEquipmentLevel
+            try {
+                if (property != null && property.isInit()) {
+                    emit(
+                        getAttrs(
+                            unitId,
+                            property.level,
+                            property.rank,
+                            property.rarity,
+                            property.uniqueEquipmentLevel
+                        )
                     )
-                )
+                }
+            } catch (e: Exception) {
+
             }
         }
 
@@ -174,8 +178,12 @@ class CharacterAttrViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getStoryAttrDetail(unitId: Int) = flow {
-        val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
-        emit(storyInfo)
+        try {
+            val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
+            emit(storyInfo)
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -227,16 +235,24 @@ class CharacterAttrViewModel @Inject constructor(
         rank0: Int,
         rank1: Int
     ) = flow {
-        val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
-        val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
-        emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
+        try {
+            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
+            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
+            emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 获取战力系数
      */
     fun getCoefficient() = flow {
-        emit(unitRepository.getCoefficient())
+        try {
+            emit(unitRepository.getCoefficient())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -245,6 +261,10 @@ class CharacterAttrViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getCutinId(unitId: Int) = flow {
-        emit(unitRepository.getCutinId(unitId) ?: 0)
+        try {
+            emit(unitRepository.getCutinId(unitId) ?: 0)
+        } catch (e: Exception) {
+
+        }
     }
 }

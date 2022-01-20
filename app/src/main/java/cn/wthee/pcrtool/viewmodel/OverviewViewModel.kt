@@ -37,28 +37,44 @@ class OverviewViewModel @Inject constructor(
      * 获取角色数量
      */
     fun getCharacterCount() = flow {
-        emit(unitRepository.getCount())
+        try {
+            emit(unitRepository.getCount())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 获取角色列表
      */
     fun getCharacterList() = flow {
-        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部", 10))
+        try {
+            emit(unitRepository.getInfoAndData(FilterCharacter(), "全部", 10))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 获取装备数量
      */
     fun getEquipCount() = flow {
-        emit(equipmentRepository.getCount())
+        try {
+            emit(equipmentRepository.getCount())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 获取装备列表
      */
     fun getEquipList(limit: Int) = flow {
-        emit(equipmentRepository.getEquipments(FilterEquipment(), "全部", limit))
+        try {
+            emit(equipmentRepository.getEquipments(FilterEquipment(), "全部", limit))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -67,23 +83,27 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getGachaList(type: Int) = flow {
-        val regionType = getRegion()
-        val today = getToday()
-        val data = gachaRepository.getGachaHistory(5)
+        try {
+            val regionType = getRegion()
+            val today = getToday()
+            val data = gachaRepository.getGachaHistory(5)
 
-        if (type == 0) {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val ed = fixJpTime(it.endTime.formatTime, regionType)
-                val inProgress = today.second(sd) > 0 && ed.second(today) > 0
-                inProgress
-            })
-        } else {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val comingSoon = today.second(sd) < 0
-                comingSoon
-            })
+            if (type == 0) {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val ed = fixJpTime(it.endTime.formatTime, regionType)
+                    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
+                    inProgress
+                })
+            } else {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val comingSoon = today.second(sd) < 0
+                    comingSoon
+                })
+            }
+        } catch (e: Exception) {
+
         }
     }
 
@@ -93,24 +113,29 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getCalendarEventList(type: Int) = flow {
-        val regionType = getRegion()
-        val today = getToday()
-        val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
+        try {
+            val regionType = getRegion()
+            val today = getToday()
+            val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
 
-        if (type == 0) {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val ed = fixJpTime(it.endTime.formatTime, regionType)
-                val inProgress = today.second(sd) > 0 && ed.second(today) > 0
-                inProgress
-            }.sortedWith(compare(today)))
-        } else {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val comingSoon = today.second(sd) < 0
-                comingSoon
-            }.sortedWith(compare(today)))
+            if (type == 0) {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val ed = fixJpTime(it.endTime.formatTime, regionType)
+                    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
+                    inProgress
+                }.sortedWith(compare(today)))
+            } else {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val comingSoon = today.second(sd) < 0
+                    comingSoon
+                }.sortedWith(compare(today)))
+            }
+        } catch (e: Exception) {
+
         }
+
     }
 
 
@@ -120,24 +145,28 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getStoryEventList(type: Int) = flow {
-        val regionType = getRegion()
-        val today = getToday()
-        val data = eventRepository.getAllEvents(5)
+        try {
+            val regionType = getRegion()
+            val today = getToday()
+            val data = eventRepository.getAllEvents(5)
 
-        if (type == 0) {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val ed = fixJpTime(it.endTime.formatTime, regionType)
-                val inProgress =
-                    today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
-                inProgress
-            })
-        } else {
-            emit(data.filter {
-                val sd = fixJpTime(it.startTime.formatTime, regionType)
-                val comingSoon = today.second(sd) < 0
-                comingSoon
-            })
+            if (type == 0) {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val ed = fixJpTime(it.endTime.formatTime, regionType)
+                    val inProgress =
+                        today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
+                    inProgress
+                })
+            } else {
+                emit(data.filter {
+                    val sd = fixJpTime(it.startTime.formatTime, regionType)
+                    val comingSoon = today.second(sd) < 0
+                    comingSoon
+                })
+            }
+        } catch (e: Exception) {
+
         }
     }
 
@@ -145,9 +174,13 @@ class OverviewViewModel @Inject constructor(
      * 获取新闻
      */
     fun getNewsOverview(region: Int) = flow {
-        val data = apiRepository.getNewsOverviewByRegion(region).data
-        data?.let {
-            emit(it)
+        try {
+            val data = apiRepository.getNewsOverviewByRegion(region).data
+            data?.let {
+                emit(it)
+            }
+        } catch (e: Exception) {
+
         }
     }
 
@@ -156,7 +189,11 @@ class OverviewViewModel @Inject constructor(
      */
     fun getR6Ids() {
         viewModelScope.launch {
-            navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
+            try {
+                navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
+            } catch (e: Exception) {
+
+            }
         }
     }
 }

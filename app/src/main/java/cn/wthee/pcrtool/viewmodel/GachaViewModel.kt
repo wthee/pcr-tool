@@ -20,7 +20,11 @@ class GachaViewModel @Inject constructor(
      * 获取卡池记录
      */
     fun getGachaHistory() = flow {
-        emit(gachaRepository.getGachaHistory(Int.MAX_VALUE))
+        try {
+            emit(gachaRepository.getGachaHistory(Int.MAX_VALUE))
+        } catch (e: Exception) {
+
+        }
     }
 
 }

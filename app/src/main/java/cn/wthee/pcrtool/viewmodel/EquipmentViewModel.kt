@@ -28,10 +28,14 @@ class EquipmentViewModel @Inject constructor(
      * @param params 装备筛选
      */
     fun getEquips(params: FilterEquipment) = flow {
-        val typeName =
-            if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
-        val data = equipmentRepository.getEquipments(params, typeName, Int.MAX_VALUE)
-        emit(data)
+        try {
+            val typeName =
+                if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
+            val data = equipmentRepository.getEquipments(params, typeName, Int.MAX_VALUE)
+            emit(data)
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -40,14 +44,22 @@ class EquipmentViewModel @Inject constructor(
      * @param equipId 装备编号
      */
     fun getEquip(equipId: Int) = flow {
-        emit(equipmentRepository.getEquipmentData(equipId))
+        try {
+            emit(equipmentRepository.getEquipmentData(equipId))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 获取装备类型
      */
     fun getTypes() = flow {
-        emit(equipmentRepository.getEquipTypes())
+        try {
+            emit(equipmentRepository.getEquipTypes())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -58,48 +70,52 @@ class EquipmentViewModel @Inject constructor(
      * @param endRank 目标rank
      */
     fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
-        if (startRank > 0 && endRank > 0 && startRank <= endRank) {
-            val data = if (unitId != -1) {
-                equipmentRepository.getEquipByRank(unitId, startRank, endRank)
-            } else {
-                val d = CharacterPromotionEquip(
-                    "", "", "", "", "", ""
-                )
-                equipmentRepository.getAllEquip().forEach {
-                    d.equipIds1 += "-${it.equipIds1}"
-                    d.equipIds2 += "-${it.equipIds2}"
-                    d.equipIds3 += "-${it.equipIds3}"
-                    d.equipIds4 += "-${it.equipIds4}"
-                    d.equipIds5 += "-${it.equipIds5}"
-                    d.equipIds6 += "-${it.equipIds6}"
+        try {
+            if (startRank > 0 && endRank > 0 && startRank <= endRank) {
+                val data = if (unitId != -1) {
+                    equipmentRepository.getEquipByRank(unitId, startRank, endRank)
+                } else {
+                    val d = CharacterPromotionEquip(
+                        "", "", "", "", "", ""
+                    )
+                    equipmentRepository.getAllEquip().forEach {
+                        d.equipIds1 += "-${it.equipIds1}"
+                        d.equipIds2 += "-${it.equipIds2}"
+                        d.equipIds3 += "-${it.equipIds3}"
+                        d.equipIds4 += "-${it.equipIds4}"
+                        d.equipIds5 += "-${it.equipIds5}"
+                        d.equipIds6 += "-${it.equipIds6}"
+                    }
+                    d
                 }
-                d
-            }
-            //计算倍数
-            val materials = arrayListOf<EquipmentMaterial>()
-            data.getAllEquipId().forEach { map ->
-                val equip = equipmentRepository.getEquipmentData(map.key)
-                val material = getEquipCraft(equip)
-                material.map {
-                    it.count *= map.value
+                //计算倍数
+                val materials = arrayListOf<EquipmentMaterial>()
+                data.getAllEquipId().forEach { map ->
+                    val equip = equipmentRepository.getEquipmentData(map.key)
+                    val material = getEquipCraft(equip)
+                    material.map {
+                        it.count *= map.value
+                    }
+                    materials.addAll(material)
                 }
-                materials.addAll(material)
-            }
-            //合并重复项
-            val map = mutableMapOf<Int, EquipmentMaterial>()
-            materials.forEach {
-                var i = it.count
-                val key = it.id
-                if (map[key] != null) {
-                    i = map[key]!!.count + it.count
+                //合并重复项
+                val map = mutableMapOf<Int, EquipmentMaterial>()
+                materials.forEach {
+                    var i = it.count
+                    val key = it.id
+                    if (map[key] != null) {
+                        i = map[key]!!.count + it.count
+                    }
+                    it.count = i
+                    map[key] = it
                 }
-                it.count = i
-                map[key] = it
+                //转换为列表
+                emit(map.values.sortedByDescending {
+                    it.count
+                })
             }
-            //转换为列表
-            emit(map.values.sortedByDescending {
-                it.count
-            })
+        } catch (e: Exception) {
+
         }
     }
 
@@ -109,7 +125,11 @@ class EquipmentViewModel @Inject constructor(
      * @param equip 装备信息
      */
     fun getEquipInfos(equip: EquipmentMaxData) = flow {
-        emit(getEquipCraft(equip))
+        try {
+            emit(getEquipCraft(equip))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -118,7 +138,11 @@ class EquipmentViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getAllRankEquipList(unitId: Int) = flow {
-        emit(equipmentRepository.getAllRankEquip(unitId))
+        try {
+            emit(equipmentRepository.getAllRankEquip(unitId))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -137,36 +161,40 @@ class EquipmentViewModel @Inject constructor(
         count: Int,
         craftFlg: Int
     ) {
-        if (craftFlg == 1) {
-            val material = equipmentRepository.getEquipmentCraft(equipmentId).getAllMaterialId()
-            material.forEach {
-                val data = equipmentRepository.getEquipmentData(it.id)
-                getAllMaterial(
-                    materials,
-                    data.equipmentId,
-                    data.equipmentName,
-                    it.count,
-                    data.craftFlg
-                )
-            }
-        } else {
-            val material =
-                EquipmentMaterial(
-                    equipmentId,
-                    name,
-                    count
-                )
-            var flag = -1
-            materials.forEachIndexed { index, equipmentMaterial ->
-                if (equipmentMaterial.id == material.id) {
-                    flag = index
+        try {
+            if (craftFlg == 1) {
+                val material = equipmentRepository.getEquipmentCraft(equipmentId).getAllMaterialId()
+                material.forEach {
+                    val data = equipmentRepository.getEquipmentData(it.id)
+                    getAllMaterial(
+                        materials,
+                        data.equipmentId,
+                        data.equipmentName,
+                        it.count,
+                        data.craftFlg
+                    )
+                }
+            } else {
+                val material =
+                    EquipmentMaterial(
+                        equipmentId,
+                        name,
+                        count
+                    )
+                var flag = -1
+                materials.forEachIndexed { index, equipmentMaterial ->
+                    if (equipmentMaterial.id == material.id) {
+                        flag = index
+                    }
+                }
+                if (flag == -1) {
+                    materials.add(material)
+                } else {
+                    materials[flag].count += material.count
                 }
             }
-            if (flag == -1) {
-                materials.add(material)
-            } else {
-                materials[flag].count += material.count
-            }
+        } catch (e: Exception) {
+
         }
     }
 
@@ -197,16 +225,20 @@ class EquipmentViewModel @Inject constructor(
      * @param equipId 装备编号
      */
     fun getDropInfos(equipId: Int) = flow {
-        if (equipId != UNKNOWN_EQUIP_ID) {
-            val equip = equipmentRepository.getEquipmentData(equipId)
-            val fixedId = if (equip.craftFlg == 1) {
-                equipmentRepository.getEquipmentCraft(equipId).cid1
-            } else
-                equipId
-            //获取装备掉落信息
-            val infos =
-                equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
-            emit(infos)
+        try {
+            if (equipId != UNKNOWN_EQUIP_ID) {
+                val equip = equipmentRepository.getEquipmentData(equipId)
+                val fixedId = if (equip.craftFlg == 1) {
+                    equipmentRepository.getEquipmentCraft(equipId).cid1
+                } else
+                    equipId
+                //获取装备掉落信息
+                val infos =
+                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
+                emit(infos)
+            }
+        } catch (e: Exception) {
+
         }
     }
 

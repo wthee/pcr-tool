@@ -232,7 +232,7 @@ fun Overview(
                 ) {
                     Column {
                         if (newsList.isNotEmpty()) {
-                            newsList.forEach() {
+                            newsList.forEach {
                                 NewsItem(
                                     news = it,
                                     toDetail = actions.toNewsDetail
@@ -587,7 +587,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
             Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
                 //内容
                 getTypeData(calendar).forEach {
-                    Row(verticalAlignment = Alignment.Bottom) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Subtitle2(text = it.title + it.info)
                         if (it.multiple > 0f) {
                             Subtitle1(
@@ -632,7 +632,7 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
                 else -> ""
             }
 
-            var dropMumColor = when (data.getFixedValue()) {
+            val dropMumColor = when (data.getFixedValue()) {
                 1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
                 3f -> colorResource(id = R.color.color_rank_18_20)
                 4f -> colorResource(id = R.color.color_rank_21)
