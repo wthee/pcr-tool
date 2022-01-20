@@ -152,8 +152,9 @@
     <string name="explore">探索</string>
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>
-    <string name="dungeon">地下城玛那</string>
-    <string name="drop_x">掉落量 * %s </string>
+    <string name="dungeon">地下城</string>
+    <string name="drop">掉落量</string>
+    <string name="mana">玛那掉落量</string>
     <string name="progressing">%s</string>
     <string name="coming_soon">%s</string>
 

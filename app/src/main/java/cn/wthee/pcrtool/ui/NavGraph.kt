@@ -106,7 +106,8 @@ fun NavGraph(
             popEnterTransition = { myFadeIn }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-            Overview(actions = actions)
+            val scrollState = rememberLazyListState()
+            Overview(actions = actions, scrollState)
         }
 
         //角色列表

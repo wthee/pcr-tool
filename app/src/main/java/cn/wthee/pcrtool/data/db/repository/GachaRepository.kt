@@ -10,5 +10,5 @@ import javax.inject.Inject
  */
 class GachaRepository @Inject constructor(private val gachaDao: GachaDao) {
 
-    suspend fun getGachaHistory() = gachaDao.getGachaHistory()
+    suspend fun getGachaHistory(limit: Int) = gachaDao.getGachaHistory(limit)
 }

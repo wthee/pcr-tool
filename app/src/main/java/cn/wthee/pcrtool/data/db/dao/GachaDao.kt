@@ -38,7 +38,8 @@ interface GachaDao {
             a.gacha_id 
         ORDER BY
             a.start_time DESC
+        LIMIT 0,:limit
     """
     )
-    suspend fun getGachaHistory(): List<GachaInfo>
+    suspend fun getGachaHistory(limit: Int): List<GachaInfo>
 }

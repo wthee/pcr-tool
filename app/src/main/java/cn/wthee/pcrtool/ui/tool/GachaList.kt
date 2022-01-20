@@ -86,12 +86,13 @@ fun GachaList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
+fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val regionType = getRegion()
     val today = getToday()
     val sd = fixJpTime(gachaInfo.startTime, regionType)
     val ed = fixJpTime(gachaInfo.endTime, regionType)
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
+    val comingSoon = today.second(sd) < 0
 
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
@@ -128,11 +129,12 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             )
 
             //计时
-            if (inProgress) {
-                Row(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (inProgress) {
+
                     IconCompose(
                         data = MainIconType.TIME_LEFT.icon,
                         size = Dimen.smallIconSize,
@@ -142,6 +144,19 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                         modifier = Modifier.padding(start = Dimen.smallPadding),
                         textAlign = TextAlign.Start,
                         color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                if (comingSoon) {
+                    IconCompose(
+                        data = MainIconType.COUNTDOWN.icon,
+                        size = Dimen.smallIconSize,
+                        tint = colorResource(id = R.color.news_system)
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.coming_soon, sd.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = colorResource(id = R.color.news_system)
                     )
                 }
             }

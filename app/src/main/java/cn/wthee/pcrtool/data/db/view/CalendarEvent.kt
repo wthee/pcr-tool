@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.second
 
@@ -18,17 +18,18 @@ data class CalendarEvent(
      * 去零
      */
     fun getFixedValue() = if (value % 1000 != 0) {
-        (value / 1000f).toString()
+        (value / 1000f)
     } else {
-        (value / 1000).toString()
+        (value / 1000).toFloat()
     }
 
 }
 
 data class CalendarEventData(
     val title: String,
+    val multiple: Float,
     val info: String,
-    val colorId: Int = R.color.black,
+    val color: Color = Color.Unspecified,
 )
 
 /**

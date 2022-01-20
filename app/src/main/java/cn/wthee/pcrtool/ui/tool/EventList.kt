@@ -91,7 +91,7 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItem(
+fun EventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int) -> Unit

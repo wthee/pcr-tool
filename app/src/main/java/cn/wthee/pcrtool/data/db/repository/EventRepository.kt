@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 class EventRepository @Inject constructor(private val eventDao: EventDao) {
 
-    suspend fun getAllEvents() = eventDao.getAllEvents()
+    suspend fun getAllEvents(limit: Int) = eventDao.getAllEvents(limit)
 
     suspend fun getStoryDetails(storyId: Int) = eventDao.getStoryDetails(storyId)
 

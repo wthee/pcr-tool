@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -28,6 +29,7 @@ class OverviewViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
     private val equipmentRepository: EquipmentRepository,
     private val eventRepository: EventRepository,
+    private val gachaRepository: GachaRepository,
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
@@ -60,6 +62,32 @@ class OverviewViewModel @Inject constructor(
     }
 
     /**
+     * 获取卡池列表
+     *
+     * @param type 0：进行中 1：预告
+     */
+    fun getGachaList(type: Int) = flow {
+        val regionType = getRegion()
+        val today = getToday()
+        val data = gachaRepository.getGachaHistory(5)
+
+        if (type == 0) {
+            emit(data.filter {
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
+                val ed = fixJpTime(it.endTime.formatTime, regionType)
+                val inProgress = today.second(sd) > 0 && ed.second(today) > 0
+                inProgress
+            })
+        } else {
+            emit(data.filter {
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
+                val comingSoon = today.second(sd) < 0
+                comingSoon
+            })
+        }
+    }
+
+    /**
      * 获取活动列表
      *
      * @param type 0：进行中 1：预告
@@ -82,6 +110,34 @@ class OverviewViewModel @Inject constructor(
                 val comingSoon = today.second(sd) < 0
                 comingSoon
             }.sortedWith(compare(today)))
+        }
+    }
+
+
+    /**
+     * 获取剧情活动列表
+     *
+     * @param type 0：进行中 1：预告
+     */
+    fun getStoryEventList(type: Int) = flow {
+        val regionType = getRegion()
+        val today = getToday()
+        val data = eventRepository.getAllEvents(5)
+
+        if (type == 0) {
+            emit(data.filter {
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
+                val ed = fixJpTime(it.endTime.formatTime, regionType)
+                val inProgress =
+                    today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
+                inProgress
+            })
+        } else {
+            emit(data.filter {
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
+                val comingSoon = today.second(sd) < 0
+                comingSoon
+            })
         }
     }
 
