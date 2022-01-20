@@ -4,6 +4,6 @@ data class GuildAllMember(
     val guildId: Int = 1,
     val guildName: String = "???",
     val desc: String = "???",
-    val memberIds: List<Int> = listOf(100101),
-    val newMemberIds: List<Int> = listOf(100102)
+    val memberIds: List<Int> = listOf(),
+    var newMemberIds: List<Int> = listOf()
 )

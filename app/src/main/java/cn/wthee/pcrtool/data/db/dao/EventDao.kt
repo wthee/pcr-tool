@@ -2,10 +2,11 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.EventStoryDetail
 
 /**
  * 活动记录 DAO
@@ -16,6 +17,7 @@ interface EventDao {
     /**
      * 获取所有活动记录
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -58,15 +60,17 @@ interface EventDao {
                 ) as e ON c.story_group_id = e.story_group_id
             GROUP BY event.start_time
             ORDER BY event.start_time DESC     
+            LIMIT 0,:limit
         """
     )
-    suspend fun getAllEvents(): List<EventData>
+    suspend fun getAllEvents(limit: Int): List<EventData>
 
 
     /**
      * 获取活动剧情列表
      * @param storyId 剧情活动编号
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
     suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>
 
@@ -74,6 +78,7 @@ interface EventDao {
     /**
      * 获取加倍活动信息
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -85,14 +90,14 @@ interface EventDao {
         FROM
             campaign_schedule 
         WHERE
-            campaign_category IN ( 31, 32, 34, 37, 38, 39, 45 ) 
+            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45) 
         GROUP BY
             start_time,
             end_time,
             value 
         ORDER BY
             campaign_schedule.id DESC 
-        LIMIT 0,50
+        LIMIT 0,100
     """
     )
     suspend fun getDropEvent(): List<CalendarEvent>
@@ -100,6 +105,7 @@ interface EventDao {
     /**
      * 获取露娜塔信息
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -112,7 +118,7 @@ interface EventDao {
             tower_schedule 
         ORDER BY
             tower_schedule.tower_schedule_id DESC
-            LIMIT 0,:limit
+        LIMIT 0,:limit
     """
     )
     suspend fun getTowerEvent(limit: Int): List<CalendarEvent>

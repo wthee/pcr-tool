@@ -1,9 +1,9 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.db.entity.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 
 /**
  * 角色相关属性

@@ -1,13 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
  * 角色技能信息
  */
-@Entity(tableName = "unit_skill_data")
 data class UnitSkillData(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val unit_id: Int,
@@ -42,7 +40,7 @@ data class UnitSkillData(
     @ColumnInfo(name = "main_skill_evolution_2") val main_skill_evolution_2: Int,
 ) {
 
-    fun getAllSkillId(): ArrayList<Int> {
+    fun getAllSkillId(spUB: Int): ArrayList<Int> {
         val list = arrayListOf<Int>()
         union_burst.also {
             if (it != 0) list.add(it)
@@ -72,9 +70,8 @@ data class UnitSkillData(
             if (it != 0) list.add(it)
         }
         //sp skill
-        //日服莉玛
-        if (sp_skill_1 == 1158101) {
-            list.add(1158100)
+        spUB.also {
+            if (it != 0) list.add(it)
         }
         sp_skill_1.also {
             if (it != 0) list.add(it)
@@ -96,7 +93,7 @@ data class UnitSkillData(
         )
     }
 
-    fun joinCutinSkillId(cutinSkill: UnitSkillData): ArrayList<Int> {
+    fun joinCutinSkillId(spUB: Int, cutinSpUB: Int, cutinSkill: UnitSkillData): ArrayList<Int> {
         val list = arrayListOf<Int>()
         union_burst.also {
             if (it != 0) list.add(it)
@@ -141,9 +138,11 @@ data class UnitSkillData(
             if (it != 0) list.add(it)
         }
         //sp skill
-        //日服莉玛
-        if (sp_skill_1 == 1158101) {
-            list.add(1158100)
+        spUB.also {
+            if (it != 0) list.add(it)
+        }
+        cutinSpUB.also {
+            if (it != 0) list.add(it)
         }
         sp_skill_1.also {
             if (it != 0) list.add(it)

@@ -1,7 +1,6 @@
 <resources>
     <string name="date_m_d">%s 月 %s 日</string>
     <string name="section">%s阶段</string>
-    <string name="title_section">阶段</string>
 
     <!-- 角色 -->
     <string name="unknown_character">角色暂未登场</string>
@@ -30,7 +29,6 @@
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
     <string name="skill">技能</string>
-    <string name="unknown_area">暂无掉落信息</string>
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
@@ -154,8 +152,9 @@
     <string name="explore">探索</string>
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>
-    <string name="dungeon">地下城玛那</string>
-    <string name="drop_x">掉落量 * %s </string>
+    <string name="dungeon">地下城</string>
+    <string name="drop">掉落量</string>
+    <string name="mana">玛那掉落量</string>
     <string name="progressing">%s</string>
     <string name="coming_soon">%s</string>
 
@@ -191,7 +190,7 @@
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="to_summon">查看召唤物 ></string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
-    <string name="db_downloading">数据下载中...</string>
+    <string name="db_downloading">数据下载中</string>
     <string name="activity_info">活动信息</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">查看剧情立绘</string>

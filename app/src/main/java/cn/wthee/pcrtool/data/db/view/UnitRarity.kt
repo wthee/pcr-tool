@@ -1,27 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Index
-import cn.wthee.pcrtool.data.db.view.Attr
 
 /**
  * 角色星级属性
  */
-@Entity(
-    tableName = "unit_rarity",
-    indices = [Index(
-        value = arrayOf("unit_id"),
-        unique = false,
-        name = "unit_rarity_0_unit_id"
-    ), Index(
-        value = arrayOf("unit_material_id"),
-        unique = false,
-        name = "unit_rarity_0_unit_material_id"
-    )],
-    primaryKeys = ["unit_id", "rarity"]
-)
 data class UnitRarity(
     @ColumnInfo(name = "unit_id") val unitid: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
@@ -42,8 +26,5 @@ data class UnitRarity(
     @ColumnInfo(name = "hp_recovery_rate_growth") val hpRecoveryRateGrowth: Double,
     @ColumnInfo(name = "energy_recovery_rate_growth") val energyRecoveryRateGrowth: Double,
     @ColumnInfo(name = "energy_reduce_rate_growth") val energyReduceRateGrowth: Double,
-    @ColumnInfo(name = "unit_material_id") val unitMaterialId: Int,
-    @ColumnInfo(name = "consume_num") val consumeNum: Int,
-    @ColumnInfo(name = "consume_gold") val consumeGold: Int,
     @ColumnInfo(name = "accuracy_growth") val accuracyGrowth: Double
 )

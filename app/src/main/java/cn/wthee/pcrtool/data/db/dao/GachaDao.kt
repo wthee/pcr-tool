@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 
@@ -15,6 +16,7 @@ interface GachaDao {
     /**
      * 获取所有卡池记录
      */
+    @SkipQueryVerification
     @Transaction
     @Query(
         """
@@ -36,7 +38,8 @@ interface GachaDao {
             a.gacha_id 
         ORDER BY
             a.start_time DESC
+        LIMIT 0,:limit
     """
     )
-    suspend fun getGachaHistory(): List<GachaInfo>
+    suspend fun getGachaHistory(limit: Int): List<GachaInfo>
 }

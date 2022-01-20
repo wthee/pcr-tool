@@ -12,7 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -52,7 +53,6 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -221,7 +221,6 @@ fun ClanBossInfoPager(
     val pagerState =
         rememberPagerState(initialPage = index)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
@@ -270,51 +269,14 @@ fun ClanBossInfoPager(
                         .align(Alignment.Start)
                 )
                 //图标
-                TabRow(
-                    modifier = Modifier
-                        .padding(top = Dimen.largePadding)
-                        .width(getItemWidth()),
-                    selectedTabIndex = pagerState.currentPage,
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                        )
-                    },
-                    divider = {
-                        TabRowDefaults.Divider(color = Color.Transparent)
-                    },
-                ) {
-                    for (tabIndex in 0 until 5) {
-                        Tab(
-                            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                            icon = {
-                                val it = list[tabIndex]
-                                Box {
-                                    IconCompose(
-                                        data = ImageResourceHelper.getInstance()
-                                            .getUrl(ICON_UNIT, it.unitId)
-                                    )
-                                    //多目标提示
-                                    if (it.partEnemyIds.isNotEmpty()) {
-                                        MainTitleText(
-                                            text = it.partEnemyIds.size.toString(),
-                                            modifier = Modifier.align(Alignment.BottomEnd)
-                                        )
-                                    }
-                                }
-                            },
-                            selected = pagerState.currentPage == tabIndex,
-                            onClick = {
-                                scope.launch {
-                                    pagerState.scrollToPage(tabIndex)
-                                }
-                                VibrateUtil(context).single()
-                            },
-                        )
-                    }
+                val urls = arrayListOf<String>()
+                list.forEach { clanBossTargetInfo ->
+                    urls.add(
+                        ImageResourceHelper.getInstance()
+                            .getUrl(ICON_UNIT, clanBossTargetInfo.unitId)
+                    )
                 }
+                IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)
                 //BOSS信息
                 val visible = bossDataList.isNotEmpty()
                 HorizontalPager(

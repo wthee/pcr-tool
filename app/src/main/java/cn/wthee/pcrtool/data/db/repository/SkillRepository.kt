@@ -12,6 +12,8 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     suspend fun getUnitSkill(unitId: Int) = skillDao.getUnitSkill(unitId)
 
+    suspend fun getUnitSpUBSkill(unitId: Int) = skillDao.getUnitSpUBSkill(unitId)
+
     suspend fun getSkillData(skillId: Int) = skillDao.getSkillData(skillId)
 
     suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>) =

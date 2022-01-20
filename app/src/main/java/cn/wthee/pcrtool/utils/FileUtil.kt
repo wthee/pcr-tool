@@ -51,7 +51,7 @@ object FileUtil {
     /**
      * 数据库压缩包路径
      */
-    fun getDatabaseBrPath(region: Int) =
+    private fun getDatabaseBrPath(region: Int) =
         getDatabaseDir() + "/" + when (region) {
             2 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
             3 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW

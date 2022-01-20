@@ -1,21 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
  * 剧情活动详情
  */
-@Entity(
-    tableName = "event_story_detail",
-    indices = [Index(
-        value = arrayOf("story_group_id"),
-        unique = false,
-        name = "event_story_detail_0_story_group_id"
-    )]
-)
 data class EventStoryDetail(
     @PrimaryKey
     @ColumnInfo(name = "story_id") val story_id: Int,

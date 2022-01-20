@@ -2,13 +2,13 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-
 /**
  * 角色 ViewModel
  *
@@ -25,13 +25,18 @@ class CharacterViewModel @Inject constructor(
      * @param params 角色筛选
      */
     fun getCharacters(params: FilterCharacter?) = flow {
-        if (params != null) {
-            val guildName = if (params.guild > 0)
-                unitRepository.getGuilds()[params.guild - 1].guildName
-            else
-                "全部"
-            emit(unitRepository.getInfoAndData(params, guildName, Int.MAX_VALUE))
+        try {
+            if (params != null) {
+                val guildName = if (params.guild > 0)
+                    unitRepository.getGuilds()[params.guild - 1].guildName
+                else
+                    "全部"
+                emit(unitRepository.getInfoAndData(params, guildName, Int.MAX_VALUE))
+            }
+        } catch (e: Exception) {
+
         }
+
     }
 
 
@@ -50,6 +55,7 @@ class CharacterViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getCharacter(unitId: Int) = flow {
+        //校验是否未多角色卡
         val data = unitRepository.getInfoPro(unitId)
         if (data == null) {
             UMengLogUtil.upload(
@@ -57,25 +63,67 @@ class CharacterViewModel @Inject constructor(
                 Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
             )
         }
-        emit(unitRepository.getInfoPro(unitId))
+        emit(data)
+    }
+
+    /**
+     * 获取角色小屋对话
+     *
+     * @param unitId 角色编号
+     */
+    fun getRoomComments(unitId: Int) = flow {
+        //校验是否未多角色卡
+        val ids = arrayListOf(unitId)
+        try {
+            val multiIds = unitRepository.getMultiIds(unitId)
+            if (multiIds.isNotEmpty()) {
+                ids.addAll(multiIds)
+            }
+        } catch (e: Exception) {
+
+        }
+        val commentList = arrayListOf<RoomCommentData>()
+        ids.forEach {
+            val data = unitRepository.getRoomComments(it)
+            if (data != null) {
+                commentList.add(data)
+            }
+        }
+
+        emit(commentList)
     }
 
     /**
      * 竞技场角色信息
      */
     fun getAllCharacter() = flow {
-        emit(unitRepository.getCharacterByPosition(0, 999))
+        try {
+            emit(unitRepository.getCharacterByPosition(1, 999))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 公会信息
      */
     fun getGuilds() = flow {
-        emit(unitRepository.getGuilds())
+        try {
+            emit(unitRepository.getGuilds())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
      * 角色站位
      */
-    suspend fun getPvpCharacterByIds(ids: List<Int>) = unitRepository.getCharacterByIds(ids)
+    suspend fun getPvpCharacterByIds(ids: List<Int>) =
+        try {
+            unitRepository.getCharacterByIds(ids).filter { it.position > 0 }
+        } catch (e: Exception) {
+            arrayListOf()
+        }
+
 }
+

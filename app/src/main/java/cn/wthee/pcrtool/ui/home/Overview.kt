@@ -2,9 +2,11 @@ package cn.wthee.pcrtool.ui.home
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -48,6 +50,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.tool.EventItem
+import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
@@ -65,11 +69,13 @@ import kotlinx.coroutines.launch
 /**
  * 首页纵览
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 fun Overview(
     actions: NavActions,
+    scrollState: LazyListState,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
@@ -108,10 +114,18 @@ fun Overview(
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
+    val inProgressStoryEventList =
+        overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
+    val comingSoonStoryEventList =
+        overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
+    val inProgressGachaList =
+        overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
+    val comingSoonGachaList =
+        overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn {
+        LazyColumn(state = scrollState) {
             item {
                 TopBarCompose(actions, noticeViewModel)
             }
@@ -218,7 +232,7 @@ fun Overview(
                 ) {
                     Column {
                         if (newsList.isNotEmpty()) {
-                            newsList.forEach() {
+                            newsList.forEach {
                                 NewsItem(
                                     news = it,
                                     toDetail = actions.toNewsDetail
@@ -238,7 +252,7 @@ fun Overview(
 
             //日历
             item {
-                if (inProgressEventList.isNotEmpty()) {
+                if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar,
                         iconType = MainIconType.CALENDAR_TODAY
@@ -247,13 +261,19 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
+                            inProgressGachaList.forEach {
+                                GachaItem(it, actions.toCharacterDetail)
+                            }
+                            inProgressStoryEventList.forEach {
+                                EventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                            }
                             inProgressEventList.forEach {
                                 CalendarItem(it)
                             }
                         }
                     }
                 }
-                if (comingSoonEventList.isNotEmpty()) {
+                if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar_comming,
                         iconType = MainIconType.CALENDAR
@@ -262,6 +282,12 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
+                            comingSoonGachaList.forEach {
+                                GachaItem(it, actions.toCharacterDetail)
+                            }
+                            comingSoonStoryEventList.forEach {
+                                EventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                            }
                             comingSoonEventList.forEach {
                                 CalendarItem(it)
                             }
@@ -561,7 +587,20 @@ private fun CalendarItem(calendar: CalendarEvent) {
             Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
                 //内容
                 getTypeData(calendar).forEach {
-                    Subtitle1(text = it.title + it.info)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Subtitle2(text = it.title + it.info)
+                        if (it.multiple > 0f) {
+                            Subtitle1(
+                                text = (if ((it.multiple * 10).toInt() % 10 == 0) {
+                                    it.multiple.toInt().toString()
+                                } else {
+                                    it.multiple.toString()
+                                }) + "倍",
+                                color = it.color,
+                                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+                            )
+                        }
+                    }
                 }
                 //结束日期
                 CaptionText(text = ed, modifier = Modifier.fillMaxWidth())
@@ -582,43 +621,29 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
         //正常活动
         val list = data.type.split("-")
         list.forEach { s ->
-            var colorId = R.color.black
             val title = when (s.toInt()) {
-                31 -> {
-                    colorId = R.color.color_map_n
-                    stringResource(id = R.string.normal)
-                }
-                32 -> {
-                    colorId = R.color.color_map_h
-                    stringResource(id = R.string.hard)
-                }
-                39 -> {
-                    colorId = R.color.color_map_vh
-                    stringResource(id = R.string.very_hard)
-                }
-                34 -> {
-                    colorId = R.color.color_rank_21
-                    stringResource(id = R.string.explore)
-                }
-                37 -> {
-                    colorId = R.color.news_update
-                    stringResource(id = R.string.shrine)
-                }
-                38 -> {
-                    colorId = R.color.news_update
-                    stringResource(id = R.string.temple)
-                }
-                45 -> {
-                    colorId = R.color.color_rank_2_3
-                    stringResource(id = R.string.dungeon)
-                }
+                31, 41 -> stringResource(id = R.string.normal)
+                32, 42 -> stringResource(id = R.string.hard)
+                39, 49 -> stringResource(id = R.string.very_hard)
+                34 -> stringResource(id = R.string.explore)
+                37 -> stringResource(id = R.string.shrine)
+                38 -> stringResource(id = R.string.temple)
+                45 -> stringResource(id = R.string.dungeon)
                 else -> ""
+            }
+
+            val dropMumColor = when (data.getFixedValue()) {
+                1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
+                3f -> colorResource(id = R.color.color_rank_18_20)
+                4f -> colorResource(id = R.color.color_rank_21)
+                else -> MaterialTheme.colorScheme.primary
             }
             events.add(
                 CalendarEventData(
                     title,
-                    stringResource(id = R.string.drop_x, data.getFixedValue()),
-                    colorId
+                    data.getFixedValue(),
+                    stringResource(id = if (s.toInt() > 40) R.string.mana else R.string.drop),
+                    dropMumColor
                 )
             )
         }
@@ -627,7 +652,8 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
         events.add(
             CalendarEventData(
                 stringResource(id = R.string.tower),
-                "",
+                0f,
+                ""
             )
         )
     }

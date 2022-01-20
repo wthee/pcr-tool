@@ -33,6 +33,10 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
+    suspend fun getRoomComments(unitId: Int) = unitDao.getRoomComments(unitId)
+
+    suspend fun getMultiIds(unitId: Int) = unitDao.getMultiIds(unitId)
+
     suspend fun getCharacterByPosition(start: Int, end: Int) =
         unitDao.getCharacterByPosition(start, end)
 

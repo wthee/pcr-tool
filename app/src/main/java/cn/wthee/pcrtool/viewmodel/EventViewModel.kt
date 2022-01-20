@@ -20,6 +20,10 @@ class EventViewModel @Inject constructor(
      * 获取活动记录
      */
     fun getEventHistory() = flow {
-        emit(eventRepository.getAllEvents())
+        try {
+            emit(eventRepository.getAllEvents(Int.MAX_VALUE))
+        } catch (e: Exception) {
+
+        }
     }
 }

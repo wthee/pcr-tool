@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
-import cn.wthee.pcrtool.data.db.entity.*
+import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_CN
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_CN
@@ -14,49 +14,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_CN
 
 @Database(
     entities = [
-        UnitProfile::class,
-        Unit6Star::class,
-        ActualUnitBackground::class,
-        UnitData::class,
-        UnitPromotion::class,
-        UnitPromotionStatus::class,
-        ExperienceUnit::class,
-        UnitRarity::class,
-        UnitSkillData::class,
-        EnemyRewardData::class,
-        EquipmentCraft::class,
-        EquipmentData::class,
-        EquipmentEnhanceRate::class,
-        EquipmentEnhanceData::class,
-        UniqueEquipmentData::class,
-        UniqueEquipmentEnhanceData::class,
-        UniqueEquipmentEnhanceRate::class,
-        QuestData::class,
-        SkillAction::class,
-        SkillData::class,
-        WaveGroupData::class,
-        AttackPattern::class,
-        GuildData::class,
-        UnitComments::class,
-        GachaData::class,
-        GachaExchange::class,
-        CharaStoryStatus::class,
-        CharacterType::class,
-        EventStoryData::class,
-        EventStoryDetail::class,
-        EventTopAdv::class,
-        HatsuneSchedule::class,
-        CampaignSchedule::class,
-        RoomUnitComments::class,
-        AilmentData::class,
-        ClanBattleBossData::class,
-        ClanBattleSchedule::class,
-        EnemyParameter::class,
-        TowerSchedule::class,
-        UnitEnemyData::class,
-        UnitPromotionBonus::class,
-        GuildAdditionalMember::class,
-        UnitStatusCoefficient::class,
+        ExperienceUnit::class
     ],
     version = Constants.SQLITE_VERSION,
     exportSchema = false

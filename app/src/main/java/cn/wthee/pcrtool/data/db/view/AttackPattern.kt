@@ -1,13 +1,11 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
  * 动作循环
  */
-@Entity(tableName = "unit_attack_pattern")
 data class AttackPattern(
     @PrimaryKey
     @ColumnInfo(name = "pattern_id") val patternId: Int,

@@ -22,7 +22,11 @@ class ClanViewModel @Inject constructor(
      * 获取团队战记录
      */
     fun getAllClanBattleData() = flow {
-        emit(clanRepository.getAllClanBattleData())
+        try {
+            emit(clanRepository.getAllClanBattleData())
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -31,7 +35,11 @@ class ClanViewModel @Inject constructor(
      * @param clanId 团队战编号
      */
     fun getClanInfo(clanId: Int) = flow {
-        emit(clanRepository.getClanInfo(clanId))
+        try {
+            emit(clanRepository.getClanInfo(clanId))
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -40,8 +48,12 @@ class ClanViewModel @Inject constructor(
      * @param enemyId 敌人编号
      */
     fun getEnemyAttr(enemyId: Int) = flow {
-        val data = clanRepository.getBossAttr(enemyId)
-        emit(data)
+        try {
+            val data = clanRepository.getBossAttr(enemyId)
+            emit(data)
+        } catch (e: Exception) {
+
+        }
     }
 
     /**
@@ -50,24 +62,32 @@ class ClanViewModel @Inject constructor(
      * @param enemyIds boss编号列表
      */
     fun getAllBossAttr(enemyIds: List<Int>) = flow {
-        val list = arrayListOf<EnemyParameterPro>()
-        enemyIds.forEach {
-            val data = clanRepository.getBossAttr(it)
-            list.add(data)
+        try {
+            val list = arrayListOf<EnemyParameterPro>()
+            enemyIds.forEach {
+                val data = clanRepository.getBossAttr(it)
+                list.add(data)
+            }
+            emit(list)
+        } catch (e: Exception) {
+
         }
-        emit(list)
     }
 
     /**
      * 获取 BOSS 属性，测试用
      */
     fun getAllBossIds() = flow {
-        val list = arrayListOf<Int>()
-        val boss = clanRepository.getAllBossAttr()
-        boss.forEach {
-            list.add(it.unit_id)
+        try {
+            val list = arrayListOf<Int>()
+            val boss = clanRepository.getAllBossAttr()
+            boss.forEach {
+                list.add(it.unit_id)
+            }
+            emit(list)
+        } catch (e: Exception) {
+
         }
-        emit(list)
     }
 
     /**
@@ -76,17 +96,21 @@ class ClanViewModel @Inject constructor(
      * @param bossList boss 信息
      */
     fun getPartEnemyAttr(bossList: List<ClanBossTargetInfo>) = flow {
-        val map = hashMapOf<Int, List<EnemyParameterPro>>()
-        bossList.forEach { boss ->
-            if (boss.partEnemyIds.isNotEmpty()) {
-                val list = arrayListOf<EnemyParameterPro>()
-                boss.partEnemyIds.forEach {
-                    val data = clanRepository.getBossAttr(it)
-                    list.add(data)
+        try {
+            val map = hashMapOf<Int, List<EnemyParameterPro>>()
+            bossList.forEach { boss ->
+                if (boss.partEnemyIds.isNotEmpty()) {
+                    val list = arrayListOf<EnemyParameterPro>()
+                    boss.partEnemyIds.forEach {
+                        val data = clanRepository.getBossAttr(it)
+                        list.add(data)
+                    }
+                    map[boss.unitId] = list
                 }
-                map[boss.unitId] = list
             }
+            emit(map)
+        } catch (e: Exception) {
+
         }
-        emit(map)
     }
 }

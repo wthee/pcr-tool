@@ -15,8 +15,8 @@ hilt {
 }
 
 val composeVersion = "1.1.0-rc01"
-val appVersionCode = 313
-val appVersionName = "3.1.3"
+val appVersionCode = 314
+val appVersionName = "3.1.4"
 
 android {
 

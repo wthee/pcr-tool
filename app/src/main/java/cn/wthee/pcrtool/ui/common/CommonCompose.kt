@@ -8,6 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -27,6 +29,10 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.PagerState
+import kotlinx.coroutines.launch
 
 /**
  * 蓝底白字
@@ -533,4 +539,39 @@ fun getAtkColor(atkType: Int): Color {
         else -> R.color.color_rank_2_3
     }
     return colorResource(id = colorId)
+}
+
+/**
+ * 带指示器图标
+ */
+@ExperimentalPagerApi
+@Composable
+fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
+    val scope = rememberCoroutineScope()
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        //显示指示器
+        Row {
+            urls.forEachIndexed { index, s ->
+                IconCompose(
+                    modifier = Modifier.padding(horizontal = Dimen.largePadding),
+                    data = s,
+                ) {
+                    scope.launch {
+                        pagerState.scrollToPage(index)
+                    }
+                }
+            }
+        }
+
+        HorizontalPagerIndicator(
+            pagerState = pagerState,
+            modifier = Modifier.padding(top = Dimen.largePadding + Dimen.iconSize + Dimen.smallPadding),
+            spacing = Dimen.iconSize + Dimen.largePadding + 8.dp,
+            activeColor = MaterialTheme.colorScheme.primary,
+            inactiveColor = Color.Unspecified
+        )
+    }
 }
