@@ -38,7 +38,6 @@ import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 /**
@@ -52,10 +51,10 @@ fun PvpSearchCompose(
     floatWindow: Boolean = false,
     initSpanCount: Int = 0,
     pagerState: PagerState = rememberPagerState(),
-    selectListState: LazyListState = rememberLazyListState(),
-    resultListState: LazyListState = rememberLazyListState(),
-    favoritesListState: LazyListState = rememberLazyListState(),
-    historyListState: LazyListState = rememberLazyListState(),
+    selectListState: LazyGridState = rememberLazyGridState(),
+    resultListState: LazyGridState = rememberLazyGridState(),
+    favoritesListState: LazyGridState = rememberLazyGridState(),
+    historyListState: LazyGridState = rememberLazyGridState(),
     toCharacter: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -307,7 +306,7 @@ fun PvpSearchCompose(
 @Composable
 private fun PvpCharacterSelectPage(
     spanCount: Int,
-    selectListState: LazyListState,
+    selectListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
     data: List<PvpCharacterData>

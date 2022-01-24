@@ -1,13 +1,9 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyGridScope
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
-import androidx.paging.compose.LazyPagingItems
 import cn.wthee.pcrtool.ui.theme.Dimen
 import kotlin.math.ceil
 import kotlin.math.max
@@ -125,12 +121,12 @@ fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
     Dimen.iconSize + Dimen.largePadding * 2
 } * 5
 
-@ExperimentalFoundationApi
-fun <T : Any> LazyGridScope.items(
-    lazyPagingItems: LazyPagingItems<T>,
-    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
-) {
-    items(lazyPagingItems.itemCount) { index ->
-        itemContent(lazyPagingItems[index])
-    }
-}
+//@ExperimentalFoundationApi
+//fun <T : Any> LazyGridScope.items(
+//    lazyPagingItems: LazyPagingItems<T>,
+//    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
+//) {
+//    items(lazyPagingItems.itemCount) { index ->
+//        itemContent(lazyPagingItems[index])
+//    }
+//}

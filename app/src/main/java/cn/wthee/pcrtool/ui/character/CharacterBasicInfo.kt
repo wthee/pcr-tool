@@ -7,10 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,8 +40,6 @@ fun CharacterBasicInfo(
     val roomComments =
         viewModel.getRoomComments(unitId).collectAsState(initial = null).value
     val pagerState = rememberPagerState()
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->

@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui.tool.pvp
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyGridState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,7 +32,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 /**
@@ -42,7 +41,7 @@ import java.util.*
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
-    historyListState: LazyListState,
+    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
