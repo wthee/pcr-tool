@@ -75,16 +75,22 @@ fun PvpSearchResult(
     LaunchedEffect(null) {
         //添加搜索记录
         var unSplitDefIds = ""
+        var isError = false
         for (sel in selectedIds.subList(0, 5)) {
+            if (sel.unitId == 0) {
+                isError = true
+            }
             idArray.add(sel.unitId)
             unSplitDefIds += "${sel.unitId}-"
         }
-        pvpViewModel.insert(
-            PvpHistoryData(
-                "$region@$unSplitDefIds",
-                getToday(),
+        if (!isError) {
+            pvpViewModel.insert(
+                PvpHistoryData(
+                    "$region@$unSplitDefIds",
+                    getToday(),
+                )
             )
-        )
+        }
     }
     val context = LocalContext.current
     val vibrated = remember {

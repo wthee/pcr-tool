@@ -47,77 +47,86 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
         mutableStateOf(-1)
     }
 
-    Column(
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
-        if (picUrls == null) {
-            VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-                for (i in 0..5) {
-                    Card(
-                        modifier = Modifier
-                            .padding(Dimen.largePadding)
-                            .fillMaxWidth()
-                    ) {
-                        ImageCompose(
-                            data = R.drawable.load,
-                            ratio = RATIO,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }
+        if (picUrls != null && picUrls.isEmpty()) {
+            MainText(
+                text = "暂无信息",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(
+                        Dimen.largePadding
+                    )
+            )
         } else {
-            if (picUrls.isNotEmpty()) {
-                VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-                    picUrls.forEachIndexed { index, _ ->
-                        val request = coil.request.ImageRequest.Builder(context)
-                            .data(picUrls[index])
-                            .build()
-                        coroutineScope.launch {
-                            val image = coil.Coil.imageLoader(context).execute(request).drawable
-                            drawables[index] = image
-                        }
-                        Card(
-                            modifier = Modifier
-                                .padding(Dimen.largePadding)
-                                .fillMaxWidth(),
-                            onClick = {
-                                VibrateUtil(context).single()
-                                //下载
-                                if (loaded[index]) {
-                                    //权限校验
-                                    checkPermissions(context) {
-                                        clickedIndex.value = index
-                                    }
-                                } else {
-                                    ToastUtil.short(unLoadToast)
-                                }
-                            },
-                            shape = Shape.medium,
-                        ) {
-                            //图片
-                            ImageCompose(
-                                data = picUrls[index],
-                                ratio = -1f,
-                                loadingId = R.drawable.load,
-                                errorId = R.drawable.error,
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (picUrls == null) {
+                    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
+                        for (i in 0..5) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(Dimen.largePadding)
+                                    .fillMaxWidth()
                             ) {
-                                loaded[index] = true
+                                ImageCompose(
+                                    data = R.drawable.load,
+                                    ratio = RATIO,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
                         }
                     }
-                    CommonSpacer()
-                }
-            } else {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    MainTitleText(text = "暂无信息")
+                } else {
+                    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
+                        picUrls.forEachIndexed { index, _ ->
+                            val request = coil.request.ImageRequest.Builder(context)
+                                .data(picUrls[index])
+                                .build()
+                            coroutineScope.launch {
+                                val image = coil.Coil.imageLoader(context).execute(request).drawable
+                                drawables[index] = image
+                            }
+                            Card(
+                                modifier = Modifier
+                                    .padding(Dimen.largePadding)
+                                    .fillMaxWidth(),
+                                onClick = {
+                                    VibrateUtil(context).single()
+                                    //下载
+                                    if (loaded[index]) {
+                                        //权限校验
+                                        checkPermissions(context) {
+                                            clickedIndex.value = index
+                                        }
+                                    } else {
+                                        ToastUtil.short(unLoadToast)
+                                    }
+                                },
+                                shape = Shape.medium,
+                            ) {
+                                //图片
+                                ImageCompose(
+                                    data = picUrls[index],
+                                    ratio = -1f,
+                                    loadingId = R.drawable.load,
+                                    errorId = R.drawable.error,
+                                ) {
+                                    loaded[index] = true
+                                }
+                            }
+                        }
+                        CommonSpacer()
+                    }
                 }
             }
-
         }
-
     }
 
     //下载确认
