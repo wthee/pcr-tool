@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -121,10 +120,7 @@ fun RankEquipCount(
                     ) {
                         //头像
                         IconCompose(
-                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
-                                unitId,
-                                r6Ids.contains(unitId)
-                            ),
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
                             size = Dimen.largeIconSize
                         )
                         //标题

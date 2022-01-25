@@ -104,7 +104,7 @@ fun CharacterList(
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
-                    cells = GridCells.Adaptive(getItemWidth() / 2),
+                    cells = GridCells.Adaptive((Dimen.iconSize + Dimen.largePadding * 2) * 2),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {

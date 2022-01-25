@@ -426,4 +426,21 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT unit_id, unit_name, search_area_width, normal_atk_cast_time, atk_type  FROM unit_data WHERE unit_id = :unitId ")
     suspend fun getSummonData(unitId: Int): SummonData
+
+    /**
+     * 获取现实中角色 id
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            b.unit_id 
+        FROM
+            unit_profile AS a
+            LEFT JOIN actual_unit_background AS b ON a.unit_id / 100 % 100 = b.unit_id / 100 % 100
+        WHERE a.unit_id = :unitId
+    """
+    )
+    suspend fun getActualId(unitId: Int): Int?
+
 }

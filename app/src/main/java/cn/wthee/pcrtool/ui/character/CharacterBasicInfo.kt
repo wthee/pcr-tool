@@ -14,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -55,10 +54,7 @@ fun CharacterBasicInfo(
                         val urls = arrayListOf<String>()
                         roomComments.forEach { roomComment ->
                             urls.add(
-                                ImageResourceHelper.getInstance().getMaxIconUrl(
-                                    roomComment.unitId,
-                                    r6Ids.contains(roomComment.unitId)
-                                )
+                                ImageResourceHelper.getInstance().getMaxIconUrl(roomComment.unitId)
                             )
                         }
                         IconHorizontalPagerIndicator(pagerState, urls)

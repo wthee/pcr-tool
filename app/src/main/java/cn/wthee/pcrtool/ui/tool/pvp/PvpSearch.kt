@@ -29,7 +29,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -464,10 +463,7 @@ fun PvpIconItem(
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
-            ImageResourceHelper.getInstance().getMaxIconUrl(
-                it.unitId,
-                r6Ids.contains(it.unitId)
-            )
+            ImageResourceHelper.getInstance().getMaxIconUrl(it.unitId)
         }
 
         Column(
