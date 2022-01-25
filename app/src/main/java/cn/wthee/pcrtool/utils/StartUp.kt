@@ -14,7 +14,7 @@ class UMengInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         UMConfigure.init(
             context,
-            "5fe591d7adb42d58268e8603",
+            UMengKey.myKey,
             "Umeng",
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
