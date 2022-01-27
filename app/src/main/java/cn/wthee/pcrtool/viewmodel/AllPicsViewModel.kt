@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
+import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AllPicsViewModel @Inject constructor(
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: MyAPIRepository,
+    private val unitRepository: UnitRepository,
 ) : ViewModel() {
 
     /**
@@ -23,8 +25,9 @@ class AllPicsViewModel @Inject constructor(
         val data = apiRepository.getStoryList(id).data
         data?.let {
             if (firstNum == 1) {
+                val actualId = unitRepository.getActualId(id)
                 val picUrls =
-                    ImageResourceHelper.getInstance().getAllPicUrl(id)
+                    ImageResourceHelper.getInstance().getAllPicUrl(id, actualId)
                 val list = arrayListOf<String>()
                 list.addAll(picUrls)
                 list.addAll(getStoryUrls(it, ImageResourceHelper.CARD_STORY))

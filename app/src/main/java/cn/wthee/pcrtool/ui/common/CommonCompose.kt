@@ -455,8 +455,7 @@ fun SelectText(
 @Composable
 fun CharacterLimitText(
     modifier: Modifier = Modifier,
-    characterInfo: CharacterInfo,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
+    characterInfo: CharacterInfo
 ) {
     val color: Color
     val type: String
@@ -476,8 +475,6 @@ fun CharacterLimitText(
         }
     }
     Subtitle2(modifier = modifier, text = type, color = color)
-//    MainTitleText(modifier = modifier, text = type, backgroundColor = color, textStyle = textStyle)
-
 }
 
 

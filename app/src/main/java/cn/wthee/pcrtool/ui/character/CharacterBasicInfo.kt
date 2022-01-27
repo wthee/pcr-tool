@@ -7,16 +7,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -42,8 +39,6 @@ fun CharacterBasicInfo(
     val roomComments =
         viewModel.getRoomComments(unitId).collectAsState(initial = null).value
     val pagerState = rememberPagerState()
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->
@@ -59,10 +54,7 @@ fun CharacterBasicInfo(
                         val urls = arrayListOf<String>()
                         roomComments.forEach { roomComment ->
                             urls.add(
-                                ImageResourceHelper.getInstance().getMaxIconUrl(
-                                    roomComment.unitId,
-                                    r6Ids.contains(roomComment.unitId)
-                                )
+                                ImageResourceHelper.getInstance().getMaxIconUrl(roomComment.unitId)
                             )
                         }
                         IconHorizontalPagerIndicator(pagerState, urls)

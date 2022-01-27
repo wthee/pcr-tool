@@ -1,6 +1,9 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -11,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.getAttr
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.AttrList
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
@@ -34,8 +39,7 @@ fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hi
                 item {
                     IconCompose(
                         modifier = Modifier.padding(top = Dimen.largePadding),
-                        data = ImageResourceHelper.getInstance()
-                            .getMaxIconUrl(id, r6Ids.contains(id))
+                        data = ImageResourceHelper.getInstance().getMaxIconUrl(id)
                     )
                 }
                 items(value) {

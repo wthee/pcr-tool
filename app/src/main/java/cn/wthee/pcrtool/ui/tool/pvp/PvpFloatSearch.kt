@@ -4,7 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,10 +35,10 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
     val min = navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState()
-    val selectListState = rememberLazyListState()
-    val resultListState = rememberLazyListState()
-    val favoritesListState = rememberLazyListState()
-    val historyListState = rememberLazyListState()
+    val selectListState = rememberLazyGridState()
+    val resultListState = rememberLazyGridState()
+    val favoritesListState = rememberLazyGridState()
+    val historyListState = rememberLazyGridState()
     val actions = NavActions(navController)
 
     PCRToolComposeTheme {

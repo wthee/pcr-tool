@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyGridState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun NoticeList(
-    scrollState: LazyListState,
+    scrollState: LazyGridState,
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
     val noticeList = noticeViewModel.getNotice().collectAsState(initial = arrayListOf()).value

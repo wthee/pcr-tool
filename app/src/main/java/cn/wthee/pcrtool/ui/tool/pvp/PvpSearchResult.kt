@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui.tool.pvp
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyGridState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -51,7 +50,7 @@ import kotlin.math.round
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchResult(
-    resultListState: LazyListState,
+    resultListState: LazyGridState,
     selectedIds: List<PvpCharacterData>,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -75,16 +74,22 @@ fun PvpSearchResult(
     LaunchedEffect(null) {
         //添加搜索记录
         var unSplitDefIds = ""
+        var isError = false
         for (sel in selectedIds.subList(0, 5)) {
+            if (sel.unitId == 0) {
+                isError = true
+            }
             idArray.add(sel.unitId)
             unSplitDefIds += "${sel.unitId}-"
         }
-        pvpViewModel.insert(
-            PvpHistoryData(
-                "$region@$unSplitDefIds",
-                getToday(),
+        if (!isError) {
+            pvpViewModel.insert(
+                PvpHistoryData(
+                    "$region@$unSplitDefIds",
+                    getToday(),
+                )
             )
-        )
+        }
     }
     val context = LocalContext.current
     val vibrated = remember {
@@ -319,10 +324,7 @@ private fun PvpResultItem(
                             contentAlignment = Alignment.Center
                         ) {
                             IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(
-                                    it,
-                                    r6Ids.contains(it)
-                                ),
+                                data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
                                 size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                             )
                         }

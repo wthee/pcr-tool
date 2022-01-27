@@ -234,7 +234,24 @@ interface UnitDao {
      * @param end 结束位置
      */
     @SkipQueryVerification
-    @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
+    @Query(
+        """
+        SELECT
+            a.unit_id,
+            b.search_area_width AS position, 
+            - 1 AS type 
+        FROM
+            unit_profile AS a
+            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+        WHERE
+            search_area_width >= :start 
+            AND search_area_width <= :end
+            AND a.unit_id < 200000  
+            AND b.search_area_width > 0
+        ORDER BY
+            b.search_area_width
+    """
+    )
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
     /**
@@ -242,7 +259,23 @@ interface UnitDao {
      * @param unitIds 角色编号
      */
     @SkipQueryVerification
-    @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
+    @Query(
+        """
+        SELECT
+            a.unit_id,
+            b.search_area_width AS position, 
+            - 1 AS type 
+        FROM
+            unit_profile AS a
+            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+        WHERE
+            a.unit_id IN (:unitIds) 
+            AND a.unit_id < 200000  
+            AND b.search_area_width > 0
+        ORDER BY
+            b.search_area_width
+    """
+    )
     suspend fun getCharacterByIds(unitIds: List<Int>): List<PvpCharacterData>
 
     /**
@@ -393,4 +426,21 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT unit_id, unit_name, search_area_width, normal_atk_cast_time, atk_type  FROM unit_data WHERE unit_id = :unitId ")
     suspend fun getSummonData(unitId: Int): SummonData
+
+    /**
+     * 获取现实中角色 id
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            b.unit_id 
+        FROM
+            unit_profile AS a
+            LEFT JOIN actual_unit_background AS b ON a.unit_id / 100 % 100 = b.unit_id / 100 % 100
+        WHERE a.unit_id = :unitId
+    """
+    )
+    suspend fun getActualId(unitId: Int): Int?
+
 }

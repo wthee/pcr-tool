@@ -14,15 +14,15 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.1.0-rc01"
-val appVersionCode = 314
-val appVersionName = "3.1.4"
+val composeVersion = "1.2.0-alpha02"
+val appVersionCode = 315
+val appVersionName = "3.1.5"
 
 android {
 
     compileSdk = 31
     buildToolsVersion = "31.0.0"
-    flavorDimensions("version")
+    flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = "cn.wthee.pcrtool"
@@ -114,15 +114,14 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha01")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha04")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-//    implementation("androidx.compose.compiler:compiler:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:1.1.0-rc02")
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
     //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.22.0-rc"
+    val accompanistVersion = "0.24.1-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

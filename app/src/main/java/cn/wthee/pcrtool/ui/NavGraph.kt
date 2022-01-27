@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -119,7 +120,7 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
             CharacterList(scrollState, actions.toCharacterDetail)
         }
 
@@ -199,7 +200,7 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             EquipList(
                 scrollState,
@@ -344,7 +345,7 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
             EventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
         }
 
@@ -369,7 +370,7 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ClanBattleList(scrollState, actions.toClanBossInfo)
         }
@@ -428,7 +429,7 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             NoticeList(scrollState)
         }

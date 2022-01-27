@@ -60,19 +60,6 @@ class ImageResourceHelper() {
         //漫画地址
         const val COMIC4 = OTHER_RESOURCE_URL + "comic/"
 
-        //现实图片有误的角色编号
-        val errorIDs = arrayListOf(
-            101001,
-            101301,
-            101501,
-            102201,
-            102801,
-            103801,
-            104501,
-            104601,
-            105401,
-        )
-
         //无现实图片角色
         val notExistsIDs = arrayListOf(
             109731, 109831, 109931, 109231, 109331, 109431
@@ -88,15 +75,15 @@ class ImageResourceHelper() {
      *
      * @param unitId 角色编号
      */
-    fun getAllPicUrl(unitId: Int): ArrayList<String> {
+    fun getAllPicUrl(unitId: Int, actualId: Int?): ArrayList<String> {
         val list = arrayListOf<String>()
         if (r6Ids.contains(unitId)) {
             list.add(getUrl(CARD_FULL, getStarId(unitId, 6)))
         }
         list.add(getUrl(CARD_FULL, getStarId(unitId, 3)))
         list.add(getUrl(CARD_PROFILE, getStarId(unitId, 1)))
-        if (!notExistsIDs.contains(getFixedId(unitId))) {
-            list.add(getUrl(CARD_ACTUAL_PROFILE, getFixedId(unitId)))
+        if (actualId != null) {
+            list.add(getUrl(CARD_ACTUAL_PROFILE, actualId))
         }
         return list
     }
@@ -119,10 +106,9 @@ class ImageResourceHelper() {
      * @param unitId 角色编号
      * @param r6Id 是否已解放六星
      */
-    fun getMaxIconUrl(unitId: Int, r6Id: Boolean): String {
-        if (r6Id) {
+    fun getMaxIconUrl(unitId: Int): String {
+        if (r6Ids.contains(unitId)) {
             return getUrl(ICON_UNIT, getStarId(unitId, 6))
-
         }
         return getUrl(ICON_UNIT, getStarId(unitId, 3))
     }
@@ -139,11 +125,5 @@ class ImageResourceHelper() {
             ""
         }
     }
-
-    /**
-     * 去除无效id
-     */
-    private fun getFixedId(unitId: Int) =
-        unitId + if (errorIDs.contains(unitId)) 31 else 30
 
 }

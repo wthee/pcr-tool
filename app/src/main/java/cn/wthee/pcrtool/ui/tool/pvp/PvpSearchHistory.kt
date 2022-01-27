@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui.tool.pvp
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyGridState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -32,7 +31,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 /**
@@ -42,7 +40,7 @@ import java.util.*
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
-    historyListState: LazyListState,
+    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
@@ -160,10 +158,7 @@ private fun PvpHistoryItem(
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
-                                it,
-                                r6Ids.contains(it)
-                            ),
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
                             size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {
                             if (!floatWindow) {

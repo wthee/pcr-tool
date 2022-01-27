@@ -22,7 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -126,10 +125,7 @@ fun RankCompare(
                 ) {
                     //头像
                     IconCompose(
-                        data = ImageResourceHelper.getInstance().getMaxIconUrl(
-                            unitId,
-                            r6Ids.contains(unitId)
-                        ),
+                        data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
                         size = Dimen.largeIconSize
                     )
                     Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {

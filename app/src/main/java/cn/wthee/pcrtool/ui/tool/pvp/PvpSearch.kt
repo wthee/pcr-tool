@@ -29,7 +29,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -38,7 +37,6 @@ import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 /**
@@ -52,10 +50,10 @@ fun PvpSearchCompose(
     floatWindow: Boolean = false,
     initSpanCount: Int = 0,
     pagerState: PagerState = rememberPagerState(),
-    selectListState: LazyListState = rememberLazyListState(),
-    resultListState: LazyListState = rememberLazyListState(),
-    favoritesListState: LazyListState = rememberLazyListState(),
-    historyListState: LazyListState = rememberLazyListState(),
+    selectListState: LazyGridState = rememberLazyGridState(),
+    resultListState: LazyGridState = rememberLazyGridState(),
+    favoritesListState: LazyGridState = rememberLazyGridState(),
+    historyListState: LazyGridState = rememberLazyGridState(),
     toCharacter: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -307,7 +305,7 @@ fun PvpSearchCompose(
 @Composable
 private fun PvpCharacterSelectPage(
     spanCount: Int,
-    selectListState: LazyListState,
+    selectListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
     data: List<PvpCharacterData>
@@ -330,9 +328,9 @@ private fun PvpCharacterSelectPage(
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
     //中卫以上填充数
-    positions[1] = getLine(character0, spanCount)
+    positions[1] = getLine(character0)
     //后卫以上填充数
-    positions[0] = getLine(character0 + character1, spanCount)
+    positions[0] = getLine(character0 + character1)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -387,10 +385,7 @@ private fun PvpCharacterSelectPage(
 /**
  * 获取行数
  */
-private fun getLine(
-    list: List<PvpCharacterData>,
-    spanCount: Int
-) = list.size / spanCount
+private fun getLine(list: List<PvpCharacterData>) = list.size
 
 
 /**
@@ -465,10 +460,7 @@ fun PvpIconItem(
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
-            ImageResourceHelper.getInstance().getMaxIconUrl(
-                it.unitId,
-                r6Ids.contains(it.unitId)
-            )
+            ImageResourceHelper.getInstance().getMaxIconUrl(it.unitId)
         }
 
         Column(
