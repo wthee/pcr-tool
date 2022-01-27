@@ -15,14 +15,14 @@ hilt {
 }
 
 val composeVersion = "1.2.0-alpha01"
-val appVersionCode = 314
-val appVersionName = "3.1.4"
+val appVersionCode = 315
+val appVersionName = "3.1.5"
 
 android {
 
     compileSdk = 31
     buildToolsVersion = "31.0.0"
-    flavorDimensions("version")
+    flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = "cn.wthee.pcrtool"

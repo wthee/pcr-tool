@@ -573,14 +573,17 @@ private fun CharacterEquip(
 ) {
     val context = LocalContext.current
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         //装备 6、 3
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(top = Dimen.largePadding)
+                .width(Dimen.iconSize * 4)
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
@@ -661,11 +664,11 @@ private fun CharacterEquip(
         }
         //装备 4、 1
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
+                .width(Dimen.iconSize * 4)
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId

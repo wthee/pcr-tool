@@ -328,9 +328,9 @@ private fun PvpCharacterSelectPage(
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
     //中卫以上填充数
-    positions[1] = getLine(character0, spanCount)
+    positions[1] = getLine(character0)
     //后卫以上填充数
-    positions[0] = getLine(character0 + character1, spanCount)
+    positions[0] = getLine(character0 + character1)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -385,10 +385,7 @@ private fun PvpCharacterSelectPage(
 /**
  * 获取行数
  */
-private fun getLine(
-    list: List<PvpCharacterData>,
-    spanCount: Int
-) = list.size / spanCount
+private fun getLine(list: List<PvpCharacterData>) = list.size
 
 
 /**
