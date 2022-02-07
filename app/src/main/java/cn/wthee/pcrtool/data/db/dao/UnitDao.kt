@@ -437,7 +437,7 @@ interface UnitDao {
             b.unit_id 
         FROM
             unit_profile AS a
-            LEFT JOIN actual_unit_background AS b ON a.unit_id / 100 % 100 = b.unit_id / 100 % 100
+            LEFT JOIN actual_unit_background AS b ON a.unit_id / 100 = b.unit_id / 100
         WHERE a.unit_id = :unitId
     """
     )

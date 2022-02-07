@@ -1050,7 +1050,7 @@ data class SkillActionPro(
      */
     private fun getPercent() = when (toSkillActionType(action_type)) {
         SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
-            if (action_value_1.int == 2 || action_detail_1 / 10 == 14 || action_detail_1 / 10 == 17) {
+            if (action_value_1.int == 2 || action_detail_1 / 10 == 14 || action_detail_1 / 10 == 16 || action_detail_1 / 10 == 17) {
                 "%"
             } else {
                 ""
@@ -1137,7 +1137,7 @@ data class SkillActionPro(
             }
         }
         var type = (if (v % 10 == 0) "提升" else "减少") + " " + valueText
-        if (v / 10 == 14 || v / 10 == 17) {
+        if (v / 10 == 14 || v / 10 == 16 || v / 10 == 17) {
             type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText
         }
         //固定buff，不受其他效果影响

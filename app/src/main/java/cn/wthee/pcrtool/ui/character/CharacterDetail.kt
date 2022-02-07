@@ -76,7 +76,7 @@ fun CharacterDetail(
         .collectAsState(initial = CharacterProperty()).value
     val currentValueState = navViewModel.currentValue.observeAsState()
     //数值信息
-    if (currentValueState.value == null && maxValue.isInit()) {
+    if ((currentValueState.value == null || currentValueState.value!!.level == -1) && maxValue.isInit()) {
         navViewModel.currentValue.postValue(maxValue)
     }
     // bottomsheet 状态
@@ -144,15 +144,6 @@ fun CharacterDetail(
                 navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
             }
             val unknown = maxValue.level == -1
-            //角色等级滑动条
-            val characterLevel = remember {
-                mutableStateOf(currentValue.level)
-            }
-            //专武等级滑动条
-            val uniqueEquipLevel = remember {
-                mutableStateOf(currentValue.uniqueEquipmentLevel)
-            }
-
             //关闭
             if (close) {
                 coroutineScope.launch {
@@ -255,7 +246,7 @@ fun CharacterDetail(
 
                             //等级
                             Text(
-                                text = characterLevel.value.toString(),
+                                text = currentValue.level.toString(),
                                 color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.titleLarge,
                                 textAlign = TextAlign.Center,
@@ -305,13 +296,12 @@ fun CharacterDetail(
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
                                         if (inputLevel.value != "") {
-                                            characterLevel.value = inputLevel.value.toInt()
-                                        }
-                                        navViewModel.currentValue.postValue(
-                                            currentValue.update(
-                                                level = characterLevel.value
+                                            navViewModel.currentValue.postValue(
+                                                currentValue.update(
+                                                    level = inputLevel.value.toInt()
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 },
                                 keyboardOptions = KeyboardOptions(
@@ -323,13 +313,12 @@ fun CharacterDetail(
                                         keyboardController?.hide()
                                         focusManager.clearFocus()
                                         if (inputLevel.value != "") {
-                                            characterLevel.value = inputLevel.value.toInt()
-                                        }
-                                        navViewModel.currentValue.postValue(
-                                            currentValue.update(
-                                                level = characterLevel.value
+                                            navViewModel.currentValue.postValue(
+                                                currentValue.update(
+                                                    level = inputLevel.value.toInt()
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 ),
                                 modifier = if (insets.ime.isVisible) {
@@ -361,7 +350,6 @@ fun CharacterDetail(
                             UniqueEquip(
                                 currentValue = currentValue,
                                 uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                uniqueEquipLevel = uniqueEquipLevel,
                                 uniqueEquipmentMaxData = allData.uniqueEquip,
                             )
                         }
@@ -693,7 +681,6 @@ private fun CharacterEquip(
 private fun UniqueEquip(
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
-    uniqueEquipLevel: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
 
@@ -715,7 +702,7 @@ private fun UniqueEquip(
             )
             //专武等级
             Text(
-                text = uniqueEquipLevel.value.toString(),
+                text = currentValue.uniqueEquipmentLevel.toString(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
@@ -766,13 +753,12 @@ private fun UniqueEquip(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (inputLevel.value != "") {
-                            uniqueEquipLevel.value = inputLevel.value.toInt()
-                        }
-                        navViewModel.currentValue.postValue(
-                            currentValue.update(
-                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            navViewModel.currentValue.postValue(
+                                currentValue.update(
+                                    uniqueEquipmentLevel = inputLevel.value.toInt()
+                                )
                             )
-                        )
+                        }
                     }
                 },
                 keyboardOptions = KeyboardOptions(
@@ -784,14 +770,12 @@ private fun UniqueEquip(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (inputLevel.value != "") {
-                            uniqueEquipLevel.value = inputLevel.value.toInt()
-                        }
-                        navViewModel.currentValue.postValue(
-                            currentValue.update(
-                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            navViewModel.currentValue.postValue(
+                                currentValue.update(
+                                    uniqueEquipmentLevel = inputLevel.value.toInt()
+                                )
                             )
-                        )
-
+                        }
                     }
                 ),
                 modifier = if (insets.ime.isVisible) {
