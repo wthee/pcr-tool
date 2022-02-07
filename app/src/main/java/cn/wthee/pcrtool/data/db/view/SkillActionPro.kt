@@ -436,7 +436,11 @@ data class SkillActionPro(
                     3 -> "回避所有攻击"
                     else -> UNKNOWN
                 }
-                "${tag}${getTimeText(1, action_value_1, action_value_2)}"
+                if (action_value_1 > 0) {
+                    "${tag}${getTimeText(1, action_value_1, action_value_2)}"
+                } else {
+                    tag
+                }
             }
             // 22：改变模式
             SkillActionType.CHANGE_PATTERN -> {
@@ -500,13 +504,13 @@ data class SkillActionPro(
                 if (action_detail_1 in 0..99) {
                     when {
                         action_detail_2 != 0 && action_detail_3 != 0 -> {
-                            "随机事件：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})，否则使用动作(${action_detail_3 % 10})"
+                            "随机：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})，否则使用动作(${action_detail_3 % 10})"
                         }
                         action_detail_2 != 0 -> {
-                            "随机事件：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
+                            "随机：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
                         }
                         action_detail_3 != 0 -> {
-                            "随机事件：[${100 - action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
+                            "随机：[${100 - action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
                         }
                         else -> UNKNOWN
                     }
@@ -565,7 +569,7 @@ data class SkillActionPro(
                     5 -> "$commonDesc * [受到伤害的目标数量]"
                     6 -> "$commonDesc * [造成的伤害]"
                     12 -> "$commonDesc * [后方${getTarget()}数量]"
-                    13 -> "$commonDesc * [${getTarget()}剩余的HP比例]"
+                    13 -> "$commonDesc * [损失的HP比例]"
                     102 -> "$commonDesc * [小眼球数量]"
                     in 200 until 300 -> "$commonDesc * [标记层数]"
                     in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
@@ -1127,6 +1131,7 @@ data class SkillActionPro(
                 12 -> "魔法暴击伤害"
                 13 -> "命中"
                 14 -> "受到的暴击伤害"
+                16 -> "受到的物理伤害"
                 17 -> "受到的魔法伤害"
                 else -> UNKNOWN
             }
