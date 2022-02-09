@@ -301,13 +301,17 @@ data class SkillActionPro(
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val main = when (action_detail_1) {
-                    1, 2 -> "${tag}${getTarget()}，速度 * ${value}$time"
+                    1, 2 -> {
+                        val descText =
+                            if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
+                                tag += "(可叠加)"
+                                "速度额外提升初始值的${value}倍（可与其它相同效果叠加）"
+                            } else {
+                                "速度变更为初始值的${value}倍"
+                            }
+                        "${tag}${getTarget()}，$descText$time"
+                    }
                     else -> "使${getTarget()}进入${tag}状态$time"
-                } + if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
-                    tag += "(可叠加)"
-                    "（可与其它相同效果叠加）"
-                } else {
-                    ""
                 }
                 if (action_detail_2 == 1) {
                     "$main，本效果将会在受到伤害时解除"

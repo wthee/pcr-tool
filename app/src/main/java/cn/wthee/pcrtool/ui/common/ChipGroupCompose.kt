@@ -60,7 +60,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
         colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray)
     //字体颜色
     val textColor = when (type) {
-        1 -> getRankColor(size - index)
+        1 -> getRankColor(item.text.toInt())
         2 -> getSectionTextColor(index + 1)
         else -> {
             if (selectIndex.value == index)
