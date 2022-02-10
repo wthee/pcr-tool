@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -78,7 +77,6 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
-    val context = LocalContext.current
     val region = getRegion()
     val coroutineScope = rememberCoroutineScope()
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
@@ -147,14 +145,11 @@ fun Overview(
                             itemSpacing = Dimen.mediumPadding
                         ) { index ->
                             val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                            Card(
+                            MainCard(
                                 modifier = Modifier.width(getItemWidth()),
                                 onClick = {
-                                    VibrateUtil(context).single()
                                     actions.toCharacterDetail(id)
-                                },
-                                elevation = 0.dp,
-                                shape = Shape.medium
+                                }
                             ) {
                                 ImageCompose(
                                     data = ImageResourceHelper.getInstance().getMaxCardUrl(id),

@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -425,10 +424,8 @@ private fun ClanBossInfoPagerItem(
         mutableStateOf(false)
     }
 
-    Card(
+    MainCard(
         shape = CardTopShape,
-        elevation = Dimen.cardElevation,
-        backgroundColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
             .padding(top = Dimen.mediumPadding)
             .fillMaxSize()

@@ -200,14 +200,13 @@ private fun MenuItem(
     it: ToolMenuData
 ) {
     MainCard(
-        modifier = Modifier.padding(Dimen.mediumPadding)
+        modifier = Modifier.padding(Dimen.mediumPadding),
+        onClick = getAction(coroutineScope, context, actions, it)
     ) {
         Row(
             modifier = Modifier
-                .clip(Shape.medium)
-                .clickable(onClick = getAction(coroutineScope, context, actions, it))
                 .defaultMinSize(minWidth = Dimen.menuItemSize)
-                .padding(Dimen.smallPadding),
+                .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconCompose(

@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil.compose.rememberAsyncImagePainter
 
 const val RATIO = 1.78f
 
@@ -40,7 +40,6 @@ fun ImageCompose(
     contentScale: ContentScale = ContentScale.FillWidth,
     onSuccess: () -> Unit = {}
 ) {
-    val context = LocalContext.current
     var mModifier = modifier
     if (ratio > 0) {
         mModifier = modifier
@@ -48,41 +47,13 @@ fun ImageCompose(
     }
 
     AsyncImage(
-        model = ImageRequest.Builder(context)
-            .data(data)
-            .listener(
-                onSuccess = { _, _ ->
-                    onSuccess.invoke()
-                }
-            )
-            .build(),
+        model = data,
         contentDescription = null,
         contentScale = contentScale,
-        loading = {
-            AsyncImage(
-                model = loadingId,
-                contentDescription = null,
-                contentScale = contentScale,
-                modifier = if (ratio > 0) {
-                    modifier.aspectRatio(ratio)
-                } else {
-                    modifier
-                        .aspectRatio(RATIO)
-                }
-            )
-        },
-        error = {
-            AsyncImage(
-                model = errorId,
-                contentDescription = null,
-                contentScale = contentScale,
-                modifier = if (ratio > 0) {
-                    modifier.aspectRatio(ratio)
-                } else {
-                    modifier
-                        .aspectRatio(RATIO)
-                }
-            )
+        placeholder = loadingId?.let { rememberAsyncImagePainter(it) },
+        error = errorId?.let { rememberAsyncImagePainter(it) },
+        onSuccess = {
+            onSuccess.invoke()
         },
         modifier = mModifier
     )
@@ -146,28 +117,12 @@ fun IconCompose(
         )
     } else {
         AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(data)
-                .build(),
+            model = data,
             colorFilter = colorFilter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            loading = {
-                AsyncImage(
-                    model = R.drawable.unknown_gray,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = mModifier
-                )
-            },
-            error = {
-                AsyncImage(
-                    model = R.drawable.unknown_gray,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = mModifier
-                )
-            },
+            placeholder = rememberAsyncImagePainter(R.drawable.unknown_gray),
+            error = rememberAsyncImagePainter(R.drawable.unknown_gray),
             modifier = mModifier
         )
     }

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +69,7 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                 if (picUrls == null) {
                     VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
                         for (i in 0..5) {
-                            Card(
+                            MainCard(
                                 modifier = Modifier
                                     .padding(Dimen.largePadding)
                                     .fillMaxWidth()
@@ -93,12 +92,11 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                                 val image = coil.Coil.imageLoader(context).execute(request).drawable
                                 drawables[index] = image
                             }
-                            Card(
+                            MainCard(
                                 modifier = Modifier
                                     .padding(Dimen.largePadding)
                                     .fillMaxWidth(),
                                 onClick = {
-                                    VibrateUtil(context).single()
                                     //下载
                                     if (loaded[index]) {
                                         //权限校验
@@ -108,8 +106,7 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                                     } else {
                                         ToastUtil.short(unLoadToast)
                                     }
-                                },
-                                shape = Shape.medium,
+                                }
                             ) {
                                 //图片
                                 ImageCompose(

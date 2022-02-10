@@ -42,7 +42,7 @@ fun ChipGroup(
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(item = chipData, selectIndex, items.size, index, type)
+            ChipItem(item = chipData, selectIndex, index, type)
         }
     }
 }
@@ -51,7 +51,7 @@ fun ChipGroup(
  * ChipItem
  */
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: Int, type: Int) {
+fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: Int) {
     val context = LocalContext.current
     //背景色
     val backgroundColor = if (selectIndex.value == index)

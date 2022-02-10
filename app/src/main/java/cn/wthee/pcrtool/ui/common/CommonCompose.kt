@@ -2,15 +2,16 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -374,42 +375,30 @@ fun CommonSpacer() {
 /**
  * 卡片布局
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    shape: RoundedCornerShape = Shape.medium,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
     val mModifier = modifier
         .fillMaxWidth()
-        .heightIn(min = Dimen.cardHeight)
+        .shadow(Dimen.cardElevation, shape, true)
+        .clickable(enabled = onClick != null) {
+            VibrateUtil(context).single()
+            onClick?.invoke()
+        }
 
-    if (onClick != null) {
-        Card(
-            modifier = mModifier,
-            content = content,
-            onClick = {
-                VibrateUtil(context).single()
-                onClick.invoke()
-            },
-            backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation,
-            shape = Shape.medium,
-        )
-    } else {
-        Card(
-            modifier = mModifier,
-            content = content,
-            backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation,
-            shape = Shape.medium,
-        )
-    }
-
+    Card(
+        modifier = mModifier,
+        content = content,
+        containerColor = backgroundColor
+    )
 }
 
 /**

@@ -16,7 +16,7 @@ private val DarkColorPalette = darkColorScheme(
     secondary = colorPrimaryDark,
     surfaceVariant = colorAccentDark,
     background = Color.Black,
-    onBackground = colorPrimaryDark
+    onBackground = Color.White
 )
 
 private val LightColorPalette = lightColorScheme(
@@ -27,7 +27,7 @@ private val LightColorPalette = lightColorScheme(
     secondary = colorPrimary,
     surfaceVariant = colorAccent,
     background = Color.White,
-    onBackground = colorPrimary
+    onBackground = Color.Black
 )
 
 @SuppressLint("NewApi")

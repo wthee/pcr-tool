@@ -275,7 +275,8 @@ fun NewsItem(
             .placeholder(
                 visible = placeholder,
                 highlight = PlaceholderHighlight.shimmer()
-            ),
+            )
+            .heightIn(min = Dimen.cardHeight),
             onClick = {
                 toDetail(news.id)
             }
