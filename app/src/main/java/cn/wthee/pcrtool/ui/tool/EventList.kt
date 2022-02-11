@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 fun EventList(
     scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
-    toAllPics: (Int) -> Unit,
+    toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
@@ -94,7 +94,7 @@ fun EventList(
 fun EventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
-    toAllPics: (Int) -> Unit
+    toAllPics: (Int, Int) -> Unit
 ) {
     val context = LocalContext.current
     val type: String
@@ -115,7 +115,7 @@ fun EventItem(
         //支线
         event.eventId / 10000 == 2 -> {
             type = "支线"
-            typeColor = colorResource(id = R.color.color_rank_21)
+            typeColor = colorResource(id = R.color.color_rank_21_23)
             showDays = false
         }
         //复刻
@@ -250,7 +250,7 @@ fun EventItem(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
                             VibrateUtil(context).single()
-                            toAllPics(event.storyId)
+                            toAllPics(event.storyId, 1)
                         })
                     //结束日期
                     CaptionText(
@@ -275,7 +275,7 @@ fun EventItem(
 private fun EventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), toCharacterDetail = {}, toAllPics = {})
+            EventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
         }
     }
 }

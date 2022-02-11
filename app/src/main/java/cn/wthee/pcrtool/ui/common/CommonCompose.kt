@@ -352,10 +352,9 @@ fun getRankColor(rank: Int): Color {
         in 7..10 -> R.color.color_rank_7_10
         in 11..17 -> R.color.color_rank_11_17
         in 18..20 -> R.color.color_rank_18_20
-        in 21..99 -> R.color.color_rank_21
-        else -> {
-            R.color.color_rank_2_3
-        }
+        in 21..23 -> R.color.color_rank_21_23
+        in 24..99 -> R.color.color_rank_24
+        else -> R.color.color_rank_1
     }
     return colorResource(id = colorId)
 }
@@ -452,7 +451,7 @@ fun CharacterLimitText(
         1 -> {
             if (characterInfo.rarity == 1) {
                 type = stringResource(id = R.string.type_event_limit)
-                color = colorResource(id = R.color.color_rank_21)
+                color = colorResource(id = R.color.color_rank_21_23)
             } else {
                 type = stringResource(id = R.string.type_limit)
                 color = colorResource(id = R.color.color_rank_18_20)

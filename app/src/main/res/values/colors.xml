@@ -15,12 +15,14 @@
     <color name="bg_gray_dark">#121212</color>
     <color name="ic_launcher_background">#FFFFFF</color>
     <!-- Rank 颜色-->
-    <color name="color_rank_2_3">#DF8C66</color>
-    <color name="color_rank_4_6">#B9C4C8</color>
-    <color name="color_rank_7_10">#EFC005</color>
-    <color name="color_rank_11_17">#B55CCF</color>
-    <color name="color_rank_18_20">#DE0703</color>
-    <color name="color_rank_21">#4caf50</color>
+    <color name="color_rank_1">#50BFE3</color>
+    <color name="color_rank_2_3">#C28662</color>
+    <color name="color_rank_4_6">#90B6B8</color>
+    <color name="color_rank_7_10">#EBA827</color>
+    <color name="color_rank_11_17">#BF76CD</color>
+    <color name="color_rank_18_20">#E95264</color>
+    <color name="color_rank_21_23">#5EB56D</color>
+    <color name="color_rank_24">#FF6c47</color>
 
     <color name="news_system">#a067c5</color>
     <color name="news_update">#f55291</color>

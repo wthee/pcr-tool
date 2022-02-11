@@ -122,7 +122,7 @@ fun EquipMaterialDeatil(
                                     0 -> R.color.color_map_n
                                     1 -> R.color.color_map_h
                                     2 -> R.color.color_map_vh
-                                    3 -> R.color.color_rank_21
+                                    3 -> R.color.color_rank_21_23
                                     else -> R.color.black
                                 }
                             )

@@ -223,8 +223,7 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
                 "S" -> R.color.color_rank_7_10
                 "A" -> R.color.color_rank_4_6
                 "B" -> R.color.color_rank_2_3
-                "C" -> R.color.color_rank_21
-                else -> R.color.color_rank_21
+                else -> R.color.color_rank_21_23
             }
         ),
         textAlign = textAlign,

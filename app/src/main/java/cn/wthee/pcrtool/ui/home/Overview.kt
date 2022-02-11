@@ -626,7 +626,7 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
             val dropMumColor = when (data.getFixedValue()) {
                 1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
                 3f -> colorResource(id = R.color.color_rank_18_20)
-                4f -> colorResource(id = R.color.color_rank_21)
+                4f -> colorResource(id = R.color.color_rank_21_23)
                 else -> MaterialTheme.colorScheme.primary
             }
             events.add(

@@ -15,8 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
@@ -235,7 +238,7 @@ fun SkillActionItem(
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
         arrayListOf(
-            colorResource(R.color.color_rank_21),
+            colorResource(R.color.color_rank_21_23),
             colorResource(if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black),
             colorResource(R.color.color_rank_11_17),
             MaterialTheme.colorScheme.primary

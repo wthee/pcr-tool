@@ -119,7 +119,7 @@ private fun NoticeItem(data: AppNotice) {
         if (data.type == 0) {
             exTitle = if (itemVersion > BuildConfig.VERSION_CODE) {
                 newVersion = true
-                exTitleColor = colorResource(id = R.color.color_rank_21)
+                exTitleColor = colorResource(id = R.color.color_rank_21_23)
                 "版本更新"
             } else {
                 "当前版本"
@@ -185,7 +185,7 @@ private fun NoticeItem(data: AppNotice) {
                 if (data.type == 0 && newVersion) {
                     MainContentText(
                         text = stringResource(id = R.string.to_update),
-                        color = colorResource(id = R.color.color_rank_21),
+                        color = colorResource(id = R.color.color_rank_21_23),
                         modifier = Modifier.padding(top = Dimen.mediumPadding)
                     )
                 }
