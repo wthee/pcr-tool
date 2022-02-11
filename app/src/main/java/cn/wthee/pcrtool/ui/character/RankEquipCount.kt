@@ -31,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -207,7 +206,7 @@ private fun EquipCountItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(Dimen.mediumPadding),
     ) {
-        IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, item.id)) {
+        IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(item.id)) {
             toEquipMaterial(item.id)
         }
         SelectText(

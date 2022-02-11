@@ -33,9 +33,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
@@ -397,10 +395,10 @@ private fun SkillLoopIconList(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val type: String
-                val url: String
+                val url: Any
                 if (it == 1) {
                     type = "普攻"
-                    url = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
+                    url = R.drawable.unknown_item
                 } else {
                     type = when (it / 1000) {
                         1 -> "技能 ${it % 10}"
@@ -417,7 +415,7 @@ private fun SkillLoopIconList(
                         else -> null
                     }
                     url = if (iconType == null) {
-                        ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
+                        R.drawable.unknown_item
                     } else {
                         ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
                     }

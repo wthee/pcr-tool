@@ -39,7 +39,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -177,7 +176,7 @@ private fun EquipItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(
-            data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, equip.equipmentId)
+            data = ImageResourceHelper.getInstance().getEquipPic(equip.equipmentId)
         ) {
             if (equip.craftFlg == 1) {
                 toEquipDetail(equip.equipmentId)

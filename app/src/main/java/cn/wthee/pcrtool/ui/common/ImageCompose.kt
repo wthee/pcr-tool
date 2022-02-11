@@ -122,7 +122,7 @@ fun IconCompose(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             placeholder = rememberAsyncImagePainter(R.drawable.unknown_gray),
-            error = rememberAsyncImagePainter(R.drawable.unknown_gray),
+            error = rememberAsyncImagePainter(R.drawable.unknown_item),
             modifier = mModifier
         )
     }

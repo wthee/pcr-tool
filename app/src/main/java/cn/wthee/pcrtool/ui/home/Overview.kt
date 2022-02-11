@@ -49,7 +49,6 @@ import cn.wthee.pcrtool.ui.tool.EventItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -188,7 +187,7 @@ fun Overview(
                                 ) {
                                     IconCompose(
                                         data = ImageResourceHelper.getInstance()
-                                            .getUrl(ICON_EQUIPMENT, it.equipmentId)
+                                            .getEquipPic(it.equipmentId)
                                     ) {
                                         actions.toEquipDetail(it.equipmentId)
                                     }

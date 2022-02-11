@@ -27,7 +27,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -113,14 +112,14 @@ fun RankEquipListItem(
                     ) {
                         IconCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(ICON_EQUIPMENT, allIds[index])
+                                .getEquipPic(allIds[index])
                         ) {
                             toEquipDetail(allIds[index])
                         }
                         Spacer(modifier = Modifier.width(Dimen.smallPadding))
                         IconCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(ICON_EQUIPMENT, allIds[index + 1])
+                                .getEquipPic(allIds[index + 1])
                         ) {
                             toEquipDetail(allIds[index + 1])
                         }
