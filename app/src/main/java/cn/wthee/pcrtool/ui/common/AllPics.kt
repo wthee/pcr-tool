@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,25 +26,25 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色所有卡面/剧情故事图片
- * //TODO 优化获取已加载图片的方法
+ * type 0: 角色 1：剧情活动
  */
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
+fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
     val context = LocalContext.current
-    val picUrls = picsViewModel.getStoryList(id).collectAsState(initial = null).value
-    val loaded = arrayListOf<Boolean>()
-    val drawables = arrayListOf<Drawable?>()
-    picUrls?.forEach { _ ->
-        loaded.add(false)
-        drawables.add(null)
+    //角色卡面
+    val basicUrls = if (type == 0) {
+        picsViewModel.getUniCardList(id).collectAsState(initial = arrayListOf()).value
+    } else {
+        arrayListOf()
     }
-    val coroutineScope = rememberCoroutineScope()
+    //剧情活动
+    val storyUrls = picsViewModel.getStoryList(id, type).collectAsState(initial = null).value
 
-    val unLoadToast = stringResource(id = R.string.wait_pic_load)
-    val clickedIndex = remember {
-        mutableStateOf(-1)
+    val loadedPicMap = hashMapOf<String, Drawable?>()
+    val checkedPicUrl = remember {
+        mutableStateOf("")
     }
 
 
@@ -51,103 +52,89 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (picUrls != null && picUrls.isEmpty()) {
-            MainText(
-                text = "暂无信息",
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(
-                        Dimen.largePadding
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (type == 0) {
+                MainTitleText(
+                    text = "基本",
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
                     )
+                )
+                PicGridList(
+                    checkedPicUrl = checkedPicUrl,
+                    urls = basicUrls,
+                    loadedPicMap = loadedPicMap
+                )
+            }
+            MainTitleText(
+                text = "剧情",
+                modifier = Modifier.padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
             )
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (picUrls == null) {
-                    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-                        for (i in 0..5) {
-                            MainCard(
-                                modifier = Modifier
-                                    .padding(Dimen.largePadding)
-                                    .fillMaxWidth()
-                            ) {
-                                ImageCompose(
-                                    data = R.drawable.load,
-                                    ratio = RATIO,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                    }
-                } else {
-                    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-                        picUrls.forEachIndexed { index, _ ->
-                            val request = coil.request.ImageRequest.Builder(context)
-                                .data(picUrls[index])
-                                .build()
-                            coroutineScope.launch {
-                                val image = coil.Coil.imageLoader(context).execute(request).drawable
-                                drawables[index] = image
-                            }
-                            MainCard(
-                                modifier = Modifier
-                                    .padding(Dimen.largePadding)
-                                    .fillMaxWidth(),
-                                onClick = {
-                                    //下载
-                                    if (loaded[index]) {
-                                        //权限校验
-                                        checkPermissions(context) {
-                                            clickedIndex.value = index
-                                        }
-                                    } else {
-                                        ToastUtil.short(unLoadToast)
-                                    }
-                                }
-                            ) {
-                                //图片
-                                ImageCompose(
-                                    data = picUrls[index],
-                                    ratio = -1f,
-                                    loadingId = R.drawable.load,
-                                    errorId = R.drawable.error,
-                                ) {
-                                    loaded[index] = true
-                                }
-                            }
-                        }
-                        CommonSpacer()
-                    }
+            when {
+                storyUrls == null -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(
+                                Dimen.largePadding
+                            )
+                            .size(Dimen.fabIconSize),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                storyUrls.isEmpty() -> {
+                    MainText(
+                        text = "暂无剧情信息",
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(
+                                Dimen.largePadding
+                            )
+                    )
+                }
+                else -> {
+                    PicGridList(
+                        checkedPicUrl = checkedPicUrl,
+                        urls = storyUrls,
+                        loadedPicMap = loadedPicMap
+                    )
                 }
             }
+            CommonSpacer()
         }
     }
 
     //下载确认
-    if (clickedIndex.value != -1) {
-        val index = clickedIndex.value
+    if (checkedPicUrl.value != "") {
         AlertDialog(
             title = {
                 MainText(text = stringResource(R.string.ask_save_image))
             },
             modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
             onDismissRequest = {
-                clickedIndex.value = -1
+                checkedPicUrl.value = ""
             },
             containerColor = MaterialTheme.colorScheme.background,
             shape = Shape.medium,
             confirmButton = {
                 //确认下载
                 MainButton(text = stringResource(R.string.save_image)) {
-                    drawables[index]?.let {
+                    loadedPicMap[checkedPicUrl.value]?.let {
                         FileSaveHelper(context).saveBitmap(
                             bitmap = (it as BitmapDrawable).bitmap,
-                            displayName = "${id}_${index}.jpg"
+                            displayName = "${getFileName(checkedPicUrl.value)}.jpg"
                         )
-                        clickedIndex.value = -1
+                        checkedPicUrl.value = ""
                     }
                 }
             },
@@ -157,8 +144,68 @@ fun AllPics(id: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
                     text = stringResource(id = R.string.cancel),
                     color = MaterialTheme.colorScheme.primary
                 ) {
-                    clickedIndex.value = -1
+                    checkedPicUrl.value = ""
                 }
             })
+    }
+}
+
+
+@Composable
+private fun PicGridList(
+    checkedPicUrl: MutableState<String>,
+    urls: ArrayList<String>,
+    loadedPicMap: MutableMap<String, Drawable?>
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val unLoadToast = stringResource(id = R.string.wait_pic_load)
+
+    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
+        urls.forEachIndexed { index, picUrl ->
+            val request = coil.request.ImageRequest.Builder(context)
+                .data(picUrl)
+                .build()
+            coroutineScope.launch {
+                val image = coil.Coil.imageLoader(context).execute(request).drawable
+                loadedPicMap[picUrl] = image
+            }
+            MainCard(
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .fillMaxWidth(),
+                onClick = {
+                    //下载
+                    val loaded = loadedPicMap[picUrl] != null
+                    if (loaded) {
+                        //权限校验
+                        checkPermissions(context) {
+                            checkedPicUrl.value = picUrl
+                        }
+                    } else {
+                        ToastUtil.short(unLoadToast)
+                    }
+                }
+            ) {
+                //图片
+                ImageCompose(
+                    data = picUrl,
+                    ratio = -1f,
+                    loadingId = R.drawable.load,
+                    errorId = R.drawable.error
+                )
+            }
+        }
+    }
+}
+
+/**
+ * 获取文件名
+ */
+private fun getFileName(url: String): String {
+    try {
+        return url.split('/').last().split('.')[0]
+    } catch (e: Exception) {
+        return System.currentTimeMillis().toString()
     }
 }

@@ -42,6 +42,7 @@ object Navigation {
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
     const val ALL_PICS = "allPics"
+    const val ALL_PICS_TYPE = "allPicsType"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
     const val EQUIP_LIST = "equipList"
@@ -147,10 +148,13 @@ fun NavGraph(
 
         //角色图片详情
         composable(
-            route = "${Navigation.ALL_PICS}/{${Navigation.UNIT_ID}}",
+            route = "${Navigation.ALL_PICS}/{${Navigation.UNIT_ID}}/{${Navigation.ALL_PICS_TYPE}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
-            }),
+            },
+                navArgument(Navigation.ALL_PICS_TYPE) {
+                    type = NavType.IntType
+                }),
             enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
             popEnterTransition = { myFadeIn },
@@ -158,7 +162,10 @@ fun NavGraph(
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            AllPics(arguments.getInt(Navigation.UNIT_ID))
+            AllPics(
+                arguments.getInt(Navigation.UNIT_ID),
+                arguments.getInt(Navigation.ALL_PICS_TYPE)
+            )
         }
 
         //角色资料
@@ -627,8 +634,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色图片详情
      */
-    val toAllPics: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${Navigation.ALL_PICS}/${unitId}")
+    val toAllPics: (Int, Int) -> Unit = { unitId: Int, type: Int ->
+        navController.navigate("${Navigation.ALL_PICS}/${unitId}/${type}")
     }
 
     /**

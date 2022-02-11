@@ -486,7 +486,7 @@ private fun CharacterCard(
                 .width(getItemWidth()),
             isLargerCard = true
         ) {
-            actions.toAllPics(unitId)
+            actions.toAllPics(unitId, 0)
         }
     }
 }

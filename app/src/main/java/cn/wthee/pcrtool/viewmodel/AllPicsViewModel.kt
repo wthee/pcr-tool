@@ -18,23 +18,26 @@ class AllPicsViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * 立绘数据
+     * 角色立绘数据
      */
-    fun getStoryList(id: Int) = flow {
-        val firstNum = id.toString().substring(0, 1).toInt()
+    fun getUniCardList(id: Int) = flow {
+        val actualId = unitRepository.getActualId(id)
+        val picUrls =
+            ImageResourceHelper.getInstance().getAllPicUrl(id, actualId)
+        val list = arrayListOf<String>()
+        list.addAll(picUrls)
+        emit(list)
+    }
+
+    /**
+     * 剧情立绘数据
+     */
+    fun getStoryList(id: Int, type: Int) = flow {
         val data = apiRepository.getStoryList(id).data
         data?.let {
-            if (firstNum == 1) {
-                val actualId = unitRepository.getActualId(id)
-                val picUrls =
-                    ImageResourceHelper.getInstance().getAllPicUrl(id, actualId)
-                val list = arrayListOf<String>()
-                list.addAll(picUrls)
-                list.addAll(getStoryUrls(it, ImageResourceHelper.CARD_STORY))
-                emit(list)
-            } else {
-                emit(getStoryUrls(it, ImageResourceHelper.EVENT_STORY))
-            }
+            val pathName =
+                if (type == 0) ImageResourceHelper.CARD_STORY else ImageResourceHelper.EVENT_STORY
+            emit(getStoryUrls(it, pathName))
         }
     }
 
