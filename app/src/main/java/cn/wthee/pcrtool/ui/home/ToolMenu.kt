@@ -90,7 +90,10 @@ private fun MenuItem(
     Column(
         modifier = Modifier
             .clip(Shape.medium)
-            .clickable(onClick = getAction(coroutineScope, context, actions, it))
+            .clickable {
+                VibrateUtil(context).single()
+                getAction(coroutineScope, actions, it).invoke()
+            }
             .defaultMinSize(minWidth = Dimen.menuItemSize)
             .padding(Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -106,13 +109,11 @@ private fun MenuItem(
 
 fun getAction(
     coroutineScope: CoroutineScope,
-    context: Context,
     actions: NavActions,
     tool: ToolMenuData
 ): () -> Unit {
 
     return {
-        VibrateUtil(context).single()
         when (tool.iconType) {
             MainIconType.CHARACTER -> actions.toCharacterList()
             MainIconType.GACHA -> actions.toGacha()

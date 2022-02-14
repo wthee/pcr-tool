@@ -141,7 +141,7 @@ fun PvpSearchCompose(
             }
             //供选择列表
             if (showResult) {
-                if (!research.value && selectedIds.contains(PvpCharacterData())) {
+                if (!research.value && (selectedIds.contains(PvpCharacterData()) || selectedIds.size < 5)) {
                     ToastUtil.short(tip)
                     navViewModel.showResult.postValue(false)
                 } else {

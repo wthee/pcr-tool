@@ -92,6 +92,8 @@ fun Overview(
         navViewModel.openChangeDataDialog.postValue(false)
     }
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val equipSpanCount =
+        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
 
 
     val characterCount =
@@ -99,7 +101,7 @@ fun Overview(
     val characterList =
         overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
     val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
-    val equipList = overviewViewModel.getEquipList(maxOf(1, spanCount) * 10)
+    val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
         .collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
@@ -174,7 +176,7 @@ fun Overview(
                     }
                 ) {
                     VerticalGrid(
-                        spanCount = maxOf(1, spanCount) * 5,
+                        spanCount = maxOf(1, equipSpanCount),
                         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
                     ) {
                         if (equipList.isNotEmpty()) {

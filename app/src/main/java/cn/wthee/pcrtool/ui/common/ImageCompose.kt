@@ -30,6 +30,7 @@ const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 682f
 
 
+//fixme  aspectRatio 不设置时，加载占位图显示不出来
 @Composable
 fun ImageCompose(
     modifier: Modifier = Modifier,

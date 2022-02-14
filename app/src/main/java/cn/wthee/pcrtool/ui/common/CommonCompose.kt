@@ -326,6 +326,7 @@ fun MainTexButton(
 
 /**
  * RANK 文本
+ * type: 0 默认 1 白字+底色
  */
 @Composable
 fun RankText(
@@ -333,14 +334,27 @@ fun RankText(
     style: TextStyle,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
+    type: Int = 0
 ) {
-    Text(
-        text = getFormatText(rank),
-        textAlign = textAlign,
-        color = getRankColor(rank),
-        style = style,
-        modifier = modifier
-    )
+    val color = getRankColor(rank)
+    val text = getFormatText(rank)
+    if (type == 0) {
+        Text(
+            text = text,
+            textAlign = textAlign,
+            color = color,
+            style = style,
+            modifier = modifier
+        )
+    } else {
+        MainTitleText(
+            text = text,
+            textStyle = MaterialTheme.typography.titleMedium,
+            backgroundColor = color,
+            modifier = modifier
+        )
+    }
+
 }
 
 //rank 颜色
@@ -385,13 +399,17 @@ fun MainCard(
 ) {
     val context = LocalContext.current
 
-    val mModifier = modifier
-        .fillMaxWidth()
-        .shadow(Dimen.cardElevation, shape, true)
-        .clickable(enabled = onClick != null) {
+    var mModifier =
+        modifier
+            .fillMaxWidth()
+            .shadow(Dimen.cardElevation, shape, true)
+
+    if (onClick != null) {
+        mModifier = mModifier.clickable {
             VibrateUtil(context).single()
-            onClick?.invoke()
+            onClick.invoke()
         }
+    }
 
     Card(
         modifier = mModifier,

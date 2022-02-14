@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -16,8 +14,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.BuildConfig
@@ -29,7 +25,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.ToolMenuData
 import cn.wthee.pcrtool.ui.home.getAction
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import kotlinx.coroutines.CoroutineScope
 
@@ -47,7 +42,6 @@ data class ToolMenuGroup(
 fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
 
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -2
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val list = arrayListOf<ToolMenuGroup>()
@@ -95,7 +89,6 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
         items(list) {
             MenuGroup(
                 coroutineScope = coroutineScope,
-                context = context,
                 actions = actions,
                 title = it.title,
                 list = it.list,
@@ -115,7 +108,6 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
 @Composable
 private fun MenuGroup(
     coroutineScope: CoroutineScope,
-    context: Context,
     actions: NavActions,
     title: String,
     list: List<ToolMenuData>,
@@ -141,19 +133,15 @@ private fun MenuGroup(
                     MainIconType.DB_DOWNLOAD -> {
                         if (downloadState > -2) {
                             MainCard(
-                                modifier = Modifier.padding(Dimen.mediumPadding)
+                                modifier = Modifier.padding(Dimen.mediumPadding),
+                                onClick = getAction(
+                                    coroutineScope,
+                                    actions,
+                                    it
+                                )
                             ) {
                                 Row(
                                     modifier = Modifier
-                                        .clip(Shape.medium)
-                                        .clickable(
-                                            onClick = getAction(
-                                                coroutineScope,
-                                                context,
-                                                actions,
-                                                it
-                                            )
-                                        )
                                         .defaultMinSize(minWidth = Dimen.menuItemSize)
                                         .padding(Dimen.smallPadding),
                                     verticalAlignment = Alignment.CenterVertically
@@ -181,10 +169,10 @@ private fun MenuGroup(
                                 }
                             }
                         } else {
-                            MenuItem(coroutineScope, context, actions, it)
+                            MenuItem(coroutineScope, actions, it)
                         }
                     }
-                    else -> MenuItem(coroutineScope, context, actions, it)
+                    else -> MenuItem(coroutineScope, actions, it)
                 }
             }
         }
@@ -195,13 +183,12 @@ private fun MenuGroup(
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,
-    context: Context,
     actions: NavActions,
     it: ToolMenuData
 ) {
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
-        onClick = getAction(coroutineScope, context, actions, it)
+        onClick = getAction(coroutineScope, actions, it)
     ) {
         Row(
             modifier = Modifier

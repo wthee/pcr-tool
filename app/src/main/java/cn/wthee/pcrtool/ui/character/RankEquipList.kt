@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -12,10 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -24,8 +20,6 @@ import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.common.RankText
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
@@ -71,14 +65,6 @@ fun RankEquipListItem(
     selectedRank: MutableState<Int>,
     toEquipDetail: (Int) -> Unit
 ) {
-    val colorAnim = animateColorAsState(
-        targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
-            colorResource(id = R.color.alpha_primary)
-        else
-            MaterialTheme.colorScheme.surface,
-        animationSpec = defaultSpring()
-    )
-
 
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
@@ -91,16 +77,17 @@ fun RankEquipListItem(
         //图标列表
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(colorAnim.value, Shape.medium),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(Dimen.mediumPadding)
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                type = if (unitPromotion.promotionLevel == selectedRank.value) 1 else 0
             )
+
             val allIds = unitPromotion.getAllOrderIds()
             allIds.forEachIndexed { index, _ ->
                 if (index % 2 == 0) {
