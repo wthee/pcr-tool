@@ -60,7 +60,7 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
             if (updateApp != -1) {
                 IconCompose(
                     data = if (updateApp == 1) MainIconType.APP_UPDATE.icon else MainIconType.NOTICE.icon,
-                    tint = if (updateApp == 1) colorResource(id = R.color.color_rank_21) else MaterialTheme.colorScheme.onSurface,
+                    tint = if (updateApp == 1) colorResource(id = R.color.color_rank_21_23) else MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 ) {
                     actions.toNotice()
@@ -70,8 +70,7 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
                     modifier = Modifier
                         .size(Dimen.fabIconSize)
                         .padding(Dimen.lineHeight),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    strokeWidth = Dimen.lineHeight
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             Spacer(modifier = Modifier.width(Dimen.largePadding))

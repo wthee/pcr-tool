@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -50,7 +49,6 @@ import cn.wthee.pcrtool.ui.tool.EventItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -65,6 +63,7 @@ import kotlinx.coroutines.launch
 /**
  * 首页纵览
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -95,6 +94,8 @@ fun Overview(
         navViewModel.openChangeDataDialog.postValue(false)
     }
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val equipSpanCount =
+        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
 
 
     val characterCount =
@@ -102,7 +103,7 @@ fun Overview(
     val characterList =
         overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
     val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
-    val equipList = overviewViewModel.getEquipList(maxOf(1, spanCount) * 10)
+    val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
         .collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
@@ -148,13 +149,16 @@ fun Overview(
                         ) { index ->
                             val id = if (characterList.isEmpty()) 0 else characterList[index].id
                             Card(
-                                modifier = Modifier.width(getItemWidth()),
-                                onClick = {
-                                    VibrateUtil(context).single()
-                                    actions.toCharacterDetail(id)
-                                },
-                                elevation = 0.dp,
-                                shape = Shape.medium
+                                modifier = Modifier
+                                    .width(getItemWidth())
+                                    .clip(Shape.medium)
+                                    .clickable {
+                                        VibrateUtil(context).single()
+                                        actions.toCharacterDetail(id)
+                                    },
+                                elevation = CardDefaults.cardElevation(0.dp),
+                                shape = Shape.medium,
+                                containerColor = MaterialTheme.colorScheme.background
                             ) {
                                 ImageCompose(
                                     data = ImageResourceHelper.getInstance().getMaxCardUrl(id),
@@ -180,7 +184,7 @@ fun Overview(
                     }
                 ) {
                     VerticalGrid(
-                        spanCount = maxOf(1, spanCount) * 5,
+                        spanCount = maxOf(1, equipSpanCount),
                         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
                     ) {
                         if (equipList.isNotEmpty()) {
@@ -193,7 +197,7 @@ fun Overview(
                                 ) {
                                     IconCompose(
                                         data = ImageResourceHelper.getInstance()
-                                            .getUrl(ICON_EQUIPMENT, it.equipmentId)
+                                            .getEquipPic(it.equipmentId)
                                     ) {
                                         actions.toEquipDetail(it.equipmentId)
                                     }
@@ -386,13 +390,7 @@ private fun ChangeDbCompose(
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(Dimen.menuIconSize)
-                            .padding(Dimen.smallPadding),
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
-                    )
+                    SmallCircularProgressIndicator()
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(
@@ -631,7 +629,7 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
             val dropMumColor = when (data.getFixedValue()) {
                 1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
                 3f -> colorResource(id = R.color.color_rank_18_20)
-                4f -> colorResource(id = R.color.color_rank_21)
+                4f -> colorResource(id = R.color.color_rank_21_23)
                 else -> MaterialTheme.colorScheme.primary
             }
             events.add(

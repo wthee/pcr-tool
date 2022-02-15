@@ -2,15 +2,16 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -325,6 +326,7 @@ fun MainTexButton(
 
 /**
  * RANK 文本
+ * type: 0 默认 1 白字+底色
  */
 @Composable
 fun RankText(
@@ -332,14 +334,27 @@ fun RankText(
     style: TextStyle,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
+    type: Int = 0
 ) {
-    Text(
-        text = getFormatText(rank),
-        textAlign = textAlign,
-        color = getRankColor(rank),
-        style = style,
-        modifier = modifier
-    )
+    val color = getRankColor(rank)
+    val text = getFormatText(rank)
+    if (type == 0) {
+        Text(
+            text = text,
+            textAlign = textAlign,
+            color = color,
+            style = style,
+            modifier = modifier
+        )
+    } else {
+        MainTitleText(
+            text = text,
+            textStyle = MaterialTheme.typography.titleMedium,
+            backgroundColor = color,
+            modifier = modifier
+        )
+    }
+
 }
 
 //rank 颜色
@@ -351,10 +366,9 @@ fun getRankColor(rank: Int): Color {
         in 7..10 -> R.color.color_rank_7_10
         in 11..17 -> R.color.color_rank_11_17
         in 18..20 -> R.color.color_rank_18_20
-        in 21..99 -> R.color.color_rank_21
-        else -> {
-            R.color.color_rank_2_3
-        }
+        in 21..23 -> R.color.color_rank_21_23
+        in 24..99 -> R.color.color_rank_24
+        else -> R.color.color_rank_1
     }
     return colorResource(id = colorId)
 }
@@ -374,42 +388,34 @@ fun CommonSpacer() {
 /**
  * 卡片布局
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    shape: RoundedCornerShape = Shape.medium,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
-    val mModifier = modifier
-        .fillMaxWidth()
-        .heightIn(min = Dimen.cardHeight)
+    var mModifier =
+        modifier
+            .fillMaxWidth()
+            .shadow(Dimen.cardElevation, shape, true)
 
     if (onClick != null) {
-        Card(
-            modifier = mModifier,
-            content = content,
-            onClick = {
-                VibrateUtil(context).single()
-                onClick.invoke()
-            },
-            backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation,
-            shape = Shape.medium,
-        )
-    } else {
-        Card(
-            modifier = mModifier,
-            content = content,
-            backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation,
-            shape = Shape.medium,
-        )
+        mModifier = mModifier.clickable {
+            VibrateUtil(context).single()
+            onClick.invoke()
+        }
     }
 
+    Card(
+        modifier = mModifier,
+        content = content,
+        containerColor = backgroundColor
+    )
 }
 
 /**
@@ -463,7 +469,7 @@ fun CharacterLimitText(
         1 -> {
             if (characterInfo.rarity == 1) {
                 type = stringResource(id = R.string.type_event_limit)
-                color = colorResource(id = R.color.color_rank_21)
+                color = colorResource(id = R.color.color_rank_21_23)
             } else {
                 type = stringResource(id = R.string.type_limit)
                 color = colorResource(id = R.color.color_rank_18_20)
@@ -551,10 +557,10 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     ) {
         //显示指示器
         Row {
-            urls.forEachIndexed { index, s ->
+            urls.forEachIndexed { index, url ->
                 IconCompose(
                     modifier = Modifier.padding(horizontal = Dimen.largePadding),
-                    data = s,
+                    data = url,
                 ) {
                     scope.launch {
                         pagerState.scrollToPage(index)
@@ -571,4 +577,15 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
             inactiveColor = Color.Unspecified
         )
     }
+}
+
+@Composable
+fun SmallCircularProgressIndicator() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .size(Dimen.menuIconSize)
+            .padding(Dimen.smallPadding),
+        color = MaterialTheme.colorScheme.primary,
+        strokeWidth = 2.dp
+    )
 }

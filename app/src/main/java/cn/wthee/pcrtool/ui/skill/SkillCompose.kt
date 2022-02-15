@@ -15,8 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
@@ -30,9 +33,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
@@ -235,7 +236,7 @@ fun SkillActionItem(
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
         arrayListOf(
-            colorResource(R.color.color_rank_21),
+            colorResource(R.color.color_rank_21_23),
             colorResource(if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black),
             colorResource(R.color.color_rank_11_17),
             MaterialTheme.colorScheme.primary
@@ -394,10 +395,10 @@ private fun SkillLoopIconList(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val type: String
-                val url: String
+                val url: Any
                 if (it == 1) {
                     type = "普攻"
-                    url = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
+                    url = R.drawable.unknown_item
                 } else {
                     type = when (it / 1000) {
                         1 -> "技能 ${it % 10}"
@@ -414,7 +415,7 @@ private fun SkillLoopIconList(
                         else -> null
                     }
                     url = if (iconType == null) {
-                        ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
+                        R.drawable.unknown_item
                     } else {
                         ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
                     }

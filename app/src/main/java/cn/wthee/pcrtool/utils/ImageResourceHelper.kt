@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
@@ -70,6 +71,13 @@ class ImageResourceHelper() {
     fun getUrl(resUrl: String, id: Any) =
         RESOURCE_PREFIX_URL + type + RESOURCE + resUrl + id.toString() + WEBP
 
+    //获取装备图标
+    fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {
+        R.drawable.unknown_item
+    } else {
+        RESOURCE_PREFIX_URL + type + RESOURCE + ICON_EQUIPMENT + id.toString() + WEBP
+    }
+
     /**
      * 获取角色卡面 urls
      *
@@ -127,3 +135,4 @@ class ImageResourceHelper() {
     }
 
 }
+

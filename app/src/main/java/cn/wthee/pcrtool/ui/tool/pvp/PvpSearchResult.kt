@@ -301,7 +301,7 @@ private fun PvpResultItem(
                     )
                     MainContentText(
                         text = item.up.toString(),
-                        color = colorResource(id = R.color.color_rank_21),
+                        color = colorResource(id = R.color.color_rank_21_23),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(0.3f)
                     )

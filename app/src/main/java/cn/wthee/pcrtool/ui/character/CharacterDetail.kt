@@ -43,7 +43,6 @@ import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
@@ -486,7 +485,7 @@ private fun CharacterCard(
                 .width(getItemWidth()),
             isLargerCard = true
         ) {
-            actions.toAllPics(unitId)
+            actions.toAllPics(unitId, 0)
         }
     }
 }
@@ -575,12 +574,12 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id6)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id6)) {
                 if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id3)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id3)) {
                 toEquipDetail(id3)
             }
         }
@@ -593,7 +592,7 @@ private fun CharacterEquip(
                 .padding(top = Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id5)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id5)) {
                 toEquipDetail(id5)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -645,7 +644,7 @@ private fun CharacterEquip(
                 )
             }
             val id2 = equips[3].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id2)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id2)) {
                 toEquipDetail(id2)
             }
 
@@ -660,10 +659,10 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id4)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id4)) {
                 toEquipDetail(id4)
             }
-            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id1)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id1)) {
                 toEquipDetail(id1)
             }
         }
@@ -800,7 +799,7 @@ private fun UniqueEquip(
                     .fillMaxWidth()
             ) {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, it.equipmentId)
+                    data = ImageResourceHelper.getInstance().getEquipPic(it.equipmentId)
                 )
                 Subtitle2(
                     text = it.getDesc(),

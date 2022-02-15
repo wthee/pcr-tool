@@ -64,7 +64,7 @@ fun RandomEquipArea(
                             ImageResourceHelper.UNKNOWN_EQUIP_ID,
                             odds,
                             "区域 ${it.area}",
-                            colorResource(id = R.color.color_rank_21)
+                            colorResource(id = R.color.color_rank_21_23)
                         )
                     }
                     item {
@@ -91,7 +91,7 @@ fun RandomEquipArea(
                         -1,
                         odds,
                         "区域 xx",
-                        colorResource(id = R.color.color_rank_21)
+                        colorResource(id = R.color.color_rank_21_23)
                     )
                 }
                 item {

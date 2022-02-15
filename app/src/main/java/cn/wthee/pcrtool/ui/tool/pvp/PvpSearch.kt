@@ -14,14 +14,12 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
@@ -141,7 +139,7 @@ fun PvpSearchCompose(
             }
             //供选择列表
             if (showResult) {
-                if (!research.value && selectedIds.contains(PvpCharacterData())) {
+                if (!research.value && (selectedIds.contains(PvpCharacterData()) || selectedIds.size < 5)) {
                     ToastUtil.short(tip)
                     navViewModel.showResult.postValue(false)
                 } else {
@@ -336,7 +334,11 @@ private fun PvpCharacterSelectPage(
         modifier = Modifier.fillMaxSize()
     ) {
         //角色图标列表
-        LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = selectListState) {
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(spanCount),
+            state = selectListState,
+            verticalArrangement = Arrangement.Center
+        ) {
             items(character0 + character1 + character2) {
                 PvpIconItem(selectedIds, it, floatWindow)
             }
@@ -399,58 +401,32 @@ fun PvpIconItem(
     floatWindow: Boolean
 ) {
     val textTopPadding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
-    val iconSize = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
 
     if (it.type != -1) {
-        val iconId: Int
-        val textColorId: Int
-        val textId: Int
+        //位置图标
 
-        when (it.type) {
+        val iconId: Int = when (it.type) {
             0 -> {
-                iconId = R.drawable.ic_position_0
-                textColorId = R.color.color_rank_18_20
-                textId = R.string.position_0
+                R.drawable.ic_position_0
             }
             1 -> {
-                iconId = R.drawable.ic_position_1
-                textColorId = R.color.color_rank_7_10
-                textId = R.string.position_1
-            }
-            2 -> {
-                iconId = R.drawable.ic_position_2
-                textColorId = R.color.colorPrimary
-                textId = R.string.position_2
+                R.drawable.ic_position_1
             }
             else -> {
-                iconId = R.drawable.unknown_gray
-                textColorId = R.color.black
-                textId = R.string.all
+                R.drawable.ic_position_2
             }
         }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(Dimen.smallPadding)
-                .fillMaxWidth()
-        ) {
-            Box(modifier = Modifier.size(iconSize), contentAlignment = Alignment.Center) {
-                IconCompose(
-                    data = iconId,
-                    size = if (floatWindow) Dimen.smallIconSize else Dimen.fabIconSize
-                )
-            }
-
-            Text(
-                text = stringResource(id = textId),
-                color = colorResource(id = textColorId),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = textTopPadding)
+        Box(modifier = Modifier.size(Dimen.iconSize), contentAlignment = Alignment.Center) {
+            IconCompose(
+                data = iconId,
+                size = Dimen.smallIconSize
             )
         }
 
     } else {
+        //角色图标
+
         val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
         val selected = selectedIds.contains(it)
         val newList = arrayListOf<PvpCharacterData>()
@@ -467,12 +443,10 @@ fun PvpIconItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(Dimen.smallPadding)
-                .fillMaxWidth()
         ) {
             //图标
             IconCompose(
-                data = icon,
-                size = iconSize
+                data = icon
             ) {
                 //点击选择或取消选择
                 if (selected) {

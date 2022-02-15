@@ -237,8 +237,8 @@ fun FabMain(modifier: Modifier = Modifier) {
             MainIconType.MAIN -> navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
             MainIconType.DOWN -> navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             else -> {
-                navController.navigateUp()
                 navViewModel.loading.postValue(false)
+                navController.navigateUp()
             }
         }
     }
