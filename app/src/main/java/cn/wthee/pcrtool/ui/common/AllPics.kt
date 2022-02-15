@@ -7,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,7 +58,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
         ) {
             if (type == 0) {
                 MainTitleText(
-                    text = "基本",
+                    text = "基本 ${basicUrls.size}",
                     modifier = Modifier.padding(
                         top = Dimen.largePadding,
                         start = Dimen.largePadding,
@@ -72,27 +71,26 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                     loadedPicMap = loadedPicMap
                 )
             }
-            MainTitleText(
-                text = "剧情",
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                )
-            )
-            when {
-                storyUrls == null -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(
-                                Dimen.largePadding
-                            )
-                            .size(Dimen.fabIconSize),
-                        color = MaterialTheme.colorScheme.primary
+            Row(
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
                     )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = "剧情 ${storyUrls?.size?.toString() ?: "-"}"
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                if (storyUrls == null) {
+                    SmallCircularProgressIndicator()
                 }
-                storyUrls.isEmpty() -> {
+            }
+            if (storyUrls != null) {
+                if (storyUrls.isEmpty()) {
                     MainText(
                         text = "暂无剧情信息",
                         modifier = Modifier
@@ -101,8 +99,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                                 Dimen.largePadding
                             )
                     )
-                }
-                else -> {
+                } else {
                     PicGridList(
                         checkedPicUrl = checkedPicUrl,
                         urls = storyUrls,
@@ -188,9 +185,8 @@ private fun PicGridList(
                 }
             ) {
                 //图片
-                ImageCompose(
+                StoryImageCompose(
                     data = picUrl,
-                    ratio = -1f,
                     loadingId = R.drawable.load,
                     errorId = R.drawable.error
                 )

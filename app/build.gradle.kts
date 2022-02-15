@@ -14,9 +14,9 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha03"
-val appVersionCode = 316
-val appVersionName = "3.1.6"
+val composeVersion = "1.2.0-alpha02"
+val appVersionCode = 317
+val appVersionName = "3.1.7"
 
 android {
 
@@ -121,7 +121,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.24.2-alpha"
+    val accompanistVersion = "0.24.1-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

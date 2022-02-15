@@ -63,6 +63,7 @@ import kotlinx.coroutines.launch
 /**
  * 首页纵览
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -76,6 +77,7 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
+    val context = LocalContext.current
     val region = getRegion()
     val coroutineScope = rememberCoroutineScope()
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
@@ -146,11 +148,17 @@ fun Overview(
                             itemSpacing = Dimen.mediumPadding
                         ) { index ->
                             val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                            MainCard(
-                                modifier = Modifier.width(getItemWidth()),
-                                onClick = {
-                                    actions.toCharacterDetail(id)
-                                }
+                            Card(
+                                modifier = Modifier
+                                    .width(getItemWidth())
+                                    .clip(Shape.medium)
+                                    .clickable {
+                                        VibrateUtil(context).single()
+                                        actions.toCharacterDetail(id)
+                                    },
+                                elevation = CardDefaults.cardElevation(0.dp),
+                                shape = Shape.medium,
+                                containerColor = MaterialTheme.colorScheme.background
                             ) {
                                 ImageCompose(
                                     data = ImageResourceHelper.getInstance().getMaxCardUrl(id),
@@ -382,13 +390,7 @@ private fun ChangeDbCompose(
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(Dimen.menuIconSize)
-                            .padding(Dimen.smallPadding),
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
-                    )
+                    SmallCircularProgressIndicator()
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(

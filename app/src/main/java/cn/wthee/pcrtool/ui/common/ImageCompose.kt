@@ -2,11 +2,14 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,6 +23,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 
 const val RATIO = 1.78f
@@ -30,7 +34,6 @@ const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 682f
 
 
-//fixme  aspectRatio 不设置时，加载占位图显示不出来
 @Composable
 fun ImageCompose(
     modifier: Modifier = Modifier,
@@ -60,6 +63,40 @@ fun ImageCompose(
     )
 }
 
+
+@Composable
+fun StoryImageCompose(
+    data: Any,
+    @DrawableRes loadingId: Int? = null,
+    @DrawableRes errorId: Int? = null,
+    contentScale: ContentScale = ContentScale.FillWidth
+) {
+    SubcomposeAsyncImage(
+        model = data,
+        contentDescription = null,
+        contentScale = contentScale,
+        loading = {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                AsyncImage(
+                    model = loadingId,
+                    contentDescription = null,
+                    contentScale = contentScale,
+                    modifier = Modifier.aspectRatio(RATIO_COMMON)
+                )
+            }
+        },
+        error = {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                AsyncImage(
+                    model = errorId,
+                    contentDescription = null,
+                    contentScale = contentScale,
+                    modifier = Modifier.aspectRatio(RATIO_COMMON)
+                )
+            }
+        }
+    )
+}
 
 /**
  * 角色位置图标
@@ -106,6 +143,7 @@ fun IconCompose(
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)
+
     }
 
 
@@ -124,7 +162,7 @@ fun IconCompose(
             contentScale = ContentScale.Crop,
             placeholder = rememberAsyncImagePainter(R.drawable.unknown_gray),
             error = rememberAsyncImagePainter(R.drawable.unknown_item),
-            modifier = mModifier
+            modifier = mModifier.aspectRatio(1f)
         )
     }
 }

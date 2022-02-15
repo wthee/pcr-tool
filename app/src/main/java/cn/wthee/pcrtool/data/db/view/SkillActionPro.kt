@@ -186,6 +186,7 @@ data class SkillActionPro(
             512 -> "中毒或猛毒状态"
             710 -> "BREAK 状态"
             1400 -> "变身状态"
+            1600 -> "恐慌状态"
             721, 6107 -> "龙眼状态"
             else -> UNKNOWN
         }
@@ -271,7 +272,7 @@ data class SkillActionPro(
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val type = getBarrierTtpe(action_detail_1)
                 if (type != UNKNOWN) {
-                    "对${getTarget()}展开${type}${value}${time}"
+                    "对${getTarget()}展开${type} ${value}${time}"
                 } else {
                     type
                 }
@@ -305,9 +306,9 @@ data class SkillActionPro(
                         val descText =
                             if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
                                 tag += "(可叠加)"
-                                "速度额外提升初始值的${value}倍（可与其它相同效果叠加）"
+                                "速度额外提升初始值的 ${value} 倍（可与其它相同效果叠加）"
                             } else {
-                                "速度变更为初始值的${value}倍"
+                                "速度变更为初始值的 ${value} 倍"
                             }
                         "${tag}${getTarget()}，$descText$time"
                     }
@@ -332,7 +333,7 @@ data class SkillActionPro(
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)
-                "使${getTarget()}进入${tag}状态，每秒造成伤害 $value $time"
+                "使${getTarget()}进入${tag}状态，每秒造成伤害 $value$time"
             }
             // 10：buff/debuff
             SkillActionType.AURA -> {
@@ -477,7 +478,10 @@ data class SkillActionPro(
                                 "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 100})"
                             }
                             1300 -> {
-                                "${getTarget()}是使用魔法攻击对象时，使用动作(${action_detail_3 % 10})"
+                                "目标是${getTarget()}时，使用动作(${action_detail_3 % 10})"
+                            }
+                            1600 -> {
+                                "${getTarget()}在${status}时，使用动作(${action_detail_2 % 10})"
                             }
                             else -> UNKNOWN
                         }
@@ -498,7 +502,10 @@ data class SkillActionPro(
                                 "${getTarget()}的HP在 [${action_detail_1 - 900}%] 及以上时，使用动作(${action_detail_3 % 100})"
                             }
                             1300 -> {
-                                "${getTarget()}不是使用魔法攻击对象时，使用动作(${action_detail_2 % 10})"
+                                "目标不是${getTarget()}时，使用动作(${action_detail_2 % 10})"
+                            }
+                            1600 -> {
+                                "${getTarget()}是不在${status}时，使用动作(${action_detail_3 % 10})"
                             }
                             else -> UNKNOWN
                         }
@@ -704,13 +711,13 @@ data class SkillActionPro(
             // 32：HP吸收
             SkillActionType.LIFE_STEAL -> {
                 val value = getValueText(1, action_value_1, action_value_2)
-                "为${getTarget()}的下 [${action_value_3.toInt()}] 次攻击附加 ${toSkillActionType(action_type).desc}$value 的效果"
+                "为${getTarget()}的下 [${action_value_3.toInt()}] 次攻击附加 ${toSkillActionType(action_type).desc} $value 的效果"
             }
             // 33：反伤
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val type = getBarrierTtpe(action_detail_1)
-                val shieldText = "对${getTarget()}展开${type}${value}"
+                val shieldText = "对${getTarget()}展开${type} ${value}"
 
                 when (action_detail_1) {
                     1 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害"
@@ -917,8 +924,8 @@ data class SkillActionPro(
                 val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
                 val time = getTimeText(3, action_value_3, action_value_4)
                 when (action_detail_1) {
-                    0 -> "${getTarget()}的UB对任意目标造成伤害或直接回复时，使其效果值降低 [$value]$time"
-                    1 -> "${getTarget()}的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 [$value]$time"
+                    0 -> "${getTarget()}的UB对任意目标造成伤害或直接回复时，使其效果值降低 $value$time"
+                    1 -> "${getTarget()}的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 $value$time"
                     else -> UNKNOWN
                 }
             }
@@ -976,7 +983,7 @@ data class SkillActionPro(
             SkillActionType.HEAL_DOWN -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
                 val time = getTimeText(3, action_value_3, action_value_4)
-                "${getTarget()}治疗量变为原来的$value 倍$time"
+                "${getTarget()}治疗量变为原来的 $value 倍$time"
             }
             // 77：被动叠加刻印
             SkillActionType.IF_BUFF_SEAL -> {
@@ -991,7 +998,7 @@ data class SkillActionPro(
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
-                "${getTarget()}行动时，受到${
+                "${getTarget()}行动时，受到 ${
                     getValueText(
                         1,
                         action_value_1,
@@ -1017,7 +1024,7 @@ data class SkillActionPro(
             }
             // 92：改变 TP 获取倍率
             SkillActionType.CHANGE_TP_RATIO -> {
-                "包括通过受伤获得的TP奖励值在内，使${getTarget()}获得的所有TP回复效果值变为 [原值 * ${action_value_1}]"
+                "使${getTarget()}受击获得的TP变更为初始值的 [${action_value_1}] 倍"
             }
             // 93：无视挑衅
             SkillActionType.IGNOR_TAUNT -> {

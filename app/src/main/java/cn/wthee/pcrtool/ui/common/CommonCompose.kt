@@ -557,10 +557,10 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     ) {
         //显示指示器
         Row {
-            urls.forEachIndexed { index, s ->
+            urls.forEachIndexed { index, url ->
                 IconCompose(
                     modifier = Modifier.padding(horizontal = Dimen.largePadding),
-                    data = s,
+                    data = url,
                 ) {
                     scope.launch {
                         pagerState.scrollToPage(index)
@@ -577,4 +577,15 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
             inactiveColor = Color.Unspecified
         )
     }
+}
+
+@Composable
+fun SmallCircularProgressIndicator() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .size(Dimen.menuIconSize)
+            .padding(Dimen.smallPadding),
+        color = MaterialTheme.colorScheme.primary,
+        strokeWidth = 2.dp
+    )
 }
