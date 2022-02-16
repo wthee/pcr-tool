@@ -136,6 +136,7 @@ fun getAction(
             MainIconType.RANDOM_AREA -> actions.toRandomEquipArea(0)
             MainIconType.TOOL_MORE -> actions.toToolMore()
             MainIconType.NEWS -> actions.toNews()
+            MainIconType.FREE_GACHA -> actions.toFreeGacha()
             else -> {
             }
         }

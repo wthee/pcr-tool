@@ -107,6 +107,7 @@
     <string name="pvp_info_add_tip">添加对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
+    <string name="tool_free_gacha">免费十连</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
     <string name="tool_more">全部功能</string>

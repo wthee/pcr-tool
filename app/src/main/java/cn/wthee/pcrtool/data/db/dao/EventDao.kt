@@ -7,6 +7,7 @@ import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.EventStoryDetail
+import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 
 /**
  * 活动记录 DAO
@@ -123,4 +124,30 @@ interface EventDao {
     )
     suspend fun getTowerEvent(limit: Int): List<CalendarEvent>
 
+
+    /**
+     * 获取免费十连信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.id,
+            COALESCE( b.relation_count, 0 ) AS max_count,
+            a.start_time,
+        CASE
+                WHEN b.end_time IS NOT NULL THEN
+                b.end_time ELSE a.end_time 
+            END AS end_time 
+        FROM
+            campaign_freegacha AS a
+            LEFT JOIN campaign_freegacha AS b ON a.campaign_id = b.relation_id 
+        WHERE
+            a.freegacha_10 = 1
+        ORDER BY a.start_time DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getFreeGachaEvent(limit: Int): List<FreeGachaInfo>
 }

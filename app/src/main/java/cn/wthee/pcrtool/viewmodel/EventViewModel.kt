@@ -26,4 +26,16 @@ class EventViewModel @Inject constructor(
 
         }
     }
+
+
+    /**
+     * 获取免费十连活动记录
+     */
+    fun getFreeGachaHistory() = flow {
+        try {
+            emit(eventRepository.getFreeGachaEvent(Int.MAX_VALUE))
+        } catch (e: Exception) {
+
+        }
+    }
 }

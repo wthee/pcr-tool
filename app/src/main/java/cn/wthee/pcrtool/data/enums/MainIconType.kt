@@ -121,6 +121,11 @@ enum class MainIconType(val icon: ImageVector) {
     GACHA(Icons.Rounded.ReceiptLong),
 
     /**
+     * 免费十连
+     */
+    FREE_GACHA(Icons.Rounded.Celebration),
+
+    /**
      * 公会
      */
     GUILD(Icons.Rounded.Group),

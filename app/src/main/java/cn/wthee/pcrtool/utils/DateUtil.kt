@@ -64,7 +64,7 @@ fun String.days(str2: String): String {
         val time = d1.time - d2.time + 1000
         "${time / (60 * 60 * 1000 * 24)}天"
     } catch (e: Exception) {
-        "0"
+        "0天"
     }
 }
 
@@ -125,3 +125,20 @@ fun String.fillZero(toLength: Int = 2): String {
     return temp
 }
 
+
+/**
+ * 进行中判断
+ */
+fun isInProgress(today: String, startTime: String, endTime: String, regionType: Int): Boolean {
+    val sd = fixJpTime(startTime.formatTime, regionType)
+    val ed = fixJpTime(endTime.formatTime, regionType)
+    return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
+}
+
+/**
+ * 进行中判断
+ */
+fun isComingSoon(today: String, startTime: String, regionType: Int): Boolean {
+    val sd = fixJpTime(startTime.formatTime, regionType)
+    return today.second(sd) < 0
+}

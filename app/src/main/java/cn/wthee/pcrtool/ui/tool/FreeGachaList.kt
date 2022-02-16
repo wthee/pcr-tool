@@ -15,33 +15,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
- * 角色卡池页面
+ * 免费十连页面
  */
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun GachaList(
+fun FreeGachaList(
     scrollState: LazyListState,
-    toCharacterDetail: (Int) -> Unit,
-    gachaViewModel: GachaViewModel = hiltViewModel()
+    eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val gachas = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val gachas = eventViewModel.getFreeGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -50,7 +47,7 @@ fun GachaList(
                 state = scrollState
             ) {
                 items(gachas) {
-                    GachaItem(it, toCharacterDetail)
+                    FreeGachaItem(it)
                 }
                 item {
                     CommonSpacer()
@@ -59,8 +56,8 @@ fun GachaList(
         }
         //回到顶部
         FabCompose(
-            iconType = MainIconType.GACHA,
-            text = stringResource(id = R.string.tool_gacha),
+            iconType = MainIconType.FREE_GACHA,
+            text = stringResource(id = R.string.tool_free_gacha),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -81,28 +78,18 @@ fun GachaList(
 }
 
 /**
- * 单个卡池
+ * 免费十连
  */
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
+fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
     val regionType = getRegion()
     val today = getToday()
-    val sd = fixJpTime(gachaInfo.startTime, regionType)
-    val ed = fixJpTime(gachaInfo.endTime, regionType)
-    val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime, regionType)
-    val comingSoon = isComingSoon(today, gachaInfo.startTime, regionType)
-
-    val icons = gachaInfo.unitIds.intArrayList
-    val type = gachaInfo.getType()
-    val color = when (type) {
-        "PICK UP" -> colorResource(id = R.color.news_update)
-        "复刻" -> colorResource(id = R.color.color_rank_7_10)
-        "公主庆典" -> colorResource(id = R.color.color_rank_21_23)
-        else -> MaterialTheme.colorScheme.primary
-    }
-
+    val sd = fixJpTime(freeGachaInfo.startTime, regionType)
+    val ed = fixJpTime(freeGachaInfo.endTime, regionType)
+    val inProgress = isInProgress(today, freeGachaInfo.startTime, freeGachaInfo.endTime, regionType)
+    val comingSoon = isComingSoon(today, freeGachaInfo.startTime, regionType)
 
     Column(
         modifier = Modifier.padding(
@@ -115,10 +102,6 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            MainTitleText(
-                text = type,
-                backgroundColor = color
-            )
             MainTitleText(
                 text = sd.substring(0, 10),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -134,7 +117,6 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (inProgress) {
-
                     IconCompose(
                         data = MainIconType.TIME_LEFT.icon,
                         size = Dimen.smallIconSize,
@@ -164,20 +146,16 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //图标/描述
-                if (icons.isEmpty()) {
-                    MainContentText(
-                        text = gachaInfo.getDesc(),
-                        modifier = Modifier.padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding
-                        ),
-                        textAlign = TextAlign.Start
-                    )
-                } else {
-                    GridIconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
-                }
+                //描述
+                MainContentText(
+                    text = "「免费十连」 ${freeGachaInfo.getCount(regionType)} 次",
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
 
                 //结束日期
                 CaptionText(
@@ -191,16 +169,4 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         }
     }
 
-}
-
-@Preview
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@Composable
-private fun GachaItemPreview() {
-    PreviewBox {
-        Column {
-            GachaItem(gachaInfo = GachaInfo(), toCharacterDetail = {})
-        }
-    }
 }

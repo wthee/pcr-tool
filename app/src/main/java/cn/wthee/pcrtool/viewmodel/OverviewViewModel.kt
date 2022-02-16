@@ -12,10 +12,9 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.fixJpTime
-import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.second
+import cn.wthee.pcrtool.utils.isComingSoon
+import cn.wthee.pcrtool.utils.isInProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -90,16 +89,11 @@ class OverviewViewModel @Inject constructor(
 
             if (type == 0) {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val ed = fixJpTime(it.endTime.formatTime, regionType)
-                    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
-                    inProgress
+                    isInProgress(today, it.startTime, it.endTime, regionType)
                 })
             } else {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val comingSoon = today.second(sd) < 0
-                    comingSoon
+                    isComingSoon(today, it.startTime, regionType)
                 })
             }
         } catch (e: Exception) {
@@ -120,16 +114,11 @@ class OverviewViewModel @Inject constructor(
 
             if (type == 0) {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val ed = fixJpTime(it.endTime.formatTime, regionType)
-                    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
-                    inProgress
+                    isInProgress(today, it.startTime, it.endTime, regionType)
                 }.sortedWith(compare(today)))
             } else {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val comingSoon = today.second(sd) < 0
-                    comingSoon
+                    isComingSoon(today, it.startTime, regionType)
                 }.sortedWith(compare(today)))
             }
         } catch (e: Exception) {
@@ -152,17 +141,11 @@ class OverviewViewModel @Inject constructor(
 
             if (type == 0) {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val ed = fixJpTime(it.endTime.formatTime, regionType)
-                    val inProgress =
-                        today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
-                    inProgress
+                    isInProgress(today, it.startTime, it.endTime, regionType)
                 })
             } else {
                 emit(data.filter {
-                    val sd = fixJpTime(it.startTime.formatTime, regionType)
-                    val comingSoon = today.second(sd) < 0
-                    comingSoon
+                    isComingSoon(today, it.startTime, regionType)
                 })
             }
         } catch (e: Exception) {
@@ -194,6 +177,32 @@ class OverviewViewModel @Inject constructor(
             } catch (e: Exception) {
 
             }
+        }
+    }
+
+
+    /**
+     * 获取免费十连卡池列表
+     *
+     * @param type 0：进行中 1：预告
+     */
+    fun getFreeGachaList(type: Int) = flow {
+        try {
+            val regionType = getRegion()
+            val today = getToday()
+            val data = eventRepository.getFreeGachaEvent(1)
+
+            if (type == 0) {
+                emit(data.filter {
+                    isInProgress(today, it.startTime, it.endTime, regionType)
+                })
+            } else {
+                emit(data.filter {
+                    isComingSoon(today, it.startTime, regionType)
+                })
+            }
+        } catch (e: Exception) {
+
         }
     }
 }

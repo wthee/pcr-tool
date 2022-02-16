@@ -53,6 +53,7 @@ object Navigation {
     const val EQUIP_MATERIAL = "equipMaterial"
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
+    const val TOOL_FREE_GACHA = "toolFreeGacha"
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
@@ -341,6 +342,19 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             GachaList(scrollState, actions.toCharacterDetail)
+        }
+
+        //免费十连
+        composable(
+            route = Navigation.TOOL_FREE_GACHA,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+            FreeGachaList(scrollState)
         }
 
         //剧情活动
@@ -709,6 +723,13 @@ class NavActions(navController: NavHostController) {
      */
     val toGacha = {
         navController.navigate(Navigation.TOOL_GACHA)
+    }
+
+    /**
+     * 免费十连
+     */
+    val toFreeGacha = {
+        navController.navigate(Navigation.TOOL_FREE_GACHA)
     }
 
     /**

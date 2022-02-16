@@ -46,6 +46,7 @@ import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.EventItem
+import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
@@ -97,28 +98,44 @@ fun Overview(
     val equipSpanCount =
         ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
 
-
+    //角色总数
     val characterCount =
         overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
+    //角色列表
     val characterList =
         overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
+    //装备总数
     val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
+    //装备列表
     val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
         .collectAsState(initial = arrayListOf()).value
+    //进行中掉落活动
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
+    //预告掉落活动
     val comingSoonEventList =
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
+    //公共列表
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
+    //进行中剧情活动
     val inProgressStoryEventList =
         overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
+    //预告剧情活动
     val comingSoonStoryEventList =
         overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
+    //进行中卡池
     val inProgressGachaList =
         overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
+    //预告卡池
     val comingSoonGachaList =
         overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
+    //进行中免费十连
+    val inProgressFreeGachaList =
+        overviewViewModel.getFreeGachaList(0).collectAsState(initial = arrayListOf()).value
+    //预告免费十连
+    val comingSoonFreeGachaList =
+        overviewViewModel.getFreeGachaList(1).collectAsState(initial = arrayListOf()).value
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -252,7 +269,7 @@ fun Overview(
 
             //日历
             item {
-                if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty()) {
+                if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty() || inProgressFreeGachaList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar,
                         iconType = MainIconType.CALENDAR_TODAY
@@ -261,6 +278,9 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
+                            inProgressFreeGachaList.forEach {
+                                FreeGachaItem(it)
+                            }
                             inProgressGachaList.forEach {
                                 GachaItem(it, actions.toCharacterDetail)
                             }
@@ -273,7 +293,7 @@ fun Overview(
                         }
                     }
                 }
-                if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty()) {
+                if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty() || comingSoonFreeGachaList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar_comming,
                         iconType = MainIconType.CALENDAR
@@ -282,6 +302,9 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
+                            comingSoonFreeGachaList.forEach {
+                                FreeGachaItem(it)
+                            }
                             comingSoonGachaList.forEach {
                                 GachaItem(it, actions.toCharacterDetail)
                             }
@@ -508,8 +531,8 @@ private fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
     val sd = fixJpTime(calendar.startTime.formatTime, regionType)
     val ed = fixJpTime(calendar.endTime.formatTime, regionType)
-    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
-    val comingSoon = today.second(sd) < 0
+    val inProgress = isInProgress(today, calendar.startTime, calendar.endTime, regionType)
+    val comingSoon = isComingSoon(today, calendar.startTime, regionType)
 
     val color = when {
         inProgress -> {
