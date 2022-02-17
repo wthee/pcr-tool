@@ -100,6 +100,7 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         "PICK UP" -> colorResource(id = R.color.news_update)
         "复刻" -> colorResource(id = R.color.color_rank_7_10)
         "公主庆典" -> colorResource(id = R.color.color_rank_21_23)
+        "周年" -> colorResource(id = R.color.color_rank_24)
         else -> MaterialTheme.colorScheme.primary
     }
 

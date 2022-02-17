@@ -61,6 +61,7 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
+    const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
@@ -623,6 +624,18 @@ fun NavGraph(
             val scrollState = rememberLazyListState()
             AllToolMenu(scrollState, actions)
         }
+
+        //模拟抽卡
+        composable(
+            route = Navigation.TOOL_MOCK_GACHA,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            MockGacha()
+        }
     }
 }
 
@@ -856,6 +869,13 @@ class NavActions(navController: NavHostController) {
      */
     val toToolMore = {
         navController.navigate(Navigation.TOOL_MORE)
+    }
+
+    /**
+     * 模拟抽卡
+     */
+    val toMockGacha = {
+        navController.navigate(Navigation.TOOL_MOCK_GACHA)
     }
 }
 

@@ -54,8 +54,8 @@ fun ImageCompose(
         model = data,
         contentDescription = null,
         contentScale = contentScale,
-        placeholder = loadingId?.let { rememberAsyncImagePainter(it) },
-        error = errorId?.let { rememberAsyncImagePainter(it) },
+        placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
+        error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         onSuccess = {
             onSuccess.invoke()
         },
@@ -155,13 +155,17 @@ fun IconCompose(
             modifier = mModifier
         )
     } else {
+        val contentScale = ContentScale.Crop
         AsyncImage(
             model = data,
             colorFilter = colorFilter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            placeholder = rememberAsyncImagePainter(R.drawable.unknown_gray),
-            error = rememberAsyncImagePainter(R.drawable.unknown_item),
+            placeholder = rememberAsyncImagePainter(
+                R.drawable.unknown_gray,
+                contentScale = contentScale
+            ),
+            error = rememberAsyncImagePainter(R.drawable.unknown_item, contentScale = contentScale),
             modifier = mModifier.aspectRatio(1f)
         )
     }

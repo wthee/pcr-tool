@@ -196,4 +196,5 @@
     <string name="basic_info">基本信息</string>
     <string name="story_pic">查看剧情立绘</string>
     <string name="no_limit">无限制</string>
+    <string name="tool_mock_gacha">模拟卡池</string>
 </resources>

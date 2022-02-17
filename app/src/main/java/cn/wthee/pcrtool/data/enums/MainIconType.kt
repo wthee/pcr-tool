@@ -121,6 +121,11 @@ enum class MainIconType(val icon: ImageVector) {
     GACHA(Icons.Rounded.ReceiptLong),
 
     /**
+     * 模拟卡池
+     */
+    MOCK_GACHA(Icons.Rounded.Savings),
+
+    /**
      * 免费十连
      */
     FREE_GACHA(Icons.Rounded.Celebration),

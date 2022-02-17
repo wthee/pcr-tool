@@ -7,7 +7,7 @@ import androidx.room.Embedded
  * 角色星级属性
  */
 data class UnitRarity(
-    @ColumnInfo(name = "unit_id") val unitid: Int,
+    @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
     @Embedded val attr: Attr,
     @ColumnInfo(name = "hp_growth") val hpGrowth: Double,

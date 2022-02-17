@@ -132,7 +132,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha08"
+    val coilVersion = "2.0.0-alpha09"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 

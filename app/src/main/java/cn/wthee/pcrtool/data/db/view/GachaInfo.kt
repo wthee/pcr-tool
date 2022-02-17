@@ -26,6 +26,12 @@ data class GachaInfo(
         "ピックアップガチャ", "精選轉蛋", "限定精選轉蛋" -> "PICK UP"
         "プライズガチャ", "獎勵轉蛋", "附奖扭蛋" -> "复刻扭蛋"
         "プリンセスフェス", "公主祭典" -> "公主庆典"
-        else -> gachaName
+        else -> {
+            if (gachaName.contains("Anniversary") || gachaName.contains("周年")) {
+                "周年"
+            } else {
+                gachaName
+            }
+        }
     }.replace("ガチャ", "").replace("扭蛋", "").replace("轉蛋", "")
 }

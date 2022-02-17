@@ -51,7 +51,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-        ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA),
+        ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA),
         ToolMenuData(R.string.tool_more, MainIconType.TOOL_MORE),
     )
 
@@ -137,6 +137,7 @@ fun getAction(
             MainIconType.TOOL_MORE -> actions.toToolMore()
             MainIconType.NEWS -> actions.toNews()
             MainIconType.FREE_GACHA -> actions.toFreeGacha()
+            MainIconType.MOCK_GACHA -> actions.toMockGacha()
             else -> {
             }
         }
