@@ -197,4 +197,7 @@
     <string name="story_pic">查看剧情立绘</string>
     <string name="no_limit">无限制</string>
     <string name="tool_mock_gacha">模拟卡池</string>
+    <string name="gacha_pick_up_single">单角色 UP</string>
+    <string name="gacha_pick_up_multi">多角色 UP</string>
+    <string name="gacha_pick_up_fes">FES UP</string>
 </resources>

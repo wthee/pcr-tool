@@ -57,14 +57,20 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 .verticalScroll(rememberScrollState())
         ) {
             if (type == 0) {
-                MainTitleText(
-                    text = "基本 ${basicUrls.size}",
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.largePadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainTitleText(text = "基本")
+                    Spacer(modifier = Modifier.weight(1f))
+                    MainText(text = basicUrls.size.toString())
+                }
                 PicGridList(
                     checkedPicUrl = checkedPicUrl,
                     urls = basicUrls,
@@ -82,11 +88,13 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MainTitleText(
-                    text = "剧情 ${storyUrls?.size?.toString() ?: "-"}"
+                    text = "剧情"
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (storyUrls == null) {
                     SmallCircularProgressIndicator()
+                } else {
+                    MainText(text = storyUrls.size.toString())
                 }
             }
             if (storyUrls != null) {
@@ -159,7 +167,7 @@ private fun PicGridList(
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
     VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-        urls.forEachIndexed { index, picUrl ->
+        urls.forEach { picUrl ->
             val request = coil.request.ImageRequest.Builder(context)
                 .data(picUrl)
                 .build()

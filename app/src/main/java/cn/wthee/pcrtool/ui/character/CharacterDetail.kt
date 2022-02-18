@@ -128,11 +128,7 @@ fun CharacterDetail(
             SkillLoopList(
                 loopData,
                 iconTypes,
-                Modifier.padding(
-                    top = Dimen.largePadding,
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding,
-                ),
+                Modifier.padding(Dimen.largePadding),
                 unitType = 0
             )
         },

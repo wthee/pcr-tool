@@ -160,7 +160,7 @@ fun IconCompose(
             model = data,
             colorFilter = colorFilter,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = contentScale,
             placeholder = rememberAsyncImagePainter(
                 R.drawable.unknown_gray,
                 contentScale = contentScale

@@ -177,7 +177,7 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                         textAlign = TextAlign.Start
                     )
                 } else {
-                    GridIconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
+                    GridIconListCompose(icons = icons, onClickItem = toCharacterDetail)
                 }
 
                 //结束日期

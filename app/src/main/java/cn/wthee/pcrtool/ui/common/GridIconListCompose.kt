@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 @Composable
 fun GridIconListCompose(
     icons: List<Int>,
-    toCharacterDetail: (Int) -> Unit
+    onClickItem: (Int) -> Unit
 ) {
     VerticalGrid(
         modifier = Modifier.padding(
@@ -31,7 +31,7 @@ fun GridIconListCompose(
         icons.forEach {
             UnitIcon(
                 it,
-                toCharacterDetail
+                onClickItem
             )
         }
     }
@@ -41,7 +41,7 @@ fun GridIconListCompose(
  * 角色图标
  */
 @Composable
-fun UnitIcon(id: Int, toCharacterDetail: (Int) -> Unit) {
+fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
     val unitId: Int
     val iconId: Int
     if (id / 10000 == 3) {
@@ -63,7 +63,7 @@ fun UnitIcon(id: Int, toCharacterDetail: (Int) -> Unit) {
         IconCompose(
             data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, iconId)
         ) {
-            toCharacterDetail(unitId)
+            onClickItem(unitId)
         }
     }
 
@@ -78,6 +78,6 @@ private fun IconListComposePreview() {
         mockData.add(i)
     }
     PreviewBox {
-        GridIconListCompose(icons = mockData, toCharacterDetail = {})
+        GridIconListCompose(icons = mockData, onClickItem = {})
     }
 }

@@ -226,7 +226,7 @@ fun EventItem(
                             event.getUnitIdList().forEach {
                                 UnitIcon(
                                     id = it,
-                                    toCharacterDetail = toCharacterDetail
+                                    onClickItem = toCharacterDetail
                                 )
                             }
                         }
