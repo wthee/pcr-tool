@@ -9,23 +9,18 @@ import androidx.compose.foundation.lazy.LazyGridState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,7 +29,6 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -42,10 +36,8 @@ import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -56,7 +48,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -219,19 +210,7 @@ fun ClanBossInfoPager(
         clanViewModel.getClanInfo(clanId).collectAsState(initial = null).value
     val pagerState =
         rememberPagerState(initialPage = index)
-    val scope = rememberCoroutineScope()
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
-    //切换关闭监听
-    if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.BACK) {
-        navViewModel.openChangeDataDialog.postValue(false)
-    }
+
     //页面
     Box(modifier = Modifier.fillMaxSize()) {
         clanInfo?.let { clanValue ->
@@ -295,11 +274,17 @@ fun ClanBossInfoPager(
             }
 
             //阶段选择
-            SelectSectionCompose(
-                section = section,
-                openDialog = openDialog,
-                coroutineScope = scope,
-                maxSection = maxSection,
+            //阶段文本
+            val tabs = arrayListOf<String>()
+            for (i in 1..maxSection) {
+                tabs.add(stringResource(id = R.string.section, getZhNumberText(i)))
+            }
+            val sectionColor = getSectionTextColor(section = section.value + 1)
+            SelectTypeCompose(
+                icon = MainIconType.CLAN_SECTION,
+                tabs = tabs,
+                type = section,
+                selectedColor = sectionColor,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .navigationBarsPadding()
@@ -308,104 +293,6 @@ fun ClanBossInfoPager(
     }
 }
 
-
-//阶段Boss选择弹窗
-@Composable
-private fun SelectSectionCompose(
-    section: MutableState<Int>,
-    openDialog: Boolean,
-    coroutineScope: CoroutineScope,
-    maxSection: Int,
-    modifier: Modifier
-) {
-    val context = LocalContext.current
-    //阶段文本
-    val tabs = arrayListOf<String>()
-    for (i in 1..maxSection) {
-        tabs.add(stringResource(id = R.string.section, getZhNumberText(i)))
-    }
-    val sectionColor = getSectionTextColor(section = section.value + 1)
-
-    //数据切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(
-                end = Dimen.fabMarginEnd,
-                start = Dimen.fabMargin,
-                top = Dimen.fabMargin,
-                bottom = Dimen.fabMargin,
-            ),
-        containerColor = MaterialTheme.colorScheme.background,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
-        onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            } else {
-                navViewModel.fabCloseClick.postValue(true)
-            }
-        },
-    ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.width(Dimen.dataChangeWidth),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //阶段选择
-                tabs.forEachIndexed { index, tab ->
-                    val mModifier = if (section.value == index) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                navViewModel.openChangeDataDialog.postValue(false)
-                                navViewModel.fabCloseClick.postValue(true)
-                                if (section.value != index) {
-                                    coroutineScope.launch {
-                                        section.value = index
-                                    }
-                                }
-                            }
-                    }
-                    SelectText(
-                        selected = section.value == index,
-                        text = tab,
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        selectedColor = sectionColor,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
-                    )
-                }
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                IconCompose(
-                    data = MainIconType.CLAN_SECTION.icon,
-                    tint = sectionColor,
-                    size = Dimen.menuIconSize
-                )
-                Text(
-                    text = tabs[section.value],
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = sectionColor,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.largePadding
-                    )
-                )
-            }
-
-        }
-    }
-}
 
 /**
  * Boss 信息详情

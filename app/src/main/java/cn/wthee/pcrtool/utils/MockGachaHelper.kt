@@ -9,24 +9,24 @@ import java.util.*
  * fixme 调整权重
  */
 class MockGachaHelper(
-    star3Sum: Double,
+    star3SumP: Double,
     pickUpType: Int,
     pickUpList: List<GachaUnitInfo>,
     unitListData: UnitsInGacha
 ) {
     private var categorys: MutableList<UnitWeight> = ArrayList()
     private val random = Random()
-    private val totalWeight = 10000
-    private val star3Weight = (star3Sum * totalWeight).toInt()
-    private val pickUpWeight = 1
+    private val totalWeight = 1000
+    private val star3Weight = (star3SumP * totalWeight).toInt()
+    private val pickUpWeight = (0.7 * totalWeight).toInt()
 
     init {
         //初始权重
         when (pickUpType) {
             //单
             0 -> {
-                categorys.add(UnitWeight(unitListData.normal1, 60));
-                categorys.add(UnitWeight(unitListData.normal2, 37));
+                categorys.add(UnitWeight(unitListData.normal1, 79 * totalWeight));
+                categorys.add(UnitWeight(unitListData.normal2, 18 * totalWeight));
                 categorys.add(UnitWeight(unitListData.normal3, star3Weight - pickUpWeight));
                 categorys.add(UnitWeight(pickUpList, pickUpWeight));
             }

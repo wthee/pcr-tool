@@ -122,15 +122,4 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 当前选择属性
      */
     val currentValue = MutableLiveData<CharacterProperty>()
-
-    /**
-     * 模拟卡池 pick up 类型
-     * 类型: 0:单 up 1：双 up 2：fes up
-     */
-    val gachaPickUpType = MutableLiveData<Int>()
-
-    /**
-     * 模拟卡池 pic kup 角色
-     */
-    val gachaPickUpIds = MutableLiveData(arrayListOf<Int>())
 }
