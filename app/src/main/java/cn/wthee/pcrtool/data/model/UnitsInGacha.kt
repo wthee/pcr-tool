@@ -17,3 +17,19 @@ fun List<GachaUnitInfo>.getIds(): ArrayList<Int> {
     }
     return ids
 }
+
+fun List<GachaUnitInfo>.getIdsStr(): String {
+    var ids = ""
+    this.forEach {
+        ids += it.unitId.toString() + "-"
+    }
+    return ids
+}
+
+fun List<GachaUnitInfo>.getRaritysStr(): String {
+    var ids = ""
+    this.forEach {
+        ids += it.rarity.toString() + "-"
+    }
+    return ids
+}

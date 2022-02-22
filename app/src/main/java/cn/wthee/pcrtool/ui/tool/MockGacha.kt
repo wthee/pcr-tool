@@ -1,13 +1,20 @@
 package cn.wthee.pcrtool.ui.tool
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,15 +29,32 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * 模拟卡池
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MockGacha(gachaViewModel: GachaViewModel = hiltViewModel()) {
-    val allUnits = gachaViewModel.getGachaUnits().collectAsState(initial = null).value
+fun MockGacha(
+    pagerState: PagerState = rememberPagerState(),
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val gachaId = remember {
+        mutableStateOf("")
+    }
+    //角色列表
+    val allUnits = mockGachaViewModel.getGachaUnits().collectAsState(initial = null).value
+    //历史记录
+    val historyData = mockGachaViewModel.getHistory().collectAsState(initial = arrayListOf()).value
     // 类型: 0:单up 1：多up 2：fesup
     val gachaType = remember {
         mutableStateOf(0)
@@ -40,6 +64,11 @@ fun MockGacha(gachaViewModel: GachaViewModel = hiltViewModel()) {
         stringResource(id = R.string.gacha_pick_up_single),
         stringResource(id = R.string.gacha_pick_up_multi),
         stringResource(id = R.string.gacha_pick_up_fes)
+    )
+    //类型
+    val pageTabs = arrayListOf(
+        stringResource(id = R.string.character),
+        stringResource(id = R.string.title_history)
     )
     //选中的角色
     val pickUpList = remember {
@@ -92,7 +121,10 @@ fun MockGacha(gachaViewModel: GachaViewModel = hiltViewModel()) {
                             data = ImageResourceHelper.getInstance().getMaxIconUrl(it.unitId),
                             modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                         ) {
-                            updatePickUpList(pickUpList, it)
+                            //更新选中
+                            if (!showResult.value) {
+                                updatePickUpList(pickUpList, it)
+                            }
                         }
                     }
                 }
@@ -104,14 +136,85 @@ fun MockGacha(gachaViewModel: GachaViewModel = hiltViewModel()) {
 
                 }
             } else {
-                //角色选择
-                allUnits?.let {
-                    UnitList(gachaType.value, it, pickUpList)
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                        )
+                    },
+                    backgroundColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .fillMaxWidth(0.618f)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    pageTabs.forEachIndexed { index, s ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                scope.launch {
+                                    VibrateUtil(context).single()
+                                    pagerState.scrollToPage(index)
+                                }
+                            }) {
+                            Subtitle1(
+                                text = s,
+                                modifier = Modifier.padding(Dimen.smallPadding),
+                                color = if (pagerState.currentPage == index) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    Color.Unspecified
+                                }
+                            )
+                        }
+                    }
                 }
+
+                HorizontalPager(
+                    count = 2,
+                    state = pagerState,
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                ) { pageIndex ->
+                    when (pageIndex) {
+                        0 -> //角色选择
+                            allUnits?.let {
+                                UnitList(gachaType.value, it, pickUpList)
+                            }
+                        else -> {
+                            //TODO 历史记录展示
+                            historyData.forEach {
+                                MainText(text = it.gachaId)
+                                it.pickUpIds.split("-").forEach { unitId ->
+                                    IconCompose(
+                                        data = ImageResourceHelper.getInstance().getUrl(
+                                            ImageResourceHelper.ICON_UNIT,
+                                            unitId.toInt() + 30
+                                        )
+                                    )
+                                }
+                            }
+                            //抽取结果详情
+//                            historyDetailData.forEach {
+//                                MainText(text = it.gachaId)
+//                                val raritys = it.unitRaritys.split("-")
+//                                it.unitIds.split("-").forEachIndexed { index, unitId ->
+//                                    val formatUnitId =
+//                                        unitId + (if (raritys[index].toInt() == 1) 10 else 30)
+//                                    IconCompose(
+//                                        data = ImageResourceHelper.getInstance()
+//                                            .getUrl(ImageResourceHelper.ICON_UNIT, formatUnitId)
+//                                    )
+//                                }
+//                            }
+                        }
+                    }
+                }
+
             }
         }
 
-        //抽取
+        //抽取 TODO 弹窗确认
         allUnits?.let {
             FabCompose(
                 iconType = MainIconType.ALL_IN_GACHA,
@@ -126,15 +229,31 @@ fun MockGacha(gachaViewModel: GachaViewModel = hiltViewModel()) {
                 if (pickUpList.value.isNotEmpty()) {
                     if (!showResult.value) {
                         showResult.value = true
+                        //TODO 创建卡池，若存在相同卡池，则不重新创建
+                        gachaId.value = UUID.randomUUID().toString()
+                        Log.e("DEBUG", gachaId.value)
+                        mockGachaViewModel.createMockGacha(
+                            gachaId.value,
+                            gachaType.value,
+                            pickUpList.value
+                        )
                     }
-                    count.value = count.value + 1
-                    resultList.value = MockGachaHelper(
-                        3.0,
-                        pickUpType = gachaType.value,
-                        pickUpList = pickUpList.value,
-                        allUnits
+                    if (gachaId.value != "") {
+                        count.value = count.value + 1
+                        resultList.value = MockGachaHelper(
+                            3.0,
+                            pickUpType = gachaType.value,
+                            pickUpList = pickUpList.value,
+                            allUnits
 
-                    ).giveMe1500Gems()
+                        ).giveMe1500Gems()
+                        //保存记录
+                        mockGachaViewModel.addMockResult(gachaId.value, resultList.value)
+                    } else {
+                        ToastUtil.short("卡池创建失败")
+                        showResult.value = false
+                    }
+
                 } else {
                     ToastUtil.short("请选择 UP 角色")
                 }
@@ -177,12 +296,12 @@ private fun UnitList(
     ) {
         if (gachaType == 2) {
             // FES
-            GachaUnitGridList(allUnits.fesLimit, "Fes限定★3", pickUpList)
+            ToSelectGachaUnitList(allUnits.fesLimit, "Fes限定★3", pickUpList)
         } else {
             // 限定
-            GachaUnitGridList(allUnits.limit, "限定★3", pickUpList)
+            ToSelectGachaUnitList(allUnits.limit, "限定★3", pickUpList)
             // 常驻
-            GachaUnitGridList(allUnits.normal3, "常驻★3", pickUpList)
+            ToSelectGachaUnitList(allUnits.normal3, "常驻★3", pickUpList)
         }
         CommonSpacer()
 
@@ -190,7 +309,7 @@ private fun UnitList(
 }
 
 @Composable
-private fun GachaUnitGridList(
+private fun ToSelectGachaUnitList(
     data: List<GachaUnitInfo>,
     title: String,
     pickUpList: MutableState<ArrayList<GachaUnitInfo>>
@@ -231,7 +350,7 @@ private fun updatePickUpList(
  */
 @Composable
 fun GachaUnitIconListCompose(
-    showRarity: Boolean = false,
+    isResultPage: Boolean = false,
     icons: List<GachaUnitInfo>,
     onClickItem: (GachaUnitInfo) -> Unit
 ) {
@@ -257,9 +376,11 @@ fun GachaUnitIconListCompose(
                     data = ImageResourceHelper.getInstance()
                         .getUrl(ImageResourceHelper.ICON_UNIT, iconId)
                 ) {
-                    onClickItem(it)
+                    if (!isResultPage) {
+                        onClickItem(it)
+                    }
                 }
-                if (showRarity) {
+                if (isResultPage) {
                     MainText(text = "★${it.rarity}")
                 }
             }
