@@ -1,9 +1,8 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Tab
@@ -86,6 +85,8 @@ fun MockGacha(
         navViewModel.fabCloseClick.postValue(false)
     }
 
+    val tipToSelect = stringResource(id = R.string.tip_to_pick_up)
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -100,7 +101,7 @@ fun MockGacha(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (pickUpList.isEmpty()) {
-                    MainText(text = "请选择 UP 角色")
+                    MainText(text = tipToSelect)
                 } else {
                     pickUpList.forEach {
                         IconCompose(
@@ -117,7 +118,7 @@ fun MockGacha(
             }
             if (showResult) {
                 //抽卡结果
-                MockGachaResultRecordList(gachaId, pickUpList)
+                MockGachaResultRecordList(gachaId, pickUpList.getIds())
             } else {
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
@@ -157,7 +158,9 @@ fun MockGacha(
                 HorizontalPager(
                     count = 2,
                     state = pagerState,
-                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    modifier = Modifier
+                        .padding(top = Dimen.mediumPadding)
+                        .fillMaxSize()
                 ) { pageIndex ->
                     when (pageIndex) {
                         0 -> //角色选择
@@ -185,8 +188,8 @@ fun MockGacha(
             visible = pickUpList.isNotEmpty() && allUnits != null
         ) {
             FabCompose(
-                iconType = MainIconType.MOCK_GACHA,
-                text = if (showResult) "+19" else "加载卡池"
+                iconType = if (showResult) MainIconType.MOCK_GACHA_PAY else MainIconType.MOCK_GACHA,
+                text = if (showResult) "-1500" else "加载卡池"
             ) {
                 if (pickUpList.isNotEmpty()) {
                     if (!showResult) {
@@ -238,13 +241,18 @@ fun MockGacha(
 /**
  * 历史卡池
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
     //历史记录
     mockGachaViewModel.getHistory()
     val historyData = mockGachaViewModel.historyList.observeAsState().value ?: arrayListOf()
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberLazyGridState(),
+        cells = GridCells.Adaptive(getItemWidth())
+    ) {
         items(historyData) {
             MockGachaHistoryItem(it)
         }
@@ -338,30 +346,74 @@ private fun MockGachaHistoryItem(
 /**
  * 抽取结果详情
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MockGachaResultRecordList(
     gachaId: String,
-    pickUpList: List<GachaUnitInfo>,
+    pickUpUnitIds: List<Int>,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     mockGachaViewModel.getResult(gachaId = gachaId)
     val resultRecordList =
         mockGachaViewModel.resultRecordList.observeAsState().value ?: arrayListOf()
-    //TODO 显示抽中 up 角色的相关信息，总抽数、第n次抽中哪个角色、累计消耗钻石数、抽中的三星角色
-    // 放到底部，点击展示详情，动态更新数据
-
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(resultRecordList) { index, resultRecord ->
-            MockGachaResultRecordItem(resultRecordList.size - index, pickUpList, resultRecord)
-        }
-        item {
-            CommonSpacer()
-        }
-        item {
-            CommonSpacer()
+    val tipToPay = stringResource(id = R.string.tip_no_gacha_record)
+    //统计抽中角色的次数
+    var upCount = 0
+    var start3Count = 0
+    resultRecordList.forEach { record ->
+        record.unitIds.intArrayList.forEachIndexed { index, unitId ->
+            if (pickUpUnitIds.contains(unitId)) {
+                upCount++
+            }
+            if (record.unitRaritys.intArrayList[index] == 3) {
+                start3Count++
+            }
         }
     }
 
+    //显示相关记录
+    if (resultRecordList.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            MainText(text = tipToPay)
+        }
+    } else {
+        //TODO 显示抽中 up 角色的相关信息，总抽数、第n次抽中哪个角色、累计消耗钻石数、抽中的三星角色
+        // 放到底部，点击展示详情，动态更新数据
+        val payCount = resultRecordList.size
+        val sumText =
+            """
+                消耗宝石：1500 * $payCount = ${1500 * payCount} 
+                ★3 角色：$start3Count（$upCount 个 UP 角色""".trimIndent()
+
+        Column {
+            MainText(
+                text = sumText,
+                modifier = Modifier
+                    .padding(vertical = Dimen.mediumPadding)
+                    .align(Alignment.CenterHorizontally)
+            )
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                state = rememberLazyGridState(),
+                cells = GridCells.Adaptive(getItemWidth())
+            ) {
+                itemsIndexed(resultRecordList) { index, resultRecord ->
+                    MockGachaResultRecordItem(
+                        resultRecordList.size - index,
+                        pickUpUnitIds,
+                        resultRecord
+                    )
+                }
+                item {
+                    CommonSpacer()
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
+
+    }
 }
 
 /**
@@ -370,7 +422,7 @@ private fun MockGachaResultRecordList(
 @Composable
 private fun MockGachaResultRecordItem(
     order: Int,
-    pickUpList: List<GachaUnitInfo>,
+    pickUpUnitIds: List<Int>,
     recordData: MockGachaResultRecord
 ) {
     val formatResult = arrayListOf<GachaUnitInfo>()
@@ -380,7 +432,7 @@ private fun MockGachaResultRecordItem(
 
     recordData.unitIds.intArrayList.forEachIndexed { index, unitId ->
         val rarity = recordData.unitRaritys.intArrayList[index]
-        if (pickUpList.getIds().contains(unitId)) {
+        if (pickUpUnitIds.contains(unitId)) {
             pickUpIndexList.add(index)
         }
         if (rarity == 3) {
@@ -421,7 +473,18 @@ private fun MockGachaResultRecordItem(
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                MockGachaUnitIconListCompose(true, formatResult, pickUpIndexList) {}
+                MockGachaResultRecordIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    0,
+                    formatResult.subList(0, 5),
+                    pickUpIndexList
+                )
+                MockGachaResultRecordIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    1,
+                    formatResult.subList(5, 10),
+                    pickUpIndexList
+                )
                 //日期
                 CaptionText(
                     text = recordData.createTime,
@@ -430,6 +493,55 @@ private fun MockGachaResultRecordItem(
                         .padding(end = Dimen.mediumPadding)
 
                 )
+            }
+        }
+    }
+}
+
+/**
+ * 角色图标列表（5个/行）
+ */
+@Composable
+fun MockGachaResultRecordIconLine(
+    modifier: Modifier = Modifier,
+    line: Int,
+    icons: List<GachaUnitInfo>,
+    pickUpIndex: ArrayList<Int> = arrayListOf()
+) {
+    Row(
+        modifier = modifier
+            .padding(Dimen.mediumPadding)
+            .width(getItemWidth()),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        icons.forEachIndexed { index, gachaUnitInfo ->
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            bottom = Dimen.mediumPadding
+                        )
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance()
+                            .getUrl(ImageResourceHelper.ICON_UNIT, iconId)
+                    )
+                    val textColor = when {
+                        pickUpIndex.contains(index + line * 5) -> {
+                            colorResource(id = R.color.color_rank_18_20)
+                        }
+                        gachaUnitInfo.rarity == 3 -> {
+                            colorResource(id = R.color.color_rank_7_10)
+                        }
+                        else -> {
+                            Color.Unspecified
+                        }
+                    }
+                    MainText(text = "★${gachaUnitInfo.rarity}", color = textColor)
+                }
             }
         }
     }
@@ -484,34 +596,11 @@ private fun ToSelectMockGachaUnitListItem(
 }
 
 /**
- * 更新选中列表
- */
-private fun updatePickUpList(data: GachaUnitInfo) {
-    val pickUpList = navViewModel.pickUpList.value ?: arrayListOf()
-    val newList = arrayListOf<GachaUnitInfo>()
-    newList.addAll(pickUpList)
-    if (newList.contains(data)) {
-        newList.remove(data)
-    } else {
-        if (pickUpList.size >= 4) {
-            ToastUtil.short("最多可选 4 名角色")
-            return
-        } else {
-            newList.add(data)
-        }
-    }
-    navViewModel.pickUpList.postValue(newList)
-}
-
-
-/**
  * 角色图标列表
  */
 @Composable
 private fun MockGachaUnitIconListCompose(
-    isResultPage: Boolean = false,
     icons: List<GachaUnitInfo>,
-    pickUpIndex: ArrayList<Int> = arrayListOf(),
     onClickItem: (GachaUnitInfo) -> Unit
 ) {
     VerticalGrid(
@@ -536,25 +625,29 @@ private fun MockGachaUnitIconListCompose(
                     data = ImageResourceHelper.getInstance()
                         .getUrl(ImageResourceHelper.ICON_UNIT, iconId)
                 ) {
-                    if (!isResultPage) {
-                        onClickItem(gachaUnitInfo)
-                    }
-                }
-                if (isResultPage) {
-                    val textColor = when {
-                        pickUpIndex.contains(index) -> {
-                            colorResource(id = R.color.color_rank_18_20)
-                        }
-                        gachaUnitInfo.rarity == 3 -> {
-                            colorResource(id = R.color.color_rank_7_10)
-                        }
-                        else -> {
-                            Color.Unspecified
-                        }
-                    }
-                    MainText(text = "★${gachaUnitInfo.rarity}", color = textColor)
+                    onClickItem(gachaUnitInfo)
                 }
             }
         }
     }
+}
+
+/**
+ * 更新选中列表
+ */
+private fun updatePickUpList(data: GachaUnitInfo) {
+    val pickUpList = navViewModel.pickUpList.value ?: arrayListOf()
+    val newList = arrayListOf<GachaUnitInfo>()
+    newList.addAll(pickUpList)
+    if (newList.contains(data)) {
+        newList.remove(data)
+    } else {
+        if (pickUpList.size >= 4) {
+            ToastUtil.short("最多可选 4 名角色")
+            return
+        } else {
+            newList.add(data)
+        }
+    }
+    navViewModel.pickUpList.postValue(newList)
 }

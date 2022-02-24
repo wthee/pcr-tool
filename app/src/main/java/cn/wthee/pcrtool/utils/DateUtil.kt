@@ -51,10 +51,10 @@ fun fixJpTime(date: String, type: Int): String = if (date != "") {
 fun getToday(ms: Boolean = false): String {
     val time = System.currentTimeMillis()
     val date = Date(time)
-    if (ms) {
-        return df2.format(date)
+    return if (ms) {
+        df2.format(date)
     } else {
-        return df1.format(date)
+        df1.format(date)
     }
 }
 

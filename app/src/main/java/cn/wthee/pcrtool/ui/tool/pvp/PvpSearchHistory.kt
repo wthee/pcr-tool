@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -96,11 +95,10 @@ private fun PvpHistoryItem(
             vertical = mediumPadding
         )
     ) {
-        Row {
+        Row(modifier = Modifier.padding(bottom = mediumPadding)) {
             //日期
             MainTitleText(
-                text = itemData.date.formatTime.substring(0, 10), modifier = Modifier
-                    .padding(bottom = mediumPadding)
+                text = itemData.date.formatTime.substring(0, 10)
             )
             Spacer(modifier = Modifier.weight(1f))
             IconCompose(
@@ -125,23 +123,12 @@ private fun PvpHistoryItem(
                     .padding(top = mediumPadding, bottom = mediumPadding)
             ) {
                 //防守
-                Row {
-                    itemData.getDefIds().forEachIndexed { _, it ->
-                        Box(
-                            modifier = Modifier.padding(mediumPadding),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-                                size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
-                            ) {
-                                if (!floatWindow) {
-                                    toCharacter(it)
-                                }
-                            }
-                        }
-                    }
-                }
+                PvpUnitIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    itemData.getDefIds(),
+                    floatWindow,
+                    toCharacter
+                )
             }
         }
     }

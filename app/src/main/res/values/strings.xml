@@ -121,8 +121,8 @@
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
     <string name="team_no">进攻队伍 %s</string>
-    <string name="team_atk">进攻方</string>
-    <string name="team_def">防守方</string>
+    <string name="team_win">进攻</string>
+    <string name="team_lose">防守</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>
@@ -201,4 +201,6 @@
     <string name="tool_mock_gacha">模拟卡池</string>
     <string name="gacha_pick_up_normal">自选 UP</string>
     <string name="gacha_pick_up_fes">FES UP</string>
+    <string name="tip_to_pick_up">请选择 UP 角色</string>
+    <string name="tip_no_gacha_record">暂无抽卡记录</string>
 </resources>

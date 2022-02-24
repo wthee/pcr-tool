@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -96,11 +95,10 @@ private fun PvpFavoriteItem(
             vertical = mediumPadding
         )
     ) {
-        Row {
+        Row(modifier = Modifier.padding(bottom = mediumPadding)) {
             //日期
             MainTitleText(
-                text = itemData.date.formatTime.substring(0, 10),
-                modifier = Modifier.padding(bottom = mediumPadding)
+                text = itemData.date.formatTime.substring(0, 10)
             )
             Spacer(modifier = Modifier.weight(1f))
             //取消收藏
@@ -138,50 +136,28 @@ private fun PvpFavoriteItem(
             ) {
                 //进攻
                 MainTitleText(
-                    text = stringResource(id = R.string.team_atk),
-                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
-                    modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
+                    text = stringResource(id = R.string.team_win),
+                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    modifier = Modifier.padding(start = mediumPadding)
                 )
-                Row {
-                    itemData.getAtkIds().forEachIndexed { _, it ->
-                        Box(
-                            modifier = Modifier.padding(mediumPadding),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-                                size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
-                            ) {
-                                if (!floatWindow) {
-                                    toCharacter(it)
-                                }
-                            }
-                        }
-                    }
-                }
+                PvpUnitIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    itemData.getAtkIds(),
+                    floatWindow,
+                    toCharacter
+                )
                 //防守
                 MainTitleText(
-                    text = stringResource(id = R.string.team_def),
-                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    text = stringResource(id = R.string.team_lose),
+                    backgroundColor = colorResource(id = R.color.gray),
                     modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
                 )
-                Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    itemData.getDefIds().forEachIndexed { _, it ->
-                        Box(
-                            modifier = Modifier.padding(mediumPadding),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-                                size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
-                            ) {
-                                if (!floatWindow) {
-                                    toCharacter(it)
-                                }
-                            }
-                        }
-                    }
-                }
+                PvpUnitIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    itemData.getDefIds(),
+                    floatWindow,
+                    toCharacter
+                )
             }
         }
     }

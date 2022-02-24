@@ -89,8 +89,8 @@ fun GachaList(
 fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val regionType = getRegion()
     val today = getToday()
-    val sd = fixJpTime(gachaInfo.startTime, regionType)
-    val ed = fixJpTime(gachaInfo.endTime, regionType)
+    val sd = fixJpTime(gachaInfo.startTime.formatTime, regionType)
+    val ed = fixJpTime(gachaInfo.endTime.formatTime, regionType)
     val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime, regionType)
     val comingSoon = isComingSoon(today, gachaInfo.startTime, regionType)
 

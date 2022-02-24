@@ -106,7 +106,6 @@ class MockGachaViewModel @Inject constructor(
         }
     }
 
-
     /**
      * 获取历史记录
      */
@@ -123,13 +122,11 @@ class MockGachaViewModel @Inject constructor(
      */
     suspend fun getGacha(gachaId: String) = mockGachaRepository.getGachaByGachaId(gachaId)
 
-
     /**
      * 获取卡池
      */
     suspend fun getGachaByPickUp(pickUpList: List<GachaUnitInfo>) =
         mockGachaRepository.getGachaByPickUpIds(getRegion(), pickUpList.getIdsStr())
-
 
     /**
      * 获取抽取结果
@@ -139,6 +136,5 @@ class MockGachaViewModel @Inject constructor(
             val data = mockGachaRepository.getResultByGachaId(gachaId)
             resultRecordList.postValue(data)
         }
-
     }
 }
