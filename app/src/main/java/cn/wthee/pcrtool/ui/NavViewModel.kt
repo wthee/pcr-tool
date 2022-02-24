@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -122,4 +123,25 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 当前选择属性
      */
     val currentValue = MutableLiveData<CharacterProperty>()
+
+    /**
+     * 模拟卡池结果显示
+     */
+    val showMockGachaResult = MutableLiveData(false)
+
+    /**
+     * 模拟卡池数据
+     */
+    val gachaId = MutableLiveData<String>()
+
+    /**
+     * 模拟卡池类型
+     * 0：自选角色 1：fes角色
+     */
+    val gachaType = MutableLiveData<Int>()
+
+    /**
+     * 模拟卡池 pickUp 角色
+     */
+    val pickUpList = MutableLiveData<List<GachaUnitInfo>>()
 }

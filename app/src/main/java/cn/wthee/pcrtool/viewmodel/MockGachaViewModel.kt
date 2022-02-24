@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
@@ -30,6 +31,9 @@ class MockGachaViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
+
+    val historyList = MutableLiveData<List<MockGachaData>>()
+    val resultRecordList = MutableLiveData<List<MockGachaResultRecord>>()
 
     /**
      * 获取卡池角色
@@ -67,8 +71,8 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 创建卡池
      */
-    fun createMockGacha(gachaId: String, gachaType: Int, pickUpList: List<GachaUnitInfo>) = flow {
-        try {
+    fun createMockGacha(gachaId: String, gachaType: Int, pickUpList: List<GachaUnitInfo>) {
+        viewModelScope.launch {
             val nowTime = getToday()
             val data = MockGachaData(
                 gachaId,
@@ -79,9 +83,8 @@ class MockGachaViewModel @Inject constructor(
                 nowTime
             )
             mockGachaRepository.insertGacha(data)
-            emit(data)
-        } catch (e: Exception) {
-
+            //加载历史数据
+            getHistory()
         }
     }
 
@@ -96,9 +99,10 @@ class MockGachaViewModel @Inject constructor(
                     gachaId,
                     resultList.getIdsStr(),
                     resultList.getRaritysStr(),
-                    getToday()
+                    getToday(true)
                 )
             )
+            getResult(gachaId = gachaId)
         }
     }
 
@@ -106,10 +110,35 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取历史记录
      */
-    fun getHistory() = flow {
+    fun getHistory() {
         viewModelScope.launch {
-            val data = mockGachaRepository.getHistory()
-            emit(data)
+            val region = getRegion()
+            val data = mockGachaRepository.getHistory(region)
+            historyList.postValue(data)
         }
+    }
+
+    /**
+     * 获取卡池
+     */
+    suspend fun getGacha(gachaId: String) = mockGachaRepository.getGachaByGachaId(gachaId)
+
+
+    /**
+     * 获取卡池
+     */
+    suspend fun getGachaByPickUp(pickUpList: List<GachaUnitInfo>) =
+        mockGachaRepository.getGachaByPickUpIds(getRegion(), pickUpList.getIdsStr())
+
+
+    /**
+     * 获取抽取结果
+     */
+    fun getResult(gachaId: String) {
+        viewModelScope.launch {
+            val data = mockGachaRepository.getResultByGachaId(gachaId)
+            resultRecordList.postValue(data)
+        }
+
     }
 }

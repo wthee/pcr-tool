@@ -7,6 +7,7 @@ import java.util.*
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
 val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
+val df2: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.CHINESE)
 
 /**
  * 格式化时间 yyyy/MM/dd HH:mm:ss
@@ -47,10 +48,14 @@ fun fixJpTime(date: String, type: Int): String = if (date != "") {
 /**
  * 获取当天时间
  */
-fun getToday(): String {
+fun getToday(ms: Boolean = false): String {
     val time = System.currentTimeMillis()
     val date = Date(time)
-    return df1.format(date)
+    if (ms) {
+        return df2.format(date)
+    } else {
+        return df1.format(date)
+    }
 }
 
 /**

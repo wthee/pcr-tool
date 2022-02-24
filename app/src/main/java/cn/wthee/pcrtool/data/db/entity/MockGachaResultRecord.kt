@@ -13,5 +13,5 @@ data class MockGachaResultRecord(
     val gachaId: String,
     val unitIds: String,
     val unitRaritys: String,
-    val createTime: String,
+    val createTime: String
 )

@@ -625,7 +625,6 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             MockGacha()
         }
     }
