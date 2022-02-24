@@ -225,12 +225,12 @@ private fun PvpResultItem(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
-    val largerPadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
+    val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Column(
         modifier = Modifier.padding(
-            horizontal = largerPadding,
+            horizontal = largePadding,
             vertical = mediumPadding
         )
     ) {

@@ -670,8 +670,8 @@ fun SelectTypeCompose(
                                 if (type.value != index) {
                                     coroutineScope.launch {
                                         type.value = index
+                                        changeListener?.invoke()
                                     }
-                                    changeListener?.invoke()
                                 }
                             }
                     }

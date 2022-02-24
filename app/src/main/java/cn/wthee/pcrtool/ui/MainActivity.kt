@@ -145,6 +145,14 @@ class MainActivity : ComponentActivity() {
                     navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                     return true
                 }
+                MainIconType.CLOSE -> {
+                    navViewModel.fabCloseClick.postValue(true)
+                    return true
+                }
+                MainIconType.OK -> {
+                    navViewModel.fabOKCilck.postValue(true)
+                    return true
+                }
                 else -> {
                     navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                 }
