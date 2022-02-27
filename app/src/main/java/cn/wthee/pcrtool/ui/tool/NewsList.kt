@@ -4,20 +4,16 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -25,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,9 +38,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ShareIntentUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
@@ -54,8 +47,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * 公告列表
@@ -70,27 +61,20 @@ fun NewsList(
     toDetail: (String) -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
-    //切换关闭监听
-    if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.BACK) {
-        navViewModel.openChangeDataDialog.postValue(false)
-    }
+    //区服
+    val tabs = arrayListOf(
+        stringResource(id = R.string.db_cn),
+        stringResource(id = R.string.db_tw),
+        stringResource(id = R.string.db_jp)
+    )
 
-    val region = remember {
-        mutableStateOf(getRegion())
+    val type = remember {
+        mutableStateOf(getRegion() - 2)
     }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(region.value)
-    val flow = when (region.value) {
+    newsViewModel.getNews(type.value + 2)
+    val flow = when (type.value + 2) {
         2 -> newsViewModel.newsPageList0
         3 -> newsViewModel.newsPageList1
         else -> newsViewModel.newsPageList2
@@ -123,10 +107,10 @@ fun NewsList(
         }
 
         //公告区服选择
-        SelectNewsTypeCompose(
-            region = region,
-            openDialog = openDialog,
-            coroutineScope = coroutineScope,
+        SelectTypeCompose(
+            icon = MainIconType.NEWS,
+            tabs = tabs,
+            type = type,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
@@ -134,103 +118,6 @@ fun NewsList(
     }
 }
 
-//公告区服选择
-@Composable
-private fun SelectNewsTypeCompose(
-    region: MutableState<Int>,
-    openDialog: Boolean,
-    coroutineScope: CoroutineScope,
-    modifier: Modifier
-) {
-    val context = LocalContext.current
-    //区服
-    val tabs = arrayListOf(
-        stringResource(id = R.string.db_cn),
-        stringResource(id = R.string.db_tw),
-        stringResource(id = R.string.db_jp)
-    )
-    val sectionColor = MaterialTheme.colorScheme.primary
-
-    //数据切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(
-                end = Dimen.fabMarginEnd,
-                start = Dimen.fabMargin,
-                top = Dimen.fabMargin,
-                bottom = Dimen.fabMargin,
-            ),
-        containerColor = MaterialTheme.colorScheme.background,
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            } else {
-                navViewModel.fabCloseClick.postValue(true)
-            }
-        },
-    ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.width(Dimen.dataChangeWidth),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //区服选择
-                tabs.forEachIndexed { index, tab ->
-                    val mModifier = if (region.value == index + 2) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                navViewModel.openChangeDataDialog.postValue(false)
-                                navViewModel.fabCloseClick.postValue(true)
-                                if (region.value != index + 2) {
-                                    coroutineScope.launch {
-                                        region.value = index + 2
-                                    }
-                                }
-                            }
-                    }
-                    SelectText(
-                        selected = region.value == index + 2,
-                        text = tab,
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        selectedColor = sectionColor,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
-                    )
-                }
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                IconCompose(
-                    data = MainIconType.NEWS.icon,
-                    tint = sectionColor,
-                    size = Dimen.menuIconSize
-                )
-                Text(
-                    text = tabs[region.value - 2],
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = sectionColor,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.largePadding
-                    )
-                )
-            }
-
-        }
-    }
-}
 
 /**
  * 新闻公告

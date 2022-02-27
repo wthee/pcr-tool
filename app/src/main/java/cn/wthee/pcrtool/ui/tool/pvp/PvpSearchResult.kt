@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
@@ -38,8 +37,6 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.round
 
 
@@ -225,27 +222,29 @@ private fun PvpResultItem(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
-    val largerPadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
+    val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Column(
         modifier = Modifier.padding(
-            horizontal = largerPadding,
+            horizontal = largePadding,
             vertical = mediumPadding
         )
     ) {
-        Row {
+        Row(
+            modifier = Modifier.padding(bottom = mediumPadding),
+            verticalAlignment = Alignment.Bottom
+        ) {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
                 modifier = Modifier
-                    .padding(bottom = mediumPadding)
                     .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
             if (!placeholder) {
                 IconCompose(
-                    data = if (favorites.value) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
+                    data = if (favorites.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     size = Dimen.fabIconSize
                 ) {
                     if (!placeholder) {
@@ -255,18 +254,12 @@ private fun PvpResultItem(
                                 viewModel.delete(item.atk, item.def, region)
                             } else {
                                 //未收藏，添加收藏
-                                val simpleDateFormat =
-                                    SimpleDateFormat(
-                                        "yyyy/MM/dd HH:mm:ss.SSS",
-                                        Locale.CHINESE
-                                    )
-                                val date = Date(System.currentTimeMillis())
                                 viewModel.insert(
                                     PvpFavoriteData(
                                         item.id,
                                         item.atk,
                                         item.def,
-                                        simpleDateFormat.format(date),
+                                        getToday(true),
                                         region
                                     )
                                 )
@@ -314,22 +307,11 @@ private fun PvpResultItem(
                 }
                 //队伍角色图标
                 //进攻
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = mediumPadding)
-                ) {
-                    item.getIdList(0).forEachIndexed { _, it ->
-                        Box(
-                            modifier = Modifier.padding(mediumPadding),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-                                size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
-                            )
-                        }
-                    }
-                }
+                PvpUnitIconLine(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    item.getIdList(0),
+                    floatWindow
+                ) { }
             }
         }
 

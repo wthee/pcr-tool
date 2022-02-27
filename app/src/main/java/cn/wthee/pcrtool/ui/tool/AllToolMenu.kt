@@ -60,6 +60,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     infoList.add(ToolMenuData(R.string.tool_gacha, MainIconType.GACHA))
     infoList.add(ToolMenuData(R.string.tool_event, MainIconType.EVENT))
     infoList.add(ToolMenuData(R.string.tool_news, MainIconType.NEWS))
+    infoList.add(ToolMenuData(R.string.tool_free_gacha, MainIconType.FREE_GACHA))
     list.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询
@@ -198,7 +199,7 @@ private fun MenuItem(
         ) {
             IconCompose(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
-                data = it.iconType.icon,
+                data = it.iconType,
                 size = Dimen.mediumIconSize
             )
             Subtitle2(

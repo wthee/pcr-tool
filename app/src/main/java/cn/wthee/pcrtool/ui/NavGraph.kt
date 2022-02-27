@@ -9,17 +9,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
-import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllPics
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -34,8 +28,6 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 object Navigation {
     const val HOME = "home"
@@ -53,6 +45,7 @@ object Navigation {
     const val EQUIP_MATERIAL = "equipMaterial"
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
+    const val TOOL_FREE_GACHA = "toolFreeGacha"
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
@@ -60,6 +53,7 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
+    const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
@@ -343,6 +337,19 @@ fun NavGraph(
             GachaList(scrollState, actions.toCharacterDetail)
         }
 
+        //免费十连
+        composable(
+            route = Navigation.TOOL_FREE_GACHA,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+            FreeGachaList(scrollState)
+        }
+
         //剧情活动
         composable(
             route = Navigation.TOOL_EVENT,
@@ -609,6 +616,17 @@ fun NavGraph(
             val scrollState = rememberLazyListState()
             AllToolMenu(scrollState, actions)
         }
+
+        //模拟抽卡
+        composable(
+            route = Navigation.TOOL_MOCK_GACHA,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            MockGacha()
+        }
     }
 }
 
@@ -709,6 +727,13 @@ class NavActions(navController: NavHostController) {
      */
     val toGacha = {
         navController.navigate(Navigation.TOOL_GACHA)
+    }
+
+    /**
+     * 免费十连
+     */
+    val toFreeGacha = {
+        navController.navigate(Navigation.TOOL_FREE_GACHA)
     }
 
     /**
@@ -836,118 +861,11 @@ class NavActions(navController: NavHostController) {
     val toToolMore = {
         navController.navigate(Navigation.TOOL_MORE)
     }
-}
-
-/**
- * 导航 ViewModel
- */
-@HiltViewModel
-class NavViewModel @Inject constructor() : ViewModel() {
 
     /**
-     * fab 图标显示
+     * 模拟抽卡
      */
-    val fabMainIcon = MutableLiveData(MainIconType.MAIN)
-
-    /**
-     * 确认
-     */
-    val fabOKCilck = MutableLiveData(false)
-
-    /**
-     * 关闭
-     */
-    val fabCloseClick = MutableLiveData(false)
-
-    /**
-     * 下载状态
-     * -2: 隐藏
-     * -1: 显示加载中
-     * >0: 进度
-     */
-    val downloadProgress = MutableLiveData(-1)
-
-    /**
-     * 加载中
-     */
-    val loading = MutableLiveData(false)
-
-    /**
-     * 已六星的角色ID
-     */
-    val r6Ids = MutableLiveData(listOf<Int>())
-
-    /**
-     * 重置
-     */
-    val resetClick = MutableLiveData(false)
-
-    /**
-     * 角色筛选
-     */
-    var filterCharacter = MutableLiveData(FilterCharacter())
-
-    /**
-     * 装备筛选
-     */
-    var filterEquip = MutableLiveData(FilterEquipment())
-
-    /**
-     * 竞技场查询角色
-     */
-    val selectedPvpData = MutableLiveData(
-        arrayListOf(
-            PvpCharacterData(),
-            PvpCharacterData(),
-            PvpCharacterData(),
-            PvpCharacterData(),
-            PvpCharacterData()
-        )
-    )
-
-    /**
-     * rank 选择，当前
-     */
-    var curRank = MutableLiveData(0)
-
-    /**
-     * rank 选择，目标
-     */
-    var targetRank = MutableLiveData(0)
-
-    /**
-     * rank 选择，当前
-     */
-    var curRank1 = MutableLiveData(0)
-
-    /**
-     * rank 选择，目标
-     */
-    var targetRank1 = MutableLiveData(0)
-
-    /**
-     * 悬浮服务
-     */
-    val floatServiceRun = MutableLiveData(true)
-
-    /**
-     * 悬浮闯最小化
-     */
-    val floatSearchMin = MutableLiveData(false)
-
-    /**
-     * pvp 查询结果显示
-     */
-    val showResult = MutableLiveData(false)
-
-    /**
-     * 数据切换弹窗显示
-     */
-    val openChangeDataDialog = MutableLiveData(false)
-
-    /**
-     * 当前选择属性
-     */
-    val currentValue = MutableLiveData<CharacterProperty>()
-
+    val toMockGacha = {
+        navController.navigate(Navigation.TOOL_MOCK_GACHA)
+    }
 }

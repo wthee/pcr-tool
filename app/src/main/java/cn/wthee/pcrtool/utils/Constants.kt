@@ -70,6 +70,7 @@ object Constants {
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
     const val DATABASE_PVP = "pvp.db"
+    const val DATABASE_MOCK_GACHA = "mock_gacha.db"
 
 
     const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"

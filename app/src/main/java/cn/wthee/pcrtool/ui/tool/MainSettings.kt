@@ -139,7 +139,7 @@ fun MainSettings() {
         ) {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
             IconCompose(
-                data = MainIconType.VIBRATE.icon,
+                data = MainIconType.VIBRATE,
                 size = Dimen.settingIconSize
             )
             Column(
@@ -179,7 +179,7 @@ fun MainSettings() {
         ) {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
             IconCompose(
-                data = MainIconType.ANIMATION.icon,
+                data = MainIconType.ANIMATION,
                 size = Dimen.settingIconSize
             )
             Column(
@@ -298,7 +298,7 @@ private fun SettingItem(
     ) {
         Spacer(modifier = Modifier.width(Dimen.largePadding))
         IconCompose(
-            data = iconType.icon,
+            data = iconType,
             size = Dimen.settingIconSize
         )
         Column(

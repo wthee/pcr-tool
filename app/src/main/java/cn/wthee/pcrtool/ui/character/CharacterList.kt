@@ -250,7 +250,7 @@ fun CharacterItem(
                 Text(
                     text = str,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = MaterialTheme.colorScheme.secondary,
                     maxLines = 1,
                     overflow = TextOverflow.Visible
                 )
@@ -266,7 +266,7 @@ fun CharacterItem(
                 }
             }
             if (!isLargerCard) {
-                Box(
+                Row(
                     modifier = Modifier
                         .padding(
                             start = Dimen.mediumPadding,
@@ -275,8 +275,12 @@ fun CharacterItem(
                             top = Dimen.smallPadding
                         )
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    if (loved) {
+                        IconCompose(data = MainIconType.LOVE_FILL, size = Dimen.smallIconSize)
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                     Subtitle2(text = character.startTime.formatTime)
                 }
             }
@@ -393,13 +397,13 @@ private fun FilterCharacterSheet(
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
-                    data = MainIconType.CHARACTER.icon,
+                    data = MainIconType.CHARACTER,
                     size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
                 IconCompose(
-                    data = MainIconType.SEARCH.icon,
+                    data = MainIconType.SEARCH,
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()

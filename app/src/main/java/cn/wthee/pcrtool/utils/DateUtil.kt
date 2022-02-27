@@ -7,6 +7,7 @@ import java.util.*
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
 val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
+val df2: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.CHINESE)
 
 /**
  * 格式化时间 yyyy/MM/dd HH:mm:ss
@@ -24,6 +25,12 @@ val String.formatTime: String
         } else {
             ""
         }
+    }
+
+val String.simpleDateFormat: String
+    get() {
+        val d = df1.parse(this)!!.time
+        return df1.format(Date(d))
     }
 
 /**
@@ -47,10 +54,14 @@ fun fixJpTime(date: String, type: Int): String = if (date != "") {
 /**
  * 获取当天时间
  */
-fun getToday(): String {
+fun getToday(ms: Boolean = false): String {
     val time = System.currentTimeMillis()
     val date = Date(time)
-    return df1.format(date)
+    return if (ms) {
+        df2.format(date)
+    } else {
+        df1.format(date)
+    }
 }
 
 /**
@@ -64,7 +75,7 @@ fun String.days(str2: String): String {
         val time = d1.time - d2.time + 1000
         "${time / (60 * 60 * 1000 * 24)}天"
     } catch (e: Exception) {
-        "0"
+        "0天"
     }
 }
 
@@ -125,3 +136,20 @@ fun String.fillZero(toLength: Int = 2): String {
     return temp
 }
 
+
+/**
+ * 进行中判断
+ */
+fun isInProgress(today: String, startTime: String, endTime: String, regionType: Int): Boolean {
+    val sd = fixJpTime(startTime.formatTime, regionType)
+    val ed = fixJpTime(endTime.formatTime, regionType)
+    return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
+}
+
+/**
+ * 进行中判断
+ */
+fun isComingSoon(today: String, startTime: String, regionType: Int): Boolean {
+    val sd = fixJpTime(startTime.formatTime, regionType)
+    return today.second(sd) < 0
+}

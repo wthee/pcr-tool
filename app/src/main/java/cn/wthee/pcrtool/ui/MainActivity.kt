@@ -48,6 +48,7 @@ import cn.wthee.pcrtool.utils.UMengInitializer
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -145,6 +146,14 @@ class MainActivity : ComponentActivity() {
                     navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                     return true
                 }
+                MainIconType.CLOSE -> {
+                    navViewModel.fabCloseClick.postValue(true)
+                    return true
+                }
+                MainIconType.OK -> {
+                    navViewModel.fabOKCilck.postValue(true)
+                    return true
+                }
                 else -> {
                     navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                 }
@@ -202,6 +211,7 @@ fun Home(
 
     Box(
         modifier = Modifier
+            .navigationBarsPadding(start = true, end = true, bottom = false)
             .fillMaxSize()
             .padding(top = statusBarHeight)
     ) {

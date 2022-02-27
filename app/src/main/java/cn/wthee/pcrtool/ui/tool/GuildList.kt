@@ -109,7 +109,7 @@ private fun GuildItem(
                 //图标/描述
                 GridIconListCompose(
                     icons = guild.memberIds,
-                    toCharacterDetail = toCharacterDetail
+                    onClickItem = toCharacterDetail
                 )
                 // 新加入的成员
                 if (guild.newMemberIds.isNotEmpty()) {
@@ -124,7 +124,7 @@ private fun GuildItem(
                     )
                     GridIconListCompose(
                         icons = guild.newMemberIds,
-                        toCharacterDetail = toCharacterDetail
+                        onClickItem = toCharacterDetail
                     )
                 }
             }

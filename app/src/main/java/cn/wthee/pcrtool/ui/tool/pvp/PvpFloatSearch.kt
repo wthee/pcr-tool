@@ -57,7 +57,8 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //退出
                 if (!min) {
                     FabCompose(
-                        iconType = MainIconType.FLOAT_CLOSE
+                        iconType = MainIconType.FLOAT_CLOSE,
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
                         navViewModel.floatServiceRun.postValue(false)
                     }
@@ -65,7 +66,8 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //查询
                 if (!min && !showResult) {
                     FabCompose(
-                        iconType = MainIconType.PVP_SEARCH
+                        iconType = MainIconType.PVP_SEARCH,
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
                         coroutineScope.launch {
                             try {
@@ -80,7 +82,9 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 }
                 //返回
                 if (!min && showResult) {
-                    FabMain()
+                    FabMain(
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    )
                 }
             }
 

@@ -116,7 +116,7 @@ class SkillViewModel @Inject constructor(
                         val (infos, map) = getSkill(
                             data.getEnemySkillId(),
                             enemy.getSkillLv(),
-                            enemy.attr.atk
+                            maxOf(enemy.attr.atk, enemy.attr.magicStr)
                         )
                         allSkill.add(infos)
                         allIcon.add(map)

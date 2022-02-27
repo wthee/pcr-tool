@@ -263,13 +263,13 @@ private fun FilterEquipSheet(
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
-                    data = MainIconType.EQUIP.icon,
+                    data = MainIconType.EQUIP,
                     size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
                 IconCompose(
-                    data = MainIconType.SEARCH.icon,
+                    data = MainIconType.SEARCH,
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()

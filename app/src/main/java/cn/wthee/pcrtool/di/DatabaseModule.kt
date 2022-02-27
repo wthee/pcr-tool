@@ -50,6 +50,12 @@ class DatabaseModule {
         return AppPvpDatabase.getInstance()
     }
 
+    @Singleton
+    @Provides
+    fun provideMockGachaDatabase(): AppMockGachaDatabase {
+        return AppMockGachaDatabase.getInstance()
+    }
+
     @Provides
     fun provideGachaDao(): GachaDao {
         return when (getType()) {
@@ -122,5 +128,10 @@ class DatabaseModule {
     @Provides
     fun provideTweetDao(): TweetDao {
         return provideAppTweetDatabase().getTweetDao()
+    }
+
+    @Provides
+    fun provideMockGachaDao(): MockGachaDao {
+        return provideMockGachaDatabase().getMockGachaDao()
     }
 }

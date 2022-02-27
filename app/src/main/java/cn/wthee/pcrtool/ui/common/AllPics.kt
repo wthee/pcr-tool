@@ -57,14 +57,20 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 .verticalScroll(rememberScrollState())
         ) {
             if (type == 0) {
-                MainTitleText(
-                    text = "基本 ${basicUrls.size}",
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.largePadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainTitleText(text = "基本")
+                    Spacer(modifier = Modifier.weight(1f))
+                    MainText(text = basicUrls.size.toString())
+                }
                 PicGridList(
                     checkedPicUrl = checkedPicUrl,
                     urls = basicUrls,
@@ -79,14 +85,15 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                         end = Dimen.largePadding
                     )
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 MainTitleText(
-                    text = "剧情 ${storyUrls?.size?.toString() ?: "-"}"
+                    text = "剧情"
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (storyUrls == null) {
-                    SmallCircularProgressIndicator()
+                    CircularProgressIndicator()
+                } else {
+                    MainText(text = storyUrls.size.toString())
                 }
             }
             if (storyUrls != null) {
@@ -157,9 +164,10 @@ private fun PicGridList(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
-    VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-        urls.forEachIndexed { index, picUrl ->
+    VerticalGrid(spanCount = spanCount) {
+        urls.forEach { picUrl ->
             val request = coil.request.ImageRequest.Builder(context)
                 .data(picUrl)
                 .build()
@@ -169,8 +177,7 @@ private fun PicGridList(
             }
             MainCard(
                 modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth(),
+                    .padding(Dimen.largePadding),
                 onClick = {
                     //下载
                     val loaded = loadedPicMap[picUrl] != null
@@ -199,9 +206,9 @@ private fun PicGridList(
  * 获取文件名
  */
 private fun getFileName(url: String): String {
-    try {
-        return url.split('/').last().split('.')[0]
+    return try {
+        url.split('/').last().split('.')[0]
     } catch (e: Exception) {
-        return System.currentTimeMillis().toString()
+        System.currentTimeMillis().toString()
     }
 }

@@ -174,7 +174,7 @@ fun EventItem(
             ) {
                 if (inProgress) {
                     IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
+                        data = MainIconType.TIME_LEFT,
                         size = Dimen.smallIconSize,
                     )
                     MainContentText(
@@ -186,7 +186,7 @@ fun EventItem(
                 }
                 if (comingSoon) {
                     IconCompose(
-                        data = MainIconType.COUNTDOWN.icon,
+                        data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
                         tint = colorResource(id = R.color.news_system)
                     )
@@ -226,7 +226,7 @@ fun EventItem(
                             event.getUnitIdList().forEach {
                                 UnitIcon(
                                     id = it,
-                                    toCharacterDetail = toCharacterDetail
+                                    onClickItem = toCharacterDetail
                                 )
                             }
                         }

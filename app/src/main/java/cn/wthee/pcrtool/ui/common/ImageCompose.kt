@@ -2,10 +2,7 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -54,8 +51,8 @@ fun ImageCompose(
         model = data,
         contentDescription = null,
         contentScale = contentScale,
-        placeholder = loadingId?.let { rememberAsyncImagePainter(it) },
-        error = errorId?.let { rememberAsyncImagePainter(it) },
+        placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
+        error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         onSuccess = {
             onSuccess.invoke()
         },
@@ -80,7 +77,6 @@ fun StoryImageCompose(
                 AsyncImage(
                     model = loadingId,
                     contentDescription = null,
-                    contentScale = contentScale,
                     modifier = Modifier.aspectRatio(RATIO_COMMON)
                 )
             }
@@ -90,11 +86,11 @@ fun StoryImageCompose(
                 AsyncImage(
                     model = errorId,
                     contentDescription = null,
-                    contentScale = contentScale,
                     modifier = Modifier.aspectRatio(RATIO_COMMON)
                 )
             }
-        }
+        },
+        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -147,21 +143,25 @@ fun IconCompose(
     }
 
 
-    if (data is ImageVector) {
+    if (data is MainIconType) {
         Icon(
-            imageVector = data,
+            imageVector = data.icon,
             contentDescription = null,
             tint = tint,
             modifier = mModifier
         )
     } else {
+        val contentScale = ContentScale.Crop
         AsyncImage(
             model = data,
             colorFilter = colorFilter,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            placeholder = rememberAsyncImagePainter(R.drawable.unknown_gray),
-            error = rememberAsyncImagePainter(R.drawable.unknown_item),
+            contentScale = contentScale,
+            placeholder = rememberAsyncImagePainter(
+                R.drawable.unknown_gray,
+                contentScale = contentScale
+            ),
+            error = rememberAsyncImagePainter(R.drawable.unknown_item, contentScale = contentScale),
             modifier = mModifier.aspectRatio(1f)
         )
     }

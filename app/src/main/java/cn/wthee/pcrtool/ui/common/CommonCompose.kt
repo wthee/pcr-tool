@@ -1,13 +1,17 @@
 package cn.wthee.pcrtool.ui.common
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +28,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
@@ -129,7 +136,7 @@ fun Subtitle1(
     text: String,
     color: Color = Color.Unspecified,
     selectable: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -381,7 +388,7 @@ fun CommonSpacer() {
     Spacer(
         modifier = Modifier
             .navigationBarsPadding()
-            .height(Dimen.fabSize + Dimen.fabMargin)
+            .height(Dimen.fabSize + Dimen.fabMargin + Dimen.mediumPadding)
     )
 }
 
@@ -414,7 +421,8 @@ fun MainCard(
     Card(
         modifier = mModifier,
         content = content,
-        containerColor = backgroundColor
+        shape = shape,
+        containerColor = backgroundColor,
     )
 }
 
@@ -579,13 +587,126 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     }
 }
 
+/**
+ * 加载中
+ */
 @Composable
-fun SmallCircularProgressIndicator() {
+fun CircularProgressIndicator(size: Dp = Dimen.menuIconSize) {
     CircularProgressIndicator(
         modifier = Modifier
-            .size(Dimen.menuIconSize)
+            .size(size)
             .padding(Dimen.smallPadding),
         color = MaterialTheme.colorScheme.primary,
         strokeWidth = 2.dp
     )
+}
+
+/**
+ * 切换
+ */
+@Composable
+fun SelectTypeCompose(
+    icon: MainIconType,
+    tabs: List<String>,
+    type: MutableState<Int>,
+    width: Dp = Dimen.dataChangeWidth,
+    selectedColor: Color = MaterialTheme.colorScheme.primary,
+    modifier: Modifier = Modifier,
+    changeListener: (() -> Unit)? = null
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    //切换关闭监听
+    if (close) {
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
+    }
+    if (mainIcon == MainIconType.BACK) {
+        navViewModel.openChangeDataDialog.postValue(false)
+    }
+
+    //切换
+    SmallFloatingActionButton(
+        modifier = modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                end = Dimen.fabMarginEnd,
+                start = Dimen.fabMargin,
+                top = Dimen.fabMargin,
+                bottom = Dimen.fabMargin,
+            ),
+        containerColor = MaterialTheme.colorScheme.background,
+        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        onClick = {
+            VibrateUtil(context).single()
+            if (!openDialog) {
+                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                navViewModel.openChangeDataDialog.postValue(true)
+            } else {
+                navViewModel.fabCloseClick.postValue(true)
+            }
+        },
+    ) {
+        if (openDialog) {
+            Column(
+                modifier = Modifier.width(width),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //选择
+                tabs.forEachIndexed { index, tab ->
+                    val mModifier = if (type.value == index) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                VibrateUtil(context).single()
+                                navViewModel.openChangeDataDialog.postValue(false)
+                                navViewModel.fabCloseClick.postValue(true)
+                                if (type.value != index) {
+                                    coroutineScope.launch {
+                                        type.value = index
+                                        changeListener?.invoke()
+                                    }
+                                }
+                            }
+                    }
+                    SelectText(
+                        selected = type.value == index,
+                        text = tab,
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        selectedColor = selectedColor,
+                        modifier = mModifier.padding(Dimen.mediumPadding)
+                    )
+                }
+            }
+        } else {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                IconCompose(
+                    data = icon,
+                    tint = selectedColor,
+                    size = Dimen.menuIconSize
+                )
+                Text(
+                    text = tabs[type.value],
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = selectedColor,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding,
+                        end = Dimen.largePadding
+                    )
+                )
+            }
+
+        }
+    }
 }

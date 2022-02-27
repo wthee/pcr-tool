@@ -14,9 +14,9 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha02"
-val appVersionCode = 317
-val appVersionName = "3.1.7"
+val composeVersion = "1.2.0-alpha04"
+val appVersionCode = 320
+val appVersionName = "3.2.0"
 
 android {
 
@@ -114,14 +114,14 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha05")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha06")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.compiler:compiler:$composeVersion")
     //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.24.1-alpha"
+    val accompanistVersion = "0.24.3-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -129,10 +129,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha08"
+    val coilVersion = "2.0.0-alpha09"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
@@ -172,8 +171,8 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.1.1")
 
     //umeng
-    implementation("com.umeng.umsdk:common:9.4.4")
-    implementation("com.umeng.umsdk:asms:1.4.1")
+    implementation("com.umeng.umsdk:common:9.4.7")
+    implementation("com.umeng.umsdk:asms:1.6.0")
     implementation("com.umeng.umsdk:apm:1.5.2")
 
     //Work
