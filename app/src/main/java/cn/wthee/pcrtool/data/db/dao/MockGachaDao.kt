@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
 
@@ -19,6 +16,13 @@ interface MockGachaDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGacha(data: MockGachaData)
+
+    /**
+     * 更新卡池日期
+     * @param data 卡池信息
+     */
+    @Update
+    suspend fun updateGacha(data: MockGachaData)
 
     /**
      * 插入卡池抽取结果数据

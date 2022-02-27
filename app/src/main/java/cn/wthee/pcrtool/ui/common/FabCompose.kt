@@ -35,14 +35,14 @@ fun FabCompose(
 ) {
     val context = LocalContext.current
     var mModifier = if (hasNavBarPadding) {
-        modifier.navigationBarsPadding()
+        modifier.navigationBarsPadding(bottom = true, start = false, end = false)
     } else {
         modifier
     }
 
-    if (text != "") {
-        mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
-    }
+//    if (text != "") {
+    mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+//    }
 
     SmallFloatingActionButton(
         onClick = {
@@ -63,7 +63,7 @@ fun FabCompose(
             }
         ) {
             IconCompose(
-                data = if (iconType is MainIconType) iconType.icon else iconType,
+                data = iconType,
                 size = Dimen.fabIconSize,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )

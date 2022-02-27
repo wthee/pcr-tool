@@ -5,16 +5,20 @@
 - 排行榜数据：[AppMedia](https://appmedia.jp/priconne-redive/1642761#b)
 - 感谢大佬的开源项目！[静流笔记|ShizuruNotes](https://github.com/MalitsPlus/ShizuruNotes)
 
-
 > 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
 
 ## 更新记录
-
 
 ### 3.X.X
 
 > 更换图片资源地址，后续将删除旧版本图片资源
 
+### 3.2.0
+
+- 添加模拟抽卡功能
+- 添加免费十连信息
+- 优化页面细节
+- 修复已知 BUG
 
 ### 3.1.7
 

@@ -59,7 +59,7 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
             //数据切换
             if (updateApp != -1) {
                 IconCompose(
-                    data = if (updateApp == 1) MainIconType.APP_UPDATE.icon else MainIconType.NOTICE.icon,
+                    data = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                     tint = if (updateApp == 1) colorResource(id = R.color.color_rank_21_23) else MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 ) {
@@ -76,7 +76,7 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
             //设置
             IconCompose(
-                data = MainIconType.SETTING.icon,
+                data = MainIconType.SETTING,
                 tint = MaterialTheme.colorScheme.onSurface,
                 size = Dimen.fabIconSize
             ) {
@@ -115,13 +115,13 @@ private fun TopBarComposePreview() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconCompose(
-                    data = MainIconType.NOTICE.icon,
+                    data = MainIconType.NOTICE,
                     tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 )
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
-                    data = MainIconType.SETTING.icon,
+                    data = MainIconType.SETTING,
                     tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 )

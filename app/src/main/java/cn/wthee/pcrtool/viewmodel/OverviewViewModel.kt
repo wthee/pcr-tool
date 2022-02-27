@@ -6,15 +6,12 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.isComingSoon
-import cn.wthee.pcrtool.utils.isInProgress
+import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -85,16 +82,20 @@ class OverviewViewModel @Inject constructor(
         try {
             val regionType = getRegion()
             val today = getToday()
-            val data = gachaRepository.getGachaHistory(5)
+            val data = gachaRepository.getGachaHistory(10)
 
             if (type == 0) {
-                emit(data.filter {
-                    isInProgress(today, it.startTime, it.endTime, regionType)
-                })
+                emit(
+                    data.filter {
+                        isInProgress(today, it.startTime, it.endTime, regionType)
+                    }.sortedWith(compareGacha(today))
+                )
             } else {
-                emit(data.filter {
-                    isComingSoon(today, it.startTime, regionType)
-                })
+                emit(
+                    data.filter {
+                        isComingSoon(today, it.startTime, regionType)
+                    }.sortedWith(compareGacha(today))
+                )
             }
         } catch (e: Exception) {
 
@@ -113,20 +114,23 @@ class OverviewViewModel @Inject constructor(
             val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
 
             if (type == 0) {
-                emit(data.filter {
-                    isInProgress(today, it.startTime, it.endTime, regionType)
-                }.sortedWith(compare(today)))
+                emit(
+                    data.filter {
+                        isInProgress(today, it.startTime, it.endTime, regionType)
+                    }.sortedWith(compareEvent(today))
+                )
             } else {
-                emit(data.filter {
-                    isComingSoon(today, it.startTime, regionType)
-                }.sortedWith(compare(today)))
+                emit(
+                    data.filter {
+                        isComingSoon(today, it.startTime, regionType)
+                    }.sortedWith(compareEvent(today))
+                )
             }
         } catch (e: Exception) {
 
         }
 
     }
-
 
     /**
      * 获取剧情活动列表
@@ -137,16 +141,20 @@ class OverviewViewModel @Inject constructor(
         try {
             val regionType = getRegion()
             val today = getToday()
-            val data = eventRepository.getAllEvents(5)
+            val data = eventRepository.getAllEvents(10)
 
             if (type == 0) {
-                emit(data.filter {
-                    isInProgress(today, it.startTime, it.endTime, regionType)
-                })
+                emit(
+                    data.filter {
+                        isInProgress(today, it.startTime, it.endTime, regionType)
+                    }.sortedWith(compareStoryEvent(today))
+                )
             } else {
-                emit(data.filter {
-                    isComingSoon(today, it.startTime, regionType)
-                })
+                emit(
+                    data.filter {
+                        isComingSoon(today, it.startTime, regionType)
+                    }.sortedWith(compareStoryEvent(today))
+                )
             }
         } catch (e: Exception) {
 

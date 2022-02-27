@@ -15,6 +15,12 @@ class MockGachaRepository @Inject constructor(private val mockGachaDao: MockGach
 
     suspend fun insertGacha(data: MockGachaData) = mockGachaDao.insertGacha(data)
 
+    suspend fun updateGacha(gachaId: String, updateTime: String) {
+        val data = mockGachaDao.getGachaByGachaId(gachaId)
+        data.lastUpdateTime = updateTime
+        mockGachaDao.updateGacha(data)
+    }
+
     suspend fun insertResult(data: MockGachaResultRecord) = mockGachaDao.insertResult(data)
 
     suspend fun getHistory(region: Int) = mockGachaDao.getHistory(region)

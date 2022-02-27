@@ -231,7 +231,10 @@ private fun PvpResultItem(
             vertical = mediumPadding
         )
     ) {
-        Row(modifier = Modifier.padding(bottom = mediumPadding)) {
+        Row(
+            modifier = Modifier.padding(bottom = mediumPadding),
+            verticalAlignment = Alignment.Bottom
+        ) {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
                 modifier = Modifier
@@ -241,7 +244,7 @@ private fun PvpResultItem(
             //收藏
             if (!placeholder) {
                 IconCompose(
-                    data = if (favorites.value) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
+                    data = if (favorites.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     size = Dimen.fabIconSize
                 ) {
                     if (!placeholder) {

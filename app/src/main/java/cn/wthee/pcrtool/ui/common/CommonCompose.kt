@@ -136,7 +136,7 @@ fun Subtitle1(
     text: String,
     color: Color = Color.Unspecified,
     selectable: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -421,7 +421,8 @@ fun MainCard(
     Card(
         modifier = mModifier,
         content = content,
-        containerColor = backgroundColor
+        shape = shape,
+        containerColor = backgroundColor,
     )
 }
 
@@ -590,10 +591,10 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
  * 加载中
  */
 @Composable
-fun SmallCircularProgressIndicator() {
+fun CircularProgressIndicator(size: Dp = Dimen.menuIconSize) {
     CircularProgressIndicator(
         modifier = Modifier
-            .size(Dimen.menuIconSize)
+            .size(size)
             .padding(Dimen.smallPadding),
         color = MaterialTheme.colorScheme.primary,
         strokeWidth = 2.dp
@@ -690,7 +691,7 @@ fun SelectTypeCompose(
                 modifier = Modifier.padding(start = Dimen.largePadding)
             ) {
                 IconCompose(
-                    data = icon.icon,
+                    data = icon,
                     tint = selectedColor,
                     size = Dimen.menuIconSize
                 )

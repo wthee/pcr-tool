@@ -267,7 +267,7 @@ private fun TweetButton(
             btn.action.invoke()
         },
     ) {
-        IconCompose(data = btn.iconType.icon, size = Dimen.smallIconSize)
+        IconCompose(data = btn.iconType, size = Dimen.smallIconSize)
         MainContentText(text = btn.text)
     }
 }

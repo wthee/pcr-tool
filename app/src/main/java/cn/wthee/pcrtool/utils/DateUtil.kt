@@ -27,6 +27,12 @@ val String.formatTime: String
         }
     }
 
+val String.simpleDateFormat: String
+    get() {
+        val d = df1.parse(this)!!.time
+        return df1.format(Date(d))
+    }
+
 /**
  * 小时 - 1
  */

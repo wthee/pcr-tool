@@ -226,7 +226,7 @@ fun CharacterDetail(
                                         .animateContentSize(defaultSpring())
                                 )
                                 IconCompose(
-                                    data = MainIconType.HELP.icon,
+                                    data = MainIconType.HELP,
                                     size = Dimen.smallIconSize
                                 ) {
                                     actions.toCoe()
@@ -285,7 +285,7 @@ fun CharacterDetail(
                                 textStyle = MaterialTheme.typography.bodyMedium,
                                 trailingIcon = {
                                     IconCompose(
-                                        data = MainIconType.OK.icon,
+                                        data = MainIconType.OK,
                                         size = Dimen.fabIconSize
                                     ) {
                                         keyboardController?.hide()
@@ -507,7 +507,7 @@ private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
             modifier = Modifier.padding(end = Dimen.smallPadding)
         )
         IconCompose(
-            data = MainIconType.HELP.icon,
+            data = MainIconType.HELP,
             size = Dimen.smallIconSize
         ) {
             actions.toCharacteStoryDetail(unitId)
@@ -742,7 +742,7 @@ private fun UniqueEquip(
                 textStyle = MaterialTheme.typography.bodyMedium,
                 trailingIcon = {
                     IconCompose(
-                        data = MainIconType.OK.icon,
+                        data = MainIconType.OK,
                         size = Dimen.fabIconSize
                     ) {
                         keyboardController?.hide()

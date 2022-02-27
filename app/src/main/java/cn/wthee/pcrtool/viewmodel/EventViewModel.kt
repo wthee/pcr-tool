@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.utils.compareStoryEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class EventViewModel @Inject constructor(
      */
     fun getEventHistory() = flow {
         try {
-            emit(eventRepository.getAllEvents(Int.MAX_VALUE))
+            emit(eventRepository.getAllEvents(Int.MAX_VALUE).sortedWith(compareStoryEvent()))
         } catch (e: Exception) {
 
         }

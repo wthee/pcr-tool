@@ -95,7 +95,10 @@ private fun PvpFavoriteItem(
             vertical = mediumPadding
         )
     ) {
-        Row(modifier = Modifier.padding(bottom = mediumPadding)) {
+        Row(
+            modifier = Modifier.padding(bottom = mediumPadding),
+            verticalAlignment = Alignment.Bottom
+        ) {
             //日期
             MainTitleText(
                 text = itemData.date.formatTime.substring(0, 10)
@@ -103,7 +106,7 @@ private fun PvpFavoriteItem(
             Spacer(modifier = Modifier.weight(1f))
             //取消收藏
             IconCompose(
-                data = MainIconType.LOVE_FILL.icon,
+                data = MainIconType.LOVE_FILL,
                 size = Dimen.fabIconSize
             ) {
                 //点击取消收藏
@@ -114,7 +117,7 @@ private fun PvpFavoriteItem(
             Spacer(modifier = Modifier.width(largePadding))
             //搜索
             IconCompose(
-                data = MainIconType.PVP_SEARCH.icon,
+                data = MainIconType.PVP_SEARCH,
                 size = Dimen.fabIconSize
             ) {
                 //重置页面

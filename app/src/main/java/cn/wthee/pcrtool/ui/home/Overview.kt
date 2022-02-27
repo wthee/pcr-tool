@@ -278,9 +278,6 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
-                            inProgressFreeGachaList.forEach {
-                                FreeGachaItem(it)
-                            }
                             inProgressGachaList.forEach {
                                 GachaItem(it, actions.toCharacterDetail)
                             }
@@ -289,6 +286,9 @@ fun Overview(
                             }
                             inProgressEventList.forEach {
                                 CalendarItem(it)
+                            }
+                            inProgressFreeGachaList.forEach {
+                                FreeGachaItem(it)
                             }
                         }
                     }
@@ -302,9 +302,6 @@ fun Overview(
                             spanCount = spanCount,
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
-                            comingSoonFreeGachaList.forEach {
-                                FreeGachaItem(it)
-                            }
                             comingSoonGachaList.forEach {
                                 GachaItem(it, actions.toCharacterDetail)
                             }
@@ -313,6 +310,9 @@ fun Overview(
                             }
                             comingSoonEventList.forEach {
                                 CalendarItem(it)
+                            }
+                            comingSoonFreeGachaList.forEach {
+                                FreeGachaItem(it)
                             }
                         }
                     }
@@ -407,13 +407,13 @@ private fun ChangeDbCompose(
         } else {
             if (downloadState == -2) {
                 IconCompose(
-                    data = MainIconType.CHANGE_DATA.icon,
+                    data = MainIconType.CHANGE_DATA,
                     tint = MaterialTheme.colorScheme.primary,
                     size = Dimen.fabIconSize
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
-                    SmallCircularProgressIndicator()
+                    CircularProgressIndicator()
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(
@@ -470,7 +470,7 @@ private fun Section(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconCompose(
-                data = iconType.icon,
+                data = iconType,
                 size = Dimen.fabIconSize,
                 tint = MaterialTheme.colorScheme.onSurface
             )
@@ -504,7 +504,7 @@ private fun Section(
                         })
                     }
                     IconCompose(
-                        data = MainIconType.MORE.icon,
+                        data = MainIconType.MORE,
                         size = Dimen.fabIconSize,
                         tint = MaterialTheme.colorScheme.onSurface
                     )
@@ -573,7 +573,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
             ) {
                 if (inProgress) {
                     IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
+                        data = MainIconType.TIME_LEFT,
                         size = Dimen.smallIconSize,
                         tint = color
                     )
@@ -586,7 +586,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
                 }
                 if (comingSoon) {
                     IconCompose(
-                        data = MainIconType.COUNTDOWN.icon,
+                        data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
                         tint = color
                     )

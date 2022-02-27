@@ -198,9 +198,9 @@
     <string name="basic_info">基本信息</string>
     <string name="story_pic">查看剧情立绘</string>
     <string name="no_limit">无限制</string>
-    <string name="tool_mock_gacha">模拟卡池</string>
+    <string name="tool_mock_gacha">抽卡模拟</string>
     <string name="gacha_pick_up_normal">自选 UP</string>
-    <string name="gacha_pick_up_fes">FES UP</string>
+    <string name="gacha_pick_up_fes">Fes UP</string>
     <string name="tip_to_pick_up">请选择 UP 角色</string>
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
 </resources>

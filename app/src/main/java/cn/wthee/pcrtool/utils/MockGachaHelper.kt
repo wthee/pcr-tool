@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.utils
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
-import java.util.*
+import kotlin.random.Random
 
 /**
  * 模拟抽卡
@@ -16,7 +16,6 @@ class MockGachaHelper(
 ) {
     private var gachaBoxList: MutableList<GachaWeightInfo> = ArrayList()
     private var tenthGachaBoxList: MutableList<GachaWeightInfo> = ArrayList()
-    private val random = Random()
     private val totalWeight = 1000
 
     //默认三星 up 总概率 3%
@@ -45,7 +44,7 @@ class MockGachaHelper(
                 )
                 tenthGachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
             }
-            //FES 三星概率翻倍
+            //Fes 三星概率翻倍
             else -> {
                 //基本
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal1, 77 * totalWeight))
@@ -63,8 +62,8 @@ class MockGachaHelper(
                         notUpFesList.add(it)
                     }
                 }
-                gachaBoxList.add(GachaWeightInfo(notUpFesList, pickUpWeight * 2))
-                gachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight * 2))
+                gachaBoxList.add(GachaWeightInfo(notUpFesList, pickUpWeight))
+                gachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
                 //第十发
                 tenthGachaBoxList.add(GachaWeightInfo(unitListData.normal2, 94 * totalWeight))
                 tenthGachaBoxList.add(
@@ -73,21 +72,21 @@ class MockGachaHelper(
                         (star3Weight - pickUpWeight) * 2
                     )
                 )
-                tenthGachaBoxList.add(GachaWeightInfo(notUpFesList, pickUpWeight * 2))
-                tenthGachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight * 2))
+                tenthGachaBoxList.add(GachaWeightInfo(notUpFesList, pickUpWeight))
+                tenthGachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
             }
         }
     }
 
     fun giveMe1500Gems(): ArrayList<GachaUnitInfo> {
-        val reslutList = arrayListOf<GachaUnitInfo>()
+        val resultList = arrayListOf<GachaUnitInfo>()
         for (i in 0 until 9) {
-            reslutList.add(getSingleResult(false))
+            resultList.add(getSingleResult(false))
         }
         //第十次
-        reslutList.add(getSingleResult(true))
+        resultList.add(getSingleResult(true))
 
-        return reslutList
+        return resultList
     }
 
     /**
@@ -105,7 +104,7 @@ class MockGachaHelper(
         for (wc in boxList) {
             weightSum += wc.weight
         }
-        val randomNum = random.nextInt(weightSum)
+        val randomNum = Random.nextInt(weightSum)
         var m = 0
         for (wc in boxList) {
             if (m <= randomNum && randomNum < m + wc.weight) {

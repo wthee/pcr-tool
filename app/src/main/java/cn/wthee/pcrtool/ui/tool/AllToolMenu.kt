@@ -199,7 +199,7 @@ private fun MenuItem(
         ) {
             IconCompose(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
-                data = it.iconType.icon,
+                data = it.iconType,
                 size = Dimen.mediumIconSize
             )
             Subtitle2(

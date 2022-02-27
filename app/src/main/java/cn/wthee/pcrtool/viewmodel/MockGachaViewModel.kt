@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.simpleDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -93,15 +94,19 @@ class MockGachaViewModel @Inject constructor(
      */
     fun addMockResult(gachaId: String, resultList: List<GachaUnitInfo>) {
         viewModelScope.launch {
+            val updateTime = getToday(true)
             mockGachaRepository.insertResult(
                 MockGachaResultRecord(
                     UUID.randomUUID().toString(),
                     gachaId,
                     resultList.getIdsStr(),
                     resultList.getRaritysStr(),
-                    getToday(true)
+                    updateTime
                 )
             )
+            //更新日期
+            mockGachaRepository.updateGacha(gachaId, updateTime.simpleDateFormat)
+            //重新获取结果
             getResult(gachaId = gachaId)
         }
     }

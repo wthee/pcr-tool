@@ -95,14 +95,17 @@ private fun PvpHistoryItem(
             vertical = mediumPadding
         )
     ) {
-        Row(modifier = Modifier.padding(bottom = mediumPadding)) {
+        Row(
+            modifier = Modifier.padding(bottom = mediumPadding),
+            verticalAlignment = Alignment.Bottom
+        ) {
             //日期
             MainTitleText(
                 text = itemData.date.formatTime.substring(0, 10)
             )
             Spacer(modifier = Modifier.weight(1f))
             IconCompose(
-                data = MainIconType.PVP_SEARCH.icon,
+                data = MainIconType.PVP_SEARCH,
                 size = Dimen.fabIconSize
             ) {
                 scope.launch {

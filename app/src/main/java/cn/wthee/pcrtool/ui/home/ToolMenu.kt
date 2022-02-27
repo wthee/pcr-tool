@@ -98,7 +98,7 @@ private fun MenuItem(
             .padding(Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
+        IconCompose(data = it.iconType, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = it.titleId),
             modifier = Modifier.padding(top = Dimen.mediumPadding),

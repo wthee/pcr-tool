@@ -118,7 +118,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
             ) {
                 if (inProgress) {
                     IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
+                        data = MainIconType.TIME_LEFT,
                         size = Dimen.smallIconSize,
                     )
                     MainContentText(
@@ -130,7 +130,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
                 }
                 if (comingSoon) {
                     IconCompose(
-                        data = MainIconType.COUNTDOWN.icon,
+                        data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
                         tint = colorResource(id = R.color.news_system)
                     )

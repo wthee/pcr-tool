@@ -14,5 +14,5 @@ data class MockGachaData(
     val gachaType: Int,
     val pickUpIds: String,
     val createTime: String,
-    val lastUpdateTime: String
+    var lastUpdateTime: String
 )
