@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.MockGachaRepository
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
@@ -33,7 +34,7 @@ class MockGachaViewModel @Inject constructor(
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
 
-    val historyList = MutableLiveData<List<MockGachaData>>()
+    val historyList = MutableLiveData<List<MockGachaProData>>()
     val resultRecordList = MutableLiveData<List<MockGachaResultRecord>>()
 
     /**
@@ -140,6 +141,21 @@ class MockGachaViewModel @Inject constructor(
         viewModelScope.launch {
             val data = mockGachaRepository.getResultByGachaId(gachaId)
             resultRecordList.postValue(data)
+        }
+    }
+
+    /**
+     * 删除指定卡池的所有记录
+     */
+    fun deleteGachaResultByGachaId(gachaId: String) {
+        viewModelScope.launch {
+            try {
+                mockGachaRepository.deleteGachaResultByGachaId(gachaId)
+                //刷新记录
+                getResult(gachaId)
+            }catch (e: Exception){
+
+            }
         }
     }
 }

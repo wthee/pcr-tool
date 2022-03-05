@@ -32,5 +32,6 @@ class MockGachaRepository @Inject constructor(private val mockGachaDao: MockGach
 
     suspend fun getResultByGachaId(gachaId: String) = mockGachaDao.getResultByGachaId(gachaId)
 
+    suspend fun deleteGachaResultByGachaId(gachaId: String) = mockGachaDao.deleteGachaResultByGachaId(gachaId)
 
 }

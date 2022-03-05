@@ -17,11 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
@@ -240,6 +241,16 @@ fun MockGacha(
                 navViewModel.pickUpList.postValue(arrayListOf())
                 navViewModel.gachaType.postValue(gachaType.value)
             }
+        } else {
+            FabCompose(
+                iconType = MainIconType.RESET,
+                text = stringResource(id = R.string.reset_record),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                mockGachaViewModel.deleteGachaResultByGachaId(gachaId)
+            }
         }
     }
 }
@@ -276,9 +287,23 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
  */
 @Composable
 private fun MockGachaHistoryItem(
-    gachaData: MockGachaData
+    gachaData: MockGachaProData
 ) {
     val scope = rememberCoroutineScope()
+    var upCount = 0
+    var start3Count = 0
+    val pickUpUnitIds = gachaData.pickUpIds.intArrayList
+    val resultIds = gachaData.resultUnitIds.intArrayList
+    val resultCount = resultIds.size / 10
+
+    resultIds.forEachIndexed { index, unitId ->
+        if (pickUpUnitIds.contains(unitId)) {
+            upCount++
+        }
+        if (gachaData.resultUnitRaritys.intArrayList[index] == 3) {
+            start3Count++
+        }
+    }
 
     Column(
         modifier = Modifier.padding(
@@ -294,6 +319,20 @@ private fun MockGachaHistoryItem(
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)
             )
+            if (upCount > 0) {
+                MainTitleText(
+                    text = "UP：$upCount",
+                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            if (start3Count > 0) {
+                MainTitleText(
+                    text = "★3：$start3Count",
+                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             IconCompose(
                 data = MainIconType.MOCK_GACHA_PAY,
@@ -323,6 +362,19 @@ private fun MockGachaHistoryItem(
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                //内容
+                if (resultCount > 0) {
+                    MainContentText(
+                        text = "消耗宝石：1500 * $resultCount = ${1500 * resultCount}",
+                        modifier = Modifier.padding(
+                            top = Dimen.mediumPadding,
+                            start = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding
+                        ),
+                        textAlign = TextAlign.Start
+                    )
+                }
+
                 //up 角色
                 Row {
                     gachaData.pickUpIds.intArrayList.forEach { unitId ->
@@ -385,18 +437,30 @@ private fun MockGachaResultRecordList(
     } else {
         //显示相关信息
         val payCount = resultRecordList.size
-        val sumText =
-            """
-                消耗宝石：1500 * $payCount = ${1500 * payCount} 
-                ★3 角色：$start3Count（$upCount 个 UP 角色）""".trimIndent()
+        val sumText = "消耗宝石：1500 * $payCount = ${1500 * payCount}"
 
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             MainText(
                 text = sumText,
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
-                    .align(Alignment.CenterHorizontally)
             )
+            Row {
+                MainTitleText(
+                    text = "UP：$upCount",
+                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                MainTitleText(
+                    text = "★3：$start3Count",
+                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            DivCompose()
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberLazyGridState(),
