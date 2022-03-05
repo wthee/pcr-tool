@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun EventList(
+fun StoryEventList(
     scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
@@ -58,7 +58,7 @@ fun EventList(
                 cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
-                    EventItem(it, toCharacterDetail, toAllPics)
+                    StoryEventItem(it, toCharacterDetail, toAllPics)
                 }
                 item {
                     CommonSpacer()
@@ -91,7 +91,7 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun EventItem(
+fun StoryEventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
@@ -272,10 +272,10 @@ fun EventItem(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItemPreview() {
+private fun StoryEventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
+            StoryEventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
         }
     }
 }

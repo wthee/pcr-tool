@@ -10,11 +10,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,10 +42,10 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.ui.tool.EventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
+import cn.wthee.pcrtool.ui.tool.StoryEventItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -60,6 +57,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 /**
  * 首页纵览
@@ -82,6 +80,10 @@ fun Overview(
     val region = getRegion()
     val coroutineScope = rememberCoroutineScope()
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    //添加日历确认弹窗
+    val openInsertCalendarDialog = remember {
+        mutableStateOf(false)
+    }
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
@@ -272,7 +274,11 @@ fun Overview(
                 if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty() || inProgressFreeGachaList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar,
-                        iconType = MainIconType.CALENDAR_TODAY
+                        iconType = MainIconType.CALENDAR_TODAY,
+                        onClick = {
+                            //TODO 弹窗确认
+                            openInsertCalendarDialog.value = true
+                        }
                     ) {
                         VerticalGrid(
                             spanCount = spanCount,
@@ -282,10 +288,10 @@ fun Overview(
                                 GachaItem(it, actions.toCharacterDetail)
                             }
                             inProgressStoryEventList.forEach {
-                                EventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
                             }
                             inProgressEventList.forEach {
-                                CalendarItem(it)
+                                CalendarEventItem(it)
                             }
                             inProgressFreeGachaList.forEach {
                                 FreeGachaItem(it)
@@ -306,10 +312,10 @@ fun Overview(
                                 GachaItem(it, actions.toCharacterDetail)
                             }
                             comingSoonStoryEventList.forEach {
-                                EventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
                             }
                             comingSoonEventList.forEach {
-                                CalendarItem(it)
+                                CalendarEventItem(it)
                             }
                             comingSoonFreeGachaList.forEach {
                                 FreeGachaItem(it)
@@ -331,6 +337,41 @@ fun Overview(
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
         )
+
+        //TODO 添加日历弹窗确认
+        if (openInsertCalendarDialog.value) {
+            AlertDialog(
+                title = {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            MainText(text = "是否添加全部日程")
+                    }
+                },
+                modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
+                onDismissRequest = {
+                    openInsertCalendarDialog.value = false
+                },
+                containerColor = MaterialTheme.colorScheme.background,
+                shape = Shape.medium,
+                confirmButton = {
+                    //关闭
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        MainButton(text = stringResource(R.string.confirm)) {
+                            //TODO 添加信息
+                            //掉落活动
+                            inProgressEventList.forEach {
+                                SystemCalendarHelper().insert(
+                                    Random.nextLong(1000),
+                                    it.startTime,
+                                    it.endTime,
+                                    getTypeDataToString(it)
+                                )
+                            }
+                            openInsertCalendarDialog.value = false
+                        }
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -526,7 +567,7 @@ private fun Section(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CalendarItem(calendar: CalendarEvent) {
+private fun CalendarEventItem(calendar: CalendarEvent) {
     val regionType = getRegion()
     val today = getToday()
     val sd = fixJpTime(calendar.startTime.formatTime, regionType)
@@ -606,13 +647,9 @@ private fun CalendarItem(calendar: CalendarEvent) {
                 getTypeData(calendar).forEach {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Subtitle2(text = it.title + it.info)
-                        if (it.multiple > 0f) {
+                        if (it.multiple != "") {
                             Subtitle1(
-                                text = (if ((it.multiple * 10).toInt() % 10 == 0) {
-                                    it.multiple.toInt().toString()
-                                } else {
-                                    it.multiple.toString()
-                                }) + "倍",
+                                text = it.multiple,
                                 color = it.color,
                                 modifier = Modifier.padding(horizontal = Dimen.smallPadding)
                             )
@@ -626,7 +663,6 @@ private fun CalendarItem(calendar: CalendarEvent) {
     }
 
 }
-
 
 /**
  * 获取事项信息
@@ -655,10 +691,15 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
                 4f -> colorResource(id = R.color.color_rank_21_23)
                 else -> MaterialTheme.colorScheme.primary
             }
+            val multiple = data.getFixedValue()
             events.add(
                 CalendarEventData(
                     title,
-                    data.getFixedValue(),
+                    (if ((multiple * 10).toInt() % 10 == 0) {
+                        multiple.toInt().toString()
+                    } else {
+                        multiple.toString()
+                    }) + "倍",
                     stringResource(id = if (s.toInt() > 40) R.string.mana else R.string.drop),
                     dropMumColor
                 )
@@ -669,11 +710,46 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
         events.add(
             CalendarEventData(
                 stringResource(id = R.string.tower),
-                0f,
+                "",
                 ""
             )
         )
     }
 
     return events
+}
+
+/**
+ * 获取事项信息
+ */
+private fun getTypeDataToString(data: CalendarEvent): String {
+    var eventTitle = ""
+    if (data.type != "1") {
+        //正常活动
+        val list = data.type.split("-")
+        list.forEach { s ->
+            val title = when (s.toInt()) {
+                31, 41 -> "普通关卡"
+                32, 42 -> "困难关卡"
+                39, 49 -> "非常困难关卡"
+                34 -> "探索"
+                37 -> "圣迹调查"
+                38 -> "神殿调查"
+                45 -> "地下城"
+                else -> ""
+            }
+            val multiple = data.getFixedValue()
+            eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+                multiple.toInt().toString()
+            } else {
+                multiple.toString()
+            }) + "倍"
+
+        }
+    } else {
+        //露娜塔
+        eventTitle = "露娜塔"
+    }
+
+    return eventTitle
 }
