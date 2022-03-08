@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -57,7 +58,12 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.random.Random
+
+//权限
+val permissions = arrayOf(
+    Manifest.permission.READ_CALENDAR,
+    Manifest.permission.WRITE_CALENDAR,
+)
 
 /**
  * 首页纵览
@@ -275,8 +281,9 @@ fun Overview(
                     Section(
                         titleId = R.string.tool_calendar,
                         iconType = MainIconType.CALENDAR_TODAY,
+                        rightIconType = MainIconType.MAIN,
                         onClick = {
-                            //TODO 弹窗确认
+                            //弹窗确认
                             openInsertCalendarDialog.value = true
                         }
                     ) {
@@ -302,7 +309,12 @@ fun Overview(
                 if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty() || comingSoonFreeGachaList.isNotEmpty()) {
                     Section(
                         titleId = R.string.tool_calendar_comming,
-                        iconType = MainIconType.CALENDAR
+                        iconType = MainIconType.CALENDAR,
+                        rightIconType = MainIconType.MAIN,
+                        onClick = {
+                            //弹窗确认
+                            openInsertCalendarDialog.value = true
+                        }
                     ) {
                         VerticalGrid(
                             spanCount = spanCount,
@@ -343,7 +355,7 @@ fun Overview(
             AlertDialog(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            MainText(text = "是否添加全部日程")
+                        MainText(text = "是否添加全部活动日程至系统日历？")
                     }
                 },
                 modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
@@ -354,21 +366,44 @@ fun Overview(
                 shape = Shape.medium,
                 confirmButton = {
                     //关闭
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        MainButton(text = stringResource(R.string.confirm)) {
-                            //TODO 添加信息
+                    MainButton(text = stringResource(R.string.confirm_add)) {
+                        //添加信息
+                        checkPermissions(context, permissions, false) {
                             //掉落活动
                             inProgressEventList.forEach {
                                 SystemCalendarHelper().insert(
-                                    Random.nextLong(1000),
                                     it.startTime,
                                     it.endTime,
                                     getTypeDataToString(it)
                                 )
                             }
+                            //剧情活动
+                            inProgressStoryEventList.forEach {
+                                SystemCalendarHelper().insert(
+                                    it.startTime,
+                                    it.endTime,
+                                    it.getEventTitle()
+                                )
+                            }
+                            //卡池
+                            inProgressGachaList.forEach {
+                                SystemCalendarHelper().insert(
+                                    it.startTime,
+                                    it.endTime,
+                                    it.getDesc()
+                                )
+                            }
                             openInsertCalendarDialog.value = false
                         }
                     }
+                },
+                dismissButton = {
+                    SubButton(
+                        text = stringResource(R.string.cancel)
+                    ) {
+                        openInsertCalendarDialog.value = false
+                    }
+
                 }
             )
         }
@@ -478,6 +513,7 @@ private fun Section(
     iconType: MainIconType,
     hintText: String = "",
     visible: Boolean = true,
+    rightIconType: MainIconType? = null,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -545,7 +581,7 @@ private fun Section(
                         })
                     }
                     IconCompose(
-                        data = MainIconType.MORE,
+                        data = rightIconType ?: MainIconType.MORE,
                         size = Dimen.fabIconSize,
                         tint = MaterialTheme.colorScheme.onSurface
                     )
@@ -729,9 +765,9 @@ private fun getTypeDataToString(data: CalendarEvent): String {
         val list = data.type.split("-")
         list.forEach { s ->
             val title = when (s.toInt()) {
-                31, 41 -> "普通关卡"
-                32, 42 -> "困难关卡"
-                39, 49 -> "非常困难关卡"
+                31 -> "普通关卡"
+                32 -> "困难关卡"
+                39 -> "高难关卡"
                 34 -> "探索"
                 37 -> "圣迹调查"
                 38 -> "神殿调查"
@@ -739,11 +775,14 @@ private fun getTypeDataToString(data: CalendarEvent): String {
                 else -> ""
             }
             val multiple = data.getFixedValue()
-            eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
-                multiple.toInt().toString()
-            } else {
-                multiple.toString()
-            }) + "倍"
+            if (s.toInt() <= 40 || s.toInt() == 45) {
+                eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+                    multiple.toInt().toString()
+                } else {
+                    multiple.toString()
+                }) + "倍\n"
+            }
+
 
         }
     } else {

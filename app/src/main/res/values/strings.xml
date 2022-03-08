@@ -147,11 +147,12 @@
     <string name="other">其它</string>
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
+    <string name="confirm_add">确认添加</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
     <string name="hard">困难关卡</string>
-    <string name="very_hard">非常困难关卡</string>
+    <string name="very_hard">高难关卡</string>
     <string name="explore">探索</string>
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>

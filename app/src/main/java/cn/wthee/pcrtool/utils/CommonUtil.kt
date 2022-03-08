@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -22,22 +21,40 @@ private fun hasPermissions(context: Context, permissions: Array<String>) = permi
 /**
  * 存储权限
  */
-fun checkPermissions(context: Context, action: () -> Unit) {
-    //权限
-    val permissions = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    )
-    //权限校验
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(context, permissions)) {
-        ActivityCompat.requestPermissions(
-            context as Activity,
-            permissions,
-            1
-        )
+fun checkPermissions(
+    context: Context,
+    permissions: Array<String>,
+    sdkCheck: Boolean = true,
+    action: () -> Unit
+) {
+
+    if (!sdkCheck) {
+        //不校验sdk
+        if (!hasPermissions(context, permissions)) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                permissions,
+                1
+            )
+        } else {
+            action.invoke()
+        }
     } else {
-        action.invoke()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
+                context,
+                permissions
+            )
+        ) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                permissions,
+                1
+            )
+        } else {
+            action.invoke()
+        }
     }
+
 }
 
 /**
