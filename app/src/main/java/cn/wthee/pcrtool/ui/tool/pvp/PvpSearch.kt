@@ -8,7 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -335,7 +335,7 @@ private fun PvpCharacterSelectPage(
     ) {
         //角色图标列表
         LazyVerticalGrid(
-            cells = GridCells.Fixed(spanCount),
+            columns = GridCells.Fixed(spanCount),
             state = selectListState,
             verticalArrangement = Arrangement.Center
         ) {

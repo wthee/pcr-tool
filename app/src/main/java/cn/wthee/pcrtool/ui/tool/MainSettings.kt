@@ -29,12 +29,10 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.switchColors
-import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
-import cn.wthee.pcrtool.utils.FileUtil.importUserFile
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.openWebView
 
 /**
  * 设置页面
@@ -198,42 +196,6 @@ fun MainSettings() {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
         }
         LineCompose()
-        if (BuildConfig.DEBUG) {
-            //收藏、竞技场数据本地数据备份
-            MainText(
-                text = stringResource(id = R.string.data_backup),
-                modifier = Modifier.padding(Dimen.largePadding)
-            )
-            //导出收藏数据
-            SettingItem(
-                MainIconType.EXPORT,
-                stringResource(id = R.string.data_export),
-                stringResource(id = R.string.data_export_hint),
-            ) {
-                //导出文件
-                checkPermissions(context) {
-                    exportUserFile(context)
-                }
-            }
-            //导入收藏数据
-            SettingItem(
-                MainIconType.IMPORT,
-                stringResource(id = R.string.data_import),
-                stringResource(id = R.string.data_import_hint),
-            ) {
-                checkPermissions(context) {
-                    if (importUserFile(context)) {
-                        //重新读取导入的文件，刷新数据
-                        ToastUtil.short(reloadImportDataTip)
-                        coroutineScope.launch {
-                            delay(3000)
-                            exitProcess(0)
-                        }
-                    }
-                }
-            }
-            LineCompose()
-        }
         //感谢友链
         MainText(
             text = stringResource(id = R.string.thanks),

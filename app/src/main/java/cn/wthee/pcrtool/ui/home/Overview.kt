@@ -355,7 +355,7 @@ fun Overview(
             AlertDialog(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        MainText(text = "是否添加全部活动日程至系统日历？")
+                        MainText(text = stringResource(R.string.add_to_sys_calendar))
                     }
                 },
                 modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),

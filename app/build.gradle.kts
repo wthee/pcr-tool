@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha04"
+val composeVersion = "1.2.0-alpha05"
 val appVersionCode = 320
 val appVersionName = "3.2.0"
 
@@ -114,7 +114,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha06")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha07")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.compiler:compiler:$composeVersion")
     //icon
@@ -131,7 +131,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-alpha09"
+    val coilVersion = "2.0.0-rc01"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 

@@ -4,10 +4,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyGridState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -72,7 +72,7 @@ fun ClanBattleList(
         FadeAnimation(visible = visible) {
             LazyVerticalGrid(
                 state = scrollState,
-                cells = GridCells.Adaptive(getItemWidth())
+                columns = GridCells.Adaptive(getItemWidth())
             ) {
                 items(clanList) {
                     ClanBattleItem(it, toClanBossInfo)
@@ -84,7 +84,7 @@ fun ClanBattleList(
         }
         FadeAnimation(visible = !visible) {
             LazyVerticalGrid(
-                cells = GridCells.Adaptive(getItemWidth())
+                columns = GridCells.Adaptive(getItemWidth())
             ) {
                 items(20) {
                     ClanBattleItem(ClanBattleInfo(), toClanBossInfo)

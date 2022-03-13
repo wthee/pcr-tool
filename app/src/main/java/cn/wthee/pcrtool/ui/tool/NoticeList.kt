@@ -2,10 +2,10 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyGridState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,7 +53,7 @@ fun NoticeList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         val visible = noticeList.isNotEmpty()
-        LazyVerticalGrid(state = scrollState, cells = GridCells.Adaptive(getItemWidth())) {
+        LazyVerticalGrid(state = scrollState, columns = GridCells.Adaptive(getItemWidth())) {
             if (visible) {
                 items(noticeList) {
                     NoticeItem(it)

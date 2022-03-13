@@ -2,10 +2,10 @@ package cn.wthee.pcrtool.ui.tool.pvp
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyGridState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -125,7 +125,7 @@ fun PvpSearchResult(
                                 //展示查询结果
                                 LazyVerticalGrid(
                                     state = resultListState,
-                                    cells = GridCells.Adaptive(itemWidth)
+                                    columns = GridCells.Adaptive(itemWidth)
                                 ) {
                                     itemsIndexed(items = list) { index, item ->
                                         PvpResultItem(
@@ -179,7 +179,7 @@ fun PvpSearchResult(
                     //展示查询结果
                     LazyVerticalGrid(
                         state = resultListState,
-                        cells = GridCells.Adaptive(itemWidth)
+                        columns = GridCells.Adaptive(itemWidth)
                     ) {
                         items(10) {
                             PvpResultItem(

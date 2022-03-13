@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Tab
@@ -268,7 +268,7 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
         state = rememberLazyGridState(),
-        cells = GridCells.Adaptive(getItemWidth())
+        columns = GridCells.Adaptive(getItemWidth())
     ) {
         items(historyData) {
             MockGachaHistoryItem(it)
@@ -464,7 +464,7 @@ private fun MockGachaResultRecordList(
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberLazyGridState(),
-                cells = GridCells.Adaptive(getItemWidth())
+                columns = GridCells.Adaptive(getItemWidth())
             ) {
                 itemsIndexed(resultRecordList) { index, resultRecord ->
                     MockGachaResultRecordItem(

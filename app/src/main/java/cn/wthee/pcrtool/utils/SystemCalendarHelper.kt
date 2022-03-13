@@ -46,31 +46,37 @@ class SystemCalendarHelper {
      *
      */
     fun insert(startTime: String, endTime: String, title: String) {
-        val uri: Uri = CalendarContract.Calendars.CONTENT_URI
-        val cur = contentResolver.query(uri, EVENT_PROJECTION, null, null, null)
-        cur?.use {
-            cur.moveToFirst()
-            val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
+        try {
+            val uri: Uri = CalendarContract.Calendars.CONTENT_URI
+            val cur = contentResolver.query(uri, EVENT_PROJECTION, null, null, null)
+            if (cur != null) {
+                cur.moveToFirst()
+                if (cur.count > 0) {
+                    val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
 
-            val startMillis: Long = fixJpTime(startTime.formatTime, region).toTimestamp
-            val endMillis: Long = fixJpTime(endTime.formatTime, region).toTimestamp
+                    val startMillis: Long = fixJpTime(startTime.formatTime, region).toTimestamp
+                    val endMillis: Long = fixJpTime(endTime.formatTime, region).toTimestamp
 
-            val values = ContentValues().apply {
-                put(CalendarContract.Events.DTSTART, startMillis)
-                put(CalendarContract.Events.DTEND, endMillis)
-                put(CalendarContract.Events.TITLE, "$regionName：$title")
-                put(CalendarContract.Events.DESCRIPTION, regionName)
-                put(CalendarContract.Events.CALENDAR_ID, calID)
-                put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
+                    val values = ContentValues().apply {
+                        put(CalendarContract.Events.DTSTART, startMillis)
+                        put(CalendarContract.Events.DTEND, endMillis)
+                        put(CalendarContract.Events.TITLE, "$regionName：$title")
+                        put(CalendarContract.Events.DESCRIPTION, regionName)
+                        put(CalendarContract.Events.CALENDAR_ID, calID)
+                        put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
+                    }
+                    contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+                    ToastUtil.short("日程已添加至系统日历~")
+                } else {
+                    ToastUtil.short("无法添加日程，未找到日历程序~")
+                }
+                cur.close()
+            } else {
+                ToastUtil.short("无法添加日程，未找到日历程序~")
             }
-            try {
-                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-                ToastUtil.short("日程已添加至系统日历~")
-            } catch (e: Exception) {
-                Log.e("DEBUG", e.message ?: "")
-                ToastUtil.short("日程添加失败~")
-            }
+        } catch (e: Exception) {
+            Log.e("DEBUG", e.message ?: "")
+            ToastUtil.short("日程添加失败~")
         }
-
     }
 }
