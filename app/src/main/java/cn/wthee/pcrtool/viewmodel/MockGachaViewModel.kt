@@ -153,7 +153,23 @@ class MockGachaViewModel @Inject constructor(
                 mockGachaRepository.deleteGachaResultByGachaId(gachaId)
                 //刷新记录
                 getResult(gachaId)
-            }catch (e: Exception){
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    /**
+     * 删除卡池
+     */
+    fun deleteGachaByGachaId(gachaId: String) {
+        viewModelScope.launch {
+            try {
+                mockGachaRepository.deleteGachaByGachaId(gachaId)
+                mockGachaRepository.deleteGachaResultByGachaId(gachaId)
+                //刷新记录
+                getHistory()
+            } catch (e: Exception) {
 
             }
         }

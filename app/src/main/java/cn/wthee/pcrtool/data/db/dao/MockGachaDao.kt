@@ -82,4 +82,11 @@ interface MockGachaDao {
      */
     @Query("DELETE FROM gacha_result_record WHERE gachaId = :gachaId")
     suspend fun deleteGachaResultByGachaId(gachaId: String)
+
+    /**
+     * 删除指定卡池的所有记录
+     * @param
+     */
+    @Query("DELETE FROM gacha_data WHERE gachaId = :gachaId")
+    suspend fun deleteGachaByGachaId(gachaId: String)
 }

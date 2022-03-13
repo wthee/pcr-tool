@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
@@ -287,8 +287,10 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
  */
 @Composable
 private fun MockGachaHistoryItem(
-    gachaData: MockGachaProData
+    gachaData: MockGachaProData,
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var upCount = 0
     var start3Count = 0
@@ -319,6 +321,14 @@ private fun MockGachaHistoryItem(
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)
             )
+            //内容
+            if (resultCount > 0) {
+                MainTitleText(
+                    text = "$resultCount",
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
             if (upCount > 0) {
                 MainTitleText(
                     text = "UP：$upCount",
@@ -362,18 +372,6 @@ private fun MockGachaHistoryItem(
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //内容
-                if (resultCount > 0) {
-                    MainContentText(
-                        text = "消耗宝石：1500 * $resultCount = ${1500 * resultCount}",
-                        modifier = Modifier.padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding
-                        ),
-                        textAlign = TextAlign.Start
-                    )
-                }
 
                 //up 角色
                 Row {
@@ -387,15 +385,29 @@ private fun MockGachaHistoryItem(
                         )
                     }
                 }
-
-                //日期
-                CaptionText(
-                    text = "上次抽卡 ${gachaData.lastUpdateTime}",
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = Dimen.mediumPadding)
+                        .padding(horizontal = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Subtitle2(
+                        text = stringResource(R.string.delete_gacha),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            VibrateUtil(context).single()
+                            mockGachaViewModel.deleteGachaByGachaId(gachaData.gachaId)
+                        })
+                    //日期
+                    CaptionText(
+                        text = "上次抽卡 ${gachaData.lastUpdateTime}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = Dimen.mediumPadding)
 
-                )
+                    )
+                }
+
             }
         }
     }
