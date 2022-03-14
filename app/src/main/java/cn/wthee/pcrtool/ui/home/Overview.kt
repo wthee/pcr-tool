@@ -88,7 +88,7 @@ fun Overview(
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     //添加日历确认弹窗
     val openInsertCalendarDialog = remember {
-        mutableStateOf(false)
+        mutableStateOf(0)
     }
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
@@ -284,7 +284,7 @@ fun Overview(
                         rightIconType = MainIconType.MAIN,
                         onClick = {
                             //弹窗确认
-                            openInsertCalendarDialog.value = true
+                            openInsertCalendarDialog.value = 1
                         }
                     ) {
                         VerticalGrid(
@@ -313,7 +313,7 @@ fun Overview(
                         rightIconType = MainIconType.MAIN,
                         onClick = {
                             //弹窗确认
-                            openInsertCalendarDialog.value = true
+                            openInsertCalendarDialog.value = 2
                         }
                     ) {
                         VerticalGrid(
@@ -351,7 +351,7 @@ fun Overview(
         )
 
         //TODO 添加日历弹窗确认
-        if (openInsertCalendarDialog.value) {
+        if (openInsertCalendarDialog.value != 0) {
             AlertDialog(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -360,7 +360,7 @@ fun Overview(
                 },
                 modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
                 onDismissRequest = {
-                    openInsertCalendarDialog.value = false
+                    openInsertCalendarDialog.value = 0
                 },
                 containerColor = MaterialTheme.colorScheme.background,
                 shape = Shape.medium,
@@ -370,7 +370,11 @@ fun Overview(
                         //添加信息
                         checkPermissions(context, permissions, false) {
                             //掉落活动
-                            inProgressEventList.forEach {
+                            if (openInsertCalendarDialog.value == 1) {
+                                inProgressEventList
+                            } else {
+                                comingSoonEventList
+                            }.forEach {
                                 SystemCalendarHelper().insert(
                                     it.startTime,
                                     it.endTime,
@@ -378,7 +382,11 @@ fun Overview(
                                 )
                             }
                             //剧情活动
-                            inProgressStoryEventList.forEach {
+                            if (openInsertCalendarDialog.value == 1) {
+                                inProgressStoryEventList
+                            } else {
+                                comingSoonStoryEventList
+                            }.forEach {
                                 SystemCalendarHelper().insert(
                                     it.startTime,
                                     it.endTime,
@@ -386,14 +394,18 @@ fun Overview(
                                 )
                             }
                             //卡池
-                            inProgressGachaList.forEach {
+                            if (openInsertCalendarDialog.value == 1) {
+                                inProgressGachaList
+                            } else {
+                                comingSoonGachaList
+                            }.forEach {
                                 SystemCalendarHelper().insert(
                                     it.startTime,
                                     it.endTime,
                                     it.getDesc()
                                 )
                             }
-                            openInsertCalendarDialog.value = false
+                            openInsertCalendarDialog.value = 0
                         }
                     }
                 },
@@ -401,7 +413,7 @@ fun Overview(
                     SubButton(
                         text = stringResource(R.string.cancel)
                     ) {
-                        openInsertCalendarDialog.value = false
+                        openInsertCalendarDialog.value = 0
                     }
 
                 }
@@ -765,9 +777,9 @@ private fun getTypeDataToString(data: CalendarEvent): String {
         val list = data.type.split("-")
         list.forEach { s ->
             val title = when (s.toInt()) {
-                31 -> "普通关卡"
-                32 -> "困难关卡"
-                39 -> "高难关卡"
+                31, 41 -> "普通关卡"
+                32, 42 -> "困难关卡"
+                39, 49 -> "高难关卡"
                 34 -> "探索"
                 37 -> "圣迹调查"
                 38 -> "神殿调查"
@@ -775,14 +787,11 @@ private fun getTypeDataToString(data: CalendarEvent): String {
                 else -> ""
             }
             val multiple = data.getFixedValue()
-            if (s.toInt() <= 40 || s.toInt() == 45) {
-                eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
-                    multiple.toInt().toString()
-                } else {
-                    multiple.toString()
-                }) + "倍\n"
-            }
-
+            eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+                multiple.toInt().toString()
+            } else {
+                multiple.toString()
+            }) + "倍\n"
 
         }
     } else {
