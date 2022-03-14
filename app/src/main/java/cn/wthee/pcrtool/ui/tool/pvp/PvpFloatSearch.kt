@@ -4,7 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -57,8 +57,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //退出
                 if (!min) {
                     FabCompose(
-                        iconType = MainIconType.FLOAT_CLOSE,
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        iconType = MainIconType.FLOAT_CLOSE
                     ) {
                         navViewModel.floatServiceRun.postValue(false)
                     }
@@ -66,8 +65,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //查询
                 if (!min && !showResult) {
                     FabCompose(
-                        iconType = MainIconType.PVP_SEARCH,
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        iconType = MainIconType.PVP_SEARCH
                     ) {
                         coroutineScope.launch {
                             try {
@@ -82,9 +80,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 }
                 //返回
                 if (!min && showResult) {
-                    FabMain(
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
-                    )
+                    FabMain()
                 }
             }
 

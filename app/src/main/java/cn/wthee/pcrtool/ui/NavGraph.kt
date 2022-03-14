@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -46,7 +46,7 @@ object Navigation {
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
     const val TOOL_FREE_GACHA = "toolFreeGacha"
-    const val TOOL_EVENT = "toolEvent"
+    const val TOOL_STORY_EVENT = "toolStoryEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
     const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
@@ -352,7 +352,7 @@ fun NavGraph(
 
         //剧情活动
         composable(
-            route = Navigation.TOOL_EVENT,
+            route = Navigation.TOOL_STORY_EVENT,
             enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
             popEnterTransition = { myFadeIn },
@@ -360,7 +360,7 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyGridState()
-            EventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
+            StoryEventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
         }
 
         //角色公会
@@ -747,7 +747,7 @@ class NavActions(navController: NavHostController) {
      * 剧情活动
      */
     val toEvent = {
-        navController.navigate(Navigation.TOOL_EVENT)
+        navController.navigate(Navigation.TOOL_STORY_EVENT)
     }
 
     /**

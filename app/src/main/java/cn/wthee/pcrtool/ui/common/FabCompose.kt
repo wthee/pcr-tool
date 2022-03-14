@@ -40,9 +40,9 @@ fun FabCompose(
         modifier
     }
 
-//    if (text != "") {
-    mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
-//    }
+    if (text != "") {
+        mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+    }
 
     SmallFloatingActionButton(
         onClick = {

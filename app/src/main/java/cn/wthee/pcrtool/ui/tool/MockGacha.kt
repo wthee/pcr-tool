@@ -1,8 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Tab
@@ -19,9 +20,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
@@ -240,6 +241,16 @@ fun MockGacha(
                 navViewModel.pickUpList.postValue(arrayListOf())
                 navViewModel.gachaType.postValue(gachaType.value)
             }
+        } else {
+            FabCompose(
+                iconType = MainIconType.RESET,
+                text = stringResource(id = R.string.reset_record),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                mockGachaViewModel.deleteGachaResultByGachaId(gachaId)
+            }
         }
     }
 }
@@ -257,7 +268,7 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
         state = rememberLazyGridState(),
-        cells = GridCells.Adaptive(getItemWidth())
+        columns = GridCells.Adaptive(getItemWidth())
     ) {
         items(historyData) {
             MockGachaHistoryItem(it)
@@ -276,9 +287,25 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
  */
 @Composable
 private fun MockGachaHistoryItem(
-    gachaData: MockGachaData
+    gachaData: MockGachaProData,
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var upCount = 0
+    var start3Count = 0
+    val pickUpUnitIds = gachaData.pickUpIds.intArrayList
+    val resultIds = gachaData.resultUnitIds.intArrayList
+    val resultCount = resultIds.size / 10
+
+    resultIds.forEachIndexed { index, unitId ->
+        if (pickUpUnitIds.contains(unitId)) {
+            upCount++
+        }
+        if (gachaData.resultUnitRaritys.intArrayList[index] == 3) {
+            start3Count++
+        }
+    }
 
     Column(
         modifier = Modifier.padding(
@@ -294,6 +321,28 @@ private fun MockGachaHistoryItem(
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)
             )
+            //内容
+            if (resultCount > 0) {
+                MainTitleText(
+                    text = "$resultCount",
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            if (upCount > 0) {
+                MainTitleText(
+                    text = "UP：$upCount",
+                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            if (start3Count > 0) {
+                MainTitleText(
+                    text = "★3：$start3Count",
+                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             IconCompose(
                 data = MainIconType.MOCK_GACHA_PAY,
@@ -323,6 +372,7 @@ private fun MockGachaHistoryItem(
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+
                 //up 角色
                 Row {
                     gachaData.pickUpIds.intArrayList.forEach { unitId ->
@@ -335,15 +385,29 @@ private fun MockGachaHistoryItem(
                         )
                     }
                 }
-
-                //日期
-                CaptionText(
-                    text = "上次抽卡 ${gachaData.lastUpdateTime}",
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = Dimen.mediumPadding)
+                        .padding(horizontal = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Subtitle2(
+                        text = stringResource(R.string.delete_gacha),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            VibrateUtil(context).single()
+                            mockGachaViewModel.deleteGachaByGachaId(gachaData.gachaId)
+                        })
+                    //日期
+                    CaptionText(
+                        text = "上次抽卡 ${gachaData.lastUpdateTime}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = Dimen.mediumPadding)
 
-                )
+                    )
+                }
+
             }
         }
     }
@@ -385,22 +449,34 @@ private fun MockGachaResultRecordList(
     } else {
         //显示相关信息
         val payCount = resultRecordList.size
-        val sumText =
-            """
-                消耗宝石：1500 * $payCount = ${1500 * payCount} 
-                ★3 角色：$start3Count（$upCount 个 UP 角色）""".trimIndent()
+        val sumText = "消耗宝石：1500 * $payCount = ${1500 * payCount}"
 
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             MainText(
                 text = sumText,
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
-                    .align(Alignment.CenterHorizontally)
             )
+            Row {
+                MainTitleText(
+                    text = "UP：$upCount",
+                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                MainTitleText(
+                    text = "★3：$start3Count",
+                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            DivCompose()
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberLazyGridState(),
-                cells = GridCells.Adaptive(getItemWidth())
+                columns = GridCells.Adaptive(getItemWidth())
             ) {
                 itemsIndexed(resultRecordList) { index, resultRecord ->
                     MockGachaResultRecordItem(

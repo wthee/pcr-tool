@@ -187,6 +187,7 @@ data class SkillActionPro(
             710 -> "BREAK 状态"
             1400 -> "变身状态"
             1600 -> "恐慌状态"
+            1700 -> "魔法防御减少状态"
             721, 6107 -> "龙眼状态"
             else -> UNKNOWN
         }
@@ -604,7 +605,7 @@ data class SkillActionPro(
                 if (action_detail_2 != 0 || (action_detail_2 == 0 && action_detail_3 == 0)) {
                     trueClause =
                         when (action_detail_1) {
-                            710, 100, in 500..512, 721 -> {
+                            710, 100, in 500..512, 721, 1700 -> {
                                 if (status != UNKNOWN)
                                     "当${getTarget()}在[${status}]时，使用动作(${action_detail_2 % 100})"
                                 else
@@ -650,7 +651,7 @@ data class SkillActionPro(
                 if (action_detail_3 != 0) {
                     falseClause =
                         when (action_detail_1) {
-                            710, 100, in 500..512, 721 -> {
+                            710, 100, in 500..512, 721, 1700 -> {
                                 if (status != UNKNOWN)
                                     "当${getTarget()}不在[${status}]时，使用动作(${action_detail_3 % 100})"
                                 else

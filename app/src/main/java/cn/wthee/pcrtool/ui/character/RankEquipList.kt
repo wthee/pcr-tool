@@ -2,9 +2,9 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -43,7 +43,7 @@ fun RankEquipList(
     }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
-        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
+        columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {
         items(allRankEquip) {
@@ -133,7 +133,7 @@ private fun RankEquipListItemPreview() {
     )
     PreviewBox {
         LazyVerticalGrid(
-            cells = GridCells.Fixed(3),
+            columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(allRankEquip) {

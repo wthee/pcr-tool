@@ -213,6 +213,10 @@ fun EquipMaterialDeatil(
                             }
                         }
                     }
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        MainText(text = stringResource(id = R.string.tip_no_equip_get_area))
+                    }
                 }
             } else {
                 val odds = arrayListOf<EquipmentIdWithOdd>()

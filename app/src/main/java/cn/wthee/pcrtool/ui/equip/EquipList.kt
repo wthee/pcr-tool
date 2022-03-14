@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyGridState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -93,7 +93,7 @@ fun EquipList(
             Box(modifier = Modifier.fillMaxSize()) {
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyVerticalGrid(
-                        cells = GridCells.Adaptive(Dimen.iconSize + Dimen.largePadding * 2),
+                        columns = GridCells.Adaptive(Dimen.iconSize + Dimen.largePadding * 2),
                         state = scrollState,
                         contentPadding = PaddingValues(Dimen.commonItemPadding)
                     ) {

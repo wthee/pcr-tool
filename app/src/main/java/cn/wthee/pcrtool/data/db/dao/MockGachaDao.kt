@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.*
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.view.MockGachaProData
 
 /**
  * 模拟抽卡 DAO
@@ -35,8 +36,23 @@ interface MockGachaDao {
      * 获取历史记录
      * @param region 区服
      */
-    @Query("SELECT * FROM gacha_data WHERE region = :region ORDER BY lastUpdateTime DESC")
-    suspend fun getHistory(region: Int): List<MockGachaData>
+    @Query(
+        """
+        SELECT
+            a.*,
+            COALESCE(GROUP_CONCAT( b.unitIds, '-' ), "") AS resultUnitIds,
+            COALESCE(GROUP_CONCAT( b.unitRaritys, '-' ), "") AS resultUnitRaritys
+        FROM
+            gacha_data AS a
+        LEFT JOIN gacha_result_record AS b ON a.gachaId = b.gachaId 
+        WHERE region = :region
+        GROUP BY a.gachaId 
+        ORDER BY
+            a.lastUpdateTime DESC,
+            b.createTime DESC
+    """
+    )
+    suspend fun getHistory(region: Int): List<MockGachaProData>
 
     /**
      * 获取卡池
@@ -59,4 +75,18 @@ interface MockGachaDao {
      */
     @Query("SELECT * FROM gacha_result_record WHERE gachaId = :gachaId ORDER BY createTime DESC")
     suspend fun getResultByGachaId(gachaId: String): List<MockGachaResultRecord>
+
+    /**
+     * 删除指定卡池的所有记录
+     * @param
+     */
+    @Query("DELETE FROM gacha_result_record WHERE gachaId = :gachaId")
+    suspend fun deleteGachaResultByGachaId(gachaId: String)
+
+    /**
+     * 删除指定卡池的所有记录
+     * @param
+     */
+    @Query("DELETE FROM gacha_data WHERE gachaId = :gachaId")
+    suspend fun deleteGachaByGachaId(gachaId: String)
 }

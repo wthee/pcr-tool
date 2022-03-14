@@ -147,11 +147,12 @@
     <string name="other">其它</string>
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
+    <string name="confirm_add">确认添加</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
     <string name="hard">困难关卡</string>
-    <string name="very_hard">非常困难关卡</string>
+    <string name="very_hard">高难关卡</string>
     <string name="explore">探索</string>
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>
@@ -203,4 +204,8 @@
     <string name="gacha_pick_up_fes">Fes UP</string>
     <string name="tip_to_pick_up">请选择 UP 角色</string>
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
+    <string name="reset_record">重置卡池</string>
+    <string name="tip_no_equip_get_area">暂无掉落区域</string>
+    <string name="add_to_sys_calendar">是否添加全部活动日程至\n系统日历？</string>
+    <string name="delete_gacha">删除卡池</string>
 </resources>

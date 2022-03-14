@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 
 /**
  * 活动记录 DAO
+ * 调整 id，避免重复添加日历事项
  */
 @Dao
 interface EventDao {
@@ -84,21 +85,22 @@ interface EventDao {
     @Query(
         """
         SELECT
-            COALESCE( GROUP_CONCAT( campaign_category, '-' ), "0" ) AS type,
+            80000 + MAX( id ) AS id,
+            COALESCE( GROUP_CONCAT( campaign_category, '-' ), '0' ) AS type,
             value,
             start_time,
             end_time 
         FROM
             campaign_schedule 
         WHERE
-            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45) 
+            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45 ) 
         GROUP BY
             start_time,
             end_time,
             value 
         ORDER BY
             campaign_schedule.id DESC 
-        LIMIT 0,100
+            LIMIT 0, 100
     """
     )
     suspend fun getDropEvent(): List<CalendarEvent>
@@ -111,6 +113,7 @@ interface EventDao {
     @Query(
         """
         SELECT
+            90000 + tower_schedule_id as id,
             1 AS type,
             0 AS value,
             start_time,
@@ -133,7 +136,7 @@ interface EventDao {
     @Query(
         """
         SELECT
-            a.id,
+            70000 + a.id as id,
             COALESCE( b.relation_count, 0 ) AS max_count,
             a.start_time,
         CASE

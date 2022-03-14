@@ -153,3 +153,15 @@ fun isComingSoon(today: String, startTime: String, regionType: Int): Boolean {
     val sd = fixJpTime(startTime.formatTime, regionType)
     return today.second(sd) < 0
 }
+
+/**
+ * 获取时间戳
+ */
+val String.toTimestamp: Long
+    get() {
+        return try {
+            df1.parse(this)!!.time
+        } catch (e: Exception) {
+            0L
+        }
+    }

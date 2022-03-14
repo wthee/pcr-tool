@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
+import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,11 @@ import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+//权限
+val permissions = arrayOf(
+    Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+)
 
 /**
  * 角色所有卡面/剧情故事图片
@@ -145,8 +151,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
             dismissButton = {
                 //取消
                 SubButton(
-                    text = stringResource(id = R.string.cancel),
-                    color = MaterialTheme.colorScheme.primary
+                    text = stringResource(id = R.string.cancel)
                 ) {
                     checkedPicUrl.value = ""
                 }
@@ -183,7 +188,7 @@ private fun PicGridList(
                     val loaded = loadedPicMap[picUrl] != null
                     if (loaded) {
                         //权限校验
-                        checkPermissions(context) {
+                        checkPermissions(context, permissions) {
                             checkedPicUrl.value = picUrl
                         }
                     } else {

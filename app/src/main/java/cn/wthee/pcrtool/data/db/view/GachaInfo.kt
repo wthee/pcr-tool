@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.utils.deleteSpace
 
 /**
  * 卡池记录
@@ -17,7 +18,7 @@ data class GachaInfo(
     /**
      * 获取卡池描述
      */
-    fun getDesc() = description.replace("\\n", "\n")
+    fun getDesc() = description.deleteSpace
 
     /**
      * 获取卡池类型

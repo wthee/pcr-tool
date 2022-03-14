@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyGridState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun EventList(
+fun StoryEventList(
     scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
@@ -55,10 +55,10 @@ fun EventList(
         if (events.isNotEmpty()) {
             LazyVerticalGrid(
                 state = scrollState,
-                cells = GridCells.Adaptive(getItemWidth())
+                columns = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
-                    EventItem(it, toCharacterDetail, toAllPics)
+                    StoryEventItem(it, toCharacterDetail, toAllPics)
                 }
                 item {
                     CommonSpacer()
@@ -91,7 +91,7 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun EventItem(
+fun StoryEventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
@@ -272,10 +272,10 @@ fun EventItem(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItemPreview() {
+private fun StoryEventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
+            StoryEventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
         }
     }
 }
