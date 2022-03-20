@@ -165,21 +165,26 @@ private fun EquipItem(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    val id by remember { mutableStateOf(equip.equipmentId) }
-    val name by remember { mutableStateOf(equip.equipmentName) }
-    val loved by remember { mutableStateOf(filter.starIds.contains(id)) }
+    var eq by remember { mutableStateOf(equip) }
+    if(eq != equip){
+        eq = equip
+    }
+    var ft by remember { mutableStateOf(filter) }
+    if(ft != filter){
+        ft = filter
+    }
 
 
     val equipIcon:@Composable ()->Unit by remember {
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getEquipPic(id)
+                    data = ImageResourceHelper.getInstance().getEquipPic(eq.equipmentId)
                 ) {
                     if (equip.craftFlg == 1) {
-                        toEquipDetail(id)
+                        toEquipDetail(eq.equipmentId)
                     } else {
-                        toEquipMaterial(id)
+                        toEquipMaterial(eq.equipmentId)
                     }
                 }
             }
@@ -189,8 +194,8 @@ private fun EquipItem(
         mutableStateOf(
             {
                 SelectText(
-                    selected = loved,
-                    text = name
+                    selected = ft.starIds.contains(eq.equipmentId),
+                    text = eq.equipmentName
                 )
             }
         )
