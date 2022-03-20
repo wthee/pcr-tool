@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.rememberCached
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -165,15 +166,8 @@ private fun EquipItem(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    var eq by remember { mutableStateOf(equip) }
-    if(eq != equip){
-        eq = equip
-    }
-    var ft by remember { mutableStateOf(filter) }
-    if(ft != filter){
-        ft = filter
-    }
-
+    val eq = rememberCached { equip }
+    val ft = rememberCached { filter }
 
     val equipIcon:@Composable ()->Unit by remember {
         mutableStateOf(
@@ -190,7 +184,7 @@ private fun EquipItem(
             }
         )
     }
-    val equipName :@Composable ()->Unit by remember {
+    val equipName:@Composable ()->Unit by remember {
         mutableStateOf(
             {
                 SelectText(
