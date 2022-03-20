@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -75,7 +72,7 @@ fun EquipList(
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
 
-        val equips = viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf()).value
+        val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
         ModalBottomSheetLayout(
             sheetState = state,
             scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
@@ -168,27 +165,45 @@ private fun EquipItem(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    val loved = filter.starIds.contains(equip.equipmentId)
+    val id by remember { mutableStateOf(equip.equipmentId) }
+    val name by remember { mutableStateOf(equip.equipmentName) }
+    val loved by remember { mutableStateOf(filter.starIds.contains(id)) }
+
+
+    val equipIcon:@Composable ()->Unit by remember {
+        mutableStateOf(
+            {
+                IconCompose(
+                    data = ImageResourceHelper.getInstance().getEquipPic(id)
+                ) {
+                    if (equip.craftFlg == 1) {
+                        toEquipDetail(id)
+                    } else {
+                        toEquipMaterial(id)
+                    }
+                }
+            }
+        )
+    }
+    val equipName :@Composable ()->Unit by remember {
+        mutableStateOf(
+            {
+                SelectText(
+                    selected = loved,
+                    text = name
+                )
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconCompose(
-            data = ImageResourceHelper.getInstance().getEquipPic(equip.equipmentId)
-        ) {
-            if (equip.craftFlg == 1) {
-                toEquipDetail(equip.equipmentId)
-            } else {
-                toEquipMaterial(equip.equipmentId)
-            }
-        }
-        //装备名称
-        SelectText(
-            selected = loved,
-            text = equip.equipmentName
-        )
+        equipIcon()
+        equipName()
     }
 }
 
