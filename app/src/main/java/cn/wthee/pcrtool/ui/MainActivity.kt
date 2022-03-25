@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.AppDatabaseCN
 import cn.wthee.pcrtool.database.AppDatabaseJP
@@ -42,10 +43,7 @@ import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.UMengInitializer
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -168,16 +166,22 @@ class MainActivity : ComponentActivity() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             //关闭其他数据库连接
-            AppDatabaseCN.close()
-            AppDatabaseTW.close()
-            AppDatabaseJP.close()
-            try {
-                navController.popBackStack()
-                viewModelStore.clear()
-                recreate()
-            } catch (e: Exception) {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+            val isHome = navViewModel.fabMainIcon.value == MainIconType.MAIN
+            if (isHome) {
+                AppDatabaseCN.close()
+                AppDatabaseTW.close()
+                AppDatabaseJP.close()
+                try {
+                    navController.popBackStack()
+                    viewModelStore.clear()
+                    recreate()
+                } catch (e: Exception) {
+                    UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                }
+            } else {
+                ToastUtil.short(getString(R.string.tip_download_finish))
             }
+
             return@Callback true
         })
     }

@@ -208,4 +208,5 @@
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="add_to_sys_calendar">是否添加全部活动日程至\n系统日历？</string>
     <string name="delete_gacha">删除卡池</string>
+    <string name="tip_download_finish">数据下载完成，重新打开应用后更新~</string>
 </resources>
