@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha05"
+val composeVersion = "1.2.0-alpha06"
 val appVersionCode = 321
 val appVersionName = "3.2.1"
 
@@ -121,7 +121,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.24.3-alpha"
+    val accompanistVersion = "0.24.5-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -131,7 +131,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-rc01"
+    val coilVersion = "2.0.0-rc02"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
@@ -152,7 +152,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.1")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime-ktx:3.1.0")
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     //Retrofit

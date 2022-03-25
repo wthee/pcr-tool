@@ -501,7 +501,7 @@ private fun ChangeDbCompose(
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    CircularProgressCompose()
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(

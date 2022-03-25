@@ -97,7 +97,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (storyUrls == null) {
-                    CircularProgressIndicator()
+                    CircularProgressCompose()
                 } else {
                     MainText(text = storyUrls.size.toString())
                 }

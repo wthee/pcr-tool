@@ -49,7 +49,7 @@ class SystemCalendarHelper {
         try {
             val uri: Uri = CalendarContract.Calendars.CONTENT_URI
             val cur = contentResolver.query(uri, EVENT_PROJECTION, null, null, null)
-            if (cur != null) {
+            if (cur != null && title.isNotBlank()) {
                 cur.moveToFirst()
                 if (cur.count > 0) {
                     val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
