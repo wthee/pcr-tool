@@ -591,7 +591,7 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
  * 加载中
  */
 @Composable
-fun CircularProgressIndicator(size: Dp = Dimen.menuIconSize) {
+fun CircularProgressCompose(size: Dp = Dimen.menuIconSize) {
     CircularProgressIndicator(
         modifier = Modifier
             .size(size)

@@ -330,4 +330,15 @@ enum class MainIconType(val icon: ImageVector) {
      * 更多工具
      */
     TOOL_MORE(Icons.Rounded.DashboardCustomize),
+
+    /**
+     * 更多
+     */
+    COPY(Icons.Rounded.ContentCopy),
+
+    /**
+     * 更多
+     */
+    ADD_CALENDAR(Icons.Rounded.EditCalendar),
+
 }

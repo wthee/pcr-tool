@@ -147,7 +147,8 @@
     <string name="other">其它</string>
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
-    <string name="confirm_add">确认添加</string>
+    <string name="add_to_calendar">添加至系统日历</string>
+    <string name="copy_event">复制活动信息</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -206,6 +207,6 @@
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
-    <string name="add_to_sys_calendar">是否添加全部活动日程至\n系统日历？</string>
     <string name="delete_gacha">删除卡池</string>
+    <string name="tip_download_finish">数据下载完成，重新打开应用后更新~</string>
 </resources>

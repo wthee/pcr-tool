@@ -58,7 +58,7 @@ private fun compareDate(
         if (today.second(sd1) > 0 && ed1.second(today) > 0) {
             if (today.second(sd2) > 0 && ed2.second(today) > 0) {
                 //都是进行中，比较结束时间
-                ed2.compareTo(ed1)
+                ed1.compareTo(ed2)
             } else {
                 //o1进行中
                 -1

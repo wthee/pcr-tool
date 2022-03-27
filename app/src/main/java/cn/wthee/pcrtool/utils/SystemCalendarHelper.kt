@@ -31,9 +31,6 @@ class SystemCalendarHelper {
     )
 
     private val PROJECTION_ID_INDEX: Int = 0
-    private val PROJECTION_ACCOUNT_NAME_INDEX: Int = 1
-    private val PROJECTION_DISPLAY_NAME_INDEX: Int = 2
-    private val PROJECTION_OWNER_ACCOUNT_INDEX: Int = 3
 
     //查询日历
     private fun getCalendar() {
@@ -49,7 +46,7 @@ class SystemCalendarHelper {
         try {
             val uri: Uri = CalendarContract.Calendars.CONTENT_URI
             val cur = contentResolver.query(uri, EVENT_PROJECTION, null, null, null)
-            if (cur != null) {
+            if (cur != null && title.isNotBlank()) {
                 cur.moveToFirst()
                 if (cur.count > 0) {
                     val calID: Long = cur.getLong(PROJECTION_ID_INDEX)

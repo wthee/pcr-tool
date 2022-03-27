@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -102,3 +104,15 @@ val Double.int: Int
     get() {
         return if (this * 10 % 10 > 1) ceil(this).toInt() else floor(this).toInt()
     }
+
+/**
+ * 复制
+ */
+fun copyText(context: Context, text: String) {
+    //复制群号
+    val clipboardManager =
+        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val mClipData = ClipData.newPlainText("OcrText", text)
+    clipboardManager.setPrimaryClip(mClipData)
+    ToastUtil.short("已复制~")
+}

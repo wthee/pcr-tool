@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.theme
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 
@@ -48,6 +49,28 @@ val myFadeIn = if (animOnFlag) {
     fadeIn(animationSpec = fastTween())
 }
 
+
+//展开
+val myExpandIn = if (animOnFlag) {
+    expandVertically(
+        expandFrom = Alignment.Top,
+        animationSpec = defaultSpring()
+    ) + fadeIn(animationSpec = defaultSpring())
+} else {
+    fadeIn(animationSpec = fastTween())
+}
+
+//折叠
+val myShrinkIn = if (animOnFlag) {
+    shrinkVertically(
+        shrinkTowards = Alignment.Top,
+        animationSpec = defaultSpring()
+    ) + fadeOut(animationSpec = defaultSpring())
+} else {
+    fadeOut(animationSpec = fastTween())
+}
+
+
 /**
  * 页面进入动画
  */
@@ -81,5 +104,24 @@ fun FadeAnimation(
         exit = fadeOut(),
         content = content,
         modifier = modifier
+    )
+}
+
+
+/**
+ * 页面进入动画
+ */
+@Composable
+fun ExpandAnimation(
+    modifier: Modifier = Modifier,
+    visible: Boolean,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = myExpandIn,
+        exit = myShrinkIn,
+        content = content,
     )
 }

@@ -32,6 +32,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
+import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getRegion
@@ -39,10 +41,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.SlideAnimation
-import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.NewsItem
@@ -50,6 +49,7 @@ import cn.wthee.pcrtool.ui.tool.StoryEventItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
@@ -82,14 +82,10 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
-    val context = LocalContext.current
     val region = getRegion()
     val coroutineScope = rememberCoroutineScope()
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
-    //添加日历确认弹窗
-    val openInsertCalendarDialog = remember {
-        mutableStateOf(0)
-    }
+
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
@@ -102,48 +98,11 @@ fun Overview(
     if (mainIcon == MainIconType.MAIN) {
         navViewModel.openChangeDataDialog.postValue(false)
     }
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
-    val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
 
-    //角色总数
-    val characterCount =
-        overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
-    //角色列表
-    val characterList =
-        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
-    //装备总数
-    val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
-    //装备列表
-    val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
-        .collectAsState(initial = arrayListOf()).value
-    //进行中掉落活动
-    val inProgressEventList =
-        overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
-    //预告掉落活动
-    val comingSoonEventList =
-        overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
-    //公共列表
+
+    //公告列表
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
-    //进行中剧情活动
-    val inProgressStoryEventList =
-        overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
-    //预告剧情活动
-    val comingSoonStoryEventList =
-        overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
-    //进行中卡池
-    val inProgressGachaList =
-        overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
-    //预告卡池
-    val comingSoonGachaList =
-        overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
-    //进行中免费十连
-    val inProgressFreeGachaList =
-        overviewViewModel.getFreeGachaList(0).collectAsState(initial = arrayListOf()).value
-    //预告免费十连
-    val comingSoonFreeGachaList =
-        overviewViewModel.getFreeGachaList(1).collectAsState(initial = arrayListOf()).value
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -153,84 +112,12 @@ fun Overview(
             }
             //角色
             item {
-                Section(
-                    titleId = R.string.character,
-                    iconType = MainIconType.CHARACTER,
-                    hintText = characterCount.toString(),
-                    visible = characterList.isNotEmpty(),
-                    onClick = {
-                        actions.toCharacterList()
-                    }
-                ) {
-                    if (characterList.isNotEmpty()) {
-                        HorizontalPager(
-                            count = characterList.size,
-                            state = rememberPagerState(),
-                            modifier = Modifier
-                                .padding(vertical = Dimen.mediumPadding)
-                                .fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = Dimen.largePadding),
-                            itemSpacing = Dimen.mediumPadding
-                        ) { index ->
-                            val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                            Card(
-                                modifier = Modifier
-                                    .width(getItemWidth())
-                                    .clip(Shape.medium)
-                                    .clickable {
-                                        VibrateUtil(context).single()
-                                        actions.toCharacterDetail(id)
-                                    },
-                                elevation = CardDefaults.cardElevation(0.dp),
-                                shape = Shape.medium,
-                                containerColor = MaterialTheme.colorScheme.background
-                            ) {
-                                ImageCompose(
-                                    data = ImageResourceHelper.getInstance().getMaxCardUrl(id),
-                                    ratio = RATIO,
-                                    loadingId = R.drawable.load,
-                                    errorId = R.drawable.error
-                                )
-                            }
-                        }
-                    }
-                }
+                CharacterSection(actions)
             }
 
             //装备
             item {
-                Section(
-                    titleId = R.string.tool_equip,
-                    iconType = MainIconType.EQUIP,
-                    hintText = equipCount.toString(),
-                    visible = equipList.isNotEmpty(),
-                    onClick = {
-                        actions.toEquipList()
-                    }
-                ) {
-                    VerticalGrid(
-                        spanCount = maxOf(1, equipSpanCount),
-                        modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
-                    ) {
-                        if (equipList.isNotEmpty()) {
-                            equipList.forEach {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(Dimen.mediumPadding)
-                                        .fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    IconCompose(
-                                        data = ImageResourceHelper.getInstance()
-                                            .getEquipPic(it.equipmentId)
-                                    ) {
-                                        actions.toEquipDetail(it.equipmentId)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                EquipSection(actions)
             }
 
             //更多功能
@@ -277,65 +164,7 @@ fun Overview(
 
             //日历
             item {
-                if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty() || inProgressFreeGachaList.isNotEmpty()) {
-                    Section(
-                        titleId = R.string.tool_calendar,
-                        iconType = MainIconType.CALENDAR_TODAY,
-                        rightIconType = MainIconType.MAIN,
-                        onClick = {
-                            //弹窗确认
-                            openInsertCalendarDialog.value = 1
-                        }
-                    ) {
-                        VerticalGrid(
-                            spanCount = spanCount,
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            inProgressGachaList.forEach {
-                                GachaItem(it, actions.toCharacterDetail)
-                            }
-                            inProgressStoryEventList.forEach {
-                                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
-                            }
-                            inProgressEventList.forEach {
-                                CalendarEventItem(it)
-                            }
-                            inProgressFreeGachaList.forEach {
-                                FreeGachaItem(it)
-                            }
-                        }
-                    }
-                }
-                if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty() || comingSoonFreeGachaList.isNotEmpty()) {
-                    Section(
-                        titleId = R.string.tool_calendar_comming,
-                        iconType = MainIconType.CALENDAR,
-                        rightIconType = MainIconType.MAIN,
-                        onClick = {
-                            //弹窗确认
-                            openInsertCalendarDialog.value = 2
-                        }
-                    ) {
-                        VerticalGrid(
-                            spanCount = spanCount,
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            comingSoonGachaList.forEach {
-                                GachaItem(it, actions.toCharacterDetail)
-                            }
-                            comingSoonStoryEventList.forEach {
-                                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
-                            }
-                            comingSoonEventList.forEach {
-                                CalendarEventItem(it)
-                            }
-                            comingSoonFreeGachaList.forEach {
-                                FreeGachaItem(it)
-                            }
-                        }
-                    }
-                }
-                CommonSpacer()
+                CalendarEventSection(actions)
             }
 
         }
@@ -349,28 +178,298 @@ fun Overview(
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
         )
+    }
+}
 
-        //TODO 添加日历弹窗确认
-        if (openInsertCalendarDialog.value != 0) {
-            AlertDialog(
-                title = {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        MainText(text = stringResource(R.string.add_to_sys_calendar))
+
+/**
+ * 角色
+ */
+@OptIn(ExperimentalPagerApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun CharacterSection(
+    actions: NavActions,
+    overviewViewModel: OverviewViewModel = hiltViewModel()
+) {
+
+    val context = LocalContext.current
+
+    //角色总数
+    val characterCount =
+        overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
+    //角色列表
+    val characterList =
+        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
+
+    Section(
+        titleId = R.string.character,
+        iconType = MainIconType.CHARACTER,
+        hintText = characterCount.toString(),
+        visible = characterList.isNotEmpty(),
+        onClick = {
+            actions.toCharacterList()
+        }
+    ) {
+        if (characterList.isNotEmpty()) {
+            HorizontalPager(
+                count = characterList.size,
+                state = rememberPagerState(),
+                modifier = Modifier
+                    .padding(vertical = Dimen.mediumPadding)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = Dimen.largePadding),
+                itemSpacing = Dimen.mediumPadding
+            ) { index ->
+                val id = if (characterList.isEmpty()) 0 else characterList[index].id
+                Card(
+                    modifier = Modifier
+                        .width(getItemWidth())
+                        .clip(Shape.medium)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            actions.toCharacterDetail(id)
+                        },
+                    elevation = CardDefaults.cardElevation(0.dp),
+                    shape = Shape.medium,
+                    containerColor = MaterialTheme.colorScheme.background
+                ) {
+                    ImageCompose(
+                        data = ImageResourceHelper.getInstance().getMaxCardUrl(id),
+                        ratio = RATIO,
+                        loadingId = R.drawable.load,
+                        errorId = R.drawable.error
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 装备
+ */
+@Composable
+private fun EquipSection(
+    actions: NavActions,
+    overviewViewModel: OverviewViewModel = hiltViewModel()
+) {
+    val equipSpanCount =
+        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
+    //装备总数
+    val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
+    //装备列表
+    val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
+        .collectAsState(initial = arrayListOf()).value
+
+    Section(
+        titleId = R.string.tool_equip,
+        iconType = MainIconType.EQUIP,
+        hintText = equipCount.toString(),
+        visible = equipList.isNotEmpty(),
+        onClick = {
+            actions.toEquipList()
+        }
+    ) {
+        VerticalGrid(
+            spanCount = maxOf(1, equipSpanCount),
+            modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
+        ) {
+            if (equipList.isNotEmpty()) {
+                equipList.forEach {
+                    Box(
+                        modifier = Modifier
+                            .padding(Dimen.mediumPadding)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getEquipPic(it.equipmentId)
+                        ) {
+                            actions.toEquipDetail(it.equipmentId)
+                        }
                     }
-                },
-                modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
-                onDismissRequest = {
-                    openInsertCalendarDialog.value = 0
-                },
-                containerColor = MaterialTheme.colorScheme.background,
-                shape = Shape.medium,
-                confirmButton = {
-                    //关闭
-                    MainButton(text = stringResource(R.string.confirm_add)) {
-                        //添加信息
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 活动
+ */
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@Composable
+private fun CalendarEventSection(
+    actions: NavActions,
+    overviewViewModel: OverviewViewModel = hiltViewModel()
+) {
+    //添加日历确认弹窗
+    val confirmState = remember {
+        mutableStateOf(0)
+    }
+
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+
+    //进行中掉落活动
+    val inProgressEventList =
+        overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
+    //预告掉落活动
+    val comingSoonEventList =
+        overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
+    //进行中剧情活动
+    val inProgressStoryEventList =
+        overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
+    //预告剧情活动
+    val comingSoonStoryEventList =
+        overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
+    //进行中卡池
+    val inProgressGachaList =
+        overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
+    //预告卡池
+    val comingSoonGachaList =
+        overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
+    //进行中免费十连
+    val inProgressFreeGachaList =
+        overviewViewModel.getFreeGachaList(0).collectAsState(initial = arrayListOf()).value
+    //预告免费十连
+    val comingSoonFreeGachaList =
+        overviewViewModel.getFreeGachaList(1).collectAsState(initial = arrayListOf()).value
+
+    //进行中
+    if (inProgressEventList.isNotEmpty() || inProgressGachaList.isNotEmpty() || inProgressStoryEventList.isNotEmpty() || inProgressFreeGachaList.isNotEmpty()) {
+        Section(
+            titleId = R.string.tool_calendar,
+            iconType = MainIconType.CALENDAR_TODAY,
+            rightIconType = if (confirmState.value == 1) MainIconType.CLOSE else MainIconType.MAIN,
+            onClick = {
+                //弹窗确认
+                if (confirmState.value == 1) {
+                    confirmState.value = 0
+                } else {
+                    confirmState.value = 1
+                }
+            }
+        ) {
+            ExpandAnimation(visible = confirmState.value == 1) {
+                CalendarEventOperation(
+                    confirmState,
+                    inProgressEventList,
+                    inProgressStoryEventList,
+                    inProgressGachaList,
+                    comingSoonEventList,
+                    comingSoonStoryEventList,
+                    comingSoonGachaList
+                )
+            }
+            VerticalGrid(
+                spanCount = spanCount,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
+            ) {
+                inProgressGachaList.forEach {
+                    GachaItem(it, actions.toCharacterDetail)
+                }
+                inProgressStoryEventList.forEach {
+                    StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                }
+                inProgressEventList.forEach {
+                    CalendarEventItem(it)
+                }
+                inProgressFreeGachaList.forEach {
+                    FreeGachaItem(it)
+                }
+            }
+        }
+    }
+
+    //预告
+    if (comingSoonEventList.isNotEmpty() || comingSoonGachaList.isNotEmpty() || comingSoonStoryEventList.isNotEmpty() || comingSoonFreeGachaList.isNotEmpty()) {
+        Section(
+            titleId = R.string.tool_calendar_comming,
+            iconType = MainIconType.CALENDAR,
+            rightIconType = if (confirmState.value == 2) MainIconType.CLOSE else MainIconType.MAIN,
+            onClick = {
+                //弹窗确认
+                if (confirmState.value == 2) {
+                    confirmState.value = 0
+                } else {
+                    confirmState.value = 2
+                }
+            }
+        ) {
+            ExpandAnimation(visible = confirmState.value == 2) {
+                CalendarEventOperation(
+                    confirmState,
+                    inProgressEventList,
+                    inProgressStoryEventList,
+                    inProgressGachaList,
+                    comingSoonEventList,
+                    comingSoonStoryEventList,
+                    comingSoonGachaList
+                )
+            }
+            VerticalGrid(
+                spanCount = spanCount,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
+            ) {
+                comingSoonGachaList.forEach {
+                    GachaItem(it, actions.toCharacterDetail)
+                }
+                comingSoonStoryEventList.forEach {
+                    StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                }
+                comingSoonEventList.forEach {
+                    CalendarEventItem(it)
+                }
+                comingSoonFreeGachaList.forEach {
+                    FreeGachaItem(it)
+                }
+            }
+        }
+    }
+    CommonSpacer()
+}
+
+/**
+ * 添加日历确认
+ */
+@Composable
+private fun CalendarEventOperation(
+    confirmState: MutableState<Int>,
+    inProgressEventList: List<CalendarEvent>,
+    inProgressStoryEventList: List<EventData>,
+    inProgressGachaList: List<GachaInfo>,
+    comingSoonEventList: List<CalendarEvent>,
+    comingSoonStoryEventList: List<EventData>,
+    comingSoonGachaList: List<GachaInfo>,
+) {
+    val context = LocalContext.current
+    val region = getRegion()
+    val regionName = when (region) {
+        2 -> stringResource(id = R.string.db_cn)
+        3 -> stringResource(id = R.string.db_tw)
+        4 -> stringResource(id = R.string.db_jp)
+        else -> ""
+    }
+
+    // 添加日历确认
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        FlowColumn {
+            //添加日历
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
+                    .clip(Shape.small)
+                    .clickable {
+                        VibrateUtil(context).single()
                         checkPermissions(context, permissions, false) {
                             //掉落活动
-                            if (openInsertCalendarDialog.value == 1) {
+                            if (confirmState.value == 1) {
                                 inProgressEventList
                             } else {
                                 comingSoonEventList
@@ -382,7 +481,7 @@ fun Overview(
                                 )
                             }
                             //剧情活动
-                            if (openInsertCalendarDialog.value == 1) {
+                            if (confirmState.value == 1) {
                                 inProgressStoryEventList
                             } else {
                                 comingSoonStoryEventList
@@ -394,7 +493,7 @@ fun Overview(
                                 )
                             }
                             //卡池
-                            if (openInsertCalendarDialog.value == 1) {
+                            if (confirmState.value == 1) {
                                 inProgressGachaList
                             } else {
                                 comingSoonGachaList
@@ -405,20 +504,93 @@ fun Overview(
                                     it.getDesc()
                                 )
                             }
-                            openInsertCalendarDialog.value = 0
+                            confirmState.value = 0
                         }
                     }
-                },
-                dismissButton = {
-                    SubButton(
-                        text = stringResource(R.string.cancel)
-                    ) {
-                        openInsertCalendarDialog.value = 0
-                    }
+                    .padding(Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(data = MainIconType.ADD_CALENDAR, size = Dimen.fabIconSize)
+                MainText(
+                    text = stringResource(R.string.add_to_calendar),
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+                )
+            }
 
-                }
-            )
+            //复制至剪贴板
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
+                    .clip(Shape.small)
+                    .clickable {
+                        VibrateUtil(context).single()
+                        var allText = ""
+                        //掉落活动
+                        var eventText = ""
+                        if (confirmState.value == 1) {
+                            inProgressEventList
+                        } else {
+                            comingSoonEventList
+                        }.forEach {
+                            val date = fixJpTime(it.startTime.formatTime, region).substring(
+                                0,
+                                10
+                            ) + " ~ " + fixJpTime(it.endTime.formatTime, region).substring(0, 10)
+                            eventText += "• $date\n${getTypeDataToString(it)}\n"
+                        }
+                        if (eventText != "") {
+                            allText += "▶ 掉落活动\n$eventText\n\n"
+                        }
+
+                        //剧情活动
+                        var storyText = ""
+                        if (confirmState.value == 1) {
+                            inProgressStoryEventList
+                        } else {
+                            comingSoonStoryEventList
+                        }.forEach {
+                            val date = fixJpTime(it.startTime.formatTime, region).substring(
+                                0,
+                                10
+                            ) + " ~ " + fixJpTime(it.endTime.formatTime, region).substring(0, 10)
+                            storyText += "• $date\n${it.getEventTitle()}"
+                        }
+                        if (storyText != "") {
+                            allText += "▶ 剧情活动\n$storyText\n\n"
+                        }
+
+                        //卡池
+                        var gachaText = ""
+                        if (confirmState.value == 1) {
+                            inProgressGachaList
+                        } else {
+                            comingSoonGachaList
+                        }.forEach {
+                            val date = fixJpTime(it.startTime.formatTime, region).substring(
+                                0,
+                                10
+                            ) + " ~ " + fixJpTime(it.endTime.formatTime, region).substring(0, 10)
+                            gachaText += "• $date\n${it.getDesc()}"
+
+                        }
+                        if (gachaText != "") {
+                            allText += "▶ 卡池信息\n$gachaText\n"
+                        }
+                        //复制
+                        copyText(context, "——$regionName——\n\n$allText")
+                        confirmState.value = 0
+                    }
+                    .padding(Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(data = MainIconType.COPY, size = Dimen.fabIconSize)
+                MainText(
+                    text = stringResource(R.string.copy_event),
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+                )
+            }
         }
+
     }
 }
 
@@ -501,7 +673,7 @@ private fun ChangeDbCompose(
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    CircularProgressCompose()
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(
@@ -530,9 +702,10 @@ private fun Section(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val modifier = (if (onClick == null) {
+    val modifier = if (onClick == null) {
         Modifier
     } else {
+        //只有一个按钮有点击事件时
         Modifier
             .clip(Shape.medium)
             .clickable(onClick = {
@@ -541,7 +714,7 @@ private fun Section(
                     onClick.invoke()
                 }
             })
-    })
+    }
 
 
     Column(
@@ -572,13 +745,13 @@ private fun Section(
                 color = MaterialTheme.colorScheme.onSurface
             )
             //点击跳转
-            if (onClick != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (onClick != null) {
                     if (hintText != "") {
                         Text(text = buildAnnotatedString {
                             withStyle(
@@ -603,7 +776,9 @@ private fun Section(
         }
 
         SlideAnimation(visible = visible) {
-            content.invoke()
+            Column {
+                content.invoke()
+            }
         }
     }
 
