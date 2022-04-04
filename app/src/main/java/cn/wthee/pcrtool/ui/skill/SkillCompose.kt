@@ -35,6 +35,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * 角色技能列表
@@ -189,7 +190,7 @@ fun SkillItem(
         }
         val tags = getTags(skillDetail.getActionInfo())
         //标签
-        Row {
+        FlowRow {
             tags.forEach {
                 SkillActionTag(it)
             }

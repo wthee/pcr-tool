@@ -17,9 +17,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     DAMAGE(1, "伤害"),
 
     /**
-     * 2：冲锋
+     * 2：位移
      */
-    MOVE(2, "冲锋"),
+    MOVE(2, "位移"),
 
     /**
      * 3：改变对方位置
@@ -410,6 +410,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 94：技能特效
      */
     SPECIAL_EFFECT(94, ""),
+
+    /**
+     * 95：隐匿
+     */
+    HIDE(95, "隐匿"),
 }
 
 /**

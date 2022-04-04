@@ -219,11 +219,12 @@ data class SkillActionPro(
                     ""
                 }
             }
-            // 2：冲锋
+            // 2：位移
             SkillActionType.MOVE -> {
+
                 val directionText = if (action_value_1 > 0) "向前" else "向后"
                 val positionText = if (action_value_1 > 0) "前方" else "后方"
-                val moveText = "移动至${getTarget()}前[$action_value_1]"
+                val moveText = "移动至${getTarget()}$positionText[${abs(action_value_1)}]"
                 val returnText = "，动作结束后回到原来位置"
                 val speedText = "，移动速度 [${action_value_2}] "
                 when (action_detail_1) {
@@ -338,7 +339,7 @@ data class SkillActionPro(
             }
             // 10：buff/debuff
             SkillActionType.AURA -> {
-                tag = if (action_detail_1 % 10 == 0) "BUFF" else "DEBUFF"
+                tag = if (action_detail_1 % 10 == 0) "增益" else "减益"
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
                 val aura = getAura(action_detail_1, value)
                 val time = getTimeText(4, action_value_4, action_value_5)
@@ -1034,6 +1035,10 @@ data class SkillActionPro(
             // 94：技能特效
             SkillActionType.SPECIAL_EFFECT -> {
                 "${getTarget()}附加技能特效"
+            }
+            // 95：隐匿
+            SkillActionType.HIDE -> {
+                "${getTarget()}进入隐匿状态${getTimeText(1, action_value_1, action_value_2)}"
             }
             else -> UNKNOWN
         }
