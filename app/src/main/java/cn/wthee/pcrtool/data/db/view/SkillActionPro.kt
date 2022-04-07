@@ -308,9 +308,9 @@ data class SkillActionPro(
                         val descText =
                             if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
                                 tag += "(可叠加)"
-                                "速度额外提升初始值的 ${value} 倍（可与其它相同效果叠加）"
+                                "速度额外提升初始值的 $value 倍（可与其它相同效果叠加）"
                             } else {
-                                "速度变更为初始值的 ${value} 倍"
+                                "速度变更为初始值的 $value 倍"
                             }
                         "${tag}${getTarget()}，$descText$time"
                     }
@@ -719,7 +719,7 @@ data class SkillActionPro(
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val type = getBarrierTtpe(action_detail_1)
-                val shieldText = "对${getTarget()}展开${type} ${value}"
+                val shieldText = "对${getTarget()}展开${type} $value"
 
                 when (action_detail_1) {
                     1 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害"
@@ -963,6 +963,17 @@ data class SkillActionPro(
                 val time = getTimeText(6, action_value_6, action_value_7)
                 "对${getTarget()}赋予「受到致死伤害时，回复 $value HP」的效果$time"
             }
+            // 72：伤害减免
+            SkillActionType.DAMAGE_REDUCE -> {
+                val type = when (action_detail_1) {
+                    1 -> "物理伤害"
+                    2 -> "魔法伤害"
+                    else -> UNKNOWN
+                }
+                val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
+                val time = getTimeText(3, action_value_3, action_value_4)
+                "对${getTarget()}赋予${type}减伤${value}的效果$time"
+            }
             // 73：伤害护盾
             SkillActionType.LOG_GUARD -> {
                 val time = getTimeText(3, action_value_3, action_value_4)
@@ -1040,7 +1051,14 @@ data class SkillActionPro(
             SkillActionType.HIDE -> {
                 "${getTarget()}进入隐匿状态${getTimeText(1, action_value_1, action_value_2)}"
             }
-            else -> UNKNOWN
+            else -> "${UNKNOWN}目标：${getTarget()}；类型：${action_type}；数值：${
+                getValueText(
+                    1,
+                    action_value_1,
+                    action_value_2,
+                    percent = getPercent()
+                )
+            }${getTimeText(3, action_value_3, action_value_4)}"
         }
 
         //是否显示系数判断
@@ -1074,6 +1092,7 @@ data class SkillActionPro(
             }
         }
         SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (action_detail_2 == 2) "%" else ""
+        SkillActionType.DAMAGE_REDUCE -> "%"
         else -> ""
     }
 

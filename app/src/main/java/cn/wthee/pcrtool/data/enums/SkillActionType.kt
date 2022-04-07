@@ -342,6 +342,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
     KNIGHT_GUARD(71, "骑士"),
 
     /**
+     * 72：伤害减免
+     */
+    DAMAGE_REDUCE(72, "减伤"),
+
+    /**
      * 73：伤害护盾
      */
     LOG_GUARD(73, "伤害护盾"),
