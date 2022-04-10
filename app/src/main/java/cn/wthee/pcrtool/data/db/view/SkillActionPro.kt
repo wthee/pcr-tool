@@ -966,8 +966,8 @@ data class SkillActionPro(
             // 72：伤害减免
             SkillActionType.DAMAGE_REDUCE -> {
                 val type = when (action_detail_1) {
-                    1 -> "物理伤害"
-                    2 -> "魔法伤害"
+                    1 -> "物理"
+                    2 -> "魔法"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
