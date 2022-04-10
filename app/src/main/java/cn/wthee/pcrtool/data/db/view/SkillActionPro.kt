@@ -219,11 +219,12 @@ data class SkillActionPro(
                     ""
                 }
             }
-            // 2：冲锋
+            // 2：位移
             SkillActionType.MOVE -> {
+
                 val directionText = if (action_value_1 > 0) "向前" else "向后"
                 val positionText = if (action_value_1 > 0) "前方" else "后方"
-                val moveText = "移动至${getTarget()}前[$action_value_1]"
+                val moveText = "移动至${getTarget()}$positionText[${abs(action_value_1)}]"
                 val returnText = "，动作结束后回到原来位置"
                 val speedText = "，移动速度 [${action_value_2}] "
                 when (action_detail_1) {
@@ -307,9 +308,9 @@ data class SkillActionPro(
                         val descText =
                             if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
                                 tag += "(可叠加)"
-                                "速度额外提升初始值的 ${value} 倍（可与其它相同效果叠加）"
+                                "速度额外提升初始值的 $value 倍（可与其它相同效果叠加）"
                             } else {
-                                "速度变更为初始值的 ${value} 倍"
+                                "速度变更为初始值的 $value 倍"
                             }
                         "${tag}${getTarget()}，$descText$time"
                     }
@@ -338,7 +339,7 @@ data class SkillActionPro(
             }
             // 10：buff/debuff
             SkillActionType.AURA -> {
-                tag = if (action_detail_1 % 10 == 0) "BUFF" else "DEBUFF"
+                tag = if (action_detail_1 % 10 == 0) "增益" else "减益"
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
                 val aura = getAura(action_detail_1, value)
                 val time = getTimeText(4, action_value_4, action_value_5)
@@ -718,7 +719,7 @@ data class SkillActionPro(
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val type = getBarrierTtpe(action_detail_1)
-                val shieldText = "对${getTarget()}展开${type} ${value}"
+                val shieldText = "对${getTarget()}展开${type} $value"
 
                 when (action_detail_1) {
                     1 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害"
@@ -962,6 +963,17 @@ data class SkillActionPro(
                 val time = getTimeText(6, action_value_6, action_value_7)
                 "对${getTarget()}赋予「受到致死伤害时，回复 $value HP」的效果$time"
             }
+            // 72：伤害减免
+            SkillActionType.DAMAGE_REDUCE -> {
+                val type = when (action_detail_1) {
+                    1 -> "物理"
+                    2 -> "魔法"
+                    else -> UNKNOWN
+                }
+                val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
+                val time = getTimeText(3, action_value_3, action_value_4)
+                "对${getTarget()}赋予${type}减伤${value}的效果$time"
+            }
             // 73：伤害护盾
             SkillActionType.LOG_GUARD -> {
                 val time = getTimeText(3, action_value_3, action_value_4)
@@ -1035,7 +1047,18 @@ data class SkillActionPro(
             SkillActionType.SPECIAL_EFFECT -> {
                 "${getTarget()}附加技能特效"
             }
-            else -> UNKNOWN
+            // 95：隐匿
+            SkillActionType.HIDE -> {
+                "${getTarget()}进入隐匿状态${getTimeText(1, action_value_1, action_value_2)}"
+            }
+            else -> "${UNKNOWN}目标：${getTarget()}；类型：${action_type}；数值：${
+                getValueText(
+                    1,
+                    action_value_1,
+                    action_value_2,
+                    percent = getPercent()
+                )
+            }${getTimeText(3, action_value_3, action_value_4)}"
         }
 
         //是否显示系数判断
@@ -1069,6 +1092,7 @@ data class SkillActionPro(
             }
         }
         SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (action_detail_2 == 2) "%" else ""
+        SkillActionType.DAMAGE_REDUCE -> "%"
         else -> ""
     }
 
