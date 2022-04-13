@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -50,9 +51,21 @@ import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.insets.LocalWindowInsets
 import kotlinx.coroutines.launch
 import kotlin.math.max
+
+//TODO 暂时实现该方法，直到官方修复 https://issuetracker.google.com/issues/217770337
+val WindowInsets.Companion.isImeVisible: Boolean
+    @Composable
+    get() {
+        val density = LocalDensity.current
+        val ime = this.ime
+        return remember {
+            derivedStateOf {
+                ime.getBottom(density) > 0
+            }
+        }.value
+    }
 
 /**
  * 角色信息
@@ -107,7 +120,7 @@ fun CharacterDetail(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    val insets = LocalWindowInsets.current
+    val isImeVisible = WindowInsets.isImeVisible
     val context = LocalContext.current
 
     //战力系数
@@ -252,7 +265,7 @@ fun CharacterDetail(
                                     .clip(Shape.small)
                                     .clickable {
                                         VibrateUtil(context).single()
-                                        if (insets.ime.isVisible) {
+                                        if (isImeVisible) {
                                             focusManager.clearFocus()
                                             keyboardController?.hide()
                                         } else {
@@ -316,7 +329,7 @@ fun CharacterDetail(
                                         }
                                     }
                                 ),
-                                modifier = if (insets.ime.isVisible) {
+                                modifier = if (isImeVisible) {
                                     Modifier
                                         .focusRequester(focusRequester)
                                         .padding(Dimen.smallPadding)
@@ -667,8 +680,8 @@ private fun CharacterEquip(
 
 /**
  * 专武信息
- * @param uniqueEquipLevelMax 最大等级
- * @param uniqueEquipLevel 等级状态
+ * @param currentValue 当前属性
+ * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
 @ExperimentalComposeUiApi
@@ -682,7 +695,7 @@ private fun UniqueEquip(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    val insets = LocalWindowInsets.current
+    val isImeVisible = WindowInsets.isImeVisible
     val context = LocalContext.current
 
     uniqueEquipmentMaxData?.let {
@@ -708,7 +721,7 @@ private fun UniqueEquip(
                     .clip(Shape.small)
                     .clickable {
                         VibrateUtil(context).single()
-                        if (insets.ime.isVisible) {
+                        if (isImeVisible) {
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         } else {
@@ -773,7 +786,7 @@ private fun UniqueEquip(
                         }
                     }
                 ),
-                modifier = if (insets.ime.isVisible) {
+                modifier = if (isImeVisible) {
                     Modifier
                         .focusRequester(focusRequester)
                         .padding(Dimen.smallPadding)

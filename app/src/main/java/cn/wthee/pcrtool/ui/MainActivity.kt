@@ -44,10 +44,6 @@ import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.utils.*
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -97,25 +93,27 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PCRToolComposeTheme {
-                ProvideWindowInsets {
-                    //状态栏、导航栏适配
-                    val ui = rememberSystemUiController()
-                    val isLight = !isSystemInDarkTheme()
-                    ui.setNavigationBarColor(
-                        MaterialTheme.colorScheme.surface,
-                        darkIcons = isLight
-                    )
-                    ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
-                    Surface {
-                        Home()
-                    }
+                //状态栏、导航栏适配
+                val ui = rememberSystemUiController()
+                val isLight = !isSystemInDarkTheme()
+                ui.setNavigationBarColor(
+                    MaterialTheme.colorScheme.surface,
+                    darkIcons = isLight
+                )
+                ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
+                Surface {
+                    Home()
                 }
             }
         }
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
+        //友盟统计
         UMengInitializer().create(this)
+        //Parse 日志
+        ParseInitializer().create(this)
+
         val sp = settingSP()
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
@@ -176,7 +174,7 @@ class MainActivity : ComponentActivity() {
                     viewModelStore.clear()
                     recreate()
                 } catch (e: Exception) {
-                    UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                    ParseServer.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 }
             } else {
                 ToastUtil.short(getString(R.string.tip_download_finish))
@@ -208,14 +206,11 @@ fun Home(
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    val statusBarHeight =
-        rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.systemBars
-        ).calculateTopPadding()
+    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
 
     Box(
         modifier = Modifier
-            .navigationBarsPadding(start = true, end = true, bottom = false)
+            .navigationBarsPadding()
             .fillMaxSize()
             .padding(top = statusBarHeight)
     ) {
