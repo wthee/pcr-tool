@@ -240,7 +240,7 @@ object FileUtil {
                 ToastUtil.short("没有找到可导出的文件")
             }
         } catch (e: Exception) {
-            UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_EXPORT)
+            ParseServer.upload(e, Constants.EXCEPTION_DATA_EXPORT)
             ToastUtil.short(Constants.EXCEPTION_DATA_EXPORT)
         }
     }
@@ -287,7 +287,7 @@ object FileUtil {
                 ToastUtil.short("没有找到可导入的文件")
             }
         } catch (e: Exception) {
-            UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_IMPORT)
+            ParseServer.upload(e, Constants.EXCEPTION_DATA_IMPORT)
             ToastUtil.short(Constants.EXCEPTION_DATA_IMPORT)
         }
         return false

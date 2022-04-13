@@ -126,7 +126,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
@@ -155,6 +154,14 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
+    //Parse SDK
+    val parseVersion = "3.0.0"
+    implementation("com.github.parse-community.Parse-SDK-Android:parse:$parseVersion")
+    // for Kotlin extensions support (optional)
+    implementation("com.github.parse-community.Parse-SDK-Android:ktx:$parseVersion")
+    // for Kotlin coroutines support (optional)
+    implementation("com.github.parse-community.Parse-SDK-Android:coroutines:$parseVersion")
+
     //Retrofit
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
@@ -173,7 +180,6 @@ dependencies {
     //umeng
     implementation("com.umeng.umsdk:common:9.4.7")
     implementation("com.umeng.umsdk:asms:1.6.0")
-    implementation("com.umeng.umsdk:apm:1.5.2")
 
     //Work
     val workVersion = "2.7.1"

@@ -54,6 +54,9 @@
             <meta-data
                 android:name="cn.wthee.pcrtool.utils.UMengInitializer"
                 android:value="@string/androidx_startup" />
+            <meta-data
+                android:name="cn.wthee.pcrtool.utils.ParseInitializer"
+                android:value="@string/androidx_startup" />
         </provider>
     </application>
 

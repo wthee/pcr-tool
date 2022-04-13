@@ -5,7 +5,7 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.ParseServer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class CharacterViewModel @Inject constructor(
         //校验是否未多角色卡
         val data = unitRepository.getInfoPro(unitId)
         if (data == null) {
-            UMengLogUtil.upload(
+            ParseServer.upload(
                 NullPointerException(),
                 Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
             )

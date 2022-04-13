@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.ParseServer
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -49,7 +49,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 MainScope().launch {
-                    UMengLogUtil.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
+                    ParseServer.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
                 }
             }
         }
@@ -81,7 +81,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
             }
         }
         return error()
@@ -109,7 +109,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
+                ParseServer.upload(e, Constants.EXCEPTION_API + "news" + id)
             }
         }
         return error()
@@ -130,7 +130,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "newsoverview")
             }
         }
         return error()
@@ -156,7 +156,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "newsoverview")
             }
         }
         return error()
@@ -184,7 +184,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
             }
         }
         return error()
@@ -205,7 +205,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "tweet")
             }
         }
         return error()
@@ -226,7 +226,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "leader")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "leader")
             }
         }
         return error()
@@ -247,7 +247,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "notice")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "notice")
             }
         }
         return error()
@@ -274,7 +274,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()
@@ -302,7 +302,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()
@@ -331,7 +331,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                ParseServer.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()

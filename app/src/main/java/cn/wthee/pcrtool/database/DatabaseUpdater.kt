@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
-import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -143,7 +142,7 @@ object DatabaseUpdater {
                 )
             } catch (e: Exception) {
                 WorkManager.getInstance(MyApplication.context).cancelAllWork()
-                UMengLogUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
+                ParseServer.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         } else {
             //强制更新/切换成功
@@ -234,7 +233,7 @@ fun tryOpenDatabase(): Int {
         //启用远程备份数据库
         MainScope().launch {
             ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-            UMCrash.generateCustomLog("OpenDatabaseException", msg)
+            ParseServer.upload(e, msg)
         }
         return 0
     }

@@ -34,6 +34,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
+
     }
 
     override fun newImageLoader(): ImageLoader {

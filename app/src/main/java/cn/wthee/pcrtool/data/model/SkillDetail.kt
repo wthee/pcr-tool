@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.ParseServer
 
 /**
  * 角色技能信息
@@ -58,7 +58,7 @@ data class SkillDetail(
                 }
             }
         } catch (e: Exception) {
-            UMengLogUtil.upload(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
+            ParseServer.upload(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
         }
 
         return list

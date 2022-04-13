@@ -84,7 +84,7 @@ class PvpFloatService : LifecycleService() {
             }
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
-            UMengLogUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
+            ParseServer.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }
 
