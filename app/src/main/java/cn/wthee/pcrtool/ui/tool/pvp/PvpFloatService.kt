@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@Suppress("DEPRECATION")
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -84,7 +85,7 @@ class PvpFloatService : LifecycleService() {
             }
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
-            ParseServer.upload(e, Constants.EXCEPTION_PVP_SERVICE)
+            LogReportUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }
 

@@ -142,7 +142,7 @@ object DatabaseUpdater {
                 )
             } catch (e: Exception) {
                 WorkManager.getInstance(MyApplication.context).cancelAllWork()
-                ParseServer.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
+                LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         } else {
             //强制更新/切换成功
@@ -233,7 +233,7 @@ fun tryOpenDatabase(): Int {
         //启用远程备份数据库
         MainScope().launch {
             ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-            ParseServer.upload(e, msg)
+            LogReportUtil.upload(e, msg)
         }
         return 0
     }

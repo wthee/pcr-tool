@@ -103,12 +103,17 @@ android {
 }
 
 dependencies {
+
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
+
+    //Bugly
+    implementation("com.tencent.bugly:crashreport:4.0.4")
+
     //compose
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
@@ -117,7 +122,6 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha09")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.compiler:compiler:$composeVersion")
-    //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
@@ -130,7 +134,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-rc02"
+    val coilVersion = "2.0.0-rc03"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
@@ -140,7 +144,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0"
+    val lifecycleVersion = "2.4.1"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -153,14 +157,6 @@ dependencies {
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
-
-    //Parse SDK
-    val parseVersion = "3.0.0"
-    implementation("com.github.parse-community.Parse-SDK-Android:parse:$parseVersion")
-    // for Kotlin extensions support (optional)
-    implementation("com.github.parse-community.Parse-SDK-Android:ktx:$parseVersion")
-    // for Kotlin coroutines support (optional)
-    implementation("com.github.parse-community.Parse-SDK-Android:coroutines:$parseVersion")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
@@ -177,14 +173,9 @@ dependencies {
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")
 
-    //umeng
-    implementation("com.umeng.umsdk:common:9.4.7")
-    implementation("com.umeng.umsdk:asms:1.6.0")
-
     //Work
     val workVersion = "2.7.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
-
 
     implementation(files("libs\\commons-compress-1.19.jar"))
     implementation(files("libs\\dec-0.1.2.jar"))

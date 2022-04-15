@@ -43,7 +43,10 @@ import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -109,14 +112,11 @@ class MainActivity : ComponentActivity() {
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
-        //友盟统计
-        UMengInitializer().create(this)
-        //Parse 日志
-        ParseInitializer().create(this)
-
+        //用户设置信息
         val sp = settingSP()
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
@@ -174,7 +174,7 @@ class MainActivity : ComponentActivity() {
                     viewModelStore.clear()
                     recreate()
                 } catch (e: Exception) {
-                    ParseServer.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                    LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 }
             } else {
                 ToastUtil.short(getString(R.string.tip_download_finish))

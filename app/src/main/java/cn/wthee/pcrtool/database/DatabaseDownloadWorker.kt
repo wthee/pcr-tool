@@ -94,7 +94,7 @@ class DatabaseDownloadWorker(
             //下载文件
             response = service.execute()
         } catch (e: Exception) {
-            ParseServer.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
+            LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
         }
         try {
             //创建数据库文件夹
@@ -130,7 +130,7 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
-            ParseServer.upload(e, Constants.EXCEPTION_SAVE_DB)
+            LogReportUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
             return Result.failure()
         }
     }

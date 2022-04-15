@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ParseServer
+import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -74,7 +74,7 @@ class SkillViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                ParseServer.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
+                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
             }
         }
     }
@@ -125,7 +125,7 @@ class SkillViewModel @Inject constructor(
                 allSkills.postValue(allSkill)
                 allIconTypes.postValue(allIcon)
             } catch (e: Exception) {
-                ParseServer.upload(
+                LogReportUtil.upload(
                     e,
                     Constants.EXCEPTION_SKILL + "enemy:${list[0].enemy_id}"
                 )

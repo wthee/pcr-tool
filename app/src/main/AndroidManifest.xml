@@ -52,10 +52,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="cn.wthee.pcrtool.utils.UMengInitializer"
-                android:value="@string/androidx_startup" />
-            <meta-data
-                android:name="cn.wthee.pcrtool.utils.ParseInitializer"
+                android:name="cn.wthee.pcrtool.utils.BuglyInitializer"
                 android:value="@string/androidx_startup" />
         </provider>
     </application>
