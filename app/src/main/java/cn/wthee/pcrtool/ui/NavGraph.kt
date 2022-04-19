@@ -55,7 +55,6 @@ object Navigation {
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
     const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
-    const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
@@ -435,19 +434,6 @@ fun NavGraph(
             MainSettings()
         }
 
-        //更新通知
-        composable(
-            route = Navigation.APP_NOTICE,
-            enterTransition = { myFadeIn },
-            exitTransition = { fadeOut },
-            popEnterTransition = { myFadeIn },
-            popExitTransition = { fadeOut }
-        ) {
-            val scrollState = rememberLazyGridState()
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            NoticeList(scrollState)
-        }
-
         //公告
         composable(
             route = Navigation.TOOL_NEWS,
@@ -783,13 +769,6 @@ class NavActions(navController: NavHostController) {
      */
     val toEquipList = {
         navController.navigate(Navigation.EQUIP_LIST)
-    }
-
-    /**
-     * 通知
-     */
-    val toNotice = {
-        navController.navigate(Navigation.APP_NOTICE)
     }
 
     /**

@@ -118,28 +118,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 最新公告
      */
-    suspend fun getNewsOverview(): ResponseData<List<NewsTable>> {
-        //请求
-        try {
-            val response = service.getNewsOverview()
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
-            }
-        }
-        return error()
-    }
-
-
-    /**
-     * 最新公告
-     */
     suspend fun getNewsOverviewByRegion(region: Int): ResponseData<List<NewsTable>> {
         //请求
         try {
@@ -233,30 +211,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 获取通知信息
+     * 获取应用更新通知详情
      */
-    suspend fun getNotice(): ResponseData<List<AppNotice>> {
-        //请求
-        try {
-            val response = service.getAppNotice()
-            if (response.message == "failure" || response.data == null) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "notice")
-            }
-        }
-        return error()
-    }
-
-    /**
-     * 获取应用更新通知信息
-     */
-    suspend fun getAppUpdateNotice(): ResponseData<Boolean> {
+    suspend fun getUpdateContent(): ResponseData<AppNotice> {
         //请求
         try {
             //接口参数
@@ -265,7 +222,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             val body =
                 json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 
-            val response = service.toUpdate(body)
+            val response = service.getUpdateContent(body)
             if (response.message == "failure" || response.data == null) {
                 return error()
             }
@@ -279,7 +236,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         }
         return error()
     }
-
 
     /**
      * 查询额外装备掉落信息
