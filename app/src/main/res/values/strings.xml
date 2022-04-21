@@ -15,6 +15,8 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+    <string name="skill_cooltime">冷却时间：%.3f秒</string>
+    <string name="skill_cast_time">准备时间：%.3f秒</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>

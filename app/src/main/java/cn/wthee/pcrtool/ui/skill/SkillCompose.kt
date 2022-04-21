@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool.ui.skill
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +16,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +32,7 @@ import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -44,7 +43,7 @@ import com.google.accompanist.flowlayout.FlowRow
  * @param cutinId 角色特殊编号
  * @param level 等级
  * @param atk 攻击力
- * @param unitType 0：角色、1：角色召唤五、2：敌人、3：敌人召唤物
+ * @param unitType 0：角色、1：角色召唤物、2：敌人、3：敌人召唤物
  */
 @Composable
 fun SkillCompose(
@@ -74,6 +73,7 @@ fun SkillCompose(
         }
     }
 }
+
 
 /**
  * 技能
@@ -123,7 +123,7 @@ fun SkillItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
+            .padding(vertical = Dimen.largePadding + Dimen.mediumPadding)
     ) {
         //技能名
         val type = when (unitType) {
@@ -134,72 +134,81 @@ fun SkillItem(
         }
         val color = getSkillColor(type)
         val name = if (unitType > 1) type else skillDetail.name
-        MainText(
-            text = name,
-            color = color,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.largePadding),
-            selectable = true
-        )
-        //技能类型
-        CaptionText(
-            text = type + if (skillDetail.isCutin) "(六星)" else "",
-            color = color,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.smallPadding)
-        )
-        //冷却时间
-        if (unitType > 1 && skillDetail.bossUbCooltime > 0.0) {
-            CaptionText(
-                text = skillDetail.bossUbCooltime.toString(),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.smallPadding)
-            )
-        }
-        //图标、等级、描述
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Dimen.smallPadding)
-        ) {
-            val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
-            //技能图标
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                IconCompose(data = url)
-                if (skillDetail.castTime > 0) {
-                    CaptionText(text = "${skillDetail.castTime}秒")
-                }
-            }
-            Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
-                //等级
-                if (unitType > 1) {
-                    Text(
-                        text = stringResource(id = R.string.skill_level, skillDetail.level),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
-                //描述
-                Subtitle2(text = skillDetail.desc, selectable = true)
-            }
+        val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
 
+        Row {
+            //技能图标
+            IconCompose(data = url)
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .heightIn(min = Dimen.iconSize),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                //技能名
+                MainText(
+                    text = name,
+                    color = color,
+                    selectable = true,
+                    textAlign = TextAlign.Start
+                )
+                FlowRow {
+                    //技能类型
+                    CaptionText(
+                        text = type + if (skillDetail.isCutin) "(六星)" else "",
+                    )
+                    //技能等级
+                    if (unitType > 1) {
+                        CaptionText(
+                            text = stringResource(id = R.string.skill_level, skillDetail.level),
+                            modifier = Modifier.padding(start = Dimen.largePadding)
+                        )
+                    }
+                    //冷却时间
+                    if (unitType > 1 && skillDetail.bossUbCooltime > 0.0) {
+                        CaptionText(
+                            text = stringResource(
+                                id = R.string.skill_cooltime,
+                                skillDetail.bossUbCooltime
+                            ),
+                            modifier = Modifier
+                                .padding(start = Dimen.largePadding)
+                        )
+                    }
+                    //准备时间
+                    if (skillDetail.castTime > 0) {
+                        CaptionText(
+                            text = stringResource(
+                                id = R.string.skill_cast_time,
+                                skillDetail.castTime
+                            ),
+                            modifier = Modifier
+                                .padding(start = Dimen.largePadding)
+                        )
+                    }
+                }
+            }
         }
-        val tags = getTags(skillDetail.getActionInfo())
+
         //标签
+        val tags = getTags(skillDetail.getActionInfo())
         FlowRow {
             tags.forEach {
                 SkillActionTag(it)
             }
         }
+
+        //描述
+        if (skillDetail.desc.isNotBlank()) {
+            Subtitle1(
+                text = skillDetail.desc,
+                selectable = true,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
+            )
+        }
+
         //动作
         actionData.forEach {
-            if (BuildConfig.DEBUG) {
-                Text(it.actionId.toString())
-            }
             SkillActionItem(
                 skillAction = it,
                 unitType = unitType,
@@ -216,7 +225,7 @@ fun SkillItem(
 fun SkillActionTag(skillTag: String) {
     MainTitleText(
         text = skillTag,
-        textStyle = MaterialTheme.typography.bodySmall,
+        textStyle = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(end = Dimen.smallPadding, top = Dimen.mediumPadding)
     )
 }
@@ -230,6 +239,7 @@ fun SkillActionItem(
     unitType: Int,
     toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
+
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()
     val mark1 = arrayListOf<SkillIndex>()
@@ -273,57 +283,78 @@ fun SkillActionItem(
     map[1] = mark1
     map[2] = mark2
     map[3] = mark3
-    Column {
 
-        //设置字体
-        Text(
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 0.5.sp
-            ),
-            color = colorResource(id = R.color.gray),
-            modifier = Modifier.padding(
-                top = Dimen.mediumPadding,
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding
-            ),
-            text = buildAnnotatedString {
-                skillAction.action.forEachIndexed { index, c ->
-                    var added = false
-                    for (i in 0..3) {
-                        map[i]?.forEach {
-                            if (index >= it.start && index <= it.end) {
-                                added = true
-                                withStyle(style = SpanStyle(color = colors[i])) {
-                                    append(c)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .padding(vertical = Dimen.smallPadding)
+            .background(colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray))
+            .clickable(enabled = BuildConfig.DEBUG) {
+                ToastUtil.short(skillAction.actionId.toString())
+            }
+    ) {
+        Box(
+            modifier = Modifier
+                .width(Dimen.vLineWidth)
+                .fillMaxHeight()
+                .background(colorResource(id = R.color.div_line))
+        )
+        Column(
+            modifier = Modifier
+                .padding(Dimen.smallPadding)
+                .fillMaxWidth()
+                .heightIn(min = Dimen.skillActionMinHeight)
+        ) {
+            //设置字体
+            Text(
+                style = TextStyle(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.5.sp
+                ),
+                modifier = Modifier.padding(
+                    top = Dimen.smallPadding
+                ),
+                text = buildAnnotatedString {
+                    skillAction.action.forEachIndexed { index, c ->
+                        var added = false
+                        for (i in 0..3) {
+                            map[i]?.forEach {
+                                if (index >= it.start && index <= it.end) {
+                                    added = true
+                                    withStyle(style = SpanStyle(color = colors[i])) {
+                                        append(c)
+                                    }
+                                    return@forEachIndexed
                                 }
-                                return@forEachIndexed
                             }
                         }
+                        if (!added) {
+                            append(c)
+                        }
                     }
-                    if (!added) {
-                        append(c)
-                    }
+
                 }
-
-            }
-        )
-        if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
-            //查看召唤物
-            Text(
-                text = stringResource(R.string.to_summon),
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(start = Dimen.mediumPadding)
-                    .clip(Shape.medium)
-                    .clickable {
-                        toSummonDetail(skillAction.summonUnitId, unitType)
-                    }
-                    .padding(Dimen.smallPadding)
-
             )
+
+            if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+                //查看召唤物
+                Text(
+                    text = stringResource(R.string.to_summon),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(start = Dimen.mediumPadding)
+                        .clip(Shape.medium)
+                        .clickable {
+                            toSummonDetail(skillAction.summonUnitId, unitType)
+                        }
+                        .padding(Dimen.smallPadding)
+
+                )
+            }
         }
     }
 }

@@ -59,4 +59,8 @@ object Dimen {
     val lineWidth = 32.dp
 
     val lineHeight = 3.dp
+
+    val vLineWidth = 4.dp
+
+    val skillActionMinHeight = 16.dp
 }
