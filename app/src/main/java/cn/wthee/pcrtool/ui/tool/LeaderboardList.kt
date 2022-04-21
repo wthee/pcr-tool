@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +34,6 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
-@ExperimentalMaterialApi
 @Composable
 fun LeaderboardList(
     scrollState: LazyListState,
@@ -167,7 +165,6 @@ fun LeaderboardList(
 /**
  * 角色评价信息
  */
-@ExperimentalMaterialApi
 @Composable
 private fun LeaderboardItem(info: LeaderboardData) {
     val placeholder = info.icon == ""
@@ -233,7 +230,6 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
 }
 
 @Preview
-@ExperimentalMaterialApi
 @Composable
 private fun LeaderboardItemPreview() {
     PreviewBox {

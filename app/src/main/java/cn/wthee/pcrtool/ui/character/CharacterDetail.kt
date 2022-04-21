@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -54,26 +53,16 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-//TODO 暂时实现该方法，直到官方修复 https://issuetracker.google.com/issues/217770337
-val WindowInsets.Companion.isImeVisible: Boolean
-    @Composable
-    get() {
-        val density = LocalDensity.current
-        val ime = this.ime
-        return remember {
-            derivedStateOf {
-                ime.getBottom(density) > 0
-            }
-        }.value
-    }
-
 /**
  * 角色信息
  *
  * @param unitId 角色编号
  */
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
+@OptIn(
+    ExperimentalLayoutApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -474,7 +463,6 @@ fun CharacterDetail(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun CharacterCard(
     loved: Boolean,
@@ -502,7 +490,6 @@ private fun CharacterCard(
 /**
  * 属性
  */
-@ExperimentalComposeUiApi
 @Composable
 private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
     //属性
@@ -684,7 +671,7 @@ private fun CharacterEquip(
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
-@ExperimentalComposeUiApi
+@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,

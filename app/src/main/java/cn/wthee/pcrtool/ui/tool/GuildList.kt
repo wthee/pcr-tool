@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,8 +28,6 @@ import kotlinx.coroutines.launch
 /**
  * 角色公会
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun GuildList(
     scrollState: LazyListState,
@@ -77,8 +73,6 @@ fun GuildList(
 /**
  * 公会
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 private fun GuildItem(
     guild: GuildAllMember,
@@ -134,8 +128,6 @@ private fun GuildItem(
 }
 
 @Preview
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 private fun GuildItemPreview() {
     PreviewBox {

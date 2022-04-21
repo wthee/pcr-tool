@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,8 +31,6 @@ import kotlinx.coroutines.launch
  * 已收藏数据
  *
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun PvpFavorites(
     favoritesListState: LazyGridState,
@@ -75,7 +71,6 @@ fun PvpFavorites(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun PvpFavoriteItem(
     toCharacter: (Int) -> Unit,

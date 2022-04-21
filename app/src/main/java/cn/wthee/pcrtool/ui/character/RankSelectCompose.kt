@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,8 +33,7 @@ import kotlinx.coroutines.launch
  * @param maxRank rank最大值
  * @param type 0：默认，1：限制（当前[rank0] <= 目标[rank1]）
  */
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankSelectCompose(
     rank0: MutableState<Int>,
@@ -107,7 +105,6 @@ fun RankSelectCompose(
 /**
  * RANK 选择器
  */
-@ExperimentalFoundationApi
 @Composable
 fun RankSelectItem(selectIndex: MutableState<Int>, rankList: List<Int>) {
     Box {

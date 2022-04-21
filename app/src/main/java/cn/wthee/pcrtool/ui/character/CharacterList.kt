@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -50,9 +49,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色列表
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CharacterList(
     scrollState: LazyGridState,
@@ -177,7 +174,6 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@ExperimentalMaterialApi
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
@@ -291,8 +287,7 @@ fun CharacterItem(
 /**
  * 角色筛选
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,

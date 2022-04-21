@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,8 +41,6 @@ import kotlin.math.round
 /**
  * 查询结果页面
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun PvpSearchResult(
     resultListState: LazyGridState,
@@ -206,7 +202,6 @@ fun PvpSearchResult(
 /**
  * 查询结果 Item
  */
-@ExperimentalMaterialApi
 @Composable
 private fun PvpResultItem(
     favoritesList: List<String>,

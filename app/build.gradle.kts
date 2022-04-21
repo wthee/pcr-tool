@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha07"
+val composeVersion = "1.2.0-alpha08"
 val appVersionCode = 323
 val appVersionName = "3.2.3"
 
@@ -119,13 +119,13 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha09")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.24.6-alpha"
+    val accompanistVersion = "0.24.7-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -152,7 +152,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.1")
+    implementation("androidx.navigation:navigation-compose:2.4.2")
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
@@ -169,6 +169,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+
+    //saved state
+    implementation ("androidx.savedstate:savedstate-ktx:1.1.0")
 
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")

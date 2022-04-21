@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import cn.wthee.pcrtool.utils.openWebView
 /**
  * 菜单
  */
-@ExperimentalMaterialApi
 @Composable
 fun MoreFabCompose(viewModel: NavViewModel) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK

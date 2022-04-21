@@ -177,7 +177,8 @@
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
     <string name="issue">问题反馈</string>
-    <string name="qq_group">QQ群</string>
+    <string name="qq_group">反馈交流群</string>
+    <string name="github">Github</string>
     <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
     <string name="issue_tip">前往 github.com ，添加 issue</string>
 

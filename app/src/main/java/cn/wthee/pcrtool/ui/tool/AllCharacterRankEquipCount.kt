@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +15,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
-@ExperimentalFoundationApi
 @Composable
 fun AllCharacterRankEquipCount(
     toEquipMaterial: (Int) -> Unit,

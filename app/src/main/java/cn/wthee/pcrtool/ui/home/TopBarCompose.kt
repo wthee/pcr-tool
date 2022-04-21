@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -21,16 +23,15 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.common.MainContentText
-import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.openWebView
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
 
@@ -115,7 +116,7 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
 
 //应用更新内容
 @Composable
-fun AppUpdateContent(appNotice: AppNotice) {
+private fun AppUpdateContent(appNotice: AppNotice) {
     val context = LocalContext.current
 
     MainCard(
@@ -124,35 +125,73 @@ fun AppUpdateContent(appNotice: AppNotice) {
             vertical = Dimen.mediumPadding
         )
     ) {
-        Column(modifier = Modifier.padding(horizontal = Dimen.largePadding)) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = Dimen.largePadding)
+                .fillMaxWidth()
+        ) {
             Row(
                 modifier = Modifier
-                    .padding(top = Dimen.mediumPadding)
-                    .fillMaxWidth(),
+                    .padding(top = Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //版本
                 Text(
                     text = "v${appNotice.title}",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Black
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.weight(1f)
                 )
+                //反馈群
+                Row(
+                    modifier = Modifier
+                        .clip(Shape.medium)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            joinQQGroup(context)
+                        }
+                        .padding(Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconCompose(data = MainIconType.SUPPORT, size = Dimen.smallIconSize)
+                    CaptionText(
+                        text = stringResource(id = R.string.qq_group),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
+                }
                 //查看 github release 详情
-                IconCompose(data = MainIconType.GITHUB_RELEASE, size = Dimen.smallIconSize) {
-                    openWebView(
-                        context,
-                        Constants.GITHUB_RELEASE_URL + appNotice.title
+                Row(
+                    modifier = Modifier
+                        .padding(start = Dimen.largePadding)
+                        .clip(Shape.medium)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            openWebView(
+                                context,
+                                Constants.GITHUB_RELEASE_URL + appNotice.title
+                            )
+                        }
+                        .padding(Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconCompose(data = MainIconType.GITHUB_RELEASE, size = Dimen.smallIconSize)
+                    CaptionText(
+                        text = stringResource(id = R.string.github),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
                     )
                 }
             }
+
             //日期
-            Subtitle2(text = appNotice.date)
+            CaptionText(text = "${appNotice.date.formatTime.substring(0, 10)} 发布")
+
             //内容
             MainContentText(
                 text = appNotice.message,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.padding(top = Dimen.largePadding)
+                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding)
             )
 
             //前往更新
@@ -184,9 +223,9 @@ private fun AppUpdateContentPreview() {
     PreviewBox {
         AppUpdateContent(
             AppNotice(
-                date = "2022-01-01",
+                date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- 更新测试",
+                message = "- 更新测试\n- BUGBUGBUG",
                 file_url = "123"
             )
         )

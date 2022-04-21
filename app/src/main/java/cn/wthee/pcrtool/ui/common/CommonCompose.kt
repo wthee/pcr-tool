@@ -421,7 +421,7 @@ fun MainCard(
         modifier = mModifier,
         content = content,
         shape = shape,
-        containerColor = backgroundColor,
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     )
 }
 
@@ -554,7 +554,7 @@ fun getAtkColor(atkType: Int): Color {
 /**
  * 带指示器图标
  */
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     val scope = rememberCoroutineScope()

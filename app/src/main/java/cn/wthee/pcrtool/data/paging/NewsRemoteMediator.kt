@@ -15,7 +15,7 @@ import java.io.IOException
 /**
  * 公告加载
  */
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
     private val region: Int,
     private val database: AppNewsDatabase,

@@ -218,7 +218,8 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         try {
             //接口参数
             val json = JsonObject()
-            json.addProperty("version", BuildConfig.VERSION_CODE)
+            //测试版本显示更新布局
+            json.addProperty("version",if(BuildConfig.DEBUG) 1 else  BuildConfig.VERSION_CODE)
             val body =
                 json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 
