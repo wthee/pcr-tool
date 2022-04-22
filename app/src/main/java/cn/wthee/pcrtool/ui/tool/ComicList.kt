@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -42,9 +45,7 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
 fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
@@ -144,8 +145,6 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
 /**
  * 漫画内容
  */
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
 @Composable
 private fun ComicItem(data: ComicData) {
     val placeholder = data.id == -1
@@ -192,8 +191,6 @@ private fun ComicItem(data: ComicData) {
 /**
  * 章节选择
  */
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
 @Composable
 private fun SelectPager(
     scrollState: LazyListState,
@@ -221,7 +218,6 @@ private fun SelectPager(
 /**
  * 目录
  */
-@ExperimentalPagerApi
 @Composable
 private fun TocItem(
     selectIndex: MutableState<Int>,

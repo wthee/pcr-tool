@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -52,9 +50,6 @@ import kotlinx.coroutines.launch
 /**
  * 每月 BOSS 信息列表
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun ClanBattleList(
     scrollState: LazyGridState,
@@ -113,8 +108,6 @@ fun ClanBattleList(
  * 图标列表
  * type 0：点击查看详情， 1：点击切换 BOSS
  */
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 private fun ClanBattleItem(
     clanInfo: ClanBattleInfo,
@@ -196,8 +189,7 @@ private fun ClanBattleItem(
 /**
  * 团队战 BOSS 详情
  */
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ClanBossInfoPager(
     clanId: Int,
@@ -296,7 +288,6 @@ fun ClanBossInfoPager(
 /**
  * Boss 信息详情
  */
-@ExperimentalMaterialApi
 @Composable
 private fun ClanBossInfoPagerItem(
     bossDataList: List<EnemyParameterPro>,
@@ -438,8 +429,6 @@ fun getSectionTextColor(section: Int): Color {
 }
 
 @Preview
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 private fun ClanBattleItemPreview() {
     PreviewBox {

@@ -15,7 +15,7 @@ import java.io.IOException
 /**
  * 推特加载
  */
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class TweetRemoteMediator(
     private val database: AppTweetDatabase,
     private val repository: MyAPIRepository

@@ -28,7 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
  *
  * @param unitId 角色编号
  */
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun CharacterBasicInfo(
     scrollState: ScrollState,

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -20,7 +19,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
 //权限
@@ -33,8 +31,6 @@ val permissions = arrayOf(
  * 角色所有卡面/剧情故事图片
  * type 0: 角色 1：剧情活动
  */
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
 @Composable
 fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
     val context = LocalContext.current

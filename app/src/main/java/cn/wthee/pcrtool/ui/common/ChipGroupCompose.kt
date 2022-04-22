@@ -1,11 +1,10 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ChipDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +12,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -24,7 +22,6 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.flowlayout.FlowRow
-
 
 /**
  * ChipGroup
@@ -50,6 +47,7 @@ fun ChipGroup(
 /**
  * ChipItem
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: Int) {
     val context = LocalContext.current
@@ -65,7 +63,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: I
             else -> Color.Unspecified
         }
     }
-    //背景色
+    //Chip 背景色
     val backgroundColor = if (isSelected) {
         //选中背景色
         when (type) {
@@ -76,28 +74,21 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: I
         //未选中背景色
         colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray)
     }
+    val chipColor = ChipDefaults.filterChipColors(backgroundColor = backgroundColor)
 
-
-    Box(
-        modifier = Modifier
-            .padding(Dimen.mediumPadding)
-            .clip(CircleShape)
-            .background(backgroundColor, CircleShape)
-            .clickable {
-                VibrateUtil(context).single()
-                selectIndex.value = index
-            }
+    FilterChip(
+        selected = isSelected,
+        onClick = {
+            VibrateUtil(context).single()
+            selectIndex.value = index
+        },
+        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+        colors = chipColor
     ) {
         Text(
             text = item.text,
             color = textColor,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(
-                start = Dimen.largePadding,
-                end = Dimen.largePadding,
-                top = Dimen.mediumPadding,
-                bottom = Dimen.mediumPadding
-            )
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }

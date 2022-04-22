@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,8 +26,6 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param unitId 角色编号
  */
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
 @Composable
 fun RankEquipList(
     unitId: Int,
@@ -58,7 +54,6 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
-@ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(
     unitPromotion: UnitPromotion,
@@ -117,9 +112,7 @@ fun RankEquipListItem(
     }
 }
 
-@ExperimentalFoundationApi
 @Preview
-@ExperimentalMaterialApi
 @Composable
 private fun RankEquipListItemPreview() {
     val selectedRank = remember {

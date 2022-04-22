@@ -11,10 +11,8 @@ import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -48,7 +46,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -70,12 +67,6 @@ fun settingSP(context: Context): SharedPreferences =
     context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalComposeUiApi
-@ExperimentalPagingApi
-@ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -91,6 +82,11 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @OptIn(
+        ExperimentalComposeUiApi::class,
+        ExperimentalPagingApi::class,
+        ExperimentalAnimationApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -186,12 +182,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalComposeUiApi
-@ExperimentalPagingApi
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Home(
     mNavViewModel: NavViewModel = hiltViewModel()

@@ -21,7 +21,6 @@ import javax.inject.Inject
  * 公告 ViewModel
  */
 @HiltViewModel
-@ExperimentalPagingApi
 class NewsViewModel @Inject constructor(
     private val newsDao: NewsDao,
     private val database: AppNewsDatabase,
@@ -40,6 +39,7 @@ class NewsViewModel @Inject constructor(
     /**
      * 公告数据
      */
+    @OptIn(ExperimentalPagingApi::class)
     fun getNews(region: Int) {
         when (region) {
             2 -> {

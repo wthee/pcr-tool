@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -25,7 +24,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 /**
  * 角色剧情属性详情
  */
-@ExperimentalMaterialApi
 @Composable
 fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
 
@@ -56,7 +54,6 @@ fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hi
 /**
  * 剧情属性
  */
-@ExperimentalMaterialApi
 @Composable
 private fun StoryDetailItem(data: CharacterStoryAttr) {
 

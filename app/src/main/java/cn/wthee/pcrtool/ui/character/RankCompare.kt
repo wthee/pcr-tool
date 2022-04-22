@@ -1,11 +1,13 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -44,8 +46,7 @@ import kotlinx.coroutines.launch
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun RankCompare(
     unitId: Int,
@@ -139,13 +140,11 @@ fun RankCompare(
                         StarCompose(rarity)
                     }
                 }
-                Card(
+                MainCard(
                     shape = CardTopShape,
-                    elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
                         .fillMaxSize(),
-                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
                     Column {
                         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
