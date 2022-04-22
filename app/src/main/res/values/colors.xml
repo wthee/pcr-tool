@@ -31,4 +31,8 @@
     <color name="color_map_n">@color/colorPrimary</color>
     <color name="color_map_h">#C94C5D</color>
     <color name="color_map_vh">#7A418A</color>
+
+    <!--卡片遮罩-->
+    <color name="card_alpha_black">#BF000000</color>
+
 </resources>

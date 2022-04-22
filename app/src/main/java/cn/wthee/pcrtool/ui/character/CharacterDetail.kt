@@ -479,8 +479,7 @@ private fun CharacterCard(
             loved = loved,
             modifier = Modifier
                 .padding(Dimen.largePadding)
-                .width(getItemWidth()),
-            isLargerCard = true
+                .width(getItemWidth())
         ) {
             actions.toAllPics(unitId, 0)
         }

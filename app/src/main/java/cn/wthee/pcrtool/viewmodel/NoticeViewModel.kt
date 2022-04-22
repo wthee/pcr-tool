@@ -32,7 +32,7 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
             try {
                 val data = apiRepository.getUpdateContent().data
                 if (data != null) {
-                    updateApp.postValue(data)
+                    updateApp.postValue(data!!)
                 } else {
                     updateApp.postValue(AppNotice(id = -2))
                 }

@@ -115,14 +115,14 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.0.4")
 
     //compose
-    implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+
+    //compose material3
+    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
 
     //Accompanist
     val accompanistVersion = "0.24.7-alpha"
@@ -171,10 +171,13 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     //saved state
-    implementation ("androidx.savedstate:savedstate-ktx:1.1.0")
+    implementation("androidx.savedstate:savedstate-ktx:1.1.0")
 
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")
+
+    //palette 取色
+    implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
     val workVersion = "2.7.1"

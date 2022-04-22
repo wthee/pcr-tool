@@ -49,7 +49,6 @@ val myFadeIn = if (animOnFlag) {
     fadeIn(animationSpec = fastTween())
 }
 
-
 //展开
 val myExpandIn = if (animOnFlag) {
     expandVertically(
@@ -70,6 +69,15 @@ val myShrinkIn = if (animOnFlag) {
     fadeOut(animationSpec = fastTween())
 }
 
+//页面进入动画：从右向左
+val mySlideInRTL = if (animOnFlag) {
+    slideInHorizontally(
+        initialOffsetX = { 30 },
+        animationSpec = defaultTween()
+    )
+} else {
+    fadeIn(animationSpec = fastTween())
+}
 
 /**
  * 页面进入动画
@@ -109,7 +117,7 @@ fun FadeAnimation(
 
 
 /**
- * 页面进入动画
+ * 页面展开动画，从上到下
  */
 @Composable
 fun ExpandAnimation(
@@ -122,6 +130,25 @@ fun ExpandAnimation(
         modifier = modifier,
         enter = myExpandIn,
         exit = myShrinkIn,
+        content = content,
+    )
+}
+
+
+/**
+ * 从右向左滑动
+ */
+@Composable
+fun SlideRTLAnimation(
+    modifier: Modifier = Modifier,
+    visible: Boolean,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = mySlideInRTL,
+        exit = fadeOut(),
         content = content,
     )
 }
