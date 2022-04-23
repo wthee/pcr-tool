@@ -19,4 +19,4 @@ local.properties
 /app/build/
 /app/release/
 /app/official/
-/app/src/main/java/cn/wthee/pcrtool/utils/UMengKey.kt
+/app/src/main/java/cn/wthee/pcrtool/utils/PrivateConfig.kt

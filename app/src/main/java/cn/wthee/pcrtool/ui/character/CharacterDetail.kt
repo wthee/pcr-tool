@@ -50,7 +50,6 @@ import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.insets.LocalWindowInsets
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -59,8 +58,11 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
+@OptIn(
+    ExperimentalLayoutApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -107,7 +109,7 @@ fun CharacterDetail(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    val insets = LocalWindowInsets.current
+    val isImeVisible = WindowInsets.isImeVisible
     val context = LocalContext.current
 
     //战力系数
@@ -252,7 +254,7 @@ fun CharacterDetail(
                                     .clip(Shape.small)
                                     .clickable {
                                         VibrateUtil(context).single()
-                                        if (insets.ime.isVisible) {
+                                        if (isImeVisible) {
                                             focusManager.clearFocus()
                                             keyboardController?.hide()
                                         } else {
@@ -316,7 +318,7 @@ fun CharacterDetail(
                                         }
                                     }
                                 ),
-                                modifier = if (insets.ime.isVisible) {
+                                modifier = if (isImeVisible) {
                                     Modifier
                                         .focusRequester(focusRequester)
                                         .padding(Dimen.smallPadding)
@@ -461,7 +463,6 @@ fun CharacterDetail(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun CharacterCard(
     loved: Boolean,
@@ -478,8 +479,7 @@ private fun CharacterCard(
             loved = loved,
             modifier = Modifier
                 .padding(Dimen.largePadding)
-                .width(getItemWidth()),
-            isLargerCard = true
+                .width(getItemWidth())
         ) {
             actions.toAllPics(unitId, 0)
         }
@@ -489,7 +489,6 @@ private fun CharacterCard(
 /**
  * 属性
  */
-@ExperimentalComposeUiApi
 @Composable
 private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
     //属性
@@ -667,11 +666,11 @@ private fun CharacterEquip(
 
 /**
  * 专武信息
- * @param uniqueEquipLevelMax 最大等级
- * @param uniqueEquipLevel 等级状态
+ * @param currentValue 当前属性
+ * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
-@ExperimentalComposeUiApi
+@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
@@ -682,7 +681,7 @@ private fun UniqueEquip(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    val insets = LocalWindowInsets.current
+    val isImeVisible = WindowInsets.isImeVisible
     val context = LocalContext.current
 
     uniqueEquipmentMaxData?.let {
@@ -708,7 +707,7 @@ private fun UniqueEquip(
                     .clip(Shape.small)
                     .clickable {
                         VibrateUtil(context).single()
-                        if (insets.ime.isVisible) {
+                        if (isImeVisible) {
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         } else {
@@ -773,7 +772,7 @@ private fun UniqueEquip(
                         }
                     }
                 ),
-                modifier = if (insets.ime.isVisible) {
+                modifier = if (isImeVisible) {
                     Modifier
                         .focusRequester(focusRequester)
                         .padding(Dimen.smallPadding)

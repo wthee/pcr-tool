@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flow
@@ -141,7 +141,7 @@ class CharacterAttrViewModel @Inject constructor(
             allData.sumAttr = info
         } catch (e: Exception) {
             if (e !is CancellationException) {
-                UMengLogUtil.upload(
+                LogReportUtil.upload(
                     e, Constants.EXCEPTION_LOAD_ATTR +
                             "uid:$unitId," +
                             "rank:${rank}," +

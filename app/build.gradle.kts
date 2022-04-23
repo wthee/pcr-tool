@@ -14,9 +14,9 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha07"
-val appVersionCode = 323
-val appVersionName = "3.2.3"
+val composeVersion = "1.2.0-alpha08"
+val appVersionCode = 324
+val appVersionName = "3.2.4"
 
 android {
 
@@ -103,35 +103,38 @@ android {
 }
 
 dependencies {
+
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
+
+    //Bugly
+    implementation("com.tencent.bugly:crashreport:4.0.4")
+
     //compose
-    implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha09")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
-    //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
+    //compose material3
+    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
+
     //Accompanist
-    val accompanistVersion = "0.24.6-alpha"
+    val accompanistVersion = "0.24.7-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-rc02"
+    val coilVersion = "2.0.0-rc03"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
@@ -141,7 +144,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0"
+    val lifecycleVersion = "2.4.1"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -149,7 +152,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.1")
+    implementation("androidx.navigation:navigation-compose:2.4.2")
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
@@ -167,18 +170,18 @@ dependencies {
     implementation("androidx.room:room-paging:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
+    //saved state
+    implementation("androidx.savedstate:savedstate-ktx:1.1.0")
+
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")
 
-    //umeng
-    implementation("com.umeng.umsdk:common:9.4.7")
-    implementation("com.umeng.umsdk:asms:1.6.0")
-    implementation("com.umeng.umsdk:apm:1.5.2")
+    //palette 取色
+    implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
     val workVersion = "2.7.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
-
 
     implementation(files("libs\\commons-compress-1.19.jar"))
     implementation(files("libs\\dec-0.1.2.jar"))

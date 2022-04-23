@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
+import cn.wthee.pcrtool.utils.BuglyInitializer
 import coil.ComponentRegistry
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -15,6 +16,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import dagger.hilt.android.HiltAndroidApp
+
 
 /**
  * 应用初始
@@ -31,6 +33,9 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        //Bugly
+        BuglyInitializer().create(this)
+        //数据库
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
@@ -59,5 +64,4 @@ class MyApplication : Application(), ImageLoaderFactory {
             }
             .build()
     }
-
 }

@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,16 +26,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
@@ -171,31 +167,36 @@ fun Subtitle2(
     text: String,
     color: Color = Color.Unspecified,
     selectable: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign = TextAlign.Start,
+    fontWeight: FontWeight = FontWeight.Normal
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
             Text(
                 text = text,
                 color = color,
-                textAlign = TextAlign.Start,
+                textAlign = textAlign,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
+                fontWeight = fontWeight
             )
         }
     } else {
         Text(
             text = text,
             color = color,
-            textAlign = TextAlign.Start,
+            textAlign = textAlign,
             style = MaterialTheme.typography.titleSmall,
             modifier = modifier,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
+            fontWeight = fontWeight
         )
     }
 }
+
 
 /**
  * 灰色标注字体
@@ -422,7 +423,7 @@ fun MainCard(
         modifier = mModifier,
         content = content,
         shape = shape,
-        containerColor = backgroundColor,
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     )
 }
 
@@ -462,36 +463,6 @@ fun SelectText(
     )
 }
 
-
-/**
- * 角色限定类型文本样式
- */
-@Composable
-fun CharacterLimitText(
-    modifier: Modifier = Modifier,
-    characterInfo: CharacterInfo
-) {
-    val color: Color
-    val type: String
-    when (characterInfo.isLimited) {
-        1 -> {
-            if (characterInfo.rarity == 1) {
-                type = stringResource(id = R.string.type_event_limit)
-                color = colorResource(id = R.color.color_rank_21_23)
-            } else {
-                type = stringResource(id = R.string.type_limit)
-                color = colorResource(id = R.color.color_rank_18_20)
-            }
-        }
-        else -> {
-            type = stringResource(id = R.string.type_normal)
-            color = colorResource(id = R.color.color_rank_7_10)
-        }
-    }
-    Subtitle2(modifier = modifier, text = type, color = color)
-}
-
-
 /**
  * 角色站位文本样式
  */
@@ -499,38 +470,19 @@ fun CharacterLimitText(
 fun CharacterPositionText(
     modifier: Modifier = Modifier,
     showColor: Boolean = true,
-    showText: Boolean = false,
     position: Int,
     textAlign: TextAlign = TextAlign.Center,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     val color = if (showColor) {
-        colorResource(
-            id = when (position) {
-                in 1..299 -> R.color.color_rank_18_20
-                in 300..599 -> R.color.color_rank_7_10
-                in 600..9999 -> R.color.colorPrimary
-                else -> R.color.black
-            }
-        )
+        getPositionColor(position)
     } else {
         Color.Unspecified
     }
-    var text = position.toString()
-    if (showText) {
-        val pos = when (position) {
-            in 1..299 -> stringResource(id = R.string.position_0)
-            in 300..599 -> stringResource(id = R.string.position_1)
-            in 600..9999 -> stringResource(id = R.string.position_2)
-            else -> Constants.UNKNOWN
-        }
-        if (pos != Constants.UNKNOWN) {
-            text = "$pos($position)"
-        }
-    }
+
 
     Text(
-        text = text,
+        text = position.toString(),
         color = color,
         style = textStyle,
         maxLines = 1,
@@ -539,6 +491,17 @@ fun CharacterPositionText(
         modifier = modifier
     )
 }
+
+//位置颜色
+@Composable
+fun getPositionColor(position: Int) = colorResource(
+    id = when (position) {
+        in 1..299 -> R.color.color_rank_18_20
+        in 300..599 -> R.color.color_rank_7_10
+        in 600..9999 -> R.color.colorPrimary
+        else -> R.color.black
+    }
+)
 
 
 //攻击颜色
@@ -555,7 +518,7 @@ fun getAtkColor(atkType: Int): Color {
 /**
  * 带指示器图标
  */
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     val scope = rememberCoroutineScope()

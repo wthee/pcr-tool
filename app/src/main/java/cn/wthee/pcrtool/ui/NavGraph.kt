@@ -2,13 +2,10 @@ package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -55,7 +52,6 @@ object Navigation {
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
     const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
-    const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
@@ -79,12 +75,11 @@ object Navigation {
 }
 
 
-@ExperimentalPagingApi
-@ExperimentalComposeUiApi
-@ExperimentalPagerApi
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
+@OptIn(
+    ExperimentalPagerApi::class,
+    ExperimentalPagingApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -435,19 +430,6 @@ fun NavGraph(
             MainSettings()
         }
 
-        //更新通知
-        composable(
-            route = Navigation.APP_NOTICE,
-            enterTransition = { myFadeIn },
-            exitTransition = { fadeOut },
-            popEnterTransition = { myFadeIn },
-            popExitTransition = { fadeOut }
-        ) {
-            val scrollState = rememberLazyGridState()
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            NoticeList(scrollState)
-        }
-
         //公告
         composable(
             route = Navigation.TOOL_NEWS,
@@ -783,13 +765,6 @@ class NavActions(navController: NavHostController) {
      */
     val toEquipList = {
         navController.navigate(Navigation.EQUIP_LIST)
-    }
-
-    /**
-     * 通知
-     */
-    val toNotice = {
-        navController.navigate(Navigation.APP_NOTICE)
     }
 
     /**

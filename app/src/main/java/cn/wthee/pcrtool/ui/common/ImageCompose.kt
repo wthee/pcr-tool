@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 
@@ -39,7 +40,7 @@ fun ImageCompose(
     @DrawableRes loadingId: Int? = null,
     @DrawableRes errorId: Int? = null,
     contentScale: ContentScale = ContentScale.FillWidth,
-    onSuccess: () -> Unit = {}
+    onSuccess: (AsyncImagePainter.State.Success) -> Unit = {}
 ) {
     var mModifier = modifier
     if (ratio > 0) {
@@ -54,7 +55,7 @@ fun ImageCompose(
         placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         onSuccess = {
-            onSuccess.invoke()
+            onSuccess.invoke(it)
         },
         modifier = mModifier
     )

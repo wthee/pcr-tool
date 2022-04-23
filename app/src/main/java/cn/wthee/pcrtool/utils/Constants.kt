@@ -113,4 +113,7 @@ object Constants {
     const val EXCEPTION_DATA_EXPORT = "数据导出$EXCEPTION"
     const val EXCEPTION_DATA_IMPORT = "数据导入$EXCEPTION"
     const val EXCEPTION_DATA_CHANGE = "数据切换$EXCEPTION"
+
+    //github 发布页
+    const val GITHUB_RELEASE_URL = "https://github.com/wthee/pcr-tool/releases/tag/v"
 }

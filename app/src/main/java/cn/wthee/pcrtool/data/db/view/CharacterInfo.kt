@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.utils.Constants
 
 
 /**
@@ -26,17 +27,17 @@ data class CharacterInfo(
     /**
      * 格式化年龄
      */
-    fun getFixedAge() = if (age == "999") "?" else age
+    fun getFixedAge() = if (age == "999") Constants.UNKNOWN else age
 
     /**
      * 格式化身高
      */
-    fun getFixedHeight() = if (height == "999") "?" else height
+    fun getFixedHeight() = if (height == "999") Constants.UNKNOWN else height
 
     /**
      * 格式化体重
      */
-    fun getFixedWeight() = if (weight == "999") "?" else weight
+    fun getFixedWeight() = if (weight == "999") Constants.UNKNOWN else weight
 
     /**
      * 获取名字，去除限定类型

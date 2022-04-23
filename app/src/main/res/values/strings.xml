@@ -15,6 +15,8 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+    <string name="skill_cooltime">冷却时间：%.3f秒</string>
+    <string name="skill_cast_time">准备时间：%.3f秒</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -132,7 +134,7 @@
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="update_log">更新日志</string>
     <string name="visit_more_log">查看更多更新日志</string>
-    <string name="to_update">更新</string>
+    <string name="to_update">前往更新</string>
     <string name="compare">对比</string>
     <string name="count">统计</string>
     <string name="share">分享</string>
@@ -175,7 +177,8 @@
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
     <string name="issue">问题反馈</string>
-    <string name="qq_group">QQ群</string>
+    <string name="qq_group">反馈交流群</string>
+    <string name="github">Github</string>
     <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
     <string name="issue_tip">前往 github.com ，添加 issue</string>
 

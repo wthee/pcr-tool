@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -42,8 +39,6 @@ import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -51,10 +46,6 @@ import com.google.accompanist.placeholder.material.shimmer
 /**
  * 公告列表
  */
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
-@ExperimentalPagingApi
 @Composable
 fun NewsList(
     scrollState: LazyListState,
@@ -122,7 +113,6 @@ fun NewsList(
 /**
  * 新闻公告
  */
-@ExperimentalMaterialApi
 @Composable
 fun NewsItem(
     news: NewsTable,
@@ -182,7 +172,6 @@ fun NewsItem(
 /**
  * 公告详情
  */
-@ExperimentalPagingApi
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
@@ -247,10 +236,10 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                             webViewClient = object : WebViewClient() {
 
                                 override fun shouldOverrideUrlLoading(
-                                    view: WebView,
-                                    url: String?
+                                    view: WebView?,
+                                    request: WebResourceRequest?
                                 ): Boolean {
-                                    view.loadUrl(url!!)
+                                    view?.loadUrl(url!!)
                                     return true
                                 }
 
@@ -367,7 +356,6 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
 
 
 @Preview
-@ExperimentalMaterialApi
 @Composable
 private fun NewsItemPreview() {
     PreviewBox {

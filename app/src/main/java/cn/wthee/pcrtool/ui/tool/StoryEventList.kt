@@ -1,13 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,8 +36,6 @@ import kotlinx.coroutines.launch
 /**
  * 剧情活动
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun StoryEventList(
     scrollState: LazyGridState,
@@ -88,8 +84,6 @@ fun StoryEventList(
 /**
  * 剧情活动
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun StoryEventItem(
     event: EventData,
@@ -269,8 +263,6 @@ fun StoryEventItem(
 }
 
 @Preview
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 private fun StoryEventItemPreview() {
     PreviewBox {

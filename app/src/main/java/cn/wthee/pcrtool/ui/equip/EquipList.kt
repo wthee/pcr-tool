@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,9 +45,7 @@ import kotlinx.coroutines.launch
 /**
  * 装备列表
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EquipList(
     scrollState: LazyGridState,
@@ -166,16 +166,16 @@ private fun EquipItem(
     toEquipMaterial: (Int) -> Unit,
 ) {
     var eq by remember { mutableStateOf(equip) }
-    if(eq != equip){
+    if (eq != equip) {
         eq = equip
     }
     var ft by remember { mutableStateOf(filter) }
-    if(ft != filter){
+    if (ft != filter) {
         ft = filter
     }
 
 
-    val equipIcon:@Composable ()->Unit by remember {
+    val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf(
             {
                 IconCompose(
@@ -190,7 +190,7 @@ private fun EquipItem(
             }
         )
     }
-    val equipName :@Composable ()->Unit by remember {
+    val equipName: @Composable () -> Unit by remember {
         mutableStateOf(
             {
                 SelectText(
@@ -215,8 +215,7 @@ private fun EquipItem(
 /**
  * 装备筛选
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun FilterEquipSheet(
     navViewModel: NavViewModel,

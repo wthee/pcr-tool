@@ -11,10 +11,8 @@ import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,13 +41,11 @@ import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.utils.*
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.rememberInsetsPaddingValues
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -71,12 +67,6 @@ fun settingSP(context: Context): SharedPreferences =
     context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalComposeUiApi
-@ExperimentalPagingApi
-@ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -92,33 +82,37 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @OptIn(
+        ExperimentalComposeUiApi::class,
+        ExperimentalPagingApi::class,
+        ExperimentalAnimationApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PCRToolComposeTheme {
-                ProvideWindowInsets {
-                    //状态栏、导航栏适配
-                    val ui = rememberSystemUiController()
-                    val isLight = !isSystemInDarkTheme()
-                    ui.setNavigationBarColor(
-                        MaterialTheme.colorScheme.surface,
-                        darkIcons = isLight
-                    )
-                    ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
-                    Surface {
-                        Home()
-                    }
+                //状态栏、导航栏适配
+                val ui = rememberSystemUiController()
+                val isLight = !isSystemInDarkTheme()
+                ui.setNavigationBarColor(
+                    MaterialTheme.colorScheme.surface,
+                    darkIcons = isLight
+                )
+                ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
+                Surface {
+                    Home()
                 }
             }
         }
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
-        UMengInitializer().create(this)
+        //用户设置信息
         val sp = settingSP()
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
@@ -176,7 +170,7 @@ class MainActivity : ComponentActivity() {
                     viewModelStore.clear()
                     recreate()
                 } catch (e: Exception) {
-                    UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                    LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 }
             } else {
                 ToastUtil.short(getString(R.string.tip_download_finish))
@@ -188,12 +182,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalComposeUiApi
-@ExperimentalPagingApi
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Home(
     mNavViewModel: NavViewModel = hiltViewModel()
@@ -208,14 +197,11 @@ fun Home(
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    val statusBarHeight =
-        rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.systemBars
-        ).calculateTopPadding()
+    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
 
     Box(
         modifier = Modifier
-            .navigationBarsPadding(start = true, end = true, bottom = false)
+            .navigationBarsPadding()
             .fillMaxSize()
             .padding(top = statusBarHeight)
     ) {

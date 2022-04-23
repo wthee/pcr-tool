@@ -4,12 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -32,7 +30,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -40,9 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场查询
  */
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
@@ -297,9 +292,6 @@ fun PvpSearchCompose(
 /**
  * 角色选择
  */
-@ExperimentalPagerApi
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 private fun PvpCharacterSelectPage(
     spanCount: Int,
@@ -393,7 +385,6 @@ private fun getLine(list: List<PvpCharacterData>) = list.size
 /**
  * 角色图标
  */
-@ExperimentalMaterialApi
 @Composable
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,

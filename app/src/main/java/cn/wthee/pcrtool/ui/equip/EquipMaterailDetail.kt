@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -50,9 +48,7 @@ import kotlinx.coroutines.launch
  *
  * @param equipId 装备编号
  */
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun EquipMaterialDeatil(
     equipId: Int,
@@ -264,8 +260,6 @@ fun EquipMaterialDeatil(
 /**
  * 掉落区域信息
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun AreaItem(
     selectedId: Int,

@@ -17,7 +17,6 @@ import javax.inject.Inject
  * 推特 ViewModel
  */
 @HiltViewModel
-@ExperimentalPagingApi
 class TweetViewModel @Inject constructor(
     private val tweetDao: TweetDao,
     private val database: AppTweetDatabase,
@@ -33,6 +32,7 @@ class TweetViewModel @Inject constructor(
     /**
      * 推特数据
      */
+    @OptIn(ExperimentalPagingApi::class)
     fun getTweet() {
         if (tweetPageList == null) {
             tweetPageList = Pager(

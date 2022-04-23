@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -39,7 +37,6 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -48,9 +45,6 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
-@ExperimentalPagerApi
-@ExperimentalPagingApi
-@ExperimentalMaterialApi
 @Composable
 fun TweetList(
     scrollState: LazyListState,
@@ -121,8 +115,6 @@ fun TweetList(
 /**
  * 推特内容
  */
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
 @Composable
 private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int) -> Unit) {
     val placeholder = data.id == ""
@@ -285,8 +277,6 @@ private fun getComicId(title: String): String {
 }
 
 @Preview
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
 @Composable
 private fun TweetItemPreview() {
     PreviewBox {

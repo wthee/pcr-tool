@@ -35,7 +35,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize">
@@ -52,7 +51,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="cn.wthee.pcrtool.utils.UMengInitializer"
+                android:name="cn.wthee.pcrtool.utils.BuglyInitializer"
                 android:value="@string/androidx_startup" />
         </provider>
     </application>

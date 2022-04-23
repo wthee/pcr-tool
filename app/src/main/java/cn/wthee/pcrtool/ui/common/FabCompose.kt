@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -20,7 +21,6 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 通用悬浮按钮
@@ -35,7 +35,7 @@ fun FabCompose(
 ) {
     val context = LocalContext.current
     var mModifier = if (hasNavBarPadding) {
-        modifier.navigationBarsPadding(bottom = true, start = false, end = false)
+        modifier.navigationBarsPadding()
     } else {
         modifier
     }

@@ -7,7 +7,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Switch
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,8 +45,6 @@ fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
     val region = getRegion()
-    val coroutineScope = rememberCoroutineScope()
-    val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
     SideEffect {
         //自动删除历史数据

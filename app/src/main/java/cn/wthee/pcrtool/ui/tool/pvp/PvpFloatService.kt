@@ -8,22 +8,17 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
-import androidx.savedstate.ViewTreeSavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
-import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
+@Suppress("DEPRECATION")
 class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
@@ -84,7 +79,7 @@ class PvpFloatService : LifecycleService() {
             }
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
-            UMengLogUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
+            LogReportUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }
 
@@ -92,7 +87,7 @@ class PvpFloatService : LifecycleService() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         floatRootView = ComposeView(this).apply {
             ViewTreeLifecycleOwner.set(this, this@PvpFloatService)
-            ViewTreeSavedStateRegistryOwner.set(this, activity)
+            setViewTreeSavedStateRegistryOwner(activity)
             ViewTreeViewModelStoreOwner.set(this, activity)
             setContent {
                 PvpFloatSearch(spanCount = spanCount)

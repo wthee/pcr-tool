@@ -2,25 +2,17 @@ package cn.wthee.pcrtool.utils
 
 import android.content.Context
 import androidx.startup.Initializer
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.umcrash.UMCrash
+import cn.wthee.pcrtool.BuildConfig
+import com.tencent.bugly.crashreport.CrashReport
 import java.util.*
 
 /**
- * 友盟 SDK 初始化
+ * Bugly SDK 初始化
  */
-class UMengInitializer : Initializer<Unit> {
+class BuglyInitializer : Initializer<Unit> {
+
     override fun create(context: Context) {
-        UMConfigure.init(
-            context,
-            UMengKey.myKey,
-            "Umeng",
-            UMConfigure.DEVICE_TYPE_PHONE,
-            ""
-        )
-        UMCrash.setDebug(false)
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+        CrashReport.initCrashReport(context, PrivateConfig.BUGLY_KEY, BuildConfig.DEBUG);
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {

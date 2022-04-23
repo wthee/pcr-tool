@@ -332,13 +332,22 @@ enum class MainIconType(val icon: ImageVector) {
     TOOL_MORE(Icons.Rounded.DashboardCustomize),
 
     /**
-     * 更多
+     * 复制
      */
     COPY(Icons.Rounded.ContentCopy),
 
     /**
-     * 更多
+     * 添加日历
      */
     ADD_CALENDAR(Icons.Rounded.EditCalendar),
 
+    /**
+     * 更新日志记录
+     */
+    UPDATE_LOG(Icons.Rounded.History),
+
+    /**
+     * 发布详情
+     */
+    GITHUB_RELEASE(Icons.Rounded.NewReleases),
 }

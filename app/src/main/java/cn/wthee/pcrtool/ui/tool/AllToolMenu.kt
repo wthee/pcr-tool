@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,7 +36,6 @@ data class ToolMenuGroup(
  * 全部工具
  * TODO 添加到首页
  */
-@ExperimentalMaterialApi
 @Composable
 fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
 
@@ -105,7 +103,6 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
 /**
  * 菜单组
  */
-@ExperimentalMaterialApi
 @Composable
 private fun MenuGroup(
     coroutineScope: CoroutineScope,
@@ -180,7 +177,6 @@ private fun MenuGroup(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,

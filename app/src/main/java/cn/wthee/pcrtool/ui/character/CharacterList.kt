@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -8,25 +8,33 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -50,9 +58,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色列表
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CharacterList(
     scrollState: LazyGridState,
@@ -104,7 +110,7 @@ fun CharacterList(
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive((Dimen.iconSize + Dimen.largePadding * 2) * 2),
+                    columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
@@ -113,7 +119,6 @@ fun CharacterList(
                             character = it,
                             loved = filter.value!!.starIds.contains(it.id),
                             modifier = Modifier.padding(Dimen.mediumPadding),
-                            isLargerCard = false
                         ) {
                             toDetail(it.id)
                         }
@@ -177,23 +182,64 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
     loved: Boolean,
     modifier: Modifier = Modifier,
-    isLargerCard: Boolean,
     onClick: () -> Unit
 ) {
-    val str =
-        character.getFixedAge() + "  " + character.getFixedHeight() + "CM" + "  " + character.getFixedWeight() + "KG"
+    //图片是否加载成功
+    var loadSuccess by remember {
+        mutableStateOf(false)
+    }
+    //位置信息
+    var positionText = ""
+    val pos = when (character.position) {
+        in 1..299 -> stringResource(id = R.string.position_0)
+        in 300..599 -> stringResource(id = R.string.position_1)
+        in 600..9999 -> stringResource(id = R.string.position_2)
+        else -> Constants.UNKNOWN
+    }
+    if (pos != Constants.UNKNOWN) {
+        positionText = "$pos ${character.position}"
+    }
+    //获取方式
+    val limitColor: Color
+    val limitType: String
+    when (character.isLimited) {
+        1 -> {
+            if (character.rarity == 1) {
+                limitType = stringResource(id = R.string.type_event_limit)
+                limitColor = colorResource(id = R.color.color_rank_21_23)
+            } else {
+                limitType = stringResource(id = R.string.type_limit)
+                limitColor = colorResource(id = R.color.color_rank_18_20)
+            }
+        }
+        else -> {
+            limitType = stringResource(id = R.string.type_normal)
+            limitColor = colorResource(id = R.color.color_rank_7_10)
+        }
+    }
+    //主色
+    val initColor = MaterialTheme.colorScheme.onPrimary
+    var cardMainColor by remember {
+        mutableStateOf(initColor)
+    }
+    //主要字体颜色
+    val textColor = if (loadSuccess) {
+        MaterialTheme.colorScheme.onPrimary
+    } else {
+        MaterialTheme.colorScheme.onBackground
+    }
 
     MainCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.height(IntrinsicSize.Min)) {
             //图片
             ImageCompose(
                 data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
@@ -202,97 +248,192 @@ fun CharacterItem(
                 errorId = R.drawable.error,
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.heightIn(max = getItemWidth())
-            )
+            ) { successData ->
+                loadSuccess = true
+                //取色
+                Palette.from(successData.result.drawable.toBitmap()).generate { palette ->
+                    palette?.let {
+                        cardMainColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
+                    }
+                }
+            }
 
-            Row(
-                modifier = Modifier.padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //位置图标
-                PositionIcon(
-                    position = character.position,
-                    size = Dimen.smallIconSize
-                )
-                //名称
-                Subtitle1(
-                    text = if (isLargerCard) character.name else character.getNameF(),
-                    color = if (loved) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                    selectable = true,
-                    maxLines = if (isLargerCard) Int.MAX_VALUE else 1,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
+            if (loved) {
+                IconCompose(
+                    data = MainIconType.LOVE_FILL,
+                    size = Dimen.fabIconSize,
+                    modifier = Modifier.padding(Dimen.mediumPadding)
                 )
             }
 
-
-            Row(
-                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //获取方式
-                CharacterLimitText(
-                    characterInfo = character,
-                    modifier = Modifier.padding(end = Dimen.smallPadding)
-                )
-                //攻击
-                Subtitle2(
-                    modifier = Modifier.padding(end = Dimen.smallPadding),
-                    text = character.getAtkType(),
-                    color = getAtkColor(atkType = character.atkType)
-                )
-                //位置
-                CharacterPositionText(position = character.position, showText = true)
-            }
-
-            Row(
-                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
+            //名称
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.mediumPadding)
+                    .fillMaxWidth(1f - RATIO_SHAPE)
+                    .align(Alignment.BottomStart),
             ) {
                 Text(
-                    text = str,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Visible
+                    text = character.getNameF(),
+                    color = textColor,
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold
                 )
-                if (isLargerCard) {
-                    Box(
-                        modifier = Modifier
-                            .padding(bottom = Dimen.mediumPadding)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Subtitle2(text = character.startTime.formatTime)
-                    }
-                }
             }
-            if (!isLargerCard) {
-                Row(
+
+            //其它信息
+            SlideRTLAnimation(
+                visible = loadSuccess,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                //年龄等
+                Column(
                     modifier = Modifier
-                        .padding(
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding,
-                            bottom = Dimen.mediumPadding,
-                            top = Dimen.smallPadding
-                        )
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxWidth(RATIO_SHAPE)
+                        .fillMaxHeight()
+                        .clip(TrapezoidShape)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    cardMainColor,
+                                    cardMainColor,
+                                )
+                            ),
+                            alpha = 0.6f
+                        ),
+                    horizontalAlignment = Alignment.End,
                 ) {
-                    if (loved) {
-                        IconCompose(data = MainIconType.LOVE_FILL, size = Dimen.smallIconSize)
+                    Column(
+                        modifier = Modifier.padding(
+                            horizontal = Dimen.mediumPadding,
+                            vertical = Dimen.smallPadding
+                        ),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        //年龄
+                        Subtitle2(
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            text = character.getFixedAge(),
+                            fontWeight = FontWeight.Bold,
+                            color = initColor
+                        )
+                        //体重
+                        Subtitle2(
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            text = character.getFixedWeight() + "KG",
+                            fontWeight = FontWeight.Bold,
+                            color = initColor
+                        )
+                        //身高
+                        Subtitle2(
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            text = character.getFixedHeight() + "CM",
+                            fontWeight = FontWeight.Bold,
+                            color = initColor
+                        )
                     }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Subtitle2(text = character.startTime.formatTime)
+
+                    //分隔线
+//                    Spacer(
+//                        modifier = modifier
+//                            .padding(vertical = Dimen.smallPadding)
+//                            .width(Dimen.cardDivWidth)
+//                            .height(Dimen.divLineHeight)
+//                            .background(initColor)
+//                    )
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Row {
+                            //获取方式
+                            CharacterTag(
+                                modifier = Modifier.padding(end = Dimen.mediumPadding),
+                                text = limitType,
+                                backgroundColor = limitColor,
+                                textColor = initColor
+                            )
+                            //攻击
+                            CharacterTag(
+                                modifier = Modifier.padding(end = Dimen.mediumPadding),
+                                text = character.getAtkType(),
+                                backgroundColor = getAtkColor(atkType = character.atkType),
+                                textColor = initColor
+                            )
+                        }
+
+                        //位置
+                        Row(
+                            modifier = Modifier.padding(
+                                top = Dimen.mediumPadding,
+                                end = Dimen.mediumPadding
+                            ),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            //位置图标
+                            PositionIcon(
+                                position = character.position,
+                                size = Dimen.smallIconSize
+                            )
+                            //位置
+                            CharacterTag(
+                                modifier = Modifier.padding(start = Dimen.smallPadding),
+                                text = positionText,
+                                backgroundColor = getPositionColor(character.position),
+                                textColor = initColor
+                            )
+                        }
+                    }
+
+                    //最近登场日期
+                    CaptionText(
+                        text = character.startTime.formatTime,
+                        color = initColor,
+                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    )
+
                 }
             }
+
         }
+
+    }
+}
+
+/**
+ * 角色属性标签
+ */
+@Composable
+private fun CharacterTag(
+    modifier: Modifier = Modifier,
+    text: String,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
+            .padding(horizontal = Dimen.mediumPadding),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = textColor,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
 
 /**
  * 角色筛选
  */
-@ExperimentalComposeUiApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,

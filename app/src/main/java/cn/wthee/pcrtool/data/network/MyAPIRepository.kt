@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.UMengLogUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -49,7 +49,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 MainScope().launch {
-                    UMengLogUtil.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
+                    LogReportUtil.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
                 }
             }
         }
@@ -81,7 +81,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
             }
         }
         return error()
@@ -109,33 +109,11 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
             }
         }
         return error()
     }
-
-    /**
-     * 最新公告
-     */
-    suspend fun getNewsOverview(): ResponseData<List<NewsTable>> {
-        //请求
-        try {
-            val response = service.getNewsOverview()
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
-            }
-        }
-        return error()
-    }
-
 
     /**
      * 最新公告
@@ -156,7 +134,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
             }
         }
         return error()
@@ -184,7 +162,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
             }
         }
         return error()
@@ -205,7 +183,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet")
             }
         }
         return error()
@@ -226,46 +204,26 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "leader")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "leader")
             }
         }
         return error()
     }
 
     /**
-     * 获取通知信息
+     * 获取应用更新通知详情
      */
-    suspend fun getNotice(): ResponseData<List<AppNotice>> {
-        //请求
-        try {
-            val response = service.getAppNotice()
-            if (response.message == "failure" || response.data == null) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "notice")
-            }
-        }
-        return error()
-    }
-
-    /**
-     * 获取应用更新通知信息
-     */
-    suspend fun getAppUpdateNotice(): ResponseData<Boolean> {
+    suspend fun getUpdateContent(): ResponseData<AppNotice> {
         //请求
         try {
             //接口参数
             val json = JsonObject()
-            json.addProperty("version", BuildConfig.VERSION_CODE)
+            //测试版本显示更新布局
+            json.addProperty("version",if(BuildConfig.DEBUG) 1 else  BuildConfig.VERSION_CODE)
             val body =
                 json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 
-            val response = service.toUpdate(body)
+            val response = service.getUpdateContent(body)
             if (response.message == "failure" || response.data == null) {
                 return error()
             }
@@ -274,12 +232,11 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()
     }
-
 
     /**
      * 查询额外装备掉落信息
@@ -302,7 +259,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()
@@ -331,7 +288,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()

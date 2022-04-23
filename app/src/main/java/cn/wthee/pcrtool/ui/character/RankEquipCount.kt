@@ -1,12 +1,14 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,8 +42,7 @@ import kotlinx.coroutines.launch
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
@@ -142,13 +143,11 @@ fun RankEquipCount(
                     }
                 }
                 //装备素材列表
-                Card(
+                MainCard(
                     shape = CardTopShape,
-                    elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxSize(),
-                    backgroundColor = MaterialTheme.colorScheme.surface
+                        .fillMaxSize()
                 ) {
                     filter.value?.let { filterValue ->
                         filterValue.starIds =
@@ -216,7 +215,6 @@ private fun EquipCountItem(
     }
 }
 
-@ExperimentalFoundationApi
 @Preview
 @Composable
 private fun EquipCountItemPreview() {

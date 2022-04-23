@@ -32,7 +32,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import java.util.*

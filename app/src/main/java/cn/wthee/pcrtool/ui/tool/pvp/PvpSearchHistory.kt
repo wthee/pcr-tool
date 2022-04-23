@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,8 +29,6 @@ import kotlinx.coroutines.launch
 /**
  * 搜索历史
  */
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
     historyListState: LazyGridState,
@@ -75,7 +71,6 @@ fun PvpSearchHistory(
 /**
  * 搜索历史项
  */
-@ExperimentalMaterialApi
 @Composable
 private fun PvpHistoryItem(
     toCharacter: (Int) -> Unit,
