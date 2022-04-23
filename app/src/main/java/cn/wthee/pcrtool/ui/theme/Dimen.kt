@@ -64,5 +64,4 @@ object Dimen {
 
     val skillActionMinHeight = 16.dp
 
-    val cardDivWidth = 24.dp
 }

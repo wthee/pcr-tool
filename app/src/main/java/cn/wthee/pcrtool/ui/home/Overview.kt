@@ -198,6 +198,8 @@ fun Overview(
                 comingSoonGachaList,
                 comingSoonFreeGachaList
             )
+
+            CommonSpacer()
         }
 
         //数据切换功能

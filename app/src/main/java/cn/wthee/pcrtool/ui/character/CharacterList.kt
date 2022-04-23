@@ -266,6 +266,7 @@ fun CharacterItem(
                 )
             }
 
+            //名称
             Column(
                 modifier = Modifier
                     .padding(Dimen.mediumPadding)
@@ -286,6 +287,7 @@ fun CharacterItem(
                 visible = loadSuccess,
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
+                //年龄等
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(RATIO_SHAPE)
@@ -344,7 +346,8 @@ fun CharacterItem(
                     Column(
                         modifier = Modifier
                             .weight(1f),
-                        verticalArrangement = Arrangement.Bottom
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.End
                     ) {
                         Row {
                             //获取方式
@@ -363,8 +366,12 @@ fun CharacterItem(
                             )
                         }
 
+                        //位置
                         Row(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            modifier = Modifier.padding(
+                                top = Dimen.mediumPadding,
+                                end = Dimen.mediumPadding
+                            ),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             //位置图标
@@ -374,7 +381,7 @@ fun CharacterItem(
                             )
                             //位置
                             CharacterTag(
-                                modifier = Modifier.padding(start = Dimen.mediumPadding),
+                                modifier = Modifier.padding(start = Dimen.smallPadding),
                                 text = positionText,
                                 backgroundColor = getPositionColor(character.position),
                                 textColor = initColor
