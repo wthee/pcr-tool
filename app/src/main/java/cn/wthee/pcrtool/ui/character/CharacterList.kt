@@ -114,7 +114,12 @@ fun CharacterList(
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
-                    items(list) {
+                    items(
+                        items = list,
+                        key = {
+                            it.id
+                        }
+                    ) {
                         CharacterItem(
                             character = it,
                             loved = filter.value!!.starIds.contains(it.id),

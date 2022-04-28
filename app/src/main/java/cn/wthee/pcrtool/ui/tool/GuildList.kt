@@ -42,7 +42,12 @@ fun GuildList(
             LazyColumn(
                 state = scrollState
             ) {
-                items(guilds) {
+                items(
+                    items = guilds,
+                    key = {
+                        it.guildId
+                    }
+                ) {
                     GuildItem(it, toCharacterDetail = toCharacterDetail)
                 }
                 item {

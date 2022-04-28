@@ -40,7 +40,12 @@ fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hi
                         data = ImageResourceHelper.getInstance().getMaxIconUrl(id)
                     )
                 }
-                items(value) {
+                items(
+                    items = value,
+                    key = {
+                        it.storyId
+                    }
+                ) {
                     StoryDetailItem(it)
                 }
             }

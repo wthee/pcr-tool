@@ -85,7 +85,12 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface), state = scrollState
     ) {
-        items(list) {
+        items(
+            items = list,
+            key = {
+                it.title
+            }
+        ) {
             MenuGroup(
                 coroutineScope = coroutineScope,
                 actions = actions,

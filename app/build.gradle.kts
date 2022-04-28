@@ -115,6 +115,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.0.4")
 
     //compose
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")

@@ -65,7 +65,12 @@ fun AllSkillList(
     ) {
         skills.value?.let { skillValue ->
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(skillValue) {
+                items(
+                    items = skillValue,
+                    key = {
+                        it.skillId
+                    }
+                ) {
                     if (type.value == 0 || (type.value == 1 && it.skillId > 3000000)) {
                         var error = false
                         it.getActionInfo().forEach { action ->

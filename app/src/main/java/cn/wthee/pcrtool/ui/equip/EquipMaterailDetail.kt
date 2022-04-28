@@ -173,11 +173,20 @@ fun EquipMaterialDeatil(
                         ) { pagerIndex ->
                             LazyColumn(modifier = Modifier.fillMaxSize()) {
                                 items(
-                                    when (tabs[pagerIndex]) {
+                                    items = when (tabs[pagerIndex]) {
                                         "Normal" -> lists[0]
                                         "Hard" -> lists[1]
                                         "Very Hard" -> lists[2]
                                         else -> lists[3]
+                                    },
+                                    key = {
+                                        if (tabs[pagerIndex] != randomDrop) {
+                                            (it as EquipmentDropInfo)
+                                            it.questId
+                                        } else {
+                                            it as RandomEquipDropArea
+                                            it.area
+                                        }
                                     }
                                 ) {
                                     if (tabs[pagerIndex] != randomDrop) {

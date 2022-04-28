@@ -87,7 +87,12 @@ fun LeaderboardList(
                 LazyColumn(
                     state = scrollState
                 ) {
-                    items(leaderData.leader) {
+                    items(
+                        items = leaderData.leader,
+                        key = {
+                            it.url
+                        }
+                    ) {
                         LeaderboardItem(it)
                     }
                     item {

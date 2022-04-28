@@ -45,7 +45,12 @@ fun GachaList(
             LazyColumn(
                 state = scrollState
             ) {
-                items(gachas) {
+                items(
+                    items = gachas,
+                    key = {
+                        it.gachaId
+                    }
+                ) {
                     GachaItem(it, toCharacterDetail)
                 }
                 item {

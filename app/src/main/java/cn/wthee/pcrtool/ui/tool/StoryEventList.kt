@@ -53,7 +53,12 @@ fun StoryEventList(
                 state = scrollState,
                 columns = GridCells.Adaptive(getItemWidth())
             ) {
-                items(events) {
+                items(
+                    items = events,
+                    key = {
+                        it.eventId
+                    }
+                ) {
                     StoryEventItem(it, toCharacterDetail, toAllPics)
                 }
                 item {

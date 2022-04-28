@@ -269,7 +269,12 @@ private fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewMo
         state = rememberLazyGridState(),
         columns = GridCells.Adaptive(getItemWidth())
     ) {
-        items(historyData) {
+        items(
+            items = historyData,
+            key = {
+                it.gachaId
+            }
+        ) {
             MockGachaHistoryItem(it)
         }
         item {
@@ -477,7 +482,12 @@ private fun MockGachaResultRecordList(
                 state = rememberLazyGridState(),
                 columns = GridCells.Adaptive(getItemWidth())
             ) {
-                itemsIndexed(resultRecordList) { index, resultRecord ->
+                itemsIndexed(
+                    items = resultRecordList,
+                    key = { _, it ->
+                        it.gachaId
+                    }
+                ) { index, resultRecord ->
                     MockGachaResultRecordItem(
                         resultRecordList.size - index,
                         pickUpUnitIds,

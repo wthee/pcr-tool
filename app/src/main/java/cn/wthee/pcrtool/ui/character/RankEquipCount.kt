@@ -159,7 +159,12 @@ fun RankEquipCount(
                                 columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
                                 contentPadding = PaddingValues(Dimen.mediumPadding)
                             ) {
-                                items(items = rankEquipMaterials) { item ->
+                                items(
+                                    items = rankEquipMaterials,
+                                    key = {
+                                        it.id
+                                    }
+                                ) { item ->
                                     EquipCountItem(item, filterValue, toEquipMaterial)
                                 }
                                 items(5) {

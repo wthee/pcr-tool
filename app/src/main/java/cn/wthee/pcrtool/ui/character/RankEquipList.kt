@@ -42,7 +42,12 @@ fun RankEquipList(
         columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {
-        items(allRankEquip) {
+        items(
+            items = allRankEquip,
+            key = {
+                it.unitId
+            }
+        ) {
             RankEquipListItem(it, selectedRank, toEquipDetail)
         }
         items(2) {

@@ -49,7 +49,12 @@ fun PvpFavorites(
                 state = favoritesListState,
                 columns = GridCells.Adaptive(itemWidth)
             ) {
-                items(list.value!!) { data ->
+                items(
+                    items = list.value!!,
+                    key = {
+                        it.id
+                    }
+                ) { data ->
                     PvpFavoriteItem(
                         toCharacter,
                         region,

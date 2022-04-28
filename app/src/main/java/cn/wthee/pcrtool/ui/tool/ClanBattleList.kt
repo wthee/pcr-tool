@@ -68,7 +68,12 @@ fun ClanBattleList(
                 state = scrollState,
                 columns = GridCells.Adaptive(getItemWidth())
             ) {
-                items(clanList) {
+                items(
+                    items = clanList,
+                    key = {
+                        it.clan_battle_id
+                    }
+                ) {
                     ClanBattleItem(it, toClanBossInfo)
                 }
                 item {

@@ -343,45 +343,48 @@ private fun CalendarEventSection(
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
 ) {
-    Section(
-        titleId = if (calendarType == 1) R.string.tool_calendar else R.string.tool_calendar_comming,
-        iconType = if (calendarType == 1) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-        rightIconType = if (confirmState.value == calendarType) MainIconType.CLOSE else MainIconType.MAIN,
-        onClick = {
-            //弹窗确认
-            if (confirmState.value == calendarType) {
-                confirmState.value = 0
-            } else {
-                confirmState.value = calendarType
+    if (eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()) {
+        Section(
+            titleId = if (calendarType == 1) R.string.tool_calendar else R.string.tool_calendar_comming,
+            iconType = if (calendarType == 1) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
+            rightIconType = if (confirmState.value == calendarType) MainIconType.CLOSE else MainIconType.MAIN,
+            onClick = {
+                //弹窗确认
+                if (confirmState.value == calendarType) {
+                    confirmState.value = 0
+                } else {
+                    confirmState.value = calendarType
+                }
             }
-        }
-    ) {
-        ExpandAnimation(visible = confirmState.value == calendarType) {
-            CalendarEventOperation(
-                confirmState,
-                eventList,
-                storyEventList,
-                gachaList
-            )
-        }
-        VerticalGrid(
-            spanCount = spanCount,
-            modifier = Modifier.padding(top = Dimen.mediumPadding)
         ) {
-            gachaList.forEach {
-                GachaItem(it, actions.toCharacterDetail)
+            ExpandAnimation(visible = confirmState.value == calendarType) {
+                CalendarEventOperation(
+                    confirmState,
+                    eventList,
+                    storyEventList,
+                    gachaList
+                )
             }
-            storyEventList.forEach {
-                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
-            }
-            eventList.forEach {
-                CalendarEventItem(it)
-            }
-            freeGachaList.forEach {
-                FreeGachaItem(it)
+            VerticalGrid(
+                spanCount = spanCount,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
+            ) {
+                gachaList.forEach {
+                    GachaItem(it, actions.toCharacterDetail)
+                }
+                storyEventList.forEach {
+                    StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                }
+                eventList.forEach {
+                    CalendarEventItem(it)
+                }
+                freeGachaList.forEach {
+                    FreeGachaItem(it)
+                }
             }
         }
     }
+
 }
 
 /**

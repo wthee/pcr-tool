@@ -206,7 +206,12 @@ private fun SelectPager(
             end = Dimen.largePadding
         )
     ) {
-        items(comic) {
+        items(
+            items = comic,
+            key = {
+                it.id
+            }
+        ) {
             TocItem(selectIndex, comic.size - it.id, it)
         }
         item {
