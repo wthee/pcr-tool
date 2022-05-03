@@ -484,9 +484,6 @@ private fun MockGachaResultRecordList(
             ) {
                 itemsIndexed(
                     items = resultRecordList,
-                    key = { _, it ->
-                        it.gachaId
-                    }
                 ) { index, resultRecord ->
                     MockGachaResultRecordItem(
                         resultRecordList.size - index,

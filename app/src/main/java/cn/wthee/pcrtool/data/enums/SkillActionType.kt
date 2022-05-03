@@ -420,6 +420,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 95：隐匿
      */
     HIDE(95, "隐匿"),
+
+    /**
+     * 96：范围tp回复
+     */
+    TP_FIELD(96, ""),
 }
 
 /**
