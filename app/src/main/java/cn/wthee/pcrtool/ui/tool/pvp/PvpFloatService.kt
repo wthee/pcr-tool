@@ -1,6 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
@@ -9,14 +12,18 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
+
+const val ACTION_FINISH = "pvp_service_finish"
 
 @Suppress("DEPRECATION")
 class PvpFloatService : LifecycleService() {
@@ -36,6 +43,16 @@ class PvpFloatService : LifecycleService() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //前台通知
+            val finishIntent = Intent(this, FinishReceiver::class.java)
+            finishIntent.action = ACTION_FINISH
+            val finishPendingIntent =
+                PendingIntent.getBroadcast(
+                    this,
+                    0,
+                    finishIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
             val notificationManager: NotificationManager =
                 MyApplication.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             val notice = NotificationUtil.createNotice(
@@ -44,7 +61,12 @@ class PvpFloatService : LifecycleService() {
                 "竞技场查询服务",
                 Constants.PVPSEARCH_NOTICE_TITLE,
                 notificationManager
-            ).build()
+            )
+                .addAction(
+                    NotificationCompat.Action(R.drawable.unknown_gray, "关闭应用", finishPendingIntent)
+                )
+                .build()
+
             startForeground(1, notice)
         }
         //初始化加载
@@ -54,7 +76,6 @@ class PvpFloatService : LifecycleService() {
 
     override fun onDestroy() {
         try {
-            navViewModel.floatServiceRun.postValue(false)
             windowManager.removeView(floatRootView)
         } catch (e: Exception) {
 
@@ -69,8 +90,7 @@ class PvpFloatService : LifecycleService() {
             navViewModel.apply {
                 floatServiceRun.observe(this@PvpFloatService) {
                     if (it == false) {
-                        windowManager.removeView(floatRootView)
-                        this@PvpFloatService.stopSelf()
+                        activity?.finish()
                     }
                 }
                 floatSearchMin.observe(this@PvpFloatService) {
@@ -123,6 +143,24 @@ class PvpFloatService : LifecycleService() {
         gravity = Gravity.START or Gravity.TOP
         x = 0
         y = 0
+    }
+
+
+    /**
+     * 结束应用
+     */
+    class FinishReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let {
+                when (it.action) {
+                    ACTION_FINISH -> {
+                        ActivityHelper.instance.currentActivity?.finish()
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 }
 

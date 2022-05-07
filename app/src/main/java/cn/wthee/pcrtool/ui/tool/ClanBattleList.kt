@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -368,7 +369,7 @@ private fun ClanBossInfoPagerItem(
             }
             DivCompose(Modifier.align(Alignment.CenterHorizontally))
             //技能
-            BossSkillList(pagerIndex, bossDataList, 2, toSummonDetail)
+            BossSkillList(pagerIndex, bossDataList, UnitType.ENEMY, toSummonDetail)
             CommonSpacer()
         }
     }
@@ -380,7 +381,7 @@ private fun ClanBossInfoPagerItem(
 fun BossSkillList(
     index: Int,
     bossList: List<EnemyParameterPro>,
-    unitType: Int,
+    unitType: UnitType,
     toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {

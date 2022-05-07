@@ -15,11 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
-import kotlinx.coroutines.launch
 
 //权限
 val permissions = arrayOf(
@@ -27,23 +27,26 @@ val permissions = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE,
 )
 
+//缓存
+val loadedPicMap = hashMapOf<String, Drawable?>()
+
+
 /**
  * 角色所有卡面/剧情故事图片
- * type 0: 角色 1：剧情活动
  */
 @Composable
-fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel()) {
+fun AllPics(id: Int, allPicsType: AllPicsType, picsViewModel: AllPicsViewModel = hiltViewModel()) {
     val context = LocalContext.current
     //角色卡面
-    val basicUrls = if (type == 0) {
+    val basicUrls = if (allPicsType == AllPicsType.CHARACTER) {
         picsViewModel.getUniCardList(id).collectAsState(initial = arrayListOf()).value
     } else {
         arrayListOf()
     }
     //剧情活动
-    val storyUrls = picsViewModel.getStoryList(id, type).collectAsState(initial = null).value
+    val storyUrls =
+        picsViewModel.getStoryList(id, allPicsType.type).collectAsState(initial = null).value
 
-    val loadedPicMap = hashMapOf<String, Drawable?>()
     val checkedPicUrl = remember {
         mutableStateOf("")
     }
@@ -58,7 +61,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            if (type == 0) {
+            if (allPicsType == AllPicsType.CHARACTER) {
                 Row(
                     modifier = Modifier
                         .padding(
@@ -75,8 +78,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 }
                 PicGridList(
                     checkedPicUrl = checkedPicUrl,
-                    urls = basicUrls,
-                    loadedPicMap = loadedPicMap
+                    urls = basicUrls
                 )
             }
             Row(
@@ -111,8 +113,7 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
                 } else {
                     PicGridList(
                         checkedPicUrl = checkedPicUrl,
-                        urls = storyUrls,
-                        loadedPicMap = loadedPicMap
+                        urls = storyUrls
                     )
                 }
             }
@@ -159,23 +160,14 @@ fun AllPics(id: Int, type: Int, picsViewModel: AllPicsViewModel = hiltViewModel(
 @Composable
 private fun PicGridList(
     checkedPicUrl: MutableState<String>,
-    urls: ArrayList<String>,
-    loadedPicMap: MutableMap<String, Drawable?>
+    urls: ArrayList<String>
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
     VerticalGrid(spanCount = spanCount) {
         urls.forEach { picUrl ->
-            val request = coil.request.ImageRequest.Builder(context)
-                .data(picUrl)
-                .build()
-            coroutineScope.launch {
-                val image = coil.Coil.imageLoader(context).execute(request).drawable
-                loadedPicMap[picUrl] = image
-            }
             MainCard(
                 modifier = Modifier
                     .padding(Dimen.largePadding),
@@ -197,7 +189,9 @@ private fun PicGridList(
                     data = picUrl,
                     loadingId = R.drawable.load,
                     errorId = R.drawable.error
-                )
+                ) {
+                    loadedPicMap[picUrl] = it.result.drawable
+                }
             }
         }
     }

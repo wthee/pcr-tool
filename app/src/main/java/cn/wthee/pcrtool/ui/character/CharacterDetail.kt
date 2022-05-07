@@ -33,7 +33,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -131,7 +133,7 @@ fun CharacterDetail(
                 loopData,
                 iconTypes,
                 Modifier.padding(Dimen.largePadding),
-                unitType = 0
+                unitType = UnitType.CHARACTER
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
@@ -359,7 +361,7 @@ fun CharacterDetail(
                                 allData.sumAttr.atk.int,
                                 allData.sumAttr.magicStr.int
                             ),
-                            unitType = 0,
+                            unitType = UnitType.CHARACTER,
                             toSummonDetail = actions.toSummonDetail
                         )
                         CommonSpacer()
@@ -481,7 +483,7 @@ private fun CharacterCard(
                 .padding(Dimen.largePadding)
                 .width(getItemWidth())
         ) {
-            actions.toAllPics(unitId, 0)
+            actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
         }
     }
 }

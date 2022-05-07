@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getRegion
@@ -105,28 +106,36 @@ fun Overview(
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
     //进行中掉落活动
     val inProgressEventList =
-        overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCalendarEventList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中剧情活动
     val inProgressStoryEventList =
-        overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getStoryEventList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中卡池
     val inProgressGachaList =
-        overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getGachaList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中免费十连
     val inProgressFreeGachaList =
-        overviewViewModel.getFreeGachaList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //预告掉落活动
     val comingSoonEventList =
-        overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCalendarEventList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告剧情活动
     val comingSoonStoryEventList =
-        overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getStoryEventList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告卡池
     val comingSoonGachaList =
-        overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getGachaList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告免费十连
     val comingSoonFreeGachaList =
-        overviewViewModel.getFreeGachaList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -177,7 +186,7 @@ fun Overview(
 
             //进行中
             CalendarEventSection(
-                1,
+                EventType.IN_PROGRESS,
                 confirmState,
                 spanCount,
                 actions,
@@ -189,7 +198,7 @@ fun Overview(
 
             //活动预告
             CalendarEventSection(
-                2,
+                EventType.COMING_SOON,
                 confirmState,
                 spanCount,
                 actions,
@@ -334,7 +343,7 @@ private fun EquipSection(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun CalendarEventSection(
-    calendarType: Int,
+    calendarType: EventType,
     confirmState: MutableState<Int>,
     spanCount: Int,
     actions: NavActions,
@@ -345,19 +354,19 @@ private fun CalendarEventSection(
 ) {
     if (eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()) {
         Section(
-            titleId = if (calendarType == 1) R.string.tool_calendar else R.string.tool_calendar_comming,
-            iconType = if (calendarType == 1) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-            rightIconType = if (confirmState.value == calendarType) MainIconType.CLOSE else MainIconType.MAIN,
+            titleId = if (calendarType == EventType.IN_PROGRESS) R.string.tool_calendar else R.string.tool_calendar_comming,
+            iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
+            rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
             onClick = {
                 //弹窗确认
-                if (confirmState.value == calendarType) {
+                if (confirmState.value == calendarType.type) {
                     confirmState.value = 0
                 } else {
-                    confirmState.value = calendarType
+                    confirmState.value = calendarType.type
                 }
             }
         ) {
-            ExpandAnimation(visible = confirmState.value == calendarType) {
+            ExpandAnimation(visible = confirmState.value == calendarType.type) {
                 CalendarEventOperation(
                     confirmState,
                     eventList,

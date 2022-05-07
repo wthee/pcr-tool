@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -96,11 +97,11 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when (type) {
-        "PICK UP" -> colorResource(id = R.color.color_rank_18_20)
-        "复刻" -> colorResource(id = R.color.color_rank_7_10)
-        "公主庆典" -> colorResource(id = R.color.color_rank_21_23)
-        "周年" -> colorResource(id = R.color.color_rank_24)
-        else -> MaterialTheme.colorScheme.primary
+        GachaType.PICK_UP -> colorResource(id = R.color.color_rank_18_20)
+        GachaType.RE -> colorResource(id = R.color.color_rank_7_10)
+        GachaType.FES -> colorResource(id = R.color.color_rank_21_23)
+        GachaType.ANNIV -> colorResource(id = R.color.color_rank_24)
+        GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
     }
 
 
@@ -116,7 +117,7 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             MainTitleText(
-                text = type,
+                text = if (type.typeName != "") type.typeName else gachaInfo.fixTypeName(),
                 backgroundColor = color
             )
             MainTitleText(

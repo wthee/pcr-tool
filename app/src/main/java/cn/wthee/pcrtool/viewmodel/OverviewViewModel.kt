@@ -6,6 +6,7 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
@@ -75,16 +76,14 @@ class OverviewViewModel @Inject constructor(
 
     /**
      * 获取卡池列表
-     *
-     * @param type 0：进行中 1：预告
      */
-    fun getGachaList(type: Int) = flow {
+    fun getGachaList(type: EventType) = flow {
         try {
             val regionType = getRegion()
             val today = getToday()
             val data = gachaRepository.getGachaHistory(10)
 
-            if (type == 0) {
+            if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime, regionType)
@@ -104,16 +103,14 @@ class OverviewViewModel @Inject constructor(
 
     /**
      * 获取活动列表
-     *
-     * @param type 0：进行中 1：预告
      */
-    fun getCalendarEventList(type: Int) = flow {
+    fun getCalendarEventList(type: EventType) = flow {
         try {
             val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
 
-            if (type == 0) {
+            if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime, regionType)
@@ -134,16 +131,14 @@ class OverviewViewModel @Inject constructor(
 
     /**
      * 获取剧情活动列表
-     *
-     * @param type 0：进行中 1：预告
      */
-    fun getStoryEventList(type: Int) = flow {
+    fun getStoryEventList(type: EventType) = flow {
         try {
             val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getAllEvents(10)
 
-            if (type == 0) {
+            if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime, regionType)
@@ -192,15 +187,14 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取免费十连卡池列表
      *
-     * @param type 0：进行中 1：预告
      */
-    fun getFreeGachaList(type: Int) = flow {
+    fun getFreeGachaList(type: EventType) = flow {
         try {
             val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getFreeGachaEvent(1)
 
-            if (type == 0) {
+            if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {
                     isInProgress(today, it.startTime, it.endTime, regionType)
                 })

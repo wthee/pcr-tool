@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -83,7 +84,7 @@ fun AllSkillList(
                             SkillItem(
                                 1,
                                 skillDetail = it,
-                                unitType = 0,
+                                unitType = UnitType.CHARACTER,
                                 toSummonDetail = toSummonDetail
                             )
                         }

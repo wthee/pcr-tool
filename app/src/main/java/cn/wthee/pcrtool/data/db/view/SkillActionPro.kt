@@ -421,7 +421,7 @@ data class SkillActionPro(
                     9 -> "BREAK 时 [${action_value_1.toInt()}%] 的概率${getTimeText(3, action_value_3)}"
                     10 -> "受到持续伤害时 [${action_value_1.toInt()}%] 概率"
                     11 -> "所有部位 BREAK"
-                    else -> "未知"
+                    else -> UNKNOWN
                 }
                 "条件：$expr"
             }

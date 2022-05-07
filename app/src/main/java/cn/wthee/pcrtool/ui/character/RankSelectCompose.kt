@@ -16,7 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.ChipGroupType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.ChipGroup
@@ -31,7 +33,6 @@ import kotlinx.coroutines.launch
  * @param rank0 当前rank
  * @param rank1 目标rank
  * @param maxRank rank最大值
- * @param type 0：默认，1：限制（当前[rank0] <= 目标[rank1]）
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -42,7 +43,7 @@ fun RankSelectCompose(
     coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
     navViewModel: NavViewModel,
-    type: Int = 0
+    type: RankSelectType = RankSelectType.DEFAULT
 ) {
     val rankList = arrayListOf<Int>()
     for (i in maxRank downTo 1) {
@@ -76,7 +77,7 @@ fun RankSelectCompose(
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             rank0.value = maxRank - selectIndex0.value
             rank1.value = maxRank - selectIndex1.value
-            if (type == 0) {
+            if (type == RankSelectType.DEFAULT) {
                 navViewModel.curRank.postValue(maxRank - selectIndex0.value)
                 navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
             } else {
@@ -88,7 +89,7 @@ fun RankSelectCompose(
         MainText(text = stringResource(id = R.string.cur_rank))
         RankSelectItem(selectIndex = selectIndex0, rankList = rankList)
         MainText(text = stringResource(id = R.string.target_rank))
-        if (type == 1) {
+        if (type == RankSelectType.LIMIT) {
             //只可选择比当前大的值
             val newRankList = arrayListOf<Int>()
             for (i in maxRank downTo maxRank - selectIndex0.value) {
@@ -112,7 +113,7 @@ fun RankSelectItem(selectIndex: MutableState<Int>, rankList: List<Int>) {
         rankList.forEachIndexed { index, i ->
             chipData.add(ChipData(index, rankFillBlank(i)))
         }
-        ChipGroup(chipData, selectIndex, type = 1)
+        ChipGroup(chipData, selectIndex, type = ChipGroupType.RANK)
     }
 }
 

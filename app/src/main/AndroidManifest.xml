@@ -20,6 +20,7 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:configChanges="orientation|screenSize"
+        android:hasFragileUserData="true"
         android:icon="${icon}"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_config"
@@ -27,7 +28,7 @@
         android:roundIcon="${icon}"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pcrtoolcompose"
-        tools:targetApi="n">
+        tools:targetApi="q">
         <service
             android:name=".ui.tool.pvp.PvpFloatService"
             android:exported="false" />
@@ -44,6 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".ui.tool.pvp.PvpFloatService$FinishReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="pvp_service_finish" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name="androidx.startup.InitializationProvider"

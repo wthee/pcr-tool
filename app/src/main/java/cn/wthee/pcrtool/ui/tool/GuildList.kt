@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.data.model.GuildAllMember
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -96,16 +97,18 @@ private fun GuildItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //内容
-                MainContentText(
-                    text = guild.desc,
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    ),
-                    textAlign = TextAlign.Start
-                )
-                //图标/描述
+                if (guild.desc != Constants.UNKNOWN) {
+                    MainContentText(
+                        text = guild.desc,
+                        modifier = Modifier.padding(
+                            top = Dimen.mediumPadding,
+                            start = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding
+                        ),
+                        textAlign = TextAlign.Start
+                    )
+                }
+                //角色图标列表
                 GridIconListCompose(
                     icons = guild.memberIds,
                     onClickItem = toCharacterDetail
