@@ -6,6 +6,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -138,77 +139,95 @@ fun Overview(
             .collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            TopBarCompose(actions, noticeViewModel)
+        LazyColumn(state = scrollState) {
+            item {
+                TopBarCompose(actions, noticeViewModel)
+            }
+
             //角色
-            CharacterSection(actions)
+            item {
+                CharacterSection(actions)
+            }
 
             //装备
-            EquipSection(actions)
+            item {
+                EquipSection(actions)
+            }
 
             //更多功能
-            Section(
-                titleId = R.string.function,
-                iconType = MainIconType.FUNCTION,
-                onClick = {
-                    actions.toToolMore()
+            item {
+                Section(
+                    titleId = R.string.function,
+                    iconType = MainIconType.FUNCTION,
+                    onClick = {
+                        actions.toToolMore()
+                    }
+                ) {
+                    ToolMenu(actions = actions)
                 }
-            ) {
-                ToolMenu(actions = actions)
             }
 
             //新闻
-            Section(
-                titleId = R.string.tool_news,
-                iconType = MainIconType.NEWS,
-                onClick = {
-                    actions.toNews()
-                }
-            ) {
-                Column {
-                    if (newsList.isNotEmpty()) {
-                        newsList.forEach {
-                            NewsItem(
-                                news = it,
-                                toDetail = actions.toNewsDetail
-                            )
-                        }
-                    } else {
-                        for (i in 0 until 3) {
-                            NewsItem(
-                                news = NewsTable(),
-                                toDetail = actions.toNewsDetail
-                            )
+            item {
+
+                Section(
+                    titleId = R.string.tool_news,
+                    iconType = MainIconType.NEWS,
+                    onClick = {
+                        actions.toNews()
+                    }
+                ) {
+                    Column {
+                        if (newsList.isNotEmpty()) {
+                            newsList.forEach {
+                                NewsItem(
+                                    news = it,
+                                    toDetail = actions.toNewsDetail
+                                )
+                            }
+                        } else {
+                            for (i in 0 until 3) {
+                                NewsItem(
+                                    news = NewsTable(),
+                                    toDetail = actions.toNewsDetail
+                                )
+                            }
                         }
                     }
                 }
             }
 
             //进行中
-            CalendarEventSection(
-                EventType.IN_PROGRESS,
-                confirmState,
-                spanCount,
-                actions,
-                inProgressEventList,
-                inProgressStoryEventList,
-                inProgressGachaList,
-                inProgressFreeGachaList
-            )
+            item {
+                CalendarEventSection(
+                    EventType.IN_PROGRESS,
+                    confirmState,
+                    spanCount,
+                    actions,
+                    inProgressEventList,
+                    inProgressStoryEventList,
+                    inProgressGachaList,
+                    inProgressFreeGachaList
+                )
+            }
 
             //活动预告
-            CalendarEventSection(
-                EventType.COMING_SOON,
-                confirmState,
-                spanCount,
-                actions,
-                comingSoonEventList,
-                comingSoonStoryEventList,
-                comingSoonGachaList,
-                comingSoonFreeGachaList
-            )
+            item {
+                CalendarEventSection(
+                    EventType.COMING_SOON,
+                    confirmState,
+                    spanCount,
+                    actions,
+                    comingSoonEventList,
+                    comingSoonStoryEventList,
+                    comingSoonGachaList,
+                    comingSoonFreeGachaList
+                )
+            }
 
-            CommonSpacer()
+            item {
+                CommonSpacer()
+            }
         }
 
         //数据切换功能
