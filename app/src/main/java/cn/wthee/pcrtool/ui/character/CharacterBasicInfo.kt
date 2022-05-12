@@ -114,14 +114,18 @@ private fun BasicInfo(info: CharacterInfoPro) {
             text = stringResource(id = R.string.character),
             modifier = Modifier.weight(0.15f)
         )
-        MainContentText(text = info.name, modifier = Modifier.weight(0.85f))
+        MainContentText(text = info.name, modifier = Modifier.weight(0.85f), selectable = true)
     }
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(
             text = stringResource(id = R.string.name),
             modifier = Modifier.weight(0.15f)
         )
-        MainContentText(text = info.actualName, modifier = Modifier.weight(0.85f))
+        MainContentText(
+            text = info.actualName,
+            modifier = Modifier.weight(0.85f),
+            selectable = true
+        )
     }
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.utils.deleteSpace
 
 /**
@@ -24,15 +25,17 @@ data class GachaInfo(
      * 获取卡池类型
      */
     fun getType() = when (gachaName) {
-        "ピックアップガチャ", "精選轉蛋", "限定精選轉蛋" -> "PICK UP"
-        "プライズガチャ", "獎勵轉蛋", "附奖扭蛋" -> "复刻扭蛋"
-        "プリンセスフェス", "公主祭典" -> "公主庆典"
+        "ピックアップガチャ", "精選轉蛋", "限定精選轉蛋" -> GachaType.PICK_UP
+        "プライズガチャ", "獎勵轉蛋", "附奖扭蛋" -> GachaType.RE
+        "プリンセスフェス", "公主祭典" -> GachaType.FES
         else -> {
             if (gachaName.contains("Anniversary") || gachaName.contains("周年")) {
-                "周年"
+                GachaType.ANNIV
             } else {
-                gachaName
+                GachaType.UNKNOWN
             }
         }
-    }.replace("ガチャ", "").replace("扭蛋", "").replace("轉蛋", "")
+    }
+
+    fun fixTypeName() = gachaName.replace("ガチャ", "").replace("扭蛋", "").replace("轉蛋", "")
 }

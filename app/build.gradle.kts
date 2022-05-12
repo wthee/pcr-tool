@@ -5,7 +5,6 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-
 kapt {
     correctErrorTypes = true
 }
@@ -14,18 +13,20 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-alpha08"
-val appVersionCode = 324
-val appVersionName = "3.2.4"
+val composeVersion = "1.2.0-beta01"
+val appVersionCode = 325
+val appVersionName = "3.2.5"
+val appId = "cn.wthee.pcrtool"
 
 android {
 
+    namespace = appId
     compileSdk = 31
     buildToolsVersion = "31.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
-        applicationId = "cn.wthee.pcrtool"
+        applicationId = appId
         minSdk = 23
         targetSdk = 30
         versionCode = appVersionCode
@@ -115,6 +116,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.0.4")
 
     //compose
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
@@ -122,10 +124,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha11")
 
     //Accompanist
-    val accompanistVersion = "0.24.7-alpha"
+    val accompanistVersion = "0.24.8-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -134,7 +136,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0-rc03"
+    val coilVersion = "2.0.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 

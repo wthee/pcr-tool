@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -95,7 +96,15 @@ fun RankEquipCount(
         },
         sheetContent = {
             //RANK 选择
-            RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)
+            RankSelectCompose(
+                rank0,
+                rank1,
+                maxRank,
+                coroutineScope,
+                state,
+                navViewModel,
+                RankSelectType.LIMIT
+            )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
@@ -159,7 +168,12 @@ fun RankEquipCount(
                                 columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
                                 contentPadding = PaddingValues(Dimen.mediumPadding)
                             ) {
-                                items(items = rankEquipMaterials) { item ->
+                                items(
+                                    items = rankEquipMaterials,
+                                    key = {
+                                        it.id
+                                    }
+                                ) { item ->
                                     EquipCountItem(item, filterValue, toEquipMaterial)
                                 }
                                 items(5) {

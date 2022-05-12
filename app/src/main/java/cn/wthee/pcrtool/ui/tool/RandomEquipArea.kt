@@ -49,7 +49,12 @@ fun RandomEquipArea(
                     modifier = Modifier.fillMaxSize(),
                     state = scrollState
                 ) {
-                    items(areaList) {
+                    items(
+                        items = areaList,
+                        key = {
+                            it.area
+                        }
+                    ) {
                         val odds = arrayListOf<EquipmentIdWithOdd>()
                         it.equipIds.intArrayList.forEach { id ->
                             odds.add(EquipmentIdWithOdd(id, 0))

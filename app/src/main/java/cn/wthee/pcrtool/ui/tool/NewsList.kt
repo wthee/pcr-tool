@@ -78,7 +78,12 @@ fun NewsList(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {
             if (news != null && news.itemCount > 0) {
-                items(news) {
+                items(
+                    items = news,
+                    key = {
+                        it.id
+                    }
+                ) {
                     if (it != null) {
                         if (navViewModel.loading.value == true) {
                             navViewModel.loading.postValue(false)

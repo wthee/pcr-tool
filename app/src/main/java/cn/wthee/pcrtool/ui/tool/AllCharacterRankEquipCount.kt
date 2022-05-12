@@ -32,7 +32,12 @@ fun AllCharacterRankEquipCount(
     if (rankEquipMaterials.isNotEmpty()) {
         navViewModel.loading.postValue(false)
         LazyColumn {
-            items(items = rankEquipMaterials) { item ->
+            items(
+                items = rankEquipMaterials,
+                key = {
+                    it.id
+                }
+            ) { item ->
                 EquipCountItem(item, FilterEquipment(), toEquipMaterial)
             }
             items(5) {

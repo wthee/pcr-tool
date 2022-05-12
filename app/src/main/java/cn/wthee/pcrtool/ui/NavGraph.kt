@@ -10,7 +10,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
+import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllPics
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -151,9 +153,10 @@ fun NavGraph(
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
+
             AllPics(
                 arguments.getInt(Navigation.UNIT_ID),
-                arguments.getInt(Navigation.ALL_PICS_TYPE)
+                AllPicsType.getByValue(arguments.getInt(Navigation.ALL_PICS_TYPE))
             )
         }
 
@@ -550,7 +553,7 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             SummonDetail(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                unitType = arguments.getInt(Navigation.UNIT_TYPE),
+                unitType = UnitType.getByValue(arguments.getInt(Navigation.UNIT_TYPE)),
             )
         }
 

@@ -302,15 +302,15 @@ private fun PvpCharacterSelectPage(
 ) {
     val scope = rememberCoroutineScope()
     //选择页面
-    val character0 = arrayListOf(PvpCharacterData(type = 0))
+    val character0 = arrayListOf(PvpCharacterData(unitId = 0, type = 0))
     character0.addAll(data.filter {
         it.position in 0..299
     })
-    val character1 = arrayListOf(PvpCharacterData(type = 1))
+    val character1 = arrayListOf(PvpCharacterData(unitId = 1, type = 1))
     character1.addAll(data.filter {
         it.position in 300..599
     })
-    val character2 = arrayListOf(PvpCharacterData(type = 2))
+    val character2 = arrayListOf(PvpCharacterData(unitId = 2, type = 2))
     character2.addAll(data.filter {
         it.position in 600..9999
     })
@@ -318,9 +318,9 @@ private fun PvpCharacterSelectPage(
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
     //中卫以上填充数
-    positions[1] = getLine(character0)
+    positions[1] = character0.size
     //后卫以上填充数
-    positions[0] = getLine(character0 + character1)
+    positions[0] = (character0 + character1).size
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -331,7 +331,12 @@ private fun PvpCharacterSelectPage(
             state = selectListState,
             verticalArrangement = Arrangement.Center
         ) {
-            items(character0 + character1 + character2) {
+            items(
+                items = character0 + character1 + character2,
+                key = {
+                    it.unitId
+                }
+            ) {
                 PvpIconItem(selectedIds, it, floatWindow)
             }
             items(spanCount) {
@@ -375,12 +380,6 @@ private fun PvpCharacterSelectPage(
         }
     }
 }
-
-/**
- * 获取行数
- */
-private fun getLine(list: List<PvpCharacterData>) = list.size
-
 
 /**
  * 角色图标

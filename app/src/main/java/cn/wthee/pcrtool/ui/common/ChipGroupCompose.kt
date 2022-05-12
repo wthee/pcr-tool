@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.ChipGroupType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -28,14 +29,14 @@ import com.google.accompanist.flowlayout.FlowRow
  *
  * @param items chip 数据列表
  * @param selectIndex 选择位置状态
- * @param type 0：默认，1：rank选择（字体颜色改变）
+ * @param type
  */
 @Composable
 fun ChipGroup(
     items: List<ChipData>,
     selectIndex: MutableState<Int>,
     modifier: Modifier = Modifier,
-    type: Int = 0
+    type: ChipGroupType = ChipGroupType.DEFAULT
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
@@ -49,7 +50,7 @@ fun ChipGroup(
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: Int) {
+fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: ChipGroupType) {
     val context = LocalContext.current
     val isSelected = selectIndex.value == index
     //字体颜色
@@ -59,16 +60,16 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: I
     } else {
         //未选中字体颜色
         when (type) {
-            1 -> getRankColor(item.text.toInt())
-            else -> Color.Unspecified
+            ChipGroupType.DEFAULT -> Color.Unspecified
+            ChipGroupType.RANK -> getRankColor(item.text.toInt())
         }
     }
     //Chip 背景色
     val backgroundColor = if (isSelected) {
         //选中背景色
         when (type) {
-            1 -> getRankColor(item.text.toInt())
-            else -> MaterialTheme.colorScheme.primary
+            ChipGroupType.DEFAULT -> MaterialTheme.colorScheme.primary
+            ChipGroupType.RANK -> getRankColor(item.text.toInt())
         }
     } else {
         //未选中背景色

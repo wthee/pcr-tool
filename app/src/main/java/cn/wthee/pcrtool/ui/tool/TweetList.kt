@@ -70,7 +70,12 @@ fun TweetList(
                         TweetItem(TweetData(), toDetail, toComic)
                     }
                 }
-                items(tweet) {
+                items(
+                    items = tweet,
+                    key = {
+                        it.id
+                    }
+                ) {
                     TweetItem(it ?: TweetData(), toDetail, toComic)
                 }
                 if (tweet.loadState.append is LoadState.Loading) {

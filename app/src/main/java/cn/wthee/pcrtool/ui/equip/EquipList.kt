@@ -94,7 +94,12 @@ fun EquipList(
                         state = scrollState,
                         contentPadding = PaddingValues(Dimen.commonItemPadding)
                     ) {
-                        items(equips) { equip ->
+                        items(
+                            items = equips,
+                            key = {
+                                it.equipmentId
+                            }
+                        ) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
                         items(5) {

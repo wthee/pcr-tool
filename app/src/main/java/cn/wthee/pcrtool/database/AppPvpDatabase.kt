@@ -61,7 +61,8 @@ abstract class AppPvpDatabase : RoomDatabase() {
                 MyApplication.context,
                 AppPvpDatabase::class.java,
                 Constants.DATABASE_PVP
-            ).addMigrations(MIGRATION_100_101)
+            )
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

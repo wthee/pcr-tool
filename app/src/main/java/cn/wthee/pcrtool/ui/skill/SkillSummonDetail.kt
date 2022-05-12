@@ -9,6 +9,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
@@ -27,14 +28,14 @@ import kotlin.math.max
 @Composable
 fun SummonDetail(
     unitId: Int,
-    unitType: Int
+    unitType: UnitType
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        if (unitType > 1) {
+        if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
             EnemySummonDetail(unitId)
         } else {
             CharacterSummonDetail(unitId)
@@ -104,7 +105,7 @@ private fun CharacterSummonDetail(
                 SkillLoopList(
                     loopData,
                     iconTypes,
-                    unitType = 1,
+                    unitType = UnitType.CHARACTER_SUMMON,
                     modifier = Modifier.padding(
                         top = Dimen.largePadding,
                         start = Dimen.mediumPadding * 2,
@@ -117,7 +118,7 @@ private fun CharacterSummonDetail(
                     cutinId = 0,
                     level = currValue.level,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
-                    unitType = 1
+                    unitType = UnitType.CHARACTER_SUMMON,
                 )
                 CommonSpacer()
             }
@@ -164,7 +165,7 @@ private fun EnemySummonDetail(
             //属性
             val attr = enemyData.attr.enemy()
             AttrList(attrs = attr)
-            BossSkillList(0, arrayListOf(enemyData), 3)
+            BossSkillList(0, arrayListOf(enemyData), UnitType.ENEMY_SUMMON)
             CommonSpacer()
         }
     }

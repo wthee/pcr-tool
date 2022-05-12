@@ -42,7 +42,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -2
     val coroutineScope = rememberCoroutineScope()
 
-    val list = arrayListOf<ToolMenuGroup>()
+    val itemsList = arrayListOf<ToolMenuGroup>()
 
     //游戏数据
     val dataList = arrayListOf<ToolMenuData>()
@@ -51,7 +51,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     dataList.add(ToolMenuData(R.string.tool_guild, MainIconType.GUILD))
     dataList.add(ToolMenuData(R.string.tool_clan, MainIconType.CLAN))
     dataList.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
-    list.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
+    itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //游戏信息
     val infoList = arrayListOf<ToolMenuData>()
@@ -59,13 +59,13 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     infoList.add(ToolMenuData(R.string.tool_event, MainIconType.EVENT))
     infoList.add(ToolMenuData(R.string.tool_news, MainIconType.NEWS))
     infoList.add(ToolMenuData(R.string.tool_free_gacha, MainIconType.FREE_GACHA))
-    list.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
+    itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询
     val searchList = arrayListOf<ToolMenuData>()
     searchList.add(ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH))
     searchList.add(ToolMenuData(R.string.tool_leader, MainIconType.LEADER))
-    list.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
+    itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
@@ -76,7 +76,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
         otherList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
     }
     otherList.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
-    list.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
+    itemsList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
 
     LazyColumn(
@@ -85,12 +85,17 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface), state = scrollState
     ) {
-        items(list) {
+        items(
+            items = itemsList,
+            key = {
+                it.title
+            }
+        ) {
             MenuGroup(
                 coroutineScope = coroutineScope,
                 actions = actions,
                 title = it.title,
-                list = it.list,
+                items = it.list,
                 downloadState = downloadState
             )
         }
@@ -108,7 +113,7 @@ private fun MenuGroup(
     coroutineScope: CoroutineScope,
     actions: NavActions,
     title: String,
-    list: List<ToolMenuData>,
+    items: List<ToolMenuData>,
     downloadState: Int
 ) {
 
@@ -126,7 +131,7 @@ private fun MenuGroup(
             maxColumnWidth = (getItemWidth() + Dimen.mediumPadding * 2) / 2,
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
-            list.forEach {
+            items.forEach {
                 when (it.iconType) {
                     MainIconType.DB_DOWNLOAD -> {
                         if (downloadState > -2) {

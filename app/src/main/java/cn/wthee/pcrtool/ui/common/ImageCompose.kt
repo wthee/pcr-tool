@@ -67,7 +67,8 @@ fun StoryImageCompose(
     data: Any,
     @DrawableRes loadingId: Int? = null,
     @DrawableRes errorId: Int? = null,
-    contentScale: ContentScale = ContentScale.FillWidth
+    contentScale: ContentScale = ContentScale.FillWidth,
+    onSuccess: (AsyncImagePainter.State.Success) -> Unit = {}
 ) {
     SubcomposeAsyncImage(
         model = data,
@@ -90,6 +91,9 @@ fun StoryImageCompose(
                     modifier = Modifier.aspectRatio(RATIO_COMMON)
                 )
             }
+        },
+        onSuccess = {
+            onSuccess.invoke(it)
         },
         modifier = Modifier.fillMaxWidth()
     )

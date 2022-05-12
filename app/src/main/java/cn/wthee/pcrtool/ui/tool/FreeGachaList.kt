@@ -42,7 +42,12 @@ fun FreeGachaList(
             LazyColumn(
                 state = scrollState
             ) {
-                items(gachas) {
+                items(
+                    items = gachas,
+                    key = {
+                        it.id
+                    }
+                ) {
                     FreeGachaItem(it)
                 }
                 item {

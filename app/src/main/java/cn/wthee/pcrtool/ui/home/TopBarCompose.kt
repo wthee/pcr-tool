@@ -11,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -29,7 +30,6 @@ import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.common.MainContentText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
@@ -83,11 +83,13 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
                     strokeWidth = 3.dp
                 )
             } else {
-                //有更新时显示
-                FadeAnimation(updateApp.id == 0) {
-                    val updateColor = colorResource(id = R.color.color_rank_21_23)
+                if (updateApp.id != -2) {
+                    val updateColor =
+                        if (updateApp.id == 0) colorResource(id = R.color.color_rank_21_23) else Color.Unspecified
+                    val icon =
+                        if (updateApp.id == 0) MainIconType.APP_UPDATE else MainIconType.NOTICE
                     IconCompose(
-                        data = if (isExpanded) MainIconType.CLOSE else MainIconType.APP_UPDATE,
+                        data = if (isExpanded) MainIconType.CLOSE else icon,
                         tint = if (isExpanded) MaterialTheme.colorScheme.onSurface else updateColor,
                         size = Dimen.fabIconSize,
                         modifier = Modifier.padding(start = Dimen.smallPadding)
@@ -195,21 +197,23 @@ private fun AppUpdateContent(appNotice: AppNotice) {
             )
 
             //前往更新
-            TextButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {
-                    VibrateUtil(context).single()
-                    openWebView(
-                        context,
-                        appNotice.url
+            if (appNotice.id == 0) {
+                TextButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = {
+                        VibrateUtil(context).single()
+                        openWebView(
+                            context,
+                            appNotice.url
+                        )
+                    }
+                ) {
+                    MainContentText(
+                        text = stringResource(id = R.string.to_update),
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
                     )
                 }
-            ) {
-                MainContentText(
-                    text = stringResource(id = R.string.to_update),
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center
-                )
             }
 
         }

@@ -123,7 +123,12 @@ fun PvpSearchResult(
                                     state = resultListState,
                                     columns = GridCells.Adaptive(itemWidth)
                                 ) {
-                                    itemsIndexed(items = list) { index, item ->
+                                    itemsIndexed(
+                                        items = list,
+                                        key = { _, it ->
+                                            it.id
+                                        }
+                                    ) { index, item ->
                                         PvpResultItem(
                                             favoritesList,
                                             index + 1,

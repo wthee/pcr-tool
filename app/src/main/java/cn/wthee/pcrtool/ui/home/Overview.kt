@@ -6,6 +6,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -32,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getRegion
@@ -105,101 +107,127 @@ fun Overview(
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
     //进行中掉落活动
     val inProgressEventList =
-        overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCalendarEventList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中剧情活动
     val inProgressStoryEventList =
-        overviewViewModel.getStoryEventList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getStoryEventList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中卡池
     val inProgressGachaList =
-        overviewViewModel.getGachaList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getGachaList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //进行中免费十连
     val inProgressFreeGachaList =
-        overviewViewModel.getFreeGachaList(0).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
     //预告掉落活动
     val comingSoonEventList =
-        overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCalendarEventList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告剧情活动
     val comingSoonStoryEventList =
-        overviewViewModel.getStoryEventList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getStoryEventList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告卡池
     val comingSoonGachaList =
-        overviewViewModel.getGachaList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getGachaList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
     //预告免费十连
     val comingSoonFreeGachaList =
-        overviewViewModel.getFreeGachaList(1).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            TopBarCompose(actions, noticeViewModel)
+        LazyColumn(state = scrollState) {
+            item {
+                TopBarCompose(actions, noticeViewModel)
+            }
+
             //角色
-            CharacterSection(actions)
+            item {
+                CharacterSection(actions)
+            }
 
             //装备
-            EquipSection(actions)
+            item {
+                EquipSection(actions)
+            }
 
             //更多功能
-            Section(
-                titleId = R.string.function,
-                iconType = MainIconType.FUNCTION,
-                onClick = {
-                    actions.toToolMore()
+            item {
+                Section(
+                    titleId = R.string.function,
+                    iconType = MainIconType.FUNCTION,
+                    onClick = {
+                        actions.toToolMore()
+                    }
+                ) {
+                    ToolMenu(actions = actions)
                 }
-            ) {
-                ToolMenu(actions = actions)
             }
 
             //新闻
-            Section(
-                titleId = R.string.tool_news,
-                iconType = MainIconType.NEWS,
-                onClick = {
-                    actions.toNews()
-                }
-            ) {
-                Column {
-                    if (newsList.isNotEmpty()) {
-                        newsList.forEach {
-                            NewsItem(
-                                news = it,
-                                toDetail = actions.toNewsDetail
-                            )
-                        }
-                    } else {
-                        for (i in 0 until 3) {
-                            NewsItem(
-                                news = NewsTable(),
-                                toDetail = actions.toNewsDetail
-                            )
+            item {
+
+                Section(
+                    titleId = R.string.tool_news,
+                    iconType = MainIconType.NEWS,
+                    onClick = {
+                        actions.toNews()
+                    }
+                ) {
+                    Column {
+                        if (newsList.isNotEmpty()) {
+                            newsList.forEach {
+                                NewsItem(
+                                    news = it,
+                                    toDetail = actions.toNewsDetail
+                                )
+                            }
+                        } else {
+                            for (i in 0 until 3) {
+                                NewsItem(
+                                    news = NewsTable(),
+                                    toDetail = actions.toNewsDetail
+                                )
+                            }
                         }
                     }
                 }
             }
 
             //进行中
-            CalendarEventSection(
-                1,
-                confirmState,
-                spanCount,
-                actions,
-                inProgressEventList,
-                inProgressStoryEventList,
-                inProgressGachaList,
-                inProgressFreeGachaList
-            )
+            item {
+                CalendarEventSection(
+                    EventType.IN_PROGRESS,
+                    confirmState,
+                    spanCount,
+                    actions,
+                    inProgressEventList,
+                    inProgressStoryEventList,
+                    inProgressGachaList,
+                    inProgressFreeGachaList
+                )
+            }
 
             //活动预告
-            CalendarEventSection(
-                2,
-                confirmState,
-                spanCount,
-                actions,
-                comingSoonEventList,
-                comingSoonStoryEventList,
-                comingSoonGachaList,
-                comingSoonFreeGachaList
-            )
+            item {
+                CalendarEventSection(
+                    EventType.COMING_SOON,
+                    confirmState,
+                    spanCount,
+                    actions,
+                    comingSoonEventList,
+                    comingSoonStoryEventList,
+                    comingSoonGachaList,
+                    comingSoonFreeGachaList
+                )
+            }
 
-            CommonSpacer()
+            item {
+                CommonSpacer()
+            }
         }
 
         //数据切换功能
@@ -334,7 +362,7 @@ private fun EquipSection(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun CalendarEventSection(
-    calendarType: Int,
+    calendarType: EventType,
     confirmState: MutableState<Int>,
     spanCount: Int,
     actions: NavActions,
@@ -343,45 +371,48 @@ private fun CalendarEventSection(
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
 ) {
-    Section(
-        titleId = if (calendarType == 1) R.string.tool_calendar else R.string.tool_calendar_comming,
-        iconType = if (calendarType == 1) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-        rightIconType = if (confirmState.value == calendarType) MainIconType.CLOSE else MainIconType.MAIN,
-        onClick = {
-            //弹窗确认
-            if (confirmState.value == calendarType) {
-                confirmState.value = 0
-            } else {
-                confirmState.value = calendarType
+    if (eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()) {
+        Section(
+            titleId = if (calendarType == EventType.IN_PROGRESS) R.string.tool_calendar else R.string.tool_calendar_comming,
+            iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
+            rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
+            onClick = {
+                //弹窗确认
+                if (confirmState.value == calendarType.type) {
+                    confirmState.value = 0
+                } else {
+                    confirmState.value = calendarType.type
+                }
             }
-        }
-    ) {
-        ExpandAnimation(visible = confirmState.value == calendarType) {
-            CalendarEventOperation(
-                confirmState,
-                eventList,
-                storyEventList,
-                gachaList
-            )
-        }
-        VerticalGrid(
-            spanCount = spanCount,
-            modifier = Modifier.padding(top = Dimen.mediumPadding)
         ) {
-            gachaList.forEach {
-                GachaItem(it, actions.toCharacterDetail)
+            ExpandAnimation(visible = confirmState.value == calendarType.type) {
+                CalendarEventOperation(
+                    confirmState,
+                    eventList,
+                    storyEventList,
+                    gachaList
+                )
             }
-            storyEventList.forEach {
-                StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
-            }
-            eventList.forEach {
-                CalendarEventItem(it)
-            }
-            freeGachaList.forEach {
-                FreeGachaItem(it)
+            VerticalGrid(
+                spanCount = spanCount,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
+            ) {
+                gachaList.forEach {
+                    GachaItem(it, actions.toCharacterDetail)
+                }
+                storyEventList.forEach {
+                    StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                }
+                eventList.forEach {
+                    CalendarEventItem(it)
+                }
+                freeGachaList.forEach {
+                    FreeGachaItem(it)
+                }
             }
         }
     }
+
 }
 
 /**

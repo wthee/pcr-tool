@@ -421,7 +421,7 @@ data class SkillActionPro(
                     9 -> "BREAK 时 [${action_value_1.toInt()}%] 的概率${getTimeText(3, action_value_3)}"
                     10 -> "受到持续伤害时 [${action_value_1.toInt()}%] 概率"
                     11 -> "所有部位 BREAK"
-                    else -> "未知"
+                    else -> UNKNOWN
                 }
                 "条件：$expr"
             }
@@ -588,7 +588,7 @@ data class SkillActionPro(
                     in 200 until 300 -> "$commonDesc * [标记层数]"
                     in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
                     in 20 until 30 -> "$commonDesc * [计数器${action_value_1.toInt() % 10}数量]"
-                    2112 -> "$commonDesc * [剑之刻印]"
+                    in 2112 until 2200 -> "$commonDesc * [刻印数量]"
                     else -> UNKNOWN
                 }
                 //上限判断
@@ -638,7 +638,7 @@ data class SkillActionPro(
                                 "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
                             }
                             6112 -> {
-                                "剑之刻印数量达到${action_value_3.int}时，使用动作(${action_detail_2 % 10})"
+                                "刻印数量达到${action_value_3.int}时，使用动作(${action_detail_2 % 10})"
                             }
                             else -> if (status != UNKNOWN) {
                                 "当${getTarget()}在[${status}]时，使用动作(${action_detail_2 % 100})"
@@ -682,7 +682,7 @@ data class SkillActionPro(
                                 "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
                             }
                             6112 -> {
-                                "剑之刻印数量小于${action_value_3.int}时，使用动作(${action_detail_3 % 10})"
+                                "刻印数量小于${action_value_3.int}时，使用动作(${action_detail_3 % 10})"
                             }
                             else -> if (status != UNKNOWN) {
                                 "当${getTarget()}不在[${status}]时，使用动作(${action_detail_3 % 100})"
@@ -753,7 +753,8 @@ data class SkillActionPro(
                         action_value_3
                     )
                 } ${atkType}伤害"
-                "展开半径为 [${action_value_7.toInt()}] 的领域${value}${
+
+                "展开领域 [${action_value_7.toInt()}] ${value}${
                     getTimeText(5, action_value_5, action_value_6)
                 }"
             }
@@ -761,7 +762,8 @@ data class SkillActionPro(
             SkillActionType.HEAL_FIELD -> {
                 val value =
                     "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)}HP"
-                "展开半径为 [${action_value_7.toInt()}] 的领域${value}${
+
+                "展开领域 [${action_value_7.toInt()}] ${value}${
                     getTimeText(5, action_value_5, action_value_6)
                 }"
             }
@@ -769,14 +771,14 @@ data class SkillActionPro(
             SkillActionType.AURA_FIELD -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
                 val time = getTimeText(3, action_value_3, action_value_4)
-                "${getTarget()}展开半径为 [${action_value_5.toInt()}] 的领域，${
+                "${getTarget()}展开领域 [${action_value_5.toInt()}] ，${
                     getAura(action_detail_1, value)
                 }$time"
             }
             // 39：持续伤害领域展开
             SkillActionType.DOT_FIELD -> {
                 val time = getTimeText(1, action_value_1, action_value_2)
-                "${getTarget()}展开半径为 [${action_value_3.toInt()}] 的领域，，持续施放动作(${action_detail_1 % 10})$time"
+                "${getTarget()}展开领域 [${action_value_3.toInt()}] ，持续施放动作(${action_detail_1 % 10})$time"
             }
             SkillActionType.CHANGE_ACTION_SPEED_FIELD -> UNKNOWN
             SkillActionType.CHANGE_UB_TIME -> UNKNOWN
@@ -1047,6 +1049,14 @@ data class SkillActionPro(
             // 95：隐匿
             SkillActionType.HIDE -> {
                 "${getTarget()}进入隐匿状态${getTimeText(1, action_value_1, action_value_2)}"
+            }
+            SkillActionType.TP_FIELD -> {
+                val value =
+                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2)}TP"
+
+                "展开领域 [${action_value_5.toInt()}] ${value}${
+                    getTimeText(3, action_value_3, action_value_4)
+                }"
             }
             else -> "${UNKNOWN}目标：${getTarget()}；类型：${action_type}；数值：${
                 getValueText(

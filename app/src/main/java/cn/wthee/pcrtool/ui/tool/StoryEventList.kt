@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -53,7 +54,12 @@ fun StoryEventList(
                 state = scrollState,
                 columns = GridCells.Adaptive(getItemWidth())
             ) {
-                items(events) {
+                items(
+                    items = events,
+                    key = {
+                        it.eventId
+                    }
+                ) {
                     StoryEventItem(it, toCharacterDetail, toAllPics)
                 }
                 item {
@@ -244,7 +250,7 @@ fun StoryEventItem(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
                             VibrateUtil(context).single()
-                            toAllPics(event.storyId, 1)
+                            toAllPics(event.storyId, AllPicsType.STORY.type)
                         })
                     //结束日期
                     CaptionText(
