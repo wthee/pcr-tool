@@ -66,3 +66,29 @@ enum class GachaType(val typeName: String) {
         fun getByValue(value: String) = values().find { it.typeName == value } ?: UNKNOWN
     }
 }
+
+//菜单
+enum class ToolMenuType(val id: Int) {
+    CHARACTER(0),
+    EQUIP(1),
+    GUILD(2),
+    CLAN(3),
+    RANDOM_AREA(4),
+    GACHA(5),
+    EVENT(6),
+    NEWS(7),
+    FREE_GACHA(8),
+    PVP_SEARCH(9),
+    LEADER(10),
+    TWEET(11),
+    COMIC(12),
+    ALL_SKILL(13),
+    ALL_EQUIP(14),
+    MOCK_GACHA(15),
+    RE_DOWNLOAD(99);
+
+    companion object {
+        fun getByValue(value: Int) = values()
+            .find { it.id == value } ?: CHARACTER
+    }
+}

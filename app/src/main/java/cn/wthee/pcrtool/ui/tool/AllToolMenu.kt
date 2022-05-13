@@ -8,9 +8,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,14 +17,16 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.home.ToolMenuData
-import cn.wthee.pcrtool.ui.home.getAction
+import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 data class ToolMenuGroup(
     val title: String,
@@ -34,7 +35,6 @@ data class ToolMenuGroup(
 
 /**
  * 全部工具
- * TODO 添加到首页
  */
 @Composable
 fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
@@ -42,67 +42,95 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -2
     val coroutineScope = rememberCoroutineScope()
 
+    //编辑模式
+    var isEditMode by remember {
+        mutableStateOf(false)
+    }
+
     val itemsList = arrayListOf<ToolMenuGroup>()
 
     //游戏数据
     val dataList = arrayListOf<ToolMenuData>()
-    dataList.add(ToolMenuData(R.string.character, MainIconType.CHARACTER))
-    dataList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP))
-    dataList.add(ToolMenuData(R.string.tool_guild, MainIconType.GUILD))
-    dataList.add(ToolMenuData(R.string.tool_clan, MainIconType.CLAN))
-    dataList.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CHARACTER))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EQUIP))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.GUILD))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //游戏信息
     val infoList = arrayListOf<ToolMenuData>()
-    infoList.add(ToolMenuData(R.string.tool_gacha, MainIconType.GACHA))
-    infoList.add(ToolMenuData(R.string.tool_event, MainIconType.EVENT))
-    infoList.add(ToolMenuData(R.string.tool_news, MainIconType.NEWS))
-    infoList.add(ToolMenuData(R.string.tool_free_gacha, MainIconType.FREE_GACHA))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.EVENT))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.NEWS))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询
     val searchList = arrayListOf<ToolMenuData>()
-    searchList.add(ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH))
-    searchList.add(ToolMenuData(R.string.tool_leader, MainIconType.LEADER))
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.PVP_SEARCH))
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.LEADER))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
-    otherList.add(ToolMenuData(R.string.tweet, MainIconType.TWEET))
-    otherList.add(ToolMenuData(R.string.comic, MainIconType.COMIC))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.TWEET))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.COMIC))
     if (BuildConfig.DEBUG) {
-        otherList.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
-        otherList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
+        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_SKILL))
+        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_EQUIP))
     }
-    otherList.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.RE_DOWNLOAD))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
-
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface), state = scrollState
-    ) {
-        items(
-            items = itemsList,
-            key = {
-                it.title
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            //预览
+            ExpandAnimation(visible = isEditMode) {
+                ToolMenu(actions = actions, isEditMode)
             }
-        ) {
-            MenuGroup(
-                coroutineScope = coroutineScope,
-                actions = actions,
-                title = it.title,
-                items = it.list,
-                downloadState = downloadState
-            )
+            //全部功能
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.surface), state = scrollState
+            ) {
+                items(
+                    items = itemsList,
+                    key = {
+                        it.title
+                    }
+                ) {
+                    MenuGroup(
+                        coroutineScope = coroutineScope,
+                        actions = actions,
+                        title = it.title,
+                        items = it.list,
+                        downloadState = downloadState,
+                        isEditMode = isEditMode
+                    )
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
         }
-        item {
-            CommonSpacer()
+
+        //编辑
+        FabCompose(
+            iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            coroutineScope.launch {
+                isEditMode = !isEditMode
+            }
         }
     }
+
+
 }
 
 /**
@@ -114,7 +142,8 @@ private fun MenuGroup(
     actions: NavActions,
     title: String,
     items: List<ToolMenuData>,
-    downloadState: Int
+    downloadState: Int,
+    isEditMode: Boolean
 ) {
 
     Column(
@@ -172,10 +201,10 @@ private fun MenuGroup(
                                 }
                             }
                         } else {
-                            MenuItem(coroutineScope, actions, it)
+                            MenuItem(coroutineScope, actions, it, isEditMode)
                         }
                     }
-                    else -> MenuItem(coroutineScope, actions, it)
+                    else -> MenuItem(coroutineScope, actions, it, isEditMode)
                 }
             }
         }
@@ -186,11 +215,18 @@ private fun MenuGroup(
 private fun MenuItem(
     coroutineScope: CoroutineScope,
     actions: NavActions,
-    it: ToolMenuData
+    toolMenuData: ToolMenuData,
+    isEditMode: Boolean
 ) {
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
-        onClick = getAction(coroutineScope, actions, it)
+        onClick = if (isEditMode) {
+            {
+                editToolMenuOrder(toolMenuData.type.id)
+            }
+        } else {
+            getAction(coroutineScope, actions, toolMenuData)
+        }
     ) {
         Row(
             modifier = Modifier
@@ -200,11 +236,11 @@ private fun MenuItem(
         ) {
             IconCompose(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
-                data = it.iconType,
+                data = toolMenuData.iconType,
                 size = Dimen.mediumIconSize
             )
             Subtitle2(
-                text = stringResource(id = it.titleId),
+                text = stringResource(id = toolMenuData.titleId),
                 modifier = Modifier.padding(start = Dimen.largePadding),
             )
         }

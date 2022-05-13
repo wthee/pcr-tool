@@ -327,11 +327,6 @@ enum class MainIconType(val icon: ImageVector) {
     RANDOM_AREA(Icons.Rounded.TrackChanges),
 
     /**
-     * 更多工具
-     */
-    TOOL_MORE(Icons.Rounded.DashboardCustomize),
-
-    /**
      * 复制
      */
     COPY(Icons.Rounded.ContentCopy),
@@ -350,4 +345,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 发布详情
      */
     GITHUB_RELEASE(Icons.Rounded.NewReleases),
+
+    /**
+     * 编辑
+     */
+    EDIT_TOOL(Icons.Rounded.Edit),
 }
