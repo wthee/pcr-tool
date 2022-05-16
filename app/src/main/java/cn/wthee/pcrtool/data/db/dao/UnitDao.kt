@@ -63,6 +63,8 @@ interface UnitDao {
             unit_profile.race,
             CAST((CASE WHEN unit_profile.height LIKE '%-%' OR unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
             CAST((CASE WHEN unit_profile.weight LIKE '%-%' OR unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
+            CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR  unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
+            CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
@@ -114,6 +116,10 @@ interface UnitDao {
         CASE WHEN :sortType = 3 AND :asc = 'desc'  THEN weight_int END DESC,
         CASE WHEN :sortType = 4 AND :asc = 'asc'  THEN unit_data.search_area_width END ASC,
         CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC,
+        CASE WHEN :sortType = 5 AND :asc = 'asc'  THEN birth_month_int END ASC,
+        CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_month_int END DESC,
+        CASE WHEN :sortType = 5 AND :asc = 'asc'  THEN birth_day_int END ASC,
+        CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_day_int END DESC,
         gacha.exchange_id DESC, gacha.id
         LIMIT :limit
             """
@@ -164,6 +170,8 @@ interface UnitDao {
             unit_profile.race,
             CAST((CASE WHEN unit_profile.height LIKE '%-%' OR unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
             CAST((CASE WHEN unit_profile.weight LIKE '%-%' OR unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
+            CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR  unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
+            CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,

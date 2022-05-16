@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
@@ -274,6 +275,10 @@ fun CharacterItem(
                     .fillMaxWidth(1f - RATIO_SHAPE)
                     .align(Alignment.BottomStart),
             ) {
+                Subtitle1(
+                    text = character.getNameL(),
+                    color = textColor
+                )
                 Text(
                     text = character.getNameF(),
                     color = textColor,
@@ -306,30 +311,32 @@ fun CharacterItem(
                     horizontalAlignment = Alignment.End,
                 ) {
                     Column(
-                        modifier = Modifier.padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.smallPadding
-                        ),
-                        horizontalAlignment = Alignment.End
+                        modifier = Modifier
+                            .padding(Dimen.mediumPadding),
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.SpaceAround
                     ) {
                         //年龄
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedAge(),
+                            text = getFixed(character.age),
+                            fontWeight = FontWeight.Bold,
+                            color = textColor
+                        )
+                        //生日
+                        Subtitle2(
+                            text = "${getFixed(character.birthMonth)}月${getFixed(character.birthDay)}日",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
                         //体重
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedWeight() + "KG",
+                            text = getFixed(character.weight) + "KG",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
                         //身高
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedHeight() + "CM",
+                            text = getFixed(character.height) + "CM",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
@@ -570,6 +577,7 @@ private fun FilterCharacterSheet(
             ChipData(2, stringResource(id = R.string.title_height)),
             ChipData(3, stringResource(id = R.string.title_weight)),
             ChipData(4, stringResource(id = R.string.title_position)),
+            ChipData(5, stringResource(id = R.string.title_birthday)),
         )
         ChipGroup(
             sortChipData,
