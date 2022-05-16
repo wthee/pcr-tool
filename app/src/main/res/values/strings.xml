@@ -34,7 +34,6 @@
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
-    <string name="redownload_db">重新下载数据</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
@@ -216,4 +215,7 @@
     <string name="delete_gacha">删除卡池</string>
     <string name="tip_download_finish">数据下载完成，重新打开应用后更新~</string>
     <string name="to_add_tool">添加功能</string>
+    <string name="edit">编辑</string>
+    <string name="done">完成</string>
+    <string name="tip_click_to_add">点击下列功能，添加至首页</string>
 </resources>

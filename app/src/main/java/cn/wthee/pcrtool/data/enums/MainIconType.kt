@@ -272,11 +272,6 @@ enum class MainIconType(val icon: ImageVector) {
     DELETE(Icons.Rounded.DeleteForever),
 
     /**
-     * 数据更新
-     */
-    DB_DOWNLOAD(Icons.Rounded.CloudDownload),
-
-    /**
      * 数据来源
      */
     DATA_SOURCE(Icons.Rounded.DataUsage),

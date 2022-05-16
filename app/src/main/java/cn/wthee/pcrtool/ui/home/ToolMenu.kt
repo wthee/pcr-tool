@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -19,12 +18,11 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
-import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.SubButton
+import cn.wthee.pcrtool.ui.common.MainTexButton
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -33,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -46,17 +43,19 @@ data class ToolMenuData(
  * @param isEditMode 是否为编辑模式
  */
 @Composable
-fun ToolMenu(actions: NavActions, isEditMode: Boolean = false) {
+fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean = true) {
 
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val sp = mainSP()
 
     //自定义显示
-    val toolOrderData = navViewModel.toolOrderData.observeAsState().value ?: sp.getString(
-        Constants.SP_TOOL_ORDER,
-        ""
-    ) ?: ""
+    val localData = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
+    var toolOrderData = navViewModel.toolOrderData.observeAsState().value
+    if (toolOrderData == null || toolOrderData.isEmpty()) {
+        toolOrderData = localData
+        navViewModel.toolOrderData.postValue(toolOrderData)
+    }
+
     val toolList = arrayListOf<ToolMenuData>()
     toolOrderData.split("-").forEach {
         if (it != "") {
@@ -64,9 +63,9 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false) {
         }
     }
 
-    if (toolList.isEmpty() && !isEditMode) {
+    if (toolList.isEmpty() && !isEditMode && isHome) {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            SubButton(text = stringResource(R.string.to_add_tool)) {
+            MainTexButton(text = stringResource(R.string.to_add_tool)) {
                 actions.toToolMore()
             }
         }
@@ -99,7 +98,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false) {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                MenuItem(coroutineScope, context, actions, it, isEditMode)
+                MenuItem(context, actions, it, isEditMode)
             }
         }
     }
@@ -107,7 +106,6 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false) {
 
 @Composable
 private fun MenuItem(
-    coroutineScope: CoroutineScope,
     context: Context,
     actions: NavActions,
     toolMenuData: ToolMenuData,
@@ -122,7 +120,7 @@ private fun MenuItem(
                     // 点击移除
                     editToolMenuOrder(toolMenuData.type.id)
                 } else {
-                    getAction(coroutineScope, actions, toolMenuData).invoke()
+                    getAction(actions, toolMenuData).invoke()
                 }
             }
             .defaultMinSize(minWidth = Dimen.menuItemSize)
@@ -133,14 +131,13 @@ private fun MenuItem(
         CaptionText(
             text = stringResource(id = toolMenuData.titleId),
             modifier = Modifier.padding(top = Dimen.mediumPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Center
         )
     }
 }
 
 //菜单跳转
 fun getAction(
-    coroutineScope: CoroutineScope,
     actions: NavActions,
     tool: ToolMenuData
 ): () -> Unit {
@@ -156,13 +153,7 @@ fun getAction(
             ToolMenuType.LEADER -> actions.toLeader()
             ToolMenuType.EQUIP -> actions.toEquipList()
             ToolMenuType.TWEET -> actions.toTweetList()
-//            ToolMenuType.CHANGE_DATA -> navViewModel.openChangeDataDialog.postValue(true)
             ToolMenuType.COMIC -> actions.toComicList()
-            ToolMenuType.RE_DOWNLOAD -> {
-                coroutineScope.launch {
-                    DatabaseUpdater.checkDBVersion(0)
-                }
-            }
             ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
             ToolMenuType.ALL_EQUIP -> actions.toAllEquipList()
             ToolMenuType.RANDOM_AREA -> actions.toRandomEquipArea(0)
@@ -194,7 +185,6 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
-        ToolMenuType.RE_DOWNLOAD -> ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD)
     }
     tool.type = toolMenuType
     return tool
