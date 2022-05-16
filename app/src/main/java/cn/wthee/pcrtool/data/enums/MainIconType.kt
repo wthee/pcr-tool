@@ -262,6 +262,11 @@ enum class MainIconType(val icon: ImageVector) {
     ANIMATION(Icons.Rounded.Animation),
 
     /**
+     * 动画
+     */
+    COLOR(Icons.Rounded.Palette),
+
+    /**
      * 删除
      */
     DELETE(Icons.Rounded.DeleteForever),

@@ -1,5 +1,8 @@
 package cn.wthee.pcrtool.ui.tool
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +29,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -117,84 +121,12 @@ fun MainSettings() {
             modifier = Modifier.padding(Dimen.largePadding)
         )
         //- 振动开关
-        val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
-        val vibrateState = remember {
-            mutableStateOf(vibrateOn)
-        }
-        vibrateOnFlag = vibrateState.value
-        val vibrateSummary =
-            stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    VibrateUtil(context).single()
-                    vibrateState.value = !vibrateState.value
-                    sp.edit {
-                        putBoolean(Constants.SP_VIBRATE_STATE, vibrateState.value)
-                    }
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
-            IconCompose(
-                data = MainIconType.VIBRATE,
-                size = Dimen.settingIconSize
-            )
-            Column(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .weight(1f)
-            ) {
-                TitleText(text = stringResource(id = R.string.vibrate))
-                SummaryText(text = vibrateSummary)
-            }
-            Switch(checked = vibrateState.value, colors = switchColors(), onCheckedChange = {
-                vibrateState.value = it
-                sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
-                VibrateUtil(context).single()
-            })
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
-        }
+        VibrateSetting(sp, context)
         //- 动画效果
-        val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
-        val animState = remember {
-            mutableStateOf(animOn)
-        }
-        animOnFlag = animState.value
-        val animSummary =
-            stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    animState.value = !animState.value
-                    sp.edit {
-                        putBoolean(Constants.SP_ANIM_STATE, animState.value)
-                    }
-                    VibrateUtil(context).single()
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
-            IconCompose(
-                data = MainIconType.ANIMATION,
-                size = Dimen.settingIconSize
-            )
-            Column(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .weight(1f)
-            ) {
-                TitleText(text = stringResource(id = R.string.animation))
-                SummaryText(text = animSummary)
-            }
-            Switch(checked = animState.value, colors = switchColors(), onCheckedChange = {
-                animState.value = it
-                sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
-                VibrateUtil(context).single()
-            })
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
+        AnimSetting(sp, context)
+        //- 动态色彩，仅 Android 12 及以上可用
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
+            ColorSetting(sp, context)
         }
         LineCompose()
         //感谢友链
@@ -241,6 +173,144 @@ fun MainSettings() {
         CommonSpacer()
     }
 
+}
+
+//动态色彩
+@Composable
+private fun ColorSetting(sp: SharedPreferences, context: Context) {
+    val dynamicColorOn = sp.getBoolean(Constants.SP_COLOR_STATE, true)
+    val dynamicColorState = remember {
+        mutableStateOf(dynamicColorOn)
+    }
+    dynamicColorOnFlag = dynamicColorState.value
+    val dynamicColorSummary =
+        stringResource(id = if (dynamicColorState.value) R.string.color_on else R.string.color_off)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                dynamicColorState.value = !dynamicColorState.value
+                sp.edit {
+                    putBoolean(Constants.SP_COLOR_STATE, dynamicColorState.value)
+                }
+                VibrateUtil(context).single()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+        IconCompose(
+            data = MainIconType.COLOR,
+            size = Dimen.settingIconSize
+        )
+        Column(
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .weight(1f)
+        ) {
+            TitleText(text = stringResource(id = R.string.dynamic_color))
+            SummaryText(text = dynamicColorSummary)
+        }
+        Switch(
+            checked = dynamicColorState.value,
+            colors = switchColors(),
+            onCheckedChange = {
+                dynamicColorState.value = it
+                sp.edit().putBoolean(Constants.SP_COLOR_STATE, it).apply()
+                VibrateUtil(context).single()
+            })
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+    }
+}
+
+//动画效果
+@Composable
+private fun AnimSetting(sp: SharedPreferences, context: Context) {
+    val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+    val animState = remember {
+        mutableStateOf(animOn)
+    }
+    animOnFlag = animState.value
+    val animSummary =
+        stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                animState.value = !animState.value
+                sp.edit {
+                    putBoolean(Constants.SP_ANIM_STATE, animState.value)
+                }
+                VibrateUtil(context).single()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+        IconCompose(
+            data = MainIconType.ANIMATION,
+            size = Dimen.settingIconSize
+        )
+        Column(
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .weight(1f)
+        ) {
+            TitleText(text = stringResource(id = R.string.animation))
+            SummaryText(text = animSummary)
+        }
+        Switch(checked = animState.value, colors = switchColors(), onCheckedChange = {
+            animState.value = it
+            sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
+            VibrateUtil(context).single()
+        })
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+    }
+}
+
+//振动反馈
+@Composable
+private fun VibrateSetting(
+    sp: SharedPreferences,
+    context: Context
+) {
+    val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
+    val vibrateState = remember {
+        mutableStateOf(vibrateOn)
+    }
+    vibrateOnFlag = vibrateState.value
+    val vibrateSummary =
+        stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                VibrateUtil(context).single()
+                vibrateState.value = !vibrateState.value
+                sp.edit {
+                    putBoolean(Constants.SP_VIBRATE_STATE, vibrateState.value)
+                }
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+        IconCompose(
+            data = MainIconType.VIBRATE,
+            size = Dimen.settingIconSize
+        )
+        Column(
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .weight(1f)
+        ) {
+            TitleText(text = stringResource(id = R.string.vibrate))
+            SummaryText(text = vibrateSummary)
+        }
+        Switch(checked = vibrateState.value, colors = switchColors(), onCheckedChange = {
+            vibrateState.value = it
+            sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
+            VibrateUtil(context).single()
+        })
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
+    }
 }
 
 @Composable

@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
         lateinit var navController: NavHostController
         var vibrateOnFlag = true
         var animOnFlag = true
+        var dynamicColorOnFlag = true
         var r6Ids = listOf<Int>()
     }
 
@@ -114,6 +115,7 @@ class MainActivity : ComponentActivity() {
         val sp = settingSP()
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        dynamicColorOnFlag = sp.getBoolean(Constants.SP_COLOR_STATE, true)
         //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()

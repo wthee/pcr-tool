@@ -19,6 +19,7 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
+    const val SP_COLOR_STATE = "dynamic_color_state"
     const val SP_TOOL_ORDER = "tool_order"
 
     //数据库资源地址

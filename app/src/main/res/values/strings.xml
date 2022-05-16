@@ -38,10 +38,13 @@
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
+    <string name="dynamic_color">动态色彩</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
+    <string name="color_on">动态色彩开启，应用内主题色彩将根据系统主题动态调整</string>
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
+    <string name="color_off">动态色彩关闭，使用默认主题</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
