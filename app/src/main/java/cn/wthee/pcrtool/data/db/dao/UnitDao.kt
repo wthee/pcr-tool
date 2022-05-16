@@ -360,11 +360,28 @@ interface UnitDao {
     suspend fun getGuilds(): List<GuildData>
 
     /**
-     * 获取所有公会信息
+     * 获取所有公会成员信息
      */
     @SkipQueryVerification
     @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
     suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
+
+    /**
+     * 获取无公会成员信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT 
+            GROUP_CONCAT(unit_id,'-') as unit_ids
+        FROM
+            unit_profile
+        WHERE unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        AND guild_id = ''
+        GROUP BY guild_id
+    """
+    )
+    suspend fun getNoGuildMembers(): String?
 
     /**
      * 获取已六星角色 id 列表

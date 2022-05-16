@@ -39,9 +39,29 @@ class GuildViewModel @Inject constructor(
                 }
                 list.add(allMember)
             }
+            //无公会成员
+            val noGuildData = unitRepository.getNoGuildMembers()
+            noGuildData?.let {
+                val members = arrayListOf<Int>()
+                it.split("-").forEach { id ->
+                    if (id != "") {
+                        members.add(id.toInt())
+                    }
+                }
+                list.add(
+                    GuildAllMember(
+                        999,
+                        "未加入公会",
+                        "",
+                        members
+                    )
+                )
+            }
+
             emit(list)
         } catch (e: Exception) {
 
         }
     }
+
 }
