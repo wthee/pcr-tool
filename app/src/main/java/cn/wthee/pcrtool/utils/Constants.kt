@@ -21,6 +21,7 @@ object Constants {
     const val SP_ANIM_STATE = "animation_state"
     const val SP_COLOR_STATE = "dynamic_color_state"
     const val SP_TOOL_ORDER = "tool_order"
+    const val SP_OVERVIEW_ORDER = "overview_order"
 
     //数据库资源地址
     const val DATABASE_URL = "https://wthee.xyz/db/"

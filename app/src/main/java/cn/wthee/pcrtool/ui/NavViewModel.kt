@@ -145,9 +145,13 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val pickUpList = MutableLiveData<List<GachaUnitInfo>>()
 
-
     /**
      * 菜单顺序
      */
     val toolOrderData = MutableLiveData<String>()
+
+    /**
+     * 首页显示
+     */
+    val overviewOrderData = MutableLiveData<String>()
 }
