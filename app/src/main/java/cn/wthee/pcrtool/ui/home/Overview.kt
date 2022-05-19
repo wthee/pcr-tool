@@ -8,9 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -450,30 +448,40 @@ private fun CalendarEventOperation(
                     .clickable {
                         VibrateUtil(context).single()
                         checkPermissions(context, permissions, false) {
+                            val allEvents = arrayListOf<SystemCalendarEventData>()
                             //掉落活动
                             eventList.forEach {
-                                SystemCalendarHelper().insert(
-                                    it.startTime,
-                                    it.endTime,
-                                    getTypeDataToString(it)
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.endTime,
+                                        getTypeDataToString(it)
+                                    )
                                 )
                             }
                             //剧情活动
                             storyEventList.forEach {
-                                SystemCalendarHelper().insert(
-                                    it.startTime,
-                                    it.endTime,
-                                    it.getEventTitle()
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.endTime,
+                                        it.getEventTitle()
+                                    )
                                 )
                             }
                             //卡池
                             gachaList.forEach {
-                                SystemCalendarHelper().insert(
-                                    it.startTime,
-                                    it.endTime,
-                                    it.getDesc()
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.endTime,
+                                        it.getDesc()
+                                    )
                                 )
                             }
+                            //添加至系统日历
+                            SystemCalendarHelper().insertEvents(allEvents)
+
                             confirmState.value = 0
                         }
                     }
@@ -852,9 +860,9 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
     if (data.type != "1") {
         //正常活动
-        val list = data.type.split("-")
-        list.forEach { s ->
-            val title = when (s.toInt()) {
+        val list = data.type.intArrayList
+        list.forEach { type ->
+            val title = when (type) {
                 31, 41 -> stringResource(id = R.string.normal)
                 32, 42 -> stringResource(id = R.string.hard)
                 39, 49 -> stringResource(id = R.string.very_hard)
@@ -880,7 +888,7 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
                     } else {
                         multiple.toString()
                     }) + "倍",
-                    stringResource(id = if (s.toInt() > 40) R.string.mana else R.string.drop),
+                    stringResource(id = if (type > 40) R.string.mana else R.string.drop),
                     dropMumColor
                 )
             )
@@ -906,9 +914,9 @@ private fun getTypeDataToString(data: CalendarEvent): String {
     var eventTitle = ""
     if (data.type != "1") {
         //正常活动
-        val list = data.type.split("-")
-        list.forEach { s ->
-            val title = when (s.toInt()) {
+        val list = data.type.intArrayList
+        list.forEach { type ->
+            val title = when (type) {
                 31, 41 -> "普通关卡"
                 32, 42 -> "困难关卡"
                 39, 49 -> "高难关卡"
@@ -919,7 +927,7 @@ private fun getTypeDataToString(data: CalendarEvent): String {
                 else -> ""
             }
             val multiple = data.getFixedValue()
-            eventTitle += title + (if (s.toInt() > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+            eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
                 multiple.toInt().toString()
             } else {
                 multiple.toString()
