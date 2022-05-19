@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.CoroutineScope
 
 data class ToolMenuData(
@@ -57,10 +58,8 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     val toolList = arrayListOf<ToolMenuData>()
-    toolOrderData.split("-").forEach {
-        if (it != "") {
-            toolList.add(getToolMenuData(toolMenuType = ToolMenuType.getByValue(it.toInt())))
-        }
+    toolOrderData.intArrayList.forEach {
+        toolList.add(getToolMenuData(toolMenuType = ToolMenuType.getByValue(it)))
     }
 
     if (toolList.isEmpty() && !isEditMode && isHome) {
@@ -195,7 +194,7 @@ fun editToolMenuOrder(id: Int) {
     val sp = mainSP()
     val orderStr = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
     val idStr = "$id-"
-    val hasAdded = orderStr.split("-").contains(id.toString())
+    val hasAdded = orderStr.intArrayList.contains(id)
 
     //新增或移除
     val edited = if (!hasAdded) {

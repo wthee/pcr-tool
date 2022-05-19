@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 
 data class ToolMenuGroup(
@@ -178,7 +179,7 @@ private fun MenuItem(
     isEditMode: Boolean
 ) {
     val orderStr = navViewModel.toolOrderData.observeAsState().value ?: ""
-    val hasAdded = orderStr.split("-").contains(toolMenuData.type.id.toString())
+    val hasAdded = orderStr.intArrayList.contains(toolMenuData.type.id)
 
 
     MainCard(

@@ -3,12 +3,13 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.GuildAllMember
+import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * 活动 ViewModel
+ * 公会信息 ViewModel
  *
  * @param unitRepository
  */
@@ -42,22 +43,15 @@ class GuildViewModel @Inject constructor(
             //无公会成员
             val noGuildData = unitRepository.getNoGuildMembers()
             noGuildData?.let {
-                val members = arrayListOf<Int>()
-                it.split("-").forEach { id ->
-                    if (id != "") {
-                        members.add(id.toInt())
-                    }
-                }
+                val members = it.intArrayList
                 list.add(
                     GuildAllMember(
-                        999,
-                        "未加入公会",
-                        "",
-                        members
+                        guildId = 999,
+                        guildName = "无公会",
+                        memberIds = members
                     )
                 )
             }
-
             emit(list)
         } catch (e: Exception) {
 

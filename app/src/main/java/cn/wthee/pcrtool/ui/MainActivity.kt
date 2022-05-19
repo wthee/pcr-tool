@@ -84,7 +84,6 @@ class MainActivity : ComponentActivity() {
         var r6Ids = listOf<Int>()
     }
 
-
     @OptIn(
         ExperimentalComposeUiApi::class,
         ExperimentalPagingApi::class,
@@ -121,6 +120,7 @@ class MainActivity : ComponentActivity() {
             DatabaseUpdater.checkDBVersion()
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -172,7 +172,7 @@ class MainActivity : ComponentActivity() {
                 AppDatabaseJP.close()
                 try {
                     navController.popBackStack()
-                    viewModelStore.clear()
+//                    viewModelStore.clear()
                     recreate()
                 } catch (e: Exception) {
                     LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)

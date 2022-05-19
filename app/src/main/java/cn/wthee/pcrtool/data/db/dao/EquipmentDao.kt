@@ -157,15 +157,14 @@ interface EquipmentDao {
             FROM 
                 quest_data a 
             LEFT JOIN wave_group_data b ON b.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3 ) 
-            LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 )  
-            AND c.reward_id_1 > 100000  
+            LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 ) AND c.reward_id_1 > 100000  
             WHERE 
                 a.quest_id < 18000000
-                GROUP BY 
+            GROUP BY 
                 a.quest_id  
-                ORDER BY 
-                a.quest_id ASC, 
-                a.quest_name ASC )  
+            ORDER BY 
+                a.quest_id ASC, a.quest_name ASC 
+            )  
         WHERE 
             rewards LIKE '%' || :equipId || '%'"""
     )
@@ -194,8 +193,7 @@ interface EquipmentDao {
             a.equipment_id,
             a.equipment_name,
             a.description,
-            (
-            a.hp + b.hp * COALESCE( :lv - 1, 0 )) AS hp,
+            (a.hp + b.hp * COALESCE( :lv - 1, 0 )) AS hp,
             ( a.atk + b.atk * COALESCE( :lv - 1, 0 ) ) AS atk,
             ( a.magic_str + b.magic_str * COALESCE( :lv - 1, 0 ) ) AS magic_str,
             ( a.def + b.def * COALESCE( :lv - 1, 0 ) ) AS def,

@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.utils.intArrayList
 
 /**
  * 竞技场收藏
@@ -13,14 +14,5 @@ data class PvpHistoryData(
     @ColumnInfo(name = "defs") val defs: String,
     @ColumnInfo(name = "date") val date: String
 ) {
-    fun getDefIds(): List<Int> {
-        val list = arrayListOf<Int>()
-        val ids = defs.split("@")[1].split("-")
-        ids.forEachIndexed { _, id ->
-            if (id != "") {
-                list.add(id.toInt())
-            }
-        }
-        return list
-    }
+    fun getDefIds() = defs.split("@")[1].intArrayList
 }
