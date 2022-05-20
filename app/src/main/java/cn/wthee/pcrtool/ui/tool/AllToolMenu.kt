@@ -89,7 +89,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
                     text = stringResource(R.string.tip_click_to_add),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                        .padding(vertical = Dimen.mediumPadding)
                 )
             }
             //全部功能

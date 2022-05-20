@@ -219,4 +219,6 @@
     <string name="edit">编辑</string>
     <string name="done">完成</string>
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
+    <string name="no_in_progress_data">进行中活动（暂无活动）</string>
+    <string name="no_coming_soon_data">活动预告（暂无活动）</string>
 </resources>

@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
@@ -162,7 +163,7 @@ fun Overview(
                     Subtitle2(
                         text = stringResource(R.string.tip_click_to_add),
                         modifier = Modifier
-                            .padding(vertical = Dimen.largePadding)
+                            .padding(vertical = Dimen.mediumPadding)
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
@@ -514,11 +515,25 @@ private fun CalendarEventLayout(
         OverviewType.COMING_SOON_EVENT.id
     }
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val isNotEmpty =
+        eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()
+    val titleId = if (calendarType == EventType.IN_PROGRESS) {
+        if (isEditMode && !isNotEmpty)
+            R.string.no_in_progress_data
+        else
+            R.string.tool_calendar
+    } else {
+        if (isEditMode && !isNotEmpty)
+            R.string.no_coming_soon_data
+        else
+            R.string.tool_calendar_comming
+    }
 
-    if (eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()) {
+
+    if (isEditMode || isNotEmpty) {
         Section(
             id = id,
-            titleId = if (calendarType == EventType.IN_PROGRESS) R.string.tool_calendar else R.string.tool_calendar_comming,
+            titleId = titleId,
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
             rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
             isEditMode = isEditMode,
@@ -562,7 +577,6 @@ private fun CalendarEventLayout(
             }
         }
     }
-
 }
 
 /**
