@@ -71,6 +71,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     val otherList = arrayListOf<ToolMenuData>()
     otherList.add(getToolMenuData(toolMenuType = ToolMenuType.TWEET))
     otherList.add(getToolMenuData(toolMenuType = ToolMenuType.COMIC))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.MOCK_GACHA))
     if (BuildConfig.DEBUG) {
         otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_SKILL))
         otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_EQUIP))

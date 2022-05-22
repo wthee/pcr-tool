@@ -25,7 +25,6 @@ class SystemCalendarHelper {
     private val region = getRegion()
     private val contentResolver = MyApplication.context.contentResolver
     private val addedEvents = arrayListOf<SystemCalendarEventData>()
-    private val oldEventIds = arrayListOf<String>()
 
 
     private val regionName = when (region) {
@@ -74,7 +73,7 @@ class SystemCalendarHelper {
                         null,
                         null
                     )
-                    eventCur?.let {
+                    eventCur?.use {
                         eventCur.moveToFirst()
                         do {
                             try {

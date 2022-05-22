@@ -21,12 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
@@ -84,11 +82,6 @@ class MainActivity : ComponentActivity() {
         var r6Ids = listOf<Int>()
     }
 
-    @OptIn(
-        ExperimentalComposeUiApi::class,
-        ExperimentalPagingApi::class,
-        ExperimentalAnimationApi::class
-    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -178,7 +171,11 @@ class MainActivity : ComponentActivity() {
                     LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 }
             } else {
-                ToastUtil.short(getString(R.string.tip_download_finish))
+                val tipId = when (it.what) {
+                    1 -> R.string.tip_color_change
+                    else -> R.string.tip_download_finish
+                }
+                ToastUtil.short(getString(tipId))
             }
 
             return@Callback true

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -79,7 +78,6 @@ object Navigation {
 
 @OptIn(
     ExperimentalPagerApi::class,
-    ExperimentalPagingApi::class,
     ExperimentalAnimationApi::class
 )
 @Composable

@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
@@ -217,6 +218,7 @@ private fun ColorSetting(sp: SharedPreferences, context: Context) {
                 dynamicColorState.value = it
                 sp.edit().putBoolean(Constants.SP_COLOR_STATE, it).apply()
                 VibrateUtil(context).single()
+                MainActivity.handler.sendEmptyMessage(1)
             })
         Spacer(modifier = Modifier.width(Dimen.largePadding))
     }
