@@ -15,6 +15,7 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+    <string name="title_birthday">生日</string>
     <string name="skill_cooltime">冷却时间：%.3f秒</string>
     <string name="skill_cast_time">准备时间：%.3f秒</string>
     <string name="skill_level">技能等级：%d</string>
@@ -34,14 +35,16 @@
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
-    <string name="redownload_db">重新下载数据</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
+    <string name="dynamic_color">动态色彩</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
+    <string name="color_on">动态色彩开启，动态调整主题</string>
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
+    <string name="color_off">动态色彩关闭，使用默认主题</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
@@ -60,7 +63,6 @@
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
-    <string name="app_notice">通知</string>
     <string name="data_backup">备份</string>
     <string name="data_export">数据导出</string>
     <string name="data_export_hint">导出收藏数据到本地</string>
@@ -105,14 +107,12 @@
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
-    <string name="pvp_research">前往查询</string>
     <string name="pvp_info_add_tip">添加对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
-    <string name="tool_more">全部功能</string>
     <string name="read_news">查看公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
@@ -132,8 +132,6 @@
     <string name="love_equip_material">收藏素材</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
-    <string name="update_log">更新日志</string>
-    <string name="visit_more_log">查看更多更新日志</string>
     <string name="to_update">前往更新</string>
     <string name="compare">对比</string>
     <string name="count">统计</string>
@@ -174,13 +172,9 @@
     <!-- 下载相关-->
     <string name="wait_pic_load">请等待图片加载完成</string>
 
-    <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
-    <string name="issue">问题反馈</string>
     <string name="qq_group">反馈交流群</string>
     <string name="github">Github</string>
-    <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
-    <string name="issue_tip">前往 github.com ，添加 issue</string>
 
     <string name="new_member">新加入成员</string>
     <string name="save_image">保存图片</string>
@@ -198,7 +192,6 @@
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="to_summon">查看召唤物 ></string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
-    <string name="db_downloading">数据下载中</string>
     <string name="activity_info">活动信息</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">查看剧情立绘 ></string>
@@ -211,5 +204,13 @@
     <string name="reset_record">重置卡池</string>
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="delete_gacha">删除卡池</string>
-    <string name="tip_download_finish">数据下载完成，重新打开应用后更新~</string>
+    <string name="tip_download_finish">数据下载完成，重新打开应用后更新</string>
+    <string name="to_add_tool">添加功能</string>
+    <string name="edit">管理功能</string>
+    <string name="done">完成</string>
+    <string name="tip_click_to_add">点击下列功能，添加至首页</string>
+    <string name="no_in_progress_data">进行中活动（暂无活动）</string>
+    <string name="no_coming_soon_data">活动预告（暂无活动）</string>
+    <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
+
 </resources>

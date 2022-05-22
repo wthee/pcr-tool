@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -36,10 +35,6 @@ fun AllSkillList(
     val type = remember {
         mutableStateOf(1)
     }
-    val typeChips = arrayListOf(
-        ChipData(0, "角色"),
-        ChipData(1, "Boss")
-    )
 
 
     if (allCharacter.isNotEmpty() && bossIds.isNotEmpty()) {

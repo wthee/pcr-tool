@@ -144,4 +144,14 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 模拟卡池 pickUp 角色
      */
     val pickUpList = MutableLiveData<List<GachaUnitInfo>>()
+
+    /**
+     * 菜单顺序
+     */
+    val toolOrderData = MutableLiveData<String>()
+
+    /**
+     * 首页显示
+     */
+    val overviewOrderData = MutableLiveData<String>()
 }

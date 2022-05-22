@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * 活动 ViewModel
+ * 团队战 ViewModel
  *
  * @param clanRepository
  */

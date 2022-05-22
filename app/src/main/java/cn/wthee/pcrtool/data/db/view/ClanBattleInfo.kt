@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.utils.fillZero
+import cn.wthee.pcrtool.utils.intArrayList
 
 
 data class ClanBattleInfo(
@@ -49,10 +50,10 @@ data class ClanBattleInfo(
     fun getAllBossIds(): List<ClanBossIdData> {
         val list = arrayListOf<ClanBossIdData>()
         if (enemyIds != "") {
-            val enemyList = enemyIds.split("-")
+            val enemyList = enemyIds.intArrayList
             val firstIndexs = arrayListOf<Int>()
-            enemyList.forEachIndexed { index, s ->
-                if (s.isNotEmpty() && s.toInt() % 100 == 1) {
+            enemyList.forEachIndexed { index, id ->
+                if (id % 100 == 1) {
                     firstIndexs.add(index)
                 }
             }

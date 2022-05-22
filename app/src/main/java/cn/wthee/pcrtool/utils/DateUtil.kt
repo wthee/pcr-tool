@@ -33,6 +33,11 @@ val String.simpleDateFormat: String
         return df1.format(Date(d))
     }
 
+val Long.simpleDateFormat: String
+    get() {
+        return df1.format(Date(this))
+    }
+
 /**
  * 小时 - 1
  */

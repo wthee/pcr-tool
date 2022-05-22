@@ -8,7 +8,8 @@ enum class SortType(val type: Int) {
     SORT_AGE(1),
     SORT_HEIGHT(2),
     SORT_WEIGHT(3),
-    SORT_POSITION(4)
+    SORT_POSITION(4),
+    SORT_BIRTHDAY(5)
 }
 
 fun getSortType(value: Int): SortType {

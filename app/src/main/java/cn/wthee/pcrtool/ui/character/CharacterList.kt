@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
@@ -233,12 +234,8 @@ fun CharacterItem(
     var cardMainColor by remember {
         mutableStateOf(initColor)
     }
-    //主要字体颜色
-    val textColor = if (loadSuccess) {
-        MaterialTheme.colorScheme.onPrimary
-    } else {
-        MaterialTheme.colorScheme.onBackground
-    }
+    //主要字体颜色暂时使用白色字体 fixme 不同背景下变更字体颜色时，可能导致字体不明显
+    val textColor = Color.White
 
     MainCard(
         modifier = modifier,
@@ -278,6 +275,10 @@ fun CharacterItem(
                     .fillMaxWidth(1f - RATIO_SHAPE)
                     .align(Alignment.BottomStart),
             ) {
+                Subtitle1(
+                    text = character.getNameL(),
+                    color = textColor
+                )
                 Text(
                     text = character.getNameF(),
                     color = textColor,
@@ -310,43 +311,36 @@ fun CharacterItem(
                     horizontalAlignment = Alignment.End,
                 ) {
                     Column(
-                        modifier = Modifier.padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.smallPadding
-                        ),
-                        horizontalAlignment = Alignment.End
+                        modifier = Modifier
+                            .padding(Dimen.mediumPadding),
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.SpaceAround
                     ) {
                         //年龄
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedAge(),
+                            text = getFixed(character.age),
                             fontWeight = FontWeight.Bold,
-                            color = initColor
+                            color = textColor
+                        )
+                        //生日
+                        Subtitle2(
+                            text = "${getFixed(character.birthMonth)}月${getFixed(character.birthDay)}日",
+                            fontWeight = FontWeight.Bold,
+                            color = textColor
                         )
                         //体重
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedWeight() + "KG",
+                            text = getFixed(character.weight) + "KG",
                             fontWeight = FontWeight.Bold,
-                            color = initColor
+                            color = textColor
                         )
                         //身高
                         Subtitle2(
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            text = character.getFixedHeight() + "CM",
+                            text = getFixed(character.height) + "CM",
                             fontWeight = FontWeight.Bold,
-                            color = initColor
+                            color = textColor
                         )
                     }
-
-                    //分隔线
-//                    Spacer(
-//                        modifier = modifier
-//                            .padding(vertical = Dimen.smallPadding)
-//                            .width(Dimen.cardDivWidth)
-//                            .height(Dimen.divLineHeight)
-//                            .background(initColor)
-//                    )
 
                     Column(
                         modifier = Modifier
@@ -360,14 +354,14 @@ fun CharacterItem(
                                 modifier = Modifier.padding(end = Dimen.mediumPadding),
                                 text = limitType,
                                 backgroundColor = limitColor,
-                                textColor = initColor
+                                textColor = textColor
                             )
                             //攻击
                             CharacterTag(
                                 modifier = Modifier.padding(end = Dimen.mediumPadding),
                                 text = character.getAtkType(),
                                 backgroundColor = getAtkColor(atkType = character.atkType),
-                                textColor = initColor
+                                textColor = textColor
                             )
                         }
 
@@ -389,7 +383,7 @@ fun CharacterItem(
                                 modifier = Modifier.padding(start = Dimen.smallPadding),
                                 text = positionText,
                                 backgroundColor = getPositionColor(character.position),
-                                textColor = initColor
+                                textColor = textColor
                             )
                         }
                     }
@@ -397,7 +391,7 @@ fun CharacterItem(
                     //最近登场日期
                     CaptionText(
                         text = character.startTime.formatTime,
-                        color = initColor,
+                        color = textColor,
                         modifier = Modifier.padding(Dimen.mediumPadding)
                     )
 
@@ -583,6 +577,7 @@ private fun FilterCharacterSheet(
             ChipData(2, stringResource(id = R.string.title_height)),
             ChipData(3, stringResource(id = R.string.title_weight)),
             ChipData(4, stringResource(id = R.string.title_position)),
+            ChipData(5, stringResource(id = R.string.title_birthday)),
         )
         ChipGroup(
             sortChipData,

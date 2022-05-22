@@ -13,22 +13,22 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-beta01"
-val appVersionCode = 325
-val appVersionName = "3.2.5"
+val composeVersion = "1.2.0-beta02"
+val appVersionCode = 326
+val appVersionName = "3.2.6"
 val appId = "cn.wthee.pcrtool"
 
 android {
 
     namespace = appId
-    compileSdk = 31
+    compileSdk = 32
     buildToolsVersion = "31.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = appId
         minSdk = 23
-        targetSdk = 30
+        targetSdk = 32
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -124,7 +124,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha11")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
 
     //Accompanist
     val accompanistVersion = "0.24.8-beta"
@@ -136,7 +136,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "2.0.0"
+    val coilVersion = "2.1.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
@@ -171,9 +171,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
-
-    //saved state
-    implementation("androidx.savedstate:savedstate-ktx:1.1.0")
 
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")

@@ -43,20 +43,6 @@ abstract class AppPvpDatabase : RoomDatabase() {
 
         @SuppressLint("UnsafeOptInUsageError")
         private fun buildDatabase(): AppPvpDatabase {
-            val MIGRATION_100_101 = object : Migration(100, 101) {
-                override fun migrate(database: SupportSQLiteDatabase) {
-                    database.execSQL(
-                        """
-                        CREATE TABLE "pvp_history" (
-                          "defs" TEXT NOT NULL,
-                          "date" TEXT NOT NULL,
-                          PRIMARY KEY ("defs")
-                        );
-                        """.trimIndent()
-                    )
-                }
-            }
-
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppPvpDatabase::class.java,

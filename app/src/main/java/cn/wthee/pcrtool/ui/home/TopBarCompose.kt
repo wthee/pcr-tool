@@ -40,7 +40,11 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
  *
  */
 @Composable
-fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
+fun TopBarCompose(
+    actions: NavActions,
+    isEditMode: MutableState<Boolean>,
+    noticeViewModel: NoticeViewModel
+) {
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
     var isExpanded by remember {
         mutableStateOf(false)
@@ -97,6 +101,15 @@ fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
                         isExpanded = !isExpanded
                     }
                 }
+            }
+            Spacer(modifier = Modifier.width(Dimen.largePadding))
+            //编辑
+            IconCompose(
+                data = if (isEditMode.value) MainIconType.OK else MainIconType.EDIT_TOOL,
+                tint = MaterialTheme.colorScheme.onSurface,
+                size = Dimen.fabIconSize
+            ) {
+                isEditMode.value = !isEditMode.value
             }
             Spacer(modifier = Modifier.width(Dimen.largePadding))
             //设置

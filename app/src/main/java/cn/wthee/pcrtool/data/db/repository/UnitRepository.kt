@@ -58,6 +58,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
 
+    suspend fun getNoGuildMembers() = unitDao.getNoGuildMembers()
+
     suspend fun getR6Ids() = unitDao.getR6Ids()
 
     suspend fun getCharacterStoryStatus(unitId: Int) = unitDao.getCharacterStoryStatus(unitId)

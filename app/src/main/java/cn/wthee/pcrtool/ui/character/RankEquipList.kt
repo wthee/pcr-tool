@@ -45,7 +45,7 @@ fun RankEquipList(
         items(
             items = allRankEquip,
             key = {
-                it.unitId
+                it.promotionLevel
             }
         ) {
             RankEquipListItem(it, selectedRank, toEquipDetail)

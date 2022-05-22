@@ -35,8 +35,6 @@ fun MoreFabCompose(viewModel: NavViewModel) {
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {
-            val issueUrl = stringResource(R.string.issue_url)
-            val issueTip = stringResource(R.string.issue_tip)
             //反馈交流
             FabCompose(
                 iconType = MainIconType.SUPPORT,
@@ -46,15 +44,6 @@ fun MoreFabCompose(viewModel: NavViewModel) {
             ) {
                 joinQQGroup(context)
             }
-            //GitHub
-//            FabCompose(
-//                iconType = MainIconType.ISSUE,
-//                text = stringResource(R.string.issue),
-//                modifier = Modifier.padding(bottom = Dimen.fabSmallMarginEnd),
-//                hasNavBarPadding = false
-//            ) {
-//                openWebView(context, issueUrl, issueTip)
-//            }
         }
     }
 

@@ -69,10 +69,7 @@ fun GachaList(
         ) {
             coroutineScope.launch {
                 try {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (e: Exception) {
-                    }
+                    scrollState.scrollToItem(0)
                 } catch (e: Exception) {
                 }
             }

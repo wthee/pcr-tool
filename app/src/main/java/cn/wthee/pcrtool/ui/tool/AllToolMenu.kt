@@ -6,26 +6,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.home.ToolMenuData
-import cn.wthee.pcrtool.ui.home.getAction
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.defaultSpring
-import kotlinx.coroutines.CoroutineScope
+import cn.wthee.pcrtool.ui.home.*
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.intArrayList
+import kotlinx.coroutines.launch
 
 data class ToolMenuGroup(
     val title: String,
@@ -34,75 +31,114 @@ data class ToolMenuGroup(
 
 /**
  * 全部工具
- * TODO 添加到首页
  */
 @Composable
 fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
 
-    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -2
     val coroutineScope = rememberCoroutineScope()
+
+    //编辑模式
+    var isEditMode by remember {
+        mutableStateOf(false)
+    }
 
     val itemsList = arrayListOf<ToolMenuGroup>()
 
     //游戏数据
     val dataList = arrayListOf<ToolMenuData>()
-    dataList.add(ToolMenuData(R.string.character, MainIconType.CHARACTER))
-    dataList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP))
-    dataList.add(ToolMenuData(R.string.tool_guild, MainIconType.GUILD))
-    dataList.add(ToolMenuData(R.string.tool_clan, MainIconType.CLAN))
-    dataList.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CHARACTER))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EQUIP))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.GUILD))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //游戏信息
     val infoList = arrayListOf<ToolMenuData>()
-    infoList.add(ToolMenuData(R.string.tool_gacha, MainIconType.GACHA))
-    infoList.add(ToolMenuData(R.string.tool_event, MainIconType.EVENT))
-    infoList.add(ToolMenuData(R.string.tool_news, MainIconType.NEWS))
-    infoList.add(ToolMenuData(R.string.tool_free_gacha, MainIconType.FREE_GACHA))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.EVENT))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.NEWS))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询
     val searchList = arrayListOf<ToolMenuData>()
-    searchList.add(ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH))
-    searchList.add(ToolMenuData(R.string.tool_leader, MainIconType.LEADER))
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.PVP_SEARCH))
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.LEADER))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
-    otherList.add(ToolMenuData(R.string.tweet, MainIconType.TWEET))
-    otherList.add(ToolMenuData(R.string.comic, MainIconType.COMIC))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.TWEET))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.COMIC))
+    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.MOCK_GACHA))
     if (BuildConfig.DEBUG) {
-        otherList.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
-        otherList.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
+        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_SKILL))
+        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_EQUIP))
     }
-    otherList.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
-
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface), state = scrollState
-    ) {
-        items(
-            items = itemsList,
-            key = {
-                it.title
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            //预览
+            ExpandAnimation(visible = isEditMode) {
+                ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
             }
-        ) {
-            MenuGroup(
-                coroutineScope = coroutineScope,
-                actions = actions,
-                title = it.title,
-                items = it.list,
-                downloadState = downloadState
-            )
+            //编辑提示
+            if (isEditMode) {
+                Subtitle2(
+                    text = stringResource(R.string.tip_click_to_add),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = Dimen.mediumPadding)
+                )
+            }
+            //全部功能
+            MainCard(
+                shape = if (isEditMode) CardTopShape else Shape.none,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = Dimen.mediumPadding)
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.surface), state = scrollState
+                ) {
+                    items(
+                        items = itemsList,
+                        key = {
+                            it.title
+                        }
+                    ) {
+                        MenuGroup(
+                            actions = actions,
+                            title = it.title,
+                            items = it.list,
+                            isEditMode = isEditMode
+                        )
+                    }
+                    item {
+                        CommonSpacer()
+                    }
+                }
+            }
         }
-        item {
-            CommonSpacer()
+
+        //编辑
+        FabCompose(
+            iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
+            text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            coroutineScope.launch {
+                isEditMode = !isEditMode
+            }
         }
     }
+
+
 }
 
 /**
@@ -110,11 +146,10 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
  */
 @Composable
 private fun MenuGroup(
-    coroutineScope: CoroutineScope,
     actions: NavActions,
     title: String,
     items: List<ToolMenuData>,
-    downloadState: Int
+    isEditMode: Boolean
 ) {
 
     Column(
@@ -132,51 +167,7 @@ private fun MenuGroup(
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
             items.forEach {
-                when (it.iconType) {
-                    MainIconType.DB_DOWNLOAD -> {
-                        if (downloadState > -2) {
-                            MainCard(
-                                modifier = Modifier.padding(Dimen.mediumPadding),
-                                onClick = getAction(
-                                    coroutineScope,
-                                    actions,
-                                    it
-                                )
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .defaultMinSize(minWidth = Dimen.menuItemSize)
-                                        .padding(Dimen.smallPadding),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier
-                                                .size(Dimen.mediumIconSize)
-                                                .padding(Dimen.smallPadding),
-                                            color = MaterialTheme.colorScheme.primary,
-                                            strokeWidth = 2.dp
-                                        )
-                                        //显示下载进度
-                                        if (downloadState in 1..99) {
-                                            CaptionText(
-                                                text = downloadState.toString(),
-                                                color = MaterialTheme.colorScheme.primary
-                                            )
-                                        }
-                                    }
-                                    Subtitle2(
-                                        text = stringResource(id = if (downloadState == -2) it.titleId else R.string.db_downloading),
-                                        modifier = Modifier.padding(start = Dimen.mediumPadding),
-                                    )
-                                }
-                            }
-                        } else {
-                            MenuItem(coroutineScope, actions, it)
-                        }
-                    }
-                    else -> MenuItem(coroutineScope, actions, it)
-                }
+                MenuItem(actions, it, isEditMode)
             }
         }
     }
@@ -184,13 +175,24 @@ private fun MenuGroup(
 
 @Composable
 private fun MenuItem(
-    coroutineScope: CoroutineScope,
     actions: NavActions,
-    it: ToolMenuData
+    toolMenuData: ToolMenuData,
+    isEditMode: Boolean
 ) {
+    val orderStr = navViewModel.toolOrderData.observeAsState().value ?: ""
+    val hasAdded = orderStr.intArrayList.contains(toolMenuData.type.id)
+
+
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
-        onClick = getAction(coroutineScope, actions, it)
+        onClick = if (isEditMode) {
+            {
+                editToolMenuOrder(toolMenuData.type.id)
+            }
+        } else {
+            getAction(actions, toolMenuData)
+        },
+        backgroundColor = if (hasAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
     ) {
         Row(
             modifier = Modifier
@@ -200,12 +202,13 @@ private fun MenuItem(
         ) {
             IconCompose(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
-                data = it.iconType,
-                size = Dimen.mediumIconSize
+                data = toolMenuData.iconType,
+                size = Dimen.mediumIconSize,
+                tint = if (hasAdded) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary
             )
             Subtitle2(
-                text = stringResource(id = it.titleId),
-                modifier = Modifier.padding(start = Dimen.largePadding),
+                text = stringResource(id = toolMenuData.titleId),
+                modifier = Modifier.padding(start = Dimen.largePadding)
             )
         }
     }

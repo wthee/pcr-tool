@@ -8,6 +8,15 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.database.getRegion
 
 /**
+ * 添加至系统日历的数据类
+ */
+data class SystemCalendarEventData(
+    val startTime: String,
+    val endTime: String,
+    var title: String
+)
+
+/**
  * 系统日历辅助类
  */
 class SystemCalendarHelper {
@@ -15,6 +24,8 @@ class SystemCalendarHelper {
     private val timeZone = "Asia/Shanghai"
     private val region = getRegion()
     private val contentResolver = MyApplication.context.contentResolver
+    private val addedEvents = arrayListOf<SystemCalendarEventData>()
+
 
     private val regionName = when (region) {
         2 -> "国服"
@@ -23,47 +34,107 @@ class SystemCalendarHelper {
         else -> ""
     }
 
+    private val CALENDAR_PROJECTION: Array<String> = arrayOf(
+        CalendarContract.Calendars._ID,
+        CalendarContract.Calendars.ACCOUNT_NAME,
+        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+        CalendarContract.Calendars.OWNER_ACCOUNT
+    )
+
     private val EVENT_PROJECTION: Array<String> = arrayOf(
-        CalendarContract.Calendars._ID,                     // 0
-        CalendarContract.Calendars.ACCOUNT_NAME,            // 1
-        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,   // 2
-        CalendarContract.Calendars.OWNER_ACCOUNT            // 3
+        CalendarContract.Events.TITLE,
+        CalendarContract.Events.DTSTART,
+        CalendarContract.Events.DTEND,
+        CalendarContract.Events.ORIGINAL_ID,
     )
 
     private val PROJECTION_ID_INDEX: Int = 0
 
-    //查询日历
-    private fun getCalendar() {
-
-
-    }
 
     /**
      * 添加日历事件
-     *
      */
-    fun insert(startTime: String, endTime: String, title: String) {
+    fun insertEvents(eventList: List<SystemCalendarEventData>) {
         try {
+            //新增数量
+            var newAddedCount = 0
+            //获取日历信息
             val uri: Uri = CalendarContract.Calendars.CONTENT_URI
-            val cur = contentResolver.query(uri, EVENT_PROJECTION, null, null, null)
-            if (cur != null && title.isNotBlank()) {
+            val cur = contentResolver.query(uri, CALENDAR_PROJECTION, null, null, null)
+            if (cur != null) {
                 cur.moveToFirst()
                 if (cur.count > 0) {
-                    val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
+                    //获取已添加的日程信息
+                    val eventUri = CalendarContract.Events.CONTENT_URI
+                    val eventCur = contentResolver.query(
+                        eventUri,
+                        EVENT_PROJECTION,
+                        EVENT_PROJECTION[0] + " like '%服：%'",
+                        null,
+                        null
+                    )
+                    eventCur?.use {
+                        eventCur.moveToFirst()
+                        do {
+                            try {
+                                val eventTitle = eventCur.getString(0)
+                                val eventStartTime = eventCur.getString(1)
+                                val eventEndTime = eventCur.getString(2)
+                                val eventId = eventCur.getString(3)
+                                if (eventEndTime.toLong() < System.currentTimeMillis()) {
+                                    contentResolver.delete(
+                                        eventUri,
+                                        "${EVENT_PROJECTION[3]} =  $eventId",
+                                        null
+                                    )
+                                    continue
+                                }
+                                //未过期的日程
+                                addedEvents.add(
+                                    SystemCalendarEventData(
+                                        eventStartTime.toLong().simpleDateFormat,
+                                        eventEndTime.toLong().simpleDateFormat,
+                                        eventTitle
+                                    )
+                                )
 
-                    val startMillis: Long = fixJpTime(startTime.formatTime, region).toTimestamp
-                    val endMillis: Long = fixJpTime(endTime.formatTime, region).toTimestamp
-
-                    val values = ContentValues().apply {
-                        put(CalendarContract.Events.DTSTART, startMillis)
-                        put(CalendarContract.Events.DTEND, endMillis)
-                        put(CalendarContract.Events.TITLE, "$regionName：$title")
-                        put(CalendarContract.Events.DESCRIPTION, regionName)
-                        put(CalendarContract.Events.CALENDAR_ID, calID)
-                        put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
+                            } catch (e: Exception) {
+                                Log.e("DEBUG", e.toString())
+                            }
+                        } while (eventCur.moveToNext())
                     }
-                    contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-                    ToastUtil.short("日程已添加至系统日历~")
+
+                    //遍历判断新增日程
+                    eventList.forEach {
+                        cur.moveToFirst()
+                        val title = "$regionName：${it.title}"
+                        it.title = title
+                        if (!addedEvents.contains(it)) {
+                            val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
+
+                            val startMillis: Long =
+                                fixJpTime(it.startTime.formatTime, region).toTimestamp
+                            val endMillis: Long =
+                                fixJpTime(it.endTime.formatTime, region).toTimestamp
+
+                            val values = ContentValues().apply {
+                                put(CalendarContract.Events.DTSTART, startMillis)
+                                put(CalendarContract.Events.DTEND, endMillis)
+                                put(CalendarContract.Events.TITLE, title)
+                                put(CalendarContract.Events.DESCRIPTION, regionName)
+                                put(CalendarContract.Events.CALENDAR_ID, calID)
+                                put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
+                            }
+                            contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+                            newAddedCount++
+                        }
+                    }
+                    if (newAddedCount > 0) {
+                        ToastUtil.short("已更新${newAddedCount}项日程~")
+                    } else {
+                        //无更新
+                        ToastUtil.short("日程已存在~")
+                    }
                 } else {
                     ToastUtil.short("无法添加日程，未找到日历程序~")
                 }
@@ -72,7 +143,6 @@ class SystemCalendarHelper {
                 ToastUtil.short("无法添加日程，未找到日历程序~")
             }
         } catch (e: Exception) {
-            Log.e("DEBUG", e.message ?: "")
             ToastUtil.short("日程添加失败~")
         }
     }
