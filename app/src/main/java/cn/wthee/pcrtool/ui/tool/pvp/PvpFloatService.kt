@@ -98,22 +98,25 @@ class PvpFloatService : LifecycleService() {
                 }
             }
         } catch (e: Exception) {
-            Log.e("DEBUG", e.message ?: "")
             LogReportUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }
 
     private fun initWindow() {
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        floatRootView = ComposeView(this).apply {
-            ViewTreeLifecycleOwner.set(this, this@PvpFloatService)
-            setViewTreeSavedStateRegistryOwner(activity)
-            ViewTreeViewModelStoreOwner.set(this, activity)
-            setContent {
-                PvpFloatSearch(spanCount = spanCount)
+        try {
+            windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+            floatRootView = ComposeView(this).apply {
+                ViewTreeLifecycleOwner.set(this, this@PvpFloatService)
+                setViewTreeSavedStateRegistryOwner(activity)
+                ViewTreeViewModelStoreOwner.set(this, activity)
+                setContent {
+                    PvpFloatSearch(spanCount = spanCount)
+                }
             }
+            windowManager.addView(floatRootView, getParam(false))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
-        windowManager.addView(floatRootView, getParam(false))
     }
 
     private fun getParam(min: Boolean) = WindowManager.LayoutParams().apply {

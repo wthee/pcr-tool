@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -269,7 +270,9 @@ fun PvpSearchCompose(
                     //查询
                     scope.launch {
                         try {
-                            resultListState.scrollToItem(0)
+                            if (resultListState.firstVisibleItemIndex != 0) {
+                                resultListState.scrollToItem(0)
+                            }
                         } catch (ignore: Exception) {
 
                         }
