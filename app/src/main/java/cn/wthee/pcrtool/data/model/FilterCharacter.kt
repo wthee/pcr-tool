@@ -15,7 +15,7 @@ class FilterCharacter(
     var all: Boolean = true,
     var positon: Int = 0,
     var atk: Int = 0,
-    var r6: Boolean = false,
+    var r6: Int = 0,
     var guild: Int = 0,
     var sortType: SortType = SortType.SORT_DATE,
     var name: String = "",
@@ -61,5 +61,5 @@ class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && positon == 0 && atk == 0 && (!r6) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
+    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
 }

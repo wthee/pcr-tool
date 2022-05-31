@@ -139,6 +139,7 @@ data class SkillActionPro(
         38 -> "物理或魔法攻击力最高的"
         39 -> "物理或魔法攻击力最低的"
         40 -> ""
+        41 -> ""
         else -> UNKNOWN
     }
 
@@ -637,7 +638,7 @@ data class SkillActionPro(
                             in 1200..1299 -> {
                                 "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
                             }
-                            6112 -> {
+                            in 6112..6200 -> {
                                 "刻印数量达到${action_value_3.int}时，使用动作(${action_detail_2 % 10})"
                             }
                             else -> if (status != UNKNOWN) {
@@ -681,7 +682,7 @@ data class SkillActionPro(
                             in 1200..1299 -> {
                                 "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
                             }
-                            6112 -> {
+                            in 6112..6200 -> {
                                 "刻印数量小于${action_value_3.int}时，使用动作(${action_detail_3 % 10})"
                             }
                             else -> if (status != UNKNOWN) {

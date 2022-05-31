@@ -235,7 +235,7 @@ fun CharacterItem(
         mutableStateOf(initColor)
     }
     //主要字体颜色暂时使用白色字体 fixme 不同背景下变更字体颜色时，可能导致字体不明显
-    val textColor = Color.White
+    val textColor = if (loadSuccess) Color.White else Color.Black
 
     MainCard(
         modifier = modifier,
@@ -444,7 +444,7 @@ private fun FilterCharacterSheet(
 
     val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
     filter.name = textState.value.text
-    //排序类型筛选s
+    //排序类型筛选
     val sortTypeIndex = remember {
         mutableStateOf(filter.sortType.type)
     }
@@ -464,9 +464,9 @@ private fun FilterCharacterSheet(
 
     //六星筛选
     val r6Index = remember {
-        mutableStateOf(if (filter.r6) 1 else 0)
+        mutableStateOf(filter.r6)
     }
-    filter.r6 = r6Index.value == 1
+    filter.r6 = r6Index.value
 
     //位置筛选
     val positionIndex = remember {
@@ -636,6 +636,7 @@ private fun FilterCharacterSheet(
         val r6ChipData = arrayListOf(
             ChipData(0, stringResource(id = R.string.all)),
             ChipData(1, stringResource(id = R.string.six_unlock)),
+            ChipData(2, stringResource(id = R.string.six_locked)),
         )
         ChipGroup(
             r6ChipData,

@@ -65,7 +65,9 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     ) {
                         coroutineScope.launch {
                             try {
-                                resultListState.scrollToItem(0)
+                                if (resultListState.firstVisibleItemIndex != 0) {
+                                    resultListState.scrollToItem(0)
+                                }
                             } catch (ignore: Exception) {
 
                             }

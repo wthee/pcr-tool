@@ -91,6 +91,7 @@
     <string name="title_rarity">角色星级</string>
     <string name="title_type">类型</string>
     <string name="six_unlock">六星</string>
+    <string name="six_locked">未六星</string>
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>

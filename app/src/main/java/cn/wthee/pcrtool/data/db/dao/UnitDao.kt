@@ -67,7 +67,7 @@ interface UnitDao {
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
         FROM
             unit_profile
@@ -85,7 +85,8 @@ interface UnitDao {
         )
         AND 1 = CASE
             WHEN  0 = :r6  THEN 1
-            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
+            WHEN  r6Id != 0 AND 1 = :r6  THEN 1 
+            WHEN  r6Id = 0 AND 2 = :r6  THEN 1 
         END
         AND unit_profile.unit_id < 200000 
         AND 1 = CASE
@@ -174,7 +175,7 @@ interface UnitDao {
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
         FROM
             unit_profile
@@ -214,7 +215,7 @@ interface UnitDao {
             unit_data.search_area_width,
             COALESCE( unit_data.comment, "......" ) AS intro,
             unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
             COALESCE(cts.comments, "......") AS comments

@@ -21,7 +21,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
             filter.atk,
             guildName,
             if (filter.all) 1 else 0,
-            if (filter.r6) 1 else 0,
+            filter.r6,
             filter.starIds,
             filter.type,
             limit
