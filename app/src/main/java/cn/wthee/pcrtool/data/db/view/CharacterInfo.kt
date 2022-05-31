@@ -23,7 +23,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "search_area_width") val position: Int = 100,
     @ColumnInfo(name = "atk_type") val atkType: Int = 1,
     @ColumnInfo(name = "start_time") val startTime: String = "2020-01-01 00:00:00",
-    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int = 1,
+    @ColumnInfo(name = "r6Id") val r6Id: Int = 1,
 ) {
 
     /**
