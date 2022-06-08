@@ -59,6 +59,7 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.EVENT))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.NEWS))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询

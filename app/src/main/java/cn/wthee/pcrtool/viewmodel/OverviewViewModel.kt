@@ -183,10 +183,8 @@ class OverviewViewModel @Inject constructor(
         }
     }
 
-
     /**
      * 获取免费十连卡池列表
-     *
      */
     fun getFreeGachaList(type: EventType) = flow {
         try {
@@ -202,6 +200,39 @@ class OverviewViewModel @Inject constructor(
                 emit(data.filter {
                     isComingSoon(today, it.startTime, regionType)
                 })
+            }
+        } catch (e: Exception) {
+
+        }
+    }
+
+    /**
+     * 获取生日日程列表
+     */
+    fun getBirthdayList(type: EventType) = flow {
+        try {
+            val regionType = getRegion()
+            val today = getToday()
+            val data = eventRepository.getBirthdayList(2)
+
+            if (type == EventType.IN_PROGRESS) {
+                var list = data.filter {
+                    isInProgress(today, it.getStartTime(), it.getEndTime(), regionType)
+                }
+                //只取一条记录
+                if (list.isNotEmpty()) {
+                    list = list.subList(0, 1)
+                }
+                emit(list)
+            } else {
+                var list = data.filter {
+                    isComingSoon(today, it.getStartTime(), regionType)
+                }
+                //只取一条记录
+                if (list.isNotEmpty()) {
+                    list = list.subList(0, 1)
+                }
+                emit(list)
             }
         } catch (e: Exception) {
 

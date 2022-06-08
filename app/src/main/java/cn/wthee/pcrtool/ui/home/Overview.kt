@@ -46,10 +46,7 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.ui.tool.FreeGachaItem
-import cn.wthee.pcrtool.ui.tool.GachaItem
-import cn.wthee.pcrtool.ui.tool.NewsItem
-import cn.wthee.pcrtool.ui.tool.StoryEventItem
+import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -316,6 +313,10 @@ private fun InProgressEventSection(
     val inProgressFreeGachaList =
         overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
             .collectAsState(initial = arrayListOf()).value
+    //进行中生日日程
+    val inProgressBirthdayList =
+        overviewViewModel.getBirthdayList(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
 
     CalendarEventLayout(
         isEditMode,
@@ -325,7 +326,8 @@ private fun InProgressEventSection(
         inProgressEventList,
         inProgressStoryEventList,
         inProgressGachaList,
-        inProgressFreeGachaList
+        inProgressFreeGachaList,
+        inProgressBirthdayList
     )
 }
 
@@ -355,6 +357,10 @@ private fun ComingSoonEventSection(
     val comingSoonFreeGachaList =
         overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
             .collectAsState(initial = arrayListOf()).value
+    //预告免费十连
+    val comingSoonBirthdayList =
+        overviewViewModel.getBirthdayList(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
 
     CalendarEventLayout(
         isEditMode,
@@ -364,7 +370,8 @@ private fun ComingSoonEventSection(
         comingSoonEventList,
         comingSoonStoryEventList,
         comingSoonGachaList,
-        comingSoonFreeGachaList
+        comingSoonFreeGachaList,
+        comingSoonBirthdayList
     )
 }
 
@@ -508,6 +515,7 @@ private fun CalendarEventLayout(
     storyEventList: List<EventData>,
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
+    birthdayList: List<BirthdayData>
 ) {
     val id = if (calendarType == EventType.IN_PROGRESS) {
         OverviewType.IN_PROGRESS_EVENT.id
@@ -516,7 +524,7 @@ private fun CalendarEventLayout(
     }
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
     val isNotEmpty =
-        eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty()
+        eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
     val titleId = if (calendarType == EventType.IN_PROGRESS) {
         if (isEditMode && !isNotEmpty)
             R.string.no_in_progress_data
@@ -573,6 +581,9 @@ private fun CalendarEventLayout(
                 }
                 freeGachaList.forEach {
                     FreeGachaItem(it)
+                }
+                birthdayList.forEach {
+                    BirthdayItem(it, actions.toCharacterDetail)
                 }
             }
         }

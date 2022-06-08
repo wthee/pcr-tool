@@ -84,7 +84,8 @@ enum class ToolMenuType(val id: Int) {
     COMIC(12),
     ALL_SKILL(13),
     ALL_EQUIP(14),
-    MOCK_GACHA(15);
+    MOCK_GACHA(15),
+    BIRTHDAY(16);
 
     companion object {
         fun getByValue(value: Int) = values()

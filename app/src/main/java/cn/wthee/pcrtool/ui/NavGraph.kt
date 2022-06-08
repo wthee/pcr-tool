@@ -73,6 +73,7 @@ object Navigation {
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
     const val TOOL_MORE = "toolMore"
+    const val TOOL_BIRTHDAY = "toolBirthday"
 }
 
 
@@ -610,6 +611,18 @@ fun NavGraph(
         ) {
             MockGacha()
         }
+
+        //生日日程
+        composable(
+            route = Navigation.TOOL_BIRTHDAY,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val scrollState = rememberLazyListState()
+            BirthdayList(scrollState, actions.toCharacterDetail)
+        }
     }
 }
 
@@ -843,5 +856,12 @@ class NavActions(navController: NavHostController) {
      */
     val toMockGacha = {
         navController.navigate(Navigation.TOOL_MOCK_GACHA)
+    }
+
+    /**
+     * 生日一览
+     */
+    val toBirthdayList = {
+        navController.navigate(Navigation.TOOL_BIRTHDAY)
     }
 }

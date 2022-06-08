@@ -350,4 +350,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 编辑
      */
     EDIT_TOOL(Icons.Rounded.Edit),
+
+    /**
+     * 生日日程
+     */
+    BIRTHDAY(Icons.Rounded.Cake),
 }
