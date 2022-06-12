@@ -47,5 +47,6 @@ data class EnemyParameterPro(
         .replace("\\n", "")
         .replace("·", "\n\n- ")
         .replace("・", "\n\n- ")
+        .replace("‧", "\n\n- ")
         .replace("　", "")
 }

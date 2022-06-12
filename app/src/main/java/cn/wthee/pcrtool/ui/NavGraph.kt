@@ -66,8 +66,9 @@ object Navigation {
     const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val COMIC_ID = "comicId"
-    const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
+    const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
+    const val TOOL_CLAN_BOSS_PHASE = "toolClanBattlePhase"
     const val TOOL_NEWS_KEY = "toolNewsKey"
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
@@ -388,10 +389,12 @@ fun NavGraph(
 
         //团队战详情
         composable(
-            route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_BOSS_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}",
-            arguments = listOf(navArgument(Navigation.TOOL_CLAN_BOSS_ID) {
+            route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_Battle_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}/{${Navigation.TOOL_CLAN_BOSS_PHASE}}",
+            arguments = listOf(navArgument(Navigation.TOOL_CLAN_Battle_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.TOOL_CLAN_BOSS_INDEX) {
+                type = NavType.IntType
+            }, navArgument(Navigation.TOOL_CLAN_BOSS_PHASE) {
                 type = NavType.IntType
             }),
             enterTransition = { myFadeIn },
@@ -401,8 +404,9 @@ fun NavGraph(
         ) {
             val arguments = requireNotNull(it.arguments)
             ClanBossInfoPager(
-                arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+                arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_PHASE),
                 actions.toSummonDetail
             )
         }
@@ -707,8 +711,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 团队战 BOSS
      */
-    val toClanBossInfo: (Int, Int) -> Unit = { clanId: Int, index: Int ->
-        navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}")
+    val toClanBossInfo: (Int, Int, Int) -> Unit = { clanId: Int, index: Int, phase: Int ->
+        navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${phase}")
     }
 
     /**

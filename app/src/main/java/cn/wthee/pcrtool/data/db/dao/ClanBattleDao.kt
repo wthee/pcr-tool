@@ -4,32 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.db.view.ClanBattleTargetCountData
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 
-const val query = """
-    SELECT
-        a.clan_battle_id,
-        a.release_month,
-        a.start_time,
-        COALESCE(GROUP_CONCAT( b.enemy_id, '-' ), '000000' ) AS enemyIds,
-        COALESCE(GROUP_CONCAT( b.unit_id, '-' ), '000000' ) AS unitIds
-    FROM
-        clan_battle_schedule AS a
-        LEFT JOIN enemy_parameter AS b ON b.level > 30 AND (
-            (b.enemy_id / 100000 >= 4013 AND a.clan_battle_id % 100 >= 26 AND a.clan_battle_id % 100 - ((b.enemy_id / 100000 % 100 - 12) * 12 + 10 ) = b.enemy_id / 1000 % 100 AND b.enemy_id % 1000 / 100 < 6) 
-            OR
-            (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 < 26 AND  a.clan_battle_id % 100 >= 12 AND a.clan_battle_id % 100 = b.enemy_id / 100 % 100 AND b.enemy_id % 100000 / 10000 > 1)
-            OR
-            (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 < 12 AND  a.clan_battle_id % 100 >= 10 AND a.clan_battle_id % 100 = b.enemy_id / 100 % 100)
-            OR
-            (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 == 4  AND (b.enemy_id = 401010401 OR b.enemy_id = 401011402 OR b.enemy_id = 401010402 OR b.enemy_id = 401011403  OR b.enemy_id = 401010403 OR b.enemy_id = 401011404 OR b.enemy_id = 401010404 OR b.enemy_id = 401011405  OR b.enemy_id = 401011401 OR b.enemy_id = 401011406))
-            OR
-            (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 < 10  AND  a.clan_battle_id % 100 >= 2  AND a.clan_battle_id % 10 = b.enemy_id / 100 % 10  AND b.enemy_id % 100000 / 10000 = 1)
-            OR
-            (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 = 1 AND b.enemy_id /100 % 1000 = 101 )
-        ) 
-        
-"""
 
 /**
  * 团队战 DAO
@@ -73,18 +50,69 @@ interface ClanBattleDao {
     )
     suspend fun getAllBossAttr(): List<EnemyParameterPro>
 
+
     /**
      * 获取所有团队战信息
      */
     @SkipQueryVerification
-    @Query("$query GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
-    suspend fun getAllClanBattleData(): List<ClanBattleInfo>
+    @Query(
+        """
+        SELECT
+            a.clan_battle_id,
+            b.release_month,
+            b.start_time,
+            COUNT(a.lap_num_from) / 5 as max_phase,
+            GROUP_CONCAT(e.enemy_id, '-') as enemy_ids,
+            GROUP_CONCAT(f.unit_id, '-') as unit_ids
+        FROM
+            clan_battle_2_map_data AS a
+            LEFT JOIN clan_battle_schedule AS b ON b.clan_battle_id = a.clan_battle_id
+            LEFT JOIN wave_group_data AS c ON c.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3, a.wave_group_id_4, a.wave_group_id_5 )
+            LEFT JOIN enemy_parameter as e on c.enemy_id_1 = e.enemy_id
+            LEFT JOIN unit_enemy_data as f on e.unit_id = f.unit_id
+        WHERE
+            (a.lap_num_from > 1 OR a.clan_battle_id < 1011)
+            AND 1 = CASE
+            WHEN  0 = :clanBattleId  THEN 1 
+            WHEN  a.clan_battle_id = :clanBattleId  THEN 1 
+            END
+        GROUP BY 
+            a.clan_battle_id 
+        ORDER BY
+            a.clan_battle_id DESC,
+            a.lap_num_from
+    """
+    )
+    suspend fun getAllClanBattleData(clanBattleId: Int): List<ClanBattleInfo>
+
 
     /**
-     * 获取单期团队战信息
-     * @param clanId 团队战编号
+     * 获取所有团队战多目标
      */
     @SkipQueryVerification
-    @Query(" $query  WHERE a.clan_battle_id = :clanId GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
-    suspend fun getClanInfo(clanId: Int): ClanBattleInfo
+    @Query(
+        """
+        SELECT
+            a.clan_battle_id,
+            c.enemy_id_1 as multi_enemy_id,
+            (
+                d.child_enemy_parameter_1 || '-' || d.child_enemy_parameter_2 || '-' || d.child_enemy_parameter_3 || '-' || d.child_enemy_parameter_4 || '-' || d.child_enemy_parameter_5 
+            ) AS enemy_part_ids 
+        FROM
+            clan_battle_2_map_data AS a
+            LEFT JOIN clan_battle_schedule AS b ON b.clan_battle_id = a.clan_battle_id
+            LEFT JOIN wave_group_data AS c ON c.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3, a.wave_group_id_4, a.wave_group_id_5 )
+            LEFT JOIN enemy_m_parts AS d ON c.enemy_id_1 = d.enemy_id 
+        WHERE
+            ( a.lap_num_from > 1 OR a.clan_battle_id < 1011 ) 
+            AND enemy_part_ids IS NOT NULL 
+            AND phase = :phase
+        GROUP BY
+            a.clan_battle_id 
+        ORDER BY
+            a.clan_battle_id DESC
+    """
+    )
+    suspend fun getAllClanBattleTargetCount(phase: Int): List<ClanBattleTargetCountData>
+
 }

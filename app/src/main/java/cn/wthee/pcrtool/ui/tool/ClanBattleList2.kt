@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
-import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -38,6 +37,7 @@ import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.getZhNumberText
+import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClanBattleList(
     scrollState: LazyGridState,
-    toClanBossInfo: (Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int) -> Unit,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
 
@@ -72,7 +72,7 @@ fun ClanBattleList(
                 items(
                     items = clanList,
                     key = {
-                        it.clan_battle_id
+                        it.clanBattleId
                     }
                 ) {
                     ClanBattleItem(it, toClanBossInfo)
@@ -116,12 +116,12 @@ fun ClanBattleList(
  */
 @Composable
 private fun ClanBattleItem(
-    clanInfo: ClanBattleInfo,
-    toClanBossInfo: (Int, Int) -> Unit,
+    clanBattleInfo: ClanBattleInfo,
+    toClanBossInfo: (Int, Int, Int) -> Unit,
 ) {
-    val placeholder = clanInfo.clan_battle_id == -1
-    val section = clanInfo.getAllBossIds().size
-    val list = clanInfo.getUnitIdList(0)
+    val placeholder = clanBattleInfo.clanBattleId == -1
+    val bossUnitIdList = clanBattleInfo.unitIds.intArrayList.subList(0, 5)
+
 
     Column(
         modifier = Modifier.padding(
@@ -135,7 +135,7 @@ private fun ClanBattleItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MainTitleText(
-                text = clanInfo.getDate(),
+                text = clanBattleInfo.getDate(),
                 modifier = Modifier.placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()
@@ -143,10 +143,10 @@ private fun ClanBattleItem(
             )
             MainTitleText(
                 text = stringResource(
-                    id = R.string.section,
-                    getZhNumberText(section)
+                    id = R.string.phase,
+                    getZhNumberText(clanBattleInfo.phase)
                 ),
-                backgroundColor = getSectionTextColor(section),
+                backgroundColor = getSectionTextColor(clanBattleInfo.phase),
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
                     .placeholder(
@@ -165,22 +165,27 @@ private fun ClanBattleItem(
         ) {
             //图标
             Row {
-                list.forEachIndexed { index, it ->
+                bossUnitIdList.forEachIndexed { index, it ->
                     Box(
                         modifier = Modifier.padding(Dimen.mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it.unitId)
+                            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it)
                         ) {
                             if (!placeholder) {
-                                toClanBossInfo(clanInfo.clan_battle_id, index)
+                                toClanBossInfo(
+                                    clanBattleInfo.clanBattleId,
+                                    index,
+                                    clanBattleInfo.phase
+                                )
                             }
                         }
                         //多目标提示
-                        if (it.partEnemyIds.isNotEmpty()) {
+                        val targetCount = clanBattleInfo.getMultiCount(index)
+                        if (targetCount > 0) {
                             MainTitleText(
-                                text = it.partEnemyIds.size.toString(),
+                                text = targetCount.toString(),
                                 modifier = Modifier.align(Alignment.BottomEnd)
                             )
                         }
@@ -198,44 +203,44 @@ private fun ClanBattleItem(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ClanBossInfoPager(
-    clanId: Int,
+    clanBattleId: Int,
     index: Int,
+    maxPhase: Int,
     toSummonDetail: ((Int, Int) -> Unit)? = null,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
-    val clanInfo =
-        clanViewModel.getClanInfo(clanId).collectAsState(initial = null).value
+    //阶段选择状态
+    val phaseIndex = remember {
+        mutableStateOf(maxPhase - 1)
+    }
+    val clanBattleInfo =
+        clanViewModel.getAllClanBattleData(clanBattleId, phaseIndex.value + 1)
+            .collectAsState(initial = null).value
     val pagerState =
         rememberPagerState(initialPage = index)
 
     //页面
     Box(modifier = Modifier.fillMaxSize()) {
-        clanInfo?.let { clanValue ->
+        clanBattleInfo?.let { clanBattleList ->
+            val clanBattleValue = clanBattleList[0]
             //最大阶段数
-            val maxSection = clanValue.getAllBossIds().size
-            //阶段选择状态
-            val section = remember {
-                mutableStateOf(maxSection - 1)
-            }
-            //Boss 信息
-            val bossInfoList = clanValue.getUnitIdList(section.value)
-            val enemyIds = arrayListOf<Int>()
-            bossInfoList.forEach {
-                enemyIds.add(it.enemyId)
-            }
+            val maxSection = clanBattleValue.phase
+
+            //五个Boss信息
             val bossDataList =
-                clanViewModel.getAllBossAttr(enemyIds).collectAsState(initial = arrayListOf()).value
-            //Boss 部位信息
-            val partEnemyMap = clanViewModel.getPartEnemyAttr(bossInfoList)
+                clanViewModel.getAllBossAttr(clanBattleValue.enemyIdList).collectAsState(
+                    initial = arrayListOf()
+                ).value
+            //所有部位信息
+            val partEnemyMap = clanViewModel.getMultiEnemyAttr(clanBattleValue.targetCountData)
                 .collectAsState(initial = hashMapOf()).value
             //图标列表
-            val list = clanValue.getUnitIdList(0)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 //日期
                 MainTitleText(
-                    text = clanValue.getDate(),
+                    text = clanBattleValue.getDate(),
                     modifier = Modifier
                         .padding(
                             start = Dimen.largePadding,
@@ -245,24 +250,23 @@ fun ClanBossInfoPager(
                 )
                 //图标
                 val urls = arrayListOf<String>()
-                list.forEach { clanBossTargetInfo ->
+                clanBattleValue.unitIdList.forEach {
                     urls.add(
                         ImageResourceHelper.getInstance()
-                            .getUrl(ICON_UNIT, clanBossTargetInfo.unitId)
+                            .getUrl(ICON_UNIT, it)
                     )
                 }
                 IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)
                 //BOSS信息
-                val visible = bossDataList.isNotEmpty()
                 HorizontalPager(
                     count = 5,
                     state = pagerState,
                 ) { pagerIndex ->
-                    if (visible) {
+                    if (bossDataList.isNotEmpty()) {
                         ClanBossInfoPagerItem(
-                            bossDataList,
                             pagerIndex,
-                            list,
+                            clanBattleValue.getMultiCount(pagerIndex) > 0,
+                            bossDataList,
                             partEnemyMap,
                             toSummonDetail
                         )
@@ -274,13 +278,13 @@ fun ClanBossInfoPager(
             //阶段文本
             val tabs = arrayListOf<String>()
             for (i in 1..maxSection) {
-                tabs.add(stringResource(id = R.string.section, getZhNumberText(i)))
+                tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
-            val sectionColor = getSectionTextColor(section = section.value + 1)
+            val sectionColor = getSectionTextColor(section = phaseIndex.value + 1)
             SelectTypeCompose(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,
-                type = section,
+                type = phaseIndex,
                 selectedColor = sectionColor,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -296,15 +300,20 @@ fun ClanBossInfoPager(
  */
 @Composable
 private fun ClanBossInfoPagerItem(
-    bossDataList: List<EnemyParameterPro>,
     pagerIndex: Int,
-    list: List<ClanBossTargetInfo>,
+    isMultiEnemy: Boolean,
+    bossDataList: List<EnemyParameterPro>,
     partEnemyMap: HashMap<Int, List<EnemyParameterPro>>,
     toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
     val bossDataValue = bossDataList[pagerIndex]
     val expanded = remember {
         mutableStateOf(false)
+    }
+    val attr = if (isMultiEnemy) {
+        bossDataValue.attr.multiplePartEnemy()
+    } else {
+        bossDataValue.attr.enemy()
     }
 
     MainCard(
@@ -319,10 +328,9 @@ private fun ClanBossInfoPagerItem(
                 .verticalScroll(rememberScrollState())
         ) {
             //描述
-            val desc = bossDataValue.getDesc()
             SelectionContainer {
                 Text(
-                    text = desc,
+                    text = bossDataValue.getDesc(),
                     maxLines = if (expanded.value) Int.MAX_VALUE else 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleSmall,
@@ -348,14 +356,9 @@ private fun ClanBossInfoPagerItem(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //属性
-            val attr = if (list[pagerIndex].partEnemyIds.isNotEmpty()) {
-                bossDataValue.attr.multiplePartEnemy()
-            } else {
-                bossDataValue.attr.enemy()
-            }
             AttrList(attrs = attr)
             //多目标部位属性
-            partEnemyMap[bossDataValue.unit_id]?.forEach {
+            partEnemyMap[bossDataValue.enemy_id]?.forEach {
                 //名称
                 MainText(
                     text = it.name,
@@ -440,8 +443,8 @@ private fun ClanBattleItemPreview() {
     PreviewBox {
         Column {
             ClanBattleItem(
-                clanInfo = ClanBattleInfo(clan_battle_id = 1001),
-                toClanBossInfo = { _, _ -> })
+                clanBattleInfo = ClanBattleInfo(1001),
+                toClanBossInfo = { _, _, _ -> })
         }
     }
 }

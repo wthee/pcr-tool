@@ -102,7 +102,7 @@ interface UnitDao {
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
-            WHEN  1 = :type AND is_limited = 0 THEN 1 
+            WHEN  1 = :type AND is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
             WHEN  2 = :type AND ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 1 
             WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
         END
