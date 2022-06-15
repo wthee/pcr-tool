@@ -20,7 +20,7 @@ class BirthdayViewModel @Inject constructor(
      */
     fun getBirthDayList() = flow {
         try {
-            val data = eventRepository.getBirthdayList(Int.MAX_VALUE).sortedWith(compareBirthDay())
+            val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
             emit(data)
         } catch (e: Exception) {
 

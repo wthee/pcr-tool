@@ -72,6 +72,7 @@ interface ClanBattleDao {
             LEFT JOIN unit_enemy_data as f on e.unit_id = f.unit_id
         WHERE
             (a.lap_num_from > 1 OR a.clan_battle_id < 1011)
+            AND b.release_month IS NOT NULL
             AND 1 = CASE
             WHEN  0 = :clanBattleId  THEN 1 
             WHEN  a.clan_battle_id = :clanBattleId  THEN 1 

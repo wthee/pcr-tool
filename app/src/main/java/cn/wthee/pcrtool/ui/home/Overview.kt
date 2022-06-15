@@ -357,7 +357,7 @@ private fun ComingSoonEventSection(
     val comingSoonFreeGachaList =
         overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
             .collectAsState(initial = arrayListOf()).value
-    //预告免费十连
+    //生日
     val comingSoonBirthdayList =
         overviewViewModel.getBirthdayList(EventType.COMING_SOON)
             .collectAsState(initial = arrayListOf()).value

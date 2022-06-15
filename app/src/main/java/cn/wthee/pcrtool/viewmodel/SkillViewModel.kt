@@ -38,7 +38,7 @@ class SkillViewModel @Inject constructor(
      * @param lv 技能能级
      * @param atk 基础攻击力
      * @param unitId 角色编号
-     * @param unitId 角色特殊编号
+     * @param cutinId 角色特殊编号
      */
     fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, cutinId: Int) {
         viewModelScope.launch {
@@ -157,6 +157,7 @@ class SkillViewModel @Inject constructor(
         atk: Int
     ): Pair<MutableList<SkillDetail>, HashMap<Int, Int>> {
         val infos = mutableListOf<SkillDetail>()
+        //保存技能对应的图标类型，用于技能循环页面展示
         val map = hashMapOf<Int, Int>()
         //技能信息
         skillIds.forEachIndexed { index, sid ->

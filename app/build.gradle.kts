@@ -13,7 +13,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-beta02"
+val composeVersion = "1.2.0-beta03"
 val appVersionCode = 327
 val appVersionName = "3.2.7"
 val appId = "cn.wthee.pcrtool"
@@ -124,10 +124,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
 
     //Accompanist
-    val accompanistVersion = "0.24.8-beta"
+    val accompanistVersion = "0.24.10-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -158,7 +158,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

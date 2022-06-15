@@ -165,7 +165,7 @@ class MainActivity : ComponentActivity() {
                 AppDatabaseJP.close()
                 try {
                     navController.popBackStack()
-//                    viewModelStore.clear()
+                    viewModelStore.clear()
                     recreate()
                 } catch (e: Exception) {
                     LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)

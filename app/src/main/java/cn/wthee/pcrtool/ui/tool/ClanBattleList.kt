@@ -112,7 +112,6 @@ fun ClanBattleList(
 
 /**
  * 图标列表
- * type 0：点击查看详情， 1：点击切换 BOSS
  */
 @Composable
 private fun ClanBattleItem(
@@ -134,6 +133,7 @@ private fun ClanBattleItem(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            //日期
             MainTitleText(
                 text = clanBattleInfo.getDate(),
                 modifier = Modifier.placeholder(
@@ -141,6 +141,7 @@ private fun ClanBattleItem(
                     highlight = PlaceholderHighlight.shimmer()
                 )
             )
+            //阶段数
             MainTitleText(
                 text = stringResource(
                     id = R.string.phase,
@@ -222,9 +223,8 @@ fun ClanBossInfoPager(
     //页面
     Box(modifier = Modifier.fillMaxSize()) {
         clanBattleInfo?.let { clanBattleList ->
+            //该期团队战数据
             val clanBattleValue = clanBattleList[0]
-            //最大阶段数
-            val maxSection = clanBattleValue.phase
 
             //五个Boss信息
             val bossDataList =
@@ -277,7 +277,7 @@ fun ClanBossInfoPager(
             //阶段选择
             //阶段文本
             val tabs = arrayListOf<String>()
-            for (i in 1..maxSection) {
+            for (i in 1..maxPhase) {
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
             val sectionColor = getSectionTextColor(section = phaseIndex.value + 1)
@@ -379,7 +379,9 @@ private fun ClanBossInfoPagerItem(
 
 }
 
-
+/**
+ * Boss 技能信息
+ */
 @Composable
 fun BossSkillList(
     index: Int,

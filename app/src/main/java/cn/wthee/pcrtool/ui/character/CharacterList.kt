@@ -577,7 +577,7 @@ private fun FilterCharacterSheet(
             ChipData(2, stringResource(id = R.string.title_height)),
             ChipData(3, stringResource(id = R.string.title_weight)),
             ChipData(4, stringResource(id = R.string.title_position)),
-            ChipData(5, stringResource(id = R.string.title_birthday)),
+            ChipData(5, stringResource(id = R.string.title_birth)),
         )
         ChipGroup(
             sortChipData,

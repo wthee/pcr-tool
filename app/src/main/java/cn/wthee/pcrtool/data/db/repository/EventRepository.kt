@@ -20,6 +20,6 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
 
     suspend fun getFreeGachaEvent(limit: Int) = eventDao.getFreeGachaEvent(limit)
 
-    suspend fun getBirthdayList(limit: Int) = eventDao.getBirthdayList(limit)
+    suspend fun getBirthdayList() = eventDao.getBirthdayList()
 
 }

@@ -212,11 +212,11 @@ interface EquipmentDao {
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
         FROM
             unit_data AS c
-            LEFT OUTER JOIN unique_equipment_data AS a ON c.unit_id < 200000 
-            AND SUBSTR( c.unit_id, 2, 3 ) = SUBSTR( a.equipment_id, 3, 3 )
+						LEFT OUTER JOIN unit_unique_equip AS r on c.unit_id = r.unit_id
+            LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND unit_id =:unitId
+            a.equipment_id IS NOT NULL AND c.unit_id = :unitId
     """
     )
     suspend fun getUniqueEquipInfos(unitId: Int, lv: Int): UniqueEquipmentMaxData?

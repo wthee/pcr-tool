@@ -309,8 +309,8 @@ data class SkillActionPro(
                     1, 2 -> {
                         val descText =
                             if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
-                                tag += "(可叠加)"
-                                "速度额外提升初始值的 $value 倍（可与其它相同效果叠加）"
+                                tag += "(额外)"
+                                "速度额外增加初始值的 $value 倍"
                             } else {
                                 "速度变更为初始值的 $value 倍"
                             }
@@ -561,7 +561,7 @@ data class SkillActionPro(
                 }
                 val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType $commonExpr"
+                    "动作(${action_detail_1 % 10})的数值{${action_detail_2}}$changeType $commonExpr"
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
@@ -576,7 +576,7 @@ data class SkillActionPro(
                                 "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                             }
                         }
-                        "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType$expr * [击杀数量]"
+                        "动作(${action_detail_1 % 10})的数值{${action_detail_2}}$changeType$expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [剩余的HP]"
                     1 -> "$commonDesc * [损失的HP]"

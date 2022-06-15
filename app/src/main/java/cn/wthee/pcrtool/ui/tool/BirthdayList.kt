@@ -94,11 +94,16 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             MainTitleText(
+                text = stringResource(id = R.string.title_birth),
+                backgroundColor = colorResource(id = R.color.news_update)
+            )
+            MainTitleText(
                 text = if (data.month == 999) {
                     "??/??"
                 } else {
                     "${data.month.toString().fillZero()}/${data.day.toString().fillZero()}"
-                }
+                },
+                backgroundColor = colorResource(id = R.color.news_update)
             )
 
             //计时

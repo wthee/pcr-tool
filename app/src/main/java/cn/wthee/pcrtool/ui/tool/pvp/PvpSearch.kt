@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,8 +12,10 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,10 +64,7 @@ fun PvpSearchCompose(
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
-    //重新查询
-    val research = remember {
-        mutableStateOf(true)
-    }
+
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
 
     if (showResult) {
@@ -86,7 +84,6 @@ fun PvpSearchCompose(
     //返回选择
     if (close) {
         navViewModel.showResult.postValue(false)
-        research.value = false
         navViewModel.fabCloseClick.postValue(false)
         pvpViewModel.requesting = false
     }
@@ -133,15 +130,17 @@ fun PvpSearchCompose(
                     }
                 }
             }
-            //供选择列表
+
+            //展示查询结果页面或选择角色页面
             if (showResult) {
-                if (!research.value && (selectedIds.contains(PvpCharacterData()) || selectedIds.size < 5)) {
+                if (!selectedIds.contains(PvpCharacterData()) && selectedIds.size == 5) {
+                    PvpSearchResult(resultListState, selectedIds, floatWindow)
+                } else {
                     ToastUtil.short(tip)
                     navViewModel.showResult.postValue(false)
-                } else {
-                    PvpSearchResult(resultListState, selectedIds, floatWindow)
                 }
             } else {
+                //查询、收藏、历史
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
                     indicator = { tabPositions ->
@@ -277,13 +276,9 @@ fun PvpSearchCompose(
 
                         }
 
-                        if (selectedIds.contains(PvpCharacterData())) {
-                            ToastUtil.short(tip)
-                        } else {
-                            pvpViewModel.pvpResult.postValue(null)
-                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            navViewModel.showResult.postValue(true)
-                        }
+                        pvpViewModel.pvpResult.postValue(null)
+                        navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                        navViewModel.showResult.postValue(true)
                     }
                 }
             }

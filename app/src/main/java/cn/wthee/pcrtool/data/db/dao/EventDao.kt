@@ -169,8 +169,7 @@ interface EventDao {
         AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
         GROUP BY birth_month, birth_day
         ORDER BY birth_month_int, birth_day_int
-        LIMIT 0,:limit
     """
     )
-    suspend fun getBirthdayList(limit: Int): List<BirthdayData>
+    suspend fun getBirthdayList(): List<BirthdayData>
 }

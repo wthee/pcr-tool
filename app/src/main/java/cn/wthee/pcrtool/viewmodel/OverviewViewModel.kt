@@ -213,7 +213,7 @@ class OverviewViewModel @Inject constructor(
         try {
             val regionType = getRegion()
             val today = getToday()
-            val data = eventRepository.getBirthdayList(2)
+            val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
 
             if (type == EventType.IN_PROGRESS) {
                 var list = data.filter {

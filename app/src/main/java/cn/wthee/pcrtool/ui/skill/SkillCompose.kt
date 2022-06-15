@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -122,21 +123,23 @@ fun SkillItem(
 
     }
 
+    //技能类型名
+    val type = when (unitType) {
+        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
+        UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
+        UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
+    }
+    val color = getSkillColor(type)
+    val name =
+        if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) type else skillDetail.name
+    val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Dimen.largePadding + Dimen.mediumPadding)
     ) {
-        //技能名
-        val type = when (unitType) {
-            UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
-            UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
-            UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
-        }
-        val color = getSkillColor(type)
-        val name =
-            if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) type else skillDetail.name
-        val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
 
         Row {
             //技能图标
@@ -420,6 +423,32 @@ private fun SkillLoopIconList(
         maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
     ) {
         iconList.forEach {
+            val type: String
+            val url: Any
+            if (it == 1) {
+                type = "普攻"
+                url = R.drawable.unknown_item
+            } else {
+                type = when (it / 1000) {
+                    1 -> "技能 ${it % 10}"
+                    2 -> "SP技能 ${it % 10}"
+                    else -> ""
+                }
+                val iconType = when (it) {
+                    1001 -> iconTypes[2]
+                    1002 -> iconTypes[3]
+                    1003 -> iconTypes[1]
+                    in 1004..1100 -> iconTypes[it % 10]
+                    in 2001..2100 -> iconTypes[100 + it % 10]
+                    else -> null
+                }
+                url = if (iconType == null) {
+                    R.drawable.unknown_item
+                } else {
+                    ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .padding(
@@ -430,32 +459,6 @@ private fun SkillLoopIconList(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val type: String
-                val url: Any
-                if (it == 1) {
-                    type = "普攻"
-                    url = R.drawable.unknown_item
-                } else {
-                    type = when (it / 1000) {
-                        1 -> "技能 ${it % 10}"
-                        2 -> "SP技能 ${it % 10}"
-                        else -> ""
-                    }
-                    val iconType = when (it) {
-                        1001 -> iconTypes[2]
-                        1002 -> iconTypes[3]
-                        1003 -> iconTypes[1]
-                        2001 -> iconTypes[101]
-                        2002 -> iconTypes[102]
-                        2003 -> iconTypes[103]
-                        else -> null
-                    }
-                    url = if (iconType == null) {
-                        R.drawable.unknown_item
-                    } else {
-                        ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
-                    }
-                }
                 IconCompose(data = url)
                 Text(
                     text = type,
