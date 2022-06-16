@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import com.google.gson.JsonArray
@@ -30,10 +30,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
      * @param ids 防守方队伍角色编号
      */
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpResultData>> {
-        val region = getRegion()
         //接口参数
         val json = JsonObject()
-        json.addProperty("region", region)
+        json.addProperty("region", MainActivity.regionType)
         json.add("ids", ids)
         val body =
             json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
@@ -271,11 +270,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     suspend fun getStoryList(id: Int): ResponseData<String> {
         //请求
         try {
-            val region = getRegion()
             //接口参数
             val json = JsonObject()
             json.addProperty("id", id)
-            json.addProperty("region", region)
+            json.addProperty("region", MainActivity.regionType)
             val body =
                 json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 

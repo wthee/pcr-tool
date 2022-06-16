@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
 class ImageResourceHelper() {
@@ -9,7 +9,7 @@ class ImageResourceHelper() {
     var type = "cn"
 
     init {
-        type = when (getRegion()) {
+        type = when (MainActivity.regionType) {
             2 -> "cn"
             3 -> "tw"
             else -> "jp"
@@ -61,10 +61,6 @@ class ImageResourceHelper() {
         //漫画地址
         const val COMIC4 = OTHER_RESOURCE_URL + "comic/"
 
-        //无现实图片角色
-        val notExistsIDs = arrayListOf(
-            109731, 109831, 109931, 109231, 109331, 109431
-        )
     }
 
     //获取资源地址前缀
@@ -112,7 +108,6 @@ class ImageResourceHelper() {
      * 获取星级最高的角色图标
      *
      * @param unitId 角色编号
-     * @param r6Id 是否已解放六星
      */
     fun getMaxIconUrl(unitId: Int): String {
         if (r6Ids.contains(unitId)) {

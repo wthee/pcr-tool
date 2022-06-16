@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -36,8 +35,7 @@ fun PvpSearchHistory(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val region = getRegion()
-    pvpViewModel.getHistory(region)
+    pvpViewModel.getHistory()
     val list = pvpViewModel.history.observeAsState()
     val itemWidth = getItemWidth(floatWindow)
 

@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -38,8 +37,7 @@ fun PvpFavorites(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val region = getRegion()
-    pvpViewModel.getAllFavorites(region)
+    pvpViewModel.getAllFavorites()
     val list = pvpViewModel.allFavorites.observeAsState()
     val itemWidth = getItemWidth(floatWindow)
 
@@ -57,7 +55,6 @@ fun PvpFavorites(
                 ) { data ->
                     PvpFavoriteItem(
                         toCharacter,
-                        region,
                         data,
                         floatWindow,
                         pvpViewModel
@@ -79,7 +76,6 @@ fun PvpFavorites(
 @Composable
 private fun PvpFavoriteItem(
     toCharacter: (Int) -> Unit,
-    region: Int,
     itemData: PvpFavoriteData,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel,
@@ -111,7 +107,7 @@ private fun PvpFavoriteItem(
             ) {
                 //点击取消收藏
                 scope.launch {
-                    pvpViewModel.delete(itemData.atks, itemData.defs, region)
+                    pvpViewModel.delete(itemData.atks, itemData.defs)
                 }
             }
             Spacer(modifier = Modifier.width(largePadding))

@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -80,12 +79,11 @@ fun FreeGachaList(
  */
 @Composable
 fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
-    val regionType = getRegion()
     val today = getToday()
-    val sd = fixJpTime(freeGachaInfo.startTime, regionType)
-    val ed = fixJpTime(freeGachaInfo.endTime, regionType)
-    val inProgress = isInProgress(today, freeGachaInfo.startTime, freeGachaInfo.endTime, regionType)
-    val comingSoon = isComingSoon(today, freeGachaInfo.startTime, regionType)
+    val sd = fixJpTime(freeGachaInfo.startTime)
+    val ed = fixJpTime(freeGachaInfo.endTime)
+    val inProgress = isInProgress(today, freeGachaInfo.startTime, freeGachaInfo.endTime)
+    val comingSoon = isComingSoon(today, freeGachaInfo.startTime)
 
     Column(
         modifier = Modifier.padding(
@@ -144,7 +142,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //描述
                 MainContentText(
-                    text = "「免费十连」 ${freeGachaInfo.getCount(regionType)} 次",
+                    text = "「免费十连」 ${freeGachaInfo.getCount()} 次",
                     modifier = Modifier.padding(
                         top = Dimen.mediumPadding,
                         start = Dimen.mediumPadding,

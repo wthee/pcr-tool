@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.simpleDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,7 +78,7 @@ class MockGachaViewModel @Inject constructor(
             val nowTime = getToday()
             val data = MockGachaData(
                 gachaId,
-                getRegion(),
+                MainActivity.regionType,
                 gachaType,
                 pickUpList.getIdsStr(),
                 nowTime,
@@ -117,8 +117,7 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getHistory() {
         viewModelScope.launch {
-            val region = getRegion()
-            val data = mockGachaRepository.getHistory(region)
+            val data = mockGachaRepository.getHistory(MainActivity.regionType)
             historyList.postValue(data)
         }
     }
@@ -132,7 +131,7 @@ class MockGachaViewModel @Inject constructor(
      * 获取卡池
      */
     suspend fun getGachaByPickUp(pickUpList: List<GachaUnitInfo>) =
-        mockGachaRepository.getGachaByPickUpIds(getRegion(), pickUpList.getIdsStr())
+        mockGachaRepository.getGachaByPickUpIds(MainActivity.regionType, pickUpList.getIdsStr())
 
     /**
      * 获取抽取结果

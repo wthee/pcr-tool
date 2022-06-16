@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -44,7 +43,7 @@ fun StoryEventList(
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
+    val events = eventViewModel.getStoryEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -100,10 +99,9 @@ fun StoryEventItem(
     val type: String
     val typeColor: Color
     var showDays = true
-    val regionType = getRegion()
     val today = getToday()
-    val sd = fixJpTime(event.startTime.formatTime, regionType)
-    val ed = fixJpTime(event.endTime.formatTime, regionType)
+    val sd = fixJpTime(event.startTime.formatTime)
+    val ed = fixJpTime(event.endTime.formatTime)
     val preEvent = sd.substring(0, 10) == "2030/12/30"
     val days = ed.days(sd)
     if (days == "0" || days == "0天") {

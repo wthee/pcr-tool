@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.repository.PvpRepository
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.ui.MainActivity
 import com.google.gson.JsonArray
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,11 +34,11 @@ class PvpViewModel @Inject constructor(
     var requesting = false
 
     /**
-     * 根据游戏版本 [region]，获取收藏信息
+     * 获取收藏信息
      */
-    fun getAllFavorites(region: Int) {
+    fun getAllFavorites() {
         viewModelScope.launch {
-            val data = pvpRepository.getLiked(region)
+            val data = pvpRepository.getLiked(MainActivity.regionType)
             allFavorites.postValue(data)
         }
     }
@@ -45,9 +46,9 @@ class PvpViewModel @Inject constructor(
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String, region: Int) {
+    fun getFavoritesList(defs: String) {
         viewModelScope.launch {
-            val data = pvpRepository.getLikedList(defs, region)
+            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
             favorites.postValue(data)
         }
     }
@@ -58,28 +59,28 @@ class PvpViewModel @Inject constructor(
     fun insert(data: PvpFavoriteData) {
         viewModelScope.launch {
             pvpRepository.insert(data)
-            getFavoritesList(data.defs, data.region)
+            getFavoritesList(data.defs)
         }
     }
 
     /**
      * 删除收藏信息
      */
-    fun delete(atks: String, defs: String, region: Int) {
+    fun delete(atks: String, defs: String) {
         viewModelScope.launch {
-            pvpRepository.delete(atks, defs, region)
-            getAllFavorites(region)
-            getFavoritesList(defs, region)
+            pvpRepository.delete(atks, defs, MainActivity.regionType)
+            getAllFavorites()
+            getFavoritesList(defs)
         }
     }
 
 
     /**
-     * 根据游戏版本 [region]，获取搜索历史信息
+     * 获取搜索历史信息
      */
-    fun getHistory(region: Int) {
+    fun getHistory() {
         viewModelScope.launch {
-            val data = pvpRepository.getHistory(region)
+            val data = pvpRepository.getHistory(MainActivity.regionType)
             history.postValue(data)
         }
     }

@@ -75,8 +75,8 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()
     val sd = data.getStartTime().formatTime
     val ed = data.getEndTime().formatTime
-    val inProgress = isInProgress(today, sd, ed, -1)
-    val comingSoon = isComingSoon(today, sd, -1)
+    val inProgress = isInProgress(today, sd, ed, false)
+    val comingSoon = isComingSoon(today, sd, false)
 
     val icons = data.unitIds.intArrayList
 

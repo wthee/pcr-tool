@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,8 +42,8 @@ val Long.simpleDateFormat: String
 /**
  * 小时 - 1
  */
-fun fixJpTime(date: String, type: Int): String = if (date != "") {
-    if (type == 4) {
+fun fixJpTime(date: String): String = if (date != "") {
+    if (MainActivity.regionType == 4) {
         try {
             val d = df1.parse(date)!!.time - 60 * 60 * 1000
             df1.format(Date(d))
@@ -145,17 +146,22 @@ fun String.fillZero(toLength: Int = 2): String {
 /**
  * 进行中判断
  */
-fun isInProgress(today: String, startTime: String, endTime: String, regionType: Int): Boolean {
-    val sd = fixJpTime(startTime.formatTime, regionType)
-    val ed = fixJpTime(endTime.formatTime, regionType)
+fun isInProgress(
+    today: String,
+    startTime: String,
+    endTime: String,
+    fixJpTime: Boolean = true
+): Boolean {
+    val sd = if (fixJpTime) fixJpTime(startTime.formatTime) else startTime.formatTime
+    val ed = if (fixJpTime) fixJpTime(endTime.formatTime) else endTime.formatTime
     return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
 }
 
 /**
  * 进行中判断
  */
-fun isComingSoon(today: String, startTime: String, regionType: Int): Boolean {
-    val sd = fixJpTime(startTime.formatTime, regionType)
+fun isComingSoon(today: String, startTime: String, fixJpTime: Boolean = true): Boolean {
+    val sd = if (fixJpTime) fixJpTime(startTime.formatTime) else startTime.formatTime
     return today.second(sd) < 0
 }
 

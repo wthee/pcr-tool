@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
         var animOnFlag = true
         var dynamicColorOnFlag = true
         var r6Ids = listOf<Int>()
+        var regionType = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +109,7 @@ class MainActivity : ComponentActivity() {
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
         dynamicColorOnFlag = sp.getBoolean(Constants.SP_COLOR_STATE, true)
+        regionType = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
         //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()

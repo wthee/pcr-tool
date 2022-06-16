@@ -27,7 +27,6 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
@@ -49,7 +48,7 @@ import cn.wthee.pcrtool.utils.openWebView
 fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
-    val region = getRegion()
+    val region = MainActivity.regionType
 
     SideEffect {
         //自动删除历史数据

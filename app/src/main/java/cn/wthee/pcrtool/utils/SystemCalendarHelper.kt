@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 
 /**
  * 添加至系统日历的数据类
@@ -22,7 +22,7 @@ data class SystemCalendarEventData(
 class SystemCalendarHelper {
 
     private val timeZone = "Asia/Shanghai"
-    private val region = getRegion()
+    private val region = MainActivity.regionType
     private val contentResolver = MyApplication.context.contentResolver
     private val addedEvents = arrayListOf<SystemCalendarEventData>()
 
@@ -113,9 +113,9 @@ class SystemCalendarHelper {
                             val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
 
                             val startMillis: Long =
-                                fixJpTime(it.startTime.formatTime, region).toTimestamp
+                                fixJpTime(it.startTime.formatTime).toTimestamp
                             val endMillis: Long =
-                                fixJpTime(it.endTime.formatTime, region).toTimestamp
+                                fixJpTime(it.endTime.formatTime).toTimestamp
 
                             val values = ContentValues().apply {
                                 put(CalendarContract.Events.DTSTART, startMillis)

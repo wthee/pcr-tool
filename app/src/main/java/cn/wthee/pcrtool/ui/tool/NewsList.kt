@@ -30,7 +30,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -60,7 +60,7 @@ fun NewsList(
     )
 
     val type = remember {
-        mutableStateOf(getRegion() - 2)
+        mutableStateOf(MainActivity.regionType - 2)
     }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle

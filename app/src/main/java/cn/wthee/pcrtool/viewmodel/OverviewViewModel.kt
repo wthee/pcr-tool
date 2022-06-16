@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,20 +79,19 @@ class OverviewViewModel @Inject constructor(
      */
     fun getGachaList(type: EventType) = flow {
         try {
-            val regionType = getRegion()
             val today = getToday()
             val data = gachaRepository.getGachaHistory(10)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
-                        isInProgress(today, it.startTime, it.endTime, regionType)
+                        isInProgress(today, it.startTime, it.endTime)
                     }.sortedWith(compareGacha(today))
                 )
             } else {
                 emit(
                     data.filter {
-                        isComingSoon(today, it.startTime, regionType)
+                        isComingSoon(today, it.startTime)
                     }.sortedWith(compareGacha(today))
                 )
             }
@@ -106,20 +105,19 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCalendarEventList(type: EventType) = flow {
         try {
-            val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
-                        isInProgress(today, it.startTime, it.endTime, regionType)
+                        isInProgress(today, it.startTime, it.endTime)
                     }.sortedWith(compareEvent(today))
                 )
             } else {
                 emit(
                     data.filter {
-                        isComingSoon(today, it.startTime, regionType)
+                        isComingSoon(today, it.startTime)
                     }.sortedWith(compareEvent(today))
                 )
             }
@@ -134,20 +132,19 @@ class OverviewViewModel @Inject constructor(
      */
     fun getStoryEventList(type: EventType) = flow {
         try {
-            val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getAllEvents(10)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
                     data.filter {
-                        isInProgress(today, it.startTime, it.endTime, regionType)
+                        isInProgress(today, it.startTime, it.endTime)
                     }.sortedWith(compareStoryEvent(today))
                 )
             } else {
                 emit(
                     data.filter {
-                        isComingSoon(today, it.startTime, regionType)
+                        isComingSoon(today, it.startTime)
                     }.sortedWith(compareStoryEvent(today))
                 )
             }
@@ -159,9 +156,9 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    fun getNewsOverview(region: Int) = flow {
+    fun getNewsOverview() = flow {
         try {
-            val data = apiRepository.getNewsOverviewByRegion(region).data
+            val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType).data
             data?.let {
                 emit(it)
             }
@@ -188,17 +185,16 @@ class OverviewViewModel @Inject constructor(
      */
     fun getFreeGachaList(type: EventType) = flow {
         try {
-            val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getFreeGachaEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {
-                    isInProgress(today, it.startTime, it.endTime, regionType)
+                    isInProgress(today, it.startTime, it.endTime)
                 })
             } else {
                 emit(data.filter {
-                    isComingSoon(today, it.startTime, regionType)
+                    isComingSoon(today, it.startTime)
                 })
             }
         } catch (e: Exception) {
@@ -211,13 +207,12 @@ class OverviewViewModel @Inject constructor(
      */
     fun getBirthdayList(type: EventType) = flow {
         try {
-            val regionType = getRegion()
             val today = getToday()
             val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
 
             if (type == EventType.IN_PROGRESS) {
                 var list = data.filter {
-                    isInProgress(today, it.getStartTime(), it.getEndTime(), regionType)
+                    isInProgress(today, it.getStartTime(), it.getEndTime())
                 }
                 //只取一条记录
                 if (list.isNotEmpty()) {
@@ -226,7 +221,7 @@ class OverviewViewModel @Inject constructor(
                 emit(list)
             } else {
                 var list = data.filter {
-                    isComingSoon(today, it.getStartTime(), regionType)
+                    isComingSoon(today, it.getStartTime())
                 }
                 //只取一条记录
                 if (list.isNotEmpty()) {
