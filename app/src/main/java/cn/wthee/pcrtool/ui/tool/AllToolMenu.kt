@@ -53,13 +53,14 @@ fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
-    //游戏信息
+    //活动信息
     val infoList = arrayListOf<ToolMenuData>()
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.EVENT))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.NEWS))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
+    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.CALENDAR_EVENT))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //查询

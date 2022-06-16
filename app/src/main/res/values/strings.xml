@@ -98,8 +98,9 @@
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
-    <string name="tool_calendar">进行中活动</string>
+    <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
+    <string name="tool_calendar_event">活动记录</string>
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
     <string name="pvp_no_history">暂无查询历史</string>

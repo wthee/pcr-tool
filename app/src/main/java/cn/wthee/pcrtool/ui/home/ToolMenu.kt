@@ -158,6 +158,7 @@ fun getAction(
             ToolMenuType.FREE_GACHA -> actions.toFreeGacha()
             ToolMenuType.MOCK_GACHA -> actions.toMockGacha()
             ToolMenuType.BIRTHDAY -> actions.toBirthdayList()
+            ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
         }
     }
 
@@ -184,6 +185,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
+        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(
+            R.string.tool_calendar_event,
+            MainIconType.CALENDAR
+        )
     }
     tool.type = toolMenuType
     return tool

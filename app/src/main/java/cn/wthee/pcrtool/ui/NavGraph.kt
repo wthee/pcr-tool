@@ -75,6 +75,7 @@ object Navigation {
     const val TOOL_EQUIP_AREA = "toolArea"
     const val TOOL_MORE = "toolMore"
     const val TOOL_BIRTHDAY = "toolBirthday"
+    const val TOOL_CALENDAR_EVENT = "toolCalendarEvent"
 }
 
 
@@ -627,6 +628,18 @@ fun NavGraph(
             val scrollState = rememberLazyListState()
             BirthdayList(scrollState, actions.toCharacterDetail)
         }
+
+        //日程
+        composable(
+            route = Navigation.TOOL_CALENDAR_EVENT,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val scrollState = rememberLazyListState()
+            CalendarEventList(scrollState)
+        }
     }
 }
 
@@ -867,5 +880,12 @@ class NavActions(navController: NavHostController) {
      */
     val toBirthdayList = {
         navController.navigate(Navigation.TOOL_BIRTHDAY)
+    }
+
+    /**
+     * 活动一览
+     */
+    val toCalendarEventList = {
+        navController.navigate(Navigation.TOOL_CALENDAR_EVENT)
     }
 }
