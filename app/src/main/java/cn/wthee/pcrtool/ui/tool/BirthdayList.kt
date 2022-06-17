@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -77,10 +76,8 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
     val ed = data.getEndTime().formatTime
     val inProgress = isInProgress(today, sd, ed, false)
     val comingSoon = isComingSoon(today, sd, false)
-
     val icons = data.unitIds.intArrayList
 
-    Log.e("DEBUG", sd)
 
     Column(
         modifier = Modifier.padding(
@@ -103,6 +100,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                 } else {
                     "${data.month.toString().fillZero()}/${data.day.toString().fillZero()}"
                 },
+                modifier = Modifier.padding(start = Dimen.smallPadding),
                 backgroundColor = colorResource(id = R.color.news_update)
             )
 

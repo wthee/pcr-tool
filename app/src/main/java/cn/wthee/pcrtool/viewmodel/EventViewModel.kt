@@ -48,7 +48,7 @@ class EventViewModel @Inject constructor(
         try {
             val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
             emit(
-                data.sortedWith(compareEvent(getToday()))
+                data.sortedWith(compareEvent())
             )
         } catch (e: Exception) {
 
