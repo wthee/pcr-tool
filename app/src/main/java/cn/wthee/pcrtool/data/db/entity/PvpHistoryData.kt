@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
- * 竞技场收藏
+ * 竞技场历史记录
  */
 @Entity(tableName = "pvp_history")
 data class PvpHistoryData(

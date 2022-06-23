@@ -27,21 +27,6 @@ interface PvpDao {
     suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?
 
     /**
-     * 获取搜索历史信息
-     * @param region 区服版本
-     */
-    @Query("SELECT * FROM pvp_history WHERE defs LIKE '' || :region || '@%' ORDER BY date DESC LIMIT 0,10")
-    suspend fun getHistory(region: Int): List<PvpHistoryData>
-
-    /**
-     * 插入数据
-     * @param data 搜索历史信息
-     */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(data: PvpHistoryData)
-
-
-    /**
      * 获取收藏列表
      * @param defs 防守队伍成员编码
      * @param region 区服版本
@@ -71,4 +56,29 @@ interface PvpDao {
      */
     @Delete
     suspend fun delete(data: PvpFavoriteData)
+
+
+    /**
+     * 获取搜索历史信息
+     * @param region 区服版本
+     */
+    @Query("SELECT * FROM pvp_history WHERE defs LIKE '' || :region || '@%' ORDER BY date DESC LIMIT 0,10")
+    suspend fun getHistory(region: Int): List<PvpHistoryData>
+
+    /**
+     * 插入数据
+     * @param data 搜索历史信息
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(data: PvpHistoryData)
+
+    /**
+     * 根据日期获取搜索历史信息
+     * @param region 区服版本
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     */
+    @Query("SELECT * FROM pvp_history WHERE defs LIKE '' || :region || '@%'AND date >= :startDate AND date <= :endDate ORDER BY date DESC")
+    suspend fun getHistory(region: Int, startDate: String, endDate: String): List<PvpHistoryData>
+
 }

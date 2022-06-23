@@ -6,17 +6,21 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.utils.calcDate
+import cn.wthee.pcrtool.utils.getToday
 import com.google.gson.JsonArray
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * 竞技场收藏 ViewModel
+ * 竞技场 ViewModel
  *
  * @param pvpRepository
  * @param apiRepository
@@ -83,6 +87,41 @@ class PvpViewModel @Inject constructor(
             val data = pvpRepository.getHistory(MainActivity.regionType)
             history.postValue(data)
         }
+    }
+
+    /**
+     * 获取搜索历史信息
+     */
+    fun getRecentlyUsedUnitList() = flow {
+        val today = getToday()
+        //获取前30天
+        val beforeDate = calcDate(today, 30, true)
+        val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
+        val unitList = arrayListOf<PvpCharacterData>()
+        val map = hashMapOf<Int, Int>()
+        //统计数量
+        data.forEach { pvpData ->
+            pvpData.getDefIds().forEach { unitId ->
+                var count = 1
+                if (map[unitId] != null) {
+                    count = map[unitId]!! + 1
+                }
+                map[unitId] = count
+            }
+        }
+        map.forEach {
+            unitList.add(
+                PvpCharacterData(
+                    unitId = it.key,
+                    count = it.value
+                )
+            )
+        }
+        var list = unitList.sortedByDescending { it.count }
+        if (list.size > 10) {
+            list = list.subList(0, 10)
+        }
+        emit(list)
     }
 
     /**

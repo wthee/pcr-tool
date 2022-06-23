@@ -176,3 +176,13 @@ val String.toTimestamp: Long
             0L
         }
     }
+
+/**
+ * 计算 n 天前的日期
+ */
+fun calcDate(date: String, n: Int, before: Boolean): String {
+    val now = Calendar.getInstance()
+    now.time = df1.parse(date)
+    now[Calendar.DATE] = now[Calendar.DATE] + (if (before) -n else n)
+    return df1.format(now.time)
+}

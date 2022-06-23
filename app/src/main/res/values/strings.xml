@@ -214,5 +214,6 @@
     <string name="no_in_progress_data">进行中活动（暂无活动）</string>
     <string name="no_coming_soon_data">活动预告（暂无活动）</string>
     <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
+    <string name="pvp_recently_used_unit">常用（可左右滑动）</string>
 
 </resources>
