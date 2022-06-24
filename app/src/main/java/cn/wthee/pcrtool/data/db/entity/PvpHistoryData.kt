@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.utils.intArrayList
 @Entity(tableName = "pvp_history")
 data class PvpHistoryData(
     @PrimaryKey
+    @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "defs") val defs: String,
     @ColumnInfo(name = "date") val date: String
 ) {

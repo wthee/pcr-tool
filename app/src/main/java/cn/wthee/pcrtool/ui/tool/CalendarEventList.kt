@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 
 /**
- * 日程
+ * 日程记录
  */
 @Composable
 fun CalendarEventList(

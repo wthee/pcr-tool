@@ -35,6 +35,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.math.round
 
 
@@ -77,6 +78,7 @@ fun PvpSearchResult(
         if (!isError) {
             pvpViewModel.insert(
                 PvpHistoryData(
+                    UUID.randomUUID().toString(),
                     "${MainActivity.regionType}@$unSplitDefIds",
                     getToday(),
                 )

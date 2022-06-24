@@ -22,6 +22,8 @@ import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.fadeOut
 import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -404,7 +406,7 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
-            ClanBossInfoPager(
+            ClanBattleDetail(
                 arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_PHASE),
