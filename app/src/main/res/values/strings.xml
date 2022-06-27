@@ -109,6 +109,7 @@
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_info_add_tip">添加对战记录</string>
+    <string name="pvp_info_add">添加</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
@@ -215,5 +216,8 @@
     <string name="no_coming_soon_data">活动预告（暂无活动）</string>
     <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
     <string name="title_recently_used">常用</string>
+    <string name="gacha_fes">Fes限定★3</string>
+    <string name="gacha_limit">限定★3</string>
+    <string name="gacha_normal">常驻★3</string>
 
 </resources>

@@ -117,7 +117,7 @@ private fun MenuItem(
                     // 点击移除
                     editToolMenuOrder(toolMenuData.type.id)
                 } else {
-                    getAction(actions, toolMenuData).invoke()
+                    getAction(actions, toolMenuData)()
                 }
             }
             .defaultMinSize(minWidth = Dimen.menuItemSize)

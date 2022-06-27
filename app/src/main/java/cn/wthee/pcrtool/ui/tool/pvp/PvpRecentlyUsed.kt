@@ -21,14 +21,8 @@ fun PvpRecentlyUsedList(
     usedListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
-    data: List<PvpCharacterData>,
     recentlyUsedUnitList: List<PvpCharacterData>,
 ) {
-    //处理最近使用角色的站位信息
-    recentlyUsedUnitList.forEach {
-        it.position = data.find { d -> d.unitId == it.unitId }?.position ?: 0
-    }
-
     //常用角色一览
     Column(
         modifier = Modifier.fillMaxSize()
@@ -39,7 +33,12 @@ fun PvpRecentlyUsedList(
             state = usedListState,
             verticalArrangement = Arrangement.Center
         ) {
-            items(recentlyUsedUnitList) {
+            items(
+                items = recentlyUsedUnitList,
+                key = {
+                    it.unitId
+                }
+            ) {
                 PvpIconItem(selectedIds, it, floatWindow, true)
             }
             items(spanCount) {

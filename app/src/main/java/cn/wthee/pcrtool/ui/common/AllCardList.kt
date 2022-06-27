@@ -35,7 +35,11 @@ val loadedPicMap = hashMapOf<String, Drawable?>()
  * 角色所有卡面/剧情故事图片
  */
 @Composable
-fun AllPics(id: Int, allPicsType: AllPicsType, picsViewModel: AllPicsViewModel = hiltViewModel()) {
+fun AllCardList(
+    id: Int,
+    allPicsType: AllPicsType,
+    picsViewModel: AllPicsViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     //角色卡面
     val basicUrls = if (allPicsType == AllPicsType.CHARACTER) {
@@ -76,7 +80,7 @@ fun AllPics(id: Int, allPicsType: AllPicsType, picsViewModel: AllPicsViewModel =
                     Spacer(modifier = Modifier.weight(1f))
                     MainText(text = basicUrls.size.toString())
                 }
-                PicGridList(
+                CardGridList(
                     checkedPicUrl = checkedPicUrl,
                     urls = basicUrls
                 )
@@ -111,7 +115,7 @@ fun AllPics(id: Int, allPicsType: AllPicsType, picsViewModel: AllPicsViewModel =
                             )
                     )
                 } else {
-                    PicGridList(
+                    CardGridList(
                         checkedPicUrl = checkedPicUrl,
                         urls = storyUrls
                     )
@@ -158,7 +162,7 @@ fun AllPics(id: Int, allPicsType: AllPicsType, picsViewModel: AllPicsViewModel =
 
 
 @Composable
-private fun PicGridList(
+private fun CardGridList(
     checkedPicUrl: MutableState<String>,
     urls: ArrayList<String>
 ) {

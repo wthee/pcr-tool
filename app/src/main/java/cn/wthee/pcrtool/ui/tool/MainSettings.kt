@@ -327,7 +327,7 @@ private fun SettingItem(
         modifier = Modifier
             .clickable(onClick = {
                 VibrateUtil(context).single()
-                onClick.invoke()
+                onClick()
             })
     ) {
         Spacer(modifier = Modifier.width(Dimen.largePadding))

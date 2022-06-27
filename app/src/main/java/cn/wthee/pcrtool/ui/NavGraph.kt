@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.AllPics
+import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
@@ -157,7 +157,7 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
 
-            AllPics(
+            AllCardList(
                 arguments.getInt(Navigation.UNIT_ID),
                 AllPicsType.getByValue(arguments.getInt(Navigation.ALL_PICS_TYPE))
             )

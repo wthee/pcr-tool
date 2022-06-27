@@ -1,5 +1,9 @@
 package cn.wthee.pcrtool.data.enums
 
+import androidx.compose.ui.res.stringResource
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.Constants
+
 //立绘类型
 enum class AllPicsType(val type: Int) {
     CHARACTER(0),
@@ -94,7 +98,6 @@ enum class ToolMenuType(val id: Int) {
     }
 }
 
-
 //首页
 enum class OverviewType(val id: Int) {
     CHARACTER(0),
@@ -107,5 +110,22 @@ enum class OverviewType(val id: Int) {
     companion object {
         fun getByValue(value: Int) = values()
             .find { it.id == value } ?: CHARACTER
+    }
+}
+
+//站位
+enum class PositionType {
+    UNKNOWN,
+    POSITION_0_299,
+    POSITION_300_599,
+    POSITION_600_999;
+
+    companion object {
+        fun getPositionType(position: Int) = when (position) {
+            in 1..299 -> POSITION_0_299
+            in 300..599 -> POSITION_300_599
+            in 600..9999 -> POSITION_600_999
+            else -> UNKNOWN
+        }
     }
 }

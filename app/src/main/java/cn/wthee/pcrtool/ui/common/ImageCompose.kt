@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -55,7 +56,7 @@ fun ImageCompose(
         placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
         onSuccess = {
-            onSuccess.invoke(it)
+            onSuccess(it)
         },
         modifier = mModifier
     )
@@ -93,7 +94,7 @@ fun StoryImageCompose(
             }
         },
         onSuccess = {
-            onSuccess.invoke(it)
+            onSuccess(it)
         },
         modifier = Modifier.fillMaxWidth()
     )
@@ -104,12 +105,13 @@ fun StoryImageCompose(
  */
 @Composable
 fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.smallIconSize) {
-    val positionIconId = when (position) {
-        in 0..299 -> R.drawable.ic_position_0
-        in 300..599 -> R.drawable.ic_position_1
-        in 600..9999 -> R.drawable.ic_position_2
-        else -> R.drawable.ic_position_2
+    val positionIconId = when (PositionType.getPositionType(position)) {
+        PositionType.POSITION_0_299 -> R.drawable.ic_position_0
+        PositionType.POSITION_300_599 -> R.drawable.ic_position_1
+        PositionType.POSITION_600_999 -> R.drawable.ic_position_2
+        PositionType.UNKNOWN -> R.drawable.unknown_item
     }
+
     IconCompose(
         data = positionIconId,
         size = size,
@@ -137,7 +139,7 @@ fun IconCompose(
             .clip(Shape.small)
             .clickable(onClick = {
                 VibrateUtil(context).single()
-                onClick.invoke()
+                onClick()
             })
     } else {
         modifier.clip(Shape.small)

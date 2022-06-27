@@ -269,12 +269,12 @@ private fun ToSelectMockGachaUnitList(
     ) {
         if (gachaType == 1) {
             // Fes
-            ToSelectMockGachaUnitListItem(allUnits.fesLimit, "Fes限定★3")
+            ToSelectMockGachaUnitListItem(allUnits.fesLimit, stringResource(R.string.gacha_fes))
         } else {
             // 限定
-            ToSelectMockGachaUnitListItem(allUnits.limit, "限定★3")
+            ToSelectMockGachaUnitListItem(allUnits.limit, stringResource(R.string.gacha_limit))
             // 常驻
-            ToSelectMockGachaUnitListItem(allUnits.normal3, "常驻★3")
+            ToSelectMockGachaUnitListItem(allUnits.normal3, stringResource(R.string.gacha_normal))
         }
         CommonSpacer()
 

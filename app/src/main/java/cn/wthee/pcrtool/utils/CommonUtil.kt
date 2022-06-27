@@ -39,7 +39,7 @@ fun checkPermissions(
                 1
             )
         } else {
-            action.invoke()
+            action()
         }
     } else {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
@@ -53,7 +53,7 @@ fun checkPermissions(
                 1
             )
         } else {
-            action.invoke()
+            action()
         }
     }
 

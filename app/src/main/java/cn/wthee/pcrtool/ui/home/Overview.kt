@@ -856,7 +856,7 @@ private fun Section(
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 if (contentVisible) {
-                    onClick.invoke()
+                    onClick()
                 }
             })
             .background(
@@ -939,7 +939,7 @@ private fun Section(
 
         SlideAnimation(visible = contentVisible && !isEditMode) {
             Column {
-                content.invoke()
+                content()
             }
         }
     }

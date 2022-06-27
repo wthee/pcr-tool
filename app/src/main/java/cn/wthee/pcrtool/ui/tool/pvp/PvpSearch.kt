@@ -58,7 +58,6 @@ fun PvpSearchCompose(
     val context = LocalContext.current
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
     val tip = stringResource(id = R.string.tip_select_5)
-    val pageCount = 4
 
     //获取数据
     val data = characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
@@ -77,6 +76,10 @@ fun PvpSearchCompose(
     //常用角色
     val recentlyUsedUnitList =
         pvpViewModel.getRecentlyUsedUnitList().collectAsState(initial = arrayListOf()).value
+    //处理最近使用角色的站位信息
+    recentlyUsedUnitList.forEach {
+        it.position = data.find { d -> d.unitId == it.unitId }?.position ?: 0
+    }
 
     val url = stringResource(id = R.string.pcrdfans_url)
     val urlTip = stringResource(id = R.string.pcrdfans_com)
@@ -86,6 +89,8 @@ fun PvpSearchCompose(
         stringResource(id = R.string.title_love),
         stringResource(id = R.string.title_history),
     )
+    val pageCount = tabs.size
+
 
     //返回选择
     if (close) {
@@ -157,7 +162,7 @@ fun PvpSearchCompose(
                     backgroundColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .fillMaxWidth(if (floatWindow) 1f else 0.618f)
+                        .fillMaxWidth(1f)
                         .align(Alignment.CenterHorizontally)
                 ) {
                     tabs.forEachIndexed { index, s ->
@@ -188,7 +193,7 @@ fun PvpSearchCompose(
                     modifier = Modifier.padding(top = mediumPadding)
                 ) { pageIndex ->
                     when (pageIndex) {
-                        0 -> PvpCharacterSelectPage(
+                        0 -> PvpToSelectList(
                             spanCount = spanCount,
                             selectListState = selectListState,
                             selectedIds = selectedIds,
@@ -200,7 +205,6 @@ fun PvpSearchCompose(
                             usedListState = usedListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
-                            data = data,
                             recentlyUsedUnitList = recentlyUsedUnitList
                         )
                         2 -> {
@@ -259,18 +263,12 @@ fun PvpSearchCompose(
                         context.startActivity(intent)
                     }
                 }
-                //跳转
-                FabCompose(
-                    iconType = MainIconType.FRIEND_LINK
-                ) {
-                    //打开网页
-                    openWebView(context, url, urlTip)
-                }
                 //添加信息
                 val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
                 val addTip = stringResource(id = R.string.pvp_info_add_tip)
                 FabCompose(
-                    iconType = MainIconType.PVP_ADD
+                    iconType = MainIconType.PVP_ADD,
+                    text = stringResource(id = R.string.pvp_info_add)
                 ) {
                     //打开网页
                     openWebView(context, addUrl, addTip)
@@ -305,7 +303,7 @@ fun PvpSearchCompose(
  * 角色选择
  */
 @Composable
-private fun PvpCharacterSelectPage(
+private fun PvpToSelectList(
     spanCount: Int,
     selectListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
@@ -349,7 +347,33 @@ private fun PvpCharacterSelectPage(
                     it.unitId
                 }
             ) {
-                PvpIconItem(selectedIds, it, floatWindow)
+                if (it.type != -1) {
+                    //位置图标
+                    val iconId: Int = when (it.type) {
+                        0 -> {
+                            R.drawable.ic_position_0
+                        }
+                        1 -> {
+                            R.drawable.ic_position_1
+                        }
+                        else -> {
+                            R.drawable.ic_position_2
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier.size(Dimen.iconSize),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconCompose(
+                            data = iconId,
+                            size = Dimen.smallIconSize
+                        )
+                    }
+
+                } else {
+                    PvpIconItem(selectedIds, it, floatWindow)
+                }
             }
             items(spanCount) {
                 CommonSpacer()
@@ -396,6 +420,7 @@ private fun PvpCharacterSelectPage(
 
 /**
  * 角色图标
+ * fixme 卡顿优化
  */
 @Composable
 fun PvpIconItem(
@@ -404,88 +429,60 @@ fun PvpIconItem(
     floatWindow: Boolean,
     showCount: Boolean = false
 ) {
-    val textTopPadding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
-
-    if (pvpCharacterData.type != -1) {
-        //位置图标
-
-        val iconId: Int = when (pvpCharacterData.type) {
-            0 -> {
-                R.drawable.ic_position_0
-            }
-            1 -> {
-                R.drawable.ic_position_1
-            }
-            else -> {
-                R.drawable.ic_position_2
-            }
-        }
-
-        Box(modifier = Modifier.size(Dimen.iconSize), contentAlignment = Alignment.Center) {
-            IconCompose(
-                data = iconId,
-                size = Dimen.smallIconSize
-            )
-        }
-
+    //角色图标
+    val icon = if (pvpCharacterData.unitId == 0) {
+        R.drawable.unknown_gray
     } else {
-        //角色图标
-        val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
-        val selected = selectedIds.find { it.unitId == pvpCharacterData.unitId } != null
-        val newList = arrayListOf<PvpCharacterData>()
-        selectedIds.forEach {
-            newList.add(it)
-        }
-        val icon = if (pvpCharacterData.unitId == 0) {
-            R.drawable.unknown_gray
-        } else {
-            ImageResourceHelper.getInstance().getMaxIconUrl(pvpCharacterData.unitId)
-        }
+        ImageResourceHelper.getInstance().getMaxIconUrl(pvpCharacterData.unitId)
+    }
+    //选中判断
+    val selected = selectedIds.find { it.unitId == pvpCharacterData.unitId } != null
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(Dimen.smallPadding)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(Dimen.smallPadding)
+    ) {
+        //图标
+        IconCompose(
+            data = icon
         ) {
-            //图标
-            IconCompose(
-                data = icon
-            ) {
-                //点击选择或取消选择
-                if (selected) {
-                    var cancelSelectIndex = 0
-                    newList.forEachIndexed { index, sel ->
-                        if (pvpCharacterData.position == sel.position) {
-                            cancelSelectIndex = index
-                        }
-                    }
-                    newList[cancelSelectIndex] = PvpCharacterData()
-                } else {
-                    val unSelected = newList.find { it.position == 999 }
-                    if (unSelected == null) {
-                        //选完了
-                        ToastUtil.short(tipSelectLimit)
-                    } else {
-                        //可以选择
-                        newList[0] = pvpCharacterData
+            val newList = arrayListOf<PvpCharacterData>()
+            selectedIds.forEach {
+                newList.add(it)
+            }
+            //点击选择或取消选择
+            if (selected) {
+                var cancelSelectIndex = 0
+                newList.forEachIndexed { index, sel ->
+                    if (pvpCharacterData.position == sel.position) {
+                        cancelSelectIndex = index
                     }
                 }
-                newList.sortByDescending { it.position }
-                navViewModel.selectedPvpData.postValue(newList)
+                newList[cancelSelectIndex] = PvpCharacterData()
+            } else {
+                val unSelected = newList.find { it.position == 999 }
+                if (unSelected != null) {
+                    //可以选择
+                    newList[0] = pvpCharacterData
+                }
             }
+            newList.sortByDescending { it.position }
+            navViewModel.selectedPvpData.postValue(newList)
+        }
+
+        if (showCount) {
+            CaptionText(text = "${pvpCharacterData.count}次")
+        } else {
             //位置
             val position =
                 if (pvpCharacterData != PvpCharacterData()) pvpCharacterData.position else 0
+            val textTopPadding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
 
-            if (showCount) {
-                CaptionText(text = "${pvpCharacterData.count}次")
-            } else {
-                CharacterPositionText(
-                    showColor = selected,
-                    position = position,
-                    modifier = Modifier.padding(top = textTopPadding),
-                )
-            }
+            CharacterPositionText(
+                showColor = selected,
+                position = position,
+                modifier = Modifier.padding(top = textTopPadding),
+            )
         }
     }
 }

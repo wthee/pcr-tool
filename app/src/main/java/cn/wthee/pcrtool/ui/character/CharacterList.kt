@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -202,11 +203,11 @@ fun CharacterItem(
     }
     //位置信息
     var positionText = ""
-    val pos = when (character.position) {
-        in 1..299 -> stringResource(id = R.string.position_0)
-        in 300..599 -> stringResource(id = R.string.position_1)
-        in 600..9999 -> stringResource(id = R.string.position_2)
-        else -> Constants.UNKNOWN
+    val pos = when (PositionType.getPositionType(character.position)) {
+        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+        PositionType.UNKNOWN -> Constants.UNKNOWN
     }
     if (pos != Constants.UNKNOWN) {
         positionText = "$pos ${character.position}"

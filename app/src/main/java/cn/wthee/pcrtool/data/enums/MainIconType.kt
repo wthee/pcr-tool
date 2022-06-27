@@ -214,7 +214,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 添加对战信息
      */
-    PVP_ADD(Icons.Rounded.Assistant),
+    PVP_ADD(Icons.Rounded.PlaylistAdd),
 
     /**
      * 剩余时间

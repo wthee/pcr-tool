@@ -219,7 +219,7 @@ fun tryOpenDatabase(): Int {
     try {
         //尝试打开数据库
         if (File(FileUtil.getDatabasePath(MainActivity.regionType)).exists()) {
-            open.invoke()
+            open()
         }
     } catch (e: Exception) {
         //启用远程备份数据库
