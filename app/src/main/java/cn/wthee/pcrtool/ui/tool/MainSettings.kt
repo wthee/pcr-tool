@@ -36,10 +36,10 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.switchColors
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.openWebView
 
 /**
  * 设置页面
@@ -100,7 +100,7 @@ fun MainSettings() {
             Subtitle2(
                 text = projectUrl,
                 modifier = Modifier.clickable {
-                    openWebView(context, projectUrl, project)
+                    BrowserUtil.open(context, projectUrl, project)
                 })
             ImageCompose(
                 data = R.mipmap.ic_launcher_round,
@@ -141,7 +141,7 @@ fun MainSettings() {
             stringResource(id = R.string.data_from),
             stringResource(id = R.string.data_from_hint),
         ) {
-            openWebView(context, dataFromUrl)
+            BrowserUtil.open(context, dataFromUrl)
         }
         //- 静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
@@ -150,7 +150,7 @@ fun MainSettings() {
             stringResource(id = R.string.shizuru_note),
             stringResource(id = R.string.shizuru_note_tip),
         ) {
-            openWebView(context, shizuruUrl)
+            BrowserUtil.open(context, shizuruUrl)
         }
         //- 竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
@@ -159,7 +159,7 @@ fun MainSettings() {
             stringResource(id = R.string.pcrdfans),
             stringResource(id = R.string.pcrdfans_tip),
         ) {
-            openWebView(context, pcrdfansUrl)
+            BrowserUtil.open(context, pcrdfansUrl)
         }
         //- 排行
         val appMediaUrl = stringResource(id = R.string.leader_source_url)
@@ -168,7 +168,7 @@ fun MainSettings() {
             stringResource(id = R.string.leader_source),
             stringResource(id = R.string.leader_tip),
         ) {
-            openWebView(context, appMediaUrl)
+            BrowserUtil.open(context, appMediaUrl)
         }
         CommonSpacer()
     }

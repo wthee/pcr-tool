@@ -182,7 +182,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                         .clip(Shape.medium)
                         .clickable {
                             VibrateUtil(context).single()
-                            openWebView(
+                            BrowserUtil.open(
                                 context,
                                 Constants.GITHUB_RELEASE_URL + appNotice.title
                             )
@@ -215,7 +215,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         VibrateUtil(context).single()
-                        openWebView(
+                        BrowserUtil.open(
                             context,
                             appNotice.url
                         )

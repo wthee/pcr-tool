@@ -26,16 +26,16 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.db.entity.urlGetId
+import cn.wthee.pcrtool.data.db.entity.getNewsId
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
-import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TweetList(
     scrollState: LazyListState,
-    toDetail: (String) -> Unit,
+    toNewsDetail: (String) -> Unit,
     toComic: (Int) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
@@ -67,7 +67,7 @@ fun TweetList(
             LazyColumn(state = scrollState) {
                 if (tweet!!.loadState.prepend is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData(), toDetail, toComic)
+                        TweetItem(TweetData(), toNewsDetail, toComic)
                     }
                 }
                 items(
@@ -76,11 +76,11 @@ fun TweetList(
                         it.id
                     }
                 ) {
-                    TweetItem(it ?: TweetData(), toDetail, toComic)
+                    TweetItem(it ?: TweetData(), toNewsDetail, toComic)
                 }
                 if (tweet.loadState.append is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData(), toDetail, toComic)
+                        TweetItem(TweetData(), toNewsDetail, toComic)
                     }
                 }
                 item {
@@ -91,7 +91,7 @@ fun TweetList(
         FadeAnimation(visible = !visible) {
             LazyColumn(state = rememberLazyListState()) {
                 items(12) {
-                    TweetItem(TweetData(), toDetail, toComic)
+                    TweetItem(TweetData(), toNewsDetail, toComic)
                 }
                 item {
                     CommonSpacer()
@@ -121,7 +121,7 @@ fun TweetList(
  * 推特内容
  */
 @Composable
-private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int) -> Unit) {
+private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: (Int) -> Unit) {
     val placeholder = data.id == ""
     val photos = data.getImageList()
     var comicId = ""
@@ -184,9 +184,9 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
         //相关链接跳转
         if (!placeholder) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                TweetButton(data.link, toDetail = toDetail, toComic = toComic)
+                TweetButton(data.link, toNewsDetail = toNewsDetail, toComic = toComic)
                 data.getUrlList().forEach {
-                    TweetButton(it, comicId, toDetail = toDetail, toComic = toComic)
+                    TweetButton(it, comicId, toNewsDetail = toNewsDetail, toComic = toComic)
                 }
             }
         }
@@ -218,7 +218,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
 private fun TweetButton(
     url: String,
     comicId: String = "",
-    toDetail: (String) -> Unit,
+    toNewsDetail: (String) -> Unit,
     toComic: (Int) -> Unit
 ) {
     val context = LocalContext.current
@@ -227,23 +227,23 @@ private fun TweetButton(
         url.contains("youtu.be") || url.contains("www.youtube.com") -> TweetButtonData(
             stringResource(id = R.string.youtube), MainIconType.YOUTUBE,
         ) {
-            openWebView(context, url)
+            BrowserUtil.open(context, url)
         }
         url.contains("priconne-redive.jp/news/") -> TweetButtonData(
             stringResource(id = R.string.read_news), MainIconType.NEWS
         ) {
             //跳转至公告详情
-            toDetail(url.urlGetId())
+            toNewsDetail(url.getNewsId())
         }
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET
         ) {
-            openWebView(context, url)
+            BrowserUtil.open(context, url)
         }
         url.contains("hibiki-radio.jp") -> TweetButtonData(
             stringResource(id = R.string.hibiki), MainIconType.HIBIKI
         ) {
-            openWebView(context, url)
+            BrowserUtil.open(context, url)
         }
         url.contains("comic") -> TweetButtonData(
             stringResource(id = R.string.read_comic), MainIconType.COMIC
@@ -254,7 +254,7 @@ private fun TweetButton(
             }
         }
         else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
-            openWebView(context, url)
+            BrowserUtil.open(context, url)
         }
     }
 
@@ -285,7 +285,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewBox {
-        TweetItem(data = TweetData(id = "?"), toDetail = {}, toComic = {})
+        TweetItem(data = TweetData(id = "?"), toNewsDetail = {}, toComic = {})
     }
 }
 

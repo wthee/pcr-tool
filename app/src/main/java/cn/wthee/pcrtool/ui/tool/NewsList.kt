@@ -35,9 +35,9 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -49,7 +49,7 @@ import com.google.accompanist.placeholder.material.shimmer
 @Composable
 fun NewsList(
     scrollState: LazyListState,
-    toDetail: (String) -> Unit,
+    toNewsDetail: (String) -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
     //区服
@@ -88,12 +88,12 @@ fun NewsList(
                         if (navViewModel.loading.value == true) {
                             navViewModel.loading.postValue(false)
                         }
-                        NewsItem(news = it, toDetail)
+                        NewsItem(news = it, toNewsDetail)
                     }
                 }
                 if (news.loadState.append is LoadState.Loading) {
                     item {
-                        NewsItem(news = NewsTable(), toDetail)
+                        NewsItem(news = NewsTable(), toNewsDetail)
                     }
                 }
                 item {
@@ -121,7 +121,7 @@ fun NewsList(
 @Composable
 fun NewsItem(
     news: NewsTable,
-    toDetail: (String) -> Unit,
+    toNewsDetail: (String) -> Unit,
 ) {
     val placeholder = news.title == ""
     val tag = news.getTag()
@@ -160,7 +160,7 @@ fun NewsItem(
             )
             .heightIn(min = Dimen.cardHeight),
             onClick = {
-                toDetail(news.id)
+                toNewsDetail(news.id)
             }
         ) {
             //内容
@@ -341,7 +341,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                 FabCompose(
                     iconType = MainIconType.BROWSER
                 ) {
-                    openWebView(context, originalUrl)
+                    BrowserUtil.open(context, originalUrl)
                 }
                 //分享
                 FabCompose(
@@ -355,8 +355,6 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
         }
 
     }
-
-
 }
 
 
@@ -365,7 +363,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
 private fun NewsItemPreview() {
     PreviewBox {
         Column {
-            NewsItem(news = NewsTable(title = "?"), toDetail = {})
+            NewsItem(news = NewsTable(title = "?"), toNewsDetail = {})
         }
     }
 }

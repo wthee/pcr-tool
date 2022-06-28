@@ -13,7 +13,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-rc01"
+val composeVersion = "1.2.0-rc02"
 val appVersionCode = 327
 val appVersionName = "3.2.7"
 val appId = "cn.wthee.pcrtool"
@@ -112,9 +112,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
-    //Bugly
-    implementation("com.tencent.bugly:crashreport:4.0.4")
-
     //compose
     implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
@@ -127,13 +124,19 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
 
     //Accompanist
-    val accompanistVersion = "0.24.11-rc"
+    val accompanistVersion = "0.24.12-rc"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+
+    //Browser
+    implementation("androidx.browser:browser:1.4.0")
+
+    //Bugly
+    implementation("com.tencent.bugly:crashreport:4.0.4")
 
     //Coil
     val coilVersion = "2.1.0"

@@ -266,14 +266,14 @@ private fun NewsSection(
                 newsList.forEach {
                     NewsItem(
                         news = it,
-                        toDetail = actions.toNewsDetail
+                        toNewsDetail = actions.toNewsDetail
                     )
                 }
             } else {
                 for (i in 0 until 3) {
                     NewsItem(
                         news = NewsTable(),
-                        toDetail = actions.toNewsDetail
+                        toNewsDetail = actions.toNewsDetail
                     )
                 }
             }
