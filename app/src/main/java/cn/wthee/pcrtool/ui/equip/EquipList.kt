@@ -68,6 +68,7 @@ fun EquipList(
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()
     }
+
     filter.value?.let { filterValue ->
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
@@ -114,13 +115,11 @@ fun EquipList(
                     horizontalArrangement = Arrangement.End
                 ) {
                     //回到顶部
-                    FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
-                        FabCompose(
-                            iconType = MainIconType.TOP
-                        ) {
-                            coroutineScope.launch {
-                                scrollState.scrollToItem(0)
-                            }
+                    FabCompose(
+                        iconType = MainIconType.TOP
+                    ) {
+                        coroutineScope.launch {
+                            scrollState.scrollToItem(0)
                         }
                     }
                     //重置筛选

@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -64,15 +63,6 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     FabCompose(
                         iconType = MainIconType.PVP_SEARCH
                     ) {
-                        coroutineScope.launch {
-                            try {
-                                if (resultListState.firstVisibleItemIndex != 0) {
-                                    resultListState.scrollToItem(0)
-                                }
-                            } catch (ignore: Exception) {
-
-                            }
-                        }
                         pvpViewModel.pvpResult.postValue(null)
                         navViewModel.showResult.postValue(true)
                     }

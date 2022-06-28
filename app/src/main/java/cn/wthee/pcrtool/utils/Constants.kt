@@ -29,6 +29,9 @@ object Constants {
     //接口正式地址
     const val API_URL = "https://wthee.xyz:8848/api/"
 
+    //Spine 预览地址
+    const val PREVIEW_UNIT_URL = "https://wthee.xyz/spine/index.html?unitId="
+
     //国服数据库
     const val DATABASE_VERSION_URL_CN = "last_version_cn.json"
     const val DATABASE_DOWNLOAD_FILE_NAME_CN = "redive_cn.db.br"
@@ -78,7 +81,6 @@ object Constants {
 
     const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"
     const val PVPSEARCH_NOTICE_TITLE = "竞技场查询服务正在运行"
-    const val DOWNLOAD_ERROR = "下载数据出现未知错误~"
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(

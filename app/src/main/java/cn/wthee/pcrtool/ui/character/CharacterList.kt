@@ -143,13 +143,11 @@ fun CharacterList(
                 horizontalArrangement = Arrangement.End
             ) {
                 //回到顶部
-                FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
-                    FabCompose(
-                        iconType = MainIconType.TOP
-                    ) {
-                        coroutineScope.launch {
-                            scrollState.scrollToItem(0)
-                        }
+                FabCompose(
+                    iconType = MainIconType.TOP
+                ) {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
                     }
                 }
                 //重置筛选

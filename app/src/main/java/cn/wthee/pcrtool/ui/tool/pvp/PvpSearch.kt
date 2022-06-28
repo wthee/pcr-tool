@@ -7,7 +7,10 @@ import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -32,7 +35,10 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
 
@@ -42,14 +48,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PvpSearchCompose(
-    floatWindow: Boolean = false,
+    floatWindow: Boolean,
     initSpanCount: Int = 0,
-    pagerState: PagerState = rememberPagerState(),
-    selectListState: LazyGridState = rememberLazyGridState(),
-    usedListState: LazyGridState = rememberLazyGridState(),
-    resultListState: LazyGridState = rememberLazyGridState(),
-    favoritesListState: LazyGridState = rememberLazyGridState(),
-    historyListState: LazyGridState = rememberLazyGridState(),
+    pagerState: PagerState,
+    selectListState: LazyGridState,
+    usedListState: LazyGridState,
+    resultListState: LazyGridState,
+    favoritesListState: LazyGridState,
+    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -73,24 +79,6 @@ fun PvpSearchCompose(
     } else {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
     }
-    //常用角色
-    val recentlyUsedUnitList =
-        pvpViewModel.getRecentlyUsedUnitList().collectAsState(initial = arrayListOf()).value
-    //处理最近使用角色的站位信息
-    recentlyUsedUnitList.forEach {
-        it.position = data.find { d -> d.unitId == it.unitId }?.position ?: 0
-    }
-
-    val url = stringResource(id = R.string.pcrdfans_url)
-    val urlTip = stringResource(id = R.string.pcrdfans_com)
-    val tabs = arrayListOf(
-        stringResource(id = R.string.character),
-        stringResource(id = R.string.title_recently_used),
-        stringResource(id = R.string.title_love),
-        stringResource(id = R.string.title_history),
-    )
-    val pageCount = tabs.size
-
 
     //返回选择
     if (close) {
@@ -98,6 +86,14 @@ fun PvpSearchCompose(
         navViewModel.fabCloseClick.postValue(false)
         pvpViewModel.requesting = false
     }
+
+    val tabs = arrayListOf(
+        stringResource(id = R.string.character),
+        stringResource(id = R.string.title_recently_used),
+        stringResource(id = R.string.title_love),
+        stringResource(id = R.string.title_history),
+    )
+    val pageCount = tabs.size
 
     //动态调整 spanCount
     val normalSize = (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
@@ -112,12 +108,15 @@ fun PvpSearchCompose(
         Column {
             //标题
             if (!floatWindow) {
+                val url = stringResource(id = R.string.pcrdfans_url)
+                val urlTip = stringResource(id = R.string.pcrdfans_com)
+
                 MainTitleText(
                     text = stringResource(id = R.string.pcrdfans),
                     modifier = Modifier
                         .padding(start = Dimen.largePadding, top = Dimen.largePadding)
                         .clickable {
-                            openWebView(context, url, urlTip)
+                            BrowserUtil.open(context, url, urlTip)
                         }
                 )
             }
@@ -205,7 +204,7 @@ fun PvpSearchCompose(
                             usedListState = usedListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
-                            recentlyUsedUnitList = recentlyUsedUnitList
+                            data = data
                         )
                         2 -> {
                             PvpFavorites(
@@ -271,7 +270,7 @@ fun PvpSearchCompose(
                     text = stringResource(id = R.string.pvp_info_add)
                 ) {
                     //打开网页
-                    openWebView(context, addUrl, addTip)
+                    BrowserUtil.open(context, addUrl, addTip)
                 }
                 //查询
                 FabCompose(
@@ -279,19 +278,8 @@ fun PvpSearchCompose(
                     text = if (floatWindow) "" else stringResource(id = R.string.pvp_search)
                 ) {
                     //查询
-                    scope.launch {
-                        try {
-                            if (resultListState.firstVisibleItemIndex != 0) {
-                                resultListState.scrollToItem(0)
-                            }
-                        } catch (ignore: Exception) {
-
-                        }
-
-                        pvpViewModel.pvpResult.postValue(null)
-                        navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                        navViewModel.showResult.postValue(true)
-                    }
+                    pvpViewModel.pvpResult.postValue(null)
+                    navViewModel.showResult.postValue(true)
                 }
             }
         }
@@ -375,7 +363,7 @@ private fun PvpToSelectList(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(spanCount) {
+            items(spanCount * 2) {
                 CommonSpacer()
             }
         }
@@ -420,7 +408,6 @@ private fun PvpToSelectList(
 
 /**
  * 角色图标
- * fixme 卡顿优化
  */
 @Composable
 fun PvpIconItem(

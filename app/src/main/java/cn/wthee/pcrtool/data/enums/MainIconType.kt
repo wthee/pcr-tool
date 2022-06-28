@@ -355,4 +355,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 生日日程
      */
     BIRTHDAY(Icons.Rounded.Cake),
+
+    /**
+     * 预览模型
+     */
+    PREVIEW_UNIT_SPINE(Icons.Rounded.RemoveRedEye),
 }

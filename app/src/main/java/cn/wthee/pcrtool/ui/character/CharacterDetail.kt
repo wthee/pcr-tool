@@ -44,11 +44,8 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -334,6 +331,26 @@ fun CharacterDetail(
                         }
                         //属性
                         AttrLists(unitId, allData, actions)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            //RANK对比
+                            SubButton(text = stringResource(id = R.string.rank_compare)) {
+                                actions.toCharacteRankCompare(
+                                    unitId,
+                                    maxValue.rank,
+                                    currentValue.level,
+                                    currentValue.rarity,
+                                    currentValue.uniqueEquipmentLevel,
+                                )
+                            }
+                            //装备统计
+                            SubButton(text = stringResource(id = R.string.calc_equip_count)) {
+                                actions.toCharacteEquipCount(unitId, maxValue.rank)
+                            }
+                        }
+
                         //RANK 装备
                         CharacterEquip(
                             unitId = unitId,
@@ -400,6 +417,14 @@ fun CharacterDetail(
                             end = Dimen.fabMargin
                         )
                     ) {
+                        //预览模型
+                        FabCompose(
+                            iconType = MainIconType.PREVIEW_UNIT_SPINE,
+                            text = stringResource(R.string.model_preview),
+                            hasNavBarPadding = unknown
+                        ) {
+                            BrowserUtil.open(context, Constants.PREVIEW_UNIT_URL + unitId)
+                        }
                         //收藏
                         FabCompose(
                             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
@@ -440,7 +465,7 @@ fun CharacterDetail(
                             //跳转至 RANK 对比页面
                             FabCompose(
                                 iconType = MainIconType.RANK_COMPARE,
-                                text = stringResource(id = R.string.compare),
+                                text = stringResource(id = R.string.rank_compare),
                             ) {
                                 actions.toCharacteRankCompare(
                                     unitId,
@@ -453,7 +478,7 @@ fun CharacterDetail(
                             //跳转至装备统计页面
                             FabCompose(
                                 iconType = MainIconType.EQUIP_CALC,
-                                text = stringResource(id = R.string.count),
+                                text = stringResource(id = R.string.calc_equip_count),
                             ) {
                                 actions.toCharacteEquipCount(unitId, maxValue.rank)
                             }

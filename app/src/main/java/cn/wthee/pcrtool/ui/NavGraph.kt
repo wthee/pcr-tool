@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 
 object Navigation {
     const val HOME = "home"
@@ -422,7 +423,21 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
+            val pagerState = rememberPagerState()
+            val selectListState = rememberLazyGridState()
+            val usedListState = rememberLazyGridState()
+            val resultListState = rememberLazyGridState()
+            val favoritesListState = rememberLazyGridState()
+            val historyListState = rememberLazyGridState()
+
             PvpSearchCompose(
+                floatWindow = false,
+                pagerState = pagerState,
+                selectListState = selectListState,
+                usedListState = usedListState,
+                resultListState = resultListState,
+                favoritesListState = favoritesListState,
+                historyListState = historyListState,
                 toCharacter = actions.toCharacterDetail
             )
         }

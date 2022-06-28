@@ -8,9 +8,12 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.viewmodel.PvpViewModel
 
 /**
  * 最近最多使用过的角色
@@ -21,8 +24,17 @@ fun PvpRecentlyUsedList(
     usedListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
-    recentlyUsedUnitList: List<PvpCharacterData>,
+    data: List<PvpCharacterData>,
+    pvpViewModel: PvpViewModel = hiltViewModel(),
 ) {
+    //常用角色
+    val recentlyUsedUnitList =
+        pvpViewModel.getRecentlyUsedUnitList().collectAsState(initial = arrayListOf()).value
+    //处理最近使用角色的站位信息
+    recentlyUsedUnitList.forEach {
+        it.position = data.find { d -> d.unitId == it.unitId }?.position ?: 0
+    }
+
     //常用角色一览
     Column(
         modifier = Modifier.fillMaxSize()
