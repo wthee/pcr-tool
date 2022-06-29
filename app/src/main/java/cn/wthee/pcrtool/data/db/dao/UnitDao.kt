@@ -466,7 +466,7 @@ interface UnitDao {
      * 获取特殊六星 id
      */
     @SkipQueryVerification
-    @Query("SELECT cutin1_star6 FROM unit_data WHERE cutin_1 = :unitId AND cutin1_star6 <> :unitId")
+    @Query("SELECT unit_id FROM unit_conversion WHERE original_unit_id = :unitId")
     suspend fun getCutinId(unitId: Int): Int?
 
     /**

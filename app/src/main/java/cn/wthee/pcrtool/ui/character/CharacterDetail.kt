@@ -80,10 +80,10 @@ fun CharacterDetail(
         navViewModel.currentValue.postValue(maxValue)
     }
     // bottomsheet 状态
-    val state = rememberModalBottomSheetState(
+    val modalBottomSheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!modalBottomSheetState.isVisible && !modalBottomSheetState.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }
@@ -99,7 +99,7 @@ fun CharacterDetail(
         skillViewModel.getCharacterSkillLoops(unitId).collectAsState(initial = arrayListOf()).value
     val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
     //角色属性
-    val allData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
+    val characterAttrData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value
     //角色特殊六星id
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
@@ -117,15 +117,16 @@ fun CharacterDetail(
 
     //页面
     ModalBottomSheetLayout(
-        sheetState = state,
+        sheetState = modalBottomSheetState,
         scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
-        sheetShape = if (state.offset.value == 0f) {
+        sheetShape = if (modalBottomSheetState.offset.value == 0f) {
             noShape
         } else {
             Shape.large
         },
         sheetContent = {
+            //技能循环
             SkillLoopList(
                 loopData,
                 iconTypes,
@@ -143,7 +144,7 @@ fun CharacterDetail(
             //关闭
             if (close) {
                 coroutineScope.launch {
-                    state.hide()
+                    modalBottomSheetState.hide()
                 }
                 navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                 navViewModel.fabCloseClick.postValue(false)
@@ -151,7 +152,8 @@ fun CharacterDetail(
 
             Box(modifier = Modifier.fillMaxSize()) {
                 //数据加载后，展示页面
-                val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
+                val visible =
+                    characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
                 //页面
                 FadeAnimation(visible) {
                     Column(
@@ -174,7 +176,8 @@ fun CharacterDetail(
                                     ""
                                 } else {
                                     val basicAttr =
-                                        allData.sumAttr.copy().sub(allData.exSkillAttr)
+                                        characterAttrData.sumAttr.copy()
+                                            .sub(characterAttrData.exSkillAttr)
                                     val basic = basicAttr.hp * coe.hp_coefficient +
                                             basicAttr.atk * coe.atk_coefficient +
                                             basicAttr.magicStr * coe.magic_str_coefficient +
@@ -195,7 +198,7 @@ fun CharacterDetail(
                                     //技能2：默认加上技能2
                                     var skill = currentValue.level * coe.skill_lv_coefficient
                                     //技能1：解锁专武，技能1系数提升
-                                    if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
+                                    if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                                         skill += coe.skill1_evolution_coefficient
                                         skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
                                     } else {
@@ -330,13 +333,21 @@ fun CharacterDetail(
                             )
                         }
                         //属性
-                        AttrLists(unitId, allData, actions)
+                        AttrLists(unitId, characterAttrData, actions)
+                        //RANK相关功能
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .padding(Dimen.largePadding)
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             //RANK对比
-                            SubButton(text = stringResource(id = R.string.rank_compare)) {
+                            IconTextButton(
+                                icon = MainIconType.RANK_COMPARE,
+                                text = stringResource(id = R.string.rank_compare),
+                                iconSize = Dimen.fabIconSize,
+                                textStyle = MaterialTheme.typography.bodyMedium
+                            ) {
                                 actions.toCharacteRankCompare(
                                     unitId,
                                     maxValue.rank,
@@ -346,27 +357,31 @@ fun CharacterDetail(
                                 )
                             }
                             //装备统计
-                            SubButton(text = stringResource(id = R.string.calc_equip_count)) {
+                            IconTextButton(
+                                icon = MainIconType.EQUIP_CALC,
+                                text = stringResource(id = R.string.calc_equip_count),
+                                iconSize = Dimen.fabIconSize,
+                                textStyle = MaterialTheme.typography.bodyMedium
+                            ) {
                                 actions.toCharacteEquipCount(unitId, maxValue.rank)
                             }
                         }
-
                         //RANK 装备
                         CharacterEquip(
                             unitId = unitId,
                             rank = currentValue.rank,
                             maxRank = maxValue.rank,
-                            equips = allData.equips,
+                            equips = characterAttrData.equips,
                             toEquipDetail = actions.toEquipDetail,
                             toRankEquip = actions.toCharacteRankEquip,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         //显示专武
-                        if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
+                        if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                             UniqueEquip(
                                 currentValue = currentValue,
                                 uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                uniqueEquipmentMaxData = allData.uniqueEquip,
+                                uniqueEquipmentMaxData = characterAttrData.uniqueEquip,
                             )
                         }
                         //技能
@@ -375,8 +390,8 @@ fun CharacterDetail(
                             cutinId = cutinId,
                             level = currentValue.level,
                             atk = max(
-                                allData.sumAttr.atk.int,
-                                allData.sumAttr.magicStr.int
+                                characterAttrData.sumAttr.atk.int,
+                                characterAttrData.sumAttr.magicStr.int
                             ),
                             unitType = UnitType.CHARACTER,
                             toSummonDetail = actions.toSummonDetail
@@ -417,14 +432,6 @@ fun CharacterDetail(
                             end = Dimen.fabMargin
                         )
                     ) {
-                        //预览模型
-                        FabCompose(
-                            iconType = MainIconType.PREVIEW_UNIT_SPINE,
-                            text = stringResource(R.string.model_preview),
-                            hasNavBarPadding = unknown
-                        ) {
-                            BrowserUtil.open(context, Constants.PREVIEW_UNIT_URL + unitId)
-                        }
                         //收藏
                         FabCompose(
                             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
@@ -447,12 +454,12 @@ fun CharacterDetail(
                             modifier = Modifier.alpha(if (unknown) 0f else 1f)
                         ) {
                             coroutineScope.launch {
-                                if (state.isVisible) {
+                                if (modalBottomSheetState.isVisible) {
                                     navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                                    state.hide()
+                                    modalBottomSheetState.hide()
                                 } else {
                                     navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                                    state.show()
+                                    modalBottomSheetState.show()
                                 }
                             }
                         }
@@ -462,25 +469,12 @@ fun CharacterDetail(
                             modifier = Modifier
                                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                         ) {
-                            //跳转至 RANK 对比页面
+                            //预览模型
                             FabCompose(
-                                iconType = MainIconType.RANK_COMPARE,
-                                text = stringResource(id = R.string.rank_compare),
+                                iconType = MainIconType.PREVIEW_UNIT_SPINE,
+                                text = stringResource(R.string.model_preview)
                             ) {
-                                actions.toCharacteRankCompare(
-                                    unitId,
-                                    maxValue.rank,
-                                    currentValue.level,
-                                    currentValue.rarity,
-                                    currentValue.uniqueEquipmentLevel,
-                                )
-                            }
-                            //跳转至装备统计页面
-                            FabCompose(
-                                iconType = MainIconType.EQUIP_CALC,
-                                text = stringResource(id = R.string.calc_equip_count),
-                            ) {
-                                actions.toCharacteEquipCount(unitId, maxValue.rank)
+                                BrowserUtil.open(context, Constants.PREVIEW_UNIT_URL + unitId)
                             }
                         }
                     }
@@ -591,7 +585,6 @@ private fun CharacterEquip(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(top = Dimen.largePadding)
                 .width(Dimen.iconSize * 4)
         ) {
             val id6 = equips[0].equipmentId

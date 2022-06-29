@@ -1,12 +1,12 @@
 package cn.wthee.pcrtool.utils
 
-import android.R
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsService
+import cn.wthee.pcrtool.R
 
 object BrowserUtil {
 
@@ -20,10 +20,14 @@ object BrowserUtil {
         val packageList = getCustomTabsPackages(context)
 
         if (packageList.isNotEmpty()) {
-            val builder = CustomTabsIntent.Builder()
-            builder.setStartAnimations(context, R.anim.fade_in, R.anim.fade_out);
-            builder.setExitAnimations(context, R.anim.fade_out, R.anim.fade_in);
+            val builder = CustomTabsIntent.Builder().apply {
+                setStartAnimations(context, R.anim.fade_in, R.anim.fade_out)
+                setExitAnimations(context, R.anim.fade_out, R.anim.fade_in)
+                setShowTitle(true)
+            }
+
             val customTabsIntent = builder.build()
+            //设置默认应用
             customTabsIntent.intent.setPackage(packageList[0].activityInfo.packageName)
             customTabsIntent.launchUrl(context, Uri.parse(url))
         } else {

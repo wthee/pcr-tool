@@ -15,10 +15,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +34,8 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -674,5 +678,43 @@ fun SelectTypeCompose(
             }
 
         }
+    }
+}
+
+/**
+ * 带图标按钮
+ */
+@Composable
+fun IconTextButton(
+    modifier: Modifier = Modifier,
+    icon: Any,
+    text: String,
+    contentColor: Color = MaterialTheme.colorScheme.primary,
+    iconSize: Dp = Dimen.smallIconSize,
+    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    onClick: () -> Unit
+) {
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .padding(start = Dimen.largePadding)
+            .clip(Shape.medium)
+            .clickable {
+                VibrateUtil(context).single()
+                onClick()
+            }
+            .padding(Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconCompose(data = icon, size = iconSize, tint = contentColor)
+        Text(
+            text = text,
+            color = contentColor,
+            style = textStyle,
+            modifier = modifier,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

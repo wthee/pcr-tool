@@ -219,6 +219,6 @@
     <string name="gacha_fes">Fes限定★3</string>
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
-    <string name="model_preview">模型</string>
+    <string name="model_preview">模型预览</string>
 
 </resources>
