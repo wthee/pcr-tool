@@ -84,8 +84,8 @@ fun GachaList(
 @Composable
 fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()
-    val sd = fixJpTime(gachaInfo.startTime.formatTime)
-    val ed = fixJpTime(gachaInfo.endTime.formatTime)
+    val sd = gachaInfo.startTime.formatTime.fixJpTime
+    val ed = gachaInfo.endTime.formatTime.fixJpTime
     val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime)
     val comingSoon = isComingSoon(today, gachaInfo.startTime)
 

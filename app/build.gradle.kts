@@ -113,12 +113,12 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
@@ -138,7 +138,7 @@ dependencies {
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.0.4")
 
-    //Coil
+    //Coil(compose verion 1.1.1)
     val coilVersion = "2.1.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")

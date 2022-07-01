@@ -113,9 +113,9 @@ class SystemCalendarHelper {
                             val calID: Long = cur.getLong(PROJECTION_ID_INDEX)
 
                             val startMillis: Long =
-                                fixJpTime(it.startTime.formatTime).toTimestamp
+                                it.startTime.formatTime.fixJpTime.toTimestamp
                             val endMillis: Long =
-                                fixJpTime(it.endTime.formatTime).toTimestamp
+                                it.endTime.formatTime.fixJpTime.toTimestamp
 
                             val values = ContentValues().apply {
                                 put(CalendarContract.Events.DTSTART, startMillis)

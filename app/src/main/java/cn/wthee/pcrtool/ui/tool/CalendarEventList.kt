@@ -74,8 +74,8 @@ fun CalendarEventList(
 @Composable
 fun CalendarEventItem(calendar: CalendarEvent) {
     val today = getToday()
-    val sd = fixJpTime(calendar.startTime.formatTime)
-    val ed = fixJpTime(calendar.endTime.formatTime)
+    val sd = calendar.startTime.formatTime.fixJpTime
+    val ed = calendar.endTime.formatTime.fixJpTime
     val inProgress = isInProgress(today, calendar.startTime, calendar.endTime)
     val comingSoon = isComingSoon(today, calendar.startTime)
 

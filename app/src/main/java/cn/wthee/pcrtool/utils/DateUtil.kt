@@ -57,6 +57,23 @@ fun fixJpTime(date: String): String = if (date != "") {
     ""
 }
 
+val String.fixJpTime: String
+    get() =
+        if (this != "") {
+            if (MainActivity.regionType == 4) {
+                try {
+                    val d = df1.parse(this)!!.time - 60 * 60 * 1000
+                    df1.format(Date(d))
+                } catch (e: Exception) {
+                    this
+                }
+            } else {
+                this
+            }
+        } else {
+            this
+        }
+
 /**
  * 获取当天时间
  */
@@ -142,7 +159,6 @@ fun String.fillZero(toLength: Int = 2): String {
     return temp
 }
 
-
 /**
  * 进行中判断
  */
@@ -152,7 +168,7 @@ fun isInProgress(
     endTime: String,
     fixJpTime: Boolean = true
 ): Boolean {
-    val sd = if (fixJpTime) fixJpTime(startTime.formatTime) else startTime.formatTime
+    val sd = if (fixJpTime) startTime.formatTime.fixJpTime else startTime.formatTime
     val ed = if (fixJpTime) fixJpTime(endTime.formatTime) else endTime.formatTime
     return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
 }

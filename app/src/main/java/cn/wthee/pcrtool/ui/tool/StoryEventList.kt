@@ -100,8 +100,8 @@ fun StoryEventItem(
     val typeColor: Color
     var showDays = true
     val today = getToday()
-    val sd = fixJpTime(event.startTime.formatTime)
-    val ed = fixJpTime(event.endTime.formatTime)
+    val sd = event.startTime.formatTime.fixJpTime
+    val ed = event.endTime.formatTime.fixJpTime
     val preEvent = sd.substring(0, 10) == "2030/12/30"
     val days = ed.days(sd)
     if (days == "0" || days == "0天") {

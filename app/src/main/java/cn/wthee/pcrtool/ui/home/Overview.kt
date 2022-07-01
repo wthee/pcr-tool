@@ -677,10 +677,10 @@ private fun CalendarEventOperation(
                         //掉落活动
                         var eventText = ""
                         eventList.forEach {
-                            val date = fixJpTime(it.startTime.formatTime).substring(
+                            val date = it.startTime.formatTime.fixJpTime.substring(
                                 0,
                                 10
-                            ) + " ~ " + fixJpTime(it.endTime.formatTime).substring(0, 10)
+                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
                             eventText += "• $date\n${getTypeDataToString(it)}\n"
                         }
                         if (eventText != "") {
@@ -690,10 +690,10 @@ private fun CalendarEventOperation(
                         //剧情活动
                         var storyText = ""
                         storyEventList.forEach {
-                            val date = fixJpTime(it.startTime.formatTime).substring(
+                            val date = it.startTime.formatTime.fixJpTime.substring(
                                 0,
                                 10
-                            ) + " ~ " + fixJpTime(it.endTime.formatTime).substring(0, 10)
+                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
                             storyText += "• $date\n${it.getEventTitle()}"
                         }
                         if (storyText != "") {
@@ -703,10 +703,10 @@ private fun CalendarEventOperation(
                         //卡池
                         var gachaText = ""
                         gachaList.forEach {
-                            val date = fixJpTime(it.startTime.formatTime).substring(
+                            val date = it.startTime.formatTime.fixJpTime.substring(
                                 0,
                                 10
-                            ) + " ~ " + fixJpTime(it.endTime.formatTime).substring(0, 10)
+                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
                             gachaText += "• $date\n${it.getDesc()}"
 
                         }

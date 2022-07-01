@@ -80,8 +80,8 @@ fun FreeGachaList(
 @Composable
 fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
     val today = getToday()
-    val sd = fixJpTime(freeGachaInfo.startTime)
-    val ed = fixJpTime(freeGachaInfo.endTime)
+    val sd = freeGachaInfo.startTime.fixJpTime
+    val ed = freeGachaInfo.endTime.fixJpTime
     val inProgress = isInProgress(today, freeGachaInfo.startTime, freeGachaInfo.endTime)
     val comingSoon = isComingSoon(today, freeGachaInfo.startTime)
 
