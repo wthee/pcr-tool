@@ -5,7 +5,7 @@ package cn.wthee.pcrtool.data.enums
  *
  * @param type action_type
  * @param desc 技能标签
- * @sample cn.wthee.pcrtool.data.db.entity.SkillAction.action_type
+ * @sample cn.wthee.pcrtool.data.db.view.SkillActionPro.action_type
  */
 enum class SkillActionType(val type: Int, val desc: String) {
 
@@ -182,9 +182,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     ACCUMULATIVE_DAMAGE(34, "伤害递增"),
 
     /**
-     * 35：特殊刻印
+     * 35：特殊标记
      */
-    SEAL(35, "刻印"),
+    SEAL(35, "标记"),
 
     /**
      * 36：攻击领域展开
@@ -307,9 +307,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     INHIBIT_HEAL_ACTION(59, "回复妨碍"),
 
     /**
-     * 60：刻印赋予
+     * 60：标记赋予
      */
-    ATTACK_SEAL(60, "刻印赋予"),
+    ATTACK_SEAL(60, "标记赋予"),
 
     /**
      * 61：恐慌
@@ -367,9 +367,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     HEAL_DOWN(76, "HP回复量减少"),
 
     /**
-     * 77：被动叠加刻印
+     * 77：被动叠加标记
      */
-    IF_BUFF_SEAL(77, "被动刻印"),
+    IF_BUFF_SEAL(77, "被动标记"),
 
     /**
      * 78：被击伤上升
