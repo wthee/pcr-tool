@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.calcDate
 import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.second
 import com.google.gson.JsonArray
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -130,7 +131,16 @@ class PvpViewModel @Inject constructor(
      */
     fun insert(data: PvpHistoryData) {
         viewModelScope.launch {
-            pvpRepository.insert(data)
+            val preData = pvpRepository.getHistory(MainActivity.regionType)
+            //避免重复插入
+            if (preData.isNotEmpty()) {
+                //与上一记录不相同或间隔大于10分钟，插入新记录
+                if (data.date.second(preData[0].date) > 10 * 60 || data.defs != preData[0].defs) {
+                    pvpRepository.insert(data)
+                }
+            } else {
+                pvpRepository.insert(data)
+            }
         }
     }
 

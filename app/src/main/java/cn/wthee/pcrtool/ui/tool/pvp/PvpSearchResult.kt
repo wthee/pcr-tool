@@ -64,7 +64,7 @@ fun PvpSearchResult(
     val favorites = pvpViewModel.favorites.observeAsState()
     val favoritesList = arrayListOf<String>()
     //获取数据
-    LaunchedEffect(null) {
+    LaunchedEffect(selectedIds) {
         //添加搜索记录
         var unSplitDefIds = ""
         var isError = false
