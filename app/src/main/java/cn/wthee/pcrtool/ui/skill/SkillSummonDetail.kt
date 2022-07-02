@@ -106,11 +106,7 @@ private fun CharacterSummonDetail(
                     loopData,
                     iconTypes,
                     unitType = UnitType.CHARACTER_SUMMON,
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.mediumPadding * 2,
-                        end = Dimen.mediumPadding * 2
-                    )
+                    modifier = Modifier.padding(Dimen.largePadding)
                 )
                 //技能信息
                 SkillCompose(

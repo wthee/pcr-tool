@@ -24,7 +24,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
             filter.r6,
             filter.starIds,
             filter.type,
-            limit
+            limit,
         )
 
     suspend fun getCount() = unitDao.getCount()

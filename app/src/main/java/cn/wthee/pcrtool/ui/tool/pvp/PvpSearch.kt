@@ -267,7 +267,6 @@ fun PvpSearchCompose(
                 val addTip = stringResource(id = R.string.pvp_info_add_tip)
                 FabCompose(
                     iconType = MainIconType.PVP_ADD,
-                    text = stringResource(id = R.string.pvp_info_add)
                 ) {
                     //打开网页
                     BrowserUtil.open(context, addUrl, addTip)
@@ -457,20 +456,20 @@ fun PvpIconItem(
             navViewModel.selectedPvpData.postValue(newList)
         }
 
-        if (showCount) {
-            CaptionText(text = "${pvpCharacterData.count}次")
-        } else {
-            //位置
-            val position =
-                if (pvpCharacterData != PvpCharacterData()) pvpCharacterData.position else 0
-            val textTopPadding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
+//        if (showCount) {
+//            CaptionText(text = "${pvpCharacterData.count}次")
+//        } else {
+        //位置
+        val position =
+            if (pvpCharacterData != PvpCharacterData()) pvpCharacterData.position else 0
+        val textTopPadding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
 
-            CharacterPositionText(
-                showColor = selected,
-                position = position,
-                modifier = Modifier.padding(top = textTopPadding),
-            )
-        }
+        CharacterPositionText(
+            showColor = selected,
+            position = position,
+            modifier = Modifier.padding(top = textTopPadding),
+        )
+//        }
     }
 }
 

@@ -22,8 +22,8 @@ import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.fadeOut
 import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -77,6 +77,7 @@ object Navigation {
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
     const val TOOL_MORE = "toolMore"
+    const val TOOL_MORE_EDIT_MODE = "toolMoreEditMode"
     const val TOOL_BIRTHDAY = "toolBirthday"
     const val TOOL_CALENDAR_EVENT = "toolCalendarEvent"
 }
@@ -255,8 +256,10 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
+            val lazyGridState = rememberLazyGridState()
             RankEquipList(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
+                lazyGridState = lazyGridState,
                 toEquipDetail = actions.toEquipDetail
             )
         }
@@ -612,15 +615,23 @@ fun NavGraph(
 
         //更多工具
         composable(
-            route = Navigation.TOOL_MORE,
+            route = "${Navigation.TOOL_MORE}/{${Navigation.TOOL_MORE_EDIT_MODE}}",
+            arguments = listOf(navArgument(Navigation.TOOL_MORE_EDIT_MODE) {
+                type = NavType.BoolType
+            }),
             enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
+            val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            AllToolMenu(scrollState, actions)
+            AllToolMenu(
+                arguments.getBoolean(Navigation.TOOL_MORE_EDIT_MODE),
+                scrollState,
+                actions
+            )
         }
 
         //模拟抽卡
@@ -881,8 +892,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 更多工具
      */
-    val toToolMore = {
-        navController.navigate(Navigation.TOOL_MORE)
+    val toToolMore: (Boolean) -> Unit = { editMode ->
+        navController.navigate("${Navigation.TOOL_MORE}/${editMode}")
     }
 
     /**

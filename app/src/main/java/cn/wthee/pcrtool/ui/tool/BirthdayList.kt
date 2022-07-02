@@ -40,11 +40,12 @@ fun BirthdayList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        if (dataList.isNotEmpty()) {
-            LazyColumn {
-                items(dataList) {
-                    BirthdayItem(it, toCharacterDetail)
-                }
+        LazyColumn(state = scrollState) {
+            items(dataList) {
+                BirthdayItem(it, toCharacterDetail)
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部

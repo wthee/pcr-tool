@@ -63,7 +63,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     if (toolList.isEmpty() && !isEditMode && isHome) {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             MainTexButton(text = stringResource(R.string.to_add_tool)) {
-                actions.toToolMore()
+                actions.toToolMore(true)
             }
         }
     }

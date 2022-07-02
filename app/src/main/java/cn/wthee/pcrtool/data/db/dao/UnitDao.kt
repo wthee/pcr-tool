@@ -57,7 +57,7 @@ interface UnitDao {
             unit_data.unit_name,
             unit_data.is_limited,
             unit_data.rarity,
-            COALESCE( unit_data.kana, "" ) AS kana,
+            COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%-%' OR unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
             unit_profile.race,
@@ -68,7 +68,7 @@ interface UnitDao {
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), '2015/04/01') AS start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
@@ -76,8 +76,8 @@ interface UnitDao {
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_name like '%' || :unitName || '%'
-        AND
-            unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        AND unit_profile.unit_id < 200000
         AND (
             (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
             OR 
@@ -88,7 +88,6 @@ interface UnitDao {
             WHEN  r6Id != 0 AND 1 = :r6  THEN 1 
             WHEN  r6Id = 0 AND 2 = :r6  THEN 1 
         END
-        AND unit_profile.unit_id < 200000 
         AND 1 = CASE
             WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
         END
@@ -97,7 +96,7 @@ interface UnitDao {
             WHEN  unit_data.atk_type = :atkType  THEN 1 
         END
         AND 1 = CASE
-            WHEN  "全部" = :guild  THEN 1 
+            WHEN  '全部' = :guild  THEN 1 
             WHEN  unit_profile.guild = :guild  THEN 1 
         END     
         AND 1 = CASE
@@ -129,7 +128,7 @@ interface UnitDao {
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>,
         type: Int,
-        limit: Int
+        limit: Int,
     ): List<CharacterInfo>
 
     /**
@@ -143,13 +142,12 @@ interface UnitDao {
             COUNT(*)
         FROM
             unit_profile
-            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
-            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
+            LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id 
         WHERE
-            unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-            AND unit_profile.unit_id < 200000
-            """
+            unit_profile.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
+            AND unit_profile.unit_id < 200000 
+            AND unit_data.unit_id IS NOT NULL
+        """
     )
     suspend fun getCount(): Int
 
@@ -165,7 +163,7 @@ interface UnitDao {
             unit_data.unit_name,
             unit_data.is_limited,
             unit_data.rarity,
-            COALESCE( unit_data.kana, "" ) AS kana,
+            COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%-%' OR unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
             unit_profile.race,
@@ -176,7 +174,7 @@ interface UnitDao {
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), '2015/04/01') AS start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
@@ -199,7 +197,7 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_data.unit_name,
-            COALESCE( unit_data.kana, "" ) AS kana,
+            COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
             unit_profile.race,
@@ -213,12 +211,12 @@ interface UnitDao {
             unit_profile.catch_copy,
             unit_profile.self_text,
             unit_data.search_area_width,
-            COALESCE( unit_data.comment, "......" ) AS intro,
+            COALESCE( unit_data.comment, '......' ) AS intro,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             unit_data.rarity,
-            COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-            COALESCE(cts.comments, "......") AS comments
+            COALESCE( actual_unit_background.unit_name, '' ) AS actual_name,
+            COALESCE(cts.comments, '......') AS comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id

@@ -43,7 +43,10 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
@@ -65,7 +68,6 @@ val permissions = arrayOf(
 /**
  * 首页纵览
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Overview(
     actions: NavActions,
@@ -228,7 +230,7 @@ private fun ToolSection(
             if (isEditMode)
                 editOverviewMenuOrder(id)
             else
-                actions.toToolMore()
+                actions.toToolMore(false)
         }
     ) {
         ToolMenu(actions = actions)
@@ -374,7 +376,7 @@ private fun ComingSoonEventSection(
 /**
  * 角色
  */
-@OptIn(ExperimentalPagerApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterSection(
     actions: NavActions,
@@ -521,15 +523,9 @@ private fun CalendarEventLayout(
     val isNotEmpty =
         eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
     val titleId = if (calendarType == EventType.IN_PROGRESS) {
-        if (isEditMode && !isNotEmpty)
-            R.string.no_in_progress_data
-        else
-            R.string.tool_calendar_inprogress
+        R.string.tool_calendar_inprogress
     } else {
-        if (isEditMode && !isNotEmpty)
-            R.string.no_coming_soon_data
-        else
-            R.string.tool_calendar_comming
+        R.string.tool_calendar_comming
     }
 
 
@@ -826,7 +822,7 @@ private fun ChangeDbCompose(
 }
 
 /**
- * 标题
+ * 标题、内容
  */
 @Composable
 private fun Section(
@@ -845,7 +841,7 @@ private fun Section(
     //是否已显示到首页
     val hasAdded = orderStr.intArrayList.contains(id) && isEditMode
     //首页排序
-    var index = orderStr.intArrayList.indexOf(id)
+    val index = orderStr.intArrayList.indexOf(id)
 
     val modifier = if (onClick == null) {
         Modifier
@@ -937,7 +933,7 @@ private fun Section(
             }
         }
 
-        SlideAnimation(visible = contentVisible && !isEditMode) {
+        if (contentVisible && !isEditMode) {
             Column {
                 content()
             }

@@ -118,13 +118,14 @@ class PvpViewModel @Inject constructor(
                 )
             )
         }
+        val limit = 40
         var list = unitList.sortedByDescending { it.count }
-        val limit = 30
         if (list.size > limit) {
             list = list.subList(0, limit)
         }
         emit(list)
     }
+
 
     /**
      * 新增搜索信息

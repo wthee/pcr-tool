@@ -104,6 +104,9 @@ fun CharacterDetail(
     //角色特殊六星id
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
 
+    val inputLevel = remember {
+        mutableStateOf("")
+    }
     //输入框管理
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -242,7 +245,6 @@ fun CharacterDetail(
                                 max = maxValue.rarity,
                                 modifier = Modifier.padding(top = Dimen.mediumPadding),
                             )
-
                             //等级
                             Text(
                                 text = currentValue.level.toString(),
@@ -266,9 +268,6 @@ fun CharacterDetail(
                                     }
                             )
                             //等级输入框
-                            val inputLevel = remember {
-                                mutableStateOf("")
-                            }
                             OutlinedTextField(
                                 value = inputLevel.value,
                                 colors = outlinedTextFieldColors(),
@@ -595,7 +594,9 @@ private fun CharacterEquip(
                 }
             }
             IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id3)) {
-                toEquipDetail(id3)
+                if (id3 != UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id3)
+                }
             }
         }
         //装备 5、 2
@@ -608,7 +609,9 @@ private fun CharacterEquip(
         ) {
             val id5 = equips[2].equipmentId
             IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id5)) {
-                toEquipDetail(id5)
+                if (id5 != UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id5)
+                }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -660,7 +663,9 @@ private fun CharacterEquip(
             }
             val id2 = equips[3].equipmentId
             IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id2)) {
-                toEquipDetail(id2)
+                if (id2 != UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id2)
+                }
             }
 
         }
@@ -675,10 +680,15 @@ private fun CharacterEquip(
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
             IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id4)) {
-                toEquipDetail(id4)
+                if (id4 != UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id4)
+                }
+
             }
             IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id1)) {
-                toEquipDetail(id1)
+                if (id1 != UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id1)
+                }
             }
         }
     }
@@ -697,7 +707,9 @@ private fun UniqueEquip(
     uniqueEquipLevelMax: Int,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
-
+    val inputLevel = remember {
+        mutableStateOf("")
+    }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -737,9 +749,7 @@ private fun UniqueEquip(
                     }
             )
             //等级输入框
-            val inputLevel = remember {
-                mutableStateOf("")
-            }
+
             OutlinedTextField(
                 value = inputLevel.value,
                 shape = Shape.medium,

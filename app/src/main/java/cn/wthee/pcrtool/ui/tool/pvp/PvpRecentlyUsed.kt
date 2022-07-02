@@ -46,7 +46,7 @@ fun PvpRecentlyUsedList(
             verticalArrangement = Arrangement.Center
         ) {
             items(
-                items = recentlyUsedUnitList,
+                items = recentlyUsedUnitList.sortedBy { it.position },
                 key = {
                     it.unitId
                 }

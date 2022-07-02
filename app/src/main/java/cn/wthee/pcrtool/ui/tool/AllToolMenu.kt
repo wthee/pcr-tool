@@ -33,13 +33,13 @@ data class ToolMenuGroup(
  * 全部工具
  */
 @Composable
-fun AllToolMenu(scrollState: LazyListState, actions: NavActions) {
+fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavActions) {
 
     val coroutineScope = rememberCoroutineScope()
 
     //编辑模式
     var isEditMode by remember {
-        mutableStateOf(false)
+        mutableStateOf(initEditMode)
     }
 
     val itemsList = arrayListOf<ToolMenuGroup>()

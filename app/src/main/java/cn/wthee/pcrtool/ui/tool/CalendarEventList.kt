@@ -18,7 +18,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -42,11 +41,12 @@ fun CalendarEventList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        if (dataList.isNotEmpty()) {
-            LazyColumn {
-                items(dataList) {
-                    CalendarEventItem(it)
-                }
+        LazyColumn(state = scrollState) {
+            items(dataList) {
+                CalendarEventItem(it)
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部
