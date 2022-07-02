@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.CalendarEvent
-import cn.wthee.pcrtool.data.db.view.EventData
-import cn.wthee.pcrtool.data.db.view.EventStoryDetail
-import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
+import cn.wthee.pcrtool.data.db.view.*
 
 /**
  * 活动记录 DAO
@@ -153,4 +150,26 @@ interface EventDao {
     """
     )
     suspend fun getFreeGachaEvent(limit: Int): List<FreeGachaInfo>
+
+
+    /**
+     * 获取生日信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
+            CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
+            GROUP_CONCAT(unit_id,'-') as unit_ids,
+            GROUP_CONCAT(unit_name,'-') as unit_names
+        FROM
+            unit_profile
+        WHERE unit_id < 200000 
+        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        GROUP BY birth_month, birth_day
+        ORDER BY birth_month_int, birth_day_int
+    """
+    )
+    suspend fun getBirthdayList(): List<BirthdayData>
 }

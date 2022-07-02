@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.skill
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,11 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillDetail
-import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
@@ -76,7 +76,6 @@ fun SkillCompose(
     }
 }
 
-
 /**
  * 技能
  */
@@ -122,21 +121,23 @@ fun SkillItem(
 
     }
 
+    //技能类型名
+    val type = when (unitType) {
+        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
+        UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
+        UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
+    }
+    val color = getSkillColor(type)
+    val name =
+        if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) type else skillDetail.name
+    val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Dimen.largePadding + Dimen.mediumPadding)
     ) {
-        //技能名
-        val type = when (unitType) {
-            UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
-            UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
-            UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
-        }
-        val color = getSkillColor(type)
-        val name =
-            if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) type else skillDetail.name
-        val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
 
         Row {
             //技能图标
@@ -363,112 +364,6 @@ fun SkillActionItem(
     }
 }
 
-/**
- * 技能循环
- */
-@Composable
-fun SkillLoopList(
-    loopData: List<AttackPattern>,
-    iconTypes: HashMap<Int, Int>,
-    modifier: Modifier = Modifier,
-    unitType: UnitType
-) {
-    val loops = arrayListOf<SkillLoop>()
-    loopData.forEach { ap ->
-        if (ap.getBefore().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.before_loop), ap.getBefore()))
-        }
-        if (ap.getLoop().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.looping), ap.getLoop()))
-        }
-    }
-    Column(
-        modifier = if (unitType == UnitType.CHARACTER) modifier.verticalScroll(rememberScrollState()) else modifier
-    ) {
-        if (loops.isNotEmpty()) {
-            loops.forEach {
-                SkillLoopItem(loop = it, iconTypes)
-            }
-        }
-        if (unitType == UnitType.CHARACTER) {
-            CommonSpacer()
-        }
-    }
-}
-
-/**
- * 技能循环 item
- */
-@Composable
-private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
-    Column {
-        MainTitleText(text = loop.loopTitle)
-        SkillLoopIconList(loop.loopList, iconTypes)
-    }
-}
-
-/**
- * 技能循环图标列表
- */
-@Composable
-private fun SkillLoopIconList(
-    iconList: List<Int>,
-    iconTypes: HashMap<Int, Int>
-) {
-    VerticalGrid(
-        modifier = Modifier.padding(top = Dimen.mediumPadding),
-        maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
-    ) {
-        iconList.forEach {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        bottom = Dimen.mediumPadding
-                    )
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val type: String
-                val url: Any
-                if (it == 1) {
-                    type = "普攻"
-                    url = R.drawable.unknown_item
-                } else {
-                    type = when (it / 1000) {
-                        1 -> "技能 ${it % 10}"
-                        2 -> "SP技能 ${it % 10}"
-                        else -> ""
-                    }
-                    val iconType = when (it) {
-                        1001 -> iconTypes[2]
-                        1002 -> iconTypes[3]
-                        1003 -> iconTypes[1]
-                        2001 -> iconTypes[101]
-                        2002 -> iconTypes[102]
-                        2003 -> iconTypes[103]
-                        else -> null
-                    }
-                    url = if (iconType == null) {
-                        R.drawable.unknown_item
-                    } else {
-                        ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType)
-                    }
-                }
-                IconCompose(data = url)
-                Text(
-                    text = type,
-                    color = getSkillColor(type = type),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.smallPadding)
-                )
-            }
-        }
-    }
-}
 
 /**
  * 获取标签状态
@@ -515,7 +410,7 @@ private fun getSkillType(skillId: Int): String {
  * 获取技能名称颜色
  */
 @Composable
-private fun getSkillColor(type: String): Color {
+fun getSkillColor(type: String): Color {
     return when {
         type.contains("连结") -> colorResource(R.color.color_rank_7_10)
         type.contains("EX") -> colorResource(R.color.color_rank_2_3)

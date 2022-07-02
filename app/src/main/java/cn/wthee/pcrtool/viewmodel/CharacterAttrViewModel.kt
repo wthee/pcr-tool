@@ -264,7 +264,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             emit(unitRepository.getCutinId(unitId) ?: 0)
         } catch (e: Exception) {
-
+            emit(0)
         }
     }
 }

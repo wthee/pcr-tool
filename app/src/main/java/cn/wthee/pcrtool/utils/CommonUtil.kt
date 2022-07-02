@@ -4,14 +4,13 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlin.math.ceil
 import kotlin.math.floor
+
 
 /**
  * 权限校验
@@ -39,7 +38,7 @@ fun checkPermissions(
                 1
             )
         } else {
-            action.invoke()
+            action()
         }
     } else {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
@@ -53,26 +52,11 @@ fun checkPermissions(
                 1
             )
         } else {
-            action.invoke()
+            action()
         }
     }
 
 }
-
-/**
- * 在浏览器中打开 [url]
- *
- * @param url 链接
- * @param title 标题
- */
-fun openWebView(context: Context, url: String, title: String = "请选择浏览器") {
-    val intent = Intent()
-    intent.action = Intent.ACTION_VIEW
-    intent.data = Uri.parse(url)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-    context.startActivity(Intent.createChooser(intent, title))
-}
-
 
 /**
  *  把 - 拼接的字符串，转化为数组

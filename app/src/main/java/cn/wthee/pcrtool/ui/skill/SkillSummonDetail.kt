@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.BossSkillList
+import cn.wthee.pcrtool.ui.tool.clan.BossSkillList
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
@@ -106,11 +106,7 @@ private fun CharacterSummonDetail(
                     loopData,
                     iconTypes,
                     unitType = UnitType.CHARACTER_SUMMON,
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.mediumPadding * 2,
-                        end = Dimen.mediumPadding * 2
-                    )
+                    modifier = Modifier.padding(Dimen.largePadding)
                 )
                 //技能信息
                 SkillCompose(

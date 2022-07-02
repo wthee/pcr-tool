@@ -214,7 +214,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 添加对战信息
      */
-    PVP_ADD(Icons.Rounded.Assistant),
+    PVP_ADD(Icons.Rounded.PlaylistAdd),
 
     /**
      * 剩余时间
@@ -350,4 +350,14 @@ enum class MainIconType(val icon: ImageVector) {
      * 编辑
      */
     EDIT_TOOL(Icons.Rounded.Edit),
+
+    /**
+     * 生日日程
+     */
+    BIRTHDAY(Icons.Rounded.Cake),
+
+    /**
+     * 预览模型
+     */
+    PREVIEW_UNIT_SPINE(Icons.Rounded.RemoveRedEye),
 }

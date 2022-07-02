@@ -1,14 +1,16 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import androidx.room.Ignore
 
 /**
  *  角色位置
  */
 data class PvpCharacterData(
-    @ColumnInfo(name = "unit_id") val unitId: Int = 0,
-    @ColumnInfo(name = "position") val position: Int = 999,
-    @ColumnInfo(name = "type") val type: Int = -1
+    @ColumnInfo(name = "unit_id") var unitId: Int = 0,
+    @ColumnInfo(name = "position") var position: Int = 999,
+    @ColumnInfo(name = "type") var type: Int = -1,
+    @Ignore var count: Int = 0
 )
 
 /**

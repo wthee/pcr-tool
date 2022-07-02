@@ -45,7 +45,7 @@ val String.region: Int
         }
     }
 
-fun String.urlGetId(): String {
+fun String.getNewsId(): String {
     val url = if (this.last() == '/') {
         this.substring(0, this.length - 1)
     } else {

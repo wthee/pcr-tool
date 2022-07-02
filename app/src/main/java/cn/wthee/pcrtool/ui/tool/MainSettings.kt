@@ -27,7 +27,6 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
@@ -37,10 +36,10 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.switchColors
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.openWebView
 
 /**
  * 设置页面
@@ -49,7 +48,7 @@ import cn.wthee.pcrtool.utils.openWebView
 fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
-    val region = getRegion()
+    val region = MainActivity.regionType
 
     SideEffect {
         //自动删除历史数据
@@ -101,7 +100,7 @@ fun MainSettings() {
             Subtitle2(
                 text = projectUrl,
                 modifier = Modifier.clickable {
-                    openWebView(context, projectUrl, project)
+                    BrowserUtil.open(context, projectUrl, project)
                 })
             ImageCompose(
                 data = R.mipmap.ic_launcher_round,
@@ -142,7 +141,7 @@ fun MainSettings() {
             stringResource(id = R.string.data_from),
             stringResource(id = R.string.data_from_hint),
         ) {
-            openWebView(context, dataFromUrl)
+            BrowserUtil.open(context, dataFromUrl)
         }
         //- 静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
@@ -151,7 +150,7 @@ fun MainSettings() {
             stringResource(id = R.string.shizuru_note),
             stringResource(id = R.string.shizuru_note_tip),
         ) {
-            openWebView(context, shizuruUrl)
+            BrowserUtil.open(context, shizuruUrl)
         }
         //- 竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
@@ -160,7 +159,7 @@ fun MainSettings() {
             stringResource(id = R.string.pcrdfans),
             stringResource(id = R.string.pcrdfans_tip),
         ) {
-            openWebView(context, pcrdfansUrl)
+            BrowserUtil.open(context, pcrdfansUrl)
         }
         //- 排行
         val appMediaUrl = stringResource(id = R.string.leader_source_url)
@@ -169,7 +168,7 @@ fun MainSettings() {
             stringResource(id = R.string.leader_source),
             stringResource(id = R.string.leader_tip),
         ) {
-            openWebView(context, appMediaUrl)
+            BrowserUtil.open(context, appMediaUrl)
         }
         CommonSpacer()
     }
@@ -328,7 +327,7 @@ private fun SettingItem(
         modifier = Modifier
             .clickable(onClick = {
                 VibrateUtil(context).single()
-                onClick.invoke()
+                onClick()
             })
     ) {
         Spacer(modifier = Modifier.width(Dimen.largePadding))

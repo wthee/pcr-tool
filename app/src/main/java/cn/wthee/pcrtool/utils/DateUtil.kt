@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,8 +42,8 @@ val Long.simpleDateFormat: String
 /**
  * 小时 - 1
  */
-fun fixJpTime(date: String, type: Int): String = if (date != "") {
-    if (type == 4) {
+fun fixJpTime(date: String): String = if (date != "") {
+    if (MainActivity.regionType == 4) {
         try {
             val d = df1.parse(date)!!.time - 60 * 60 * 1000
             df1.format(Date(d))
@@ -55,6 +56,23 @@ fun fixJpTime(date: String, type: Int): String = if (date != "") {
 } else {
     ""
 }
+
+val String.fixJpTime: String
+    get() =
+        if (this != "") {
+            if (MainActivity.regionType == 4) {
+                try {
+                    val d = df1.parse(this)!!.time - 60 * 60 * 1000
+                    df1.format(Date(d))
+                } catch (e: Exception) {
+                    this
+                }
+            } else {
+                this
+            }
+        } else {
+            this
+        }
 
 /**
  * 获取当天时间
@@ -141,21 +159,25 @@ fun String.fillZero(toLength: Int = 2): String {
     return temp
 }
 
-
 /**
  * 进行中判断
  */
-fun isInProgress(today: String, startTime: String, endTime: String, regionType: Int): Boolean {
-    val sd = fixJpTime(startTime.formatTime, regionType)
-    val ed = fixJpTime(endTime.formatTime, regionType)
+fun isInProgress(
+    today: String,
+    startTime: String,
+    endTime: String,
+    fixJpTime: Boolean = true
+): Boolean {
+    val sd = if (fixJpTime) startTime.formatTime.fixJpTime else startTime.formatTime
+    val ed = if (fixJpTime) fixJpTime(endTime.formatTime) else endTime.formatTime
     return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
 }
 
 /**
  * 进行中判断
  */
-fun isComingSoon(today: String, startTime: String, regionType: Int): Boolean {
-    val sd = fixJpTime(startTime.formatTime, regionType)
+fun isComingSoon(today: String, startTime: String, fixJpTime: Boolean = true): Boolean {
+    val sd = if (fixJpTime) fixJpTime(startTime.formatTime) else startTime.formatTime
     return today.second(sd) < 0
 }
 
@@ -170,3 +192,13 @@ val String.toTimestamp: Long
             0L
         }
     }
+
+/**
+ * 计算 n 天前的日期
+ */
+fun calcDate(date: String, n: Int, before: Boolean): String {
+    val now = Calendar.getInstance()
+    now.time = df1.parse(date)
+    now[Calendar.DATE] = now[Calendar.DATE] + (if (before) -n else n)
+    return df1.format(now.time)
+}

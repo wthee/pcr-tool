@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.GachaInfo
@@ -36,6 +37,18 @@ fun compareStoryEvent(today: String? = null) = Comparator<EventData> { o1, o2 ->
     val sd2 = o2.startTime.formatTime
     val ed2 = o2.endTime.formatTime
     compareDate(today, sd1, ed1, sd2, ed2)
+}
+
+
+/**
+ * 排序生日日程，正序
+ */
+fun compareBirthDay(today: String? = null) = Comparator<BirthdayData> { o1, o2 ->
+    val sd1 = o1.getStartTime().formatTime
+    val ed1 = o1.getEndTime().formatTime
+    val sd2 = o2.getStartTime().formatTime
+    val ed2 = o2.getEndTime().formatTime
+    compareDate(today, sd2, ed2, sd1, ed1)
 }
 
 

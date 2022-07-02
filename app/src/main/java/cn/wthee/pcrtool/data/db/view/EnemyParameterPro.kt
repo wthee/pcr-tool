@@ -43,5 +43,10 @@ data class EnemyParameterPro(
         )
     }
 
-    fun getDesc() = comment.replace("\\n", "").replace("·", "").replace("　", "")
+    fun getDesc() = comment
+        .replace("\\n", "")
+        .replace("·", "\n\n- ")
+        .replace("・", "\n\n- ")
+        .replace("‧", "\n\n- ")
+        .replace("　", "")
 }

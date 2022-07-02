@@ -6,13 +6,20 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
- * 竞技场收藏
+ * 竞技场历史记录
  */
 @Entity(tableName = "pvp_history")
 data class PvpHistoryData(
     @PrimaryKey
+    @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "defs") val defs: String,
     @ColumnInfo(name = "date") val date: String
 ) {
     fun getDefIds() = defs.split("@")[1].intArrayList
+
+    fun getTime() = try {
+        date.substring(11, 19)
+    } catch (e: Exception) {
+        ""
+    }
 }

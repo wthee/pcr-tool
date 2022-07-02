@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -35,6 +35,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.math.round
 
 
@@ -58,13 +59,12 @@ fun PvpSearchResult(
     val result = pvpViewModel.pvpResult.observeAsState().value
     val placeholder = result == null
     pvpViewModel.getPVPData(idArray)
-    val region = getRegion()
-    pvpViewModel.getFavoritesList(defIds, region)
+    pvpViewModel.getFavoritesList(defIds)
     //收藏信息
     val favorites = pvpViewModel.favorites.observeAsState()
     val favoritesList = arrayListOf<String>()
     //获取数据
-    LaunchedEffect(null) {
+    LaunchedEffect(selectedIds) {
         //添加搜索记录
         var unSplitDefIds = ""
         var isError = false
@@ -78,7 +78,8 @@ fun PvpSearchResult(
         if (!isError) {
             pvpViewModel.insert(
                 PvpHistoryData(
-                    "$region@$unSplitDefIds",
+                    UUID.randomUUID().toString(),
+                    "${MainActivity.regionType}@$unSplitDefIds",
                     getToday(),
                 )
             )
@@ -133,7 +134,6 @@ fun PvpSearchResult(
                                             favoritesList,
                                             index + 1,
                                             item,
-                                            region,
                                             floatWindow,
                                             pvpViewModel
                                         )
@@ -187,7 +187,6 @@ fun PvpSearchResult(
                                 favoritesList,
                                 0,
                                 PvpResultData(),
-                                region,
                                 floatWindow,
                                 pvpViewModel
                             )
@@ -212,7 +211,6 @@ private fun PvpResultItem(
     favoritesList: List<String>,
     i: Int,
     item: PvpResultData,
-    region: Int,
     floatWindow: Boolean,
     viewModel: PvpViewModel
 ) {
@@ -251,7 +249,7 @@ private fun PvpResultItem(
                         scope.launch {
                             if (favorites.value) {
                                 //已收藏，取消收藏
-                                viewModel.delete(item.atk, item.def, region)
+                                viewModel.delete(item.atk, item.def)
                             } else {
                                 //未收藏，添加收藏
                                 viewModel.insert(
@@ -260,7 +258,7 @@ private fun PvpResultItem(
                                         item.atk,
                                         item.def,
                                         getToday(true),
-                                        region
+                                        MainActivity.regionType
                                     )
                                 )
                             }

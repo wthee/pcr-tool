@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -84,12 +83,11 @@ fun GachaList(
  */
 @Composable
 fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
-    val regionType = getRegion()
     val today = getToday()
-    val sd = fixJpTime(gachaInfo.startTime.formatTime, regionType)
-    val ed = fixJpTime(gachaInfo.endTime.formatTime, regionType)
-    val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime, regionType)
-    val comingSoon = isComingSoon(today, gachaInfo.startTime, regionType)
+    val sd = gachaInfo.startTime.formatTime.fixJpTime
+    val ed = gachaInfo.endTime.formatTime.fixJpTime
+    val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime)
+    val comingSoon = isComingSoon(today, gachaInfo.startTime)
 
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()

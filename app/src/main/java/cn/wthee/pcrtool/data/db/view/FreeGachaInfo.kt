@@ -18,12 +18,12 @@ data class FreeGachaInfo(
     /**
      * 获取数量
      */
-    fun getCount(regionType: Int): Int {
+    fun getCount(): Int {
         return if (maxCount != 0) {
             maxCount
         } else {
-            val st = fixJpTime(startTime.formatTime, regionType)
-            val ed = fixJpTime(endTime.formatTime, regionType)
+            val st = startTime.formatTime
+            val ed = endTime.formatTime
             return ed.days(st).replace("天", "").toInt()
         }
     }

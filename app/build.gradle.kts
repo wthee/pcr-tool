@@ -13,9 +13,9 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-beta02"
-val appVersionCode = 327
-val appVersionName = "3.2.7"
+val composeVersion = "1.2.0-rc02"
+val appVersionCode = 330
+val appVersionName = "3.3.0"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -112,22 +112,19 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
-    //Bugly
-    implementation("com.tencent.bugly:crashreport:4.0.4")
-
     //compose
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
 
     //Accompanist
-    val accompanistVersion = "0.24.8-beta"
+    val accompanistVersion = "0.24.12-rc"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -135,7 +132,13 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
-    //Coil
+    //Browser
+    implementation("androidx.browser:browser:1.4.0")
+
+    //Bugly
+    implementation("com.tencent.bugly:crashreport:4.0.4")
+
+    //Coil(compose verion 1.1.1)
     val coilVersion = "2.1.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
@@ -158,7 +161,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

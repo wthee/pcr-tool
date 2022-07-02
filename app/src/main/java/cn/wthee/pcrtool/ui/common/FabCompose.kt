@@ -47,7 +47,7 @@ fun FabCompose(
     SmallFloatingActionButton(
         onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            onClick()
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),

@@ -24,10 +24,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.Shape
@@ -158,43 +155,26 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     modifier = Modifier.weight(1f)
                 )
                 //反馈群
-                Row(
-                    modifier = Modifier
-                        .clip(Shape.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            joinQQGroup(context)
-                        }
-                        .padding(Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconCompose(data = MainIconType.SUPPORT, size = Dimen.smallIconSize)
-                    CaptionText(
-                        text = stringResource(id = R.string.qq_group),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-                //查看 github release 详情
-                Row(
+                IconTextButton(
                     modifier = Modifier
                         .padding(start = Dimen.largePadding)
-                        .clip(Shape.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            openWebView(
-                                context,
-                                Constants.GITHUB_RELEASE_URL + appNotice.title
-                            )
-                        }
-                        .padding(Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
+                        .clip(Shape.medium),
+                    icon = MainIconType.SUPPORT,
+                    text = stringResource(id = R.string.qq_group),
                 ) {
-                    IconCompose(data = MainIconType.GITHUB_RELEASE, size = Dimen.smallIconSize)
-                    CaptionText(
-                        text = stringResource(id = R.string.github),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    joinQQGroup(context)
+                }
+                //查看 github release 详情
+                IconTextButton(
+                    modifier = Modifier
+                        .padding(start = Dimen.largePadding)
+                        .clip(Shape.medium),
+                    icon = MainIconType.GITHUB_RELEASE,
+                    text = stringResource(id = R.string.github),
+                ) {
+                    BrowserUtil.open(
+                        context,
+                        Constants.GITHUB_RELEASE_URL + appNotice.title
                     )
                 }
             }
@@ -215,7 +195,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         VibrateUtil(context).single()
-                        openWebView(
+                        BrowserUtil.open(
                             context,
                             appNotice.url
                         )

@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.utils.openWebView
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -114,7 +114,7 @@ fun LeaderboardList(
                 iconType = MainIconType.FRIEND_LINK
             ) {
                 //打开网页
-                openWebView(context, url, tip)
+                BrowserUtil.open(context, url, tip)
             }
 
             //更新说明
@@ -192,7 +192,7 @@ private fun LeaderboardItem(info: LeaderboardData) {
             onClick = {
                 //打开浏览器
                 if (!placeholder) {
-                    openWebView(context, info.url, title)
+                    BrowserUtil.open(context, info.url, title)
                 }
             }
         ) {

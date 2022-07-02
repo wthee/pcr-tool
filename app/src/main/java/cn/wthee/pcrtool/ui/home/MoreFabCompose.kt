@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.joinQQGroup
-import cn.wthee.pcrtool.utils.openWebView
 
 /**
  * 菜单

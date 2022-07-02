@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.AllPics
+import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
@@ -22,10 +22,13 @@ import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.fadeOut
 import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 
 object Navigation {
     const val HOME = "home"
@@ -66,13 +69,17 @@ object Navigation {
     const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val COMIC_ID = "comicId"
-    const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
+    const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
+    const val TOOL_CLAN_BOSS_PHASE = "toolClanBattlePhase"
     const val TOOL_NEWS_KEY = "toolNewsKey"
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
     const val TOOL_MORE = "toolMore"
+    const val TOOL_MORE_EDIT_MODE = "toolMoreEditMode"
+    const val TOOL_BIRTHDAY = "toolBirthday"
+    const val TOOL_CALENDAR_EVENT = "toolCalendarEvent"
 }
 
 
@@ -152,7 +159,7 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
 
-            AllPics(
+            AllCardList(
                 arguments.getInt(Navigation.UNIT_ID),
                 AllPicsType.getByValue(arguments.getInt(Navigation.ALL_PICS_TYPE))
             )
@@ -249,8 +256,10 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
+            val lazyGridState = rememberLazyGridState()
             RankEquipList(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
+                lazyGridState = lazyGridState,
                 toEquipDetail = actions.toEquipDetail
             )
         }
@@ -387,10 +396,12 @@ fun NavGraph(
 
         //团队战详情
         composable(
-            route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_BOSS_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}",
-            arguments = listOf(navArgument(Navigation.TOOL_CLAN_BOSS_ID) {
+            route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_Battle_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}/{${Navigation.TOOL_CLAN_BOSS_PHASE}}",
+            arguments = listOf(navArgument(Navigation.TOOL_CLAN_Battle_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.TOOL_CLAN_BOSS_INDEX) {
+                type = NavType.IntType
+            }, navArgument(Navigation.TOOL_CLAN_BOSS_PHASE) {
                 type = NavType.IntType
             }),
             enterTransition = { myFadeIn },
@@ -399,9 +410,10 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
-            ClanBossInfoPager(
-                arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+            ClanBattleDetail(
+                arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_PHASE),
                 actions.toSummonDetail
             )
         }
@@ -414,7 +426,21 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
+            val pagerState = rememberPagerState()
+            val selectListState = rememberLazyGridState()
+            val usedListState = rememberLazyGridState()
+            val resultListState = rememberLazyGridState()
+            val favoritesListState = rememberLazyGridState()
+            val historyListState = rememberLazyGridState()
+
             PvpSearchCompose(
+                floatWindow = false,
+                pagerState = pagerState,
+                selectListState = selectListState,
+                usedListState = usedListState,
+                resultListState = resultListState,
+                favoritesListState = favoritesListState,
+                historyListState = historyListState,
                 toCharacter = actions.toCharacterDetail
             )
         }
@@ -589,15 +615,23 @@ fun NavGraph(
 
         //更多工具
         composable(
-            route = Navigation.TOOL_MORE,
+            route = "${Navigation.TOOL_MORE}/{${Navigation.TOOL_MORE_EDIT_MODE}}",
+            arguments = listOf(navArgument(Navigation.TOOL_MORE_EDIT_MODE) {
+                type = NavType.BoolType
+            }),
             enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
+            val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            AllToolMenu(scrollState, actions)
+            AllToolMenu(
+                arguments.getBoolean(Navigation.TOOL_MORE_EDIT_MODE),
+                scrollState,
+                actions
+            )
         }
 
         //模拟抽卡
@@ -609,6 +643,30 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             MockGacha()
+        }
+
+        //生日日程
+        composable(
+            route = Navigation.TOOL_BIRTHDAY,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val scrollState = rememberLazyListState()
+            BirthdayList(scrollState, actions.toCharacterDetail)
+        }
+
+        //日程
+        composable(
+            route = Navigation.TOOL_CALENDAR_EVENT,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val scrollState = rememberLazyListState()
+            CalendarEventList(scrollState)
         }
     }
 }
@@ -694,8 +752,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 团队战 BOSS
      */
-    val toClanBossInfo: (Int, Int) -> Unit = { clanId: Int, index: Int ->
-        navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}")
+    val toClanBossInfo: (Int, Int, Int) -> Unit = { clanId: Int, index: Int, phase: Int ->
+        navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${phase}")
     }
 
     /**
@@ -834,8 +892,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 更多工具
      */
-    val toToolMore = {
-        navController.navigate(Navigation.TOOL_MORE)
+    val toToolMore: (Boolean) -> Unit = { editMode ->
+        navController.navigate("${Navigation.TOOL_MORE}/${editMode}")
     }
 
     /**
@@ -843,5 +901,19 @@ class NavActions(navController: NavHostController) {
      */
     val toMockGacha = {
         navController.navigate(Navigation.TOOL_MOCK_GACHA)
+    }
+
+    /**
+     * 生日一览
+     */
+    val toBirthdayList = {
+        navController.navigate(Navigation.TOOL_BIRTHDAY)
+    }
+
+    /**
+     * 活动一览
+     */
+    val toCalendarEventList = {
+        navController.navigate(Navigation.TOOL_CALENDAR_EVENT)
     }
 }

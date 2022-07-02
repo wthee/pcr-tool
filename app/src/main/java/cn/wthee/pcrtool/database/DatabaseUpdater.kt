@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
@@ -35,6 +36,7 @@ object DatabaseUpdater {
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, region)
         }
+        MainActivity.regionType = region
         checkDBVersion(1)
     }
 
@@ -64,6 +66,7 @@ object DatabaseUpdater {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
             navViewModel.downloadProgress.postValue(-2)
+            handler.sendEmptyMessage(-1)
         }
     }
 
@@ -74,7 +77,7 @@ object DatabaseUpdater {
      */
     @SuppressLint("UnsafeOptInUsageError")
     private fun downloadDB(versionData: DatabaseVersion, from: Int) {
-        val region = getRegion()
+        val region = MainActivity.regionType
         val localVersionKey = when (region) {
             2 -> Constants.SP_DATABASE_VERSION_CN
             3 -> Constants.SP_DATABASE_VERSION_TW
@@ -162,7 +165,7 @@ object DatabaseUpdater {
     /**
      * 获取数据库文件名
      */
-    private fun getVersionFileName() = when (getRegion()) {
+    private fun getVersionFileName() = when (MainActivity.regionType) {
         2 -> Constants.DATABASE_VERSION_URL_CN
         3 -> Constants.DATABASE_VERSION_URL_TW
         else -> Constants.DATABASE_VERSION_URL_JP
@@ -171,21 +174,11 @@ object DatabaseUpdater {
 }
 
 /**
- * 获取数据库版本
- * 2: 国服 3：台服 4:日服
- */
-fun getRegion(): Int {
-    val sp = settingSP()
-    return sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-}
-
-
-/**
  * 更新本地数据库版本、哈希值
  */
 fun updateLocalDataBaseVersion(ver: String) {
     val sp = settingSP()
-    val key = when (getRegion()) {
+    val key = when (MainActivity.regionType) {
         2 -> Constants.SP_DATABASE_VERSION_CN
         3 -> Constants.SP_DATABASE_VERSION_TW
         else -> Constants.SP_DATABASE_VERSION_JP
@@ -201,10 +194,9 @@ fun updateLocalDataBaseVersion(ver: String) {
  * 1：正常打开  0：启用备用数据库
  */
 fun tryOpenDatabase(): Int {
-    val region = getRegion()
     val msg: String
     val open: () -> Unit
-    when (region) {
+    when (MainActivity.regionType) {
         2 -> {
             msg = "更新国服数据结构！！！"
             open = {
@@ -226,8 +218,8 @@ fun tryOpenDatabase(): Int {
     }
     try {
         //尝试打开数据库
-        if (File(FileUtil.getDatabasePath(region)).exists()) {
-            open.invoke()
+        if (File(FileUtil.getDatabasePath(MainActivity.regionType)).exists()) {
+            open()
         }
     } catch (e: Exception) {
         //启用远程备份数据库

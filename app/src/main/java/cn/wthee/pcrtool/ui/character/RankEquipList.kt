@@ -1,7 +1,11 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
@@ -13,10 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.RankText
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -29,6 +30,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @Composable
 fun RankEquipList(
     unitId: Int,
+    lazyGridState: LazyGridState,
     toEquipDetail: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
@@ -38,9 +40,9 @@ fun RankEquipList(
         mutableStateOf(navViewModel.currentValue.value?.rank ?: 2)
     }
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
-        columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
-        contentPadding = PaddingValues(Dimen.mediumPadding)
+        columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
+        contentPadding = PaddingValues(Dimen.mediumPadding),
+        state = lazyGridState
     ) {
         items(
             items = allRankEquip,
@@ -89,26 +91,14 @@ fun RankEquipListItem(
             )
 
             val allIds = unitPromotion.getAllOrderIds()
-            allIds.forEachIndexed { index, _ ->
-                if (index % 2 == 0) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier
-                            .padding(Dimen.smallPadding)
-                            .fillMaxWidth()
+            VerticalGrid(spanCount = 2) {
+                allIds.forEach {
+                    IconCompose(
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        data = ImageResourceHelper.getInstance().getEquipPic(it)
                     ) {
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance()
-                                .getEquipPic(allIds[index])
-                        ) {
-                            toEquipDetail(allIds[index])
-                        }
-                        Spacer(modifier = Modifier.width(Dimen.smallPadding))
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance()
-                                .getEquipPic(allIds[index + 1])
-                        ) {
-                            toEquipDetail(allIds[index + 1])
+                        if (it != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                            toEquipDetail(it)
                         }
                     }
                 }

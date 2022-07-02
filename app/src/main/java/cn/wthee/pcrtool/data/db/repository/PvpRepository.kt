@@ -25,4 +25,7 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
     suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(atks, defs, region)
 
+    suspend fun getHistory(region: Int, startDate: String, endDate: String) =
+        pvpDao.getHistory(region, startDate, endDate)
+
 }

@@ -15,10 +15,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,10 +29,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -269,7 +274,7 @@ fun MainButton(
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            onClick()
         }
     ) {
         Text(
@@ -299,7 +304,7 @@ fun SubButton(
         border = BorderStroke(Dimen.divLineHeight, color = color),
         onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            onClick()
         }
     ) {
         Text(text = text, color = color, style = textStyle)
@@ -325,7 +330,7 @@ fun MainTexButton(
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            onClick()
         }
     ) {
         Text(text = text, color = color, style = textStyle)
@@ -415,7 +420,7 @@ fun MainCard(
     if (onClick != null) {
         mModifier = mModifier.clickable {
             VibrateUtil(context).single()
-            onClick.invoke()
+            onClick()
         }
     }
 
@@ -495,11 +500,11 @@ fun CharacterPositionText(
 //位置颜色
 @Composable
 fun getPositionColor(position: Int) = colorResource(
-    id = when (position) {
-        in 1..299 -> R.color.color_rank_18_20
-        in 300..599 -> R.color.color_rank_7_10
-        in 600..9999 -> R.color.colorPrimary
-        else -> R.color.black
+    id = when (PositionType.getPositionType(position)) {
+        PositionType.POSITION_0_299 -> R.color.color_rank_18_20
+        PositionType.POSITION_300_599 -> R.color.color_rank_7_10
+        PositionType.POSITION_600_999 -> R.color.colorPrimary
+        PositionType.UNKNOWN -> R.color.black
     }
 )
 
@@ -634,7 +639,9 @@ fun SelectTypeCompose(
                                 if (type.value != index) {
                                     coroutineScope.launch {
                                         type.value = index
-                                        changeListener?.invoke()
+                                        if (changeListener != null) {
+                                            changeListener()
+                                        }
                                     }
                                 }
                             }
@@ -671,5 +678,43 @@ fun SelectTypeCompose(
             }
 
         }
+    }
+}
+
+/**
+ * 带图标按钮
+ */
+@Composable
+fun IconTextButton(
+    modifier: Modifier = Modifier,
+    icon: Any,
+    text: String,
+    contentColor: Color = MaterialTheme.colorScheme.primary,
+    iconSize: Dp = Dimen.smallIconSize,
+    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    onClick: () -> Unit
+) {
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .padding(start = Dimen.largePadding)
+            .clip(Shape.medium)
+            .clickable {
+                VibrateUtil(context).single()
+                onClick()
+            }
+            .padding(Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconCompose(data = icon, size = iconSize, tint = contentColor)
+        Text(
+            text = text,
+            color = contentColor,
+            style = textStyle,
+            modifier = modifier,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

@@ -6,16 +6,22 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.utils.calcDate
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.second
 import com.google.gson.JsonArray
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * 竞技场收藏 ViewModel
+ * 竞技场 ViewModel
  *
  * @param pvpRepository
  * @param apiRepository
@@ -33,11 +39,11 @@ class PvpViewModel @Inject constructor(
     var requesting = false
 
     /**
-     * 根据游戏版本 [region]，获取收藏信息
+     * 获取收藏信息
      */
-    fun getAllFavorites(region: Int) {
+    fun getAllFavorites() {
         viewModelScope.launch {
-            val data = pvpRepository.getLiked(region)
+            val data = pvpRepository.getLiked(MainActivity.regionType)
             allFavorites.postValue(data)
         }
     }
@@ -45,9 +51,9 @@ class PvpViewModel @Inject constructor(
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String, region: Int) {
+    fun getFavoritesList(defs: String) {
         viewModelScope.launch {
-            val data = pvpRepository.getLikedList(defs, region)
+            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
             favorites.postValue(data)
         }
     }
@@ -58,38 +64,84 @@ class PvpViewModel @Inject constructor(
     fun insert(data: PvpFavoriteData) {
         viewModelScope.launch {
             pvpRepository.insert(data)
-            getFavoritesList(data.defs, data.region)
+            getFavoritesList(data.defs)
         }
     }
 
     /**
      * 删除收藏信息
      */
-    fun delete(atks: String, defs: String, region: Int) {
+    fun delete(atks: String, defs: String) {
         viewModelScope.launch {
-            pvpRepository.delete(atks, defs, region)
-            getAllFavorites(region)
-            getFavoritesList(defs, region)
+            pvpRepository.delete(atks, defs, MainActivity.regionType)
+            getAllFavorites()
+            getFavoritesList(defs)
         }
     }
 
 
     /**
-     * 根据游戏版本 [region]，获取搜索历史信息
+     * 获取搜索历史信息
      */
-    fun getHistory(region: Int) {
+    fun getHistory() {
         viewModelScope.launch {
-            val data = pvpRepository.getHistory(region)
+            val data = pvpRepository.getHistory(MainActivity.regionType)
             history.postValue(data)
         }
     }
+
+    /**
+     * 获取搜索历史信息
+     */
+    fun getRecentlyUsedUnitList() = flow {
+        val today = getToday()
+        //获取前30天
+        val beforeDate = calcDate(today, 30, true)
+        val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
+        val unitList = arrayListOf<PvpCharacterData>()
+        val map = hashMapOf<Int, Int>()
+        //统计数量
+        data.forEach { pvpData ->
+            pvpData.getDefIds().forEach { unitId ->
+                var count = 1
+                if (map[unitId] != null) {
+                    count = map[unitId]!! + 1
+                }
+                map[unitId] = count
+            }
+        }
+        map.forEach {
+            unitList.add(
+                PvpCharacterData(
+                    unitId = it.key,
+                    count = it.value
+                )
+            )
+        }
+        val limit = 40
+        var list = unitList.sortedByDescending { it.count }
+        if (list.size > limit) {
+            list = list.subList(0, limit)
+        }
+        emit(list)
+    }
+
 
     /**
      * 新增搜索信息
      */
     fun insert(data: PvpHistoryData) {
         viewModelScope.launch {
-            pvpRepository.insert(data)
+            val preData = pvpRepository.getHistory(MainActivity.regionType)
+            //避免重复插入
+            if (preData.isNotEmpty()) {
+                //与上一记录不相同或间隔大于10分钟，插入新记录
+                if (data.date.second(preData[0].date) > 10 * 60 || data.defs != preData[0].defs) {
+                    pvpRepository.insert(data)
+                }
+            } else {
+                pvpRepository.insert(data)
+            }
         }
     }
 

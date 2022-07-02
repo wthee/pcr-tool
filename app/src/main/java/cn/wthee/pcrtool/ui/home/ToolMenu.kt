@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +30,6 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import kotlinx.coroutines.CoroutineScope
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -65,7 +63,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     if (toolList.isEmpty() && !isEditMode && isHome) {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             MainTexButton(text = stringResource(R.string.to_add_tool)) {
-                actions.toToolMore()
+                actions.toToolMore(true)
             }
         }
     }
@@ -119,7 +117,7 @@ private fun MenuItem(
                     // 点击移除
                     editToolMenuOrder(toolMenuData.type.id)
                 } else {
-                    getAction(actions, toolMenuData).invoke()
+                    getAction(actions, toolMenuData)()
                 }
             }
             .defaultMinSize(minWidth = Dimen.menuItemSize)
@@ -159,6 +157,8 @@ fun getAction(
             ToolMenuType.NEWS -> actions.toNews()
             ToolMenuType.FREE_GACHA -> actions.toFreeGacha()
             ToolMenuType.MOCK_GACHA -> actions.toMockGacha()
+            ToolMenuType.BIRTHDAY -> actions.toBirthdayList()
+            ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
         }
     }
 
@@ -184,6 +184,11 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
+        ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
+        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(
+            R.string.tool_calendar_event,
+            MainIconType.CALENDAR
+        )
     }
     tool.type = toolMenuType
     return tool

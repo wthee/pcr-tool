@@ -75,18 +75,18 @@ class EquipmentViewModel @Inject constructor(
                 val data = if (unitId != -1) {
                     equipmentRepository.getEquipByRank(unitId, startRank, endRank)
                 } else {
-                    val d = CharacterPromotionEquip(
+                    val rankEquip = CharacterPromotionEquip(
                         "", "", "", "", "", ""
                     )
                     equipmentRepository.getAllEquip().forEach {
-                        d.equipIds1 += "-${it.equipIds1}"
-                        d.equipIds2 += "-${it.equipIds2}"
-                        d.equipIds3 += "-${it.equipIds3}"
-                        d.equipIds4 += "-${it.equipIds4}"
-                        d.equipIds5 += "-${it.equipIds5}"
-                        d.equipIds6 += "-${it.equipIds6}"
+                        rankEquip.equipIds1 += "-${it.equipIds1}"
+                        rankEquip.equipIds2 += "-${it.equipIds2}"
+                        rankEquip.equipIds3 += "-${it.equipIds3}"
+                        rankEquip.equipIds4 += "-${it.equipIds4}"
+                        rankEquip.equipIds5 += "-${it.equipIds5}"
+                        rankEquip.equipIds6 += "-${it.equipIds6}"
                     }
-                    d
+                    rankEquip
                 }
                 //计算倍数
                 val materials = arrayListOf<EquipmentMaterial>()

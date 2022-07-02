@@ -309,8 +309,8 @@ data class SkillActionPro(
                     1, 2 -> {
                         val descText =
                             if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
-                                tag += "(可叠加)"
-                                "速度额外提升初始值的 $value 倍（可与其它相同效果叠加）"
+                                tag += "(额外)"
+                                "速度额外增加初始值的 $value 倍"
                             } else {
                                 "速度变更为初始值的 $value 倍"
                             }
@@ -561,7 +561,7 @@ data class SkillActionPro(
                 }
                 val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType $commonExpr"
+                    "动作(${action_detail_1 % 10})的数值{${action_detail_2}}$changeType $commonExpr"
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
@@ -576,7 +576,7 @@ data class SkillActionPro(
                                 "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                             }
                         }
-                        "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType$expr * [击杀数量]"
+                        "动作(${action_detail_1 % 10})的数值{${action_detail_2}}$changeType$expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [剩余的HP]"
                     1 -> "$commonDesc * [损失的HP]"
@@ -588,8 +588,8 @@ data class SkillActionPro(
                     102 -> "$commonDesc * [小眼球数量]"
                     in 200 until 300 -> "$commonDesc * [标记层数]"
                     in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
-                    in 20 until 30 -> "$commonDesc * [计数器${action_value_1.toInt() % 10}数量]"
-                    in 2112 until 2200 -> "$commonDesc * [刻印数量]"
+                    in 20 until 30 -> "$commonDesc * [标记层数]"
+                    in 2112 until 2200 -> "$commonDesc * [标记层数]"
                     else -> UNKNOWN
                 }
                 //上限判断
@@ -636,10 +636,10 @@ data class SkillActionPro(
                                 "技能暴击时，使用动作(${action_detail_2 % 10})"
                             }
                             in 1200..1299 -> {
-                                "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
+                                "标记层数在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
                             }
                             in 6112..6200 -> {
-                                "刻印数量达到${action_value_3.int}时，使用动作(${action_detail_2 % 10})"
+                                "标记层数达到 [${action_value_3.int}] 时，使用动作(${action_detail_2 % 10})"
                             }
                             else -> if (status != UNKNOWN) {
                                 "当${getTarget()}在[${status}]时，使用动作(${action_detail_2 % 100})"
@@ -659,7 +659,7 @@ data class SkillActionPro(
                                 "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
                             }
                             in 600..699 -> {
-                                "${getTarget()}的标记层数不足 [${action_value_3.toInt()}] 时，使用动作(${action_detail_3 % 10})"
+                                "${getTarget()}的标记层数小于 [${action_value_3.toInt()}] 时，使用动作(${action_detail_3 % 10})"
                             }
                             700 -> {
                                 "${getTarget()}是不是单独时，使用 [${action_detail_3 % 10}]"
@@ -680,10 +680,10 @@ data class SkillActionPro(
                                 "技能未暴击时，使用动作(${action_detail_3 % 10})"
                             }
                             in 1200..1299 -> {
-                                "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
+                                "标记层数小于 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
                             }
                             in 6112..6200 -> {
-                                "刻印数量小于${action_value_3.int}时，使用动作(${action_detail_3 % 10})"
+                                "标记层数小于 [${action_value_3.int}] 时，使用动作(${action_detail_3 % 10})"
                             }
                             else -> if (status != UNKNOWN) {
                                 "当${getTarget()}不在[${status}]时，使用动作(${action_detail_3 % 100})"
@@ -734,13 +734,13 @@ data class SkillActionPro(
                 val value = getValueText(2, action_value_2, action_value_3)
                 "每次攻击当前的目标，将会追加伤害 $value , 叠加上限 [${(action_value_4).int}]"
             }
-            // 35：特殊刻印
+            // 35：特殊标记
             SkillActionType.SEAL -> {
                 if (action_value_4.toInt() > 0) {
                     val time = getTimeText(3, action_value_3)
                     "对${getTarget()}追加 [${action_value_4.toInt()}] 层标记${time}，叠加上限 [${action_value_1.toInt()}]"
                 } else {
-                    "${getTarget()}的标记层数减少 [${abs(action_value_4).toInt()}] 层"
+                    "${getTarget()}减少 [${abs(action_value_4).toInt()}] 层标记"
                 }
             }
             // 36：攻击领域展开
@@ -804,7 +804,7 @@ data class SkillActionPro(
             }
             // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
-                "[计数器 ${action_detail_1}] 增加 [${action_value_1.toInt()}]"
+                "追加 [${action_value_1.toInt()}] 层标记"
             }
             // 46：比例伤害
             SkillActionType.RATE_DAMAGE -> {
@@ -900,17 +900,17 @@ data class SkillActionPro(
             SkillActionType.INHIBIT_HEAL_ACTION -> {
                 "${getTarget()}受到回复效果时，使回复无效并给予其 [${action_value_1} * 回复量] 伤害"
             }
-            // 60：刻印赋予
+            // 60：标记赋予
             SkillActionType.ATTACK_SEAL -> {
                 val limit = "，叠加上限 [${action_value_1.toInt()}]"
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val target = getTarget()
                 if (action_detail_1 == 3) {
-                    "自身每次攻击${target}，增加1层标记${time}$limit"
+                    "自身每次攻击${target}，追加 [1] 层标记${time}$limit"
                 } else if (action_detail_1 == 1 && action_detail_3 == 1) {
-                    "${target}每次造成伤害时，增加1层标记${time}$limit"
+                    "${target}每次造成伤害时，追加 [1] 层标记${time}$limit"
                 } else if (action_detail_1 == 4 && action_detail_3 == 1) {
-                    "${target}每次造成暴击时，增加1层标记${time}$limit"
+                    "${target}每次造成暴击时，追加 [1] 层标记${time}$limit"
                 } else {
                     UNKNOWN
                 }
@@ -998,7 +998,7 @@ data class SkillActionPro(
                 val time = getTimeText(3, action_value_3, action_value_4)
                 "${getTarget()}治疗量变为原来的 $value 倍$time"
             }
-            // 77：被动叠加刻印
+            // 77：被动叠加标记
             SkillActionType.IF_BUFF_SEAL -> {
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val lifeTime = getTimeText(5, action_value_5, action_value_6)
@@ -1007,7 +1007,7 @@ data class SkillActionPro(
                     2 -> "伤害"
                     else -> UNKNOWN
                 }
-                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
+                "被动效果：每当${getTarget()}受到${effect}时，为自身追加 [${action_detail_2}] 层标记$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {

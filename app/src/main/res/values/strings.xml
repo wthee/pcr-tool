@@ -1,6 +1,6 @@
 <resources>
     <string name="date_m_d">%s 月 %s 日</string>
-    <string name="section">%s阶段</string>
+    <string name="phase">%s阶段</string>
 
     <!-- 角色 -->
     <string name="unknown_character">角色暂未登场</string>
@@ -15,7 +15,6 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="title_birthday">生日</string>
     <string name="skill_cooltime">冷却时间：%.3f秒</string>
     <string name="skill_cast_time">准备时间：%.3f秒</string>
     <string name="skill_level">技能等级：%d</string>
@@ -99,8 +98,9 @@
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
-    <string name="tool_calendar">进行中活动</string>
+    <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
+    <string name="tool_calendar_event">活动记录</string>
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
     <string name="pvp_no_history">暂无查询历史</string>
@@ -112,6 +112,7 @@
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
+    <string name="tool_birthday">生日日程</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
     <string name="read_news">查看公告</string>
@@ -134,8 +135,8 @@
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
-    <string name="compare">对比</string>
-    <string name="count">统计</string>
+    <string name="rank_compare">RANK 对比</string>
+    <string name="calc_equip_count">装备统计</string>
     <string name="share">分享</string>
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
@@ -193,7 +194,7 @@
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="to_summon">查看召唤物 ></string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
-    <string name="activity_info">活动信息</string>
+    <string name="activity_info">活动日程</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">查看剧情立绘 ></string>
     <string name="no_limit">无限制</string>
@@ -210,8 +211,11 @@
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
-    <string name="no_in_progress_data">进行中活动（暂无活动）</string>
-    <string name="no_coming_soon_data">活动预告（暂无活动）</string>
     <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
+    <string name="title_recently_used">常用</string>
+    <string name="gacha_fes">Fes限定★3</string>
+    <string name="gacha_limit">限定★3</string>
+    <string name="gacha_normal">常驻★3</string>
+    <string name="model_preview">模型预览</string>
 
 </resources>

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.di
 
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.database.*
+import cn.wthee.pcrtool.ui.MainActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
 
-    private fun getType() = getRegion()
+    private fun getType() = MainActivity.regionType
 
     @Singleton
     @Provides
