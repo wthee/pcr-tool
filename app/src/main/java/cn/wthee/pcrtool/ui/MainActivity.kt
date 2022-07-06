@@ -154,32 +154,25 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //刷新页面 fixme 偶尔闪退
+    //刷新页面
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
-            //关闭其他数据库连接
-            val isHome = navViewModel.fabMainIcon.value == MainIconType.MAIN
-            if (isHome) {
+            try {
+                //关闭其他数据库连接
                 AppDatabaseCN.close()
                 AppDatabaseTW.close()
                 AppDatabaseJP.close()
-                try {
-                    navController.popBackStack()
-                    viewModelStore.clear()
-                    recreate()
-                } catch (e: Exception) {
-                    LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
-                }
-            } else {
-                val tipId = when (it.what) {
-                    1 -> R.string.tip_color_change
-                    else -> R.string.tip_download_finish
-                }
-                ToastUtil.short(getString(tipId))
+                //重启应用
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                ToastUtil.short(getString(R.string.change_failed))
             }
-
             return@Callback true
         })
     }

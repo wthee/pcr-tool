@@ -14,8 +14,8 @@ hilt {
 }
 
 val composeVersion = "1.2.0-rc02"
-val appVersionCode = 330
-val appVersionName = "3.3.0"
+val appVersionCode = 331
+val appVersionName = "3.3.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -77,7 +77,7 @@ android {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
             manifestPlaceholders["icon"] = "@drawable/ic_star_pink"
-            resValue("string", "app_name", "PCR Tool β")
+            resValue("string", "app_name", "beta")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -149,7 +149,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.1"
+    val lifecycleVersion = "2.5.0"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -157,7 +157,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.2")
+    implementation("androidx.navigation:navigation-compose:2.5.0")
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
@@ -169,7 +169,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0"
+    val roomVersion = "2.4.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

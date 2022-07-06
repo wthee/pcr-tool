@@ -206,16 +206,15 @@
     <string name="reset_record">重置卡池</string>
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="delete_gacha">删除卡池</string>
-    <string name="tip_download_finish">数据下载完成，重新打开应用后更新</string>
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
-    <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
     <string name="title_recently_used">常用</string>
     <string name="gacha_fes">Fes限定★3</string>
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
     <string name="model_preview">模型预览</string>
+    <string name="change_failed">切换失败</string>
 
 </resources>
