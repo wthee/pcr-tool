@@ -60,15 +60,12 @@ enum class RankSelectType(val type: Int) {
 //卡池类型
 enum class GachaType(val typeName: String) {
     UNKNOWN(""),
-    PICK_UP("PICK UP"),
-    RE("复刻"),
+    LIMIT("限定"),
+    RE_LIMIT("复刻限定"),
+    NORMAL("常驻"),
+    RE_NORMAL("复刻常驻"),
     FES("公主庆典"),
     ANNIV("周年");
-
-
-    companion object {
-        fun getByValue(value: String) = values().find { it.typeName == value } ?: UNKNOWN
-    }
 }
 
 //菜单

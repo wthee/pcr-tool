@@ -92,8 +92,8 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when (type) {
-        GachaType.PICK_UP -> colorResource(id = R.color.color_rank_18_20)
-        GachaType.RE -> colorResource(id = R.color.color_rank_7_10)
+        GachaType.LIMIT, GachaType.NORMAL -> colorResource(id = R.color.color_rank_18_20)
+        GachaType.RE_LIMIT, GachaType.RE_NORMAL -> colorResource(id = R.color.color_rank_7_10)
         GachaType.FES -> colorResource(id = R.color.color_rank_21_23)
         GachaType.ANNIV -> colorResource(id = R.color.color_rank_24)
         GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
@@ -111,26 +111,27 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
+            //类型
             MainTitleText(
                 text = if (type.typeName != "") type.typeName else gachaInfo.fixTypeName(),
-                backgroundColor = color
+                backgroundColor = color,
             )
+            //日期
             MainTitleText(
                 text = sd.substring(0, 10),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
+            //天数
             MainTitleText(
                 text = ed.days(sd),
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             )
-
             //计时
             Row(
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (inProgress) {
-
                     IconCompose(
                         data = MainIconType.TIME_LEFT,
                         size = Dimen.smallIconSize,

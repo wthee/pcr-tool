@@ -6,6 +6,7 @@ import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.*
 
+//fixme 8月台服更新后，可取消判断
 const val limitedIds = """
     (
 		106101,
