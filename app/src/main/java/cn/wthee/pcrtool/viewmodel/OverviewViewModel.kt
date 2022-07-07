@@ -46,7 +46,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterList() = flow {
         try {
-            emit(unitRepository.getInfoAndData(FilterCharacter(), "全部", 10))
+            emit(unitRepository.getInfoAndData(FilterCharacter(), 10))
         } catch (e: Exception) {
 
         }

@@ -59,7 +59,7 @@ fun checkPermissions(
 }
 
 /**
- *  把 - 拼接的字符串，转化为数组
+ *  把 - 拼接的字符串，转化为 Int 数组
  */
 val String.intArrayList: List<Int>
     get() {
@@ -72,6 +72,10 @@ val String.intArrayList: List<Int>
         }
         return list
     }
+
+val String.stringArrayList: List<String>
+    get() = this.split("-").filter { it != "" }
+
 
 /**
  * 去除空格等无用字符

@@ -249,10 +249,10 @@ fun CharacterItem(
                 errorId = R.drawable.error,
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.heightIn(max = getItemWidth())
-            ) { successData ->
+            ) { result ->
                 loadSuccess = true
                 //取色
-                Palette.from(successData.result.drawable.toBitmap()).generate { palette ->
+                Palette.from(result.drawable.toBitmap()).generate { palette ->
                     palette?.let {
                         cardMainColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
                     }
@@ -679,9 +679,12 @@ private fun FilterCharacterSheet(
                 text = stringResource(id = R.string.title_guild),
                 modifier = Modifier.padding(top = Dimen.largePadding)
             )
-            val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            val guildChipData = arrayListOf(
+                ChipData(0, stringResource(id = R.string.all)),
+                ChipData(1, stringResource(id = R.string.no_guild)),
+            )
             guildList.forEachIndexed { index, guildData ->
-                guildChipData.add(ChipData(index + 1, guildData.guildName))
+                guildChipData.add(ChipData(index + 2, guildData.guildName))
             }
             ChipGroup(
                 guildChipData,

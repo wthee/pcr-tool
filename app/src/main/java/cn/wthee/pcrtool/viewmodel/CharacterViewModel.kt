@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+
 /**
  * 角色 ViewModel
  *
@@ -27,11 +28,7 @@ class CharacterViewModel @Inject constructor(
     fun getCharacters(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                val guildName = if (params.guild > 0)
-                    unitRepository.getGuilds()[params.guild - 1].guildName
-                else
-                    "全部"
-                emit(unitRepository.getInfoAndData(params, guildName, Int.MAX_VALUE))
+                emit(unitRepository.getInfoAndData(params, Int.MAX_VALUE))
             }
         } catch (e: Exception) {
 

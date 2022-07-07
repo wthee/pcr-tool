@@ -30,6 +30,9 @@ const val limitedIds = """
 	)
 """
 
+//角色最大编号
+const val maxUnitId = 200000
+
 /**
  * 角色数据 DAO
  */
@@ -78,7 +81,7 @@ interface UnitDao {
         WHERE 
             unit_data.unit_name like '%' || :unitName || '%'
         AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-        AND unit_profile.unit_id < 200000
+        AND unit_profile.unit_id < $maxUnitId
         AND (
             (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
             OR 
@@ -97,8 +100,9 @@ interface UnitDao {
             WHEN  unit_data.atk_type = :atkType  THEN 1 
         END
         AND 1 = CASE
-            WHEN  '全部' = :guild  THEN 1 
-            WHEN  unit_profile.guild = :guild  THEN 1 
+            WHEN 0 = :guildId THEN 1 
+            WHEN -1 = :guildId THEN unit_profile.guild_id = ''
+            WHEN  unit_profile.guild_id = :guildId  THEN 1 
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
@@ -127,7 +131,7 @@ interface UnitDao {
     )
     suspend fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>,
+        atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
         type: Int,
         limit: Int,
     ): List<CharacterInfo>
@@ -146,7 +150,7 @@ interface UnitDao {
             LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id 
         WHERE
             unit_profile.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
-            AND unit_profile.unit_id < 200000 
+            AND unit_profile.unit_id < $maxUnitId 
             AND unit_data.unit_id IS NOT NULL
         """
     )
@@ -277,7 +281,7 @@ interface UnitDao {
         WHERE
             search_area_width >= :start 
             AND search_area_width <= :end
-            AND a.unit_id < 200000  
+            AND a.unit_id < $maxUnitId  
             AND b.search_area_width > 0
         ORDER BY
             b.search_area_width
@@ -301,7 +305,7 @@ interface UnitDao {
             LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
         WHERE
             a.unit_id IN (:unitIds) 
-            AND a.unit_id < 200000  
+            AND a.unit_id < $maxUnitId
             AND b.search_area_width > 0
         ORDER BY
             b.search_area_width
@@ -356,11 +360,47 @@ interface UnitDao {
      * 获取所有公会信息
      */
     @SkipQueryVerification
-    @Query("SELECT * FROM guild WHERE guild.guild_master != 0")
+    @Query("SELECT guild_id, guild_name FROM guild WHERE member1 != 0")
     suspend fun getGuilds(): List<GuildData>
 
     /**
      * 获取所有公会成员信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            guild_id,
+            guild_name,
+            description,
+            guild_master,
+            GROUP_CONCAT( unit_id, '-' ) AS unit_ids,
+            GROUP_CONCAT( unit_name, '-' ) AS unit_names 
+        FROM
+            (
+            SELECT
+                guild.guild_id,
+                guild.guild_name,
+                guild.description,
+                ( CASE WHEN guild.guild_master == guild.member1 THEN guild.guild_master ELSE guild.member1 END ) AS guild_master,
+                unit_profile.unit_id,
+                unit_profile.unit_name 
+            FROM
+                guild
+                LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id 
+                AND unit_profile.unit_id < $maxUnitId
+                AND unit_profile.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
+            ) 
+        WHERE
+            guild_master != 0 
+        GROUP BY
+            guild_id
+    """
+    )
+    suspend fun getAllGuildMembers(): List<GuildAllMember>
+
+    /**
+     * 获取新增公会成员信息
      */
     @SkipQueryVerification
     @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
