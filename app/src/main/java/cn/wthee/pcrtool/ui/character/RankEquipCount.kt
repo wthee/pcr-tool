@@ -137,12 +137,10 @@ fun RankEquipCount(
                             MainTitleText(text = stringResource(id = R.string.cur_rank))
                             RankText(
                                 rank = rank0.value,
-                                style = MaterialTheme.typography.titleMedium,
                             )
                             MainTitleText(text = stringResource(id = R.string.target_rank))
                             RankText(
                                 rank = rank1.value,
-                                style = MaterialTheme.typography.titleMedium,
                             )
                         }
                     }

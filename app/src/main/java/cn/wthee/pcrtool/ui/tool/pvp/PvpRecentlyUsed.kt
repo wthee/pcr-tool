@@ -51,7 +51,7 @@ fun PvpRecentlyUsedList(
                     it.unitId
                 }
             ) {
-                PvpIconItem(selectedIds, it, floatWindow, true)
+                PvpIconItem(selectedIds, it, floatWindow)
             }
             items(spanCount) {
                 CommonSpacer()

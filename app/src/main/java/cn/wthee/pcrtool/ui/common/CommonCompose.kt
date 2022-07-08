@@ -240,7 +240,9 @@ fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -251,7 +253,9 @@ fun MainButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
+        contentPadding = contentPadding
     ) {
         Text(
             text = text,
@@ -270,6 +274,7 @@ fun SubButton(
     text: String,
     color: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -281,7 +286,8 @@ fun SubButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
+        },
+        contentPadding = contentPadding
     ) {
         Text(text = text, color = color, style = textStyle)
     }
@@ -320,7 +326,7 @@ fun MainTexButton(
 @Composable
 fun RankText(
     rank: Int,
-    style: TextStyle,
+    style: TextStyle = MaterialTheme.typography.titleMedium,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0

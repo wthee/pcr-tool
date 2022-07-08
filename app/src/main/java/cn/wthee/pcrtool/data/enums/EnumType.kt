@@ -1,9 +1,5 @@
 package cn.wthee.pcrtool.data.enums
 
-import androidx.compose.ui.res.stringResource
-import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.utils.Constants
-
 //立绘类型
 enum class AllPicsType(val type: Int) {
     CHARACTER(0),
@@ -34,16 +30,6 @@ enum class UnitType(val type: Int) {
 
     companion object {
         fun getByValue(value: Int) = values().find { it.type == value } ?: CHARACTER
-    }
-}
-
-//ChipGroup 类型
-enum class ChipGroupType(val type: Int) {
-    DEFAULT(0),
-    RANK(1);
-
-    companion object {
-        fun getByValue(value: Int) = values().find { it.type == value } ?: DEFAULT
     }
 }
 

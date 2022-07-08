@@ -46,9 +46,9 @@
     <string name="color_off">动态色彩关闭，使用默认主题</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
-    <string name="data_from">干炸里脊资源</string>
-    <string name="data_from_hint">数据和图片来源</string>
-    <string name="data_from_url">https://redive.estertion.win/</string>
+    <string name="data_from">Unity Texture Toolkit</string>
+    <string name="data_from_hint">资源获取工具 by esterTion</string>
+    <string name="data_from_url">https://github.com/esterTion/unity-texture-toolkit</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="shizuru_note_tip">感谢大佬的开源项目</string>
     <string name="shizuru_note_url">https://github.com/MalitsPlus/ShizuruNotes</string>

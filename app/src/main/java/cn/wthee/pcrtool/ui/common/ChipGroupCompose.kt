@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import cn.wthee.pcrtool.data.enums.ChipGroupType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -23,18 +22,16 @@ import com.google.accompanist.flowlayout.FlowRow
  *
  * @param items chip 数据列表
  * @param selectIndex 选择位置状态
- * @param type
  */
 @Composable
 fun ChipGroup(
     items: List<ChipData>,
     selectIndex: MutableState<Int>,
-    modifier: Modifier = Modifier,
-    type: ChipGroupType = ChipGroupType.DEFAULT
+    modifier: Modifier = Modifier
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(item = chipData, selectIndex, index, type)
+            ChipItem(item = chipData, selectIndex, index)
         }
     }
 }
@@ -44,7 +41,7 @@ fun ChipGroup(
  */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: ChipGroupType) {
+fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     val context = LocalContext.current
     val isSelected = selectIndex.value == index
     //字体颜色
@@ -53,23 +50,17 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: C
         MaterialTheme.colorScheme.onPrimary
     } else {
         //未选中字体颜色
-        when (type) {
-            ChipGroupType.DEFAULT -> Color.Unspecified
-            ChipGroupType.RANK -> getRankColor(item.text.toInt())
-        }
+        Color.Unspecified
     }
     //Chip 背景色
     val containerColor = if (isSelected) {
         //选中背景色
-        when (type) {
-            ChipGroupType.DEFAULT -> MaterialTheme.colorScheme.primary
-            ChipGroupType.RANK -> getRankColor(item.text.toInt())
-        }
+        MaterialTheme.colorScheme.primary
     } else {
         //未选中背景色
         Color.Transparent
     }
-    val chipColor = FilterChipDefaults.filterChipColors(containerColor = containerColor)
+    val chipColor = FilterChipDefaults.filterChipColors(selectedContainerColor = containerColor)
 
     FilterChip(
         selected = isSelected,
