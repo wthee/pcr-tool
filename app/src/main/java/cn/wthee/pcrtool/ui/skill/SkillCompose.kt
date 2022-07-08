@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -29,8 +28,7 @@ import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -251,9 +249,9 @@ fun SkillActionItem(
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
         arrayListOf(
-            colorResource(R.color.color_rank_21_23),
-            colorResource(if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black),
-            colorResource(R.color.color_rank_11_17),
+            colorGreen,
+            if (isSystemInDarkTheme()) Color.White else Color.Black,
+            colorPurple,
             MaterialTheme.colorScheme.primary
         )
     skillAction.action.forEachIndexed { index, c ->
@@ -293,7 +291,7 @@ fun SkillActionItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(vertical = Dimen.smallPadding)
-            .background(colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray))
+            .background(if (isSystemInDarkTheme()) Color.DarkGray else colorGrayWhite)
             .clickable(enabled = BuildConfig.DEBUG) {
                 ToastUtil.short(skillAction.actionId.toString())
             }
@@ -302,7 +300,7 @@ fun SkillActionItem(
             modifier = Modifier
                 .width(Dimen.vLineWidth)
                 .fillMaxHeight()
-                .background(colorResource(id = R.color.div_line))
+                .background(if (isSystemInDarkTheme()) Color.Gray else colorGrayWhite1)
         )
         Column(
             modifier = Modifier
@@ -412,10 +410,10 @@ private fun getSkillType(skillId: Int): String {
 @Composable
 fun getSkillColor(type: String): Color {
     return when {
-        type.contains("连结") -> colorResource(R.color.color_rank_7_10)
-        type.contains("EX") -> colorResource(R.color.color_rank_2_3)
-        type.contains("1") -> colorResource(R.color.color_rank_11_17)
-        type.contains("2") -> colorResource(R.color.color_rank_18_20)
+        type.contains("连结") -> colorGold
+        type.contains("EX") -> colorCopper
+        type.contains("1") -> colorPurple
+        type.contains("2") -> colorRed
         else -> MaterialTheme.colorScheme.primary
     }
 }

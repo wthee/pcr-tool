@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,6 +23,7 @@ import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.equip.AreaItem
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
@@ -65,7 +65,7 @@ fun RandomEquipArea(
                             ImageResourceHelper.UNKNOWN_EQUIP_ID,
                             odds,
                             "区域 ${it.area}",
-                            colorResource(id = R.color.color_rank_21_23)
+                            colorGreen
                         )
                     }
                     item {
@@ -92,7 +92,7 @@ fun RandomEquipArea(
                         -1,
                         odds,
                         "区域 xx",
-                        colorResource(id = R.color.color_rank_21_23)
+                        colorGreen
                     )
                 }
                 item {

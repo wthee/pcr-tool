@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -76,7 +76,7 @@ fun EquipList(
         val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
         ModalBottomSheetLayout(
             sheetState = state,
-            scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
+            scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
             sheetElevation = Dimen.sheetElevation,
             sheetShape = if (state.offset.value == 0f) {
                 noShape
@@ -281,7 +281,6 @@ private fun FilterEquipSheet(
         OutlinedTextField(
             value = textState.value,
             shape = Shape.medium,
-            colors = outlinedTextFieldColors(),
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {

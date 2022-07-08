@@ -1,12 +1,8 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FilterChip
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -14,9 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.ChipGroupType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -48,7 +42,7 @@ fun ChipGroup(
 /**
  * ChipItem
  */
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: ChipGroupType) {
     val context = LocalContext.current
@@ -65,7 +59,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: C
         }
     }
     //Chip 背景色
-    val backgroundColor = if (isSelected) {
+    val containerColor = if (isSelected) {
         //选中背景色
         when (type) {
             ChipGroupType.DEFAULT -> MaterialTheme.colorScheme.primary
@@ -73,9 +67,9 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: C
         }
     } else {
         //未选中背景色
-        colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray)
+        Color.Transparent
     }
-    val chipColor = ChipDefaults.filterChipColors(backgroundColor = backgroundColor)
+    val chipColor = FilterChipDefaults.filterChipColors(containerColor = containerColor)
 
     FilterChip(
         selected = isSelected,
@@ -84,14 +78,15 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int, type: C
             selectIndex.value = index
         },
         modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-        colors = chipColor
-    ) {
-        Text(
-            text = item.text,
-            color = textColor,
-            style = MaterialTheme.typography.titleMedium
-        )
-    }
+        colors = chipColor,
+        label = {
+            Text(
+                text = item.text,
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    )
 }
 
 @Preview

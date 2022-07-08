@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +26,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
@@ -86,7 +85,7 @@ fun TopBarCompose(
             } else {
                 if (updateApp.id != -2) {
                     val updateColor =
-                        if (updateApp.id == 0) colorResource(id = R.color.color_rank_21_23) else Color.Unspecified
+                        if (updateApp.id == 0) colorGreen else Color.Unspecified
                     val icon =
                         if (updateApp.id == 0) MainIconType.APP_UPDATE else MainIconType.NOTICE
                     IconCompose(

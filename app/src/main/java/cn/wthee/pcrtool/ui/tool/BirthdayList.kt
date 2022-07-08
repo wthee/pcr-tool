@@ -9,7 +9,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +17,8 @@ import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -93,7 +94,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),
-                backgroundColor = colorResource(id = R.color.news_update)
+                backgroundColor = colorRed
             )
             MainTitleText(
                 text = if (data.month == 999) {
@@ -102,7 +103,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                     "${data.month.toString().fillZero()}/${data.day.toString().fillZero()}"
                 },
                 modifier = Modifier.padding(start = Dimen.smallPadding),
-                backgroundColor = colorResource(id = R.color.news_update)
+                backgroundColor = colorRed
             )
 
             //计时
@@ -115,20 +116,20 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                         IconCompose(
                             data = MainIconType.BIRTHDAY,
                             size = Dimen.smallIconSize,
-                            tint = colorResource(id = R.color.news_update)
+                            tint = colorRed
                         )
                     }
                     if (comingSoon) {
                         IconCompose(
                             data = MainIconType.COUNTDOWN,
                             size = Dimen.smallIconSize,
-                            tint = colorResource(id = R.color.news_system)
+                            tint = colorPurple
                         )
                         MainContentText(
                             text = stringResource(R.string.coming_soon, sd.days(today)),
                             modifier = Modifier.padding(start = Dimen.smallPadding),
                             textAlign = TextAlign.Start,
-                            color = colorResource(id = R.color.news_system)
+                            color = colorPurple
                         )
                     }
                 }

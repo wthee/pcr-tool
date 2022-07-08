@@ -3,17 +3,13 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -26,7 +22,7 @@ import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -35,7 +31,6 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -99,7 +94,7 @@ fun EquipMaterialDeatil(
                     )
                     val tabs = arrayListOf<String>()
                     //颜色
-                    val colorList = arrayListOf<Int>()
+                    val colorList = arrayListOf<Color>()
 
                     lists.forEachIndexed { index, data ->
                         if (data.isNotEmpty()) {
@@ -115,11 +110,10 @@ fun EquipMaterialDeatil(
                             )
                             colorList.add(
                                 when (index) {
-                                    0 -> R.color.color_map_n
-                                    1 -> R.color.color_map_h
-                                    2 -> R.color.color_map_vh
-                                    3 -> R.color.color_rank_21_23
-                                    else -> R.color.black
+                                    0 -> colorBlue
+                                    1 -> colorRed
+                                    2 -> colorPurple
+                                    else -> colorGreen
                                 }
                             )
                         }
@@ -140,11 +134,11 @@ fun EquipMaterialDeatil(
                                     end = Dimen.largePadding
                                 ),
                             selectedTabIndex = pagerState.currentPage,
-                            backgroundColor = Color.Transparent,
+                            containerColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.primary,
                             indicator = { tabPositions ->
                                 TabRowDefaults.Indicator(
-                                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                    Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                                 )
                             }
                         ) {
@@ -159,7 +153,7 @@ fun EquipMaterialDeatil(
                                 ) {
                                     Text(
                                         text = s,
-                                        color = colorResource(id = colorList[index]),
+                                        color = colorList[index],
                                         modifier = Modifier.padding(bottom = Dimen.smallPadding)
                                     )
                                 }
@@ -194,7 +188,7 @@ fun EquipMaterialDeatil(
                                             equipId,
                                             (it as EquipmentDropInfo).getAllOdd(),
                                             it.getNum(),
-                                            colorResource(id = colorList[pagerIndex])
+                                            colorList[pagerIndex]
                                         )
                                     } else {
                                         it as RandomEquipDropArea
@@ -207,7 +201,7 @@ fun EquipMaterialDeatil(
                                             equipId,
                                             odds,
                                             "区域 ${it.area}",
-                                            colorResource(id = colorList[pagerIndex])
+                                            colorList[pagerIndex]
                                         )
                                     }
 

@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -94,7 +94,7 @@ fun CharacterList(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
+        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
@@ -217,15 +217,15 @@ fun CharacterItem(
         1 -> {
             if (character.rarity == 1) {
                 limitType = stringResource(id = R.string.type_event_limit)
-                limitColor = colorResource(id = R.color.color_rank_21_23)
+                limitColor = colorGreen
             } else {
                 limitType = stringResource(id = R.string.type_limit)
-                limitColor = colorResource(id = R.color.color_rank_18_20)
+                limitColor = colorRed
             }
         }
         else -> {
             limitType = stringResource(id = R.string.type_normal)
-            limitColor = colorResource(id = R.color.color_rank_7_10)
+            limitColor = colorGold
         }
     }
     //主色
@@ -531,7 +531,6 @@ private fun FilterCharacterSheet(
         OutlinedTextField(
             value = textState.value,
             shape = Shape.medium,
-            colors = outlinedTextFieldColors(),
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {

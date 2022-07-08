@@ -11,7 +11,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +25,8 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
@@ -292,13 +293,13 @@ private fun PvpResultItem(
                     )
                     MainContentText(
                         text = item.up.toString(),
-                        color = colorResource(id = R.color.color_rank_21_23),
+                        color = colorGreen,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(0.3f)
                     )
                     MainContentText(
                         text = item.down.toString(),
-                        color = colorResource(id = R.color.color_rank_18_20),
+                        color = colorRed,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
                     )

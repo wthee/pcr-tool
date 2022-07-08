@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +18,7 @@ import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -84,10 +83,10 @@ fun CalendarEventItem(calendar: CalendarEvent) {
             MaterialTheme.colorScheme.primary
         }
         comingSoon -> {
-            colorResource(id = R.color.news_system)
+            colorPurple
         }
         else -> {
-            colorResource(id = R.color.color_rank_4_6)
+            MaterialTheme.colorScheme.outline
         }
     }
 
@@ -191,9 +190,9 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
             }
 
             val dropMumColor = when (data.getFixedValue()) {
-                1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
-                3f -> colorResource(id = R.color.color_rank_18_20)
-                4f -> colorResource(id = R.color.color_rank_21_23)
+                1.5f, 2.0f -> colorGold
+                3f -> colorRed
+                4f -> colorGreen
                 else -> MaterialTheme.colorScheme.primary
             }
             val multiple = data.getFixedValue()

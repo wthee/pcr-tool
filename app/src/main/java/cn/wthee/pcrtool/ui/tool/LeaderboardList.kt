@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,8 +21,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -218,16 +216,14 @@ private fun LeaderboardItem(info: LeaderboardData) {
 fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: Modifier) {
     Text(
         text = grade,
-        color = colorResource(
-            id = when (grade) {
-                "SSS" -> R.color.color_rank_18_20
-                "SS" -> R.color.color_rank_11_17
-                "S" -> R.color.color_rank_7_10
-                "A" -> R.color.color_rank_4_6
-                "B" -> R.color.color_rank_2_3
-                else -> R.color.color_rank_21_23
-            }
-        ),
+        color = when (grade) {
+            "SSS" -> colorRed
+            "SS" -> colorPurple
+            "S" -> colorGold
+            "A" -> colorSilver
+            "B" -> colorCopper
+            else -> colorGreen
+        },
         textAlign = textAlign,
         fontWeight = FontWeight.Bold,
         modifier = modifier

@@ -8,8 +8,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,10 +25,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -121,7 +126,7 @@ fun CharacterDetail(
     //页面
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
-        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
+        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (modalBottomSheetState.offset.value == 0f) {
             noShape
@@ -270,7 +275,6 @@ fun CharacterDetail(
                             //等级输入框
                             OutlinedTextField(
                                 value = inputLevel.value,
-                                colors = outlinedTextFieldColors(),
                                 onValueChange = {
                                     var filterStr = ""
                                     it.forEach { ch ->
@@ -620,7 +624,7 @@ private fun CharacterEquip(
                     tint = if (rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
-                        MaterialTheme.colorScheme.surface
+                        Color.Transparent
                     },
                     modifier = Modifier
                         .padding(start = Dimen.mediumPadding)
@@ -648,7 +652,7 @@ private fun CharacterEquip(
                     tint = if (rank > 1) {
                         getRankColor(rank = rank - 1)
                     } else {
-                        MaterialTheme.colorScheme.surface
+                        Color.Transparent
                     },
                     modifier = Modifier
                         .padding(end = Dimen.mediumPadding)
@@ -753,7 +757,6 @@ private fun UniqueEquip(
             OutlinedTextField(
                 value = inputLevel.value,
                 shape = Shape.medium,
-                colors = outlinedTextFieldColors(),
                 onValueChange = {
                     var filterStr = ""
                     it.forEach { ch ->

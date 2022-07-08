@@ -19,23 +19,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -229,23 +222,6 @@ fun CaptionText(
  * 分割线
  */
 @Composable
-fun LineCompose(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        Spacer(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(Dimen.divLineHeight)
-                .background(colorResource(id = R.color.div_line))
-                .align(Alignment.Center)
-        )
-    }
-
-}
-
-/**
- * 分割线
- */
-@Composable
 fun DivCompose(modifier: Modifier = Modifier) {
     Spacer(
         modifier = modifier
@@ -373,17 +349,16 @@ fun RankText(
 //rank 颜色
 @Composable
 fun getRankColor(rank: Int): Color {
-    val colorId = when (rank) {
-        in 2..3 -> R.color.color_rank_2_3
-        in 4..6 -> R.color.color_rank_4_6
-        in 7..10 -> R.color.color_rank_7_10
-        in 11..17 -> R.color.color_rank_11_17
-        in 18..20 -> R.color.color_rank_18_20
-        in 21..23 -> R.color.color_rank_21_23
-        in 24..99 -> R.color.color_rank_24
-        else -> R.color.color_rank_1
+    return when (rank) {
+        in 2..3 -> colorCopper
+        in 4..6 -> colorSilver
+        in 7..10 -> colorGold
+        in 11..17 -> colorPurple
+        in 18..20 -> colorRed
+        in 21..23 -> colorGreen
+        in 24..99 -> colorOrange
+        else -> colorBlue
     }
-    return colorResource(id = colorId)
 }
 
 /**
@@ -499,25 +474,21 @@ fun CharacterPositionText(
 
 //位置颜色
 @Composable
-fun getPositionColor(position: Int) = colorResource(
-    id = when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> R.color.color_rank_18_20
-        PositionType.POSITION_300_599 -> R.color.color_rank_7_10
-        PositionType.POSITION_600_999 -> R.color.colorPrimary
-        PositionType.UNKNOWN -> R.color.black
+fun getPositionColor(position: Int) =
+    when (PositionType.getPositionType(position)) {
+        PositionType.POSITION_0_299 -> colorRed
+        PositionType.POSITION_300_599 -> colorGold
+        PositionType.POSITION_600_999 -> colorBlue
+        PositionType.UNKNOWN -> colorPrimary
     }
-)
 
 
 //攻击颜色
 @Composable
-fun getAtkColor(atkType: Int): Color {
-    val colorId = when (atkType) {
-        1 -> R.color.color_rank_7_10
-        2 -> R.color.color_rank_11_17
-        else -> R.color.color_rank_2_3
-    }
-    return colorResource(id = colorId)
+fun getAtkColor(atkType: Int) = when (atkType) {
+    1 -> colorGold
+    2 -> colorPurple
+    else -> colorCopper
 }
 
 /**

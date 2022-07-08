@@ -121,7 +121,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
 
     //Accompanist
     val accompanistVersion = "0.24.12-rc"

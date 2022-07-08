@@ -2,37 +2,7 @@
 <resources>
     <color name="colorPrimary">#5690EF</color>
     <color name="colorPrimaryDark">#3F6BB3</color>
-    <color name="black">#FF000000</color>
     <color name="statusBarColor">#FFFBFE</color>
     <color name="statusBarColorDark">#1C1B1F</color>
-    <color name="alpha_black">#80000000</color>
-    <color name="alpha_white">#80FFFFFF</color>
-    <color name="alpha_primary">#A65690EF</color>
-    <color name="alpha_primary_dark">#C47699D1</color>
-    <color name="gray">#7E7D7D</color>
-    <color name="div_line">#E3E3E3</color>
-    <color name="bg_gray">#F3F3F3</color>
-    <color name="bg_gray_dark">#121212</color>
     <color name="ic_launcher_background">#FFFFFF</color>
-    <!-- Rank 颜色-->
-    <color name="color_rank_1">#50BFE3</color>
-    <color name="color_rank_2_3">#C28662</color>
-    <color name="color_rank_4_6">#90B6B8</color>
-    <color name="color_rank_7_10">#EBA827</color>
-    <color name="color_rank_11_17">#BF76CD</color>
-    <color name="color_rank_18_20">#E95264</color>
-    <color name="color_rank_21_23">#5EB56D</color>
-    <color name="color_rank_24">#FF6c47</color>
-
-    <color name="news_system">#a067c5</color>
-    <color name="news_update">#f55291</color>
-
-    <!--地区-->
-    <color name="color_map_n">@color/colorPrimary</color>
-    <color name="color_map_h">#C94C5D</color>
-    <color name="color_map_vh">#7A418A</color>
-
-    <!--卡片遮罩-->
-    <color name="card_alpha_black">#BF000000</color>
-
 </resources>

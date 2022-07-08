@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -24,6 +23,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
@@ -113,14 +114,14 @@ private fun MockGachaHistoryItem(
             if (upCount > 0) {
                 MainTitleText(
                     text = "UP：$upCount",
-                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    backgroundColor = colorRed,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
             if (start3Count > 0) {
                 MainTitleText(
                     text = "★3：$start3Count",
-                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    backgroundColor = colorGold,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }

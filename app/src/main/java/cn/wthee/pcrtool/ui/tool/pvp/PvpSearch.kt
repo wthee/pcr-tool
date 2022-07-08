@@ -11,10 +11,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -38,7 +39,6 @@ import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
 
@@ -155,10 +155,10 @@ fun PvpSearchCompose(
                     selectedTabIndex = pagerState.currentPage,
                     indicator = { tabPositions ->
                         TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                         )
                     },
-                    backgroundColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -412,8 +412,7 @@ private fun PvpToSelectList(
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,
     pvpCharacterData: PvpCharacterData,
-    floatWindow: Boolean,
-    showCount: Boolean = false
+    floatWindow: Boolean
 ) {
     //角色图标
     val icon = if (pvpCharacterData.unitId == 0) {
@@ -456,9 +455,6 @@ fun PvpIconItem(
             navViewModel.selectedPvpData.postValue(newList)
         }
 
-//        if (showCount) {
-//            CaptionText(text = "${pvpCharacterData.count}次")
-//        } else {
         //位置
         val position =
             if (pvpCharacterData != PvpCharacterData()) pvpCharacterData.position else 0
@@ -469,7 +465,6 @@ fun PvpIconItem(
             position = position,
             modifier = Modifier.padding(top = textTopPadding),
         )
-//        }
     }
 }
 
