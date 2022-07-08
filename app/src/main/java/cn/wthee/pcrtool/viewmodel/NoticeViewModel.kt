@@ -30,12 +30,8 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
         viewModelScope.launch {
             updateApp.postValue(AppNotice(id = -1))
             try {
-                val data = apiRepository.getUpdateContent().data
-                if (data != null) {
-                    updateApp.postValue(data!!)
-                } else {
-                    updateApp.postValue(AppNotice(id = -2))
-                }
+                val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
+                updateApp.postValue(data)
             } catch (e: Exception) {
                 updateApp.postValue(AppNotice(id = -2))
             }

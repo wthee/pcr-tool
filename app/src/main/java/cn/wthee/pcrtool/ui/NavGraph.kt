@@ -2,10 +2,15 @@ package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -93,8 +98,13 @@ fun NavGraph(
     viewModel: NavViewModel,
     actions: NavActions,
 ) {
+    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
 
-    AnimatedNavHost(navController, startDestination = Navigation.HOME) {
+    AnimatedNavHost(
+        modifier = Modifier.padding(top = statusBarHeight),
+        navController = navController,
+        startDestination = Navigation.HOME
+    ) {
 
         //首页
         composable(

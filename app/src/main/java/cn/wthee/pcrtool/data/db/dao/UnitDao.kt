@@ -413,7 +413,8 @@ interface UnitDao {
     @Query(
         """
         SELECT 
-            GROUP_CONCAT(unit_id,'-') as unit_ids
+            GROUP_CONCAT(unit_id,'-') as unit_ids,
+            GROUP_CONCAT(unit_name,'-') as unit_names
         FROM
             unit_profile
         WHERE unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
@@ -421,7 +422,7 @@ interface UnitDao {
         GROUP BY guild_id
     """
     )
-    suspend fun getNoGuildMembers(): String?
+    suspend fun getNoGuildMembers(): NoGuildMemberInfo?
 
     /**
      * 获取已六星角色 id 列表

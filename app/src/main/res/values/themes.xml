@@ -3,13 +3,8 @@
     <style name="Theme.Pcrtoolcompose" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <!--        <item name="colorPrimaryVariant">@color/colorAccent</item>-->
-        <!--        <item name="colorOnPrimary">@color/white</item>-->
-        <!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
-        <!--        <item name="colorSecondary">@color/colorPrimary</item>-->
-        <!--        <item name="colorSecondaryVariant">@color/colorPrimary</item>-->
-        <!--        <item name="colorOnSecondary">@color/black</item>-->
-        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
 
     </style>
 </resources>

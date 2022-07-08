@@ -884,13 +884,13 @@ private fun Section(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding),
                     textAlign = TextAlign.Start,
-                    color = if (hasAdded) Color.White else Color.Unspecified
+                    color = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
                 )
             }
             IconCompose(
                 data = iconType,
                 size = Dimen.fabIconSize,
-                tint = if (hasAdded) Color.White else Color.Unspecified
+                tint = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
             )
             MainText(
                 text = stringResource(id = titleId),
@@ -898,7 +898,7 @@ private fun Section(
                     .weight(1f)
                     .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
-                color = if (hasAdded) Color.White else Color.Unspecified
+                color = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
             )
             //更多信息，编辑时隐藏
             if (!isEditMode) {
@@ -910,22 +910,25 @@ private fun Section(
                 ) {
                     if (onClick != null) {
                         if (hintText != "") {
-                            Text(text = buildAnnotatedString {
-                                withStyle(
-                                    style = SpanStyle(
-                                        baselineShift = BaselineShift(+0.2f),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                ) {
-                                    append(hintText)
-                                }
-                            })
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            baselineShift = BaselineShift(+0.2f),
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    ) {
+                                        append(hintText)
+                                    }
+                                },
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                         IconCompose(
                             data = rightIconType ?: MainIconType.MORE,
                             size = Dimen.fabIconSize,
-                            tint = if (hasAdded) Color.White else Color.Unspecified
+                            tint = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
                         )
                     }
 

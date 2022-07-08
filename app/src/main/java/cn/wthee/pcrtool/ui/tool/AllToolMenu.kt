@@ -206,11 +206,12 @@ private fun MenuItem(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
                 data = toolMenuData.iconType,
                 size = Dimen.mediumIconSize,
-                tint = if (hasAdded) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary
+                tint = if (hasAdded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
             )
             Subtitle2(
                 text = stringResource(id = toolMenuData.titleId),
-                modifier = Modifier.padding(start = Dimen.largePadding)
+                modifier = Modifier.padding(start = Dimen.largePadding),
+                color = if (hasAdded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
             )
         }
     }

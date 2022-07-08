@@ -75,6 +75,7 @@ fun CharacterDetail(
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
@@ -82,6 +83,7 @@ fun CharacterDetail(
     val currentValueState = navViewModel.currentValue.observeAsState()
     //数值信息
     if ((currentValueState.value == null || currentValueState.value!!.level == -1) && maxValue.isInit()) {
+        //初始为最大值
         navViewModel.currentValue.postValue(maxValue)
     }
     // bottomsheet 状态
@@ -108,7 +110,7 @@ fun CharacterDetail(
         .collectAsState(initial = AllAttrData()).value
     //角色特殊六星id
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
-
+    //角色等级
     val inputLevel = remember {
         mutableStateOf("")
     }
@@ -117,11 +119,15 @@ fun CharacterDetail(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val isImeVisible = WindowInsets.isImeVisible
-    val context = LocalContext.current
 
     //战力系数
     val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
 
+    //数据加载后，展示页面
+    val visible =
+        characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
+    //未实装角色
+    val unknown = maxValue.level == -1
 
     //页面
     ModalBottomSheetLayout(
@@ -145,10 +151,6 @@ fun CharacterDetail(
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
-            if (maxValue.isInit() && currentValue.rarity > maxValue.rarity) {
-                navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
-            }
-            val unknown = maxValue.level == -1
             //关闭
             if (close) {
                 coroutineScope.launch {
@@ -159,9 +161,6 @@ fun CharacterDetail(
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                //数据加载后，展示页面
-                val visible =
-                    characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
                 //页面
                 FadeAnimation(visible) {
                     Column(
@@ -336,7 +335,7 @@ fun CharacterDetail(
                             )
                         }
                         //属性
-                        AttrLists(unitId, characterAttrData, actions)
+                        AttrLists(unitId, characterAttrData, actions.toCharacteStoryDetail)
                         //RANK相关功能
                         Row(
                             modifier = Modifier
@@ -487,6 +486,9 @@ fun CharacterDetail(
     }
 }
 
+/**
+ * 角色卡
+ */
 @Composable
 private fun CharacterCard(
     loved: Boolean,
@@ -514,7 +516,9 @@ private fun CharacterCard(
  * 属性
  */
 @Composable
-private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
+private fun AttrLists(unitId: Int, allData: AllAttrData, toCharacteStoryDetail: (Int) -> Unit) {
+    val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
+
     //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
@@ -533,13 +537,11 @@ private fun AttrLists(unitId: Int, allData: AllAttrData, actions: NavActions) {
             data = MainIconType.HELP,
             size = Dimen.smallIconSize
         ) {
-            actions.toCharacteStoryDetail(unitId)
+            toCharacteStoryDetail(unitId)
         }
     }
-
     AttrList(attrs = allData.storyAttr.allNotZero())
     //Rank 奖励
-    val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     Column(
         modifier = Modifier
             .fillMaxWidth()

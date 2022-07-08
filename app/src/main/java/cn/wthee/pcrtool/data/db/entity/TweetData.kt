@@ -29,11 +29,7 @@ data class TweetData(
 
     fun getUrlList(): ArrayList<String> {
         val list = arrayListOf<String>()
-        urls.split(",").forEach {
-            if (it != "") {
-                list.add(it)
-            }
-        }
+        urls.split(",").filter { it != "" }
         return list
     }
 

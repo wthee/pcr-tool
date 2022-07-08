@@ -80,7 +80,7 @@ fun EquipMaterialDeatil(
                 text = basicInfo.equipmentName,
                 modifier = Modifier
                     .padding(top = Dimen.largePadding),
-                color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 selectable = true
             )
             if (dropInfoList != null && areaList != null) {
@@ -132,7 +132,8 @@ fun EquipMaterialDeatil(
                                     top = Dimen.mediumPadding,
                                     start = Dimen.largePadding,
                                     end = Dimen.largePadding
-                                ),
+                                )
+                                .fillMaxWidth(tabs.size * 0.25f),
                             selectedTabIndex = pagerState.currentPage,
                             containerColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.primary,

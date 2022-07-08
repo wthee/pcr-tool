@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -100,11 +99,7 @@ fun PvpSearchCompose(
     val spanCount = if (initSpanCount == 0) ScreenUtil.getWidth() / normalSize else initSpanCount
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    Box {
         Column {
             //标题
             if (!floatWindow) {
@@ -161,6 +156,7 @@ fun PvpSearchCompose(
                     containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
+                        .padding(horizontal = mediumPadding)
                         .fillMaxWidth(1f)
                         .align(Alignment.CenterHorizontally)
                 ) {

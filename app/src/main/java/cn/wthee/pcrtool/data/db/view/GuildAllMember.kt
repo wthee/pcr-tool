@@ -29,3 +29,7 @@ data class GuildMemberInfo(
     val unitName: String
 )
 
+data class NoGuildMemberInfo(
+    @ColumnInfo(name = "unit_ids") var unitIds: String = "0-0",
+    @ColumnInfo(name = "unit_names") var unitNames: String = "0-0"
+)

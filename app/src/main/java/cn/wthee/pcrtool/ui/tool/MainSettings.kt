@@ -363,7 +363,8 @@ private fun TitleText(text: String) {
         text = text,
         style = MaterialTheme.typography.titleLarge,
         fontSize = 18.sp,
-        fontWeight = FontWeight.Normal
+        fontWeight = FontWeight.Normal,
+        color = MaterialTheme.colorScheme.onSurface
     )
 }
 

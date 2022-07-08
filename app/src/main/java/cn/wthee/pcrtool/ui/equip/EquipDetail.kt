@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -80,7 +79,7 @@ private fun EquipDetail(
                 }
                 MainText(
                     text = equipMaxData.equipmentName,
-                    color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                    color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     selectable = true
                 )

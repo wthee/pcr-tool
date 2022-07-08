@@ -291,7 +291,7 @@ fun SkillActionItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(vertical = Dimen.smallPadding)
-            .background(if (isSystemInDarkTheme()) Color.DarkGray else colorGrayWhite)
+            .background(MaterialTheme.colorScheme.background)
             .clickable(enabled = BuildConfig.DEBUG) {
                 ToastUtil.short(skillAction.actionId.toString())
             }
@@ -300,7 +300,7 @@ fun SkillActionItem(
             modifier = Modifier
                 .width(Dimen.vLineWidth)
                 .fillMaxHeight()
-                .background(if (isSystemInDarkTheme()) Color.Gray else colorGrayWhite1)
+                .background(if (isSystemInDarkTheme()) colorGrayWhite else colorGrayWhite1)
         )
         Column(
             modifier = Modifier
@@ -318,6 +318,7 @@ fun SkillActionItem(
                 modifier = Modifier.padding(
                     top = Dimen.smallPadding
                 ),
+                color = MaterialTheme.colorScheme.onSurface,
                 text = buildAnnotatedString {
                     skillAction.action.forEachIndexed { index, c ->
                         var added = false

@@ -22,6 +22,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -95,12 +96,11 @@ class MainActivity : ComponentActivity() {
                     MaterialTheme.colorScheme.surface,
                     darkIcons = isLight
                 )
-                ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
-                Surface {
-                    Home()
-                }
+                ui.setStatusBarColor(Color.Transparent, darkIcons = isLight)
+                Home()
             }
         }
+
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
@@ -194,13 +194,11 @@ fun Home(
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
 
     Box(
         modifier = Modifier
             .navigationBarsPadding()
             .fillMaxSize()
-            .padding(top = statusBarHeight)
     ) {
         NavGraph(navController, navViewModel, actions)
         //菜单

@@ -147,7 +147,6 @@ fun RankCompare(
                             Spacer(modifier = Modifier.weight(0.3f))
                             RankText(
                                 rank = rank0.value,
-                                style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier
                                     .weight(0.2f)
@@ -155,7 +154,6 @@ fun RankCompare(
                             )
                             RankText(
                                 rank = rank1.value,
-                                style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.weight(0.2f)
                             )

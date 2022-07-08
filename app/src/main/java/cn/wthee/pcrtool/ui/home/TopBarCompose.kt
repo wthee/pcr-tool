@@ -10,7 +10,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,7 +84,7 @@ fun TopBarCompose(
             } else {
                 if (updateApp.id != -2) {
                     val updateColor =
-                        if (updateApp.id == 0) colorGreen else Color.Unspecified
+                        if (updateApp.id == 0) colorGreen else MaterialTheme.colorScheme.onSurface
                     val icon =
                         if (updateApp.id == 0) MainIconType.APP_UPDATE else MainIconType.NOTICE
                     IconCompose(

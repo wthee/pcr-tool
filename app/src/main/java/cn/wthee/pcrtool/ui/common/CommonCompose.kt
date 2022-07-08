@@ -63,7 +63,7 @@ fun MainTitleText(
 fun MainContentText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
     selectable: Boolean = false
 ) {
@@ -128,7 +128,7 @@ fun MainText(
 fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
 ) {
@@ -163,7 +163,7 @@ fun Subtitle1(
 fun Subtitle2(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign = TextAlign.Start,
@@ -203,7 +203,7 @@ fun Subtitle2(
 fun CaptionText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
     maxLines: Int = Int.MAX_VALUE
 ) {
@@ -240,7 +240,9 @@ fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -251,7 +253,9 @@ fun MainButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
+        contentPadding = contentPadding
     ) {
         Text(
             text = text,
@@ -268,8 +272,9 @@ fun MainButton(
 fun SubButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -281,7 +286,8 @@ fun SubButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
+        },
+        contentPadding = contentPadding
     ) {
         Text(text = text, color = color, style = textStyle)
     }
@@ -295,7 +301,7 @@ fun SubButton(
 fun MainTexButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
 ) {
@@ -320,7 +326,7 @@ fun MainTexButton(
 @Composable
 fun RankText(
     rank: Int,
-    style: TextStyle,
+    style: TextStyle = MaterialTheme.typography.titleMedium,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0
@@ -418,7 +424,7 @@ fun SelectText(
     selected: Boolean,
     text: String,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = Color.Unspecified,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     padding: Dp = Dimen.smallPadding,
     margin: Dp = Dimen.smallPadding,
@@ -457,7 +463,7 @@ fun CharacterPositionText(
     val color = if (showColor) {
         getPositionColor(position)
     } else {
-        Color.Unspecified
+        MaterialTheme.colorScheme.onSurface
     }
 
 

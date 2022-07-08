@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,7 +84,6 @@ fun RankEquipListItem(
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
-                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(Dimen.mediumPadding),
                 type = if (unitPromotion.promotionLevel == selectedRank.value) 1 else 0
             )

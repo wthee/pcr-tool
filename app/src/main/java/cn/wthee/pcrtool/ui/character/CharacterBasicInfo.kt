@@ -3,8 +3,6 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -105,9 +103,8 @@ private fun BasicInfo(info: CharacterInfoPro) {
         selectable = true
     )
     //介绍
-    Text(
-        info.getIntroText(),
-        style = MaterialTheme.typography.titleSmall,
+    Subtitle2(
+        text = info.getIntroText()
     )
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(

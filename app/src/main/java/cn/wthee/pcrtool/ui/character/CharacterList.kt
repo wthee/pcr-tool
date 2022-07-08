@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
@@ -267,6 +268,28 @@ fun CharacterItem(
                 )
             }
 
+            //名称阴影效果
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding + 1.dp,
+                        vertical = Dimen.mediumPadding
+                    )
+                    .fillMaxWidth(1f - RATIO_SHAPE)
+                    .align(Alignment.BottomStart),
+            ) {
+                Subtitle1(
+                    text = character.getNameL(),
+                    color = Color.Black
+                )
+                Text(
+                    text = character.getNameF(),
+                    color = Color.Black,
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
             //名称
             Column(
                 modifier = Modifier
@@ -286,6 +309,7 @@ fun CharacterItem(
                     fontWeight = FontWeight.ExtraBold
                 )
             }
+
 
             //其它信息
             SlideRTLAnimation(
