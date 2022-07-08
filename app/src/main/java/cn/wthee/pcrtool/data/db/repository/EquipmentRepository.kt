@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import javax.inject.Inject
 
@@ -31,8 +32,13 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
-    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) =
-        equipmentDao.getUniqueEquipInfos(unitId, lv)
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int): UniqueEquipmentMaxData? {
+        return try {
+            equipmentDao.getUniqueEquipInfos(unitId, lv)
+        } catch (e: Exception) {
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+        }
+    }
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 
