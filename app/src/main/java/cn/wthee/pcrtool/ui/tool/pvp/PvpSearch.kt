@@ -175,7 +175,7 @@ fun PvpSearchCompose(
                                 color = if (pagerState.currentPage == index) {
                                     MaterialTheme.colorScheme.primary
                                 } else {
-                                    Color.Unspecified
+                                    MaterialTheme.colorScheme.onSurface
                                 }
                             )
                         }
@@ -228,7 +228,7 @@ fun PvpSearchCompose(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(
-                        end = if (floatWindow) Dimen.fabMargin else Dimen.fabMarginEnd,
+                        end = Dimen.fabMarginEnd,
                         bottom = Dimen.fabMargin
                     )
             ) {
@@ -270,9 +270,16 @@ fun PvpSearchCompose(
                 //查询
                 FabCompose(
                     iconType = MainIconType.PVP_SEARCH,
-                    text = if (floatWindow) "" else stringResource(id = R.string.pvp_search)
+                    text = stringResource(id = R.string.pvp_search)
                 ) {
                     //查询
+                    try {
+                        scope.launch {
+                            resultListState.scrollToItem(0)
+                        }
+                    } catch (e: Exception) {
+
+                    }
                     pvpViewModel.pvpResult.postValue(null)
                     navViewModel.showResult.postValue(true)
                 }

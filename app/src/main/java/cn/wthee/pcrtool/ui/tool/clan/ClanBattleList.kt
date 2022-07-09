@@ -5,11 +5,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,7 +85,7 @@ fun ClanBattleList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -146,10 +148,10 @@ private fun ClanBattleItem(
                 )
         ) {
             //图标
-            Row {
+            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
                 bossUnitIdList.forEachIndexed { index, it ->
                     Box(
-                        modifier = Modifier.padding(Dimen.mediumPadding),
+                        modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
@@ -166,9 +168,18 @@ private fun ClanBattleItem(
                         //多目标提示
                         val targetCount = clanBattleInfo.getMultiCount(index)
                         if (targetCount > 0) {
-                            MainTitleText(
+                            //阴影
+                            MainText(
                                 text = targetCount.toString(),
-                                modifier = Modifier.align(Alignment.BottomEnd)
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(
+                                    start = Dimen.textElevation,
+                                    top = Dimen.textElevation
+                                )
+                            )
+                            MainText(
+                                text = targetCount.toString(),
+                                color = Color.White,
                             )
                         }
                     }

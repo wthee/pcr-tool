@@ -22,7 +22,7 @@ class BirthdayViewModel @Inject constructor(
         try {
             val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
             emit(data)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

@@ -27,11 +27,7 @@ data class TweetData(
         return urls
     }
 
-    fun getUrlList(): ArrayList<String> {
-        val list = arrayListOf<String>()
-        urls.split(",").filter { it != "" }
-        return list
-    }
+    fun getUrlList() = urls.split(",").filter { it != "" }
 
     fun getFormatTweet(): String {
         return tweet.substringBefore("http").deleteSpace.substringBeforeLast("\n")

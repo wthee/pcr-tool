@@ -36,7 +36,7 @@ val fadeOut = fadeOut(animationSpec = fastTween())
 val mySlideIn = if (animOnFlag) {
     slideInVertically(
         initialOffsetY = { 30 },
-        animationSpec = defaultTween()
+        animationSpec = defaultSpring()
     )
 } else {
     fadeIn(animationSpec = fastTween())
@@ -44,7 +44,7 @@ val mySlideIn = if (animOnFlag) {
 
 //页面进入动画：渐入
 val myFadeIn = if (animOnFlag) {
-    fadeIn(animationSpec = defaultTween())
+    fadeIn(animationSpec = defaultSpring())
 } else {
     fadeIn(animationSpec = fastTween())
 }

@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -114,34 +113,32 @@ fun PvpSearchResult(
                     if (hasData) {
                         //查询成功
                         val list = result.data!!.sortedByDescending { it.up }
-                        FadeAnimation(visible = hasData) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier
-                                    .fillMaxSize()
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            //展示查询结果
+                            LazyVerticalGrid(
+                                state = resultListState,
+                                columns = GridCells.Adaptive(itemWidth)
                             ) {
-                                //展示查询结果
-                                LazyVerticalGrid(
-                                    state = resultListState,
-                                    columns = GridCells.Adaptive(itemWidth)
-                                ) {
-                                    itemsIndexed(
-                                        items = list,
-                                        key = { _, it ->
-                                            it.id
-                                        }
-                                    ) { index, item ->
-                                        PvpResultItem(
-                                            favoritesList,
-                                            index + 1,
-                                            item,
-                                            floatWindow,
-                                            pvpViewModel
-                                        )
+                                itemsIndexed(
+                                    items = list,
+                                    key = { _, it ->
+                                        it.id
                                     }
-                                    item {
-                                        CommonSpacer()
-                                    }
+                                ) { index, item ->
+                                    PvpResultItem(
+                                        favoritesList,
+                                        index + 1,
+                                        item,
+                                        floatWindow,
+                                        pvpViewModel
+                                    )
+                                }
+                                item {
+                                    CommonSpacer()
                                 }
                             }
                         }
@@ -246,25 +243,23 @@ private fun PvpResultItem(
                     data = if (favorites.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     size = Dimen.fabIconSize
                 ) {
-                    if (!placeholder) {
-                        scope.launch {
-                            if (favorites.value) {
-                                //已收藏，取消收藏
-                                viewModel.delete(item.atk, item.def)
-                            } else {
-                                //未收藏，添加收藏
-                                viewModel.insert(
-                                    PvpFavoriteData(
-                                        item.id,
-                                        item.atk,
-                                        item.def,
-                                        getToday(true),
-                                        MainActivity.regionType
-                                    )
+                    scope.launch {
+                        if (favorites.value) {
+                            //已收藏，取消收藏
+                            viewModel.delete(item.atk, item.def)
+                        } else {
+                            //未收藏，添加收藏
+                            viewModel.insert(
+                                PvpFavoriteData(
+                                    item.id,
+                                    item.atk,
+                                    item.def,
+                                    getToday(true),
+                                    MainActivity.regionType
                                 )
-                            }
-                            favorites.value = !favorites.value
+                            )
                         }
+                        favorites.value = !favorites.value
                     }
                 }
             }

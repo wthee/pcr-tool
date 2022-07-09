@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainTexButton
+import cn.wthee.pcrtool.ui.common.IconTextButton
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -62,22 +62,11 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
 
     if (toolList.isEmpty() && !isEditMode && isHome) {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            MainTexButton(text = stringResource(R.string.to_add_tool)) {
+            IconTextButton(icon = MainIconType.MAIN, text = stringResource(R.string.to_add_tool)) {
                 actions.toToolMore(true)
             }
         }
     }
-//    val list = arrayListOf(
-//        ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
-//        ToolMenuData(R.string.tool_clan, MainIconType.CLAN),
-//        ToolMenuData(R.string.tool_leader, MainIconType.LEADER),
-//        ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
-//        ToolMenuData(R.string.tool_event, MainIconType.EVENT),
-//        ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-//        ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA),
-//        ToolMenuData(R.string.tool_more, MainIconType.TOOL_MORE),
-//    )
-
 
     VerticalGrid(
         maxColumnWidth = Dimen.toolMenuWidth,

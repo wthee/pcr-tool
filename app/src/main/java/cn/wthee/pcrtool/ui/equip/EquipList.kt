@@ -81,7 +81,7 @@ fun EquipList(
             sheetShape = if (state.offset.value == 0f) {
                 noShape
             } else {
-                Shape.large
+                CardTopShape
             },
             sheetContent = {
                 FilterEquipSheet(navViewModel, coroutineScope, state)

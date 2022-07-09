@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
@@ -29,6 +28,7 @@ import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -431,7 +431,7 @@ fun NavGraph(
         //竞技场查询
         composable(
             route = Navigation.TOOL_PVP,
-            enterTransition = { fadeIn(initialAlpha = 1f) },
+            enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }

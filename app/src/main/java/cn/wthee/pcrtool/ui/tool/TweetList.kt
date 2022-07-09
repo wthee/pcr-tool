@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -108,7 +107,7 @@ fun TweetList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -182,7 +181,9 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
         )
         //相关链接跳转
         if (!placeholder) {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier
+                .padding(vertical = Dimen.smallPadding)
+                .fillMaxWidth()) {
                 TweetButton(data.link, toNewsDetail = toNewsDetail, toComic = toComic)
                 data.getUrlList().forEach {
                     TweetButton(it, comicId, toNewsDetail = toNewsDetail, toComic = toComic)
@@ -257,14 +258,8 @@ private fun TweetButton(
         }
     }
 
-
-    TextButton(
-        onClick = {
-            btn.action()
-        },
-    ) {
-        IconCompose(data = btn.iconType, size = Dimen.smallIconSize)
-        MainContentText(text = btn.text)
+    IconTextButton(icon = btn.iconType, text = btn.text) {
+        btn.action()
     }
 }
 

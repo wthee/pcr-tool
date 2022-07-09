@@ -4,9 +4,11 @@ import androidx.compose.ui.unit.dp
 
 object Dimen {
 
-    val cardRadius = 10.dp
+    val cardRadius = 12.dp
 
     val cardElevation = 4.dp
+
+    val textElevation = 1.dp
 
     val fabElevation = 8.dp
 
@@ -60,7 +62,7 @@ object Dimen {
 
     val lineHeight = 3.dp
 
-    val vLineWidth = 4.dp
+    val vLineWidth = 3.dp
 
     val skillActionMinHeight = 16.dp
 

@@ -68,7 +68,6 @@ android {
         create("official") {
             applicationId = "cn.wthee.pcrtool"
             dimension = "version"
-            manifestPlaceholders["icon"] = "@mipmap/ic_launcher"
             resValue("string", "app_name", "PCR Tool")
             buildConfigField("boolean", "DEBUG", "false")
         }
@@ -76,7 +75,6 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            manifestPlaceholders["icon"] = "@drawable/ic_star_pink"
             resValue("string", "app_name", "beta")
             buildConfigField("boolean", "DEBUG", "true")
         }

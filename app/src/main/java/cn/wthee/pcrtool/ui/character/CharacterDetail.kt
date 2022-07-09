@@ -137,7 +137,7 @@ fun CharacterDetail(
         sheetShape = if (modalBottomSheetState.offset.value == 0f) {
             noShape
         } else {
-            Shape.large
+            CardTopShape
         },
         sheetContent = {
             //技能循环
@@ -151,6 +151,9 @@ fun CharacterDetail(
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
+            if (maxValue.isInit() && currentValue.rarity > maxValue.rarity) {
+                navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
+            }
             //关闭
             if (close) {
                 coroutineScope.launch {

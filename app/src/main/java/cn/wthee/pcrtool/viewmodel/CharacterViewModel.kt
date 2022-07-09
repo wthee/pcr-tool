@@ -30,7 +30,7 @@ class CharacterViewModel @Inject constructor(
             if (params != null) {
                 emit(unitRepository.getInfoAndData(params, Int.MAX_VALUE))
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
 
@@ -76,7 +76,7 @@ class CharacterViewModel @Inject constructor(
             if (multiIds.isNotEmpty()) {
                 ids.addAll(multiIds)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
         val commentList = arrayListOf<RoomCommentData>()
@@ -96,7 +96,7 @@ class CharacterViewModel @Inject constructor(
     fun getAllCharacter() = flow {
         try {
             emit(unitRepository.getCharacterByPosition(1, 999))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -107,7 +107,7 @@ class CharacterViewModel @Inject constructor(
     fun getGuilds() = flow {
         try {
             emit(unitRepository.getGuilds())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

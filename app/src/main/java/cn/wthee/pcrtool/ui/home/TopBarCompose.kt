@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +23,6 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
@@ -154,9 +152,6 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 )
                 //反馈群
                 IconTextButton(
-                    modifier = Modifier
-                        .padding(start = Dimen.largePadding)
-                        .clip(Shape.medium),
                     icon = MainIconType.SUPPORT,
                     text = stringResource(id = R.string.qq_group),
                 ) {
@@ -164,9 +159,6 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 }
                 //查看 github release 详情
                 IconTextButton(
-                    modifier = Modifier
-                        .padding(start = Dimen.largePadding)
-                        .clip(Shape.medium),
                     icon = MainIconType.GITHUB_RELEASE,
                     text = stringResource(id = R.string.github),
                 ) {

@@ -46,12 +46,12 @@ class SkillViewModel @Inject constructor(
             var cutinSpUB = 0
             try {
                 spUB = skillRepository.getUnitSpUBSkill(unitId) ?: 0
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
             try {
                 cutinSpUB = skillRepository.getUnitSpUBSkill(cutinId) ?: 0
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
 

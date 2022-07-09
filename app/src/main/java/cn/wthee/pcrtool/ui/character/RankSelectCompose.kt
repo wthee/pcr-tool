@@ -1,18 +1,24 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -23,6 +29,7 @@ import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.common.getRankColor
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -85,36 +92,30 @@ fun RankSelectCompose(
             }
 
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            MainText(text = stringResource(id = R.string.cur_rank))
-            MainText(text = stringResource(id = R.string.target_rank))
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            //当前
+
+        //当前
+        MainText(text = stringResource(id = R.string.cur_rank))
+        RankSelectItem(
+            selectIndex = selectIndex0,
+            rankList = rankList
+        )
+        //目标
+        MainText(text = stringResource(id = R.string.target_rank))
+        if (type == RankSelectType.LIMIT) {
+            //只可选择比当前大的值
+            val newRankList = arrayListOf<Int>()
+            for (i in maxRank downTo maxRank - selectIndex0.value) {
+                newRankList.add(i)
+            }
             RankSelectItem(
-                modifier = Modifier.weight(1f),
-                selectIndex = selectIndex0,
+                selectIndex = selectIndex1,
+                rankList = newRankList
+            )
+        } else {
+            RankSelectItem(
+                selectIndex = selectIndex1,
                 rankList = rankList
             )
-            //目标
-            if (type == RankSelectType.LIMIT) {
-                //只可选择比当前大的值
-                val newRankList = arrayListOf<Int>()
-                for (i in maxRank downTo maxRank - selectIndex0.value) {
-                    newRankList.add(i)
-                }
-                RankSelectItem(
-                    modifier = Modifier.weight(1f),
-                    selectIndex = selectIndex1,
-                    rankList = newRankList
-                )
-            } else {
-                RankSelectItem(
-                    modifier = Modifier.weight(1f),
-                    selectIndex = selectIndex1,
-                    rankList = rankList
-                )
-            }
         }
 
     }
@@ -126,18 +127,30 @@ fun RankSelectCompose(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RankSelectItem(
-    modifier: Modifier,
     selectIndex: MutableState<Int>,
     rankList: List<Int>
 ) {
-    Box(modifier = modifier) {
-        VerticalGrid(spanCount = 3) {
+    val context = LocalContext.current
+
+    Box {
+        VerticalGrid(spanCount = 6) {
             rankList.forEachIndexed { index, rank ->
+                val rankColor = getRankColor(rank = rank)
+                val selected = selectIndex.value == index
                 FilterChip(
-                    selected = selectIndex.value == index,
-                    onClick = { selectIndex.value = index },
+                    selected = selected,
+                    onClick = {
+                        VibrateUtil(context).single()
+                        selectIndex.value = index
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = rankColor
+                    ),
                     label = {
-                        CaptionText(text = rankFillBlank(rank), color = getRankColor(rank = rank))
+                        CaptionText(
+                            text = rankFillBlank(rank),
+                            color = if (selected) Color.White else rankColor
+                        )
                     }
                 )
             }

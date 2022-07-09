@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,8 +25,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaHistory
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaResult
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -153,7 +151,7 @@ fun MockGacha(
                                 color = if (pagerState.currentPage == index) {
                                     MaterialTheme.colorScheme.primary
                                 } else {
-                                    Color.Unspecified
+                                    MaterialTheme.colorScheme.onSurface
                                 }
                             )
                         }

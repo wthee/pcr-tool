@@ -242,25 +242,18 @@ fun MainButton(
     color: Color = MaterialTheme.colorScheme.onPrimary,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     Button(
-        shape = Shape.medium,
-        modifier = modifier.padding(Dimen.smallPadding),
-        onClick = {
+        shape = Shape.medium, modifier = modifier.padding(Dimen.smallPadding), onClick = {
             VibrateUtil(context).single()
             onClick()
-        },
-        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
-        contentPadding = contentPadding
+        }, colors = ButtonDefaults.buttonColors(containerColor = containerColor)
     ) {
         Text(
-            text = text,
-            color = color,
-            style = textStyle
+            text = text, color = color, style = textStyle
         )
     }
 }
@@ -274,21 +267,17 @@ fun SubButton(
     text: String,
     color: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
-    OutlinedButton(
-        shape = Shape.medium,
+    OutlinedButton(shape = Shape.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         border = BorderStroke(Dimen.divLineHeight, color = color),
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        },
-        contentPadding = contentPadding
-    ) {
+        }) {
         Text(text = text, color = color, style = textStyle)
     }
 }
@@ -307,14 +296,10 @@ fun MainTexButton(
 ) {
     val context = LocalContext.current
 
-    TextButton(
-        shape = Shape.medium,
-        modifier = modifier.padding(Dimen.smallPadding),
-        onClick = {
-            VibrateUtil(context).single()
-            onClick()
-        }
-    ) {
+    TextButton(shape = Shape.medium, modifier = modifier.padding(Dimen.smallPadding), onClick = {
+        VibrateUtil(context).single()
+        onClick()
+    }) {
         Text(text = text, color = color, style = textStyle)
     }
 }
@@ -325,9 +310,9 @@ fun MainTexButton(
  */
 @Composable
 fun RankText(
+    modifier: Modifier = Modifier,
     rank: Int,
     style: TextStyle = MaterialTheme.typography.titleMedium,
-    modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0
 ) {
@@ -335,11 +320,7 @@ fun RankText(
     val text = getFormatText(rank)
     if (type == 0) {
         Text(
-            text = text,
-            textAlign = textAlign,
-            color = color,
-            style = style,
-            modifier = modifier
+            text = text, textAlign = textAlign, color = color, style = style, modifier = modifier
         )
     } else {
         MainTitleText(
@@ -393,10 +374,9 @@ fun MainCard(
 ) {
     val context = LocalContext.current
 
-    var mModifier =
-        modifier
-            .fillMaxWidth()
-            .shadow(Dimen.cardElevation, shape, true)
+    var mModifier = modifier
+        .fillMaxWidth()
+        .shadow(Dimen.cardElevation, shape, true)
 
     if (onClick != null) {
         mModifier = mModifier.clickable {
@@ -480,13 +460,12 @@ fun CharacterPositionText(
 
 //位置颜色
 @Composable
-fun getPositionColor(position: Int) =
-    when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> colorRed
-        PositionType.POSITION_300_599 -> colorGold
-        PositionType.POSITION_600_999 -> colorBlue
-        PositionType.UNKNOWN -> colorPrimary
-    }
+fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
+    PositionType.POSITION_0_299 -> colorRed
+    PositionType.POSITION_300_599 -> colorGold
+    PositionType.POSITION_600_999 -> colorBlue
+    PositionType.UNKNOWN -> colorPrimary
+}
 
 
 //攻击颜色
@@ -524,7 +503,10 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 
         HorizontalPagerIndicator(
             pagerState = pagerState,
-            modifier = Modifier.padding(top = Dimen.largePadding + Dimen.iconSize + Dimen.smallPadding),
+            modifier = Modifier.padding(
+                top = Dimen.largePadding + Dimen.iconSize + Dimen.smallPadding,
+                bottom = Dimen.mediumPadding
+            ),
             spacing = Dimen.iconSize + Dimen.largePadding + 8.dp,
             activeColor = MaterialTheme.colorScheme.primary,
             inactiveColor = Color.Unspecified
@@ -551,12 +533,12 @@ fun CircularProgressCompose(size: Dp = Dimen.menuIconSize) {
  */
 @Composable
 fun SelectTypeCompose(
+    modifier: Modifier = Modifier,
     icon: MainIconType,
     tabs: List<String>,
     type: MutableState<Int>,
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier,
     changeListener: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -599,8 +581,7 @@ fun SelectTypeCompose(
     ) {
         if (openDialog) {
             Column(
-                modifier = Modifier.width(width),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.width(width), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 //选择
                 tabs.forEachIndexed { index, tab ->
@@ -638,9 +619,7 @@ fun SelectTypeCompose(
                 modifier = Modifier.padding(start = Dimen.largePadding)
             ) {
                 IconCompose(
-                    data = icon,
-                    tint = selectedColor,
-                    size = Dimen.menuIconSize
+                    data = icon, tint = selectedColor, size = Dimen.menuIconSize
                 )
                 Text(
                     text = tabs[type.value],
@@ -648,8 +627,7 @@ fun SelectTypeCompose(
                     textAlign = TextAlign.Center,
                     color = selectedColor,
                     modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.largePadding
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
                     )
                 )
             }
@@ -663,7 +641,6 @@ fun SelectTypeCompose(
  */
 @Composable
 fun IconTextButton(
-    modifier: Modifier = Modifier,
     icon: Any,
     text: String,
     contentColor: Color = MaterialTheme.colorScheme.primary,
@@ -673,23 +650,19 @@ fun IconTextButton(
 ) {
     val context = LocalContext.current
 
-    Row(
-        modifier = Modifier
-            .padding(start = Dimen.largePadding)
-            .clip(Shape.medium)
-            .clickable {
-                VibrateUtil(context).single()
-                onClick()
-            }
-            .padding(Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(modifier = Modifier
+        .clip(Shape.medium)
+        .clickable {
+            VibrateUtil(context).single()
+            onClick()
+        }
+        .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically) {
         IconCompose(data = icon, size = iconSize, tint = contentColor)
         Text(
             text = text,
             color = contentColor,
             style = textStyle,
-            modifier = modifier,
+            modifier = Modifier.padding(start = Dimen.smallPadding),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -76,7 +75,7 @@ fun StoryEventList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -240,15 +239,16 @@ fun StoryEventItem(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Subtitle2(
-                        text = stringResource(R.string.story_pic),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable {
-                            VibrateUtil(context).single()
-                            toAllPics(event.storyId, AllPicsType.STORY.type)
-                        })
+                    //查看立绘
+                    IconTextButton(
+                        icon = MainIconType.PREVIEW_IMAGE,
+                        text = stringResource(R.string.story_pic)
+                    ) {
+                        toAllPics(event.storyId, AllPicsType.STORY.type)
+                    }
                     //结束日期
                     CaptionText(
                         text = if (event.eventId / 10000 != 2) {

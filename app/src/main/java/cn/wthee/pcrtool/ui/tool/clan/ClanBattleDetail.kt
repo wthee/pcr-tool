@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
@@ -79,12 +78,7 @@ fun ClanBattleDetail(
                 //日期
                 MainTitleText(
                     text = clanBattleValue.getDate(),
-                    modifier = Modifier
-                        .padding(
-                            start = Dimen.largePadding,
-                            top = Dimen.largePadding
-                        )
-                        .align(Alignment.Start)
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
                 )
                 //图标
                 val urls = arrayListOf<String>()
@@ -113,7 +107,6 @@ fun ClanBattleDetail(
             }
 
             //阶段选择
-            //阶段文本
             val tabs = arrayListOf<String>()
             for (i in 1..maxPhase) {
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
@@ -154,65 +147,58 @@ private fun ClanBattleBossItem(
         bossDataValue.attr.enemy()
     }
 
-    MainCard(
-        shape = CardTopShape,
+    Column(
         modifier = Modifier
-            .padding(top = Dimen.mediumPadding)
-            .fillMaxSize()
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
-        Column(
+        //描述
+        SelectionContainer {
+            Text(
+                text = bossDataValue.getDesc(),
+                maxLines = if (expanded.value) Int.MAX_VALUE else 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .animateContentSize()
+                    .padding(Dimen.mediumPadding)
+                    .clickable {
+                        expanded.value = !expanded.value
+                    }
+            )
+        }
+        //名称
+        MainText(
+            text = bossDataValue.name,
             modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        ) {
-            //描述
-            SelectionContainer {
-                Text(
-                    text = bossDataValue.getDesc(),
-                    maxLines = if (expanded.value) Int.MAX_VALUE else 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier
-                        .animateContentSize()
-                        .padding(Dimen.mediumPadding)
-                        .clickable {
-                            expanded.value = !expanded.value
-                        }
-                )
-            }
+                .align(Alignment.CenterHorizontally)
+                .padding(top = Dimen.mediumPadding),
+            selectable = true
+        )
+        //等级
+        CaptionText(
+            text = bossDataValue.level.toString(),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        //属性
+        AttrList(attrs = attr)
+        //多目标部位属性
+        partEnemyMap[bossDataValue.enemy_id]?.forEach {
             //名称
             MainText(
-                text = bossDataValue.name,
+                text = it.name,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.mediumPadding),
+                    .padding(top = Dimen.largePadding),
                 selectable = true
             )
-            //等级
-            CaptionText(
-                text = bossDataValue.level.toString(),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
             //属性
-            AttrList(attrs = attr)
-            //多目标部位属性
-            partEnemyMap[bossDataValue.enemy_id]?.forEach {
-                //名称
-                MainText(
-                    text = it.name,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.largePadding),
-                    selectable = true
-                )
-                //属性
-                AttrList(attrs = it.attr.enemy())
-            }
-            DivCompose(Modifier.align(Alignment.CenterHorizontally))
-            //技能
-            BossSkillList(pagerIndex, bossDataList, UnitType.ENEMY, toSummonDetail)
-            CommonSpacer()
+            AttrList(attrs = it.attr.enemy())
         }
+        DivCompose(Modifier.align(Alignment.CenterHorizontally))
+        //技能
+        BossSkillList(pagerIndex, bossDataList, UnitType.ENEMY, toSummonDetail)
+        CommonSpacer()
     }
 
 }

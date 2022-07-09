@@ -74,7 +74,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                 sheetShape = if (state.offset.value == 0f) {
                     noShape
                 } else {
-                    Shape.large
+                    CardTopShape
                 },
                 sheetContent = {
                     //章节选择

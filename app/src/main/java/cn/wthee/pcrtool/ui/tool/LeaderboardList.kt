@@ -130,7 +130,7 @@ fun LeaderboardList(
                 coroutineScope.launch {
                     try {
                         scrollState.scrollToItem(0)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                     }
                 }
             }

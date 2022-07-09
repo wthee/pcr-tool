@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -21,10 +22,12 @@ import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
+    val scope = rememberCoroutineScope()
     val min = navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState()
@@ -61,6 +64,13 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     FabCompose(
                         iconType = MainIconType.PVP_SEARCH
                     ) {
+                        try {
+                            scope.launch {
+                                resultListState.scrollToItem(0)
+                            }
+                        } catch (_: Exception) {
+
+                        }
                         pvpViewModel.pvpResult.postValue(null)
                         navViewModel.showResult.postValue(true)
                     }

@@ -782,10 +782,8 @@ private fun ChangeDbCompose(
                                 VibrateUtil(context).single()
                                 navViewModel.openChangeDataDialog.postValue(false)
                                 navViewModel.fabCloseClick.postValue(true)
-                                if (region != i + 2) {
-                                    coroutineScope.launch {
-                                        DatabaseUpdater.changeDatabase(i + 2)
-                                    }
+                                coroutineScope.launch {
+                                    DatabaseUpdater.changeDatabase(i + 2)
                                 }
                             }
                     }
@@ -928,7 +926,7 @@ private fun Section(
                         IconCompose(
                             data = rightIconType ?: MainIconType.MORE,
                             size = Dimen.fabIconSize,
-                            tint = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
 

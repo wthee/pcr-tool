@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
@@ -100,7 +99,7 @@ fun CharacterList(
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            Shape.large
+            CardTopShape
         },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
@@ -188,7 +187,6 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
@@ -269,26 +267,28 @@ fun CharacterItem(
             }
 
             //名称阴影效果
-            Column(
-                modifier = Modifier
-                    .padding(
-                        horizontal = Dimen.mediumPadding + 1.dp,
-                        vertical = Dimen.mediumPadding
+            if (loadSuccess) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimen.mediumPadding + Dimen.textElevation,
+                            vertical = Dimen.mediumPadding
+                        )
+                        .fillMaxWidth(1f - RATIO_SHAPE)
+                        .align(Alignment.BottomStart),
+                ) {
+                    Subtitle1(
+                        text = character.getNameL(),
+                        color = MaterialTheme.colorScheme.primary
                     )
-                    .fillMaxWidth(1f - RATIO_SHAPE)
-                    .align(Alignment.BottomStart),
-            ) {
-                Subtitle1(
-                    text = character.getNameL(),
-                    color = Color.Black
-                )
-                Text(
-                    text = character.getNameF(),
-                    color = Color.Black,
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                    Text(
+                        text = character.getNameF(),
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
             //名称
             Column(

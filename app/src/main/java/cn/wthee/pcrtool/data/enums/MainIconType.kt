@@ -360,4 +360,14 @@ enum class MainIconType(val icon: ImageVector) {
      * 预览模型
      */
     PREVIEW_UNIT_SPINE(Icons.Rounded.RemoveRedEye),
+
+    /**
+     * 图片
+     */
+    PREVIEW_IMAGE(Icons.Rounded.Image),
+
+    /**
+     * 召唤物
+     */
+    SUMMON(Icons.Rounded.Pets),
 }

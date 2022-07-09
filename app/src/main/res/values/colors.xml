@@ -2,7 +2,5 @@
 <resources>
     <color name="colorPrimary">#5690EF</color>
     <color name="colorPrimaryDark">#3F6BB3</color>
-    <color name="statusBarColor">#FFFBFE</color>
-    <color name="statusBarColorDark">#1C1B1F</color>
     <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

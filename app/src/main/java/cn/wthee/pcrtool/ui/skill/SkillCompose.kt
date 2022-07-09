@@ -8,9 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionText
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
@@ -32,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -115,7 +113,7 @@ fun SkillItem(
                     str.replace(Regex("\\{.*?\\}"), "")
             }
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
 
     }
 
@@ -343,21 +341,12 @@ fun SkillActionItem(
 
             if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
                 //查看召唤物
-                Text(
-                    text = stringResource(R.string.to_summon),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = Dimen.smallPadding)
-                        .clip(Shape.small)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            toSummonDetail(skillAction.summonUnitId, unitType.type)
-                        }
-                        .padding(Dimen.smallPadding)
-
-                )
+                IconTextButton(
+                    icon = MainIconType.SUMMON,
+                    text = stringResource(R.string.to_summon)
+                ) {
+                    toSummonDetail(skillAction.summonUnitId, unitType.type)
+                }
             }
         }
     }

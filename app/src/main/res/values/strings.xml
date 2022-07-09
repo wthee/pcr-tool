@@ -132,7 +132,6 @@
     <string name="equip_name">装备名</string>
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
-    <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
     <string name="rank_compare">RANK 对比</string>
@@ -192,11 +191,11 @@
     <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
-    <string name="to_summon">查看召唤物 ></string>
+    <string name="to_summon">召唤物</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
     <string name="basic_info">基本信息</string>
-    <string name="story_pic">查看剧情立绘 ></string>
+    <string name="story_pic">剧情立绘</string>
     <string name="no_limit">无限制</string>
     <string name="tool_mock_gacha">抽卡模拟</string>
     <string name="gacha_pick_up_normal">自选 UP</string>

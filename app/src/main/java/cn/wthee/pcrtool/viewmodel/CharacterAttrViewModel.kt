@@ -53,7 +53,7 @@ class CharacterAttrViewModel @Inject constructor(
                         )
                     )
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
@@ -78,7 +78,7 @@ class CharacterAttrViewModel @Inject constructor(
                     info.add(it.attr)
                     allData.bonus = it
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
 
@@ -178,7 +178,7 @@ class CharacterAttrViewModel @Inject constructor(
             storyInfo.forEach {
                 storyAttr.add(it.getAttr())
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
         return storyAttr
@@ -193,7 +193,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
             emit(storyInfo)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -251,7 +251,7 @@ class CharacterAttrViewModel @Inject constructor(
             val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
             val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
             emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -262,7 +262,7 @@ class CharacterAttrViewModel @Inject constructor(
     fun getCoefficient() = flow {
         try {
             emit(unitRepository.getCoefficient())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

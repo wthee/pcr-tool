@@ -88,7 +88,7 @@ fun RankEquipCount(
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            Shape.large
+            CardTopShape
         },
         sheetContent = {
             //RANK 选择

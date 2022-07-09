@@ -45,7 +45,7 @@ class GuildViewModel @Inject constructor(
                 )
             }
             emit(list)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

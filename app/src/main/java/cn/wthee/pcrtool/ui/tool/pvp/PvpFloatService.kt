@@ -76,7 +76,7 @@ class PvpFloatService : LifecycleService() {
     override fun onDestroy() {
         try {
             windowManager.removeView(floatRootView)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
         stopForeground(true)

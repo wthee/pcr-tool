@@ -33,7 +33,7 @@ class EquipmentViewModel @Inject constructor(
                 if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
             val data = equipmentRepository.getEquipments(params, typeName, Int.MAX_VALUE)
             emit(data)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -46,7 +46,7 @@ class EquipmentViewModel @Inject constructor(
     fun getEquip(equipId: Int) = flow {
         try {
             emit(equipmentRepository.getEquipmentData(equipId))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -57,7 +57,7 @@ class EquipmentViewModel @Inject constructor(
     fun getTypes() = flow {
         try {
             emit(equipmentRepository.getEquipTypes())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -114,7 +114,7 @@ class EquipmentViewModel @Inject constructor(
                     it.count
                 })
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -127,7 +127,7 @@ class EquipmentViewModel @Inject constructor(
     fun getEquipInfos(equip: EquipmentMaxData) = flow {
         try {
             emit(getEquipCraft(equip))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -140,7 +140,7 @@ class EquipmentViewModel @Inject constructor(
     fun getAllRankEquipList(unitId: Int) = flow {
         try {
             emit(equipmentRepository.getAllRankEquip(unitId))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -193,7 +193,7 @@ class EquipmentViewModel @Inject constructor(
                     materials[flag].count += material.count
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -237,7 +237,7 @@ class EquipmentViewModel @Inject constructor(
                     equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
                 emit(infos)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

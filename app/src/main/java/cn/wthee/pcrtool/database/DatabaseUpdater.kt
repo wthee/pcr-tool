@@ -49,7 +49,7 @@ object DatabaseUpdater {
         //获取数据库最新版本
         try {
             navViewModel.downloadProgress.postValue(-1)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         try {
             //创建服务
@@ -66,7 +66,6 @@ object DatabaseUpdater {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
             navViewModel.downloadProgress.postValue(-2)
-            handler.sendEmptyMessage(-1)
         }
     }
 
@@ -155,7 +154,7 @@ object DatabaseUpdater {
             //更新数据库版本号
             try {
                 updateLocalDataBaseVersion(versionData.toString())
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
             navViewModel.downloadProgress.postValue(-2)
         }
