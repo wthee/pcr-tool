@@ -14,11 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -29,7 +29,10 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -84,7 +87,7 @@ fun MainSettings() {
                 .fillMaxWidth()
         ) {
             Text(
-                text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+                text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -98,13 +101,13 @@ fun MainSettings() {
                 modifier = Modifier.clickable {
                     BrowserUtil.open(context, projectUrl, project)
                 })
-            ImageCompose(
-                data = R.mipmap.ic_launcher_round,
-                ratio = 1f,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(Dimen.largePadding)
+            IconCompose(
+                data = R.drawable.ic_logo,
+                size = Dimen.largeIconSize,
+                modifier = Modifier.padding(Dimen.largePadding),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
+
             Subtitle2(
                 text = "${typeName}：${dbVersionGroup}",
                 color = MaterialTheme.colorScheme.primary
