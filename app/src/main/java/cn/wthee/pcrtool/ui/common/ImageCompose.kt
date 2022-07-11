@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
@@ -39,11 +38,10 @@ fun ImageCompose(
     modifier: Modifier = Modifier,
     data: Any,
     ratio: Float,
-    @DrawableRes loadingId: Int? = null,
-    @DrawableRes errorId: Int? = null,
     contentScale: ContentScale = ContentScale.FillWidth,
     onSuccess: (SuccessResult) -> Unit = {}
 ) {
+
     var mModifier = modifier
     if (ratio > 0) {
         mModifier = modifier
@@ -54,8 +52,8 @@ fun ImageCompose(
         model = data,
         contentDescription = null,
         contentScale = contentScale,
-        placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
-        error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
+        placeholder = rememberAsyncImagePainter(R.drawable.load, contentScale = contentScale),
+        error = rememberAsyncImagePainter(R.drawable.error, contentScale = contentScale),
         onSuccess = {
             onSuccess(it.result)
         },
@@ -67,11 +65,10 @@ fun ImageCompose(
 @Composable
 fun StoryImageCompose(
     data: Any,
-    @DrawableRes loadingId: Int? = null,
-    @DrawableRes errorId: Int? = null,
     contentScale: ContentScale = ContentScale.FillWidth,
     onSuccess: (AsyncImagePainter.State.Success) -> Unit = {}
 ) {
+
     SubcomposeAsyncImage(
         model = data,
         contentDescription = null,
@@ -79,7 +76,7 @@ fun StoryImageCompose(
         loading = {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
-                    model = loadingId,
+                    model = R.drawable.load,
                     contentDescription = null,
                     modifier = Modifier.aspectRatio(RATIO_COMMON)
                 )
@@ -88,7 +85,7 @@ fun StoryImageCompose(
         error = {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
-                    model = errorId,
+                    model = R.drawable.error,
                     contentDescription = null,
                     modifier = Modifier.aspectRatio(RATIO_COMMON)
                 )

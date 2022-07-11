@@ -88,7 +88,8 @@ fun CharacterDetail(
     }
     // bottomsheet 状态
     val modalBottomSheetState = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
     )
     if (!modalBottomSheetState.isVisible && !modalBottomSheetState.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)

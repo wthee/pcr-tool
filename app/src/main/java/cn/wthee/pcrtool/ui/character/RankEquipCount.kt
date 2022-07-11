@@ -67,7 +67,8 @@ fun RankEquipCount(
 
     // dialog 状态
     val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible && !state.isAnimationRunning) {

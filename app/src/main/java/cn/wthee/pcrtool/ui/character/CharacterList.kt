@@ -244,8 +244,6 @@ fun CharacterItem(
             ImageCompose(
                 data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
                 ratio = RATIO,
-                loadingId = R.drawable.load,
-                errorId = R.drawable.error,
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.heightIn(max = getItemWidth())
             ) { result ->

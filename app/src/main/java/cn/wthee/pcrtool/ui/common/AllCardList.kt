@@ -190,9 +190,7 @@ private fun CardGridList(
             ) {
                 //图片
                 StoryImageCompose(
-                    data = picUrl,
-                    loadingId = R.drawable.load,
-                    errorId = R.drawable.error
+                    data = picUrl
                 ) {
                     loadedPicMap[picUrl] = it.result.drawable
                 }

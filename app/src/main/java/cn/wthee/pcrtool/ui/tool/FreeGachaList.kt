@@ -33,16 +33,17 @@ fun FreeGachaList(
     scrollState: LazyListState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val gachas = eventViewModel.getFreeGachaHistory().collectAsState(initial = arrayListOf()).value
+    val gachaList =
+        eventViewModel.getFreeGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (gachas.isNotEmpty()) {
+        if (gachaList.isNotEmpty()) {
             LazyColumn(
                 state = scrollState
             ) {
                 items(
-                    items = gachas,
+                    items = gachaList,
                     key = {
                         it.id
                     }

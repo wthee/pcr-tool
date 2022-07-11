@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -238,7 +237,6 @@ fun SkillActionItem(
     unitType: UnitType,
     toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
-    val context = LocalContext.current
 
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()

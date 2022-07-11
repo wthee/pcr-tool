@@ -431,9 +431,7 @@ private fun CharacterSection(
                 ) {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
-                        ratio = RATIO,
-                        loadingId = R.drawable.load,
-                        errorId = R.drawable.error
+                        ratio = RATIO
                     )
                 }
             }

@@ -63,6 +63,6 @@ val colorRed = Color(0xFFE95264)
 val colorGreen = Color(0xFF5EB56D)
 
 /**
- * 橙、Rank 24 ~ ?
+ * 橙、Rank 24 ~ 28
  */
 val colorOrange = Color(0xFFFF6C47)

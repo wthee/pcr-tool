@@ -12,7 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -93,7 +92,6 @@ fun StoryEventItem(
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
 ) {
-    val context = LocalContext.current
     val type: String
     val typeColor: Color
     var showDays = true
@@ -205,9 +203,7 @@ fun StoryEventItem(
                     Box(modifier = Modifier.weight(3f)) {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
-                            ratio = RATIO_BANNER,
-                            loadingId = R.drawable.load,
-                            errorId = R.drawable.error,
+                            ratio = RATIO_BANNER
                         )
                     }
                     //图标

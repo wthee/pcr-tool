@@ -36,16 +36,16 @@ fun GachaList(
     toCharacterDetail: (Int) -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
-    val gachas = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val gachaList = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (gachas.isNotEmpty()) {
+        if (gachaList.isNotEmpty()) {
             LazyColumn(
                 state = scrollState
             ) {
                 items(
-                    items = gachas,
+                    items = gachaList,
                     key = {
                         it.gachaId
                     }
