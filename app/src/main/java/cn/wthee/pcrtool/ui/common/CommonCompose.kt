@@ -239,7 +239,7 @@ fun DivCompose(modifier: Modifier = Modifier) {
 fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colorScheme.onPrimary,
+    color: Color = colorWhite,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
@@ -282,27 +282,6 @@ fun SubButton(
     }
 }
 
-
-/**
- * 文本操作按钮
- */
-@Composable
-fun MainTexButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    color: Color = MaterialTheme.colorScheme.onSurface,
-    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    onClick: () -> Unit
-) {
-    val context = LocalContext.current
-
-    TextButton(shape = Shape.medium, modifier = modifier.padding(Dimen.smallPadding), onClick = {
-        VibrateUtil(context).single()
-        onClick()
-    }) {
-        Text(text = text, color = color, style = textStyle)
-    }
-}
 
 /**
  * RANK 文本
@@ -420,7 +399,7 @@ fun SelectText(
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colorScheme.onPrimary else textColor,
+        color = if (selected) colorWhite else textColor,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,

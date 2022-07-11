@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -20,10 +19,16 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 
+/**
+ * 功能分组
+ */
 data class ToolMenuGroup(
     val title: String,
     val list: List<ToolMenuData>
@@ -84,44 +89,47 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         Column(modifier = Modifier.fillMaxSize()) {
             //预览
             ExpandAnimation(visible = isEditMode) {
-                ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
-            }
-            //编辑提示
-            if (isEditMode) {
-                Subtitle2(
-                    text = stringResource(R.string.tip_click_to_add),
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = Dimen.mediumPadding)
-                )
-            }
-            //全部功能
-            MainCard(
-                shape = if (isEditMode) CardTopShape else Shape.none,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colorScheme.surface), state = scrollState
-                ) {
-                    items(
-                        items = itemsList,
-                        key = {
-                            it.title
-                        }
-                    ) {
-                        MenuGroup(
-                            actions = actions,
-                            title = it.title,
-                            items = it.list,
-                            isEditMode = isEditMode
+                Column {
+                    MainCard(
+                        modifier = Modifier.padding(
+                            horizontal = Dimen.largePadding,
+                            vertical = Dimen.mediumPadding
                         )
+                    ) {
+                        ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
                     }
-                    item {
-                        CommonSpacer()
+                    //编辑提示
+                    Subtitle2(
+                        text = stringResource(R.string.tip_click_to_add),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(vertical = Dimen.mediumPadding)
+                    )
+                }
+            }
+
+            //全部功能
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .fillMaxSize(),
+                state = scrollState
+            ) {
+                items(
+                    items = itemsList,
+                    key = {
+                        it.title
                     }
+                ) {
+                    MenuGroup(
+                        actions = actions,
+                        title = it.title,
+                        items = it.list,
+                        isEditMode = isEditMode
+                    )
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -206,12 +214,12 @@ private fun MenuItem(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
                 data = toolMenuData.iconType,
                 size = Dimen.mediumIconSize,
-                tint = if (hasAdded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+                tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.primary
             )
             Subtitle2(
                 text = stringResource(id = toolMenuData.titleId),
                 modifier = Modifier.padding(start = Dimen.largePadding),
-                color = if (hasAdded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
             )
         }
     }

@@ -228,12 +228,12 @@ fun CharacterItem(
         }
     }
     //主色
-    val initColor = MaterialTheme.colorScheme.onPrimary
+    val initColor = colorWhite
     var cardMainColor by remember {
         mutableStateOf(initColor)
     }
     //主要字体颜色暂时使用白色字体 fixme 不同背景下变更字体颜色时，可能导致字体不明显
-    val textColor = if (loadSuccess) Color.White else Color.Black
+    val textColor = if (loadSuccess) colorWhite else colorBlack
 
     MainCard(
         modifier = modifier,
@@ -434,7 +434,7 @@ private fun CharacterTag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary
+    textColor: Color = colorWhite
 ) {
     Box(
         modifier = modifier

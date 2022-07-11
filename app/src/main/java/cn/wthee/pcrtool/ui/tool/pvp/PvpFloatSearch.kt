@@ -44,7 +44,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //最大/小化
                 FabCompose(
                     iconType = if (min) {
-                        R.drawable.ic_logo
+                        R.drawable.ic_logo_large
                     } else {
                         MainIconType.FLOAT_MIN
                     }

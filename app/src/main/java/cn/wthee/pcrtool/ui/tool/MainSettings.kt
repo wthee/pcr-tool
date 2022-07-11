@@ -102,7 +102,7 @@ fun MainSettings() {
                     BrowserUtil.open(context, projectUrl, project)
                 })
             IconCompose(
-                data = R.drawable.ic_logo,
+                data = R.drawable.ic_logo_large,
                 size = Dimen.largeIconSize,
                 modifier = Modifier.padding(Dimen.largePadding),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)

@@ -6,6 +6,6 @@
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowSplashScreenBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_logo_avd</item>
     </style>
 </resources>
