@@ -93,14 +93,6 @@ fun MainSettings() {
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = Dimen.smallPadding)
             )
-            //- 查看项目地址
-            val projectUrl = stringResource(id = R.string.project_url)
-            val project = stringResource(id = R.string.app_sourcce)
-            Subtitle2(
-                text = projectUrl,
-                modifier = Modifier.clickable {
-                    BrowserUtil.open(context, projectUrl, project)
-                })
             IconCompose(
                 data = R.drawable.ic_logo_large,
                 size = Dimen.largeIconSize,

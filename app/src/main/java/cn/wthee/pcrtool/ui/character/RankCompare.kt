@@ -76,11 +76,12 @@ fun RankCompare(
         rank1.value
     ).collectAsState(initial = arrayListOf()).value
     // dialog 状态
-    val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
+    val bottomSheetState = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
     )
     val coroutineScope = rememberCoroutineScope()
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!bottomSheetState.isVisible && !bottomSheetState.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
@@ -88,24 +89,24 @@ fun RankCompare(
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
 
     ModalBottomSheetLayout(
-        sheetState = state,
+        sheetState = bottomSheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetElevation = Dimen.sheetElevation,
-        sheetShape = if (state.offset.value == 0f) {
+        sheetShape = if (bottomSheetState.offset.value == 0f) {
             noShape
         } else {
             CardTopShape
         },
         sheetContent = {
             //RANK 选择
-            RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
+            RankSelectCompose(rank0, rank1, maxRank, coroutineScope, bottomSheetState, navViewModel)
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
 
         if (ok) {
             coroutineScope.launch {
-                state.hide()
+                bottomSheetState.hide()
             }
             navViewModel.fabOKCilck.postValue(false)
         }
@@ -176,12 +177,12 @@ fun RankCompare(
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
                 coroutineScope.launch {
-                    if (state.isVisible) {
+                    if (bottomSheetState.isVisible) {
                         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                        state.hide()
+                        bottomSheetState.hide()
                     } else {
                         navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        state.show()
+                        bottomSheetState.show()
                     }
                 }
             }

@@ -201,8 +201,6 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
                     ImageCompose(
                         data = url,
                         ratio = if (isComic) RATIO_COMIC else RATIO_COMMON,
-                        loadingId = R.drawable.load,
-                        errorId = R.drawable.error,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

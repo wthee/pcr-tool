@@ -244,12 +244,12 @@ fun PvpSearchCompose(
                         navViewModel.floatServiceRun.postValue(true)
                         serviceIntent.putExtra("spanCount", spanCount)
                         context.stopService(serviceIntent)
+                        context.startActivity(homeIntent)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             context.startForegroundService(serviceIntent)
                         } else {
                             context.startService(serviceIntent)
                         }
-                        context.startActivity(homeIntent)
                     } else {
                         val intent = Intent(
                             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -263,6 +263,7 @@ fun PvpSearchCompose(
                 val addTip = stringResource(id = R.string.pvp_info_add_tip)
                 FabCompose(
                     iconType = MainIconType.PVP_ADD,
+                    text = stringResource(id = R.string.pvp_upload)
                 ) {
                     //打开网页
                     BrowserUtil.open(context, addUrl, addTip)

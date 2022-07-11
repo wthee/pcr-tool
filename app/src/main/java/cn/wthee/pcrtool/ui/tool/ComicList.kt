@@ -172,8 +172,6 @@ private fun ComicItem(data: ComicData) {
             ImageCompose(
                 data = data.url,
                 ratio = RATIO_COMIC,
-                loadingId = R.drawable.load,
-                errorId = R.drawable.error,
                 modifier = Modifier.fillMaxWidth()
             )
         }
