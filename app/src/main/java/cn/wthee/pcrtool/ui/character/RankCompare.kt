@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,9 +85,6 @@ fun RankCompare(
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
-    //关闭监听
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
-
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
@@ -99,18 +95,10 @@ fun RankCompare(
         },
         sheetContent = {
             //RANK 选择
-            RankSelectCompose(rank0, rank1, maxRank, coroutineScope, bottomSheetState, navViewModel)
+            RankSelectCompose(rank0, rank1, maxRank, bottomSheetState, navViewModel)
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
-
-        if (ok) {
-            coroutineScope.launch {
-                bottomSheetState.hide()
-            }
-            navViewModel.fabOKCilck.postValue(false)
-        }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()

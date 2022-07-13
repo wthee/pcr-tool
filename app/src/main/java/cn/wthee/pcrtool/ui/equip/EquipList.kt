@@ -300,7 +300,6 @@ private fun FilterEquipSheet(
     //重置或确认
     if (reset || ok) {
         LaunchedEffect(sheetState.currentValue) {
-            sheetState.hide()
             if (reset) {
                 textState.value = TextFieldValue(text = "")
                 loveIndex.value = 0
@@ -310,7 +309,7 @@ private fun FilterEquipSheet(
                 navViewModel.filterEquip.postValue(FilterEquipment())
             }
             if (ok) {
-                navViewModel.fabOKCilck.postValue(false)
+                sheetState.hide()
             }
         }
     }

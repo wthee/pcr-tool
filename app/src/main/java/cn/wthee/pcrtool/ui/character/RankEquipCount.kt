@@ -79,8 +79,7 @@ fun RankEquipCount(
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
-    //关闭监听
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+
     if (rankEquipMaterials.isEmpty()) {
         navViewModel.loading.postValue(true)
     }
@@ -100,7 +99,6 @@ fun RankEquipCount(
                 rank0,
                 rank1,
                 maxRank,
-                coroutineScope,
                 state,
                 navViewModel,
                 RankSelectType.LIMIT
@@ -108,14 +106,6 @@ fun RankEquipCount(
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
-
-        if (ok) {
-            coroutineScope.launch {
-                state.hide()
-            }
-            navViewModel.fabOKCilck.postValue(false)
-        }
-
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier

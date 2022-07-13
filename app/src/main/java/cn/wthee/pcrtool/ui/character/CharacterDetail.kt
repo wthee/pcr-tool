@@ -130,6 +130,16 @@ fun CharacterDetail(
     //未实装角色
     val unknown = maxValue.level == -1
 
+    //技能循环 bottom sheet 关闭
+    if (close) {
+        LaunchedEffect(modalBottomSheetState.targetValue) {
+            //关闭
+            modalBottomSheetState.hide()
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+            navViewModel.fabCloseClick.postValue(false)
+        }
+    }
+
     //页面
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
@@ -153,14 +163,6 @@ fun CharacterDetail(
         currentValueState.value?.let { currentValue ->
             if (maxValue.isInit() && currentValue.rarity > maxValue.rarity) {
                 navViewModel.currentValue.postValue(currentValue.update(rarity = 5))
-            }
-            //关闭
-            if (close) {
-                coroutineScope.launch {
-                    modalBottomSheetState.hide()
-                }
-                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                navViewModel.fabCloseClick.postValue(false)
             }
 
             Box(modifier = Modifier.fillMaxSize()) {

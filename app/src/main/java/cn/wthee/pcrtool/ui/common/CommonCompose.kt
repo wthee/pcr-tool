@@ -394,7 +394,7 @@ fun SelectText(
     val mModifier = if (selected) {
         modifier
             .padding(top = margin)
-            .background(color = selectedColor, shape = MaterialTheme.shapes.small)
+            .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = padding, end = padding)
     } else {
         modifier.padding(top = margin)

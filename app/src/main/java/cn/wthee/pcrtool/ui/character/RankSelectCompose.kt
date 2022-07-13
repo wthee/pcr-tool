@@ -11,16 +11,12 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.CaptionText
@@ -30,8 +26,6 @@ import cn.wthee.pcrtool.ui.common.getRankColor
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 
 /**
@@ -46,7 +40,6 @@ fun RankSelectCompose(
     rank0: MutableState<Int>,
     rank1: MutableState<Int>,
     maxRank: Int,
-    coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
     navViewModel: NavViewModel,
     type: RankSelectType = RankSelectType.DEFAULT
@@ -64,6 +57,23 @@ fun RankSelectCompose(
         mutableStateOf(maxRank - rank1.value)
     }
 
+    //RANK 选择，确认后关闭
+    if (ok) {
+        LaunchedEffect(rank0, rank1) {
+            sheetState.hide()
+            rank0.value = maxRank - selectIndex0.value
+            rank1.value = maxRank - selectIndex1.value
+            if (type == RankSelectType.DEFAULT) {
+                navViewModel.curRank.postValue(maxRank - selectIndex0.value)
+                navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
+            } else {
+                navViewModel.curRank1.postValue(maxRank - selectIndex0.value)
+                navViewModel.targetRank1.postValue(maxRank - selectIndex1.value)
+            }
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -74,25 +84,6 @@ fun RankSelectCompose(
                 start = Dimen.mediumPadding,
             )
     ) {
-        //RANK 选择
-        if (ok) {
-            coroutineScope.launch {
-                sheetState.hide()
-            }
-            navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-            rank0.value = maxRank - selectIndex0.value
-            rank1.value = maxRank - selectIndex1.value
-            if (type == RankSelectType.DEFAULT) {
-                navViewModel.curRank.postValue(maxRank - selectIndex0.value)
-                navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
-            } else {
-                navViewModel.curRank1.postValue(maxRank - selectIndex0.value)
-                navViewModel.targetRank1.postValue(maxRank - selectIndex1.value)
-            }
-
-        }
-
         //当前
         MainText(text = stringResource(id = R.string.cur_rank))
         RankSelectItem(

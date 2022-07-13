@@ -517,6 +517,33 @@ private fun FilterCharacterSheet(
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
+    //重置或确认
+    if (reset || ok) {
+        LaunchedEffect(sheetState.currentValue) {
+            sheetState.hide()
+            //点击重置
+            if (reset) {
+                textState.value = TextFieldValue(text = "")
+                sortTypeIndex.value = 0
+                sortAscIndex.value = 1
+                loveIndex.value = 0
+                r6Index.value = 0
+                positionIndex.value = 0
+                atkIndex.value = 0
+                guildIndex.value = 0
+                typeIndex.value = 0
+                navViewModel.resetClick.postValue(false)
+                navViewModel.filterCharacter.postValue(FilterCharacter())
+            }
+            //点击确认
+            if (ok) {
+                navViewModel.filterCharacter.postValue(filter)
+                navViewModel.fabOKCilck.postValue(false)
+                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+            }
+        }
+    }
+
     //选择状态
     Column(
         modifier = Modifier
@@ -524,29 +551,6 @@ private fun FilterCharacterSheet(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        //点击重置
-        if (reset) {
-            textState.value = TextFieldValue(text = "")
-            sortTypeIndex.value = 0
-            sortAscIndex.value = 1
-            loveIndex.value = 0
-            r6Index.value = 0
-            positionIndex.value = 0
-            atkIndex.value = 0
-            guildIndex.value = 0
-            typeIndex.value = 0
-            navViewModel.resetClick.postValue(false)
-            navViewModel.filterCharacter.postValue(FilterCharacter())
-        }
-        //点击确认
-        if (ok) {
-            coroutineScope.launch {
-                sheetState.hide()
-            }
-            navViewModel.filterCharacter.postValue(filter)
-            navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        }
         //角色名搜索
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
