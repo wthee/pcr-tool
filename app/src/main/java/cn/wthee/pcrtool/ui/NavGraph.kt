@@ -214,7 +214,7 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
-            val scrollState = rememberLazyGridState()
+            val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             EquipList(
                 scrollState,

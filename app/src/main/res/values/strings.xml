@@ -83,7 +83,7 @@
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
-    <string name="equip_type">装备类型</string>
+    <string name="equip_level_color">装备品级</string>
     <string name="equip_craft">装备合成</string>
     <string name="craft">装备</string>
     <string name="uncraft">素材</string>
@@ -95,6 +95,7 @@
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
     <string name="name">名字</string>
+    <string name="require_level">需求等级：%s</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>

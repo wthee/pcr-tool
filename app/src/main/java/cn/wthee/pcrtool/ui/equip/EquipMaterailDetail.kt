@@ -232,7 +232,7 @@ fun EquipMaterialDeatil(
                             -1,
                             odds,
                             "30-15",
-                            Color.White
+                            colorWhite
                         )
                     }
                     item {

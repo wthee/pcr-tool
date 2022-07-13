@@ -11,7 +11,7 @@ const val viewEquipmentMaxData = """
         SELECT
 	a.equipment_id,
 	a.equipment_name,
-	COALESCE( b.description, "" ) AS type,
+	COALESCE( b.description, '') AS type,
 	a.promotion_level,
 	a.description,
 	a.craft_flg,
@@ -39,38 +39,11 @@ FROM
 	LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
  """
 
-//装备筛选
-const val equipWhere = """
-    WHERE a.equipment_name like '%' || :name || '%' 
-        AND (
-            (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
-        AND a.equipment_id < 140000 
-        AND 1 = CASE
-            WHEN  '全部' = :type  THEN 1 
-            WHEN  b.description = :type  THEN 1 
-        END
-        AND 1 = CASE
-            WHEN  a.craft_flg = :craft  THEN 1 
-        END
-    ORDER BY  a.require_level DESC
-    LIMIT :limit
-    """
-
 /**
  * 装备数据DAO
  */
 @Dao
 interface EquipmentDao {
-
-    /**
-     * 获取装备所有类型列表
-     */
-    @SkipQueryVerification
-    @Query("""SELECT description as type FROM equipment_enhance_rate GROUP BY description""")
-    suspend fun getEquipTypes(): List<String>
 
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
@@ -82,15 +55,43 @@ interface EquipmentDao {
      */
     @SkipQueryVerification
     @Transaction
-    @Query("""$viewEquipmentMaxData  $equipWhere""")
+    @Query(
+        """
+         SELECT
+            a.equipment_id,
+            a.equipment_name,
+            a.craft_flg,
+            a.promotion_level,
+            a.require_level
+        FROM
+            equipment_data AS a
+        WHERE a.equipment_name like '%' || :name || '%' 
+            AND (
+                (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
+                OR 
+                (1 = CASE WHEN  1 = :showAll  THEN 1 END)
+            )
+            AND a.equipment_id < 140000
+            AND 1 = CASE
+                WHEN  0 = :type  THEN 1 
+                WHEN  a.promotion_level = :type  THEN 1 
+            END
+            AND 1 = CASE
+                WHEN  a.craft_flg = :craft THEN 1 
+                WHEN  a.craft_flg <> :craft AND a.craft_flg = 0 AND a.promotion_level = 1 THEN 1 
+            END
+        ORDER BY a.promotion_level DESC, a.require_level DESC
+        LIMIT :limit
+    """
+    )
     suspend fun getEquipments(
         craft: Int,
-        type: String,
+        type: Int,
         name: String,
         showAll: Int,
         starIds: List<Int>,
         limit: Int
-    ): List<EquipmentMaxData>
+    ): List<EquipmentBasicInfo>
 
     /**
      * 获取数量
@@ -105,7 +106,7 @@ interface EquipmentDao {
             equipment_data AS a
         LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
-        WHERE a.equipment_id < 140000 AND a.craft_flg = 1
+        WHERE a.equipment_id < 140000 AND (a.craft_flg = 1 OR (a.craft_flg = 0 AND a.promotion_level = 1))
     """
     )
     suspend fun getCount(): Int
@@ -169,6 +170,26 @@ interface EquipmentDao {
             rewards LIKE '%' || :equipId || '%'"""
     )
     suspend fun getEquipDropAreas(equipId: Int): List<EquipmentDropInfo>
+
+    /**
+     * 获取装备基本信息
+     * @param equipId 装备编号
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            a.equipment_id,
+            a.equipment_name,
+            a.craft_flg,
+            a.promotion_level,
+            a.require_level
+        FROM
+            equipment_data AS a
+        WHERE a.equipment_id =:equipId
+    """
+    )
+    suspend fun getEquipBasicInfo(equipId: Int): EquipmentBasicInfo
 
     /**
      * 获取装备数值信息
@@ -296,28 +317,82 @@ interface EquipmentDao {
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
 
     /**
-     * 获取所有角色  Rank 范围所需的装备
-     * @param unitId 角色编号
+     * 获取所有角色所需的装备统计
      */
     @SkipQueryVerification
     @Query(
         """
         SELECT
-            GROUP_CONCAT( equip_slot_1, '-' ) AS equip_1,
-            GROUP_CONCAT( equip_slot_2, '-' ) AS equip_2,
-            GROUP_CONCAT( equip_slot_3, '-' ) AS equip_3,
-            GROUP_CONCAT( equip_slot_4, '-' ) AS equip_4,
-            GROUP_CONCAT( equip_slot_5, '-' ) AS equip_5,
-            GROUP_CONCAT( equip_slot_6, '-' ) AS equip_6 
+            equip_slot AS equip_id,
+            COUNT( equip_slot ) AS equip_count 
         FROM
-            unit_promotion 
-        WHERE
-            promotion_level >= 1 AND equip_slot_1 != 0
+            (
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_1 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND unit_id < 200000
+                AND equip_slot_1 != 0 UNION
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_2 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND unit_id < 200000
+                AND equip_slot_2 != 0 UNION
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_3 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND unit_id < 200000
+                AND equip_slot_3 != 0 UNION
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_4 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND unit_id < 200000
+                AND equip_slot_4 != 0 UNION
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_5 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND unit_id < 200000
+                AND equip_slot_5 != 0 UNION
+            SELECT
+                unit_id,
+                promotion_level,
+                equip_slot_6 AS equip_slot 
+            FROM
+                unit_promotion 
+            WHERE
+                promotion_level >= 1 
+                AND equip_slot_6 != 0 
+                AND unit_id < 200000
+            ) 
         GROUP BY
-            unit_id
+            equip_slot
     """
     )
-    suspend fun getAllEquip(): List<CharacterPromotionEquip>
+    suspend fun getAllEquip(): List<CharacterPromotionEquipCount>
 
 
     /**
@@ -334,4 +409,17 @@ interface EquipmentDao {
     @SkipQueryVerification
     @Query("SELECT MAX(area_id) FROM quest_data WHERE area_id < 12000")
     suspend fun getMaxArea(): Int
+
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            MAX( promotion_level ) AS maxTypeNum 
+        FROM
+            equipment_data 
+        WHERE
+            equipment_id < 140000
+    """
+    )
+    suspend fun getEquipColorNum(): Int
 }
