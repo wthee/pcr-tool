@@ -17,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
@@ -29,6 +28,7 @@ import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.common.getRankColor
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -149,7 +149,7 @@ private fun RankSelectItem(
                     label = {
                         CaptionText(
                             text = rankFillBlank(rank),
-                            color = if (selected) Color.White else rankColor
+                            color = if (selected) colorWhite else rankColor
                         )
                     }
                 )

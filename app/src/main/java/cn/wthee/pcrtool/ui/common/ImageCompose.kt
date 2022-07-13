@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
@@ -134,13 +133,13 @@ fun IconCompose(
 
     var mModifier = if (onClick != null) {
         modifier
-            .clip(Shape.small)
+            .clip(MaterialTheme.shapes.extraSmall)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick()
             })
     } else {
-        modifier.clip(Shape.small)
+        modifier.clip(MaterialTheme.shapes.extraSmall)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)

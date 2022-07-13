@@ -5,8 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -48,10 +47,10 @@ fun MainTitleText(
 ) {
     Text(
         text = text,
-        color = Color.White,
+        color = colorWhite,
         style = textStyle,
         modifier = modifier
-            .background(color = backgroundColor, shape = Shape.small)
+            .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
     )
 }
@@ -247,10 +246,13 @@ fun MainButton(
     val context = LocalContext.current
 
     Button(
-        shape = Shape.medium, modifier = modifier.padding(Dimen.smallPadding), onClick = {
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier.padding(Dimen.smallPadding),
+        onClick = {
             VibrateUtil(context).single()
             onClick()
-        }, colors = ButtonDefaults.buttonColors(containerColor = containerColor)
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor)
     ) {
         Text(
             text = text, color = color, style = textStyle
@@ -271,7 +273,7 @@ fun SubButton(
 ) {
     val context = LocalContext.current
 
-    OutlinedButton(shape = Shape.medium,
+    OutlinedButton(shape = MaterialTheme.shapes.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         border = BorderStroke(Dimen.divLineHeight, color = color),
         onClick = {
@@ -347,7 +349,7 @@ fun CommonSpacer() {
 fun MainCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    shape: RoundedCornerShape = Shape.medium,
+    shape: CornerBasedShape = MaterialTheme.shapes.medium,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -392,7 +394,7 @@ fun SelectText(
     val mModifier = if (selected) {
         modifier
             .padding(top = margin)
-            .background(color = selectedColor, shape = Shape.small)
+            .background(color = selectedColor, shape = MaterialTheme.shapes.small)
             .padding(start = padding, end = padding)
     } else {
         modifier.padding(top = margin)
@@ -546,8 +548,7 @@ fun SelectTypeCompose(
                 bottom = Dimen.fabMargin,
             ),
         containerColor = MaterialTheme.colorScheme.background,
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        shape = if (openDialog) MaterialTheme.shapes.medium else Shapes.Full,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -630,7 +631,7 @@ fun IconTextButton(
     val context = LocalContext.current
 
     Row(modifier = Modifier
-        .clip(Shape.medium)
+        .clip(MaterialTheme.shapes.medium)
         .clickable {
             VibrateUtil(context).single()
             onClick()

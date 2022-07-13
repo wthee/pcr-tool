@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -25,7 +26,6 @@ import cn.wthee.pcrtool.ui.common.IconTextButton
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -99,7 +99,7 @@ private fun MenuItem(
 ) {
     Column(
         modifier = Modifier
-            .clip(Shape.medium)
+            .clip(MaterialTheme.shapes.medium)
             .clickable {
                 VibrateUtil(context).single()
                 if (isEditMode) {

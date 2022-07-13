@@ -10,6 +10,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -26,7 +27,10 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ShapeTop
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -85,11 +89,10 @@ fun RankEquipCount(
     ModalBottomSheetLayout(
         sheetState = state,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
-            noShape
+            Shapes.None
         } else {
-            CardTopShape
+            ShapeTop()
         },
         sheetContent = {
             //RANK 选择
@@ -148,7 +151,7 @@ fun RankEquipCount(
                 }
                 //装备素材列表
                 MainCard(
-                    shape = CardTopShape,
+                    shape = ShapeTop(),
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
                         .fillMaxSize()

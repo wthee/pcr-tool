@@ -9,6 +9,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -91,11 +92,10 @@ fun RankCompare(
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetElevation = Dimen.sheetElevation,
         sheetShape = if (bottomSheetState.offset.value == 0f) {
-            noShape
+            Shapes.None
         } else {
-            CardTopShape
+            ShapeTop()
         },
         sheetContent = {
             //RANK 选择
@@ -138,7 +138,7 @@ fun RankCompare(
                     }
                 }
                 MainCard(
-                    shape = CardTopShape,
+                    shape = ShapeTop(),
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
                         .fillMaxSize(),

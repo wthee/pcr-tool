@@ -4,15 +4,9 @@ import androidx.compose.ui.unit.dp
 
 object Dimen {
 
-    val cardRadius = 12.dp
-
     val cardElevation = 4.dp
 
     val textElevation = 1.dp
-
-    val fabElevation = 8.dp
-
-    val sheetElevation = 24.dp
 
     val fabSize = 40.dp
 

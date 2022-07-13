@@ -8,13 +8,13 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -95,11 +95,10 @@ fun CharacterList(
     ModalBottomSheetLayout(
         sheetState = state,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
-            noShape
+            Shapes.None
         } else {
-            CardTopShape
+            ShapeTop()
         },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
@@ -436,8 +435,8 @@ private fun CharacterTag(
 ) {
     Box(
         modifier = modifier
-            .clip(CircleShape)
-            .background(color = backgroundColor, shape = CircleShape)
+            .clip(Shapes.Full)
+            .background(color = backgroundColor, shape = Shapes.Full)
             .padding(horizontal = Dimen.mediumPadding),
         contentAlignment = Alignment.Center
     ) {
@@ -552,7 +551,7 @@ private fun FilterCharacterSheet(
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
-            shape = Shape.medium,
+            shape = MaterialTheme.shapes.medium,
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {

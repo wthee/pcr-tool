@@ -152,7 +152,7 @@ fun LeaderboardList(
                 openDialog.value = false
             },
             containerColor = MaterialTheme.colorScheme.background,
-            shape = Shape.medium,
+            shape = MaterialTheme.shapes.medium,
             confirmButton = {
                 //关闭
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {

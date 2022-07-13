@@ -68,7 +68,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getEquipList(limit: Int) = flow {
         try {
-            emit(equipmentRepository.getEquipments(FilterEquipment(), "全部", limit))
+            emit(equipmentRepository.getEquipments(FilterEquipment(), limit))
         } catch (_: Exception) {
 
         }

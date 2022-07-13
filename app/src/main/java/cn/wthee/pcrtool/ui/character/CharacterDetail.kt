@@ -12,9 +12,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -134,11 +134,10 @@ fun CharacterDetail(
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetElevation = Dimen.sheetElevation,
         sheetShape = if (modalBottomSheetState.offset.value == 0f) {
-            noShape
+            Shapes.None
         } else {
-            CardTopShape
+            ShapeTop()
         },
         sheetContent = {
             //技能循环
@@ -263,7 +262,7 @@ fun CharacterDetail(
                                     .padding(Dimen.smallPadding)
                                     .fillMaxWidth(0.3f)
                                     .padding(Dimen.mediumPadding)
-                                    .clip(Shape.small)
+                                    .clip(MaterialTheme.shapes.medium)
                                     .clickable {
                                         VibrateUtil(context).single()
                                         if (isImeVisible) {
@@ -583,7 +582,6 @@ private fun CharacterEquip(
     toRankEquip: (Int) -> Unit,
     modifier: Modifier
 ) {
-    val context = LocalContext.current
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -624,23 +622,23 @@ private fun CharacterEquip(
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = MainIconType.BACK.icon,
-                    contentDescription = null,
+                IconCompose(
+                    data = MainIconType.BACK,
                     tint = if (rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
                         Color.Transparent
                     },
-                    modifier = Modifier
-                        .padding(start = Dimen.mediumPadding)
-                        .size(Dimen.mediumIconSize)
-                        .clip(Shape.medium)
-                        .clickable(enabled = rank < maxRank) {
-                            VibrateUtil(context).single()
+                    onClick = if (rank < maxRank) {
+                        {
                             val value = navViewModel.currentValue.value
                             navViewModel.currentValue.postValue(value?.update(rank = rank + 1))
                         }
+                    } else {
+                        null
+                    },
+                    size = Dimen.mediumIconSize,
+                    modifier = Modifier.padding(start = Dimen.mediumPadding)
                 )
                 //跳转至所有 RANK 装备列表
                 SubButton(
@@ -652,23 +650,23 @@ private fun CharacterEquip(
                 ) {
                     toRankEquip(unitId)
                 }
-                Icon(
-                    imageVector = MainIconType.MORE.icon,
-                    contentDescription = null,
+                IconCompose(
+                    data = MainIconType.MORE,
                     tint = if (rank > 1) {
                         getRankColor(rank = rank - 1)
                     } else {
                         Color.Transparent
                     },
-                    modifier = Modifier
-                        .padding(end = Dimen.mediumPadding)
-                        .size(Dimen.mediumIconSize)
-                        .clip(Shape.medium)
-                        .clickable(enabled = rank > 1) {
-                            VibrateUtil(context).single()
+                    onClick = if (rank > 1) {
+                        {
                             val value = navViewModel.currentValue.value
                             navViewModel.currentValue.postValue(value?.update(rank = rank - 1))
                         }
+                    } else {
+                        null
+                    },
+                    size = Dimen.mediumIconSize,
+                    modifier = Modifier.padding(end = Dimen.mediumPadding)
                 )
             }
             val id2 = equips[3].equipmentId
@@ -746,7 +744,7 @@ private fun UniqueEquip(
                     .padding(top = Dimen.smallPadding)
                     .fillMaxWidth(0.3f)
                     .padding(Dimen.mediumPadding)
-                    .clip(Shape.small)
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         VibrateUtil(context).single()
                         if (isImeVisible) {
@@ -762,7 +760,7 @@ private fun UniqueEquip(
 
             OutlinedTextField(
                 value = inputLevel.value,
-                shape = Shape.medium,
+                shape = MaterialTheme.shapes.medium,
                 onValueChange = {
                     var filterStr = ""
                     it.forEach { ch ->

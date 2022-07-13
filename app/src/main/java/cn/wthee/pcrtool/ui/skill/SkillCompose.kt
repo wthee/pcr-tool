@@ -246,7 +246,7 @@ fun SkillActionItem(
     val colors =
         arrayListOf(
             colorGreen,
-            if (isSystemInDarkTheme()) Color.White else Color.Black,
+            if (isSystemInDarkTheme()) colorWhite else Color.Black,
             colorPurple,
             MaterialTheme.colorScheme.primary
         )

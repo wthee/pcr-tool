@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
@@ -136,7 +135,7 @@ fun AllCardList(
                 checkedPicUrl.value = ""
             },
             containerColor = MaterialTheme.colorScheme.background,
-            shape = Shape.medium,
+            shape = MaterialTheme.shapes.medium,
             confirmButton = {
                 //确认下载
                 MainButton(text = stringResource(R.string.save_image)) {

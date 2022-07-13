@@ -15,6 +15,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -70,11 +71,10 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
             ModalBottomSheetLayout(
                 sheetState = state,
                 scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-                sheetElevation = Dimen.sheetElevation,
                 sheetShape = if (state.offset.value == 0f) {
-                    noShape
+                    Shapes.None
                 } else {
-                    CardTopShape
+                    ShapeTop()
                 },
                 sheetContent = {
                     //章节选择
@@ -231,7 +231,7 @@ private fun TocItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Dimen.smallPadding)
-            .clip(Shape.small)
+            .clip(MaterialTheme.shapes.medium)
             .clickable {
                 selectIndex.value = index
             },

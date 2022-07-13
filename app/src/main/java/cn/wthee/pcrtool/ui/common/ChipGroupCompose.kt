@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -47,7 +48,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     //字体颜色
     val textColor = if (isSelected) {
         //选中字体颜色
-        Color.White
+        colorWhite
     } else {
         //未选中字体颜色
         MaterialTheme.colorScheme.onSurface

@@ -45,7 +45,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.utils.*
@@ -420,13 +420,13 @@ private fun CharacterSection(
                 Card(
                     modifier = Modifier
                         .width(getItemWidth())
-                        .clip(Shape.medium)
+                        .clip(MaterialTheme.shapes.medium)
                         .clickable {
                             VibrateUtil(context).single()
                             actions.toCharacterDetail(unitId)
                         },
                     elevation = CardDefaults.cardElevation(0.dp),
-                    shape = Shape.medium,
+                    shape = MaterialTheme.shapes.medium,
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
                 ) {
                     ImageCompose(
@@ -609,7 +609,7 @@ private fun CalendarEventOperation(
             Row(
                 modifier = Modifier
                     .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(Shape.small)
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         VibrateUtil(context).single()
                         checkPermissions(context, permissions, false) {
@@ -664,7 +664,7 @@ private fun CalendarEventOperation(
             Row(
                 modifier = Modifier
                     .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(Shape.small)
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         VibrateUtil(context).single()
                         var allText = ""
@@ -752,8 +752,7 @@ private fun ChangeDbCompose(
                 bottom = Dimen.fabMargin,
             ),
         containerColor = MaterialTheme.colorScheme.background,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -844,7 +843,7 @@ private fun Section(
     } else {
         Modifier
             .padding(horizontal = Dimen.mediumPadding)
-            .clip(Shape.medium)
+            .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 if (contentVisible) {
@@ -853,7 +852,7 @@ private fun Section(
             })
             .background(
                 color = if (hasAdded) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = Shape.medium
+                shape = MaterialTheme.shapes.medium
             )
     }
 
@@ -880,13 +879,13 @@ private fun Section(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding),
                     textAlign = TextAlign.Start,
-                    color = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
+                    color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
                 )
             }
             IconCompose(
                 data = iconType,
                 size = Dimen.fabIconSize,
-                tint = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
+                tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
             )
             MainText(
                 text = stringResource(id = titleId),
@@ -894,7 +893,7 @@ private fun Section(
                     .weight(1f)
                     .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
-                color = if (hasAdded) Color.White else MaterialTheme.colorScheme.onSurface
+                color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
             )
             //更多信息，编辑时隐藏
             if (!isEditMode) {
