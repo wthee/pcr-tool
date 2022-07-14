@@ -64,7 +64,8 @@ fun MainContentText(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
-    selectable: Boolean = false
+    selectable: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -73,6 +74,8 @@ fun MainContentText(
                 textAlign = textAlign,
                 color = color,
                 style = MaterialTheme.typography.bodyLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = maxLines
             )
         }
     } else {
@@ -82,6 +85,8 @@ fun MainContentText(
             color = color,
             style = MaterialTheme.typography.bodyLarge,
             modifier = modifier,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines
         )
     }
 }
@@ -350,7 +355,7 @@ fun MainCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
@@ -370,7 +375,7 @@ fun MainCard(
         modifier = mModifier,
         content = content,
         shape = shape,
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(containerColor = containerColor)
     )
 }
 
@@ -624,14 +629,14 @@ fun IconTextButton(
     icon: Any,
     text: String,
     contentColor: Color = MaterialTheme.colorScheme.primary,
-    iconSize: Dp = Dimen.smallIconSize,
-    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    iconSize: Dp = Dimen.textIconSize,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     Row(modifier = Modifier
-        .clip(MaterialTheme.shapes.medium)
+        .clip(MaterialTheme.shapes.small)
         .clickable {
             VibrateUtil(context).single()
             onClick()

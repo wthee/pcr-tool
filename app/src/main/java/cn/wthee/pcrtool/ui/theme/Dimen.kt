@@ -30,13 +30,13 @@ object Dimen {
 
     val smallIconSize = 18.dp
 
+    val textIconSize = 20.dp
+
     val mediumIconSize = 32.dp
 
     val iconSize = 48.dp
 
     val largeIconSize = 56.dp
-
-    val sheetMarginBottom = 60.dp
 
     val divLineHeight = 1.dp
 

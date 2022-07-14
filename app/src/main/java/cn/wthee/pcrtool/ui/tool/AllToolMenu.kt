@@ -202,7 +202,7 @@ private fun MenuItem(
         } else {
             getAction(actions, toolMenuData)
         },
-        backgroundColor = if (hasAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
+        containerColor = if (hasAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
     ) {
         Row(
             modifier = Modifier

@@ -14,7 +14,6 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -22,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -80,16 +78,11 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
             ModalBottomSheetLayout(
                 sheetState = sheetState,
                 scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-                sheetShape = if (sheetState.offset.value == 0f) {
-                    Shapes.None
-                } else {
-                    ShapeTop()
-                },
+                sheetShape = ShapeTop(),
                 sheetContent = {
                     //章节选择
                     SelectPager(scrollState, selectIndex, comicList)
-                },
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface
+                }
             ) {
                 Box(
                     modifier = Modifier
@@ -110,15 +103,10 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                             .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                     ) {
                         coroutineScope.launch {
-                            if (sheetState.isVisible) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                                sheetState.hide()
-                            } else {
-                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                selectIndex.value = pagerState.currentPage
-                                scrollState.scrollToItem(selectIndex.value)
-                                sheetState.show()
-                            }
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            selectIndex.value = pagerState.currentPage
+                            scrollState.scrollToItem(selectIndex.value)
+                            sheetState.show()
                         }
                     }
 
@@ -225,8 +213,8 @@ private fun TocItem(
                 selectIndex.value = index
             },
         selected = selectIndex.value == index, text = "${it.id} ${it.title}",
-        textStyle = MaterialTheme.typography.titleMedium,
-        margin = 0.dp,
+        textStyle = MaterialTheme.typography.titleLarge,
+        margin = Dimen.smallPadding,
         padding = Dimen.mediumPadding,
         textAlign = TextAlign.Start
     )

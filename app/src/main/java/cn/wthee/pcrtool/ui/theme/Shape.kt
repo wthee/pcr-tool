@@ -25,11 +25,11 @@ fun ShapeTop() = RoundedCornerShape(
     bottomEnd = CornerSize(0)
 )
 
+const val RATIO_SHAPE = 0.382f
 
 /**
  * 梯形
  */
-const val RATIO_SHAPE = 0.382f
 val TrapezoidShape = GenericShape { size, _ ->
     moveTo(size.width * RATIO_SHAPE, 0f)
     lineTo(0f, size.height)

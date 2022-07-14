@@ -9,18 +9,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
@@ -70,7 +72,7 @@ fun EquipList(
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
     val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
+        ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -93,42 +95,50 @@ fun EquipList(
         ModalBottomSheetLayout(
             sheetState = state,
             scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-            sheetShape = if (state.offset.value == 0f) {
-                Shapes.None
-            } else {
-                ShapeTop()
-            },
+            sheetShape = ShapeTop(),
             sheetContent = {
                 FilterEquipSheet(colorNum, state)
-            },
-            sheetBackgroundColor = MaterialTheme.colorScheme.surface
+            }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
-                        equipGroupList.forEach {
+                        equipGroupList.forEachIndexed { index, equipGroupData ->
+                            val groupOrder = equipGroupList.filter {
+                                it.promotionLevel == equipGroupData.promotionLevel
+                                        && it.requireLevel <= equipGroupData.requireLevel
+                            }.size
+
                             //分组标题
                             item {
                                 Row(
                                     modifier = Modifier
-                                        .padding(Dimen.mediumPadding)
+                                        .padding(Dimen.largePadding)
                                         .fillMaxWidth()
                                         .background(
-                                            getEquipColor(it.promotionLevel),
+                                            getEquipColor(equipGroupData.promotionLevel),
                                             shape = MaterialTheme.shapes.extraSmall
                                         )
                                         .padding(horizontal = Dimen.mediumPadding)
                                 ) {
                                     Subtitle2(
                                         text = stringResource(
-                                            id = R.string.require_level,
-                                            it.requireLevel
+                                            id = R.string.equip_group_order,
+                                            "${equipGroupData.promotionLevel}-$groupOrder"
                                         ),
                                         color = colorWhite,
                                     )
+                                    Subtitle2(
+                                        text = stringResource(
+                                            id = R.string.equip_require_level,
+                                            equipGroupData.requireLevel
+                                        ),
+                                        color = colorWhite,
+                                        modifier = Modifier.padding(start = Dimen.largePadding)
+                                    )
                                     Spacer(modifier = Modifier.weight(1f))
                                     Subtitle2(
-                                        text = "${it.equipIdList.size}",
+                                        text = "${equipGroupData.equipIdList.size}",
                                         color = colorWhite
                                     )
                                 }
@@ -137,9 +147,13 @@ fun EquipList(
                             item {
                                 VerticalGrid(
                                     spanCount = equipSpanCount,
-                                    modifier = Modifier.padding(bottom = Dimen.largePadding)
+                                    modifier = Modifier.padding(
+                                        bottom = Dimen.largePadding,
+                                        start = Dimen.commonItemPadding,
+                                        end = Dimen.commonItemPadding
+                                    ),
                                 ) {
-                                    it.equipIdList.forEach { equip ->
+                                    equipGroupData.equipIdList.forEach { equip ->
                                         EquipItem(
                                             filterValue,
                                             equip,
@@ -188,13 +202,8 @@ fun EquipList(
                         text = "$count"
                     ) {
                         coroutineScope.launch {
-                            if (state.isVisible) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                                state.hide()
-                            } else {
-                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                state.show()
-                            }
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            state.show()
                         }
                     }
                 }
@@ -217,6 +226,8 @@ private fun EquipItem(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
+    val context = LocalContext.current
+
     var equipState by remember { mutableStateOf(equip) }
     if (equipState != equip) {
         equipState = equip
@@ -232,32 +243,43 @@ private fun EquipItem(
             {
                 IconCompose(
                     data = ImageResourceHelper.getInstance().getEquipPic(equipState.equipmentId)
-                ) {
-                    if (equip.craftFlg == 1) {
-                        toEquipDetail(equipState.equipmentId)
-                    } else {
-                        toEquipMaterial(equipState.equipmentId)
-                    }
-                }
+                )
             }
         )
     }
     val equipName: @Composable () -> Unit by remember {
         mutableStateOf(
             {
-                SelectText(
-                    selected = filterState.starIds.contains(equipState.equipmentId),
-                    text = equipState.equipmentName
+                MainContentText(
+                    text = equipState.equipmentName,
+                    textAlign = TextAlign.Start,
+                    maxLines = 2,
+                    selectable = true,
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    color = if (filterState.starIds.contains(equipState.equipmentId)) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
                 )
             }
         )
     }
 
-    Column(
+    Row(
         modifier = Modifier
+            .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding)
             .fillMaxWidth()
-            .padding(Dimen.mediumPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .clip(MaterialTheme.shapes.extraSmall)
+            .clickable {
+                VibrateUtil(context).single()
+                if (equip.craftFlg == 1) {
+                    toEquipDetail(equipState.equipmentId)
+                } else {
+                    toEquipMaterial(equipState.equipmentId)
+                }
+            }
+            .padding(Dimen.smallPadding)
     ) {
         equipIcon()
         equipName()

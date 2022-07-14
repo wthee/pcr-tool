@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -147,26 +148,40 @@ fun IconCompose(
     }
 
 
-    if (data is MainIconType) {
-        Icon(
-            imageVector = data.icon,
-            contentDescription = null,
-            tint = tint,
-            modifier = mModifier
-        )
-    } else {
-        val contentScale = ContentScale.Crop
-        AsyncImage(
-            model = data,
-            colorFilter = colorFilter,
-            contentDescription = null,
-            contentScale = contentScale,
-            placeholder = rememberAsyncImagePainter(
-                R.drawable.unknown_gray,
-                contentScale = contentScale
-            ),
-            error = rememberAsyncImagePainter(R.drawable.unknown_item, contentScale = contentScale),
-            modifier = mModifier.aspectRatio(1f)
-        )
+    when (data) {
+        is MainIconType -> {
+            Icon(
+                imageVector = data.icon,
+                contentDescription = null,
+                tint = tint,
+                modifier = mModifier
+            )
+        }
+        is ImageVector -> {
+            Icon(
+                imageVector = data,
+                contentDescription = null,
+                tint = tint,
+                modifier = mModifier
+            )
+        }
+        else -> {
+            val contentScale = ContentScale.Crop
+            AsyncImage(
+                model = data,
+                colorFilter = colorFilter,
+                contentDescription = null,
+                contentScale = contentScale,
+                placeholder = rememberAsyncImagePainter(
+                    R.drawable.unknown_gray,
+                    contentScale = contentScale
+                ),
+                error = rememberAsyncImagePainter(
+                    R.drawable.unknown_item,
+                    contentScale = contentScale
+                ),
+                modifier = mModifier.aspectRatio(1f)
+            )
+        }
     }
 }

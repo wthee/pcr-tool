@@ -12,21 +12,28 @@ import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -38,9 +45,13 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.home.MoreFabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
+import cn.wthee.pcrtool.ui.tool.AnimSetting
+import cn.wthee.pcrtool.ui.tool.ColorSetting
+import cn.wthee.pcrtool.ui.tool.VibrateSetting
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.Constants
@@ -200,10 +211,12 @@ fun Home(
             .navigationBarsPadding()
             .fillMaxSize()
     ) {
+        //页面导航
         NavGraph(navController, navViewModel, actions)
-        //菜单
-        MoreFabCompose(navViewModel)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
+            //菜单
+            AppInfoCompose(actions)
+            //Home 按钮
             FabMain(
                 modifier = Modifier
                     .align(Alignment.End)
@@ -225,7 +238,13 @@ fun Home(
 fun FabMain(modifier: Modifier = Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
-    FabCompose(icon, modifier = modifier) {
+    FabCompose(
+        if (icon == MainIconType.MAIN) {
+            ImageVector.vectorResource(id = R.drawable.ic_logo_large)
+        } else {
+            icon
+        }, modifier = modifier
+    ) {
         when (icon) {
             MainIconType.OK -> navViewModel.fabOKCilck.postValue(true)
             MainIconType.CLOSE -> navViewModel.fabCloseClick.postValue(true)
@@ -236,6 +255,92 @@ fun FabMain(modifier: Modifier = Modifier) {
                 navController.navigateUp()
             }
         }
+    }
+}
+
+/**
+ * 应用信息
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppInfoCompose(actions: NavActions) {
+    val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
+    val context = LocalContext.current
+    val sp = settingSP(context)
+    val region = MainActivity.regionType
+
+    //数据库版本
+    val typeName = stringResource(
+        id = when (region) {
+            2 -> R.string.db_cn
+            3 -> R.string.db_tw
+            else -> R.string.db_jp
+        }
+    )
+    val localVersion = sp.getString(
+        when (region) {
+            2 -> Constants.SP_DATABASE_VERSION_CN
+            3 -> Constants.SP_DATABASE_VERSION_TW
+            else -> Constants.SP_DATABASE_VERSION_JP
+        },
+        ""
+    )
+    val dbVersionGroup = if (localVersion != null) {
+        localVersion.split("/")[0]
+    } else {
+        ""
+    }
+
+    DropdownMenu(
+        expanded = fabMainIcon == MainIconType.DOWN,
+        onDismissRequest = {
+            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        },
+        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
+        offset = DpOffset(Dimen.fabMargin, 0.dp)
+    ) {
+        DropdownMenuItem(
+            text = {
+                AnimSetting(sp, context)
+            },
+            onClick = {}
+        )
+        DropdownMenuItem(
+            text = {
+                VibrateSetting(sp, context)
+            },
+            onClick = {}
+        )
+        DropdownMenuItem(
+            text = {
+                ColorSetting(sp, context)
+            },
+            onClick = {}
+        )
+        DropdownMenuItem(
+            text = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(top = Dimen.smallPadding)
+                        )
+                        Subtitle2(
+                            text = "${typeName}：${dbVersionGroup}",
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Subtitle2(text = stringResource(id = R.string.expand))
+                    IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                }
+            },
+            onClick = {
+                actions.toSetting()
+            }
+        )
     }
 }
 

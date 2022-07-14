@@ -35,7 +35,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
@@ -64,6 +63,20 @@ val permissions = arrayOf(
     Manifest.permission.WRITE_CALENDAR,
 )
 
+//首页
+private enum class OverviewType(val id: Int) {
+    CHARACTER(0),
+    EQUIP(1),
+    TOOL(2),
+    NEWS(3),
+    IN_PROGRESS_EVENT(4),
+    COMING_SOON_EVENT(5);
+
+    companion object {
+        fun getByValue(value: Int) = values()
+            .find { it.id == value } ?: CHARACTER
+    }
+}
 
 /**
  * 首页纵览
@@ -472,14 +485,16 @@ private fun EquipSection(
         }
     ) {
         VerticalGrid(
-            spanCount = maxOf(1, equipSpanCount),
-            modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
+            spanCount = maxOf(1, equipSpanCount)
         ) {
             if (equipList.isNotEmpty()) {
                 equipList.forEach {
                     Box(
                         modifier = Modifier
-                            .padding(Dimen.mediumPadding)
+                            .padding(
+                                horizontal = Dimen.largePadding,
+                                vertical = Dimen.mediumPadding
+                            )
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
@@ -725,7 +740,9 @@ private fun CalendarEventOperation(
     }
 }
 
-//数据切换选择弹窗
+/**
+ * 数据切换选择弹窗
+ */
 @Composable
 private fun ChangeDbCompose(
     openDialog: Boolean,

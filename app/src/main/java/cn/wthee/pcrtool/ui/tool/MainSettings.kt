@@ -166,9 +166,11 @@ fun MainSettings() {
 
 }
 
-//动态色彩
+/**
+ * 动态色彩
+ */
 @Composable
-private fun ColorSetting(sp: SharedPreferences, context: Context) {
+fun ColorSetting(sp: SharedPreferences, context: Context) {
     val dynamicColorOn = sp.getBoolean(Constants.SP_COLOR_STATE, true)
     val dynamicColorState = remember {
         mutableStateOf(dynamicColorOn)
@@ -217,9 +219,11 @@ private fun ColorSetting(sp: SharedPreferences, context: Context) {
 }
 
 
-//动画效果
+/**
+ * 动画效果
+ */
 @Composable
-private fun AnimSetting(sp: SharedPreferences, context: Context) {
+fun AnimSetting(sp: SharedPreferences, context: Context) {
     val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
     val animState = remember {
         mutableStateOf(animOn)
@@ -266,9 +270,11 @@ private fun AnimSetting(sp: SharedPreferences, context: Context) {
     }
 }
 
-//振动反馈
+/**
+ * 振动反馈
+ */
 @Composable
-private fun VibrateSetting(
+fun VibrateSetting(
     sp: SharedPreferences,
     context: Context
 ) {
@@ -319,6 +325,9 @@ private fun VibrateSetting(
     }
 }
 
+/**
+ * 设置项
+ */
 @Composable
 private fun SettingItem(
     iconType: MainIconType,
@@ -352,6 +361,9 @@ private fun SettingItem(
     }
 }
 
+/**
+ *文本标题
+ */
 @Composable
 private fun TitleText(text: String) {
     Text(
@@ -363,6 +375,9 @@ private fun TitleText(text: String) {
     )
 }
 
+/**
+ * 摘要
+ */
 @Composable
 private fun SummaryText(text: String) {
     Text(

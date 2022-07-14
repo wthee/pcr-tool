@@ -95,7 +95,8 @@
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
     <string name="name">名字</string>
-    <string name="require_level">需求等级：%s</string>
+    <string name="equip_group_order">编组：%s</string>
+    <string name="equip_require_level">需求等级：%s</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
@@ -136,8 +137,8 @@
     <string name="love_equip_material">收藏素材</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
-    <string name="rank_compare">RANK 对比</string>
-    <string name="calc_equip_count">装备统计</string>
+    <string name="rank_compare">对比</string>
+    <string name="calc_equip_count">统计</string>
     <string name="share">分享</string>
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
@@ -215,8 +216,10 @@
     <string name="gacha_fes">Fes限定★3</string>
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
-    <string name="model_preview">模型预览</string>
+    <string name="model_preview">模型</string>
     <string name="change_failed">切换失败</string>
     <string name="no_guild">无公会</string>
+    <string name="character_pic">立绘</string>
+    <string name="expand">展开</string>
 
 </resources>

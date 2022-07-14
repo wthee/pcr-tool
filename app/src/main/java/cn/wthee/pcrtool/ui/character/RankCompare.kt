@@ -1,17 +1,15 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,11 +24,11 @@ import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import kotlinx.coroutines.launch
 
 
 /**
@@ -75,107 +73,61 @@ fun RankCompare(
         rank0.value,
         rank1.value
     ).collectAsState(initial = arrayListOf()).value
-    // dialog 状态
-    val bottomSheetState = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
-    val coroutineScope = rememberCoroutineScope()
-    if (!bottomSheetState.isVisible && !bottomSheetState.isAnimationRunning) {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
+
+    val dialogState = remember {
+        mutableStateOf(false)
     }
-    ModalBottomSheetLayout(
-        sheetState = bottomSheetState,
-        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetShape = if (bottomSheetState.offset.value == 0f) {
-            Shapes.None
-        } else {
-            ShapeTop()
-        },
-        sheetContent = {
-            //RANK 选择
-            RankSelectCompose(rank0, rank1, maxRank, bottomSheetState, navViewModel)
-        },
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = Dimen.largePadding)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = Dimen.largePadding)
-        ) {
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    //头像
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
-                        size = Dimen.largeIconSize
-                    )
-                    Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
-                        //等级
-                        Text(
-                            text = "$level",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(start = Dimen.smallPadding)
-                        )
-                        StarCompose(rarity)
-                    }
-                }
-                MainCard(
-                    shape = ShapeTop(),
+        Column {
+            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                Spacer(modifier = Modifier.weight(0.3f))
+                RankText(
+                    rank = rank0.value,
+                    textAlign = TextAlign.End,
                     modifier = Modifier
-                        .padding(top = Dimen.largePadding)
-                        .fillMaxSize(),
-                ) {
-                    Column {
-                        Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
-                            Spacer(modifier = Modifier.weight(0.3f))
-                            RankText(
-                                rank = rank0.value,
-                                textAlign = TextAlign.End,
-                                modifier = Modifier
-                                    .weight(0.2f)
-                                    .padding(0.dp)
-                            )
-                            RankText(
-                                rank = rank1.value,
-                                textAlign = TextAlign.End,
-                                modifier = Modifier.weight(0.2f)
-                            )
-                            Text(
-                                text = stringResource(id = R.string.result),
-                                textAlign = TextAlign.End,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.weight(0.2f)
-                            )
-                        }
-                        AttrCompare(attrCompareData)
-                    }
-                }
+                        .weight(0.2f)
+                        .padding(0.dp)
+                )
+                RankText(
+                    rank = rank1.value,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.weight(0.2f)
+                )
+                Text(
+                    text = stringResource(id = R.string.result),
+                    textAlign = TextAlign.End,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(0.2f)
+                )
             }
-            FabCompose(
-                iconType = MainIconType.RANK_SELECT,
-                text = stringResource(id = R.string.rank_select),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                coroutineScope.launch {
-                    if (bottomSheetState.isVisible) {
-                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                        bottomSheetState.hide()
-                    } else {
-                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        bottomSheetState.show()
-                    }
-                }
-            }
+            AttrCompare(attrCompareData)
         }
 
+        FabCompose(
+            iconType = MainIconType.RANK_SELECT,
+            text = stringResource(id = R.string.rank_select),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            dialogState.value = true
+        }
+
+        //RANK 选择
+        if (dialogState.value) {
+            RankSelectCompose(
+                rank0,
+                rank1,
+                maxRank,
+                dialogState,
+                navViewModel = navViewModel
+            )
+        }
     }
 }
 
@@ -222,28 +174,6 @@ fun AttrCompare(compareData: List<RankCompareData>) {
     }
 }
 
-/**
- * 星级显示
- */
-@Composable
-private fun StarCompose(
-    rarity: Int,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier) {
-        for (i in 1..rarity) {
-            val iconId = when (i) {
-                6 -> R.drawable.ic_star_pink
-                else -> R.drawable.ic_star
-            }
-            IconCompose(
-                data = iconId,
-                size = Dimen.mediumIconSize,
-                modifier = Modifier.padding(Dimen.smallPadding)
-            )
-        }
-    }
-}
 
 @Preview
 @Composable

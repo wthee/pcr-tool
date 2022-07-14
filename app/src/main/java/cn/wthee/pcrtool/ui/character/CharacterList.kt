@@ -54,7 +54,6 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -67,15 +66,15 @@ fun CharacterList(
     toDetail: (Int) -> Unit,
     viewModel: CharacterViewModel = hiltViewModel(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //筛选状态
     val filter = navViewModel.filterCharacter.observeAsState()
-    // dialog 状态
+    // sheet 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
     if (!state.isVisible && !state.isAnimationRunning) {
@@ -90,33 +89,29 @@ fun CharacterList(
             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
     }
-    val list = viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
+    val characterList =
+        viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
 
     ModalBottomSheetLayout(
         sheetState = state,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetShape = if (state.offset.value == 0f) {
-            Shapes.None
-        } else {
-            ShapeTop()
-        },
+        sheetShape = ShapeTop(),
         sheetContent = {
-            FilterCharacterSheet(navViewModel, coroutineScope, state)
-        },
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface
+            FilterCharacterSheet(navViewModel, state)
+        }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (list.isNotEmpty()) {
+            if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
                     items(
-                        items = list,
+                        items = characterList,
                         key = {
                             it.id
                         }
@@ -160,20 +155,15 @@ fun CharacterList(
                         navViewModel.resetClick.postValue(true)
                     }
                 }
-                val count = list.size
+                val count = characterList.size
                 // 数量显示&筛选按钮
                 FabCompose(
                     iconType = MainIconType.CHARACTER,
                     text = "$count"
                 ) {
                     coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
-                        }
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                        state.show()
                     }
                 }
             }
@@ -231,7 +221,7 @@ fun CharacterItem(
     var cardMainColor by remember {
         mutableStateOf(initColor)
     }
-    //主要字体颜色暂时使用白色字体 fixme 不同背景下变更字体颜色时，可能导致字体不明显
+    //主要字体颜色
     val textColor = if (loadSuccess) colorWhite else colorBlack
 
     MainCard(
@@ -255,32 +245,26 @@ fun CharacterItem(
                 }
             }
 
-            if (loved) {
-                IconCompose(
-                    data = MainIconType.LOVE_FILL,
-                    size = Dimen.fabIconSize,
-                    modifier = Modifier.padding(Dimen.mediumPadding)
-                )
-            }
-
             //名称阴影效果
             if (loadSuccess) {
                 Column(
                     modifier = Modifier
                         .padding(
-                            horizontal = Dimen.mediumPadding + Dimen.textElevation,
-                            vertical = Dimen.mediumPadding
+                            start = Dimen.mediumPadding + Dimen.textElevation,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.mediumPadding + Dimen.textElevation,
+                            bottom = Dimen.mediumPadding
                         )
                         .fillMaxWidth(1f - RATIO_SHAPE)
                         .align(Alignment.BottomStart),
                 ) {
                     Subtitle1(
                         text = character.getNameL(),
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (loved) textColor else MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = character.getNameF(),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = if (loved) textColor else MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.ExtraBold
@@ -296,11 +280,11 @@ fun CharacterItem(
             ) {
                 Subtitle1(
                     text = character.getNameL(),
-                    color = textColor
+                    color = if (loved) MaterialTheme.colorScheme.primary else textColor
                 )
                 Text(
                     text = character.getNameF(),
-                    color = textColor,
+                    color = if (loved) MaterialTheme.colorScheme.primary else textColor,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold
@@ -320,11 +304,12 @@ fun CharacterItem(
                         .fillMaxHeight()
                         .clip(TrapezoidShape)
                         .background(
-                            brush = Brush.verticalGradient(
+                            brush = Brush.horizontalGradient(
                                 colors = listOf(
                                     cardMainColor,
                                     cardMainColor,
-                                )
+                                    MaterialTheme.colorScheme.primary,
+                                ),
                             ),
                             alpha = 0.6f
                         ),
@@ -456,7 +441,6 @@ private fun CharacterTag(
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,
-    coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
     characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
