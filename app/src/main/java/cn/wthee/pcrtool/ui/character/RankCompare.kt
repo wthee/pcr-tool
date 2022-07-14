@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,7 +101,8 @@ fun RankCompare(
                     text = stringResource(id = R.string.result),
                     textAlign = TextAlign.End,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(0.2f)
+                    modifier = Modifier.weight(0.2f),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             AttrCompare(attrCompareData)
@@ -159,7 +159,7 @@ fun AttrCompare(compareData: List<RankCompareData>) {
                 val color = when {
                     it.attrCompare.int > 0 -> colorGreen
                     it.attrCompare.int < 0 -> colorRed
-                    else -> Color.Unspecified
+                    else -> MaterialTheme.colorScheme.onSurface
                 }
                 Text(
                     text = it.attrCompare.int.toString(),

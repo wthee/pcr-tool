@@ -78,6 +78,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
             ModalBottomSheetLayout(
                 sheetState = sheetState,
                 scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
                 sheetShape = ShapeTop(),
                 sheetContent = {
                     //章节选择

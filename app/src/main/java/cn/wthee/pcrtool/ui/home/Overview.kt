@@ -768,7 +768,6 @@ private fun ChangeDbCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
-        containerColor = MaterialTheme.colorScheme.background,
         shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()

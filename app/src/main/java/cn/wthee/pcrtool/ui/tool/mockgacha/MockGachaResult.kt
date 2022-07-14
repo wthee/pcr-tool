@@ -6,11 +6,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -232,7 +232,7 @@ private fun MockGachaResultRecordIconLine(
                             colorGold
                         }
                         else -> {
-                            Color.Unspecified
+                            MaterialTheme.colorScheme.onSurface
                         }
                     }
                     MainText(text = "★${gachaUnitInfo.rarity}", color = textColor)

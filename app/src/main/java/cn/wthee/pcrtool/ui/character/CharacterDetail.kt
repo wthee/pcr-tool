@@ -161,6 +161,7 @@ fun CharacterDetail(
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = ShapeTop(),
         sheetContent = {
             when (sheetTypeState.value) {

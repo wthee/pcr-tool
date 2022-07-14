@@ -552,7 +552,6 @@ fun SelectTypeCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
-        containerColor = MaterialTheme.colorScheme.background,
         shape = if (openDialog) MaterialTheme.shapes.medium else Shapes.Full,
         onClick = {
             VibrateUtil(context).single()

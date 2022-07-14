@@ -51,11 +51,12 @@ fun RankSelectCompose(
         mutableStateOf(maxRank - rank1.value)
     }
 
+    rank0.value = maxRank - selectIndex0.value
+    rank1.value = maxRank - selectIndex1.value
+
     //RANK 选择，确认后关闭
     if (!dialogState.value) {
         LaunchedEffect(rank0, rank1) {
-            rank0.value = maxRank - selectIndex0.value
-            rank1.value = maxRank - selectIndex1.value
             if (type == RankSelectType.DEFAULT) {
                 navViewModel.curRank.postValue(maxRank - selectIndex0.value)
                 navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
@@ -99,8 +100,8 @@ fun RankSelectCompose(
                 contentAlignment = Alignment.Center
             ) {
                 IconTextButton(
-                    icon = MainIconType.OK,
-                    text = stringResource(id = R.string.confirm),
+                    icon = MainIconType.CLOSE,
+                    text = stringResource(id = R.string.close),
                     iconSize = Dimen.mediumIconSize,
                     textStyle = MaterialTheme.typography.titleMedium
                 ) {

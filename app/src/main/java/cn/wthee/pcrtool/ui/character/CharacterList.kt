@@ -95,6 +95,7 @@ fun CharacterList(
     ModalBottomSheetLayout(
         sheetState = state,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = ShapeTop(),
         sheetContent = {
             FilterCharacterSheet(navViewModel, state)
