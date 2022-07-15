@@ -106,7 +106,10 @@ class OverviewViewModel @Inject constructor(
     fun getCalendarEventList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
+            val data =
+                eventRepository.getDropEvent() + eventRepository.getTowerEvent(1) + eventRepository.getSpDungeonEvent(
+                    1
+                )
 
             if (type == EventType.IN_PROGRESS) {
                 emit(

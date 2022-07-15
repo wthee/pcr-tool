@@ -947,31 +947,37 @@ private fun Section(
  */
 private fun getTypeDataToString(data: CalendarEvent): String {
     var eventTitle = ""
-    if (data.type != "1") {
-        //正常活动
-        val list = data.type.intArrayList
-        list.forEach { type ->
-            val title = when (type) {
-                31, 41 -> "普通关卡"
-                32, 42 -> "困难关卡"
-                39, 49 -> "高难关卡"
-                34 -> "探索"
-                37 -> "圣迹调查"
-                38 -> "神殿调查"
-                45 -> "地下城"
-                else -> ""
-            }
-            val multiple = data.getFixedValue()
-            eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
-                multiple.toInt().toString()
-            } else {
-                multiple.toString()
-            }) + "倍\n"
-
+    when (data.type) {
+        "1" -> {
+            //露娜塔
+            eventTitle = "露娜塔"
         }
-    } else {
-        //露娜塔
-        eventTitle = "露娜塔"
+        "-1" -> {
+            //特殊地下城
+            eventTitle = "特殊地下城"
+        }
+        else -> {
+            //正常活动
+            val list = data.type.intArrayList
+            list.forEach { type ->
+                val title = when (type) {
+                    31, 41 -> "普通关卡"
+                    32, 42 -> "困难关卡"
+                    39, 49 -> "高难关卡"
+                    34 -> "探索"
+                    37 -> "圣迹调查"
+                    38 -> "神殿调查"
+                    45 -> "地下城"
+                    else -> ""
+                }
+                val multiple = data.getFixedValue()
+                eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+                    multiple.toInt().toString()
+                } else {
+                    multiple.toString()
+                }) + "倍\n"
+            }
+        }
     }
 
     return eventTitle

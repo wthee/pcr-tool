@@ -124,6 +124,27 @@ interface EventDao {
     )
     suspend fun getTowerEvent(limit: Int): List<CalendarEvent>
 
+    /**
+     * 获取特殊地下城信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+       SELECT
+            secret_dungeon_schedule.dungeon_area_id AS id,
+            -1 AS type,
+            0 AS value,
+            start_time,
+            end_time 
+        FROM
+            secret_dungeon_schedule 
+        ORDER BY
+            secret_dungeon_schedule.dungeon_area_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getSpDungeonEvent(limit: Int): List<CalendarEvent>
 
     /**
      * 获取免费十连信息
