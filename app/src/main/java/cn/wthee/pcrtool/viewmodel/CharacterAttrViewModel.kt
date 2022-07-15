@@ -114,7 +114,9 @@ class CharacterAttrViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
+                if (e !is CancellationException) {
+                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
+                }
             }
 
             //专武
@@ -128,7 +130,9 @@ class CharacterAttrViewModel @Inject constructor(
                     allData.uniqueEquip = uniqueEquip
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
+                if (e !is CancellationException) {
+                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
+                }
             }
 
             //故事剧情

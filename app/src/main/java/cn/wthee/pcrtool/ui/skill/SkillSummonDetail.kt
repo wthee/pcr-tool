@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.clan.BossSkillList
@@ -24,21 +23,28 @@ import kotlin.math.max
 
 /**
  * 技能召唤物信息
+ *
+ * @param unitId    召唤物id
+ * @param unitType  召唤物类型
+ * @param currentValueState 角色召唤物属性
  */
 @Composable
 fun SummonDetail(
     unitId: Int,
-    unitType: UnitType
+    unitType: UnitType,
+    currentValueState: MutableState<CharacterProperty>? = null
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
             EnemySummonDetail(unitId)
         } else {
-            CharacterSummonDetail(unitId)
+            currentValueState?.let {
+                CharacterSummonDetail(unitId, currentValueState)
+            }
         }
     }
 
@@ -50,6 +56,7 @@ fun SummonDetail(
 @Composable
 private fun CharacterSummonDetail(
     unitId: Int,
+    currentValueState: MutableState<CharacterProperty>,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     summonViewModel: SummonViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
@@ -58,15 +65,16 @@ private fun CharacterSummonDetail(
     val basicInfo = summonViewModel.getSummonData(unitId).collectAsState(initial = null).value
 
     //数值信息
-    val currValue = navViewModel.currentValue.value ?: CharacterProperty()
     val attrs =
-        attrViewModel.getCharacterInfo(unitId, currValue).collectAsState(initial = null).value
+        attrViewModel.getCharacterInfo(unitId, currentValueState.value)
+            .collectAsState(initial = null).value
 
     //技能信息
     val loopData =
         skillViewModel.getCharacterSkillLoops(unitId)
             .collectAsState(initial = arrayListOf()).value
-    val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
+    val iconTypes =
+        skillViewModel.getskillIconTypes(unitId, 0).collectAsState(initial = hashMapOf()).value
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -83,7 +91,7 @@ private fun CharacterSummonDetail(
             )
             //等级等属性
             CaptionText(
-                text = "等级：${currValue.level} / Rank：${currValue.rank} / 星级：${currValue.rarity}",
+                text = "等级：${currentValueState.value.level} / Rank：${currentValueState.value.rank} / 星级：${currentValueState.value.rarity}",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //位置
@@ -112,7 +120,7 @@ private fun CharacterSummonDetail(
                 SkillCompose(
                     unitId = unitId,
                     cutinId = 0,
-                    level = currValue.level,
+                    level = currentValueState.value.level,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
                     unitType = UnitType.CHARACTER_SUMMON,
                 )
@@ -161,7 +169,7 @@ private fun EnemySummonDetail(
             //属性
             val attr = enemyData.attr.enemy()
             AttrList(attrs = attr)
-            BossSkillList(0, arrayListOf(enemyData), UnitType.ENEMY_SUMMON)
+            BossSkillList(enemyData, UnitType.ENEMY_SUMMON)
             CommonSpacer()
         }
     }

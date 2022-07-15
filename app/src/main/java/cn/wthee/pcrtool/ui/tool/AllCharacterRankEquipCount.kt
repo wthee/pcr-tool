@@ -21,7 +21,7 @@ fun AllCharacterRankEquipCount(
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val rankEquipMaterials =
-        equipmentViewModel.getAllEquip().collectAsState(
+        equipmentViewModel.getEquipByRank(0, 0, 0).collectAsState(
             initial = arrayListOf()
         ).value
 

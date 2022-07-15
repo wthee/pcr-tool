@@ -105,11 +105,6 @@ fun EquipList(
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
                         equipGroupList.forEachIndexed { index, equipGroupData ->
-                            val groupOrder = equipGroupList.filter {
-                                it.promotionLevel == equipGroupData.promotionLevel
-                                        && it.requireLevel <= equipGroupData.requireLevel
-                            }.size
-
                             //分组标题
                             item {
                                 Row(
@@ -124,18 +119,10 @@ fun EquipList(
                                 ) {
                                     Subtitle2(
                                         text = stringResource(
-                                            id = R.string.equip_group_order,
-                                            "${equipGroupData.promotionLevel}-$groupOrder"
-                                        ),
-                                        color = colorWhite,
-                                    )
-                                    Subtitle2(
-                                        text = stringResource(
                                             id = R.string.equip_require_level,
                                             equipGroupData.requireLevel
                                         ),
-                                        color = colorWhite,
-                                        modifier = Modifier.padding(start = Dimen.largePadding)
+                                        color = colorWhite
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
                                     Subtitle2(

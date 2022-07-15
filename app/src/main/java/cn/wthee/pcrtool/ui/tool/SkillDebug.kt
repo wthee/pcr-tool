@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,29 +28,26 @@ fun AllSkillList(
 ) {
     val allCharacter =
         characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
-    val skills = skillViewModel.skills.observeAsState()
     val bossIds = clanViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
 
     val type = remember {
         mutableStateOf(1)
     }
 
-
-    if (allCharacter.isNotEmpty() && bossIds.isNotEmpty()) {
-        val ids = arrayListOf<Int>()
-        if (type.value == 0) {
-            ids.clear()
-            allCharacter.forEach {
-                ids.add(it.unitId)
-            }
-            skillViewModel.getCharacterSkills(201, 1000, ids)
-        } else {
-            ids.clear()
-            ids.addAll(bossIds)
-            skillViewModel.getCharacterSkills(201, 1000, ids)
+    val ids = arrayListOf<Int>()
+    if (type.value == 0) {
+        ids.clear()
+        allCharacter.forEach {
+            ids.add(it.unitId)
         }
-
+    } else {
+        ids.clear()
+        ids.addAll(bossIds)
     }
+
+    val skills = skillViewModel.getCharacterSkills(201, 1000, ids)
+        .collectAsState(initial = arrayListOf()).value
+
 
     Column(
         modifier = Modifier
@@ -59,7 +55,7 @@ fun AllSkillList(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        skills.value?.let { skillValue ->
+        skills.let { skillValue ->
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(
                     items = skillValue,

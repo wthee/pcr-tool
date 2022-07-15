@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.RankCompareData
-import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -35,40 +35,28 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  *
  * @param unitId 角色编号
  * @param maxRank 角色rank最大值
- * @param level 角色等级
- * @param rarity 角色星级
- * @param uniqueEquipLevel 角色专武等级
+ * @param currentValue 角色属性
  */
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun RankCompare(
     unitId: Int,
     maxRank: Int,
-    level: Int,
-    rarity: Int,
-    uniqueEquipLevel: Int,
-    navViewModel: NavViewModel,
+    currentValue: CharacterProperty,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
-    val curRank = navViewModel.curRank.value
-    val targetRank = navViewModel.targetRank.value
     val rank0 = remember {
         mutableStateOf(maxRank)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
     }
-    if (curRank != 0) {
-        rank0.value = curRank ?: 1
-    }
-    if (targetRank != 0) {
-        rank1.value = targetRank ?: maxRank
-    }
+
     val attrCompareData = attrViewModel.getUnitAttrCompare(
         unitId,
-        level,
-        rarity,
-        uniqueEquipLevel,
+        currentValue.level,
+        currentValue.rarity,
+        currentValue.uniqueEquipmentLevel,
         rank0.value,
         rank1.value
     ).collectAsState(initial = arrayListOf()).value
@@ -125,7 +113,6 @@ fun RankCompare(
                 rank1,
                 maxRank,
                 dialogState,
-                navViewModel = navViewModel
             )
         }
     }

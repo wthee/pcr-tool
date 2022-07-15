@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
@@ -53,51 +52,14 @@ class EquipmentViewModel @Inject constructor(
     /**
      * 根据角色id [unitId] 获取对应 Rank 范围 所需的装备
      *
-     * @param unitId 角色编号
+     * @param unitId    角色编号，传 0 返回所有角色
      * @param startRank 当前rank
-     * @param endRank 目标rank
+     * @param endRank   目标rank
+     * fixme 避免重复调用，优化速度
      */
     fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
         try {
-            if (startRank > 0 && endRank > 0 && startRank <= endRank) {
-                val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
-                //计算倍数
-                val materials = arrayListOf<EquipmentMaterial>()
-                data.getAllEquipId().forEach { map ->
-                    val equip = equipmentRepository.getEquipBasicInfo(map.key)
-                    val material = getEquipCraft(equip)
-                    material.map {
-                        it.count *= map.value
-                    }
-                    materials.addAll(material)
-                }
-                //合并重复项
-                val map = mutableMapOf<Int, EquipmentMaterial>()
-                materials.forEach {
-                    var i = it.count
-                    val key = it.id
-                    if (map[key] != null) {
-                        i = map[key]!!.count + it.count
-                    }
-                    it.count = i
-                    map[key] = it
-                }
-                //转换为列表
-                emit(map.values.sortedByDescending {
-                    it.count
-                })
-            }
-        } catch (_: Exception) {
-
-        }
-    }
-
-    /**
-     * 获取所有装备素材数量
-     */
-    fun getAllEquip() = flow {
-        try {
-            val data = equipmentRepository.getAllEquip()
+            val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
             //计算倍数
             val materials = arrayListOf<EquipmentMaterial>()
             data.forEach { equipCountData ->
@@ -108,8 +70,7 @@ class EquipmentViewModel @Inject constructor(
                         it.count *= equipCountData.equipCount
                     }
                     materials.addAll(material)
-                } catch (e: Exception) {
-                    Log.e("DEBUG", "${equipCountData.equipId}")
+                } catch (_: Exception) {
                 }
 
             }
@@ -177,50 +138,6 @@ class EquipmentViewModel @Inject constructor(
      * @param craftFlg 是否可合成 0：不可，1：可合成
      */
     private suspend fun getAllMaterial(
-        materials: ArrayList<EquipmentMaterial>,
-        equipmentId: Int,
-        name: String,
-        count: Int,
-        craftFlg: Int
-    ) {
-        try {
-            if (craftFlg == 1) {
-                val material = equipmentRepository.getEquipmentCraft(equipmentId).getAllMaterialId()
-                material.forEach {
-                    val data = equipmentRepository.getEquipBasicInfo(it.id)
-                    getAllMaterial(
-                        materials,
-                        data.equipmentId,
-                        data.equipmentName,
-                        it.count,
-                        data.craftFlg
-                    )
-                }
-            } else {
-                val material =
-                    EquipmentMaterial(
-                        equipmentId,
-                        name,
-                        count
-                    )
-                var flag = -1
-                materials.forEachIndexed { index, equipmentMaterial ->
-                    if (equipmentMaterial.id == material.id) {
-                        flag = index
-                    }
-                }
-                if (flag == -1) {
-                    materials.add(material)
-                } else {
-                    materials[flag].count += material.count
-                }
-            }
-        } catch (_: Exception) {
-
-        }
-    }
-
-    private suspend fun getAllMaterialV2(
         materials: ArrayList<EquipmentMaterial>,
         equipmentId: Int,
         name: String,

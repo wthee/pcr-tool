@@ -48,18 +48,13 @@ fun RankEquipCount(
     navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val curRank = navViewModel.curRank1.value ?: 0
-    val targetRank = navViewModel.targetRank1.value ?: 0
     val rank0 = remember {
         mutableStateOf(1)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
     }
-    if (curRank != 0 && targetRank != 0) {
-        rank0.value = curRank
-        rank1.value = targetRank
-    }
+
     val rankEquipMaterials =
         equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value).collectAsState(
             initial = arrayListOf()
@@ -150,7 +145,6 @@ fun RankEquipCount(
                 rank1,
                 maxRank,
                 dialogState,
-                navViewModel = navViewModel,
                 type = RankSelectType.LIMIT
             )
         }

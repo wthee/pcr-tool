@@ -16,7 +16,10 @@ import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.ui.character.*
+import cn.wthee.pcrtool.ui.character.CharacterDetail
+import cn.wthee.pcrtool.ui.character.CharacterList
+import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
+import cn.wthee.pcrtool.ui.character.CharacterStoryDetail
 import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -45,7 +48,6 @@ object Navigation {
     const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
     const val EQUIP_LIST = "equipList"
     const val EQUIP_DETAIL = "equipDetail"
-    const val RANK_EQUIP = "rankEquip"
     const val EQUIP_MATERIAL = "equipMaterial"
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
@@ -232,26 +234,6 @@ fun NavGraph(
             EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
         }
 
-        //角色 RANK 装备
-        composable(
-            route = "${Navigation.RANK_EQUIP}/{${Navigation.UNIT_ID}}",
-            arguments = listOf(navArgument(Navigation.UNIT_ID) {
-                type = NavType.IntType
-            }),
-            enterTransition = { myFadeIn },
-            exitTransition = { myFadeOut },
-            popEnterTransition = { myFadeIn },
-            popExitTransition = { myFadeOut }
-        ) {
-            val arguments = requireNotNull(it.arguments)
-            val lazyGridState = rememberLazyGridState()
-            RankEquipList(
-                unitId = arguments.getInt(Navigation.UNIT_ID),
-                lazyGridState = lazyGridState,
-                toEquipDetail = actions.toEquipDetail
-            )
-        }
-
         //角色排行
         composable(
             route = Navigation.TOOL_LEADER,
@@ -349,8 +331,7 @@ fun NavGraph(
             ClanBattleDetail(
                 arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
-                arguments.getInt(Navigation.TOOL_CLAN_BOSS_PHASE),
-                actions.toSummonDetail
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_PHASE)
             )
         }
 
@@ -651,13 +632,6 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacteStoryDetail: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_STORY_DETAIL}/${unitId}")
-    }
-
-    /**
-     * 角色 RANK 装备
-     */
-    val toCharacteRankEquip: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${Navigation.RANK_EQUIP}/${unitId}")
     }
 
     /**

@@ -95,7 +95,6 @@
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
     <string name="name">名字</string>
-    <string name="equip_group_order">编组：%s</string>
     <string name="equip_require_level">需求等级：%s</string>
 
     <!--  工具  -->

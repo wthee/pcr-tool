@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -52,15 +52,16 @@ fun SkillCompose(
     toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
-    val skillList = skillViewModel.skills.observeAsState().value ?: listOf()
+    val skillData = skillViewModel.getCharacterSkills(level, atk, unitId, cutinId).collectAsState(
+        initial = arrayListOf()
+    ).value
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(Dimen.largePadding)
     ) {
-        skillList.forEachIndexed { index, skillDetail ->
+        skillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
                 skillDetail = skillDetail,

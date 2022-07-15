@@ -293,30 +293,6 @@ interface EquipmentDao {
     suspend fun getUniqueEquipMaxLv(): Int
 
     /**
-     * 获取角色  Rank 范围所需的装备
-     * @param unitId 角色编号
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            GROUP_CONCAT( equip_slot_1, '-' ) AS equip_1,
-            GROUP_CONCAT( equip_slot_2, '-' ) AS equip_2,
-            GROUP_CONCAT( equip_slot_3, '-' ) AS equip_3,
-            GROUP_CONCAT( equip_slot_4, '-' ) AS equip_4,
-            GROUP_CONCAT( equip_slot_5, '-' ) AS equip_5,
-            GROUP_CONCAT( equip_slot_6, '-' ) AS equip_6 
-        FROM
-            unit_promotion 
-        WHERE
-            unit_id =  :unitId AND promotion_level >= :startRank AND promotion_level <= :endRank
-        GROUP BY
-            unit_id
-    """
-    )
-    suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
-
-    /**
      * 获取所有角色所需的装备统计
      */
     @SkipQueryVerification
@@ -388,11 +364,20 @@ interface EquipmentDao {
                 AND equip_slot_6 != 0 
                 AND unit_id < 200000
             ) 
+        WHERE 
+            1 = CASE
+                WHEN 0 = :unitId THEN 1
+                WHEN unit_id = :unitId AND promotion_level >= :startRank AND promotion_level <= :endRank THEN 1
+            END
         GROUP BY
             equip_slot
     """
     )
-    suspend fun getAllEquip(): List<CharacterPromotionEquipCount>
+    suspend fun getEquipByRank(
+        unitId: Int,
+        startRank: Int,
+        endRank: Int
+    ): List<CharacterPromotionEquipCount>
 
 
     /**

@@ -7,7 +7,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -15,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
-import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
@@ -35,7 +37,6 @@ fun RankSelectCompose(
     rank1: MutableState<Int>,
     maxRank: Int,
     dialogState: MutableState<Boolean>,
-    navViewModel: NavViewModel,
     type: RankSelectType = RankSelectType.DEFAULT
 ) {
     val rankList = arrayListOf<Int>()
@@ -54,18 +55,6 @@ fun RankSelectCompose(
     rank0.value = maxRank - selectIndex0.value
     rank1.value = maxRank - selectIndex1.value
 
-    //RANK 选择，确认后关闭
-    if (!dialogState.value) {
-        LaunchedEffect(rank0, rank1) {
-            if (type == RankSelectType.DEFAULT) {
-                navViewModel.curRank.postValue(maxRank - selectIndex0.value)
-                navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
-            } else {
-                navViewModel.curRank1.postValue(maxRank - selectIndex0.value)
-                navViewModel.targetRank1.postValue(maxRank - selectIndex1.value)
-            }
-        }
-    }
 
     AlertDialog(
         onDismissRequest = { dialogState.value = false },

@@ -53,10 +53,7 @@ import cn.wthee.pcrtool.ui.tool.AnimSetting
 import cn.wthee.pcrtool.ui.tool.ColorSetting
 import cn.wthee.pcrtool.ui.tool.VibrateSetting
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -294,6 +291,7 @@ private fun AppInfoCompose(actions: NavActions) {
     DropdownMenu(
         expanded = fabMainIcon == MainIconType.DOWN,
         onDismissRequest = {
+            VibrateUtil(context).single()
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         },
         modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
@@ -338,6 +336,7 @@ private fun AppInfoCompose(actions: NavActions) {
                 }
             },
             onClick = {
+                VibrateUtil(context).single()
                 actions.toSetting()
             }
         )

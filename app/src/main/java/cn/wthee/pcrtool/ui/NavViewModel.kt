@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -80,26 +79,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     )
 
     /**
-     * rank 选择，当前
-     */
-    var curRank = MutableLiveData(0)
-
-    /**
-     * rank 选择，目标
-     */
-    var targetRank = MutableLiveData(0)
-
-    /**
-     * rank 选择，当前
-     */
-    var curRank1 = MutableLiveData(0)
-
-    /**
-     * rank 选择，目标
-     */
-    var targetRank1 = MutableLiveData(0)
-
-    /**
      * 悬浮服务
      */
     val floatServiceRun = MutableLiveData(true)
@@ -118,11 +97,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 数据切换弹窗显示
      */
     val openChangeDataDialog = MutableLiveData(false)
-
-    /**
-     * 当前选择属性
-     */
-    val currentValue = MutableLiveData<CharacterProperty>()
 
     /**
      * 模拟卡池结果显示
