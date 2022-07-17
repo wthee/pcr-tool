@@ -16,8 +16,6 @@ object Dimen {
 
     val fabMarginEnd = 65.dp
 
-    val fabSmallMarginEnd = 9.dp
-
     val textfabMargin = 3.dp
 
     val smallPadding = 4.dp
@@ -55,8 +53,6 @@ object Dimen {
     val lineWidth = 32.dp
 
     val lineHeight = 3.dp
-
-    val vLineWidth = 3.dp
 
     val skillActionMinHeight = 16.dp
 

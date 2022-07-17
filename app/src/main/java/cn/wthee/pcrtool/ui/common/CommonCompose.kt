@@ -100,6 +100,7 @@ fun MainText(
     text: String,
     textAlign: TextAlign = TextAlign.Center,
     color: Color = MaterialTheme.colorScheme.primary,
+    style: TextStyle = MaterialTheme.typography.titleMedium,
     selectable: Boolean = false,
 ) {
     if (selectable) {
@@ -107,7 +108,7 @@ fun MainText(
             Text(
                 text = text,
                 color = color,
-                style = MaterialTheme.typography.titleMedium,
+                style = style,
                 textAlign = textAlign,
                 fontWeight = FontWeight.Black,
             )
@@ -116,7 +117,7 @@ fun MainText(
         Text(
             text = text,
             color = color,
-            style = MaterialTheme.typography.titleMedium,
+            style = style,
             textAlign = textAlign,
             fontWeight = FontWeight.Black,
             modifier = modifier
@@ -551,7 +552,8 @@ fun SelectTypeCompose(
                 start = Dimen.fabMargin,
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
-            ),
+            )
+            .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
         shape = if (openDialog) MaterialTheme.shapes.medium else Shapes.Full,
         onClick = {
             VibrateUtil(context).single()
@@ -625,7 +627,8 @@ fun SelectTypeCompose(
  */
 @Composable
 fun IconTextButton(
-    icon: Any,
+    modifier: Modifier = Modifier,
+    icon: MainIconType,
     text: String,
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
@@ -634,14 +637,19 @@ fun IconTextButton(
 ) {
     val context = LocalContext.current
 
-    Row(modifier = Modifier
+    Row(modifier = modifier
         .clip(MaterialTheme.shapes.small)
         .clickable {
             VibrateUtil(context).single()
             onClick()
         }
-        .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically) {
-        IconCompose(data = icon, size = iconSize, tint = contentColor)
+        .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconCompose(
+            data = icon,
+            size = iconSize,
+            tint = contentColor
+        )
         Text(
             text = text,
             color = contentColor,
@@ -651,4 +659,18 @@ fun IconTextButton(
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+/**
+ * 标题
+ */
+@Composable
+fun HeaderText(modifier: Modifier = Modifier, text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+    )
 }

@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
@@ -47,7 +46,7 @@ fun PvpSearchResult(
     resultListState: LazyGridState,
     selectedIds: List<PvpCharacterData>,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel = hiltViewModel()
+    pvpViewModel: PvpViewModel
 ) {
 
     val defIds = selectedIds.subList(0, 5).getIdStr()
@@ -59,9 +58,9 @@ fun PvpSearchResult(
     val result = pvpViewModel.pvpResult.observeAsState().value
     val placeholder = result == null
     pvpViewModel.getPVPData(idArray)
-    pvpViewModel.getFavoritesList(defIds)
     //收藏信息
-    val favorites = pvpViewModel.favorites.observeAsState()
+    val favorites =
+        pvpViewModel.getFavoritesList(defIds).collectAsState(initial = arrayListOf()).value
     val favoritesList = arrayListOf<String>()
     //获取数据
     LaunchedEffect(selectedIds) {
@@ -92,111 +91,107 @@ fun PvpSearchResult(
     //宽度
     val itemWidth = getItemWidth(floatWindow)
 
-    if (favorites.value != null) {
-        SideEffect {
-            favorites.value?.let {
-                it.forEach { data ->
-                    favoritesList.add(data.atks)
-                }
-            }
+    SideEffect {
+        favorites.forEach { data ->
+            favoritesList.add(data.atks)
         }
+    }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (!placeholder) {
-                if (result!!.message == "success") {
-                    //振动提醒
-                    if (!vibrated.value) {
-                        vibrated.value = true
-                        VibrateUtil(context).done()
-                    }
-                    val hasData = result.data!!.isNotEmpty()
-                    if (hasData) {
-                        //查询成功
-                        val list = result.data!!.sortedByDescending { it.up }
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            //展示查询结果
-                            LazyVerticalGrid(
-                                state = resultListState,
-                                columns = GridCells.Adaptive(itemWidth)
-                            ) {
-                                itemsIndexed(
-                                    items = list,
-                                    key = { _, it ->
-                                        it.id
-                                    }
-                                ) { index, item ->
-                                    PvpResultItem(
-                                        favoritesList,
-                                        index + 1,
-                                        item,
-                                        floatWindow,
-                                        pvpViewModel
-                                    )
-                                }
-                                item {
-                                    CommonSpacer()
-                                }
-                            }
-                        }
-                    } else {
-                        MainText(
-                            text = stringResource(id = R.string.pvp_no_data),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                } else {
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (!placeholder) {
+            if (result!!.message == "success") {
+                //振动提醒
+                if (!vibrated.value) {
+                    vibrated.value = true
+                    VibrateUtil(context).done()
+                }
+                val hasData = result.data!!.isNotEmpty()
+                if (hasData) {
+                    //查询成功
+                    val list = result.data!!.sortedByDescending { it.up }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(bottom = Dimen.largePadding)
+                            .fillMaxSize()
                     ) {
-                        MainText(
-                            text = stringResource(id = R.string.data_get_error)
-                        )
-                        SubButton(
-                            text = "重新查询",
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        //展示查询结果
+                        LazyVerticalGrid(
+                            state = resultListState,
+                            columns = GridCells.Adaptive(itemWidth)
                         ) {
-                            pvpViewModel.pvpResult.postValue(null)
-                            pvpViewModel.getPVPData(idArray)
+                            itemsIndexed(
+                                items = list,
+                                key = { _, it ->
+                                    it.id
+                                }
+                            ) { index, item ->
+                                PvpResultItem(
+                                    favoritesList,
+                                    index + 1,
+                                    item,
+                                    floatWindow,
+                                    pvpViewModel
+                                )
+                            }
+                            item {
+                                CommonSpacer()
+                            }
                         }
                     }
-
+                } else {
+                    MainText(
+                        text = stringResource(id = R.string.pvp_no_data),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             } else {
-                //占位图
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .padding(bottom = Dimen.largePadding)
                 ) {
-                    //展示查询结果
-                    LazyVerticalGrid(
-                        state = resultListState,
-                        columns = GridCells.Adaptive(itemWidth)
+                    MainText(
+                        text = stringResource(id = R.string.data_get_error)
+                    )
+                    SubButton(
+                        text = "重新查询",
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
-                        items(10) {
-                            PvpResultItem(
-                                favoritesList,
-                                0,
-                                PvpResultData(),
-                                floatWindow,
-                                pvpViewModel
-                            )
-                        }
-                        item {
-                            CommonSpacer()
-                        }
+                        pvpViewModel.pvpResult.postValue(null)
+                        pvpViewModel.getPVPData(idArray)
+                    }
+                }
+
+            }
+        } else {
+            //占位图
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                //展示查询结果
+                LazyVerticalGrid(
+                    state = resultListState,
+                    columns = GridCells.Adaptive(itemWidth)
+                ) {
+                    items(10) {
+                        PvpResultItem(
+                            favoritesList,
+                            0,
+                            PvpResultData(),
+                            floatWindow,
+                            pvpViewModel
+                        )
+                    }
+                    item {
+                        CommonSpacer()
                     }
                 }
             }
-
         }
+
     }
 
 }

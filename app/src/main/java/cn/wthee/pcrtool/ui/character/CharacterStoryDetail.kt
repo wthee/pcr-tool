@@ -49,27 +49,24 @@ private fun StoryDetailItem(key: Int, attrList: List<CharacterStoryAttr>) {
 
     val id = key * 100 + 1
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.padding(vertical = Dimen.largePadding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         IconCompose(
-            modifier = Modifier.padding(top = Dimen.largePadding),
             data = ImageResourceHelper.getInstance().getMaxIconUrl(id)
         )
-        MainCard(
-            modifier = Modifier.padding(
-                horizontal = Dimen.largePadding,
-                vertical = Dimen.mediumPadding
-            )
-        ) {
-            Column {
-                attrList.forEach {
-                    Column(
-                        modifier = Modifier.padding(vertical = Dimen.largePadding),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        //标题
-                        MainContentText(text = it.storyName)
-                        AttrList(attrs = it.getAttr().allNotZero())
-                    }
+        Column {
+            attrList.forEach {
+                Column(
+                    modifier = Modifier.padding(vertical = Dimen.mediumPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    //标题
+                    CaptionText(text = it.getFixedTitle())
+                    //剧情名
+                    Subtitle1(text = it.subTitle, selectable = true)
+                    AttrList(attrs = it.getAttr().allNotZero())
                 }
             }
         }

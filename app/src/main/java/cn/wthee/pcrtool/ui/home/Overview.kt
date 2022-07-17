@@ -3,14 +3,12 @@ package cn.wthee.pcrtool.ui.home
 import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -127,7 +125,7 @@ fun Overview(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {
             item {
-                TopBarCompose(actions, isEditMode, noticeViewModel)
+                TopBarCompose(isEditMode, noticeViewModel)
             }
             if (!isEditMode.value) {
                 overviewOrderData.intArrayList.forEach {
@@ -480,16 +478,14 @@ private fun EquipSection(
         }
     ) {
         VerticalGrid(
-            spanCount = maxOf(1, equipSpanCount)
+            spanCount = maxOf(1, equipSpanCount),
+            modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
         ) {
             if (equipList.isNotEmpty()) {
                 equipList.forEach {
                     Box(
                         modifier = Modifier
-                            .padding(
-                                horizontal = Dimen.largePadding,
-                                vertical = Dimen.mediumPadding
-                            )
+                            .padding(Dimen.mediumPadding)
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
@@ -509,7 +505,6 @@ private fun EquipSection(
 /**
  * 活动
  */
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun CalendarEventLayout(
     isEditMode: Boolean,
@@ -753,9 +748,17 @@ private fun ChangeDbCompose(
         stringResource(id = R.string.db_jp),
     )
 
+    //展开边距修正
+    val mFabModifier = if (openDialog) {
+        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+
+    } else {
+        modifier
+    }
+
     //数据切换
     SmallFloatingActionButton(
-        modifier = modifier
+        modifier = mFabModifier
             .animateContentSize(defaultSpring())
             .padding(
                 end = Dimen.fabMarginEnd,

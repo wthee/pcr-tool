@@ -7,7 +7,8 @@ import androidx.room.ColumnInfo
  */
 data class CharacterStoryAttr(
     @ColumnInfo(name = "story_id") val storyId: Int,
-    @ColumnInfo(name = "unlock_story_name") val storyName: String,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "sub_title") val subTitle: String,
     @ColumnInfo(name = "status_type_1") val status_type_1: Int,
     @ColumnInfo(name = "status_rate_1") val status_rate_1: Int,
     @ColumnInfo(name = "status_type_2") val status_type_2: Int,
@@ -18,7 +19,15 @@ data class CharacterStoryAttr(
     @ColumnInfo(name = "status_rate_4") val status_rate_4: Int,
     @ColumnInfo(name = "status_type_5") val status_type_5: Int,
     @ColumnInfo(name = "status_rate_5") val status_rate_5: Int,
-)
+) {
+    fun getFixedTitle(): String {
+        return try {
+            title.split(' ')[1]
+        } catch (_: Exception) {
+            title
+        }
+    }
+}
 
 fun CharacterStoryAttr.getAttr(): Attr {
     val attrTypes = arrayListOf(

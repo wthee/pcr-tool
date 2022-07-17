@@ -22,11 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -46,6 +44,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
@@ -237,7 +236,7 @@ fun FabMain(modifier: Modifier = Modifier) {
 
     FabCompose(
         if (icon == MainIconType.MAIN) {
-            ImageVector.vectorResource(id = R.drawable.ic_logo_large)
+            MainIconType.SETTING
         } else {
             icon
         }, modifier = modifier
@@ -258,7 +257,6 @@ fun FabMain(modifier: Modifier = Modifier) {
 /**
  * 应用信息
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppInfoCompose(actions: NavActions) {
     val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
@@ -288,58 +286,75 @@ private fun AppInfoCompose(actions: NavActions) {
         ""
     }
 
-    DropdownMenu(
-        expanded = fabMainIcon == MainIconType.DOWN,
-        onDismissRequest = {
-            VibrateUtil(context).single()
-            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-        },
-        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
-        offset = DpOffset(Dimen.fabMargin, 0.dp)
+    //调整圆角
+    PCRToolComposeTheme(
+        shapes = MaterialTheme.shapes.copy(
+            extraSmall = MaterialTheme.shapes.medium
+        )
     ) {
-        DropdownMenuItem(
-            text = {
-                AnimSetting(sp, context)
+        DropdownMenu(
+            expanded = fabMainIcon == MainIconType.DOWN,
+            onDismissRequest = {
+                VibrateUtil(context).single()
+                navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             },
-            onClick = {}
-        )
-        DropdownMenuItem(
-            text = {
-                VibrateSetting(sp, context)
-            },
-            onClick = {}
-        )
-        DropdownMenuItem(
-            text = {
-                ColorSetting(sp, context)
-            },
-            onClick = {}
-        )
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(top = Dimen.smallPadding)
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            offset = DpOffset(Dimen.fabMargin, 0.dp),
+        ) {
+            DropdownMenuItem(
+                text = {
+                    AnimSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    VibrateSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    ColorSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconCompose(
+                            data = R.drawable.ic_logo_large,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                            size = Dimen.mediumIconSize
+                        )
+                        Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                            MainText(
+                                text = "v" + BuildConfig.VERSION_NAME,
+                                modifier = Modifier.padding(top = Dimen.smallPadding)
+                            )
+                            Subtitle2(
+                                text = "${typeName}：${dbVersionGroup}",
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .padding(horizontal = Dimen.largePadding)
+                                .weight(1f)
                         )
                         Subtitle2(
-                            text = "${typeName}：${dbVersionGroup}",
+                            text = stringResource(id = R.string.expand),
+                            color = MaterialTheme.colorScheme.primary
                         )
+                        IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
                     }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Subtitle2(text = stringResource(id = R.string.expand))
-                    IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                },
+                onClick = {
+                    VibrateUtil(context).single()
+                    actions.toSetting()
                 }
-            },
-            onClick = {
-                VibrateUtil(context).single()
-                actions.toSetting()
-            }
-        )
+            )
+        }
     }
 }
 

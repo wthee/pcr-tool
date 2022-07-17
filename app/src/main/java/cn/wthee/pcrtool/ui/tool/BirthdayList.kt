@@ -1,9 +1,10 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun BirthdayList(
-    scrollState: LazyListState,
+    scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
     birthdayViewModel: BirthdayViewModel = hiltViewModel()
 ) {
@@ -41,12 +42,19 @@ fun BirthdayList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
-            items(dataList) {
-                BirthdayItem(it, toCharacterDetail)
-            }
-            item {
-                CommonSpacer()
+        if (dataList.isNotEmpty()) {
+            LazyVerticalGrid(state = scrollState, columns = GridCells.Adaptive(getItemWidth())) {
+                items(
+                    items = dataList,
+                    key = {
+                        "${it.month}/${it.day}"
+                    }
+                ) {
+                    BirthdayItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
             }
         }
         //回到顶部

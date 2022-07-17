@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,18 +38,18 @@ fun PvpFavorites(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    pvpViewModel.getAllFavorites()
-    val list = pvpViewModel.allFavorites.observeAsState()
+    val favoriteDataList =
+        pvpViewModel.getAllFavorites().collectAsState(initial = arrayListOf()).value
     val itemWidth = getItemWidth(floatWindow)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (list.value != null && list.value!!.isNotEmpty()) {
+        if (favoriteDataList.isNotEmpty()) {
             LazyVerticalGrid(
                 state = favoritesListState,
                 columns = GridCells.Adaptive(itemWidth)
             ) {
                 items(
-                    items = list.value!!,
+                    items = favoriteDataList,
                     key = {
                         it.id
                     }

@@ -55,6 +55,7 @@ private val LightColorPalette = lightColorScheme(
 @SuppressLint("NewApi")
 @Composable
 fun PCRToolComposeTheme(
+    shapes: Shapes = MaterialTheme.shapes,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -70,6 +71,7 @@ fun PCRToolComposeTheme(
     }
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content
+        content = content,
+        shapes = shapes
     )
 }

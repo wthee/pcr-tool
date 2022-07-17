@@ -29,10 +29,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -86,23 +83,18 @@ fun MainSettings() {
                 .padding(bottom = Dimen.largePadding)
                 .fillMaxWidth()
         ) {
-            Text(
+            HeaderText(
                 text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = Dimen.smallPadding)
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
             )
             IconCompose(
                 data = R.drawable.ic_logo_large,
                 size = Dimen.largeIconSize,
-                modifier = Modifier.padding(Dimen.largePadding),
+                modifier = Modifier.padding(Dimen.mediumPadding),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
-
-            Subtitle2(
-                text = "${typeName}：${dbVersionGroup}",
-                color = MaterialTheme.colorScheme.primary
+            Subtitle1(
+                text = "${typeName}：${dbVersionGroup}"
             )
         }
         //其它设置
@@ -170,7 +162,11 @@ fun MainSettings() {
  * 动态色彩
  */
 @Composable
-fun ColorSetting(sp: SharedPreferences, context: Context) {
+fun ColorSetting(
+    sp: SharedPreferences,
+    context: Context,
+    showSummary: Boolean = true
+) {
     val dynamicColorOn = sp.getBoolean(Constants.SP_COLOR_STATE, true)
     val dynamicColorState = remember {
         mutableStateOf(dynamicColorOn)
@@ -201,7 +197,9 @@ fun ColorSetting(sp: SharedPreferences, context: Context) {
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.dynamic_color))
-            SummaryText(text = dynamicColorSummary)
+            if (showSummary) {
+                SummaryText(text = dynamicColorSummary)
+            }
         }
         Switch(
             checked = dynamicColorState.value,
@@ -223,7 +221,11 @@ fun ColorSetting(sp: SharedPreferences, context: Context) {
  * 动画效果
  */
 @Composable
-fun AnimSetting(sp: SharedPreferences, context: Context) {
+fun AnimSetting(
+    sp: SharedPreferences,
+    context: Context,
+    showSummary: Boolean = true
+) {
     val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
     val animState = remember {
         mutableStateOf(animOn)
@@ -254,7 +256,9 @@ fun AnimSetting(sp: SharedPreferences, context: Context) {
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.animation))
-            SummaryText(text = animSummary)
+            if (showSummary) {
+                SummaryText(text = animSummary)
+            }
         }
         Switch(
             checked = animState.value,
@@ -276,7 +280,8 @@ fun AnimSetting(sp: SharedPreferences, context: Context) {
 @Composable
 fun VibrateSetting(
     sp: SharedPreferences,
-    context: Context
+    context: Context,
+    showSummary: Boolean = true
 ) {
     val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
     val vibrateState = remember {
@@ -308,7 +313,9 @@ fun VibrateSetting(
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.vibrate))
-            SummaryText(text = vibrateSummary)
+            if (showSummary) {
+                SummaryText(text = vibrateSummary)
+            }
         }
         Switch(
             checked = vibrateState.value,

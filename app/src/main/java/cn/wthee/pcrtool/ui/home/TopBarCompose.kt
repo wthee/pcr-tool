@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -34,7 +33,6 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
  */
 @Composable
 fun TopBarCompose(
-    actions: NavActions,
     isEditMode: MutableState<Boolean>,
     noticeViewModel: NoticeViewModel
 ) {
@@ -58,11 +56,8 @@ fun TopBarCompose(
             )
             .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
+        HeaderText(
+            text = stringResource(id = R.string.app_name)
         )
         Row(
             modifier = Modifier.weight(1f),
@@ -105,14 +100,6 @@ fun TopBarCompose(
                 isEditMode.value = !isEditMode.value
             }
             Spacer(modifier = Modifier.width(Dimen.largePadding))
-            //设置
-            IconCompose(
-                data = MainIconType.SETTING,
-                tint = MaterialTheme.colorScheme.onSurface,
-                size = Dimen.fabIconSize
-            ) {
-                actions.toSetting()
-            }
         }
 
     }

@@ -65,7 +65,8 @@ fun PvpSearchCompose(
     val tip = stringResource(id = R.string.tip_select_5)
 
     //获取数据
-    val data = characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
+    val characterDataList =
+        characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
     //显示类型
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
@@ -139,7 +140,7 @@ fun PvpSearchCompose(
             //展示查询结果页面或选择角色页面
             if (showResult) {
                 if (!selectedIds.contains(PvpCharacterData()) && selectedIds.size == 5) {
-                    PvpSearchResult(resultListState, selectedIds, floatWindow)
+                    PvpSearchResult(resultListState, selectedIds, floatWindow, pvpViewModel)
                 } else {
                     ToastUtil.short(tip)
                     navViewModel.showResult.postValue(false)
@@ -193,14 +194,15 @@ fun PvpSearchCompose(
                             selectListState = selectListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
-                            data = data
+                            characterDataList = characterDataList
                         )
                         1 -> PvpRecentlyUsedList(
                             spanCount = spanCount,
                             usedListState = usedListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
-                            data = data
+                            characterDataList = characterDataList,
+                            pvpViewModel = pvpViewModel
                         )
                         2 -> {
                             PvpFavorites(
@@ -299,20 +301,20 @@ private fun PvpToSelectList(
     selectListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
-    data: List<PvpCharacterData>,
+    characterDataList: List<PvpCharacterData>,
 ) {
     val scope = rememberCoroutineScope()
     //选择页面
     val character0 = arrayListOf(PvpCharacterData(unitId = 0, type = 0))
-    character0.addAll(data.filter {
+    character0.addAll(characterDataList.filter {
         it.position in 0..299
     })
     val character1 = arrayListOf(PvpCharacterData(unitId = 1, type = 1))
-    character1.addAll(data.filter {
+    character1.addAll(characterDataList.filter {
         it.position in 300..599
     })
     val character2 = arrayListOf(PvpCharacterData(unitId = 2, type = 2))
-    character2.addAll(data.filter {
+    character2.addAll(characterDataList.filter {
         it.position in 600..9999
     })
     //站位图标在列表中的位置

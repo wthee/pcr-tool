@@ -32,30 +32,23 @@ class PvpViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
-    var allFavorites = MutableLiveData<List<PvpFavoriteData>>()
-    var history = MutableLiveData<List<PvpHistoryData>>()
-    var favorites = MutableLiveData<List<PvpFavoriteData>>()
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
     var requesting = false
 
     /**
      * 获取收藏信息
      */
-    fun getAllFavorites() {
-        viewModelScope.launch {
-            val data = pvpRepository.getLiked(MainActivity.regionType)
-            allFavorites.postValue(data)
-        }
+    fun getAllFavorites() = flow {
+        val data = pvpRepository.getLiked(MainActivity.regionType)
+        emit(data)
     }
 
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String) {
-        viewModelScope.launch {
-            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
-            favorites.postValue(data)
-        }
+    fun getFavoritesList(defs: String) = flow {
+        val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
+        emit(data)
     }
 
     /**
@@ -83,47 +76,53 @@ class PvpViewModel @Inject constructor(
     /**
      * 获取搜索历史信息
      */
-    fun getHistory() {
-        viewModelScope.launch {
-            val data = pvpRepository.getHistory(MainActivity.regionType)
-            history.postValue(data)
-        }
+    fun getHistory() = flow {
+        val data = pvpRepository.getHistory(MainActivity.regionType)
+        emit(data)
     }
 
     /**
      * 获取搜索历史信息
      */
-    fun getRecentlyUsedUnitList() = flow {
-        val today = getToday()
-        //获取前30天
-        val beforeDate = calcDate(today, 30, true)
-        val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
-        val unitList = arrayListOf<PvpCharacterData>()
-        val map = hashMapOf<Int, Int>()
-        //统计数量
-        data.forEach { pvpData ->
-            pvpData.getDefIds().forEach { unitId ->
-                var count = 1
-                if (map[unitId] != null) {
-                    count = map[unitId]!! + 1
+    fun getRecentlyUsedUnitList(characterDataList: List<PvpCharacterData>) = flow {
+        try {
+            val today = getToday()
+            //获取前30天
+            val beforeDate = calcDate(today, 30, true)
+            val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
+            val unitList = arrayListOf<PvpCharacterData>()
+            val map = hashMapOf<Int, Int>()
+            //统计数量
+            data.forEach { pvpData ->
+                pvpData.getDefIds().forEach { unitId ->
+                    var count = 1
+                    if (map[unitId] != null) {
+                        count = map[unitId]!! + 1
+                    }
+                    map[unitId] = count
                 }
-                map[unitId] = count
             }
-        }
-        map.forEach {
-            unitList.add(
-                PvpCharacterData(
-                    unitId = it.key,
-                    count = it.value
+            map.forEach {
+                unitList.add(
+                    PvpCharacterData(
+                        unitId = it.key,
+                        count = it.value
+                    )
                 )
-            )
+            }
+            val limit = 40
+            var list = unitList.sortedByDescending { it.count }
+            if (list.size > limit) {
+                list = list.subList(0, limit)
+            }
+            //处理最近使用角色的站位信息
+            list.forEach {
+                it.position = characterDataList.find { d -> d.unitId == it.unitId }?.position ?: 0
+            }
+            emit(list)
+        } catch (_: Exception) {
+
         }
-        val limit = 40
-        var list = unitList.sortedByDescending { it.count }
-        if (list.size > limit) {
-            list = list.subList(0, limit)
-        }
-        emit(list)
     }
 
 

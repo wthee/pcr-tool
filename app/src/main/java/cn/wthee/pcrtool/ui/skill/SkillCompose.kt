@@ -132,7 +132,7 @@ fun SkillItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Dimen.largePadding + Dimen.mediumPadding)
+            .padding(top = Dimen.largePadding * 2)
     ) {
 
         Row {
@@ -288,17 +288,14 @@ fun SkillActionItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(vertical = Dimen.smallPadding)
-            .background(MaterialTheme.colorScheme.background)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium
+            )
             .clickable(enabled = BuildConfig.DEBUG) {
                 ToastUtil.short(skillAction.actionId.toString())
             }
     ) {
-        Box(
-            modifier = Modifier
-                .width(Dimen.vLineWidth)
-                .fillMaxHeight()
-                .background(if (isSystemInDarkTheme()) colorGrayWhite else colorGrayWhite1)
-        )
         Column(
             modifier = Modifier
                 .padding(Dimen.smallPadding)

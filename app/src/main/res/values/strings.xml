@@ -30,7 +30,7 @@
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
-    <string name="skill">技能</string>
+    <string name="skill">技能信息</string>
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
@@ -40,10 +40,10 @@
     <string name="dynamic_color">动态色彩</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
-    <string name="color_on">动态色彩开启，动态调整主题</string>
+    <string name="color_on">根据系统壁纸，调整应用主题颜色</string>
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
-    <string name="color_off">动态色彩关闭，使用默认主题</string>
+    <string name="color_off">使用默认主题</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">Unity Texture Toolkit</string>
@@ -137,8 +137,8 @@
     <string name="love_equip_material">收藏素材</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
-    <string name="rank_compare">对比</string>
-    <string name="calc_equip_count">统计</string>
+    <string name="rank_compare">RANK 对比</string>
+    <string name="calc_equip_count">装备统计</string>
     <string name="share">分享</string>
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
@@ -190,7 +190,7 @@
     <string name="title_skill_1_coe">技能1+ 系数</string>
     <string name="title_ub_add">连结爆发+ 额外数值</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
-    <string name="attr_all_value">战力：</string>
+    <string name="attr_all_value">战力：%s</string>
     <string name="title_attr_tip">属性数值说明</string>
     <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
@@ -221,6 +221,7 @@
     <string name="change_failed">切换失败</string>
     <string name="no_guild">无公会</string>
     <string name="character_pic">立绘</string>
+    <string name="character_basic_info">资料</string>
     <string name="expand">展开</string>
 
 </resources>

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,7 +38,6 @@ import com.google.accompanist.placeholder.material.shimmer
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
@@ -72,28 +70,28 @@ fun RankEquipCount(
                 .padding(top = Dimen.largePadding)
                 .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                //标题
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.cur_rank))
-                    RankText(
-                        rank = rank0.value,
-                    )
-                    MainTitleText(text = stringResource(id = R.string.target_rank))
-                    RankText(
-                        rank = rank1.value,
-                    )
-                }
-            }
-            //装备素材列表
             filter.value?.let { filterValue ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    //标题
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        MainTitleText(text = stringResource(id = R.string.cur_rank))
+                        RankText(
+                            rank = rank0.value,
+                        )
+                        MainTitleText(text = stringResource(id = R.string.target_rank))
+                        RankText(
+                            rank = rank1.value,
+                        )
+                    }
+                }
+                //装备素材列表
                 filterValue.starIds =
                     GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
                         ?: arrayListOf()
@@ -127,6 +125,7 @@ fun RankEquipCount(
                 }
             }
         }
+
         //选择
         FabCompose(
             iconType = MainIconType.RANK_SELECT,

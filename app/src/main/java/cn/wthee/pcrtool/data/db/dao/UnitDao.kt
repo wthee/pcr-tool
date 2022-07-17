@@ -451,7 +451,8 @@ interface UnitDao {
         """
         SELECT
             a.story_id,
-	        a.unlock_story_name,
+            c.title,
+            c.sub_title,
             a.status_type_1,
             a.status_rate_1,
             a.status_type_2,
@@ -474,8 +475,9 @@ interface UnitDao {
                 a.chara_id_7,
                 a.chara_id_8,
                 a.chara_id_9,
-                a.chara_id_10
+                a.chara_id_10 
             )
+            LEFT JOIN story_detail AS c ON a.story_id = c.story_id
         WHERE b.unit_id = :unitId
     """
     )

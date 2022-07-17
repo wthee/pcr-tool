@@ -245,7 +245,13 @@ fun CharacterItem(
                     }
                 }
             }
-
+            SlideAnimation(visible = loved) {
+                IconCompose(
+                    data = MainIconType.LOVE_FILL,
+                    size = Dimen.mediumIconSize,
+                    modifier = Modifier.padding(Dimen.mediumPadding)
+                )
+            }
             //名称阴影效果
             if (loadSuccess) {
                 Column(
@@ -261,14 +267,15 @@ fun CharacterItem(
                 ) {
                     Subtitle1(
                         text = character.getNameL(),
-                        color = if (loved) textColor else MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        selectable = true
                     )
-                    Text(
+                    MainText(
                         text = character.getNameF(),
-                        color = if (loved) textColor else MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        selectable = true
                     )
                 }
             }
@@ -281,14 +288,15 @@ fun CharacterItem(
             ) {
                 Subtitle1(
                     text = character.getNameL(),
-                    color = if (loved) MaterialTheme.colorScheme.primary else textColor
+                    color = textColor,
+                    selectable = true
                 )
-                Text(
+                MainText(
                     text = character.getNameF(),
-                    color = if (loved) MaterialTheme.colorScheme.primary else textColor,
+                    color = textColor,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold
+                    selectable = true
                 )
             }
 

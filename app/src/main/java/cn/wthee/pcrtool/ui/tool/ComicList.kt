@@ -19,8 +19,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -28,6 +30,7 @@ import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -205,18 +208,20 @@ private fun TocItem(
     index: Int,
     it: ComicData,
 ) {
+    val context = LocalContext.current
     SelectText(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(Dimen.smallPadding)
+            .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
+                VibrateUtil(context).single()
                 selectIndex.value = index
             },
         selected = selectIndex.value == index, text = "${it.id} ${it.title}",
-        textStyle = MaterialTheme.typography.titleLarge,
-        margin = Dimen.smallPadding,
+        textStyle = MaterialTheme.typography.titleMedium,
         padding = Dimen.mediumPadding,
+        margin = 0.dp,
         textAlign = TextAlign.Start
     )
 }

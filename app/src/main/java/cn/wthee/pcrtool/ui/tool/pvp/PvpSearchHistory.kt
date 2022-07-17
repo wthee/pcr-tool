@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,17 +35,16 @@ fun PvpSearchHistory(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    pvpViewModel.getHistory()
-    val list = pvpViewModel.history.observeAsState()
+    val historyDataList = pvpViewModel.getHistory().collectAsState(initial = arrayListOf()).value
     val itemWidth = getItemWidth(floatWindow)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (list.value != null && list.value!!.isNotEmpty()) {
+        if (historyDataList.isNotEmpty()) {
             LazyVerticalGrid(
                 state = historyListState,
                 columns = GridCells.Adaptive(itemWidth)
             ) {
-                items(list.value!!) { data ->
+                items(historyDataList) { data ->
                     PvpHistoryItem(
                         toCharacter,
                         data,

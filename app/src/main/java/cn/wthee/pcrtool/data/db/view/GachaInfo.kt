@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Ignore
-import cn.wthee.pcrtool.data.db.dao.limitedIds
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.intArrayList
@@ -43,7 +41,7 @@ data class GachaInfo(
                 GachaType.RE_NORMAL
             }
         }
-        "プリンセスフェス", "公主祭典" -> GachaType.FES
+        "プリンセスフェス", "公主祭典", "公主庆典" -> GachaType.FES
         else -> {
             if (gachaName.contains("Anniversary") || gachaName.contains("周年")) {
                 GachaType.ANNIV

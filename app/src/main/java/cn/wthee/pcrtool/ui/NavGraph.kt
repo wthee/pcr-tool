@@ -18,7 +18,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.CharacterDetail
 import cn.wthee.pcrtool.ui.character.CharacterList
-import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
 import cn.wthee.pcrtool.ui.character.CharacterStoryDetail
 import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -65,7 +64,6 @@ object Navigation {
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
     const val ALL_EQUIP = "allEquip"
-    const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
     const val RANK = "rank"
@@ -461,18 +459,6 @@ fun NavGraph(
             AllSkillList(actions.toSummonDetail)
         }
 
-        //战力系数
-        composable(
-            route = Navigation.ATTR_COE,
-            enterTransition = { myFadeIn },
-            exitTransition = { myFadeOut },
-            popEnterTransition = { myFadeIn },
-            popExitTransition = { myFadeOut }
-        ) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            CharacterStatusCoeCompose()
-        }
-
         //召唤物信息
         composable(
             route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.UNIT_TYPE}}",
@@ -558,6 +544,7 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { myFadeOut }
         ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             MockGacha()
         }
 
@@ -569,7 +556,8 @@ fun NavGraph(
             popEnterTransition = { myFadeIn },
             popExitTransition = { myFadeOut }
         ) {
-            val scrollState = rememberLazyListState()
+            val scrollState = rememberLazyGridState()
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             BirthdayList(scrollState, actions.toCharacterDetail)
         }
 
@@ -582,6 +570,7 @@ fun NavGraph(
             popExitTransition = { myFadeOut }
         ) {
             val scrollState = rememberLazyListState()
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CalendarEventList(scrollState)
         }
     }
@@ -744,13 +733,6 @@ class NavActions(navController: NavHostController) {
      */
     val toAllSkillList = {
         navController.navigate(Navigation.ALL_SKILL)
-    }
-
-    /**
-     * 战力系数
-     */
-    val toCoe = {
-        navController.navigate(Navigation.ATTR_COE)
     }
 
     /**

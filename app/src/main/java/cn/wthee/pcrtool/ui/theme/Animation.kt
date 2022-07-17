@@ -40,7 +40,7 @@ val myFadeOut = if (animOnFlag) {
 //页面进入动画：从下向上滚动
 val mySlideIn = if (animOnFlag) {
     slideInVertically(
-        initialOffsetY = { 30 },
+        initialOffsetY = { it },
         animationSpec = defaultSpring()
     )
 } else {
