@@ -48,7 +48,20 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     val sp = mainSP()
 
     //自定义显示
-    val localData = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
+    var localData = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
+    //修复自定义错乱问题：3.4.0更新 id 后，清空旧的 id
+    localData.intArrayList.forEach {
+        if (it < 200) {
+            sp.edit {
+                putString(Constants.SP_TOOL_ORDER, "")
+                //更新
+                localData = ""
+                navViewModel.toolOrderData.postValue("")
+            }
+            return@forEach
+        }
+    }
+
     var toolOrderData = navViewModel.toolOrderData.observeAsState().value
     if (toolOrderData == null || toolOrderData.isEmpty()) {
         toolOrderData = localData

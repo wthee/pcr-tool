@@ -56,24 +56,24 @@ enum class GachaType(val typeName: String) {
 
 //菜单
 enum class ToolMenuType(val id: Int) {
-    CHARACTER(0),
-    EQUIP(1),
-    GUILD(2),
-    CLAN(3),
-    RANDOM_AREA(4),
-    GACHA(5),
-    EVENT(6),
-    NEWS(7),
-    FREE_GACHA(8),
-    PVP_SEARCH(9),
-    LEADER(10),
-    TWEET(11),
-    COMIC(12),
-    ALL_SKILL(13),
-    ALL_EQUIP(14),
-    MOCK_GACHA(15),
-    BIRTHDAY(16),
-    CALENDAR_EVENT(17);
+    CHARACTER(200),
+    EQUIP(201),
+    GUILD(202),
+    CLAN(203),
+    RANDOM_AREA(204),
+    GACHA(205),
+    EVENT(206),
+    NEWS(207),
+    FREE_GACHA(208),
+    PVP_SEARCH(209),
+    LEADER(210),
+    TWEET(211),
+    COMIC(212),
+    ALL_SKILL(213),
+    ALL_EQUIP(214),
+    MOCK_GACHA(215),
+    BIRTHDAY(216),
+    CALENDAR_EVENT(217);
 
     companion object {
         fun getByValue(value: Int) = values()
