@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +25,14 @@ import kotlin.math.max
  *
  * @param unitId    召唤物id
  * @param unitType  召唤物类型
- * @param currentValueState 角色召唤物属性
  */
 @Composable
 fun SummonDetail(
     unitId: Int,
     unitType: UnitType,
-    currentValueState: MutableState<CharacterProperty>? = null
+    level: Int,
+    rank: Int,
+    rarity: Int,
 ) {
     Box(
         modifier = Modifier
@@ -42,9 +42,12 @@ fun SummonDetail(
         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
             EnemySummonDetail(unitId)
         } else {
-            currentValueState?.let {
-                CharacterSummonDetail(unitId, currentValueState)
-            }
+            CharacterSummonDetail(
+                unitId,
+                level,
+                rank,
+                rarity
+            )
         }
     }
 
@@ -56,18 +59,20 @@ fun SummonDetail(
 @Composable
 private fun CharacterSummonDetail(
     unitId: Int,
-    currentValueState: MutableState<CharacterProperty>,
+    level: Int,
+    rank: Int,
+    rarity: Int,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     summonViewModel: SummonViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
+    val property = CharacterProperty(level = level, rank = rank, rarity = rarity)
     //基本信息
     val basicInfo = summonViewModel.getSummonData(unitId).collectAsState(initial = null).value
-
     //数值信息
     val attrs =
-        attrViewModel.getCharacterInfo(unitId, currentValueState.value)
-            .collectAsState(initial = null).value
+        attrViewModel.getCharacterInfo(unitId, property).collectAsState(initial = null).value
+
 
     //技能信息
     val loopData =
@@ -91,7 +96,7 @@ private fun CharacterSummonDetail(
             )
             //等级等属性
             CaptionText(
-                text = "等级：${currentValueState.value.level} / Rank：${currentValueState.value.rank} / 星级：${currentValueState.value.rarity}",
+                text = "等级：${level} / Rank：${rank} / 星级：${rarity}",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //位置
@@ -119,10 +124,9 @@ private fun CharacterSummonDetail(
                 //技能信息
                 SkillCompose(
                     unitId = unitId,
-                    cutinId = 0,
-                    level = currentValueState.value.level,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
                     unitType = UnitType.CHARACTER_SUMMON,
+                    property = property
                 )
                 CommonSpacer()
             }

@@ -15,6 +15,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,6 +44,7 @@ import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppDatabaseTW
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
@@ -54,6 +59,9 @@ import cn.wthee.pcrtool.ui.tool.VibrateSetting
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.BottomSheetNavigator
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -80,10 +88,13 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         lateinit var handler: Handler
-        lateinit var navViewModel: NavViewModel
 
+        lateinit var navViewModel: NavViewModel
+        @OptIn(ExperimentalMaterialApi::class)
+        lateinit var navSheetState: ModalBottomSheetState
         @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
+
         var vibrateOnFlag = true
         var animOnFlag = true
         var dynamicColorOnFlag = true
@@ -186,12 +197,24 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun Home(
     mNavViewModel: NavViewModel = hiltViewModel()
 ) {
-    navController = rememberAnimatedNavController()
+    //bottom sheet 导航
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
+    navSheetState = sheetState
+    val bottomSheetNavigator = remember(sheetState) {
+        BottomSheetNavigator(sheetState)
+    }
+    navController = rememberAnimatedNavController(bottomSheetNavigator)
+
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
 
@@ -208,7 +231,7 @@ fun Home(
             .fillMaxSize()
     ) {
         //页面导航
-        NavGraph(navController, navViewModel, actions)
+        NavGraph(bottomSheetNavigator,navController, navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             //菜单
             AppInfoCompose(actions)

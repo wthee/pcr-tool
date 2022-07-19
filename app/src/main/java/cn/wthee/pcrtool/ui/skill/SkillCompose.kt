@@ -24,12 +24,14 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -37,24 +39,26 @@ import com.google.accompanist.flowlayout.FlowRow
  * 角色技能列表
  *
  * @param unitId 角色编号
- * @param cutinId 角色特殊编号
- * @param level 等级
  * @param atk 攻击力
+ * @param property 角色属性
  * @param unitType
  */
 @Composable
 fun SkillCompose(
     unitId: Int,
-    cutinId: Int,
-    level: Int,
     atk: Int,
+    property: CharacterProperty,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
-    skillViewModel: SkillViewModel = hiltViewModel()
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    skillViewModel: SkillViewModel = hiltViewModel(),
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
-    val skillData = skillViewModel.getCharacterSkills(level, atk, unitId, cutinId).collectAsState(
+    //角色特殊六星id
+    val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
+    val skillData = skillViewModel.getCharacterSkills(property.level, atk, unitId, cutinId).collectAsState(
         initial = arrayListOf()
     ).value
+
 
     Column(
         modifier = Modifier
@@ -66,6 +70,7 @@ fun SkillCompose(
                 skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
+                property = property,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -74,6 +79,7 @@ fun SkillCompose(
 
 /**
  * 技能
+ * @paramp property 角色属性，怪物技能不需要该参数
  */
 @Suppress("RegExpRedundantEscape")
 @Composable
@@ -81,7 +87,8 @@ fun SkillItem(
     skillIndex: Int,
     skillDetail: SkillDetail,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null
+    property: CharacterProperty = CharacterProperty(),
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -211,6 +218,7 @@ fun SkillItem(
             SkillActionItem(
                 skillAction = it,
                 unitType = unitType,
+                property = property,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -236,7 +244,8 @@ fun SkillActionTag(skillTag: String) {
 fun SkillActionItem(
     skillAction: SkillActionText,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    property: CharacterProperty,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
 
     //详细描述
@@ -341,7 +350,13 @@ fun SkillActionItem(
                     icon = MainIconType.SUMMON,
                     text = stringResource(R.string.to_summon)
                 ) {
-                    toSummonDetail(skillAction.summonUnitId, unitType.type)
+                    toSummonDetail(
+                        skillAction.summonUnitId,
+                        unitType.type,
+                        property.level,
+                        property.rank,
+                        property.rarity
+                    )
                 }
             }
         }

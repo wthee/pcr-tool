@@ -7,7 +7,6 @@ import kotlin.random.Random
 
 /**
  * 模拟抽卡
- * fixme 调整权重
  */
 class MockGachaHelper(
     pickUpType: Int,

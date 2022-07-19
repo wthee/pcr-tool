@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -35,14 +34,18 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  *
  * @param unitId 角色编号
  * @param maxRank 角色rank最大值
- * @param currentValue 角色属性
+ * @param level 角色等级
+ * @param rarity 角色星级
+ * @param uniqueEquipLevel 角色专武等级
  */
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun RankCompare(
     unitId: Int,
     maxRank: Int,
-    currentValue: CharacterProperty,
+    level: Int,
+    rarity: Int,
+    uniqueEquipLevel: Int,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val rank0 = remember {
@@ -54,9 +57,9 @@ fun RankCompare(
 
     val attrCompareData = attrViewModel.getUnitAttrCompare(
         unitId,
-        currentValue.level,
-        currentValue.rarity,
-        currentValue.uniqueEquipmentLevel,
+        level,
+        rarity,
+        uniqueEquipLevel,
         rank0.value,
         rank1.value
     ).collectAsState(initial = arrayListOf()).value

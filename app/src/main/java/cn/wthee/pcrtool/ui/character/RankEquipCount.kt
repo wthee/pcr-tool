@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -28,6 +30,9 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -38,6 +43,7 @@ import com.google.accompanist.placeholder.material.shimmer
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
@@ -47,7 +53,7 @@ fun RankEquipCount(
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val rank0 = remember {
-        mutableStateOf(1)
+        mutableStateOf(maxRank)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
@@ -118,7 +124,7 @@ fun RankEquipCount(
                         columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
                         contentPadding = PaddingValues(Dimen.mediumPadding)
                     ) {
-                        items(count = 50) {
+                        items(count =10) {
                             EquipCountItem(EquipmentMaterial(), filterValue, toEquipMaterial)
                         }
                     }

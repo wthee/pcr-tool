@@ -3,15 +3,11 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -42,73 +38,19 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
-import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ShapeTop
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.math.max
 
-private enum class SheetType {
-    EMPTY,
-
-    /**
-     *  技能循环
-     */
-    SKILL_LOOP,
-
-    /**
-     * RANK 对比
-     */
-    RANK_COMPARE,
-
-    /**
-     * 装备统计
-     */
-    RANK_EQUIP_COUNT,
-
-    /**
-     * 角色基本信息
-     */
-    BASIC_INFO,
-
-    /**
-     * 角色RANK装备选择
-     */
-    RANK_EQUIP_SELECT,
-
-    /**
-     * 角色技能召唤物信息
-     */
-    SKILL_SUMMON_DETAIL,
-
-    /**
-     * 角色立绘
-     */
-    ALL_CARD_IMAGE,
-
-    /**
-     * 角色剧情属性详情
-     */
-    STORY_ATTR,
-
-    /**
-     * 角色战力详情
-     */
-    ATTR_COE,
-}
 
 /**
  * 角色信息
@@ -124,9 +66,7 @@ fun CharacterDetail(
     unitId: Int,
     actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
-    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
         .collectAsState(initial = CharacterProperty()).value
@@ -134,46 +74,24 @@ fun CharacterDetail(
     val currentValueState = remember {
         mutableStateOf(CharacterProperty())
     }
+
+    LaunchedEffect(navSheetState.currentValue) {
+        val rankEquipSelectedValue = navController.currentBackStackEntry
+            ?.savedStateHandle
+            ?.get<Int>("currentRank")
+
+        if (rankEquipSelectedValue != null) {
+            currentValueState.value =
+                currentValueState.value.update(rank = rankEquipSelectedValue)
+        }
+
+    }
+
     //数值信息
     if (currentValueState.value.level == 0 && maxValue.isInit()) {
         //初始为最大值
         currentValueState.value = maxValue
     }
-    // bottom sheet 状态
-    val modalBottomSheetState = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
-    val sheetTypeState = remember {
-        mutableStateOf(SheetType.EMPTY)
-    }
-    if (!modalBottomSheetState.isVisible && !modalBottomSheetState.isAnimationRunning) {
-        sheetTypeState.value = SheetType.EMPTY
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
-    }
-    val openSheet = {
-        navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-        coroutineScope.launch {
-            modalBottomSheetState.show()
-        }
-    }
-    //关闭监听
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    //bottom sheet 关闭
-    if (close || sheetTypeState.value == SheetType.EMPTY) {
-        LaunchedEffect(modalBottomSheetState.targetValue) {
-            //关闭
-            modalBottomSheetState.hide()
-        }
-    }
-    //角色特殊六星id
-    val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
-    //技能循环
-    val loopData =
-        skillViewModel.getCharacterSkillLoops(unitId).collectAsState(initial = arrayListOf()).value
-    val iconTypes = skillViewModel.getskillIconTypes(unitId, cutinId)
-        .collectAsState(initial = hashMapOf()).value
     //角色属性
     val characterAttrData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value
@@ -188,204 +106,145 @@ fun CharacterDetail(
     }
 
     //页面
-    ModalBottomSheetLayout(sheetState = modalBottomSheetState,
-        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-        sheetShape = ShapeTop(),
-        sheetContent = {
-            when (sheetTypeState.value) {
-                SheetType.EMPTY -> {
-                    Spacer(modifier = Modifier.height(Dimen.divLineHeight))
-                }
-                SheetType.SKILL_LOOP -> {
-                    //技能循环
-                    SkillLoopList(
-                        loopData,
-                        iconTypes,
-                        modifier = Modifier.padding(Dimen.largePadding),
-                        unitType = UnitType.CHARACTER
-                    )
-                }
-                SheetType.RANK_COMPARE -> {
-                    RankCompare(
-                        unitId, maxValue.rank, currentValue = currentValueState.value
-                    )
-                }
-                SheetType.RANK_EQUIP_COUNT -> {
-                    RankEquipCount(
-                        unitId = unitId,
-                        maxRank = maxValue.rank,
-                        toEquipMaterial = actions.toEquipMaterial,
-                        navViewModel = navViewModel
-                    )
-                }
-                SheetType.BASIC_INFO -> {
-                    CharacterBasicInfo(unitId)
-                }
-                SheetType.RANK_EQUIP_SELECT -> {
-                    RankEquipList(
-                        unitId = unitId,
-                        currentValueState = currentValueState,
-                        toEquipDetail = actions.toEquipDetail
-                    )
-                }
-                SheetType.SKILL_SUMMON_DETAIL -> {
-                    SummonDetail(
-                        unitId = summonId.value,
-                        unitType = UnitType.CHARACTER_SUMMON,
-                        currentValueState = currentValueState
-                    )
-                }
-                SheetType.ALL_CARD_IMAGE -> {
-                    AllCardList(
-                        id = unitId,
-                        allPicsType = AllPicsType.CHARACTER
-                    )
-                }
-                SheetType.STORY_ATTR -> {
-                    CharacterStoryDetail(unitId = unitId)
-                }
-                SheetType.ATTR_COE -> {
-                    CharacterStatusCoeCompose()
-                }
-            }
-        }) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            //页面
-            if (visible) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    //角色卡面
-                    CharacterCard(
-                        unitId,
-                        characterAttrData,
-                        currentValueState.value,
-                        sheetTypeState,
-                        openSheet
-                    )
-                    //星级
-                    StarSelect(
-                        currentValueState = currentValueState, max = maxValue.rarity
-                    )
-                    //角色等级
-                    CharacterLevel(currentValueState = currentValueState, maxValue.level)
-                    //属性
-                    AttrLists(
-                        characterAttrData,
-                        sheetTypeState,
-                        openSheet
-                    )
-                    //RANK相关功能
-                    Row(
-                        modifier = Modifier
-                            .padding(Dimen.largePadding)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        //RANK对比
-                        IconTextButton(
-                            icon = MainIconType.RANK_COMPARE,
-                            text = stringResource(id = R.string.rank_compare),
-                            iconSize = Dimen.fabIconSize,
-                            textStyle = MaterialTheme.typography.bodyMedium
-                        ) {
-                            sheetTypeState.value = SheetType.RANK_COMPARE
-                            openSheet()
-                        }
-                        //装备统计
-                        IconTextButton(
-                            icon = MainIconType.EQUIP_CALC,
-                            text = stringResource(id = R.string.calc_equip_count),
-                            iconSize = Dimen.fabIconSize,
-                            textStyle = MaterialTheme.typography.bodyMedium
-                        ) {
-                            sheetTypeState.value = SheetType.RANK_EQUIP_COUNT
-                            openSheet()
-                        }
-                    }
-                    //RANK 装备
-                    CharacterEquip(
-                        currentValueState = currentValueState,
-                        maxRank = maxValue.rank,
-                        equips = characterAttrData.equips,
-                        toEquipDetail = actions.toEquipDetail,
-                        sheetType = sheetTypeState,
-                        openSheet = openSheet
-                    )
-                    //显示专武
-                    if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
-                        UniqueEquip(
-                            currentValueState = currentValueState,
-                            uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                            uniqueEquipmentMaxData = characterAttrData.uniqueEquip,
-                        )
-                    }
-                    //技能列表
-                    SkillCompose(unitId = unitId,
-                        cutinId = cutinId,
-                        level = currentValueState.value.level,
-                        atk = max(
-                            characterAttrData.sumAttr.atk.int,
-                            characterAttrData.sumAttr.magicStr.int
-                        ),
-                        unitType = UnitType.CHARACTER,
-                        toSummonDetail = { sid, _ ->
-                            summonId.value = sid
-                            sheetTypeState.value = SheetType.SKILL_SUMMON_DETAIL
-                            openSheet()
-                        })
-                    CommonSpacer()
-                    Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
-                }
-            }
-
-            if (unknown) {
-                Column(
+    Box(modifier = Modifier.fillMaxSize()) {
+        //页面
+        if (visible) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //角色卡面
+                CharacterCard(
+                    unitId,
+                    characterAttrData,
+                    currentValueState.value,
+                    actions
+                )
+                //星级
+                StarSelect(
+                    currentValueState = currentValueState, max = maxValue.rarity
+                )
+                //角色等级
+                CharacterLevel(currentValueState = currentValueState, maxValue.level)
+                //属性
+                AttrLists(
+                    unitId,
+                    characterAttrData,
+                    actions.toCharacterStoryDetail
+                )
+                //RANK相关功能
+                Row(
                     modifier = Modifier
                         .padding(Dimen.largePadding)
-                        .fillMaxSize()
-                        .verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    //未知角色占位页面
-                    Text(
-                        text = stringResource(R.string.unknown_character),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(Dimen.largePadding)
+                    //RANK对比
+                    IconTextButton(
+                        icon = MainIconType.RANK_COMPARE,
+                        text = stringResource(id = R.string.rank_compare),
+                        iconSize = Dimen.fabIconSize,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    ) {
+//                            sheetTypeState.value = SheetType.RANK_COMPARE
+//                            openSheet()
+                        actions.toCharacteRankCompare(
+                            unitId,
+                            maxValue.rank,
+                            currentValueState.value.level,
+                            currentValueState.value.rarity,
+                            currentValueState.value.uniqueEquipmentLevel,
+                        )
+                    }
+                    //装备统计
+                    IconTextButton(
+                        icon = MainIconType.EQUIP_CALC,
+                        text = stringResource(id = R.string.calc_equip_count),
+                        iconSize = Dimen.fabIconSize,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    ) {
+//                            sheetTypeState.value = SheetType.RANK_EQUIP_COUNT
+//                            openSheet()
+                        actions.toCharacteEquipCount(unitId, maxValue.rank)
+                    }
+                }
+                //RANK 装备
+                CharacterEquip(
+                    unitId = unitId,
+                    currentValueState = currentValueState,
+                    maxRank = maxValue.rank,
+                    equips = characterAttrData.equips,
+                    toEquipDetail = actions.toEquipDetail,
+                    toCharacteRankEquip = actions.toCharacteRankEquip
+                )
+                //显示专武
+                if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
+                    UniqueEquip(
+                        currentValueState = currentValueState,
+                        uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
+                        uniqueEquipmentMaxData = characterAttrData.uniqueEquip,
                     )
                 }
-
+                //技能列表
+                SkillCompose(
+                    unitId = unitId,
+                    property = currentValueState.value,
+                    atk = max(
+                        characterAttrData.sumAttr.atk.int,
+                        characterAttrData.sumAttr.magicStr.int
+                    ),
+                    unitType = UnitType.CHARACTER,
+                    toSummonDetail = actions.toSummonDetail
+                )
+                CommonSpacer()
+                Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
             }
-            //悬浮按钮
-            if (!unknown) {
-                Column(
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    horizontalAlignment = Alignment.End
+        }
+
+        if (unknown) {
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //未知角色占位页面
+                Text(
+                    text = stringResource(R.string.unknown_character),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(Dimen.largePadding)
+                )
+            }
+
+        }
+        //悬浮按钮
+        if (!unknown) {
+            Column(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                horizontalAlignment = Alignment.End
+            ) {
+                Row(
+                    modifier = Modifier.padding(
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
                 ) {
-                    Row(
-                        modifier = Modifier.padding(
-                            end = Dimen.fabMarginEnd,
-                            bottom = Dimen.fabMargin
-                        )
+                    //技能循环
+                    FabCompose(
+                        iconType = MainIconType.SKILL_LOOP,
                     ) {
-                        //技能循环
-                        FabCompose(
-                            iconType = MainIconType.SKILL_LOOP,
-                        ) {
-                            sheetTypeState.value = SheetType.SKILL_LOOP
-                            openSheet()
-                        }
+                        actions.toCharacterSkillLoop(unitId)
                     }
                 }
             }
         }
     }
+
 }
 
 /**
@@ -396,8 +255,7 @@ private fun CharacterCard(
     unitId: Int,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
-    sheetTypeState: MutableState<SheetType>,
-    openSheet: () -> Job,
+    actions: NavActions,
     characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -436,15 +294,14 @@ private fun CharacterCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //战力计算
-                CharacterCoe(characterAttrData, currentValue, sheetTypeState, openSheet)
+                CharacterCoe(characterAttrData, currentValue, actions.toCoe)
                 Spacer(modifier = Modifier.weight(1f))
                 //资料
                 IconTextButton(
                     icon = MainIconType.CHARACTER_INTRO,
                     text = stringResource(id = R.string.character_basic_info),
                 ) {
-                    sheetTypeState.value = SheetType.BASIC_INFO
-                    openSheet()
+                    actions.toCharacterBasicInfo(unitId)
                 }
                 //立绘预览
                 IconTextButton(
@@ -452,8 +309,7 @@ private fun CharacterCard(
                     text = stringResource(id = R.string.character_pic),
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 ) {
-                    sheetTypeState.value = SheetType.ALL_CARD_IMAGE
-                    openSheet()
+                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
                 }
                 //模型预览
                 IconTextButton(
@@ -475,8 +331,7 @@ private fun CharacterCard(
 private fun CharacterCoe(
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
-    sheetTypeState: MutableState<SheetType>,
-    openSheet: () -> Job,
+    toCoe: () -> Unit,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     //战力系数
@@ -526,8 +381,7 @@ private fun CharacterCoe(
                 .clip(MaterialTheme.shapes.extraSmall)
                 .clickable {
                     VibrateUtil(context).single()
-                    sheetTypeState.value = SheetType.ATTR_COE
-                    openSheet()
+                    toCoe()
                 }
                 .padding(horizontal = Dimen.smallPadding)
         )
@@ -628,9 +482,9 @@ private fun CharacterLevel(
  */
 @Composable
 private fun AttrLists(
+    unitId: Int,
     allData: AllAttrData,
-    sheetTypeState: MutableState<SheetType>,
-    openSheet: () -> Job
+    toCharacterStoryDetail: (Int) -> Unit
 ) {
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     val context = LocalContext.current
@@ -650,8 +504,7 @@ private fun AttrLists(
                     .clip(MaterialTheme.shapes.extraSmall)
                     .clickable {
                         VibrateUtil(context).single()
-                        sheetTypeState.value = SheetType.STORY_ATTR
-                        openSheet()
+                        toCharacterStoryDetail(unitId)
                     }
                     .padding(horizontal = Dimen.smallPadding)
 
@@ -684,12 +537,12 @@ private fun AttrLists(
  */
 @Composable
 private fun CharacterEquip(
+    unitId: Int,
     currentValueState: MutableState<CharacterProperty>,
     maxRank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit,
-    sheetType: MutableState<SheetType>,
-    openSheet: () -> Job
+    toCharacteRankEquip: (Int, Int) -> Unit
 ) {
     val rank = currentValueState.value.rank
 
@@ -756,8 +609,7 @@ private fun CharacterEquip(
                         vertical = Dimen.largePadding * 2
                     )
                 ) {
-                    sheetType.value = SheetType.RANK_EQUIP_SELECT
-                    openSheet()
+                    toCharacteRankEquip(unitId, rank)
                 }
                 IconCompose(data = MainIconType.MORE,
                     tint = if (rank > 1) {

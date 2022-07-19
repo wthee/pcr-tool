@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -21,7 +22,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 @Composable
 fun AllSkillList(
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     clanViewModel: ClanViewModel = hiltViewModel()
@@ -76,7 +77,8 @@ fun AllSkillList(
                                 1,
                                 skillDetail = it,
                                 unitType = UnitType.CHARACTER,
-                                toSummonDetail = toSummonDetail
+                                toSummonDetail = toSummonDetail,
+                                property = CharacterProperty(100,1,1)
                             )
                         }
                     }

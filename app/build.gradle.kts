@@ -129,7 +129,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-
+    implementation ("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
     //Browser
     implementation("androidx.browser:browser:1.4.0")
 

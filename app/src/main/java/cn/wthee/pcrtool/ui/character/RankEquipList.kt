@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -29,12 +30,20 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @Composable
 fun RankEquipList(
     unitId: Int,
-    currentValueState: MutableState<CharacterProperty>,
+    currentRank: Int,
     toEquipDetail: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
     val allRankEquip =
         equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
+
+    val currentValueState = remember {
+        mutableStateOf(currentRank)
+    }
+    //返回值
+    navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.set("currentRank", currentValueState.value)
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
@@ -60,7 +69,7 @@ fun RankEquipList(
  */
 @Composable
 fun RankEquipListItem(
-    currentValueState: MutableState<CharacterProperty>,
+    currentRank: MutableState<Int>,
     unitPromotion: UnitPromotion,
     toEquipDetail: (Int) -> Unit
 ) {
@@ -68,8 +77,7 @@ fun RankEquipListItem(
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
-            currentValueState.value =
-                currentValueState.value.update(rank = unitPromotion.promotionLevel)
+            currentRank.value = unitPromotion.promotionLevel
         }
     ) {
         //图标列表
@@ -82,7 +90,7 @@ fun RankEquipListItem(
             RankText(
                 rank = unitPromotion.promotionLevel,
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                type = if (unitPromotion.promotionLevel == currentValueState.value.rank) 1 else 0
+                type = if (unitPromotion.promotionLevel == currentRank.value) 1 else 0
             )
 
             val allIds = unitPromotion.getAllOrderIds()
@@ -119,7 +127,7 @@ private fun RankEquipListItemPreview() {
         ) {
             items(allRankEquip) {
                 RankEquipListItem(remember {
-                    mutableStateOf(CharacterProperty())
+                    mutableStateOf(1)
                 }, it) { }
             }
         }

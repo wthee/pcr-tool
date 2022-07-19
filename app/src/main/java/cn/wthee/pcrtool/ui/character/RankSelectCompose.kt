@@ -91,7 +91,7 @@ fun RankSelectCompose(
                 IconTextButton(
                     icon = MainIconType.CLOSE,
                     text = stringResource(id = R.string.close),
-                    iconSize = Dimen.mediumIconSize,
+                    iconSize = Dimen.fabIconSize,
                     textStyle = MaterialTheme.typography.titleMedium
                 ) {
                     dialogState.value = false
