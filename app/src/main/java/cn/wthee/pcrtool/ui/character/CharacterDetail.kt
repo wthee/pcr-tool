@@ -57,9 +57,7 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
-@OptIn(
-    ExperimentalMaterialApi::class
-)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -84,7 +82,6 @@ fun CharacterDetail(
             currentValueState.value =
                 currentValueState.value.update(rank = rankEquipSelectedValue)
         }
-
     }
 
     //数值信息
@@ -92,6 +89,7 @@ fun CharacterDetail(
         //初始为最大值
         currentValueState.value = maxValue
     }
+
     //角色属性
     val characterAttrData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value

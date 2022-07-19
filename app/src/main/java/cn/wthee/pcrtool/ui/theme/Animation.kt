@@ -31,7 +31,7 @@ fun <T> fastTween(): TweenSpec<T> {
 
 //页面退出动画
 val myFadeOut = if (animOnFlag) {
-    fadeOut(animationSpec = defaultSpring())
+    fadeOut(animationSpec = defaultTween())
 } else {
     fadeOut(animationSpec = fastTween())
 }
@@ -49,7 +49,7 @@ val mySlideIn = if (animOnFlag) {
 
 //页面进入动画：渐入
 val myFadeIn = if (animOnFlag) {
-    fadeIn(animationSpec = defaultSpring())
+    fadeIn(animationSpec = defaultTween())
 } else {
     fadeIn(animationSpec = fastTween())
 }

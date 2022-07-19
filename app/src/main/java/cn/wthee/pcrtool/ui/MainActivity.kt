@@ -21,6 +21,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -61,7 +62,6 @@ import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -225,13 +225,20 @@ fun Home(
         r6Ids = r6IdList.value!!
     }
 
+
+    LaunchedEffect(navSheetState.currentValue) {
+        if (navController.currentDestination?.route == Navigation.HOME) {
+            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        }
+    }
+
     Box(
         modifier = Modifier
             .navigationBarsPadding()
             .fillMaxSize()
     ) {
         //页面导航
-        NavGraph(bottomSheetNavigator,navController, navViewModel, actions)
+        NavGraph(bottomSheetNavigator, navController, navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             //菜单
             AppInfoCompose(actions)

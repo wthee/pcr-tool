@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -14,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
-import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -31,37 +27,39 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 fun RankEquipList(
     unitId: Int,
     currentRank: Int,
-    toEquipDetail: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
     val allRankEquip =
         equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
 
+
     val currentValueState = remember {
         mutableStateOf(currentRank)
     }
-    //返回值
-    navController.currentBackStackEntry
-        ?.savedStateHandle
-        ?.set("currentRank", currentValueState.value)
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
-        contentPadding = PaddingValues(Dimen.mediumPadding),
-        state = rememberLazyGridState()
-    ) {
-        items(
-            items = allRankEquip,
-            key = {
-                it.promotionLevel
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (allRankEquip.isNotEmpty()) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
+                contentPadding = PaddingValues(Dimen.mediumPadding),
+                state = rememberLazyGridState()
+            ) {
+                items(
+                    items = allRankEquip,
+                    key = {
+                        it.promotionLevel
+                    }
+                ) {
+                    RankEquipListItem(currentValueState, it)
+                }
+                items(2) {
+                    CommonSpacer()
+                }
             }
-        ) {
-            RankEquipListItem(currentValueState, it, toEquipDetail)
-        }
-        items(2) {
-            CommonSpacer()
         }
     }
+
+
 }
 
 /**
@@ -70,14 +68,17 @@ fun RankEquipList(
 @Composable
 fun RankEquipListItem(
     currentRank: MutableState<Int>,
-    unitPromotion: UnitPromotion,
-    toEquipDetail: (Int) -> Unit
+    unitPromotion: UnitPromotion
 ) {
 
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
             currentRank.value = unitPromotion.promotionLevel
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("currentRank", currentRank.value)
+
         }
     ) {
         //图标列表
@@ -99,11 +100,7 @@ fun RankEquipListItem(
                     IconCompose(
                         modifier = Modifier.padding(Dimen.smallPadding),
                         data = ImageResourceHelper.getInstance().getEquipPic(it)
-                    ) {
-                        if (it != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
-                            toEquipDetail(it)
-                        }
-                    }
+                    )
                 }
             }
         }
@@ -128,7 +125,7 @@ private fun RankEquipListItemPreview() {
             items(allRankEquip) {
                 RankEquipListItem(remember {
                     mutableStateOf(1)
-                }, it) { }
+                }, it)
             }
         }
 

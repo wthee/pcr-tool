@@ -7,11 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -27,6 +25,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -40,6 +39,7 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 /**
  * 设置页面
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
@@ -49,6 +49,12 @@ fun MainSettings() {
     SideEffect {
         //自动删除历史数据
         FileUtil.deleteOldDatabase(context)
+    }
+
+    LaunchedEffect(navSheetState.currentValue) {
+        if (navSheetState.isVisible) {
+            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        }
     }
 
     //数据库版本

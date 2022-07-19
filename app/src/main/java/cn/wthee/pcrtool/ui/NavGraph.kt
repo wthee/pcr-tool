@@ -235,7 +235,11 @@ fun NavGraph(
                 route = "${Navigation.EQUIP_DETAIL}/{${Navigation.EQUIP_ID}}",
                 arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                     type = NavType.IntType
-                })
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
@@ -243,7 +247,7 @@ fun NavGraph(
             }
 
             //装备素材详情
-            composable(
+            bottomSheet(
                 route = "${Navigation.EQUIP_MATERIAL}/{${Navigation.EQUIP_ID}}",
                 arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                     type = NavType.IntType
@@ -260,18 +264,17 @@ fun NavGraph(
                     type = NavType.IntType
                 }, navArgument(Navigation.RANK) {
                     type = NavType.IntType
-                }),
+                })
             ) {
                 val arguments = requireNotNull(it.arguments)
                 RankEquipList(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
-                    currentRank = arguments.getInt(Navigation.RANK),
-                    toEquipDetail = actions.toEquipDetail
+                    currentRank = arguments.getInt(Navigation.RANK)
                 )
             }
 
             //角色 RANK 对比
-            bottomSheet(
+            composable(
                 route = "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.LEVEL}}/{${Navigation.RARITY}}/{${Navigation.UNIQUE_EQUIP_LEVEL}}",
                 arguments = listOf(navArgument(Navigation.UNIT_ID) {
                     type = NavType.IntType
@@ -283,7 +286,11 @@ fun NavGraph(
                     type = NavType.IntType
                 }, navArgument(Navigation.UNIQUE_EQUIP_LEVEL) {
                     type = NavType.IntType
-                })
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
             ) {
                 val arguments = requireNotNull(it.arguments)
                 RankCompare(
@@ -296,13 +303,17 @@ fun NavGraph(
             }
 
             //角色装备统计
-            bottomSheet(
+            composable(
                 route = "${Navigation.EQUIP_COUNT}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}",
                 arguments = listOf(navArgument(Navigation.UNIT_ID) {
                     type = NavType.IntType
                 }, navArgument(Navigation.MAX_RANK) {
                     type = NavType.IntType
-                })
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
             ) {
                 val arguments = requireNotNull(it.arguments)
                 RankEquipCount(

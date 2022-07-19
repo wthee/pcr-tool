@@ -59,23 +59,24 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
         navViewModel.fabOKCilck.postValue(false)
     }
 
-    val pagerState = rememberPagerState(
-        initialPage = if (comicId != -1) comicList.size - comicId else 0
-    )
-
-    //关闭监听
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
-    //确认
-    if (ok) {
-        LaunchedEffect(selectIndex) {
-            pagerState.scrollToPage(selectIndex.value)
-            sheetState.hide()
-        }
-    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = visible) {
+
+            val pagerState = rememberPagerState(
+                initialPage = if (comicId != -1) comicList.size - comicId else 0
+            )
+
+            //关闭监听
+            val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+            //确认
+            if (ok) {
+                LaunchedEffect(selectIndex) {
+                    pagerState.scrollToPage(selectIndex.value)
+                    sheetState.hide()
+                }
+            }
 
 
             ModalBottomSheetLayout(

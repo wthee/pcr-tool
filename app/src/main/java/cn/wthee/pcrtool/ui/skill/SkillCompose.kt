@@ -299,7 +299,7 @@ fun SkillActionItem(
             .padding(vertical = Dimen.smallPadding)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.extraSmall
             )
             .clickable(enabled = BuildConfig.DEBUG) {
                 ToastUtil.short(skillAction.actionId.toString())
@@ -318,9 +318,7 @@ fun SkillActionItem(
                     fontSize = 14.sp,
                     letterSpacing = 0.5.sp
                 ),
-                modifier = Modifier.padding(
-                    top = Dimen.smallPadding
-                ),
+                modifier = Modifier.padding(Dimen.smallPadding),
                 color = MaterialTheme.colorScheme.onSurface,
                 text = buildAnnotatedString {
                     skillAction.action.forEachIndexed { index, c ->

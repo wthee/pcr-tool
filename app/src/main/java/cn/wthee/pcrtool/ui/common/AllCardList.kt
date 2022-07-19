@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -16,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
+import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
@@ -33,6 +36,7 @@ val loadedPicMap = hashMapOf<String, Drawable?>()
 /**
  * 角色所有卡面/剧情故事图片
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AllCardList(
     id: Int,
@@ -52,6 +56,12 @@ fun AllCardList(
 
     val checkedPicUrl = remember {
         mutableStateOf("")
+    }
+
+    LaunchedEffect(MainActivity.navSheetState.currentValue) {
+        if (allPicsType == AllPicsType.STORY && MainActivity.navSheetState.isVisible) {
+            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        }
     }
 
 
