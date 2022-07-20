@@ -65,6 +65,22 @@ fun CharacterDetail(
     actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
 ) {
+    //特殊形态角色id（吉塔）
+    val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
+    //形态切换
+    val multiChangeStatus = remember {
+        mutableStateOf(true)
+    }
+    //不同技能形态对应的 unitId
+    val currentIdState = remember {
+        mutableStateOf(0)
+    }
+    currentIdState.value = if (multiChangeStatus.value && cutinId != 0) {
+        cutinId
+    } else {
+        unitId
+    }
+
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
         .collectAsState(initial = CharacterProperty()).value
@@ -73,6 +89,7 @@ fun CharacterDetail(
         mutableStateOf(CharacterProperty())
     }
 
+    //rank 装备选择监听
     LaunchedEffect(navSheetState.currentValue) {
         val rankEquipSelectedValue = navController.currentBackStackEntry
             ?.savedStateHandle
@@ -186,7 +203,7 @@ fun CharacterDetail(
                 }
                 //技能列表
                 SkillCompose(
-                    unitId = unitId,
+                    unitId = currentIdState.value,
                     property = currentValueState.value,
                     atk = max(
                         characterAttrData.sumAttr.atk.int,
@@ -225,6 +242,28 @@ fun CharacterDetail(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 horizontalAlignment = Alignment.End
             ) {
+                if (cutinId != 0) {
+                    Row(
+                        modifier = Modifier.padding(
+                            end = Dimen.fabMarginEnd,
+                            bottom = Dimen.fabMargin
+                        )
+                    ) {
+                        //角色技能形态
+                        FabCompose(
+                            iconType = MainIconType.CHARACTER_CUTIN,
+                            text = stringResource(
+                                id = if (multiChangeStatus.value) {
+                                    R.string.character_cutin_skill_new
+                                } else {
+                                    R.string.character_cutin_skill_old
+                                }
+                            )
+                        ) {
+                            multiChangeStatus.value = !multiChangeStatus.value
+                        }
+                    }
+                }
                 Row(
                     modifier = Modifier.padding(
                         end = Dimen.fabMarginEnd,
@@ -243,11 +282,12 @@ fun CharacterDetail(
                         filter.value?.addOrRemove(unitId)
                         loved.value = !loved.value
                     }
+
                     //技能循环
                     FabCompose(
                         iconType = MainIconType.SKILL_LOOP,
                     ) {
-                        actions.toCharacterSkillLoop(unitId)
+                        actions.toCharacterSkillLoop(currentIdState.value)
                     }
                 }
             }

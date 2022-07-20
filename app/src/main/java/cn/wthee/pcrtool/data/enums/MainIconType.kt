@@ -371,4 +371,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 召唤物
      */
     SUMMON(Icons.Rounded.Pets),
+
+    /**
+     * 技能形态
+     */
+    CHARACTER_CUTIN(Icons.Rounded.Category),
 }

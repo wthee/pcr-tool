@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
-import cn.wthee.pcrtool.data.db.view.AttackPattern
-import cn.wthee.pcrtool.data.db.view.SkillActionPro
-import cn.wthee.pcrtool.data.db.view.SkillData
-import cn.wthee.pcrtool.data.db.view.UnitSkillData
+import cn.wthee.pcrtool.data.db.view.*
 
 /**
  * 技能数据 DAO
@@ -20,14 +17,6 @@ interface SkillDao {
     @SkipQueryVerification
     @Query("SELECT * FROM unit_skill_data  WHERE unit_id = :unitId")
     suspend fun getUnitSkill(unitId: Int): UnitSkillData?
-
-    /**
-     * 获取特殊UB信息
-     * @param unitId 角色编号
-     */
-    @SkipQueryVerification
-    @Query("SELECT sp_union_burst FROM unit_skill_data  WHERE unit_id = :unitId")
-    suspend fun getUnitSpUBSkill(unitId: Int): Int?
 
     /**
      * 获取技能数值数据
@@ -66,4 +55,15 @@ interface SkillDao {
     @SkipQueryVerification
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
     suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
+
+
+    /**
+     * 获取角色特殊技能标签
+     * @param unitId 角色编号
+     */
+    @SkipQueryVerification
+    @Query("SELECT * FROM spskill_label_data where unit_id = :unitId")
+    suspend fun getSpSkillLabel(unitId: Int): SpSkillLabelData
+
+
 }

@@ -223,5 +223,7 @@
     <string name="character_pic">立绘</string>
     <string name="character_basic_info">资料</string>
     <string name="expand">展开</string>
+    <string name="character_cutin_skill_old">技能（旧）</string>
+    <string name="character_cutin_skill_new">技能（新）</string>
 
 </resources>

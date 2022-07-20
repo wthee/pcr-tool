@@ -30,6 +30,7 @@ data class UnitSkillData(
     @ColumnInfo(name = "ex_skill_evolution_4") val ex_skill_evolution_4: Int,
     @ColumnInfo(name = "ex_skill_5") val ex_skill_5: Int,
     @ColumnInfo(name = "ex_skill_evolution_5") val ex_skill_evolution_5: Int,
+    @ColumnInfo(name = "sp_union_burst") val sp_union_burst: Int,
     @ColumnInfo(name = "sp_skill_1") val sp_skill_1: Int,
     @ColumnInfo(name = "sp_skill_2") val sp_skill_2: Int,
     @ColumnInfo(name = "sp_skill_3") val sp_skill_3: Int,
@@ -42,7 +43,7 @@ data class UnitSkillData(
     @ColumnInfo(name = "sp_skill_evolution_2") val sp_skill_evolution_2: Int,
 ) {
 
-    fun getAllSkillId(spUB: Int): ArrayList<Int> {
+    fun getNormalSkillId(): ArrayList<Int> {
         val list = arrayListOf<Int>()
         union_burst.also {
             if (it != 0) list.add(it)
@@ -71,8 +72,13 @@ data class UnitSkillData(
         ex_skill_evolution_1.also {
             if (it != 0) list.add(it)
         }
+        return list
+    }
+
+    fun getSpSkillId(): ArrayList<Int> {
+        val list = arrayListOf<Int>()
         //sp skill
-        spUB.also {
+        sp_union_burst.also {
             if (it != 0) list.add(it)
         }
         sp_skill_1.also {
@@ -101,82 +107,4 @@ data class UnitSkillData(
         )
     }
 
-    fun joinCutinSkillId(spUB: Int, cutinSpUB: Int, cutinSkill: UnitSkillData): ArrayList<Int> {
-        val list = arrayListOf<Int>()
-        union_burst.also {
-            if (it != 0) list.add(it)
-        }
-        union_burst_evolution.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_evolution_1.also {
-            //日服雪菲
-            if ((sp_skill_1 != 1064101 || it != 1065012) && it != 0) {
-                list.add(it)
-            }
-        }
-        cutinSkill.main_skill_evolution_1.also {
-            //日服雪菲
-            if ((cutinSkill.sp_skill_1 != 1064101 || it != 1065012) && it != 0) {
-                list.add(it)
-            }
-        }
-        main_skill_2.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.main_skill_2.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_evolution_2.also {
-            if (it != 0) list.add(it)
-        }
-        ex_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.ex_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        ex_skill_evolution_1.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.ex_skill_evolution_1.also {
-            if (it != 0) list.add(it)
-        }
-        //sp skill
-        spUB.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSpUB.also {
-            if (it != 0) list.add(it)
-        }
-        sp_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.sp_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        sp_skill_evolution_1.also {
-            if (it != 0) list.add(it)
-        }
-
-        sp_skill_2.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.sp_skill_2.also {
-            if (it != 0) list.add(it)
-        }
-        sp_skill_evolution_2.also {
-            if (it != 0) list.add(it)
-        }
-        sp_skill_3.also {
-            if (it != 0) list.add(it)
-        }
-        cutinSkill.sp_skill_3.also {
-            if (it != 0) list.add(it)
-        }
-        return list
-    }
 }

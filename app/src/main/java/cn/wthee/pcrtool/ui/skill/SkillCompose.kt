@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -23,6 +24,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillDetail
@@ -31,7 +33,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -50,14 +51,21 @@ fun SkillCompose(
     property: CharacterProperty,
     unitType: UnitType,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
-    skillViewModel: SkillViewModel = hiltViewModel(),
-    attrViewModel: CharacterAttrViewModel = hiltViewModel()
+    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    //角色特殊六星id
-    val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
-    val skillData = skillViewModel.getCharacterSkills(property.level, atk, unitId, cutinId).collectAsState(
-        initial = arrayListOf()
-    ).value
+    //普通技能
+    val normalSkillData =
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
+            .collectAsState(
+                initial = arrayListOf()
+            ).value
+    //sp技能
+    val spSkillData =
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP).collectAsState(
+            initial = arrayListOf()
+        ).value
+    // sp技能标签
+    val spLabel = skillViewModel.getSpSkillLabel(unitId).collectAsState(initial = null).value
 
 
     Column(
@@ -65,7 +73,22 @@ fun SkillCompose(
             .fillMaxWidth()
             .padding(Dimen.largePadding)
     ) {
-        skillData.forEachIndexed { index, skillDetail ->
+        normalSkillData.forEachIndexed { index, skillDetail ->
+            SkillItem(
+                skillIndex = index,
+                skillDetail = skillDetail,
+                unitType = unitType,
+                property = property,
+                toSummonDetail = toSummonDetail
+            )
+        }
+        MainText(
+            text = spLabel?.spLabelText ?: "SP技能",
+            modifier = Modifier
+                .padding(top = Dimen.largePadding)
+                .align(Alignment.CenterHorizontally)
+        )
+        spSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
                 skillDetail = skillDetail,
@@ -77,9 +100,10 @@ fun SkillCompose(
     }
 }
 
+
 /**
  * 技能
- * @paramp property 角色属性，怪物技能不需要该参数
+ * @param property 角色属性，怪物技能不需要该参数
  */
 @Suppress("RegExpRedundantEscape")
 @Composable
@@ -181,8 +205,9 @@ fun SkillItem(
                                 .padding(start = Dimen.largePadding)
                         )
                     }
-                    //准备时间
-                    if (skillDetail.castTime > 0) {
+                    //准备时间，显示：时间大于 0 或 角色1、2技能
+                    val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
+                    if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
                         CaptionText(
                             text = stringResource(
                                 id = R.string.skill_cast_time,

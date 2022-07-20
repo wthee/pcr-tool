@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.data.enums
 
-//立绘类型
+/**
+ * 立绘类型
+ */
 enum class AllPicsType(val type: Int) {
     CHARACTER(0),
     STORY(1);
@@ -10,7 +12,9 @@ enum class AllPicsType(val type: Int) {
     }
 }
 
-//活动类型
+/**
+ * 活动类型
+ */
 enum class EventType(val type: Int) {
     UNKNOWN(0),
     IN_PROGRESS(1),
@@ -21,7 +25,9 @@ enum class EventType(val type: Int) {
     }
 }
 
-//角色单位类型
+/**
+ * 角色单位类型
+ */
 enum class UnitType(val type: Int) {
     CHARACTER(0),
     CHARACTER_SUMMON(1),
@@ -33,7 +39,9 @@ enum class UnitType(val type: Int) {
     }
 }
 
-//Rank 选择类型
+/**
+ * Rank 选择类型
+ */
 enum class RankSelectType(val type: Int) {
     DEFAULT(0),
     LIMIT(1);
@@ -43,7 +51,9 @@ enum class RankSelectType(val type: Int) {
     }
 }
 
-//卡池类型
+/**
+ * 卡池类型
+ */
 enum class GachaType(val typeName: String) {
     UNKNOWN(""),
     LIMIT("限定"),
@@ -54,7 +64,9 @@ enum class GachaType(val typeName: String) {
     ANNIV("周年");
 }
 
-//菜单
+/**
+ *菜单
+ */
 enum class ToolMenuType(val id: Int) {
     CHARACTER(200),
     EQUIP(201),
@@ -77,11 +89,13 @@ enum class ToolMenuType(val id: Int) {
 
     companion object {
         fun getByValue(value: Int) = values()
-            .find { it.id == value } ?: CHARACTER
+            .find { it.id == value }
     }
 }
 
-//站位
+/**
+ * 站位
+ */
 enum class PositionType {
     UNKNOWN,
     POSITION_0_299,
@@ -96,4 +110,13 @@ enum class PositionType {
             else -> UNKNOWN
         }
     }
+}
+
+/**
+ * 技能类型
+ */
+enum class SkillType {
+    ALL,
+    NORMAL,
+    SP
 }

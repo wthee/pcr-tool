@@ -79,7 +79,7 @@ private fun CharacterSummonDetail(
         skillViewModel.getCharacterSkillLoops(unitId)
             .collectAsState(initial = arrayListOf()).value
     val iconTypes =
-        skillViewModel.getskillIconTypes(unitId, 0).collectAsState(initial = hashMapOf()).value
+        skillViewModel.getskillIconTypes(unitId).collectAsState(initial = hashMapOf()).value
 
     Column(
         modifier = Modifier.fillMaxSize(),

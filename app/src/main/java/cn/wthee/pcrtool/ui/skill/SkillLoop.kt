@@ -34,12 +34,12 @@ fun SkillLoopList(
     unitType: UnitType
 ) {
     val loops = arrayListOf<SkillLoop>()
-    loopData.forEach { ap ->
-        if (ap.getBefore().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.before_loop), ap.getBefore()))
+    loopData.forEach { attackPattern ->
+        if (attackPattern.getBefore().size > 0) {
+            loops.add(SkillLoop(stringResource(R.string.before_loop), attackPattern.getBefore()))
         }
-        if (ap.getLoop().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.looping), ap.getLoop()))
+        if (attackPattern.getLoop().size > 0) {
+            loops.add(SkillLoop(stringResource(R.string.looping), attackPattern.getLoop()))
         }
     }
     Column(

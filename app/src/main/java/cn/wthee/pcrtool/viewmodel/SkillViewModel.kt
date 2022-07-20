@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
+
 
 /**
  * 角色技能 ViewModel
@@ -29,17 +31,15 @@ class SkillViewModel @Inject constructor(
      * @param lv 技能能级
      * @param atk 基础攻击力
      * @param unitId 角色编号
-     * @param cutinId 角色特殊编号
      */
-    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, cutinId: Int) = flow {
+    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, skillType: SkillType) = flow {
         try {
-            emit(
-                getSkill(
-                    getSkillIds(unitId, cutinId),
-                    arrayListOf(lv),
-                    atk,
-                )
+            val skillList = getSkills(
+                getSkillIds(unitId, skillType),
+                arrayListOf(lv),
+                atk,
             )
+            emit(skillList)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
@@ -50,27 +50,15 @@ class SkillViewModel @Inject constructor(
     /**
      * 获取角色技能 id
      */
-    private suspend fun getSkillIds(unitId: Int, cutinId: Int): ArrayList<Int> {
-        var spUB = 0
-        var cutinSpUB = 0
-        try {
-            spUB = skillRepository.getUnitSpUBSkill(unitId) ?: 0
-        } catch (_: Exception) {
-
-        }
-        try {
-            cutinSpUB = skillRepository.getUnitSpUBSkill(cutinId) ?: 0
-        } catch (_: Exception) {
-
-        }
-
+    private suspend fun getSkillIds(unitId: Int, skillType: SkillType): List<Int> {
         try {
             val data = skillRepository.getUnitSkill(unitId)
-            val spData = skillRepository.getUnitSkill(cutinId)
-            return if (data != null && spData != null) {
-                data.joinCutinSkillId(spUB, cutinSpUB, spData)
-            } else {
-                data!!.getAllSkillId(spUB)
+            val normalList = data!!.getNormalSkillId()
+            val spList = data.getSpSkillId()
+            return when (skillType) {
+                SkillType.ALL -> normalList + spList
+                SkillType.NORMAL -> normalList
+                SkillType.SP -> spList
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
@@ -89,12 +77,12 @@ class SkillViewModel @Inject constructor(
             val skillIds = arrayListOf<Int>()
             unitIds.forEach {
                 val data = skillRepository.getUnitSkill(it)
-                val spUB = skillRepository.getUnitSpUBSkill(it) ?: 0
                 if (data != null) {
-                    skillIds.addAll(data.getAllSkillId(spUB))
+                    skillIds.addAll(data.getNormalSkillId())
+                    skillIds.addAll(data.getSpSkillId())
                 }
             }
-            emit(getSkill(skillIds, arrayListOf(lv), atk))
+            emit(getSkills(skillIds, arrayListOf(lv), atk))
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
         }
@@ -107,10 +95,10 @@ class SkillViewModel @Inject constructor(
      * @param lvs 技能等级列表
      * @param atk 基础攻击力
      */
-    private suspend fun getSkill(
+    private suspend fun getSkills(
         skillIds: List<Int>,
         lvs: List<Int>,
-        atk: Int
+        atk: Int,
     ): MutableList<SkillDetail> {
         val infos = mutableListOf<SkillDetail>()
         //技能信息
@@ -144,17 +132,15 @@ class SkillViewModel @Inject constructor(
     }
 
     /**
-     * 获取技能信息
-     *
-     * @param skillIds 技能编号列表
+     * 获取技能图标信息
      */
-    fun getskillIconTypes(unitId: Int, cutinId: Int, ids: ArrayList<Int>? = null) = flow {
+    fun getskillIconTypes(unitId: Int, ids: ArrayList<Int>? = null) = flow {
         try {
-            val skillIds = ids ?: getSkillIds(unitId, cutinId)
+            val skillIds = ids ?: getSkillIds(unitId, SkillType.ALL)
             //保存技能对应的图标类型，用于技能循环页面展示
             val map = hashMapOf<Int, Int>()
             //技能信息
-            skillIds.forEachIndexed { index, sid ->
+            skillIds.forEachIndexed { _, sid ->
                 val skill = skillRepository.getSkillData(sid)
                 if (skill != null) {
                     var aid = skill.skill_id % 1000
@@ -190,12 +176,12 @@ class SkillViewModel @Inject constructor(
         try {
             val data = skillRepository.getUnitSkill(enemyParameterPro.unit_id)
             data?.let {
-                val infos = getSkill(
+                val infoList = getSkills(
                     data.getEnemySkillId(),
                     enemyParameterPro.getSkillLv(),
                     maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr)
                 )
-                emit(infos)
+                emit(infoList)
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
@@ -216,7 +202,7 @@ class SkillViewModel @Inject constructor(
         try {
             val data = skillRepository.getUnitSkill(enemyParameterPro.unit_id)
             data?.let {
-                emitAll(getskillIconTypes(0, 0, ids = data.getEnemySkillId()))
+                emitAll(getskillIconTypes(0, ids = data.getEnemySkillId()))
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
@@ -228,7 +214,6 @@ class SkillViewModel @Inject constructor(
         }
     }
 
-
     /**
      * 获取全部技能循环
      *
@@ -238,5 +223,18 @@ class SkillViewModel @Inject constructor(
         //技能循环
         val pattern = skillRepository.getAttackPattern(enemyParameterPro.unit_id)
         emit(pattern)
+    }
+
+    /**
+     * 获取角色特殊技能标签
+     *
+     * @param unitId 角色编号
+     */
+    fun getSpSkillLabel(unitId: Int) = flow {
+        try {
+            val data = skillRepository.getSpSkillLabel(unitId)
+            emit(data)
+        } catch (_: Exception) {
+        }
     }
 }
