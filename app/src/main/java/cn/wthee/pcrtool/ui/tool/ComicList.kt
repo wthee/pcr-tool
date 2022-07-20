@@ -83,7 +83,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                 sheetState = sheetState,
                 scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
                 sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-                sheetShape = ShapeTop(),
+                sheetShape = shapeTop(),
                 sheetContent = {
                     //章节选择
                     SelectPager(scrollState, selectIndex, comicList)

@@ -29,9 +29,9 @@ import kotlinx.coroutines.launch
 /**
  * 功能分组
  */
-data class ToolMenuGroup(
-    val title: String,
-    val list: List<ToolMenuData>
+private data class ToolMenuGroup(
+    val groupTitle: String,
+    val toolList: List<ToolMenuData>
 )
 
 /**
@@ -118,13 +118,13 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
                 items(
                     items = itemsList,
                     key = {
-                        it.title
+                        it.groupTitle
                     }
                 ) {
                     MenuGroup(
                         actions = actions,
-                        title = it.title,
-                        items = it.list,
+                        title = it.groupTitle,
+                        items = it.toolList,
                         isEditMode = isEditMode
                     )
                 }

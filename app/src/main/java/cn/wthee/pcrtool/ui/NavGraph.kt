@@ -118,7 +118,7 @@ fun NavGraph(
         modifier = Modifier.padding(top = statusBarHeight),
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetShape = ShapeTop(),
+        sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator
     ) {
         AnimatedNavHost(

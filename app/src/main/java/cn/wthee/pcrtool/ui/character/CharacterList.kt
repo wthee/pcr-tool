@@ -96,7 +96,7 @@ fun CharacterList(
         sheetState = state,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-        sheetShape = ShapeTop(),
+        sheetShape = shapeTop(),
         sheetContent = {
             FilterCharacterSheet(navViewModel, state)
         }

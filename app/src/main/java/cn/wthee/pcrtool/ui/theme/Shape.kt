@@ -7,18 +7,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 
-//val Shapes = androidx.compose.material3.Shapes(
-//    extraSmall = RoundedCornerShape(0.dp),
-//    small = RoundedCornerShape(4.dp),
-//    medium = RoundedCornerShape(8.dp),
-//    large = RoundedCornerShape(12.dp)
-//)
-
 /**
  * 左上、右上圆角
  */
 @Composable
-fun ShapeTop() = RoundedCornerShape(
+fun shapeTop() = RoundedCornerShape(
     topStart = MaterialTheme.shapes.medium.topStart,
     topEnd = MaterialTheme.shapes.medium.topEnd,
     bottomStart = CornerSize(0),

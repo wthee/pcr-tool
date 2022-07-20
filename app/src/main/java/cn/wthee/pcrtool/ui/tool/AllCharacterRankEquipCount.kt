@@ -15,6 +15,9 @@ import cn.wthee.pcrtool.ui.common.Subtitle1
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
+/**
+ * 全角色装备需求统计
+ */
 @Composable
 fun AllCharacterRankEquipCount(
     toEquipMaterial: (Int) -> Unit,

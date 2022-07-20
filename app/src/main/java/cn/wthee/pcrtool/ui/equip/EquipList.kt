@@ -96,7 +96,7 @@ fun EquipList(
             sheetState = state,
             scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-            sheetShape = ShapeTop(),
+            sheetShape = shapeTop(),
             sheetContent = {
                 FilterEquipSheet(colorNum, state)
             }
@@ -104,7 +104,7 @@ fun EquipList(
             Box(modifier = Modifier.fillMaxSize()) {
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
-                        equipGroupList.forEachIndexed { index, equipGroupData ->
+                        equipGroupList.forEach { equipGroupData ->
                             //分组标题
                             item {
                                 Row(

@@ -55,7 +55,6 @@ class EquipmentViewModel @Inject constructor(
      * @param unitId    角色编号，传 0 返回所有角色
      * @param startRank 当前rank
      * @param endRank   目标rank
-     * fixme 避免重复调用，优化速度
      */
     fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
         try {

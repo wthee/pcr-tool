@@ -84,7 +84,7 @@ fun ClanBattleDetail(
                 //日期
                 MainTitleText(
                     text = clanBattleValue.getDate(),
-                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    modifier = Modifier.padding(vertical = Dimen.mediumPadding)
                 )
                 //图标
                 val urls = arrayListOf<String>()

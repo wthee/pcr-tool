@@ -70,7 +70,9 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
 
     val toolList = arrayListOf<ToolMenuData>()
     toolOrderData.intArrayList.forEach {
-        toolList.add(getToolMenuData(toolMenuType = ToolMenuType.getByValue(it)))
+        ToolMenuType.getByValue(it)?.let { toolMenuType ->
+            toolList.add(getToolMenuData(toolMenuType = toolMenuType))
+        }
     }
 
     if (toolList.isEmpty() && !isEditMode && isHome) {

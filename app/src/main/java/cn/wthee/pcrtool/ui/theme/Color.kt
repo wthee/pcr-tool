@@ -10,10 +10,6 @@ val colorPrimaryDark = Color(0xFF3F6BB3)
 val colorWhite = Color(0xFFFFFCFE)
 val colorBlack = Color(0xFF0D0F0F)
 
-//灰色
-val colorGrayWhite1 = Color(0xFFE3E3E3)
-val colorGrayWhite = Color(0xFF7D7D7D)
-
 //surface
 val colorSurface = Color(0XFFFFFBFE)
 val colorSurfaceDark = Color(0XFF1C1B1F)
