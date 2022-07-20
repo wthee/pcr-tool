@@ -98,9 +98,11 @@ fun CharacterDetail(
     val visible = characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
     //未实装角色
     val unknown = maxValue.level == -1
-    //技能召唤物id
-    val summonId = remember {
-        mutableStateOf(0)
+
+    //收藏状态
+    val filter = navViewModel.filterCharacter.observeAsState()
+    val loved = remember {
+        mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
     }
 
     //页面
@@ -116,6 +118,7 @@ fun CharacterDetail(
                 //角色卡面
                 CharacterCard(
                     unitId,
+                    loved.value,
                     characterAttrData,
                     currentValueState.value,
                     actions
@@ -146,8 +149,6 @@ fun CharacterDetail(
                         iconSize = Dimen.fabIconSize,
                         textStyle = MaterialTheme.typography.bodyMedium
                     ) {
-//                            sheetTypeState.value = SheetType.RANK_COMPARE
-//                            openSheet()
                         actions.toCharacteRankCompare(
                             unitId,
                             maxValue.rank,
@@ -163,8 +164,6 @@ fun CharacterDetail(
                         iconSize = Dimen.fabIconSize,
                         textStyle = MaterialTheme.typography.bodyMedium
                     ) {
-//                            sheetTypeState.value = SheetType.RANK_EQUIP_COUNT
-//                            openSheet()
                         actions.toCharacteEquipCount(unitId, maxValue.rank)
                     }
                 }
@@ -232,6 +231,18 @@ fun CharacterDetail(
                         bottom = Dimen.fabMargin
                     )
                 ) {
+                    //收藏
+                    FabCompose(
+                        iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                        text = if (loved.value) {
+                            ""
+                        } else {
+                            stringResource(id = R.string.title_love)
+                        }
+                    ) {
+                        filter.value?.addOrRemove(unitId)
+                        loved.value = !loved.value
+                    }
                     //技能循环
                     FabCompose(
                         iconType = MainIconType.SKILL_LOOP,
@@ -251,18 +262,13 @@ fun CharacterDetail(
 @Composable
 private fun CharacterCard(
     unitId: Int,
+    loved: Boolean,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
     actions: NavActions,
     characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    //收藏状态
-    val filter = navViewModel.filterCharacter.observeAsState()
-    val loved = remember {
-        mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
-    }
-
 
     //基本信息
     val basicInfo =
@@ -277,10 +283,9 @@ private fun CharacterCard(
             //卡面信息
             Box {
                 CharacterItem(
-                    character = basicInfo, loved = loved.value
+                    character = basicInfo, loved = loved
                 ) {
-                    filter.value?.addOrRemove(unitId)
-                    loved.value = !loved.value
+                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
                 }
             }
 
