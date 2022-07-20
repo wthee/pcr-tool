@@ -29,9 +29,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
 import java.util.*
@@ -228,8 +225,7 @@ private fun PvpResultItem(
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
-                modifier = Modifier
-                    .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
+                modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
@@ -261,10 +257,7 @@ private fun PvpResultItem(
         }
 
         MainCard(
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+            modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()

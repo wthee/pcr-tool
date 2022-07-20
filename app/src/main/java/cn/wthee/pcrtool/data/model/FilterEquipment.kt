@@ -36,9 +36,6 @@ class FilterEquipment(
         sp.edit {
             putString(Constants.SP_STAR_EQUIP, Gson().toJson(list))
         }
-//        MainScope().launch {
-//            DataStoreUtil.save(Constants.SP_STAR_EQUIP, Gson().toJson(list))
-//        }
     }
 }
 

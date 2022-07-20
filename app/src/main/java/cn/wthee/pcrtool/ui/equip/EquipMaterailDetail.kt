@@ -35,9 +35,6 @@ import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 
@@ -48,7 +45,7 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun EquipMaterialDeatil(
+fun EquipMaterialDetail(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel(),
@@ -288,19 +285,12 @@ fun AreaItem(
             backgroundColor = color,
             modifier = Modifier
                 .padding(bottom = Dimen.mediumPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                .commonPlaceholder(visible = placeholder)
         )
 
 
         MainCard(
-            modifier = Modifier
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+            modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
             Column {
                 VerticalGrid(

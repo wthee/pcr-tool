@@ -42,9 +42,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 
 /**
  * 公告列表
@@ -138,26 +135,17 @@ fun NewsItem(
             MainTitleText(
                 text = tag,
                 backgroundColor = color,
-                modifier = Modifier.placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
             MainTitleText(
                 text = news.date.formatTime,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
-                    .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
+                    .commonPlaceholder(visible = placeholder)
             )
         }
         MainCard(modifier = Modifier
-            .placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+            .commonPlaceholder(visible = placeholder)
             .heightIn(min = Dimen.cardHeight),
             onClick = {
                 toNewsDetail(news.id)

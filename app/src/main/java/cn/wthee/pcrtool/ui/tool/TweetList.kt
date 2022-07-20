@@ -35,9 +35,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -141,10 +138,7 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                .commonPlaceholder(visible = placeholder)
         )
         if (!placeholder) {
             Spacer(
@@ -167,10 +161,7 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
             )
             .fillMaxWidth()
             .defaultMinSize(minHeight = Dimen.cardHeight * 2)
-            .placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            ),
+            .commonPlaceholder(visible = placeholder),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //文本

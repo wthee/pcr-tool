@@ -24,9 +24,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -183,10 +180,10 @@ private fun LeaderboardItem(info: LeaderboardData) {
             text = info.name,
             modifier = Modifier
                 .padding(bottom = Dimen.mediumPadding)
-                .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
+                .commonPlaceholder(visible = placeholder)
         )
         MainCard(modifier = Modifier
-            .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer()),
+            .commonPlaceholder(visible = placeholder),
             onClick = {
                 //打开浏览器
                 if (!placeholder) {

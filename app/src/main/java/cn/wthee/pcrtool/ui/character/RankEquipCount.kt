@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -31,11 +29,6 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 
 /**
  * rank 范围装备素材数量统计
@@ -171,10 +164,7 @@ private fun EquipCountItem(
         modifier = Modifier.padding(Dimen.mediumPadding)
     ) {
         IconCompose(
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            ),
+            modifier = Modifier.commonPlaceholder(visible = placeholder),
             data = ImageResourceHelper.getInstance().getEquipPic(item.id)
         ) {
             toEquipMaterial(item.id)

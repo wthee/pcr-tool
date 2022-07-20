@@ -14,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,9 @@ import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -672,5 +676,15 @@ fun HeaderText(modifier: Modifier = Modifier, text: String) {
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier
+    )
+}
+
+/**
+ * 通用 placeholder
+ */
+fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
+    Modifier.placeholder(
+        visible = visible,
+        highlight = PlaceholderHighlight.shimmer()
     )
 }

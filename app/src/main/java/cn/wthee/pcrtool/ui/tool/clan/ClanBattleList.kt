@@ -26,9 +26,6 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -123,10 +120,7 @@ private fun ClanBattleItem(
             //日期
             MainTitleText(
                 text = clanBattleInfo.getDate(),
-                modifier = Modifier.placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
             //阶段数
             MainTitleText(
@@ -137,19 +131,12 @@ private fun ClanBattleItem(
                 backgroundColor = getSectionTextColor(clanBattleInfo.phase),
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
-                    .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
+                    .commonPlaceholder(visible = placeholder)
             )
         }
 
         MainCard(
-            modifier = Modifier
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+            modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
             //图标
             Row(modifier = Modifier.padding(Dimen.mediumPadding)) {

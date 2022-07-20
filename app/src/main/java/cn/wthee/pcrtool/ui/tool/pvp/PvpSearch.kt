@@ -106,15 +106,31 @@ fun PvpSearchCompose(
             if (!floatWindow) {
                 val url = stringResource(id = R.string.pcrdfans_url)
                 val urlTip = stringResource(id = R.string.pcrdfans_com)
+                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+                val addTip = stringResource(id = R.string.pvp_info_add_tip)
 
-                MainTitleText(
-                    text = stringResource(id = R.string.pcrdfans),
-                    modifier = Modifier
-                        .padding(start = Dimen.largePadding, top = Dimen.largePadding)
-                        .clickable {
-                            BrowserUtil.open(context, url, urlTip)
-                        }
-                )
+                Row(
+                    modifier = Modifier.padding(Dimen.largePadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.pcrdfans),
+                        modifier = Modifier
+                            .clickable {
+                                BrowserUtil.open(context, url, urlTip)
+                            }
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    //添加信息
+                    IconTextButton(
+                        icon = MainIconType.PVP_ADD,
+                        text = stringResource(id = R.string.pvp_upload)
+                    ) {
+                        //打开网页
+                        BrowserUtil.open(context, addUrl, addTip)
+                    }
+                }
+
             }
             //已选择列表
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -259,16 +275,6 @@ fun PvpSearchCompose(
                         )
                         context.startActivity(intent)
                     }
-                }
-                //添加信息
-                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-                val addTip = stringResource(id = R.string.pvp_info_add_tip)
-                FabCompose(
-                    iconType = MainIconType.PVP_ADD,
-                    text = stringResource(id = R.string.pvp_upload)
-                ) {
-                    //打开网页
-                    BrowserUtil.open(context, addUrl, addTip)
                 }
                 //查询
                 FabCompose(

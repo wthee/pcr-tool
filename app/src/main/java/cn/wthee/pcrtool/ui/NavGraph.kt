@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
-import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
+import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.*
@@ -254,7 +254,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
+                EquipMaterialDetail(arguments.getInt(Navigation.EQUIP_ID))
             }
 
             //角色 RANK 装备
