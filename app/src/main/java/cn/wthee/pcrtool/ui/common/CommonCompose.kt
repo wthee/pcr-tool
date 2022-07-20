@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.common
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -32,7 +33,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -481,8 +481,20 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
         //显示指示器
         Row {
             urls.forEachIndexed { index, url ->
+                val modifier = if (pagerState.currentPage == index) {
+                    Modifier
+                        .padding(horizontal = Dimen.largePadding)
+                        .border(
+                            width = Dimen.border,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.extraSmall
+                        )
+                } else {
+                    Modifier.padding(horizontal = Dimen.largePadding)
+                }
+
                 IconCompose(
-                    modifier = Modifier.padding(horizontal = Dimen.largePadding),
+                    modifier = modifier,
                     data = url,
                 ) {
                     scope.launch {
@@ -491,17 +503,6 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
                 }
             }
         }
-
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier.padding(
-                top = Dimen.largePadding + Dimen.iconSize + Dimen.smallPadding,
-                bottom = Dimen.mediumPadding
-            ),
-            spacing = Dimen.iconSize + Dimen.largePadding + 8.dp,
-            activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = Color.Unspecified
-        )
     }
 }
 

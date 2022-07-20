@@ -56,4 +56,6 @@ object Dimen {
 
     val skillActionMinHeight = 16.dp
 
+    val border = 3.dp
+
 }
