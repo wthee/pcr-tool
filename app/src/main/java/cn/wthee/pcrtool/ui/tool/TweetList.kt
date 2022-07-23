@@ -1,12 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -130,25 +127,11 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
     // 时间
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = Dimen.largePadding)
+        modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
     ) {
-        Text(
+        MainTitleText(
             text = data.date,
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(start = Dimen.mediumPadding)
-                .commonPlaceholder(visible = placeholder)
         )
-        if (!placeholder) {
-            Spacer(
-                modifier = Modifier
-                    .padding(start = Dimen.largePadding)
-                    .weight(1f)
-                    .height(Dimen.divLineHeight)
-                    .background(MaterialTheme.colorScheme.outline)
-            )
-        }
     }
     //内容
     Column(

@@ -13,9 +13,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-rc02"
-val appVersionCode = 331
-val appVersionName = "3.3.1"
+val composeVersion = "1.2.0-rc03"
+val composeCompilerVersion = "1.2.0"
+val appVersionCode = 340
+val appVersionName = "3.4.0"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -96,7 +97,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
 }
@@ -107,7 +108,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose
@@ -115,14 +116,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
     implementation("androidx.compose.material3:material3:1.0.0-alpha14")
 
     //Accompanist
-    val accompanistVersion = "0.24.12-rc"
+    val accompanistVersion = "0.24.13-rc"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

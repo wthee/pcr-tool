@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -20,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -423,17 +425,14 @@ private fun CharacterSection(
                 itemSpacing = Dimen.mediumPadding
             ) { index ->
                 val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
-                Card(
-                    modifier = Modifier
-                        .width(getItemWidth())
-                        .clip(MaterialTheme.shapes.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            actions.toCharacterDetail(unitId)
-                        },
-                    elevation = CardDefaults.cardElevation(0.dp),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+                MainCard(
+                    modifier = Modifier.width(getItemWidth()),
+                    onClick = {
+                        actions.toCharacterDetail(unitId)
+                    }
+//                    elevation = CardDefaults.cardElevation(0.dp),
+//                    shape = MaterialTheme.shapes.medium,
+//                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
                 ) {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),

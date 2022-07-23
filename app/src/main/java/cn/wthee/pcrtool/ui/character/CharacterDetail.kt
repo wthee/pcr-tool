@@ -68,14 +68,14 @@ fun CharacterDetail(
     //特殊形态角色id（吉塔）
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
     //形态切换
-    val multiChangeStatus = remember {
+    val isCcutinSkill = remember {
         mutableStateOf(true)
     }
     //不同技能形态对应的 unitId
     val currentIdState = remember {
         mutableStateOf(0)
     }
-    currentIdState.value = if (multiChangeStatus.value && cutinId != 0) {
+    currentIdState.value = if (isCcutinSkill.value && cutinId != 0) {
         cutinId
     } else {
         unitId
@@ -245,22 +245,18 @@ fun CharacterDetail(
                 if (cutinId != 0) {
                     Row(
                         modifier = Modifier.padding(
-                            end = Dimen.fabMarginEnd,
-                            bottom = Dimen.fabMargin
+                            end = Dimen.fabMargin
                         )
                     ) {
                         //角色技能形态
                         FabCompose(
-                            iconType = MainIconType.CHARACTER_CUTIN,
-                            text = stringResource(
-                                id = if (multiChangeStatus.value) {
-                                    R.string.character_cutin_skill_new
-                                } else {
-                                    R.string.character_cutin_skill_old
-                                }
-                            )
+                            iconType = if (isCcutinSkill.value) {
+                                MainIconType.CHARACTER_CUTIN_SKILL
+                            } else {
+                                MainIconType.CHARACTER_NORMAL_SKILL
+                            },
                         ) {
-                            multiChangeStatus.value = !multiChangeStatus.value
+                            isCcutinSkill.value = !isCcutinSkill.value
                         }
                     }
                 }
@@ -273,11 +269,6 @@ fun CharacterDetail(
                     //收藏
                     FabCompose(
                         iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                        text = if (loved.value) {
-                            ""
-                        } else {
-                            stringResource(id = R.string.title_love)
-                        }
                     ) {
                         filter.value?.addOrRemove(unitId)
                         loved.value = !loved.value
@@ -382,6 +373,13 @@ private fun CharacterCoe(
     val context = LocalContext.current
 
     Row(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.extraSmall)
+            .clickable {
+                VibrateUtil(context).single()
+                toCoe()
+            }
+            .padding(horizontal = Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val value = if (coe == null) {
@@ -420,13 +418,10 @@ private fun CharacterCoe(
         }
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.extraSmall)
-                .clickable {
-                    VibrateUtil(context).single()
-                    toCoe()
-                }
-                .padding(horizontal = Dimen.smallPadding)
+        )
+        IconCompose(
+            data = MainIconType.HELP,
+            size = Dimen.smallIconSize
         )
     }
 }
@@ -457,7 +452,6 @@ private fun CharacterLevel(
         style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .padding(Dimen.smallPadding)
             .fillMaxWidth(0.3f)
             .padding(Dimen.mediumPadding)
             .clip(MaterialTheme.shapes.medium)
@@ -537,20 +531,22 @@ private fun AttrLists(
     //剧情属性
     if (allData.storyAttr.allNotZero().isNotEmpty()) {
         Row(
-            modifier = Modifier.padding(
-                top = Dimen.largePadding, bottom = Dimen.smallPadding
-            ), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding, bottom = Dimen.smallPadding
+                )
+                .clip(MaterialTheme.shapes.extraSmall)
+                .clickable {
+                    VibrateUtil(context).single()
+                    toCharacterStoryDetail(unitId)
+                }
+                .padding(horizontal = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            MainText(
-                text = stringResource(id = R.string.title_story_attr),
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.extraSmall)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        toCharacterStoryDetail(unitId)
-                    }
-                    .padding(horizontal = Dimen.smallPadding)
-
+            MainText(text = stringResource(id = R.string.title_story_attr))
+            IconCompose(
+                data = MainIconType.HELP,
+                size = Dimen.smallIconSize
             )
         }
         AttrList(attrs = allData.storyAttr.allNotZero())
@@ -741,7 +737,6 @@ private fun UniqueEquip(
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = Dimen.smallPadding)
                     .fillMaxWidth(0.3f)
                     .padding(Dimen.mediumPadding)
                     .clip(MaterialTheme.shapes.medium)

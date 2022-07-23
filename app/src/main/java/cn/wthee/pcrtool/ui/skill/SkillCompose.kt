@@ -71,8 +71,14 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimen.largePadding)
+            .padding(Dimen.largePadding),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        MainText(
+            text = stringResource(R.string.skill),
+            modifier = Modifier
+                .padding(top = Dimen.largePadding)
+        )
         normalSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
@@ -82,12 +88,17 @@ fun SkillCompose(
                 toSummonDetail = toSummonDetail
             )
         }
-        MainText(
-            text = spLabel?.spLabelText ?: "SP技能",
-            modifier = Modifier
-                .padding(top = Dimen.largePadding)
-                .align(Alignment.CenterHorizontally)
-        )
+        if (spSkillData.isNotEmpty()) {
+            MainText(
+                text = stringResource(R.string.sp_skill),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+            )
+            spLabel?.spLabelText?.let {
+                CaptionText(text = it)
+            }
+        }
+
         spSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
@@ -163,7 +174,7 @@ fun SkillItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.largePadding * 2)
+            .padding(vertical = Dimen.largePadding)
     ) {
 
         Row {

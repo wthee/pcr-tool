@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -200,10 +201,13 @@ fun StoryEventItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //banner 图片
-                    Box(modifier = Modifier.weight(3f)) {
+                    Box(modifier = Modifier
+                        .padding(Dimen.smallPadding)
+                        .weight(3f)) {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
-                            ratio = RATIO_BANNER
+                            ratio = RATIO_BANNER,
+                            modifier = Modifier.clip(MaterialTheme.shapes.medium)
                         )
                     }
                     //图标

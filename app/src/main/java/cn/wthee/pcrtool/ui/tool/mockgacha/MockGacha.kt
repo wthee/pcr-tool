@@ -293,7 +293,11 @@ private fun ToSelectMockGachaUnitListItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
+        modifier = Modifier.padding(
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding,
+            top = Dimen.mediumPadding
+        )
     ) {
         MainTitleText(text = title)
         Spacer(modifier = Modifier.weight(1f))

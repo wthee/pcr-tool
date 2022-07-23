@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -61,9 +60,7 @@ fun ClanBattleDetail(
 
     //页面
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background)
+        modifier = Modifier.fillMaxSize()
     ) {
         clanBattleInfo?.let { clanBattleList ->
             //该期团队战数据

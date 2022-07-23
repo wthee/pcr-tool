@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -43,9 +42,7 @@ fun ClanBattleList(
     val coroutineScope = rememberCoroutineScope()
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background)
+        modifier = Modifier.fillMaxSize()
     ) {
         val visible = clanList.isNotEmpty()
         FadeAnimation(visible = visible) {

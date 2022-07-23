@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.enums
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -375,5 +376,10 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 技能形态
      */
-    CHARACTER_CUTIN(Icons.Rounded.Category),
+    CHARACTER_NORMAL_SKILL(Icons.Outlined.Category),
+
+    /**
+     * 技能形态
+     */
+    CHARACTER_CUTIN_SKILL(Icons.Rounded.Category),
 }
