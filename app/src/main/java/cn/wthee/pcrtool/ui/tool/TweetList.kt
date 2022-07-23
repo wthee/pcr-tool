@@ -1,13 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,9 +32,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -109,7 +101,7 @@ fun TweetList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -135,28 +127,11 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
     // 时间
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = Dimen.largePadding)
+        modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
     ) {
-        Text(
+        MainTitleText(
             text = data.date,
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(start = Dimen.mediumPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
         )
-        if (!placeholder) {
-            Spacer(
-                modifier = Modifier
-                    .padding(start = Dimen.largePadding)
-                    .weight(1f)
-                    .height(Dimen.divLineHeight)
-                    .background(colorResource(id = R.color.div_line))
-            )
-        }
     }
     //内容
     Column(
@@ -169,10 +144,7 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
             )
             .fillMaxWidth()
             .defaultMinSize(minHeight = Dimen.cardHeight * 2)
-            .placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            ),
+            .commonPlaceholder(visible = placeholder),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //文本
@@ -183,7 +155,9 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
         )
         //相关链接跳转
         if (!placeholder) {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier
+                .padding(vertical = Dimen.smallPadding)
+                .fillMaxWidth()) {
                 TweetButton(data.link, toNewsDetail = toNewsDetail, toComic = toComic)
                 data.getUrlList().forEach {
                     TweetButton(it, comicId, toNewsDetail = toNewsDetail, toComic = toComic)
@@ -201,8 +175,6 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
                     ImageCompose(
                         data = url,
                         ratio = if (isComic) RATIO_COMIC else RATIO_COMMON,
-                        loadingId = R.drawable.load,
-                        errorId = R.drawable.error,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -258,14 +230,8 @@ private fun TweetButton(
         }
     }
 
-
-    TextButton(
-        onClick = {
-            btn.action()
-        },
-    ) {
-        IconCompose(data = btn.iconType, size = Dimen.smallIconSize)
-        MainContentText(text = btn.text)
+    IconTextButton(icon = btn.iconType, text = btn.text) {
+        btn.action()
     }
 }
 

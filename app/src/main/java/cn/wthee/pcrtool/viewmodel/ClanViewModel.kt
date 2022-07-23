@@ -41,7 +41,7 @@ class ClanViewModel @Inject constructor(
                 }
             }
             emit(clanList)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -55,7 +55,7 @@ class ClanViewModel @Inject constructor(
         try {
             val data = clanRepository.getBossAttr(enemyId)
             emit(data)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -73,7 +73,7 @@ class ClanViewModel @Inject constructor(
                 list.add(data)
             }
             emit(list)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -89,7 +89,7 @@ class ClanViewModel @Inject constructor(
                 list.add(it.unit_id)
             }
             emit(list)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -109,7 +109,7 @@ class ClanViewModel @Inject constructor(
             }
             map[targetCountData.multiEnemyId] = list
             emit(map)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

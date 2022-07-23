@@ -8,12 +8,13 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -54,7 +54,6 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -67,15 +66,15 @@ fun CharacterList(
     toDetail: (Int) -> Unit,
     viewModel: CharacterViewModel = hiltViewModel(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //筛选状态
     val filter = navViewModel.filterCharacter.observeAsState()
-    // dialog 状态
+    // sheet 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
     if (!state.isVisible && !state.isAnimationRunning) {
@@ -90,34 +89,30 @@ fun CharacterList(
             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
     }
-    val list = viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
+    val characterList =
+        viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
-        sheetElevation = Dimen.sheetElevation,
-        sheetShape = if (state.offset.value == 0f) {
-            noShape
-        } else {
-            Shape.large
-        },
+        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+        sheetShape = shapeTop(),
         sheetContent = {
-            FilterCharacterSheet(navViewModel, coroutineScope, state)
-        },
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface
+            FilterCharacterSheet(navViewModel, state)
+        }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (list.isNotEmpty()) {
+            if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
                     items(
-                        items = list,
+                        items = characterList,
                         key = {
                             it.id
                         }
@@ -161,20 +156,15 @@ fun CharacterList(
                         navViewModel.resetClick.postValue(true)
                     }
                 }
-                val count = list.size
+                val count = characterList.size
                 // 数量显示&筛选按钮
                 FabCompose(
                     iconType = MainIconType.CHARACTER,
                     text = "$count"
                 ) {
                     coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
-                        }
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                        state.show()
                     }
                 }
             }
@@ -187,7 +177,6 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
@@ -217,24 +206,24 @@ fun CharacterItem(
         1 -> {
             if (character.rarity == 1) {
                 limitType = stringResource(id = R.string.type_event_limit)
-                limitColor = colorResource(id = R.color.color_rank_21_23)
+                limitColor = colorGreen
             } else {
                 limitType = stringResource(id = R.string.type_limit)
-                limitColor = colorResource(id = R.color.color_rank_18_20)
+                limitColor = colorRed
             }
         }
         else -> {
             limitType = stringResource(id = R.string.type_normal)
-            limitColor = colorResource(id = R.color.color_rank_7_10)
+            limitColor = colorGold
         }
     }
     //主色
-    val initColor = MaterialTheme.colorScheme.onPrimary
+    val initColor = colorWhite
     var cardMainColor by remember {
         mutableStateOf(initColor)
     }
-    //主要字体颜色暂时使用白色字体 fixme 不同背景下变更字体颜色时，可能导致字体不明显
-    val textColor = if (loadSuccess) Color.White else Color.Black
+    //主要字体颜色
+    val textColor = if (loadSuccess) colorWhite else colorBlack
 
     MainCard(
         modifier = modifier,
@@ -245,28 +234,51 @@ fun CharacterItem(
             ImageCompose(
                 data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
                 ratio = RATIO,
-                loadingId = R.drawable.load,
-                errorId = R.drawable.error,
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.heightIn(max = getItemWidth())
-            ) { successData ->
+            ) { result ->
                 loadSuccess = true
                 //取色
-                Palette.from(successData.result.drawable.toBitmap()).generate { palette ->
+                Palette.from(result.drawable.toBitmap()).generate { palette ->
                     palette?.let {
                         cardMainColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
                     }
                 }
             }
-
-            if (loved) {
+            SlideAnimation(visible = loved) {
                 IconCompose(
                     data = MainIconType.LOVE_FILL,
-                    size = Dimen.fabIconSize,
+                    size = Dimen.mediumIconSize,
                     modifier = Modifier.padding(Dimen.mediumPadding)
                 )
             }
-
+            //名称阴影效果
+            if (loadSuccess) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.mediumPadding + Dimen.textElevation,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.mediumPadding + Dimen.textElevation,
+                            bottom = Dimen.mediumPadding
+                        )
+                        .fillMaxWidth(1f - RATIO_SHAPE)
+                        .align(Alignment.BottomStart),
+                ) {
+                    Subtitle1(
+                        text = character.getNameL(),
+                        color = MaterialTheme.colorScheme.primary,
+                        selectable = true
+                    )
+                    MainText(
+                        text = character.getNameF(),
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.titleLarge,
+                        selectable = true
+                    )
+                }
+            }
             //名称
             Column(
                 modifier = Modifier
@@ -276,16 +288,18 @@ fun CharacterItem(
             ) {
                 Subtitle1(
                     text = character.getNameL(),
-                    color = textColor
+                    color = textColor,
+                    selectable = true
                 )
-                Text(
+                MainText(
                     text = character.getNameF(),
                     color = textColor,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold
+                    selectable = true
                 )
             }
+
 
             //其它信息
             SlideRTLAnimation(
@@ -299,11 +313,12 @@ fun CharacterItem(
                         .fillMaxHeight()
                         .clip(TrapezoidShape)
                         .background(
-                            brush = Brush.verticalGradient(
+                            brush = Brush.horizontalGradient(
                                 colors = listOf(
                                     cardMainColor,
                                     cardMainColor,
-                                )
+                                    MaterialTheme.colorScheme.primary,
+                                ),
                             ),
                             alpha = 0.6f
                         ),
@@ -410,12 +425,12 @@ private fun CharacterTag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary
+    textColor: Color = colorWhite
 ) {
     Box(
         modifier = modifier
-            .clip(CircleShape)
-            .background(color = backgroundColor, shape = CircleShape)
+            .clip(Shapes.Full)
+            .background(color = backgroundColor, shape = Shapes.Full)
             .padding(horizontal = Dimen.mediumPadding),
         contentAlignment = Alignment.Center
     ) {
@@ -435,7 +450,6 @@ private fun CharacterTag(
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,
-    coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
     characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
@@ -496,6 +510,33 @@ private fun FilterCharacterSheet(
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
+    //重置或确认
+    if (reset || ok) {
+        LaunchedEffect(sheetState.currentValue) {
+            sheetState.hide()
+            //点击重置
+            if (reset) {
+                textState.value = TextFieldValue(text = "")
+                sortTypeIndex.value = 0
+                sortAscIndex.value = 1
+                loveIndex.value = 0
+                r6Index.value = 0
+                positionIndex.value = 0
+                atkIndex.value = 0
+                guildIndex.value = 0
+                typeIndex.value = 0
+                navViewModel.resetClick.postValue(false)
+                navViewModel.filterCharacter.postValue(FilterCharacter())
+            }
+            //点击确认
+            if (ok) {
+                navViewModel.filterCharacter.postValue(filter)
+                navViewModel.fabOKCilck.postValue(false)
+                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+            }
+        }
+    }
+
     //选择状态
     Column(
         modifier = Modifier
@@ -503,35 +544,11 @@ private fun FilterCharacterSheet(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        //点击重置
-        if (reset) {
-            textState.value = TextFieldValue(text = "")
-            sortTypeIndex.value = 0
-            sortAscIndex.value = 1
-            loveIndex.value = 0
-            r6Index.value = 0
-            positionIndex.value = 0
-            atkIndex.value = 0
-            guildIndex.value = 0
-            typeIndex.value = 0
-            navViewModel.resetClick.postValue(false)
-            navViewModel.filterCharacter.postValue(FilterCharacter())
-        }
-        //点击确认
-        if (ok) {
-            coroutineScope.launch {
-                sheetState.hide()
-            }
-            navViewModel.filterCharacter.postValue(filter)
-            navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        }
         //角色名搜索
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
-            shape = Shape.medium,
-            colors = outlinedTextFieldColors(),
+            shape = MaterialTheme.shapes.medium,
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
@@ -679,9 +696,12 @@ private fun FilterCharacterSheet(
                 text = stringResource(id = R.string.title_guild),
                 modifier = Modifier.padding(top = Dimen.largePadding)
             )
-            val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            val guildChipData = arrayListOf(
+                ChipData(0, stringResource(id = R.string.all)),
+                ChipData(1, stringResource(id = R.string.no_guild)),
+            )
             guildList.forEachIndexed { index, guildData ->
-                guildChipData.add(ChipData(index + 1, guildData.guildName))
+                guildChipData.add(ChipData(index + 2, guildData.guildName))
             }
             ChipGroup(
                 guildChipData,

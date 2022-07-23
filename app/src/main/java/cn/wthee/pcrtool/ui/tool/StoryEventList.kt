@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -12,9 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +23,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
@@ -77,7 +75,7 @@ fun StoryEventList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -95,7 +93,6 @@ fun StoryEventItem(
     toCharacterDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
 ) {
-    val context = LocalContext.current
     val type: String
     val typeColor: Color
     var showDays = true
@@ -113,23 +110,23 @@ fun StoryEventItem(
         //支线
         event.eventId / 10000 == 2 -> {
             type = "支线"
-            typeColor = colorResource(id = R.color.color_rank_21_23)
+            typeColor = colorGreen
             showDays = false
         }
         //复刻
         event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
             type = "复刻"
-            typeColor = colorResource(id = R.color.color_rank_7_10)
+            typeColor = colorGold
         }
         //预告
         sd.second(today) > 0 || preEvent -> {
             type = "预告"
-            typeColor = colorResource(id = R.color.news_system)
+            typeColor = colorPurple
         }
         //正常
         else -> {
             type = "活动"
-            typeColor = colorResource(id = R.color.news_update)
+            typeColor = colorRed
         }
     }
     val inProgress =
@@ -186,13 +183,13 @@ fun StoryEventItem(
                     IconCompose(
                         data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
-                        tint = colorResource(id = R.color.news_system)
+                        tint = colorPurple
                     )
                     MainContentText(
                         text = stringResource(R.string.coming_soon, sd.dates(today)),
                         modifier = Modifier.padding(start = Dimen.smallPadding),
                         textAlign = TextAlign.Start,
-                        color = colorResource(id = R.color.news_system)
+                        color = colorPurple
                     )
                 }
             }
@@ -204,12 +201,13 @@ fun StoryEventItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //banner 图片
-                    Box(modifier = Modifier.weight(3f)) {
+                    Box(modifier = Modifier
+                        .padding(Dimen.smallPadding)
+                        .weight(3f)) {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
                             ratio = RATIO_BANNER,
-                            loadingId = R.drawable.load,
-                            errorId = R.drawable.error,
+                            modifier = Modifier.clip(MaterialTheme.shapes.medium)
                         )
                     }
                     //图标
@@ -241,15 +239,16 @@ fun StoryEventItem(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Subtitle2(
-                        text = stringResource(R.string.story_pic),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable {
-                            VibrateUtil(context).single()
-                            toAllPics(event.storyId, AllPicsType.STORY.type)
-                        })
+                    //查看立绘
+                    IconTextButton(
+                        icon = MainIconType.PREVIEW_IMAGE,
+                        text = stringResource(R.string.story_pic)
+                    ) {
+                        toAllPics(event.storyId, AllPicsType.STORY.type)
+                    }
                     //结束日期
                     CaptionText(
                         text = if (event.eventId / 10000 != 2) {

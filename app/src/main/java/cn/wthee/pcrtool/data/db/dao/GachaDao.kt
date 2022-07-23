@@ -25,13 +25,15 @@ interface GachaDao {
         SELECT
             a.gacha_id,
             a.gacha_name,
-            COALESCE( GROUP_CONCAT( b.unit_id, '-' ), "" ) AS unit_ids,
+            COALESCE( GROUP_CONCAT( b.unit_id, '-' ), '' ) AS unit_ids,
+            COALESCE( GROUP_CONCAT( c.is_limited, '-' ), '' ) AS is_limiteds,
             a.description,
             a.start_time,
             a.end_time 
         FROM
             gacha_data AS a
             LEFT JOIN gacha_exchange_lineup AS b ON a.exchange_id = b.exchange_id
+            LEFT JOIN unit_data as c on b.unit_id = c.unit_id
         WHERE
             a.gacha_id NOT LIKE '1%' 
             AND a.gacha_id NOT LIKE '2%' 

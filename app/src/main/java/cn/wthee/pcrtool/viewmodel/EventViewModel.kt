@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.utils.compareEvent
 import cn.wthee.pcrtool.utils.compareStoryEvent
-import cn.wthee.pcrtool.utils.getToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -25,7 +24,7 @@ class EventViewModel @Inject constructor(
     fun getStoryEventHistory() = flow {
         try {
             emit(eventRepository.getAllEvents(Int.MAX_VALUE).sortedWith(compareStoryEvent()))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -36,7 +35,7 @@ class EventViewModel @Inject constructor(
     fun getFreeGachaHistory() = flow {
         try {
             emit(eventRepository.getFreeGachaEvent(Int.MAX_VALUE))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -46,11 +45,13 @@ class EventViewModel @Inject constructor(
      */
     fun getCalendarEventList() = flow {
         try {
-            val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
+            val data = eventRepository.getDropEvent().toMutableList()
+            data += eventRepository.getTowerEvent(Int.MAX_VALUE)
+            data += eventRepository.getSpDungeonEvent(Int.MAX_VALUE)
             emit(
                 data.sortedWith(compareEvent())
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
 

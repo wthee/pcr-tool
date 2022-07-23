@@ -4,9 +4,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,9 +48,7 @@ fun FabCompose(
             VibrateUtil(context).single()
             onClick()
         },
-        shape = CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        containerColor = MaterialTheme.colorScheme.background,
+        shape = Shapes.Full,
         modifier = mModifier,
     ) {
         Row(

@@ -30,13 +30,18 @@ fun <T> fastTween(): TweenSpec<T> {
 
 
 //页面退出动画
-val fadeOut = fadeOut(animationSpec = fastTween())
+val myFadeOut = if (animOnFlag) {
+    fadeOut(animationSpec = defaultTween())
+} else {
+    fadeOut(animationSpec = fastTween())
+}
+
 
 //页面进入动画：从下向上滚动
 val mySlideIn = if (animOnFlag) {
     slideInVertically(
-        initialOffsetY = { 30 },
-        animationSpec = defaultTween()
+        initialOffsetY = { it },
+        animationSpec = defaultSpring()
     )
 } else {
     fadeIn(animationSpec = fastTween())

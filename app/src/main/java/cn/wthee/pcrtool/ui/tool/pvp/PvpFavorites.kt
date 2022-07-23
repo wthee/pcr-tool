@@ -5,12 +5,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -37,18 +38,18 @@ fun PvpFavorites(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    pvpViewModel.getAllFavorites()
-    val list = pvpViewModel.allFavorites.observeAsState()
+    val favoriteDataList =
+        pvpViewModel.getAllFavorites().collectAsState(initial = arrayListOf()).value
     val itemWidth = getItemWidth(floatWindow)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (list.value != null && list.value!!.isNotEmpty()) {
+        if (favoriteDataList.isNotEmpty()) {
             LazyVerticalGrid(
                 state = favoritesListState,
                 columns = GridCells.Adaptive(itemWidth)
             ) {
                 items(
-                    items = list.value!!,
+                    items = favoriteDataList,
                     key = {
                         it.id
                     }
@@ -136,7 +137,7 @@ private fun PvpFavoriteItem(
                 //进攻
                 MainTitleText(
                     text = stringResource(id = R.string.team_win),
-                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    backgroundColor = colorGold,
                     modifier = Modifier.padding(start = mediumPadding)
                 )
                 PvpUnitIconLine(
@@ -148,7 +149,7 @@ private fun PvpFavoriteItem(
                 //防守
                 MainTitleText(
                     text = stringResource(id = R.string.team_lose),
-                    backgroundColor = colorResource(id = R.color.gray),
+                    backgroundColor = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
                 )
                 PvpUnitIconLine(

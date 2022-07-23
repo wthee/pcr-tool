@@ -9,7 +9,7 @@ import com.google.gson.Gson
 class FilterEquipment(
     var all: Boolean = true,
     var craft: Int = 1,
-    var type: Int = 0,
+    var colorType: Int = 0,
     var name: String = "",
 ) {
     var starIds = arrayListOf<Int>()
@@ -36,12 +36,9 @@ class FilterEquipment(
         sp.edit {
             putString(Constants.SP_STAR_EQUIP, Gson().toJson(list))
         }
-//        MainScope().launch {
-//            DataStoreUtil.save(Constants.SP_STAR_EQUIP, Gson().toJson(list))
-//        }
     }
 }
 
 fun FilterEquipment.isFilter(): Boolean {
-    return !(all && type == 0 && name == "" && craft == 1)
+    return !(all && colorType == 0 && name == "" && craft == 1)
 }

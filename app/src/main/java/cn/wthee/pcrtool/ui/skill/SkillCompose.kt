@@ -7,13 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -26,15 +23,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionText
+import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -42,42 +40,81 @@ import com.google.accompanist.flowlayout.FlowRow
  * 角色技能列表
  *
  * @param unitId 角色编号
- * @param cutinId 角色特殊编号
- * @param level 等级
  * @param atk 攻击力
+ * @param property 角色属性
  * @param unitType
  */
 @Composable
 fun SkillCompose(
     unitId: Int,
-    cutinId: Int,
-    level: Int,
     atk: Int,
+    property: CharacterProperty,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
-    val skillList = skillViewModel.skills.observeAsState().value ?: listOf()
+    //普通技能
+    val normalSkillData =
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
+            .collectAsState(
+                initial = arrayListOf()
+            ).value
+    //sp技能
+    val spSkillData =
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP).collectAsState(
+            initial = arrayListOf()
+        ).value
+    // sp技能标签
+    val spLabel = skillViewModel.getSpSkillLabel(unitId).collectAsState(initial = null).value
+
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(Dimen.largePadding)
+            .fillMaxWidth()
+            .padding(Dimen.largePadding),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        skillList.forEachIndexed { index, skillDetail ->
+        MainText(
+            text = stringResource(R.string.skill),
+            modifier = Modifier
+                .padding(top = Dimen.largePadding)
+        )
+        normalSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
+                property = property,
+                toSummonDetail = toSummonDetail
+            )
+        }
+        if (spSkillData.isNotEmpty()) {
+            MainText(
+                text = stringResource(R.string.sp_skill),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+            )
+            spLabel?.spLabelText?.let {
+                CaptionText(text = it)
+            }
+        }
+
+        spSkillData.forEachIndexed { index, skillDetail ->
+            SkillItem(
+                skillIndex = index,
+                skillDetail = skillDetail,
+                unitType = unitType,
+                property = property,
                 toSummonDetail = toSummonDetail
             )
         }
     }
 }
 
+
 /**
  * 技能
+ * @param property 角色属性，怪物技能不需要该参数
  */
 @Suppress("RegExpRedundantEscape")
 @Composable
@@ -85,7 +122,8 @@ fun SkillItem(
     skillIndex: Int,
     skillDetail: SkillDetail,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null
+    property: CharacterProperty = CharacterProperty(),
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -117,7 +155,7 @@ fun SkillItem(
                     str.replace(Regex("\\{.*?\\}"), "")
             }
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
 
     }
 
@@ -136,7 +174,7 @@ fun SkillItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Dimen.largePadding + Dimen.mediumPadding)
+            .padding(vertical = Dimen.largePadding)
     ) {
 
         Row {
@@ -178,8 +216,9 @@ fun SkillItem(
                                 .padding(start = Dimen.largePadding)
                         )
                     }
-                    //准备时间
-                    if (skillDetail.castTime > 0) {
+                    //准备时间，显示：时间大于 0 或 角色1、2技能
+                    val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
+                    if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
                         CaptionText(
                             text = stringResource(
                                 id = R.string.skill_cast_time,
@@ -215,6 +254,7 @@ fun SkillItem(
             SkillActionItem(
                 skillAction = it,
                 unitType = unitType,
+                property = property,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -240,9 +280,9 @@ fun SkillActionTag(skillTag: String) {
 fun SkillActionItem(
     skillAction: SkillActionText,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    property: CharacterProperty,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
-    val context = LocalContext.current
 
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()
@@ -251,9 +291,9 @@ fun SkillActionItem(
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
         arrayListOf(
-            colorResource(R.color.color_rank_21_23),
-            colorResource(if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black),
-            colorResource(R.color.color_rank_11_17),
+            colorGreen,
+            if (isSystemInDarkTheme()) colorWhite else Color.Black,
+            colorPurple,
             MaterialTheme.colorScheme.primary
         )
     skillAction.action.forEachIndexed { index, c ->
@@ -293,17 +333,14 @@ fun SkillActionItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(vertical = Dimen.smallPadding)
-            .background(colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray))
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.extraSmall
+            )
             .clickable(enabled = BuildConfig.DEBUG) {
                 ToastUtil.short(skillAction.actionId.toString())
             }
     ) {
-        Box(
-            modifier = Modifier
-                .width(Dimen.vLineWidth)
-                .fillMaxHeight()
-                .background(colorResource(id = R.color.div_line))
-        )
         Column(
             modifier = Modifier
                 .padding(Dimen.smallPadding)
@@ -317,9 +354,8 @@ fun SkillActionItem(
                     fontSize = 14.sp,
                     letterSpacing = 0.5.sp
                 ),
-                modifier = Modifier.padding(
-                    top = Dimen.smallPadding
-                ),
+                modifier = Modifier.padding(Dimen.smallPadding),
+                color = MaterialTheme.colorScheme.onSurface,
                 text = buildAnnotatedString {
                     skillAction.action.forEachIndexed { index, c ->
                         var added = false
@@ -344,21 +380,18 @@ fun SkillActionItem(
 
             if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
                 //查看召唤物
-                Text(
-                    text = stringResource(R.string.to_summon),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = Dimen.smallPadding)
-                        .clip(Shape.small)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            toSummonDetail(skillAction.summonUnitId, unitType.type)
-                        }
-                        .padding(Dimen.smallPadding)
-
-                )
+                IconTextButton(
+                    icon = MainIconType.SUMMON,
+                    text = stringResource(R.string.to_summon)
+                ) {
+                    toSummonDetail(
+                        skillAction.summonUnitId,
+                        unitType.type,
+                        property.level,
+                        property.rank,
+                        property.rarity
+                    )
+                }
             }
         }
     }
@@ -412,10 +445,10 @@ private fun getSkillType(skillId: Int): String {
 @Composable
 fun getSkillColor(type: String): Color {
     return when {
-        type.contains("连结") -> colorResource(R.color.color_rank_7_10)
-        type.contains("EX") -> colorResource(R.color.color_rank_2_3)
-        type.contains("1") -> colorResource(R.color.color_rank_11_17)
-        type.contains("2") -> colorResource(R.color.color_rank_18_20)
+        type.contains("连结") -> colorGold
+        type.contains("EX") -> colorCopper
+        type.contains("1") -> colorPurple
+        type.contains("2") -> colorRed
         else -> MaterialTheme.colorScheme.primary
     }
 }

@@ -10,6 +10,7 @@ object ResourcesUtil {
     /**
      * 获取文本
      */
-    fun getString(resId: Int) = MyApplication.context.getString(resId)
+    fun getString(resId: Int, vararg formatArgs: Any) =
+        MyApplication.context.getString(resId, formatArgs)
 
 }

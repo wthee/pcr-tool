@@ -36,7 +36,7 @@ class OverviewViewModel @Inject constructor(
     fun getCharacterCount() = flow {
         try {
             emit(unitRepository.getCount())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -46,8 +46,8 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterList() = flow {
         try {
-            emit(unitRepository.getInfoAndData(FilterCharacter(), "全部", 10))
-        } catch (e: Exception) {
+            emit(unitRepository.getInfoAndData(FilterCharacter(), 10))
+        } catch (_: Exception) {
 
         }
     }
@@ -58,7 +58,7 @@ class OverviewViewModel @Inject constructor(
     fun getEquipCount() = flow {
         try {
             emit(equipmentRepository.getCount())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -68,8 +68,8 @@ class OverviewViewModel @Inject constructor(
      */
     fun getEquipList(limit: Int) = flow {
         try {
-            emit(equipmentRepository.getEquipments(FilterEquipment(), "全部", limit))
-        } catch (e: Exception) {
+            emit(equipmentRepository.getEquipments(FilterEquipment(), limit))
+        } catch (_: Exception) {
 
         }
     }
@@ -95,7 +95,7 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareGacha(today))
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -106,7 +106,10 @@ class OverviewViewModel @Inject constructor(
     fun getCalendarEventList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
+            val data =
+                eventRepository.getDropEvent() + eventRepository.getTowerEvent(1) + eventRepository.getSpDungeonEvent(
+                    1
+                )
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
@@ -121,7 +124,7 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareEvent(today))
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
 
@@ -148,7 +151,7 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareStoryEvent(today))
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -162,7 +165,7 @@ class OverviewViewModel @Inject constructor(
             data?.let {
                 emit(it)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -174,7 +177,7 @@ class OverviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
@@ -197,7 +200,7 @@ class OverviewViewModel @Inject constructor(
                     isComingSoon(today, it.startTime)
                 })
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -229,7 +232,7 @@ class OverviewViewModel @Inject constructor(
                 }
                 emit(list)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

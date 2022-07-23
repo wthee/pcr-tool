@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.ui.common
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,32 +15,28 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -55,10 +51,10 @@ fun MainTitleText(
 ) {
     Text(
         text = text,
-        color = Color.White,
+        color = colorWhite,
         style = textStyle,
         modifier = modifier
-            .background(color = backgroundColor, shape = Shape.small)
+            .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
     )
 }
@@ -70,9 +66,10 @@ fun MainTitleText(
 fun MainContentText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
-    selectable: Boolean = false
+    selectable: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
@@ -81,6 +78,8 @@ fun MainContentText(
                 textAlign = textAlign,
                 color = color,
                 style = MaterialTheme.typography.bodyLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = maxLines
             )
         }
     } else {
@@ -90,6 +89,8 @@ fun MainContentText(
             color = color,
             style = MaterialTheme.typography.bodyLarge,
             modifier = modifier,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines
         )
     }
 }
@@ -103,6 +104,7 @@ fun MainText(
     text: String,
     textAlign: TextAlign = TextAlign.Center,
     color: Color = MaterialTheme.colorScheme.primary,
+    style: TextStyle = MaterialTheme.typography.titleMedium,
     selectable: Boolean = false,
 ) {
     if (selectable) {
@@ -110,7 +112,7 @@ fun MainText(
             Text(
                 text = text,
                 color = color,
-                style = MaterialTheme.typography.titleMedium,
+                style = style,
                 textAlign = textAlign,
                 fontWeight = FontWeight.Black,
             )
@@ -119,7 +121,7 @@ fun MainText(
         Text(
             text = text,
             color = color,
-            style = MaterialTheme.typography.titleMedium,
+            style = style,
             textAlign = textAlign,
             fontWeight = FontWeight.Black,
             modifier = modifier
@@ -135,7 +137,7 @@ fun MainText(
 fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
 ) {
@@ -170,7 +172,7 @@ fun Subtitle1(
 fun Subtitle2(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign = TextAlign.Start,
@@ -210,7 +212,7 @@ fun Subtitle2(
 fun CaptionText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
     maxLines: Int = Int.MAX_VALUE
 ) {
@@ -223,23 +225,6 @@ fun CaptionText(
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
     )
-}
-
-/**
- * 分割线
- */
-@Composable
-fun LineCompose(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        Spacer(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(Dimen.divLineHeight)
-                .background(colorResource(id = R.color.div_line))
-                .align(Alignment.Center)
-        )
-    }
-
 }
 
 /**
@@ -263,24 +248,24 @@ fun DivCompose(modifier: Modifier = Modifier) {
 fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colorScheme.onPrimary,
+    color: Color = colorWhite,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     Button(
-        shape = Shape.medium,
+        shape = MaterialTheme.shapes.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor)
     ) {
         Text(
-            text = text,
-            color = color,
-            style = textStyle
+            text = text, color = color, style = textStyle
         )
     }
 }
@@ -292,50 +277,23 @@ fun MainButton(
 fun SubButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
-    OutlinedButton(
-        shape = Shape.medium,
+    OutlinedButton(shape = MaterialTheme.shapes.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         border = BorderStroke(Dimen.divLineHeight, color = color),
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }
-    ) {
+        }) {
         Text(text = text, color = color, style = textStyle)
     }
 }
 
-
-/**
- * 文本操作按钮
- */
-@Composable
-fun MainTexButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    color: Color = Color.Unspecified,
-    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    onClick: () -> Unit
-) {
-    val context = LocalContext.current
-
-    TextButton(
-        shape = Shape.medium,
-        modifier = modifier.padding(Dimen.smallPadding),
-        onClick = {
-            VibrateUtil(context).single()
-            onClick()
-        }
-    ) {
-        Text(text = text, color = color, style = textStyle)
-    }
-}
 
 /**
  * RANK 文本
@@ -343,9 +301,9 @@ fun MainTexButton(
  */
 @Composable
 fun RankText(
-    rank: Int,
-    style: TextStyle,
     modifier: Modifier = Modifier,
+    rank: Int,
+    style: TextStyle = MaterialTheme.typography.titleMedium,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0
 ) {
@@ -353,11 +311,7 @@ fun RankText(
     val text = getFormatText(rank)
     if (type == 0) {
         Text(
-            text = text,
-            textAlign = textAlign,
-            color = color,
-            style = style,
-            modifier = modifier
+            text = text, textAlign = textAlign, color = color, style = style, modifier = modifier
         )
     } else {
         MainTitleText(
@@ -373,17 +327,16 @@ fun RankText(
 //rank 颜色
 @Composable
 fun getRankColor(rank: Int): Color {
-    val colorId = when (rank) {
-        in 2..3 -> R.color.color_rank_2_3
-        in 4..6 -> R.color.color_rank_4_6
-        in 7..10 -> R.color.color_rank_7_10
-        in 11..17 -> R.color.color_rank_11_17
-        in 18..20 -> R.color.color_rank_18_20
-        in 21..23 -> R.color.color_rank_21_23
-        in 24..99 -> R.color.color_rank_24
-        else -> R.color.color_rank_1
+    return when (rank) {
+        in 2..3 -> colorCopper
+        in 4..6 -> colorSilver
+        in 7..10 -> colorGold
+        in 11..17 -> colorPurple
+        in 18..20 -> colorRed
+        in 21..23 -> colorGreen
+        in 24..99 -> colorOrange
+        else -> colorBlue
     }
-    return colorResource(id = colorId)
 }
 
 /**
@@ -406,16 +359,15 @@ fun CommonSpacer() {
 fun MainCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    shape: RoundedCornerShape = Shape.medium,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    shape: CornerBasedShape = MaterialTheme.shapes.medium,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
-    var mModifier =
-        modifier
-            .fillMaxWidth()
-            .shadow(Dimen.cardElevation, shape, true)
+    var mModifier = modifier
+        .fillMaxWidth()
+        .shadow(Dimen.cardElevation, shape, true)
 
     if (onClick != null) {
         mModifier = mModifier.clickable {
@@ -428,7 +380,7 @@ fun MainCard(
         modifier = mModifier,
         content = content,
         shape = shape,
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(containerColor = containerColor)
     )
 }
 
@@ -443,7 +395,7 @@ fun SelectText(
     selected: Boolean,
     text: String,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = Color.Unspecified,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     padding: Dp = Dimen.smallPadding,
     margin: Dp = Dimen.smallPadding,
@@ -452,14 +404,14 @@ fun SelectText(
     val mModifier = if (selected) {
         modifier
             .padding(top = margin)
-            .background(color = selectedColor, shape = Shape.small)
+            .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = padding, end = padding)
     } else {
         modifier.padding(top = margin)
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colorScheme.onPrimary else textColor,
+        color = if (selected) colorWhite else textColor,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,
@@ -482,7 +434,7 @@ fun CharacterPositionText(
     val color = if (showColor) {
         getPositionColor(position)
     } else {
-        Color.Unspecified
+        MaterialTheme.colorScheme.onSurface
     }
 
 
@@ -499,25 +451,20 @@ fun CharacterPositionText(
 
 //位置颜色
 @Composable
-fun getPositionColor(position: Int) = colorResource(
-    id = when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> R.color.color_rank_18_20
-        PositionType.POSITION_300_599 -> R.color.color_rank_7_10
-        PositionType.POSITION_600_999 -> R.color.colorPrimary
-        PositionType.UNKNOWN -> R.color.black
-    }
-)
+fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
+    PositionType.POSITION_0_299 -> colorRed
+    PositionType.POSITION_300_599 -> colorGold
+    PositionType.POSITION_600_999 -> colorBlue
+    PositionType.UNKNOWN -> colorPrimary
+}
 
 
 //攻击颜色
 @Composable
-fun getAtkColor(atkType: Int): Color {
-    val colorId = when (atkType) {
-        1 -> R.color.color_rank_7_10
-        2 -> R.color.color_rank_11_17
-        else -> R.color.color_rank_2_3
-    }
-    return colorResource(id = colorId)
+fun getAtkColor(atkType: Int) = when (atkType) {
+    1 -> colorGold
+    2 -> colorPurple
+    else -> colorCopper
 }
 
 /**
@@ -534,8 +481,20 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
         //显示指示器
         Row {
             urls.forEachIndexed { index, url ->
+                val modifier = if (pagerState.currentPage == index) {
+                    Modifier
+                        .padding(horizontal = Dimen.largePadding)
+                        .border(
+                            width = Dimen.border,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.extraSmall
+                        )
+                } else {
+                    Modifier.padding(horizontal = Dimen.largePadding)
+                }
+
                 IconCompose(
-                    modifier = Modifier.padding(horizontal = Dimen.largePadding),
+                    modifier = modifier,
                     data = url,
                 ) {
                     scope.launch {
@@ -544,14 +503,6 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
                 }
             }
         }
-
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier.padding(top = Dimen.largePadding + Dimen.iconSize + Dimen.smallPadding),
-            spacing = Dimen.iconSize + Dimen.largePadding + 8.dp,
-            activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = Color.Unspecified
-        )
     }
 }
 
@@ -574,12 +525,12 @@ fun CircularProgressCompose(size: Dp = Dimen.menuIconSize) {
  */
 @Composable
 fun SelectTypeCompose(
+    modifier: Modifier = Modifier,
     icon: MainIconType,
     tabs: List<String>,
     type: MutableState<Int>,
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier,
     changeListener: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -606,10 +557,9 @@ fun SelectTypeCompose(
                 start = Dimen.fabMargin,
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
-            ),
-        containerColor = MaterialTheme.colorScheme.background,
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+            )
+            .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+        shape = if (openDialog) MaterialTheme.shapes.medium else Shapes.Full,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -622,8 +572,7 @@ fun SelectTypeCompose(
     ) {
         if (openDialog) {
             Column(
-                modifier = Modifier.width(width),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.width(width), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 //选择
                 tabs.forEachIndexed { index, tab ->
@@ -661,9 +610,7 @@ fun SelectTypeCompose(
                 modifier = Modifier.padding(start = Dimen.largePadding)
             ) {
                 IconCompose(
-                    data = icon,
-                    tint = selectedColor,
-                    size = Dimen.menuIconSize
+                    data = icon, tint = selectedColor, size = Dimen.menuIconSize
                 )
                 Text(
                     text = tabs[type.value],
@@ -671,8 +618,7 @@ fun SelectTypeCompose(
                     textAlign = TextAlign.Center,
                     color = selectedColor,
                     modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.largePadding
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
                     )
                 )
             }
@@ -687,34 +633,59 @@ fun SelectTypeCompose(
 @Composable
 fun IconTextButton(
     modifier: Modifier = Modifier,
-    icon: Any,
+    icon: MainIconType,
     text: String,
     contentColor: Color = MaterialTheme.colorScheme.primary,
-    iconSize: Dp = Dimen.smallIconSize,
-    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    iconSize: Dp = Dimen.textIconSize,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
 
-    Row(
-        modifier = Modifier
-            .padding(start = Dimen.largePadding)
-            .clip(Shape.medium)
-            .clickable {
-                VibrateUtil(context).single()
-                onClick()
-            }
-            .padding(Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically
+    Row(modifier = modifier
+        .clip(MaterialTheme.shapes.small)
+        .clickable {
+            VibrateUtil(context).single()
+            onClick()
+        }
+        .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically
     ) {
-        IconCompose(data = icon, size = iconSize, tint = contentColor)
+        IconCompose(
+            data = icon,
+            size = iconSize,
+            tint = contentColor
+        )
         Text(
             text = text,
             color = contentColor,
             style = textStyle,
-            modifier = modifier,
+            modifier = Modifier.padding(start = Dimen.smallPadding),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+/**
+ * 标题
+ */
+@Composable
+fun HeaderText(modifier: Modifier = Modifier, text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+    )
+}
+
+/**
+ * 通用 placeholder
+ */
+fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
+    Modifier.placeholder(
+        visible = visible,
+        highlight = PlaceholderHighlight.shimmer()
+    )
 }

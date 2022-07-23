@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -10,10 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,12 +18,11 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
@@ -38,7 +33,6 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
  */
 @Composable
 fun TopBarCompose(
-    actions: NavActions,
     isEditMode: MutableState<Boolean>,
     noticeViewModel: NoticeViewModel
 ) {
@@ -62,11 +56,8 @@ fun TopBarCompose(
             )
             .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
+        HeaderText(
+            text = stringResource(id = R.string.app_name)
         )
         Row(
             modifier = Modifier.weight(1f),
@@ -86,7 +77,7 @@ fun TopBarCompose(
             } else {
                 if (updateApp.id != -2) {
                     val updateColor =
-                        if (updateApp.id == 0) colorResource(id = R.color.color_rank_21_23) else Color.Unspecified
+                        if (updateApp.id == 0) colorGreen else MaterialTheme.colorScheme.onSurface
                     val icon =
                         if (updateApp.id == 0) MainIconType.APP_UPDATE else MainIconType.NOTICE
                     IconCompose(
@@ -109,14 +100,6 @@ fun TopBarCompose(
                 isEditMode.value = !isEditMode.value
             }
             Spacer(modifier = Modifier.width(Dimen.largePadding))
-            //设置
-            IconCompose(
-                data = MainIconType.SETTING,
-                tint = MaterialTheme.colorScheme.onSurface,
-                size = Dimen.fabIconSize
-            ) {
-                actions.toSetting()
-            }
         }
 
     }
@@ -156,9 +139,6 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 )
                 //反馈群
                 IconTextButton(
-                    modifier = Modifier
-                        .padding(start = Dimen.largePadding)
-                        .clip(Shape.medium),
                     icon = MainIconType.SUPPORT,
                     text = stringResource(id = R.string.qq_group),
                 ) {
@@ -166,9 +146,6 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 }
                 //查看 github release 详情
                 IconTextButton(
-                    modifier = Modifier
-                        .padding(start = Dimen.largePadding)
-                        .clip(Shape.medium),
                     icon = MainIconType.GITHUB_RELEASE,
                     text = stringResource(id = R.string.github),
                 ) {

@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +20,7 @@ import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -37,16 +36,16 @@ fun GachaList(
     toCharacterDetail: (Int) -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
-    val gachas = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val gachaList = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (gachas.isNotEmpty()) {
+        if (gachaList.isNotEmpty()) {
             LazyColumn(
                 state = scrollState
             ) {
                 items(
-                    items = gachas,
+                    items = gachaList,
                     key = {
                         it.gachaId
                     }
@@ -69,7 +68,7 @@ fun GachaList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -92,10 +91,10 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when (type) {
-        GachaType.PICK_UP -> colorResource(id = R.color.color_rank_18_20)
-        GachaType.RE -> colorResource(id = R.color.color_rank_7_10)
-        GachaType.FES -> colorResource(id = R.color.color_rank_21_23)
-        GachaType.ANNIV -> colorResource(id = R.color.color_rank_24)
+        GachaType.LIMIT, GachaType.NORMAL -> colorRed
+        GachaType.RE_LIMIT, GachaType.RE_NORMAL -> colorGold
+        GachaType.FES -> colorGreen
+        GachaType.ANNIV -> colorOrange
         GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
     }
 
@@ -111,26 +110,27 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
+            //类型
             MainTitleText(
                 text = if (type.typeName != "") type.typeName else gachaInfo.fixTypeName(),
-                backgroundColor = color
+                backgroundColor = color,
             )
+            //日期
             MainTitleText(
                 text = sd.substring(0, 10),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
+            //天数
             MainTitleText(
                 text = ed.days(sd),
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             )
-
             //计时
             Row(
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (inProgress) {
-
                     IconCompose(
                         data = MainIconType.TIME_LEFT,
                         size = Dimen.smallIconSize,
@@ -146,13 +146,13 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     IconCompose(
                         data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
-                        tint = colorResource(id = R.color.news_system)
+                        tint = colorPurple
                     )
                     MainContentText(
                         text = stringResource(R.string.coming_soon, sd.dates(today)),
                         modifier = Modifier.padding(start = Dimen.smallPadding),
                         textAlign = TextAlign.Start,
-                        color = colorResource(id = R.color.news_system)
+                        color = colorPurple
                     )
                 }
             }

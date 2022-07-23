@@ -4,13 +4,9 @@ import androidx.compose.ui.unit.dp
 
 object Dimen {
 
-    val cardRadius = 10.dp
-
     val cardElevation = 4.dp
 
-    val fabElevation = 8.dp
-
-    val sheetElevation = 24.dp
+    val textElevation = 1.dp
 
     val fabSize = 40.dp
 
@@ -19,8 +15,6 @@ object Dimen {
     val fabMargin = 16.dp
 
     val fabMarginEnd = 65.dp
-
-    val fabSmallMarginEnd = 9.dp
 
     val textfabMargin = 3.dp
 
@@ -34,13 +28,13 @@ object Dimen {
 
     val smallIconSize = 18.dp
 
+    val textIconSize = 20.dp
+
     val mediumIconSize = 32.dp
 
     val iconSize = 48.dp
 
     val largeIconSize = 56.dp
-
-    val sheetMarginBottom = 60.dp
 
     val divLineHeight = 1.dp
 
@@ -60,8 +54,8 @@ object Dimen {
 
     val lineHeight = 3.dp
 
-    val vLineWidth = 4.dp
-
     val skillActionMinHeight = 16.dp
+
+    val border = 3.dp
 
 }

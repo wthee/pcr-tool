@@ -8,34 +8,29 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.noShape
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -56,50 +51,44 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
     val comicList = comicViewModel.getComic().collectAsState(initial = arrayListOf()).value
     val visible = comicList.isNotEmpty()
     // dialog 状态
-    val state = rememberModalBottomSheetState(
+    val sheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!sheetState.isVisible && !sheetState.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
 
-    //关闭监听
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = visible) {
+
             val pagerState = rememberPagerState(
                 initialPage = if (comicId != -1) comicList.size - comicId else 0
             )
+
+            //关闭监听
+            val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+            //确认
+            if (ok) {
+                LaunchedEffect(selectIndex) {
+                    pagerState.scrollToPage(selectIndex.value)
+                    sheetState.hide()
+                }
+            }
+
+
             ModalBottomSheetLayout(
-                sheetState = state,
-                scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
-                sheetElevation = Dimen.sheetElevation,
-                sheetShape = if (state.offset.value == 0f) {
-                    noShape
-                } else {
-                    Shape.large
-                },
+                sheetState = sheetState,
+                scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+                sheetShape = shapeTop(),
                 sheetContent = {
                     //章节选择
                     SelectPager(scrollState, selectIndex, comicList)
-                },
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface
+                }
             ) {
-                if (ok) {
-                    coroutineScope.launch {
-                        state.hide()
-                    }
-                    navViewModel.fabOKCilck.postValue(false)
-                }
-
-                if (state.isAnimationRunning) {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(selectIndex.value)
-                    }
-                }
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -119,15 +108,10 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                             .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                     ) {
                         coroutineScope.launch {
-                            if (state.isVisible) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                                state.hide()
-                            } else {
-                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                selectIndex.value = pagerState.currentPage
-                                scrollState.scrollToItem(selectIndex.value)
-                                state.show()
-                            }
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            selectIndex.value = pagerState.currentPage
+                            scrollState.scrollToItem(selectIndex.value)
+                            sheetState.show()
                         }
                     }
 
@@ -165,9 +149,8 @@ private fun ComicItem(data: ComicData) {
                     data.id.toString()
                 )
             )
-            Text(
-                text = data.title,
-                style = MaterialTheme.typography.titleLarge,
+            Subtitle1(
+                text = data.title
             )
         }
 
@@ -178,8 +161,6 @@ private fun ComicItem(data: ComicData) {
             ImageCompose(
                 data = data.url,
                 ratio = RATIO_COMIC,
-                loadingId = R.drawable.load,
-                errorId = R.drawable.error,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -197,7 +178,6 @@ private fun SelectPager(
     selectIndex: MutableState<Int>,
     comic: List<ComicData>
 ) {
-
     LazyColumn(
         state = scrollState,
         modifier = Modifier.padding(
@@ -229,37 +209,20 @@ private fun TocItem(
     index: Int,
     it: ComicData,
 ) {
-    val textColor = if (selectIndex.value == index) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        Color.Unspecified
-    }
-
-    Row(
+    val context = LocalContext.current
+    SelectText(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(Dimen.smallPadding)
-            .clip(Shape.small)
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
+                VibrateUtil(context).single()
                 selectIndex.value = index
             },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = it.id.toString(),
-            color = textColor,
-            textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        SelectionContainer(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
-            Text(
-                text = it.title,
-                color = textColor,
-                textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    }
+        selected = selectIndex.value == index, text = "${it.id} ${it.title}",
+        textStyle = MaterialTheme.typography.titleMedium,
+        padding = Dimen.mediumPadding,
+        margin = 0.dp,
+        textAlign = TextAlign.Start
+    )
 }

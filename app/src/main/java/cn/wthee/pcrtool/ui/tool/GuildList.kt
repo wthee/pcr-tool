@@ -17,12 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.GuildAllMember
+import cn.wthee.pcrtool.data.db.view.GuildMemberInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.GuildAllMember
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.stringArrayList
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -67,13 +71,11 @@ fun GuildList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
     }
-
-
 }
 
 /**
@@ -84,6 +86,31 @@ private fun GuildItem(
     guild: GuildAllMember,
     toCharacterDetail: (Int) -> Unit
 ) {
+    val memberList = arrayListOf<GuildMemberInfo>()
+    val names = guild.unitNames.stringArrayList
+    var masterName = ""
+    guild.unitIds.intArrayList.forEachIndexed { index, unitId ->
+        try {
+            memberList.add(
+                GuildMemberInfo(
+                    unitId,
+                    names[index]
+                )
+            )
+            if (unitId / 100 == guild.guildMasterId) {
+                masterName = names[index]
+            }
+        } catch (e: IndexOutOfBoundsException) {
+            LogReportUtil.upload(e, "${guild.guildId}-${unitId}")
+        }
+    }
+    //调整排序
+    memberList.sortWith(compareUnit(masterName))
+    val iconIdLlist = arrayListOf<Int>()
+    memberList.forEach {
+        iconIdLlist.add(it.unitId)
+    }
+
     Column(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
@@ -97,9 +124,9 @@ private fun GuildItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //内容
-                if (guild.desc != Constants.UNKNOWN) {
+                if (guild.getDesc() != Constants.UNKNOWN) {
                     MainContentText(
-                        text = guild.desc,
+                        text = guild.getDesc(),
                         modifier = Modifier.padding(
                             top = Dimen.mediumPadding,
                             start = Dimen.mediumPadding,
@@ -110,11 +137,11 @@ private fun GuildItem(
                 }
                 //角色图标列表
                 GridIconListCompose(
-                    icons = guild.memberIds,
+                    icons = iconIdLlist,
                     onClickItem = toCharacterDetail
                 )
                 // 新加入的成员
-                if (guild.newMemberIds.isNotEmpty()) {
+                if (guild.newAddUnitIds.isNotEmpty()) {
                     MainContentText(
                         text = stringResource(R.string.new_member),
                         modifier = Modifier.padding(
@@ -125,7 +152,7 @@ private fun GuildItem(
                         textAlign = TextAlign.Start
                     )
                     GridIconListCompose(
-                        icons = guild.newMemberIds,
+                        icons = guild.newAddUnitIds,
                         onClickItem = toCharacterDetail
                     )
                 }
@@ -133,6 +160,27 @@ private fun GuildItem(
         }
     }
 
+}
+
+/**
+ * 按公会创建人、角色名排序
+ */
+private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1, gm2 ->
+    if (gm1.unitName.contains(masterName)) {
+        if (gm2.unitName.contains(masterName)) {
+            //创建人，按 unitId 排序
+            gm1.unitName.compareTo(gm2.unitName)
+        } else {
+            -1
+        }
+    } else {
+        if (gm2.unitName.contains(masterName)) {
+            1
+        } else {
+            //非创建人，按 unitName 排序
+            gm1.unitName.compareTo(gm2.unitName)
+        }
+    }
 }
 
 @Preview

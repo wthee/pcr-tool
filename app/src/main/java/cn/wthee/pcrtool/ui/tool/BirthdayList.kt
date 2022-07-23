@@ -1,15 +1,15 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +18,8 @@ import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -30,7 +32,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun BirthdayList(
-    scrollState: LazyListState,
+    scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
     birthdayViewModel: BirthdayViewModel = hiltViewModel()
 ) {
@@ -40,12 +42,19 @@ fun BirthdayList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
-            items(dataList) {
-                BirthdayItem(it, toCharacterDetail)
-            }
-            item {
-                CommonSpacer()
+        if (dataList.isNotEmpty()) {
+            LazyVerticalGrid(state = scrollState, columns = GridCells.Adaptive(getItemWidth())) {
+                items(
+                    items = dataList,
+                    key = {
+                        "${it.month}/${it.day}"
+                    }
+                ) {
+                    BirthdayItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
             }
         }
         //回到顶部
@@ -59,7 +68,7 @@ fun BirthdayList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -93,7 +102,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),
-                backgroundColor = colorResource(id = R.color.news_update)
+                backgroundColor = colorRed
             )
             MainTitleText(
                 text = if (data.month == 999) {
@@ -102,7 +111,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                     "${data.month.toString().fillZero()}/${data.day.toString().fillZero()}"
                 },
                 modifier = Modifier.padding(start = Dimen.smallPadding),
-                backgroundColor = colorResource(id = R.color.news_update)
+                backgroundColor = colorRed
             )
 
             //计时
@@ -115,20 +124,20 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                         IconCompose(
                             data = MainIconType.BIRTHDAY,
                             size = Dimen.smallIconSize,
-                            tint = colorResource(id = R.color.news_update)
+                            tint = colorRed
                         )
                     }
                     if (comingSoon) {
                         IconCompose(
                             data = MainIconType.COUNTDOWN,
                             size = Dimen.smallIconSize,
-                            tint = colorResource(id = R.color.news_system)
+                            tint = colorPurple
                         )
                         MainContentText(
                             text = stringResource(R.string.coming_soon, sd.days(today)),
                             modifier = Modifier.padding(start = Dimen.smallPadding),
                             textAlign = TextAlign.Start,
-                            color = colorResource(id = R.color.news_system)
+                            color = colorPurple
                         )
                     }
                 }

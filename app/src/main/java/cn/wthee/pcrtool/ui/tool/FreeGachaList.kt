@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +18,7 @@ import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -33,16 +33,17 @@ fun FreeGachaList(
     scrollState: LazyListState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val gachas = eventViewModel.getFreeGachaHistory().collectAsState(initial = arrayListOf()).value
+    val gachaList =
+        eventViewModel.getFreeGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (gachas.isNotEmpty()) {
+        if (gachaList.isNotEmpty()) {
             LazyColumn(
                 state = scrollState
             ) {
                 items(
-                    items = gachas,
+                    items = gachaList,
                     key = {
                         it.id
                     }
@@ -65,7 +66,7 @@ fun FreeGachaList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -126,13 +127,13 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
                     IconCompose(
                         data = MainIconType.COUNTDOWN,
                         size = Dimen.smallIconSize,
-                        tint = colorResource(id = R.color.news_system)
+                        tint = colorPurple
                     )
                     MainContentText(
                         text = stringResource(R.string.coming_soon, sd.dates(today)),
                         modifier = Modifier.padding(start = Dimen.smallPadding),
                         textAlign = TextAlign.Start,
-                        color = colorResource(id = R.color.news_system)
+                        color = colorPurple
                     )
                 }
             }

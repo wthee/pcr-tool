@@ -1,21 +1,17 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -30,32 +26,40 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @Composable
 fun RankEquipList(
     unitId: Int,
-    lazyGridState: LazyGridState,
-    toEquipDetail: (Int) -> Unit,
+    currentRank: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
     val allRankEquip =
         equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
-    val selectedRank = remember {
-        mutableStateOf(navViewModel.currentValue.value?.rank ?: 2)
+
+
+    val currentValueState = remember {
+        mutableStateOf(currentRank)
     }
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
-        contentPadding = PaddingValues(Dimen.mediumPadding),
-        state = lazyGridState
-    ) {
-        items(
-            items = allRankEquip,
-            key = {
-                it.promotionLevel
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (allRankEquip.isNotEmpty()) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.smallPadding * 4),
+                contentPadding = PaddingValues(Dimen.mediumPadding),
+                state = rememberLazyGridState()
+            ) {
+                items(
+                    items = allRankEquip,
+                    key = {
+                        it.promotionLevel
+                    }
+                ) {
+                    RankEquipListItem(currentValueState, it)
+                }
+                items(2) {
+                    CommonSpacer()
+                }
             }
-        ) {
-            RankEquipListItem(it, selectedRank, toEquipDetail)
-        }
-        items(2) {
-            CommonSpacer()
         }
     }
+
+
 }
 
 /**
@@ -63,17 +67,18 @@ fun RankEquipList(
  */
 @Composable
 fun RankEquipListItem(
-    unitPromotion: UnitPromotion,
-    selectedRank: MutableState<Int>,
-    toEquipDetail: (Int) -> Unit
+    currentRank: MutableState<Int>,
+    unitPromotion: UnitPromotion
 ) {
 
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
-            selectedRank.value = unitPromotion.promotionLevel
-            val value = navViewModel.currentValue.value
-            navViewModel.currentValue.postValue(value?.update(rank = unitPromotion.promotionLevel))
+            currentRank.value = unitPromotion.promotionLevel
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("currentRank", currentRank.value)
+
         }
     ) {
         //图标列表
@@ -85,9 +90,8 @@ fun RankEquipListItem(
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
-                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                type = if (unitPromotion.promotionLevel == selectedRank.value) 1 else 0
+                type = if (unitPromotion.promotionLevel == currentRank.value) 1 else 0
             )
 
             val allIds = unitPromotion.getAllOrderIds()
@@ -96,11 +100,7 @@ fun RankEquipListItem(
                     IconCompose(
                         modifier = Modifier.padding(Dimen.smallPadding),
                         data = ImageResourceHelper.getInstance().getEquipPic(it)
-                    ) {
-                        if (it != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
-                            toEquipDetail(it)
-                        }
-                    }
+                    )
                 }
             }
         }
@@ -110,9 +110,7 @@ fun RankEquipListItem(
 @Preview
 @Composable
 private fun RankEquipListItemPreview() {
-    val selectedRank = remember {
-        mutableStateOf(2)
-    }
+
     val allRankEquip = arrayListOf(
         UnitPromotion(),
         UnitPromotion(),
@@ -125,7 +123,9 @@ private fun RankEquipListItemPreview() {
             contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(allRankEquip) {
-                RankEquipListItem(it, selectedRank) { }
+                RankEquipListItem(remember {
+                    mutableStateOf(1)
+                }, it)
             }
         }
 

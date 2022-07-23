@@ -5,35 +5,57 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.ui.MainActivity
 
 private val DarkColorPalette = darkColorScheme(
     primary = colorPrimaryDark,
-    onPrimary = Color.Black,
-    primaryContainer = Color.Black,
+    onPrimary = colorWhite,
+    primaryContainer = colorBlack,
     onPrimaryContainer = colorPrimaryDark,
     secondary = colorPrimaryDark,
-    surfaceVariant = colorAccentDark,
-    background = Color.Black,
-    onBackground = Color.White
+    onSecondary = colorBlack,
+    secondaryContainer = colorPrimaryDark,
+    onSecondaryContainer = colorBlack,
+//    tertiary = colorPrimaryDark,
+//    onTertiary = colorBlack,
+//    tertiaryContainer = colorBlack,
+//    onTertiaryContainer = colorPrimaryDark,
+    background = colorBlack,
+    onBackground = colorWhite,
+    surface = colorSurfaceDark,
+    onSurface = colorSurface,
+    surfaceVariant = colorSurfaceDark,
+    onSurfaceVariant = colorSurface,
+    outline = colorGrayDark,
 )
 
 private val LightColorPalette = lightColorScheme(
     primary = colorPrimary,
-    onPrimary = Color.White,
-    primaryContainer = Color.White,
+    onPrimary = colorWhite,
+    primaryContainer = colorWhite,
     onPrimaryContainer = colorPrimary,
     secondary = colorPrimary,
-    surfaceVariant = colorAccent,
-    background = Color.White,
-    onBackground = Color.Black
+    onSecondary = colorWhite,
+    secondaryContainer = colorPrimary,
+    onSecondaryContainer = colorWhite,
+//    tertiary = colorPrimary,
+//    onTertiary = colorWhite,
+//    tertiaryContainer = colorWhite,
+//    onTertiaryContainer = colorPrimary,
+    background = colorWhite,
+    onBackground = colorBlack,
+    surface = colorSurface,
+    onSurface = colorSurfaceDark,
+    surfaceVariant = colorSurface,
+    onSurfaceVariant = colorSurfaceDark,
+    outline = colorGray,
 )
 
 @SuppressLint("NewApi")
 @Composable
 fun PCRToolComposeTheme(
+    shapes: Shapes = MaterialTheme.shapes,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -49,6 +71,7 @@ fun PCRToolComposeTheme(
     }
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content
+        content = content,
+        shapes = shapes
     )
 }

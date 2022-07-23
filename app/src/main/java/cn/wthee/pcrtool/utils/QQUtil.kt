@@ -7,12 +7,8 @@ import android.content.Intent
 import android.net.Uri
 
 
-/****************
- *
- * 发起添加群流程。群号：214141356 的 key 为：
- * 调用 joinQQGroup(F5P739Sbo-Y5Rg90oK4ZMoDaV2tMYf0h) 即可发起手Q客户端申请加群 PCR Tool 反馈交流(214141356)
- *
- * @return 返回true表示呼起手Q成功，返回false表示呼起失败
+/**
+ * 发起添加群流程
  */
 fun joinQQGroup(context: Context) {
     val intent = Intent()

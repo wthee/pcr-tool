@@ -9,7 +9,7 @@ data class CharacterProperty(
     var level: Int = 0,
     var rank: Int = 0,
     var rarity: Int = 5,
-    var uniqueEquipmentLevel: Int = 0
+    var uniqueEquipmentLevel: Int = 0,
 ) {
     fun isInit() = level != 0
 

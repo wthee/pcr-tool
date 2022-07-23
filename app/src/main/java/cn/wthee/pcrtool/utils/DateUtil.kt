@@ -198,7 +198,9 @@ val String.toTimestamp: Long
  */
 fun calcDate(date: String, n: Int, before: Boolean): String {
     val now = Calendar.getInstance()
-    now.time = df1.parse(date)
+    df1.parse(date)?.let {
+        now.time = it
+    }
     now[Calendar.DATE] = now[Calendar.DATE] + (if (before) -n else n)
     return df1.format(now.time)
 }

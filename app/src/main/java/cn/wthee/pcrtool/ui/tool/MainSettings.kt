@@ -7,21 +7,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Switch
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -30,12 +25,12 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.switchColors
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
@@ -44,6 +39,7 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 /**
  * 设置页面
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
@@ -53,6 +49,12 @@ fun MainSettings() {
     SideEffect {
         //自动删除历史数据
         FileUtil.deleteOldDatabase(context)
+    }
+
+    LaunchedEffect(navSheetState.currentValue) {
+        if (navSheetState.isVisible) {
+            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        }
     }
 
     //数据库版本
@@ -87,35 +89,22 @@ fun MainSettings() {
                 .padding(bottom = Dimen.largePadding)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = Dimen.smallPadding)
+            HeaderText(
+                text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
+                modifier = Modifier.padding(top = Dimen.mediumPadding)
             )
-            //- 查看项目地址
-            val projectUrl = stringResource(id = R.string.project_url)
-            val project = stringResource(id = R.string.app_sourcce)
-            Subtitle2(
-                text = projectUrl,
-                modifier = Modifier.clickable {
-                    BrowserUtil.open(context, projectUrl, project)
-                })
-            ImageCompose(
-                data = R.mipmap.ic_launcher_round,
-                ratio = 1f,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(Dimen.largePadding)
+            IconCompose(
+                data = R.drawable.ic_logo_large,
+                size = Dimen.largeIconSize,
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
-            Subtitle2(
-                text = "${typeName}：${dbVersionGroup}",
-                color = MaterialTheme.colorScheme.primary
+            Subtitle1(
+                text = "${typeName}：${dbVersionGroup}"
             )
         }
         //其它设置
-        LineCompose()
+        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
         MainText(
             text = stringResource(id = R.string.app_setting),
             modifier = Modifier.padding(Dimen.largePadding)
@@ -128,7 +117,7 @@ fun MainSettings() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
             ColorSetting(sp, context)
         }
-        LineCompose()
+        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
         //感谢友链
         MainText(
             text = stringResource(id = R.string.thanks),
@@ -175,9 +164,15 @@ fun MainSettings() {
 
 }
 
-//动态色彩
+/**
+ * 动态色彩
+ */
 @Composable
-private fun ColorSetting(sp: SharedPreferences, context: Context) {
+fun ColorSetting(
+    sp: SharedPreferences,
+    context: Context,
+    showSummary: Boolean = true
+) {
     val dynamicColorOn = sp.getBoolean(Constants.SP_COLOR_STATE, true)
     val dynamicColorState = remember {
         mutableStateOf(dynamicColorOn)
@@ -208,11 +203,15 @@ private fun ColorSetting(sp: SharedPreferences, context: Context) {
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.dynamic_color))
-            SummaryText(text = dynamicColorSummary)
+            if (showSummary) {
+                SummaryText(text = dynamicColorSummary)
+            }
         }
         Switch(
             checked = dynamicColorState.value,
-            colors = switchColors(),
+            thumbContent = {
+                SwitchThumbIcon(dynamicColorState.value)
+            },
             onCheckedChange = {
                 dynamicColorState.value = it
                 sp.edit().putBoolean(Constants.SP_COLOR_STATE, it).apply()
@@ -223,9 +222,16 @@ private fun ColorSetting(sp: SharedPreferences, context: Context) {
     }
 }
 
-//动画效果
+
+/**
+ * 动画效果
+ */
 @Composable
-private fun AnimSetting(sp: SharedPreferences, context: Context) {
+fun AnimSetting(
+    sp: SharedPreferences,
+    context: Context,
+    showSummary: Boolean = true
+) {
     val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
     val animState = remember {
         mutableStateOf(animOn)
@@ -256,22 +262,32 @@ private fun AnimSetting(sp: SharedPreferences, context: Context) {
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.animation))
-            SummaryText(text = animSummary)
+            if (showSummary) {
+                SummaryText(text = animSummary)
+            }
         }
-        Switch(checked = animState.value, colors = switchColors(), onCheckedChange = {
-            animState.value = it
-            sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
-            VibrateUtil(context).single()
-        })
+        Switch(
+            checked = animState.value,
+            thumbContent = {
+                SwitchThumbIcon(animState.value)
+            }, onCheckedChange = {
+                animState.value = it
+                sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
+                VibrateUtil(context).single()
+            }
+        )
         Spacer(modifier = Modifier.width(Dimen.largePadding))
     }
 }
 
-//振动反馈
+/**
+ * 振动反馈
+ */
 @Composable
-private fun VibrateSetting(
+fun VibrateSetting(
     sp: SharedPreferences,
-    context: Context
+    context: Context,
+    showSummary: Boolean = true
 ) {
     val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
     val vibrateState = remember {
@@ -303,17 +319,28 @@ private fun VibrateSetting(
                 .weight(1f)
         ) {
             TitleText(text = stringResource(id = R.string.vibrate))
-            SummaryText(text = vibrateSummary)
+            if (showSummary) {
+                SummaryText(text = vibrateSummary)
+            }
         }
-        Switch(checked = vibrateState.value, colors = switchColors(), onCheckedChange = {
-            vibrateState.value = it
-            sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
-            VibrateUtil(context).single()
-        })
+        Switch(
+            checked = vibrateState.value,
+            thumbContent = {
+                SwitchThumbIcon(vibrateState.value)
+            },
+            onCheckedChange = {
+                vibrateState.value = it
+                sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
+                VibrateUtil(context).single()
+            }
+        )
         Spacer(modifier = Modifier.width(Dimen.largePadding))
     }
 }
 
+/**
+ * 设置项
+ */
 @Composable
 private fun SettingItem(
     iconType: MainIconType,
@@ -347,23 +374,42 @@ private fun SettingItem(
     }
 }
 
+/**
+ *文本标题
+ */
 @Composable
 private fun TitleText(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.titleLarge,
         fontSize = 18.sp,
-        fontWeight = FontWeight.Normal
+        fontWeight = FontWeight.Normal,
+        color = MaterialTheme.colorScheme.onSurface
     )
 }
 
+/**
+ * 摘要
+ */
 @Composable
 private fun SummaryText(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge,
-        color = colorResource(id = R.color.gray),
+        color = MaterialTheme.colorScheme.outline,
         modifier = Modifier.padding(top = Dimen.mediumPadding)
+    )
+}
+
+/**
+ * switch 选中图标
+ */
+@Composable
+private fun SwitchThumbIcon(checked: Boolean) {
+    Icon(
+        imageVector = if (checked) MainIconType.OK.icon else MainIconType.CLOSE.icon,
+        contentDescription = "",
+        modifier = Modifier.size(SwitchDefaults.IconSize)
     )
 }
 

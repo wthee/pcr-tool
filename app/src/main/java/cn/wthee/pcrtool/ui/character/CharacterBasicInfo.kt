@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -31,7 +29,6 @@ import com.google.accompanist.pager.rememberPagerState
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun CharacterBasicInfo(
-    scrollState: ScrollState,
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
@@ -39,6 +36,7 @@ fun CharacterBasicInfo(
     val roomComments =
         viewModel.getRoomComments(unitId).collectAsState(initial = null).value
     val pagerState = rememberPagerState()
+    val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->
@@ -105,9 +103,8 @@ private fun BasicInfo(info: CharacterInfoPro) {
         selectable = true
     )
     //介绍
-    Text(
-        info.getIntroText(),
-        style = MaterialTheme.typography.titleSmall,
+    Subtitle2(
+        text = info.getIntroText()
     )
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(

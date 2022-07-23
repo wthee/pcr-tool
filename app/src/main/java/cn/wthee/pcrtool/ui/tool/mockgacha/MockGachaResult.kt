@@ -6,12 +6,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -19,11 +18,12 @@ import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.simpleDateFormat
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
-import java.util.ArrayList
 
 
 /**
@@ -76,12 +76,12 @@ fun MockGachaResult(
             Row {
                 MainTitleText(
                     text = "UP：$upCount",
-                    backgroundColor = colorResource(id = R.color.color_rank_18_20),
+                    backgroundColor = colorRed,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
                 MainTitleText(
                     text = "★3：$start3Count",
-                    backgroundColor = colorResource(id = R.color.color_rank_7_10),
+                    backgroundColor = colorGold,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
@@ -155,13 +155,13 @@ private fun MockGachaResultRecordItem(
                 MainTitleText(
                     text = "PICK UP",
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    backgroundColor = colorResource(id = R.color.color_rank_18_20)
+                    backgroundColor = colorRed
                 )
             } else if (rarity3List.isNotEmpty()) {
                 MainTitleText(
                     text = "★3",
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    backgroundColor = colorResource(id = R.color.color_rank_7_10)
+                    backgroundColor = colorGold
                 )
             }
         }
@@ -226,13 +226,13 @@ private fun MockGachaResultRecordIconLine(
                     )
                     val textColor = when {
                         pickUpIndex.contains(index + line * 5) -> {
-                            colorResource(id = R.color.color_rank_18_20)
+                            colorRed
                         }
                         gachaUnitInfo.rarity == 3 -> {
-                            colorResource(id = R.color.color_rank_7_10)
+                            colorGold
                         }
                         else -> {
-                            Color.Unspecified
+                            MaterialTheme.colorScheme.onSurface
                         }
                     }
                     MainText(text = "★${gachaUnitInfo.rarity}", color = textColor)

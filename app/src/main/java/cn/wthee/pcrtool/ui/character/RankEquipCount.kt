@@ -1,20 +1,16 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,15 +23,12 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import kotlinx.coroutines.launch
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 
 /**
  * rank 范围装备素材数量统计
@@ -43,7 +36,7 @@ import kotlinx.coroutines.launch
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
@@ -52,157 +45,106 @@ fun RankEquipCount(
     navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val curRank = navViewModel.curRank1.value ?: 0
-    val targetRank = navViewModel.targetRank1.value ?: 0
     val rank0 = remember {
-        mutableStateOf(1)
+        mutableStateOf(maxRank)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
     }
-    if (curRank != 0 && targetRank != 0) {
-        rank0.value = curRank
-        rank1.value = targetRank
-    }
+
     val rankEquipMaterials =
         equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value).collectAsState(
             initial = arrayListOf()
         ).value
 
-    // dialog 状态
-    val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
-    )
-    val coroutineScope = rememberCoroutineScope()
-    if (!state.isVisible && !state.isAnimationRunning) {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
-    }
-    //关闭监听
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
-    if (rankEquipMaterials.isEmpty()) {
-        navViewModel.loading.postValue(true)
-    }
     val filter = navViewModel.filterEquip.observeAsState()
 
-    ModalBottomSheetLayout(
-        sheetState = state,
-        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
-        sheetElevation = Dimen.sheetElevation,
-        sheetShape = if (state.offset.value == 0f) {
-            noShape
-        } else {
-            Shape.large
-        },
-        sheetContent = {
-            //RANK 选择
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(top = Dimen.largePadding)
+                .fillMaxWidth()
+        ) {
+            filter.value?.let { filterValue ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    //标题
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        MainTitleText(text = stringResource(id = R.string.cur_rank))
+                        RankText(
+                            rank = rank0.value,
+                        )
+                        MainTitleText(text = stringResource(id = R.string.target_rank))
+                        RankText(
+                            rank = rank1.value,
+                        )
+                    }
+                }
+                //装备素材列表
+                filterValue.starIds =
+                    GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
+                        ?: arrayListOf()
+                if (rankEquipMaterials.isNotEmpty()) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
+                        contentPadding = PaddingValues(Dimen.mediumPadding)
+                    ) {
+                        items(
+                            items = rankEquipMaterials,
+                            key = {
+                                it.id
+                            }
+                        ) { item ->
+                            EquipCountItem(item, filterValue, toEquipMaterial)
+                        }
+                        items(5) {
+                            CommonSpacer()
+                        }
+                    }
+                } else {
+                    //加载中
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
+                        contentPadding = PaddingValues(Dimen.mediumPadding)
+                    ) {
+                        items(count =10) {
+                            EquipCountItem(EquipmentMaterial(), filterValue, toEquipMaterial)
+                        }
+                    }
+                }
+            }
+        }
+
+        //选择
+        FabCompose(
+            iconType = MainIconType.RANK_SELECT,
+            text = stringResource(id = R.string.rank_select),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            dialogState.value = true
+        }
+
+        //RANK 选择
+        if (dialogState.value) {
             RankSelectCompose(
                 rank0,
                 rank1,
                 maxRank,
-                coroutineScope,
-                state,
-                navViewModel,
-                RankSelectType.LIMIT
+                dialogState,
+                type = RankSelectType.LIMIT
             )
-        },
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface
-    ) {
-
-        if (ok) {
-            coroutineScope.launch {
-                state.hide()
-            }
-            navViewModel.fabOKCilck.postValue(false)
-        }
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .padding(top = Dimen.largePadding)
-                    .fillMaxWidth()
-            ) {
-                Column {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(start = Dimen.largePadding)
-                    ) {
-                        //头像
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
-                            size = Dimen.largeIconSize
-                        )
-                        //标题
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            MainTitleText(text = stringResource(id = R.string.cur_rank))
-                            RankText(
-                                rank = rank0.value,
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                            MainTitleText(text = stringResource(id = R.string.target_rank))
-                            RankText(
-                                rank = rank1.value,
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                        }
-                    }
-                }
-                //装备素材列表
-                MainCard(
-                    shape = CardTopShape,
-                    modifier = Modifier
-                        .padding(top = Dimen.largePadding)
-                        .fillMaxSize()
-                ) {
-                    filter.value?.let { filterValue ->
-                        filterValue.starIds =
-                            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
-                                ?: arrayListOf()
-                        if (rankEquipMaterials.isNotEmpty()) {
-                            navViewModel.loading.postValue(false)
-                            LazyVerticalGrid(
-                                columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                                contentPadding = PaddingValues(Dimen.mediumPadding)
-                            ) {
-                                items(
-                                    items = rankEquipMaterials,
-                                    key = {
-                                        it.id
-                                    }
-                                ) { item ->
-                                    EquipCountItem(item, filterValue, toEquipMaterial)
-                                }
-                                items(5) {
-                                    CommonSpacer()
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            //选择
-            FabCompose(
-                iconType = MainIconType.RANK_SELECT,
-                text = stringResource(id = R.string.rank_select),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                coroutineScope.launch {
-                    if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                        state.hide()
-                    } else {
-                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        state.show()
-                    }
-                }
-            }
         }
     }
 
@@ -214,12 +156,17 @@ private fun EquipCountItem(
     filter: FilterEquipment,
     toEquipMaterial: (Int) -> Unit
 ) {
+    val placeholder = item.id == ImageResourceHelper.UNKNOWN_EQUIP_ID
     val loved = filter.starIds.contains(item.id)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(Dimen.mediumPadding),
+        modifier = Modifier.padding(Dimen.mediumPadding)
     ) {
-        IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(item.id)) {
+        IconCompose(
+            modifier = Modifier.commonPlaceholder(visible = placeholder),
+            data = ImageResourceHelper.getInstance().getEquipPic(item.id)
+        ) {
             toEquipMaterial(item.id)
         }
         SelectText(

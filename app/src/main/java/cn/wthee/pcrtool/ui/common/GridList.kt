@@ -120,12 +120,3 @@ fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
 } else {
     Dimen.iconSize + Dimen.largePadding * 2
 } * 5
-
-////fun <T : Any> LazyGridScope.items(
-//    lazyPagingItems: LazyPagingItems<T>,
-//    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
-//) {
-//    items(lazyPagingItems.itemCount) { index ->
-//        itemContent(lazyPagingItems[index])
-//    }
-//}

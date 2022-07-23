@@ -187,7 +187,7 @@ object FileUtil {
             getOldList(context)?.forEach {
                 it.delete()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

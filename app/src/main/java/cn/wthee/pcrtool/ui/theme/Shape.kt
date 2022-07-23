@@ -1,32 +1,28 @@
 package cn.wthee.pcrtool.ui.theme
 
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 
-
-object Shape {
-    val none = RoundedCornerShape(0.dp)
-    val small = RoundedCornerShape(4.dp)
-    val medium = RoundedCornerShape(8.dp)
-    val large = RoundedCornerShape(12.dp)
-}
 
 /**
  * 左上、右上圆角
  */
-val CardTopShape = RoundedCornerShape(
-    topStart = Dimen.cardRadius,
-    topEnd = Dimen.cardRadius
+@Composable
+fun shapeTop() = RoundedCornerShape(
+    topStart = MaterialTheme.shapes.medium.topStart,
+    topEnd = MaterialTheme.shapes.medium.topEnd,
+    bottomStart = CornerSize(0),
+    bottomEnd = CornerSize(0)
 )
 
-val noShape = RoundedCornerShape(0)
-
+const val RATIO_SHAPE = 0.382f
 
 /**
  * 梯形
  */
-const val RATIO_SHAPE = 0.382f
 val TrapezoidShape = GenericShape { size, _ ->
     moveTo(size.width * RATIO_SHAPE, 0f)
     lineTo(0f, size.height)

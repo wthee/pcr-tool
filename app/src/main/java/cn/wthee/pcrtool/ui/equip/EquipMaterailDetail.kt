@@ -3,17 +3,16 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -26,7 +25,7 @@ import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -35,11 +34,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 
@@ -50,7 +45,7 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun EquipMaterialDeatil(
+fun EquipMaterialDetail(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel(),
@@ -85,7 +80,7 @@ fun EquipMaterialDeatil(
                 text = basicInfo.equipmentName,
                 modifier = Modifier
                     .padding(top = Dimen.largePadding),
-                color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 selectable = true
             )
             if (dropInfoList != null && areaList != null) {
@@ -99,7 +94,7 @@ fun EquipMaterialDeatil(
                     )
                     val tabs = arrayListOf<String>()
                     //颜色
-                    val colorList = arrayListOf<Int>()
+                    val colorList = arrayListOf<Color>()
 
                     lists.forEachIndexed { index, data ->
                         if (data.isNotEmpty()) {
@@ -115,11 +110,10 @@ fun EquipMaterialDeatil(
                             )
                             colorList.add(
                                 when (index) {
-                                    0 -> R.color.color_map_n
-                                    1 -> R.color.color_map_h
-                                    2 -> R.color.color_map_vh
-                                    3 -> R.color.color_rank_21_23
-                                    else -> R.color.black
+                                    0 -> colorBlue
+                                    1 -> colorRed
+                                    2 -> colorPurple
+                                    else -> colorGreen
                                 }
                             )
                         }
@@ -138,13 +132,14 @@ fun EquipMaterialDeatil(
                                     top = Dimen.mediumPadding,
                                     start = Dimen.largePadding,
                                     end = Dimen.largePadding
-                                ),
+                                )
+                                .fillMaxWidth(tabs.size * 0.25f),
                             selectedTabIndex = pagerState.currentPage,
-                            backgroundColor = Color.Transparent,
+                            containerColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.primary,
                             indicator = { tabPositions ->
                                 TabRowDefaults.Indicator(
-                                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                    Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                                 )
                             }
                         ) {
@@ -157,10 +152,10 @@ fun EquipMaterialDeatil(
                                         }
                                     }
                                 ) {
-                                    Text(
+                                    Subtitle1(
                                         text = s,
-                                        color = colorResource(id = colorList[index]),
-                                        modifier = Modifier.padding(bottom = Dimen.smallPadding)
+                                        modifier = Modifier.padding(Dimen.smallPadding),
+                                        color = colorList[index],
                                     )
                                 }
                             }
@@ -194,7 +189,7 @@ fun EquipMaterialDeatil(
                                             equipId,
                                             (it as EquipmentDropInfo).getAllOdd(),
                                             it.getNum(),
-                                            colorResource(id = colorList[pagerIndex])
+                                            colorList[pagerIndex]
                                         )
                                     } else {
                                         it as RandomEquipDropArea
@@ -207,7 +202,7 @@ fun EquipMaterialDeatil(
                                             equipId,
                                             odds,
                                             "区域 ${it.area}",
-                                            colorResource(id = colorList[pagerIndex])
+                                            colorList[pagerIndex]
                                         )
                                     }
 
@@ -234,7 +229,7 @@ fun EquipMaterialDeatil(
                             -1,
                             odds,
                             "30-15",
-                            Color.White
+                            colorWhite
                         )
                     }
                     item {
@@ -290,19 +285,12 @@ fun AreaItem(
             backgroundColor = color,
             modifier = Modifier
                 .padding(bottom = Dimen.mediumPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                .commonPlaceholder(visible = placeholder)
         )
 
 
         MainCard(
-            modifier = Modifier
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+            modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
             Column {
                 VerticalGrid(

@@ -178,7 +178,7 @@ class FileSaveHelper(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         return uri
     }

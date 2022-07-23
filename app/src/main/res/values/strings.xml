@@ -30,7 +30,7 @@
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
-    <string name="skill">技能</string>
+    <string name="skill">技能信息</string>
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
@@ -40,15 +40,15 @@
     <string name="dynamic_color">动态色彩</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
-    <string name="color_on">动态色彩开启，动态调整主题</string>
+    <string name="color_on">根据系统壁纸，调整应用主题颜色</string>
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
-    <string name="color_off">动态色彩关闭，使用默认主题</string>
+    <string name="color_off">使用默认主题</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
-    <string name="data_from">干炸里脊资源</string>
-    <string name="data_from_hint">数据和图片来源</string>
-    <string name="data_from_url">https://redive.estertion.win/</string>
+    <string name="data_from">Unity Texture Toolkit</string>
+    <string name="data_from_hint">资源获取工具 by esterTion</string>
+    <string name="data_from_url">https://github.com/esterTion/unity-texture-toolkit</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="shizuru_note_tip">感谢大佬的开源项目</string>
     <string name="shizuru_note_url">https://github.com/MalitsPlus/ShizuruNotes</string>
@@ -83,7 +83,7 @@
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
-    <string name="equip_type">装备类型</string>
+    <string name="equip_level_color">装备品级</string>
     <string name="equip_craft">装备合成</string>
     <string name="craft">装备</string>
     <string name="uncraft">素材</string>
@@ -95,6 +95,7 @@
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
     <string name="name">名字</string>
+    <string name="equip_require_level">需求等级：%s</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
@@ -108,7 +109,8 @@
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
-    <string name="pvp_info_add_tip">添加对战记录</string>
+    <string name="pvp_upload">上传记录</string>
+    <string name="pvp_info_add_tip">上传对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
@@ -121,6 +123,7 @@
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
+    <string name="sp_dungeon">特殊地下城</string>
     <string name="visit_detail">在 AppMedia 中查看</string>
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
@@ -132,7 +135,6 @@
     <string name="equip_name">装备名</string>
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
-    <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
     <string name="rank_compare">RANK 对比</string>
@@ -149,6 +151,7 @@
     <string name="other">其它</string>
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
+    <string name="close">关闭</string>
     <string name="add_to_calendar">添加至系统日历</string>
     <string name="copy_event">复制活动信息</string>
 
@@ -187,16 +190,16 @@
     <string name="title_skill_1_coe">技能1+ 系数</string>
     <string name="title_ub_add">连结爆发+ 额外数值</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
-    <string name="attr_all_value">战力：</string>
+    <string name="attr_all_value">战力：%s</string>
     <string name="title_attr_tip">属性数值说明</string>
     <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
-    <string name="to_summon">查看召唤物 ></string>
+    <string name="to_summon">召唤物</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
     <string name="basic_info">基本信息</string>
-    <string name="story_pic">查看剧情立绘 ></string>
+    <string name="story_pic">剧情立绘</string>
     <string name="no_limit">无限制</string>
     <string name="tool_mock_gacha">抽卡模拟</string>
     <string name="gacha_pick_up_normal">自选 UP</string>
@@ -206,16 +209,20 @@
     <string name="reset_record">重置卡池</string>
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="delete_gacha">删除卡池</string>
-    <string name="tip_download_finish">数据下载完成，重新打开应用后更新</string>
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
-    <string name="tip_color_change">动态色彩设置变更，重新打开应用后生效</string>
     <string name="title_recently_used">常用</string>
     <string name="gacha_fes">Fes限定★3</string>
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
-    <string name="model_preview">模型预览</string>
+    <string name="model_preview">模型</string>
+    <string name="change_failed">切换失败</string>
+    <string name="no_guild">无公会</string>
+    <string name="character_pic">立绘</string>
+    <string name="character_basic_info">资料</string>
+    <string name="expand">展开</string>
+    <string name="sp_skill">SP技能</string>
 
 </resources>

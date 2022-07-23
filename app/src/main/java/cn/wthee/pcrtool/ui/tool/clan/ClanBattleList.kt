@@ -5,13 +5,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,16 +19,12 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -46,7 +41,9 @@ fun ClanBattleList(
         clanViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         val visible = clanList.isNotEmpty()
         FadeAnimation(visible = visible) {
             LazyVerticalGrid(
@@ -86,7 +83,7 @@ fun ClanBattleList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -120,10 +117,7 @@ private fun ClanBattleItem(
             //日期
             MainTitleText(
                 text = clanBattleInfo.getDate(),
-                modifier = Modifier.placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
             //阶段数
             MainTitleText(
@@ -134,25 +128,18 @@ private fun ClanBattleItem(
                 backgroundColor = getSectionTextColor(clanBattleInfo.phase),
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
-                    .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
+                    .commonPlaceholder(visible = placeholder)
             )
         }
 
         MainCard(
-            modifier = Modifier
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+            modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
             //图标
-            Row {
+            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
                 bossUnitIdList.forEachIndexed { index, it ->
                     Box(
-                        modifier = Modifier.padding(Dimen.mediumPadding),
+                        modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
@@ -169,9 +156,18 @@ private fun ClanBattleItem(
                         //多目标提示
                         val targetCount = clanBattleInfo.getMultiCount(index)
                         if (targetCount > 0) {
-                            MainTitleText(
+                            //阴影
+                            MainText(
                                 text = targetCount.toString(),
-                                modifier = Modifier.align(Alignment.BottomEnd)
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(
+                                    start = Dimen.textElevation,
+                                    top = Dimen.textElevation
+                                )
+                            )
+                            MainText(
+                                text = targetCount.toString(),
+                                color = colorWhite,
                             )
                         }
                     }
@@ -187,16 +183,14 @@ private fun ClanBattleItem(
  * 获取团队战阶段字体颜色
  */
 @Composable
-fun getSectionTextColor(section: Int): Color {
-    val color = when (section) {
-        1 -> R.color.color_rank_2_3
-        2 -> R.color.color_rank_4_6
-        3 -> R.color.color_rank_7_10
-        4 -> R.color.color_rank_11_17
-        else -> R.color.color_rank_18_20
-    }
-    return colorResource(id = color)
+fun getSectionTextColor(section: Int) = when (section) {
+    1 -> colorCopper
+    2 -> colorSilver
+    3 -> colorGold
+    4 -> colorPurple
+    else -> colorRed
 }
+
 
 @Preview
 @Composable

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import javax.inject.Inject
 
@@ -13,12 +14,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
 
-    suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
+    suspend fun getEquipBasicInfo(equipId: Int) = equipmentDao.getEquipBasicInfo(equipId)
 
-    suspend fun getEquipments(filter: FilterEquipment, typeName: String, limit: Int) =
+    suspend fun getEquipments(filter: FilterEquipment, limit: Int) =
         equipmentDao.getEquipments(
             filter.craft,
-            typeName,
+            filter.colorType,
             filter.name,
             if (filter.all) 1 else 0,
             filter.starIds,
@@ -31,12 +32,15 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
-    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) =
-        equipmentDao.getUniqueEquipInfos(unitId, lv)
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int): UniqueEquipmentMaxData? {
+        return try {
+            equipmentDao.getUniqueEquipInfos(unitId, lv)
+        } catch (e: Exception) {
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+        }
+    }
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
-
-    suspend fun getAllEquip() = equipmentDao.getAllEquip()
 
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) =
         equipmentDao.getEquipByRank(unitId, startRank, endRank)
@@ -47,5 +51,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
 
     suspend fun getMaxArea() = equipmentDao.getMaxArea()
+
+    suspend fun getEquipColorNum() = equipmentDao.getEquipColorNum()
 
 }

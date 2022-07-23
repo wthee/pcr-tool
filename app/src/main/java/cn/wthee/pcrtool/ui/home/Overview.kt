@@ -3,15 +3,16 @@ package cn.wthee.pcrtool.ui.home
 import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -20,14 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -35,7 +30,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
@@ -45,7 +39,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.utils.*
@@ -64,6 +58,20 @@ val permissions = arrayOf(
     Manifest.permission.WRITE_CALENDAR,
 )
 
+//首页
+private enum class OverviewType(val id: Int) {
+    CHARACTER(0),
+    EQUIP(1),
+    TOOL(2),
+    NEWS(3),
+    IN_PROGRESS_EVENT(4),
+    COMING_SOON_EVENT(5);
+
+    companion object {
+        fun getByValue(value: Int) = values()
+            .find { it.id == value } ?: CHARACTER
+    }
+}
 
 /**
  * 首页纵览
@@ -119,7 +127,7 @@ fun Overview(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {
             item {
-                TopBarCompose(actions, isEditMode, noticeViewModel)
+                TopBarCompose(isEditMode, noticeViewModel)
             }
             if (!isEditMode.value) {
                 overviewOrderData.intArrayList.forEach {
@@ -417,23 +425,18 @@ private fun CharacterSection(
                 itemSpacing = Dimen.mediumPadding
             ) { index ->
                 val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
-                Card(
-                    modifier = Modifier
-                        .width(getItemWidth())
-                        .clip(Shape.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            actions.toCharacterDetail(unitId)
-                        },
-                    elevation = CardDefaults.cardElevation(0.dp),
-                    shape = Shape.medium,
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+                MainCard(
+                    modifier = Modifier.width(getItemWidth()),
+                    onClick = {
+                        actions.toCharacterDetail(unitId)
+                    }
+//                    elevation = CardDefaults.cardElevation(0.dp),
+//                    shape = MaterialTheme.shapes.medium,
+//                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
                 ) {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
-                        ratio = RATIO,
-                        loadingId = R.drawable.load,
-                        errorId = R.drawable.error
+                        ratio = RATIO
                     )
                 }
             }
@@ -501,7 +504,6 @@ private fun EquipSection(
 /**
  * 活动
  */
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun CalendarEventLayout(
     isEditMode: Boolean,
@@ -611,7 +613,7 @@ private fun CalendarEventOperation(
             Row(
                 modifier = Modifier
                     .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(Shape.small)
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         VibrateUtil(context).single()
                         checkPermissions(context, permissions, false) {
@@ -666,7 +668,7 @@ private fun CalendarEventOperation(
             Row(
                 modifier = Modifier
                     .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(Shape.small)
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         VibrateUtil(context).single()
                         var allText = ""
@@ -727,7 +729,9 @@ private fun CalendarEventOperation(
     }
 }
 
-//数据切换选择弹窗
+/**
+ * 数据切换选择弹窗
+ */
 @Composable
 private fun ChangeDbCompose(
     openDialog: Boolean,
@@ -743,9 +747,17 @@ private fun ChangeDbCompose(
         stringResource(id = R.string.db_jp),
     )
 
+    //展开边距修正
+    val mFabModifier = if (openDialog) {
+        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+
+    } else {
+        modifier
+    }
+
     //数据切换
     SmallFloatingActionButton(
-        modifier = modifier
+        modifier = mFabModifier
             .animateContentSize(defaultSpring())
             .padding(
                 end = Dimen.fabMarginEnd,
@@ -753,9 +765,7 @@ private fun ChangeDbCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
-        containerColor = MaterialTheme.colorScheme.background,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -782,10 +792,8 @@ private fun ChangeDbCompose(
                                 VibrateUtil(context).single()
                                 navViewModel.openChangeDataDialog.postValue(false)
                                 navViewModel.fabCloseClick.postValue(true)
-                                if (region != i + 2) {
-                                    coroutineScope.launch {
-                                        DatabaseUpdater.changeDatabase(i + 2)
-                                    }
+                                coroutineScope.launch {
+                                    DatabaseUpdater.changeDatabase(i + 2)
                                 }
                             }
                     }
@@ -848,7 +856,7 @@ private fun Section(
     } else {
         Modifier
             .padding(horizontal = Dimen.mediumPadding)
-            .clip(Shape.medium)
+            .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 if (contentVisible) {
@@ -857,7 +865,7 @@ private fun Section(
             })
             .background(
                 color = if (hasAdded) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = Shape.medium
+                shape = MaterialTheme.shapes.medium
             )
     }
 
@@ -884,13 +892,13 @@ private fun Section(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding),
                     textAlign = TextAlign.Start,
-                    color = if (hasAdded) Color.White else Color.Unspecified
+                    color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
                 )
             }
             IconCompose(
                 data = iconType,
                 size = Dimen.fabIconSize,
-                tint = if (hasAdded) Color.White else Color.Unspecified
+                tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
             )
             MainText(
                 text = stringResource(id = titleId),
@@ -898,7 +906,7 @@ private fun Section(
                     .weight(1f)
                     .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
-                color = if (hasAdded) Color.White else Color.Unspecified
+                color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
             )
             //更多信息，编辑时隐藏
             if (!isEditMode) {
@@ -910,22 +918,16 @@ private fun Section(
                 ) {
                     if (onClick != null) {
                         if (hintText != "") {
-                            Text(text = buildAnnotatedString {
-                                withStyle(
-                                    style = SpanStyle(
-                                        baselineShift = BaselineShift(+0.2f),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                ) {
-                                    append(hintText)
-                                }
-                            })
+                            Subtitle2(
+                                text = hintText,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                         IconCompose(
                             data = rightIconType ?: MainIconType.MORE,
                             size = Dimen.fabIconSize,
-                            tint = if (hasAdded) Color.White else Color.Unspecified
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
@@ -947,31 +949,37 @@ private fun Section(
  */
 private fun getTypeDataToString(data: CalendarEvent): String {
     var eventTitle = ""
-    if (data.type != "1") {
-        //正常活动
-        val list = data.type.intArrayList
-        list.forEach { type ->
-            val title = when (type) {
-                31, 41 -> "普通关卡"
-                32, 42 -> "困难关卡"
-                39, 49 -> "高难关卡"
-                34 -> "探索"
-                37 -> "圣迹调查"
-                38 -> "神殿调查"
-                45 -> "地下城"
-                else -> ""
-            }
-            val multiple = data.getFixedValue()
-            eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
-                multiple.toInt().toString()
-            } else {
-                multiple.toString()
-            }) + "倍\n"
-
+    when (data.type) {
+        "1" -> {
+            //露娜塔
+            eventTitle = "露娜塔"
         }
-    } else {
-        //露娜塔
-        eventTitle = "露娜塔"
+        "-1" -> {
+            //特殊地下城
+            eventTitle = "特殊地下城"
+        }
+        else -> {
+            //正常活动
+            val list = data.type.intArrayList
+            list.forEach { type ->
+                val title = when (type) {
+                    31, 41 -> "普通关卡"
+                    32, 42 -> "困难关卡"
+                    39, 49 -> "高难关卡"
+                    34 -> "探索"
+                    37 -> "圣迹调查"
+                    38 -> "神殿调查"
+                    45 -> "地下城"
+                    else -> ""
+                }
+                val multiple = data.getFixedValue()
+                eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
+                    multiple.toInt().toString()
+                } else {
+                    multiple.toString()
+                }) + "倍\n"
+            }
+        }
     }
 
     return eventTitle

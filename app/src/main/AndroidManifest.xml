@@ -27,11 +27,11 @@
         android:allowBackup="true"
         android:configChanges="orientation|screenSize"
         android:hasFragileUserData="true"
-        android:icon="${icon}"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="${icon}"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pcrtoolcompose"
         tools:targetApi="q">

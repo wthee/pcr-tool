@@ -1,12 +1,13 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -24,14 +25,15 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaHistory
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaResult
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -125,10 +127,10 @@ fun MockGacha(
                     selectedTabIndex = pagerState.currentPage,
                     indicator = { tabPositions ->
                         TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                         )
                     },
-                    backgroundColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth(0.618f)
@@ -149,7 +151,7 @@ fun MockGacha(
                                 color = if (pagerState.currentPage == index) {
                                     MaterialTheme.colorScheme.primary
                                 } else {
-                                    Color.Unspecified
+                                    MaterialTheme.colorScheme.onSurface
                                 }
                             )
                         }
@@ -291,7 +293,11 @@ private fun ToSelectMockGachaUnitListItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
+        modifier = Modifier.padding(
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding,
+            top = Dimen.mediumPadding
+        )
     ) {
         MainTitleText(text = title)
         Spacer(modifier = Modifier.weight(1f))

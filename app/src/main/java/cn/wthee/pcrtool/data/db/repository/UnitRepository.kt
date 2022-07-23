@@ -11,7 +11,7 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    suspend fun getInfoAndData(filter: FilterCharacter, guildName: String, limit: Int) =
+    suspend fun getInfoAndData(filter: FilterCharacter, limit: Int) =
         unitDao.getInfoAndData(
             filter.sortType.type,
             if (filter.asc) "asc" else "desc",
@@ -19,7 +19,14 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
             filter.position()[0],
             filter.position()[1],
             filter.atk,
-            guildName,
+            when {
+                //公会
+                filter.guild > 1 -> getGuilds()[filter.guild - 2].guildId
+                //无公会
+                filter.guild == 1 -> -1
+                //全部
+                else -> 0
+            },
             if (filter.all) 1 else 0,
             filter.r6,
             filter.starIds,
@@ -42,7 +49,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getCharacterByIds(unitIds: List<Int>) = unitDao.getCharacterByIds(unitIds)
 
-
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =
         unitDao.getRankEquipment(unitId, rank)
 
@@ -57,6 +63,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getGuilds() = unitDao.getGuilds()
 
     suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
+
+    suspend fun getAllGuildMembers() = unitDao.getAllGuildMembers()
 
     suspend fun getNoGuildMembers() = unitDao.getNoGuildMembers()
 

@@ -7,17 +7,17 @@ import android.webkit.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -31,17 +31,17 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 
 /**
  * 公告列表
@@ -85,9 +85,6 @@ fun NewsList(
                     }
                 ) {
                     if (it != null) {
-                        if (navViewModel.loading.value == true) {
-                            navViewModel.loading.postValue(false)
-                        }
                         NewsItem(news = it, toNewsDetail)
                     }
                 }
@@ -126,8 +123,8 @@ fun NewsItem(
     val placeholder = news.title == ""
     val tag = news.getTag()
     val color = when (tag) {
-        "公告", "更新" -> colorResource(R.color.news_update)
-        "系統" -> colorResource(R.color.news_system)
+        "公告", "更新" -> colorRed
+        "系統" -> colorPurple
         else -> MaterialTheme.colorScheme.primary
     }
     Column(
@@ -138,26 +135,17 @@ fun NewsItem(
             MainTitleText(
                 text = tag,
                 backgroundColor = color,
-                modifier = Modifier.placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
+                modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
             MainTitleText(
                 text = news.date.formatTime,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
-                    .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
+                    .commonPlaceholder(visible = placeholder)
             )
         }
         MainCard(modifier = Modifier
-            .placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+            .commonPlaceholder(visible = placeholder)
             .heightIn(min = Dimen.cardHeight),
             onClick = {
                 toNewsDetail(news.id)
@@ -177,18 +165,22 @@ fun NewsItem(
 /**
  * 公告详情
  */
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
     val loading = remember {
         mutableStateOf(true)
     }
-    val alpha = if (loading.value) 0f else 1f
-    navViewModel.loading.postValue(loading.value)
     val id = if (key.indexOf('-') != -1) {
         key.split("-")[1]
     } else {
         key
+    }
+    LaunchedEffect(navSheetState.currentValue) {
+        if (navSheetState.isVisible) {
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        }
     }
     newsViewModel.getNewsDetail(id)
     val news = newsViewModel.newsDetail.observeAsState()
@@ -215,7 +207,6 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                 Subtitle2(text = date)
                 AndroidView(
                     modifier = Modifier
-                        .alpha(alpha)
                         .padding(
                             top = Dimen.mediumPadding,
                             start = Dimen.largePadding,

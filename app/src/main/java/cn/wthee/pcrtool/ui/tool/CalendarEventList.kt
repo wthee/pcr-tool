@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +18,7 @@ import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -60,7 +59,7 @@ fun CalendarEventList(
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -84,10 +83,10 @@ fun CalendarEventItem(calendar: CalendarEvent) {
             MaterialTheme.colorScheme.primary
         }
         comingSoon -> {
-            colorResource(id = R.color.news_system)
+            colorPurple
         }
         else -> {
-            colorResource(id = R.color.color_rank_4_6)
+            MaterialTheme.colorScheme.outline
         }
     }
 
@@ -175,50 +174,63 @@ fun CalendarEventItem(calendar: CalendarEvent) {
 @Composable
 private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
-    if (data.type != "1") {
-        //正常活动
-        val list = data.type.intArrayList
-        list.forEach { type ->
-            val title = when (type) {
-                31, 41 -> stringResource(id = R.string.normal)
-                32, 42 -> stringResource(id = R.string.hard)
-                39, 49 -> stringResource(id = R.string.very_hard)
-                34 -> stringResource(id = R.string.explore)
-                37 -> stringResource(id = R.string.shrine)
-                38 -> stringResource(id = R.string.temple)
-                45 -> stringResource(id = R.string.dungeon)
-                else -> ""
-            }
-
-            val dropMumColor = when (data.getFixedValue()) {
-                1.5f, 2.0f -> colorResource(id = R.color.color_rank_7_10)
-                3f -> colorResource(id = R.color.color_rank_18_20)
-                4f -> colorResource(id = R.color.color_rank_21_23)
-                else -> MaterialTheme.colorScheme.primary
-            }
-            val multiple = data.getFixedValue()
+    when (data.type) {
+        "1" -> {
+            //露娜塔
             events.add(
                 CalendarEventData(
-                    title,
-                    (if ((multiple * 10).toInt() % 10 == 0) {
-                        multiple.toInt().toString()
-                    } else {
-                        multiple.toString()
-                    }) + "倍",
-                    stringResource(id = if (type > 40) R.string.mana else R.string.drop),
-                    dropMumColor
+                    stringResource(id = R.string.tower),
+                    "",
+                    ""
                 )
             )
         }
-    } else {
-        //露娜塔
-        events.add(
-            CalendarEventData(
-                stringResource(id = R.string.tower),
-                "",
-                ""
+        "-1" -> {
+            //特殊地下城
+            events.add(
+                CalendarEventData(
+                    stringResource(id = R.string.sp_dungeon),
+                    "",
+                    ""
+                )
             )
-        )
+        }
+        else -> {
+            //正常活动
+            val list = data.type.intArrayList
+            list.forEach { type ->
+                val title = when (type) {
+                    31, 41 -> stringResource(id = R.string.normal)
+                    32, 42 -> stringResource(id = R.string.hard)
+                    39, 49 -> stringResource(id = R.string.very_hard)
+                    34 -> stringResource(id = R.string.explore)
+                    37 -> stringResource(id = R.string.shrine)
+                    38 -> stringResource(id = R.string.temple)
+                    45 -> stringResource(id = R.string.dungeon)
+                    else -> ""
+                }
+
+                val dropMumColor = when (data.getFixedValue()) {
+                    1.5f, 2.0f -> colorGold
+                    3f -> colorRed
+                    4f -> colorGreen
+                    else -> MaterialTheme.colorScheme.primary
+                }
+                val multiple = data.getFixedValue()
+                events.add(
+                    CalendarEventData(
+                        title,
+                        (if ((multiple * 10).toInt() % 10 == 0) {
+                            multiple.toInt().toString()
+                        } else {
+                            multiple.toString()
+                        }) + "倍",
+                        stringResource(id = if (type > 40) R.string.mana else R.string.drop),
+                        dropMumColor
+                    )
+                )
+            }
+        }
     }
 
     return events

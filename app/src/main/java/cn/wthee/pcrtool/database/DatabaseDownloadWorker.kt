@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.database
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import androidx.annotation.NonNull
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.MyApplication
@@ -21,8 +20,8 @@ import java.io.File
  * 数据库下载
  */
 class DatabaseDownloadWorker(
-    @NonNull context: Context,
-    @NonNull parameters: WorkerParameters?,
+    context: Context,
+    parameters: WorkerParameters?,
 ) : CoroutineWorker(context, parameters!!) {
 
 
@@ -73,7 +72,7 @@ class DatabaseDownloadWorker(
                         try {
                             //更新下载进度
                             navViewModel.downloadProgress.postValue(progress)
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
 
                         }
                         //更新下载进度

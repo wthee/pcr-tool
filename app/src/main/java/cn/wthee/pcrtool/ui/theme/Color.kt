@@ -1,33 +1,64 @@
 package cn.wthee.pcrtool.ui.theme
 
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 
 val colorPrimary = Color(0xFF5690EF)
-val colorAccent = Color(0xFF91BEF0)
-val white = Color(0xFFFFFFFF)
-
 val colorPrimaryDark = Color(0xFF3F6BB3)
-val colorAccentDark = Color(0xFF5B84B3)
+
+//黑白
+val colorWhite = Color(0xFFFFFCFE)
+val colorBlack = Color(0xFF0D0F0F)
+
+//surface
+val colorSurface = Color(0XFFFFFBFE)
+val colorSurfaceDark = Color(0XFF1C1B1F)
+
+//outline
+val colorGray = Color(0xFF9C9C9C)
+val colorGrayDark = Color(0xFF5C5B5B)
+
+//遮罩颜色
+val colorAlphaBlack = Color(0, 0, 0, 128)
+val colorAlphaWhite = Color(255, 255, 255, 128)
+
+//其它颜色
+/**
+ * 浅蓝、Rank 1
+ */
+val colorBlue = Color(0xFF50BFEA)
 
 /**
- * 输入框颜色适配
+ * 铜、Rank 2 ~ 3
  */
-@Composable
-fun outlinedTextFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
-    focusedLabelColor = MaterialTheme.colorScheme.primary,
-    focusedBorderColor = MaterialTheme.colorScheme.primary,
-    cursorColor = MaterialTheme.colorScheme.primary,
-)
+val colorCopper = Color(0xFFC28662)
 
 /**
- * 开关颜色适配
+ * 银、Rank 4 ~ 6
  */
-@Composable
-fun switchColors() = SwitchDefaults.colors(
-    checkedThumbColor = MaterialTheme.colorScheme.primary,
-)
+val colorSilver = Color(0xFF90B6B8)
+
+/**
+ * 金、Rank 7 ~ 10
+ */
+val colorGold = Color(0xFFEBA827)
+
+/**
+ * 紫、Rank 11 ~ 17
+ */
+val colorPurple = Color(0xFFBF76CD)
+
+/**
+ * 红、Rank 18 ~ 20
+ */
+val colorRed = Color(0xFFE95264)
+
+/**
+ * 绿、Rank 21 ~ 23
+ */
+val colorGreen = Color(0xFF5EB56D)
+
+/**
+ * 橙、Rank 24 ~ 28
+ */
+val colorOrange = Color(0xFFFF6C47)

@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.utils.stringArrayList
+
 /**
  * 竞技场查询结果
  */
@@ -19,13 +21,9 @@ data class PvpResultData(
     fun getIdList(type: Int): List<Int> {
         val ids = arrayListOf<Int>()
         val idList = if (type == 0) {
-            atk.split('-').filter {
-                it != ""
-            }
+            atk.stringArrayList
         } else {
-            def.split('-').filter {
-                it != ""
-            }
+            def.stringArrayList
         }
         idList.forEach {
             ids.add(it.toInt())

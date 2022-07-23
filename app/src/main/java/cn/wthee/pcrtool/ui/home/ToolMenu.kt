@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,11 +22,10 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainTexButton
+import cn.wthee.pcrtool.ui.common.IconTextButton
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -48,7 +48,20 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     val sp = mainSP()
 
     //自定义显示
-    val localData = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
+    var localData = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
+    //修复自定义错乱问题：3.4.0更新 id 后，清空旧的 id
+    localData.intArrayList.forEach {
+        if (it < 200) {
+            sp.edit {
+                putString(Constants.SP_TOOL_ORDER, "")
+                //更新
+                localData = ""
+                navViewModel.toolOrderData.postValue("")
+            }
+            return@forEach
+        }
+    }
+
     var toolOrderData = navViewModel.toolOrderData.observeAsState().value
     if (toolOrderData == null || toolOrderData.isEmpty()) {
         toolOrderData = localData
@@ -57,27 +70,18 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
 
     val toolList = arrayListOf<ToolMenuData>()
     toolOrderData.intArrayList.forEach {
-        toolList.add(getToolMenuData(toolMenuType = ToolMenuType.getByValue(it)))
+        ToolMenuType.getByValue(it)?.let { toolMenuType ->
+            toolList.add(getToolMenuData(toolMenuType = toolMenuType))
+        }
     }
 
     if (toolList.isEmpty() && !isEditMode && isHome) {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            MainTexButton(text = stringResource(R.string.to_add_tool)) {
+            IconTextButton(icon = MainIconType.MAIN, text = stringResource(R.string.to_add_tool)) {
                 actions.toToolMore(true)
             }
         }
     }
-//    val list = arrayListOf(
-//        ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
-//        ToolMenuData(R.string.tool_clan, MainIconType.CLAN),
-//        ToolMenuData(R.string.tool_leader, MainIconType.LEADER),
-//        ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
-//        ToolMenuData(R.string.tool_event, MainIconType.EVENT),
-//        ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-//        ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA),
-//        ToolMenuData(R.string.tool_more, MainIconType.TOOL_MORE),
-//    )
-
 
     VerticalGrid(
         maxColumnWidth = Dimen.toolMenuWidth,
@@ -110,7 +114,7 @@ private fun MenuItem(
 ) {
     Column(
         modifier = Modifier
-            .clip(Shape.medium)
+            .clip(MaterialTheme.shapes.medium)
             .clickable {
                 VibrateUtil(context).single()
                 if (isEditMode) {

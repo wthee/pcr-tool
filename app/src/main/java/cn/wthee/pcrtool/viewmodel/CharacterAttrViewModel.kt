@@ -53,7 +53,7 @@ class CharacterAttrViewModel @Inject constructor(
                         )
                     )
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
@@ -78,7 +78,7 @@ class CharacterAttrViewModel @Inject constructor(
                     info.add(it.attr)
                     allData.bonus = it
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
 
@@ -96,35 +96,50 @@ class CharacterAttrViewModel @Inject constructor(
             }
 
             //装备
-            val equipIds = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
-            val eqs = arrayListOf<EquipmentMaxData>()
-            equipIds.forEach {
-                if (it == UNKNOWN_EQUIP_ID || it == 0)
-                    eqs.add(EquipmentMaxData.unknown())
-                else
-                    eqs.add(equipmentRepository.getEquipmentData(it))
-            }
-            allData.equips = eqs
+            try {
+                val equipIds = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
+                val eqs = arrayListOf<EquipmentMaxData>()
+                equipIds.forEach {
+                    if (it == UNKNOWN_EQUIP_ID || it == 0)
+                        eqs.add(EquipmentMaxData.unknown())
+                    else
+                        eqs.add(equipmentRepository.getEquipmentData(it))
+                }
+                allData.equips = eqs
 
-            //装备属性
-            eqs.forEach { eq ->
-                if (eq.equipmentId != UNKNOWN_EQUIP_ID) {
-                    info.add(eq.attr)
+                //装备属性
+                eqs.forEach { eq ->
+                    if (eq.equipmentId != UNKNOWN_EQUIP_ID) {
+                        info.add(eq.attr)
+                    }
+                }
+            } catch (e: Exception) {
+                if (e !is CancellationException) {
+                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
                 }
             }
+
             //专武
-            val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, uniqueEquipLevel)
-            if (uniqueEquip != null) {
-                if (uniqueEquipLevel == 0) {
-                    uniqueEquip.attr = Attr()
+            try {
+                val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, uniqueEquipLevel)
+                if (uniqueEquip != null) {
+                    if (uniqueEquipLevel == 0) {
+                        uniqueEquip.attr = Attr()
+                    }
+                    info.add(uniqueEquip.attr)
+                    allData.uniqueEquip = uniqueEquip
                 }
-                info.add(uniqueEquip.attr)
-                allData.uniqueEquip = uniqueEquip
+            } catch (e: Exception) {
+                if (e !is CancellationException) {
+                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
+                }
             }
+
             //故事剧情
             val storyAttr = getStoryAttrs(unitId)
             info.add(storyAttr)
             allData.storyAttr = storyAttr
+
             //被动技能数值
             val skillActionData = getExSkillAttr(unitId, rarity, level)
             val skillAttr = Attr()
@@ -136,6 +151,7 @@ class CharacterAttrViewModel @Inject constructor(
                 4 -> skillAttr.magicStr = skillValue
                 5 -> skillAttr.magicDef = skillValue
             }
+
             info.add(skillAttr)
             allData.exSkillAttr = skillAttr
             allData.sumAttr = info
@@ -166,7 +182,7 @@ class CharacterAttrViewModel @Inject constructor(
             storyInfo.forEach {
                 storyAttr.add(it.getAttr())
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
         return storyAttr
@@ -181,7 +197,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
             emit(storyInfo)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -239,7 +255,7 @@ class CharacterAttrViewModel @Inject constructor(
             val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
             val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
             emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }
@@ -250,7 +266,7 @@ class CharacterAttrViewModel @Inject constructor(
     fun getCoefficient() = flow {
         try {
             emit(unitRepository.getCoefficient())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

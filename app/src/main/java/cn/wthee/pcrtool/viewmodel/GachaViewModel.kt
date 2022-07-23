@@ -23,7 +23,7 @@ class GachaViewModel @Inject constructor(
     fun getGachaHistory() = flow {
         try {
             emit(gachaRepository.getGachaHistory(Int.MAX_VALUE).sortedWith(compareGacha()))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 
         }
     }

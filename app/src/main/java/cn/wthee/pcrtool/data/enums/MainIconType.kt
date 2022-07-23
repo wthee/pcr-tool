@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.enums
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -9,6 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *
  * @param icon 矢量图标
  */
+
 enum class MainIconType(val icon: ImageVector) {
     /**
      * 向下折叠
@@ -360,4 +362,24 @@ enum class MainIconType(val icon: ImageVector) {
      * 预览模型
      */
     PREVIEW_UNIT_SPINE(Icons.Rounded.RemoveRedEye),
+
+    /**
+     * 图片
+     */
+    PREVIEW_IMAGE(Icons.Rounded.Image),
+
+    /**
+     * 召唤物
+     */
+    SUMMON(Icons.Rounded.Pets),
+
+    /**
+     * 技能形态
+     */
+    CHARACTER_NORMAL_SKILL(Icons.Outlined.Category),
+
+    /**
+     * 技能形态
+     */
+    CHARACTER_CUTIN_SKILL(Icons.Rounded.Category),
 }

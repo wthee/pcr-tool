@@ -12,20 +12,31 @@ import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -34,18 +45,23 @@ import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppDatabaseTW
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.home.MoreFabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
+import cn.wthee.pcrtool.ui.tool.AnimSetting
+import cn.wthee.pcrtool.ui.tool.ColorSetting
+import cn.wthee.pcrtool.ui.tool.VibrateSetting
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.BottomSheetNavigator
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -72,10 +88,13 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         lateinit var handler: Handler
-        lateinit var navViewModel: NavViewModel
 
+        lateinit var navViewModel: NavViewModel
+        @OptIn(ExperimentalMaterialApi::class)
+        lateinit var navSheetState: ModalBottomSheetState
         @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
+
         var vibrateOnFlag = true
         var animOnFlag = true
         var dynamicColorOnFlag = true
@@ -95,12 +114,11 @@ class MainActivity : ComponentActivity() {
                     MaterialTheme.colorScheme.surface,
                     darkIcons = isLight
                 )
-                ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
-                Surface {
-                    Home()
-                }
+                ui.setStatusBarColor(Color.Transparent, darkIcons = isLight)
+                Home()
             }
         }
+
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
@@ -154,44 +172,49 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //刷新页面 fixme 偶尔闪退
+    //刷新页面
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
-            //关闭其他数据库连接
-            val isHome = navViewModel.fabMainIcon.value == MainIconType.MAIN
-            if (isHome) {
+            try {
+                //关闭其他数据库连接
                 AppDatabaseCN.close()
                 AppDatabaseTW.close()
                 AppDatabaseJP.close()
-                try {
-                    navController.popBackStack()
-                    viewModelStore.clear()
-                    recreate()
-                } catch (e: Exception) {
-                    LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
-                }
-            } else {
-                val tipId = when (it.what) {
-                    1 -> R.string.tip_color_change
-                    else -> R.string.tip_download_finish
-                }
-                ToastUtil.short(getString(tipId))
+                //重启应用
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+                ToastUtil.short(getString(R.string.change_failed))
             }
-
             return@Callback true
         })
     }
 }
 
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun Home(
     mNavViewModel: NavViewModel = hiltViewModel()
 ) {
-    navController = rememberAnimatedNavController()
+    //bottom sheet 导航
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
+    navSheetState = sheetState
+    val bottomSheetNavigator = remember(sheetState) {
+        BottomSheetNavigator(sheetState)
+    }
+    navController = rememberAnimatedNavController(bottomSheetNavigator)
+
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
 
@@ -201,18 +224,25 @@ fun Home(
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+
+
+    LaunchedEffect(navSheetState.currentValue) {
+        if (navController.currentDestination?.route == Navigation.HOME) {
+            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        }
+    }
 
     Box(
         modifier = Modifier
             .navigationBarsPadding()
             .fillMaxSize()
-            .padding(top = statusBarHeight)
     ) {
-        NavGraph(navController, navViewModel, actions)
-        //菜单
-        MoreFabCompose(navViewModel)
+        //页面导航
+        NavGraph(bottomSheetNavigator, navController, navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
+            //菜单
+            AppInfoCompose(actions)
+            //Home 按钮
             FabMain(
                 modifier = Modifier
                     .align(Alignment.End)
@@ -234,7 +264,13 @@ fun Home(
 fun FabMain(modifier: Modifier = Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
-    FabCompose(icon, modifier = modifier) {
+    FabCompose(
+        if (icon == MainIconType.MAIN) {
+            MainIconType.SETTING
+        } else {
+            icon
+        }, modifier = modifier
+    ) {
         when (icon) {
             MainIconType.OK -> navViewModel.fabOKCilck.postValue(true)
             MainIconType.CLOSE -> navViewModel.fabCloseClick.postValue(true)
@@ -244,6 +280,110 @@ fun FabMain(modifier: Modifier = Modifier) {
                 navViewModel.loading.postValue(false)
                 navController.navigateUp()
             }
+        }
+    }
+}
+
+/**
+ * 应用信息
+ */
+@Composable
+private fun AppInfoCompose(actions: NavActions) {
+    val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
+    val context = LocalContext.current
+    val sp = settingSP(context)
+    val region = MainActivity.regionType
+
+    //数据库版本
+    val typeName = stringResource(
+        id = when (region) {
+            2 -> R.string.db_cn
+            3 -> R.string.db_tw
+            else -> R.string.db_jp
+        }
+    )
+    val localVersion = sp.getString(
+        when (region) {
+            2 -> Constants.SP_DATABASE_VERSION_CN
+            3 -> Constants.SP_DATABASE_VERSION_TW
+            else -> Constants.SP_DATABASE_VERSION_JP
+        },
+        ""
+    )
+    val dbVersionGroup = if (localVersion != null) {
+        localVersion.split("/")[0]
+    } else {
+        ""
+    }
+
+    //调整圆角
+    PCRToolComposeTheme(
+        shapes = MaterialTheme.shapes.copy(
+            extraSmall = MaterialTheme.shapes.medium
+        )
+    ) {
+        DropdownMenu(
+            expanded = fabMainIcon == MainIconType.DOWN,
+            onDismissRequest = {
+                VibrateUtil(context).single()
+                navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+            },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            offset = DpOffset(Dimen.fabMargin, 0.dp),
+        ) {
+            DropdownMenuItem(
+                text = {
+                    AnimSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    VibrateSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    ColorSetting(sp, context, false)
+                },
+                onClick = {}
+            )
+            DropdownMenuItem(
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconCompose(
+                            data = R.drawable.ic_logo_large,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                            size = Dimen.mediumIconSize
+                        )
+                        Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                            MainText(
+                                text = "v" + BuildConfig.VERSION_NAME,
+                                modifier = Modifier.padding(top = Dimen.smallPadding)
+                            )
+                            Subtitle2(
+                                text = "${typeName}：${dbVersionGroup}",
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .padding(horizontal = Dimen.largePadding)
+                                .weight(1f)
+                        )
+                        Subtitle2(
+                            text = stringResource(id = R.string.expand),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                    }
+                },
+                onClick = {
+                    VibrateUtil(context).single()
+                    actions.toSetting()
+                }
+            )
         }
     }
 }

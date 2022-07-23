@@ -1,16 +1,18 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -18,12 +20,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.SuccessResult
 
 const val RATIO = 1.78f
 
@@ -38,65 +38,32 @@ fun ImageCompose(
     modifier: Modifier = Modifier,
     data: Any,
     ratio: Float,
-    @DrawableRes loadingId: Int? = null,
-    @DrawableRes errorId: Int? = null,
     contentScale: ContentScale = ContentScale.FillWidth,
-    onSuccess: (AsyncImagePainter.State.Success) -> Unit = {}
+    onSuccess: (SuccessResult) -> Unit = {}
 ) {
+
     var mModifier = modifier
     if (ratio > 0) {
         mModifier = modifier
             .aspectRatio(ratio)
+    }
+    val loading = remember {
+        mutableStateOf(true)
     }
 
     AsyncImage(
         model = data,
         contentDescription = null,
         contentScale = contentScale,
-        placeholder = loadingId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
-        error = errorId?.let { rememberAsyncImagePainter(it, contentScale = contentScale) },
+        error = rememberAsyncImagePainter(R.drawable.error, contentScale = contentScale),
         onSuccess = {
-            onSuccess(it)
+            loading.value = false
+            onSuccess(it.result)
         },
-        modifier = mModifier
-    )
-}
-
-
-@Composable
-fun StoryImageCompose(
-    data: Any,
-    @DrawableRes loadingId: Int? = null,
-    @DrawableRes errorId: Int? = null,
-    contentScale: ContentScale = ContentScale.FillWidth,
-    onSuccess: (AsyncImagePainter.State.Success) -> Unit = {}
-) {
-    SubcomposeAsyncImage(
-        model = data,
-        contentDescription = null,
-        contentScale = contentScale,
-        loading = {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = loadingId,
-                    contentDescription = null,
-                    modifier = Modifier.aspectRatio(RATIO_COMMON)
-                )
-            }
+        onError = {
+            loading.value = false
         },
-        error = {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = errorId,
-                    contentDescription = null,
-                    modifier = Modifier.aspectRatio(RATIO_COMMON)
-                )
-            }
-        },
-        onSuccess = {
-            onSuccess(it)
-        },
-        modifier = Modifier.fillMaxWidth()
+        modifier = mModifier.commonPlaceholder(visible = loading.value)
     )
 }
 
@@ -136,13 +103,13 @@ fun IconCompose(
 
     var mModifier = if (onClick != null) {
         modifier
-            .clip(Shape.small)
+            .clip(MaterialTheme.shapes.extraSmall)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick()
             })
     } else {
-        modifier.clip(Shape.small)
+        modifier.clip(MaterialTheme.shapes.extraSmall)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)
@@ -150,26 +117,48 @@ fun IconCompose(
     }
 
 
-    if (data is MainIconType) {
-        Icon(
-            imageVector = data.icon,
-            contentDescription = null,
-            tint = tint,
-            modifier = mModifier
-        )
-    } else {
-        val contentScale = ContentScale.Crop
-        AsyncImage(
-            model = data,
-            colorFilter = colorFilter,
-            contentDescription = null,
-            contentScale = contentScale,
-            placeholder = rememberAsyncImagePainter(
-                R.drawable.unknown_gray,
-                contentScale = contentScale
-            ),
-            error = rememberAsyncImagePainter(R.drawable.unknown_item, contentScale = contentScale),
-            modifier = mModifier.aspectRatio(1f)
-        )
+    when (data) {
+        is MainIconType -> {
+            Icon(
+                imageVector = data.icon,
+                contentDescription = null,
+                tint = tint,
+                modifier = mModifier
+            )
+        }
+        is ImageVector -> {
+            Icon(
+                imageVector = data,
+                contentDescription = null,
+                tint = tint,
+                modifier = mModifier
+            )
+        }
+        else -> {
+            val contentScale = ContentScale.Crop
+            val loading = remember {
+                mutableStateOf(true)
+            }
+
+            AsyncImage(
+                model = data,
+                colorFilter = colorFilter,
+                contentDescription = null,
+                contentScale = contentScale,
+                error = rememberAsyncImagePainter(
+                    R.drawable.unknown_item,
+                    contentScale = contentScale
+                ),
+                onError = {
+                    loading.value = false
+                },
+                onSuccess = {
+                    loading.value = false
+                },
+                modifier = mModifier
+                    .aspectRatio(1f)
+                    .commonPlaceholder(visible = loading.value)
+            )
+        }
     }
 }
