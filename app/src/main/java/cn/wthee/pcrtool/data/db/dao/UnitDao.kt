@@ -360,7 +360,7 @@ interface UnitDao {
      * 获取所有公会信息
      */
     @SkipQueryVerification
-    @Query("SELECT guild_id, guild_name FROM guild WHERE member1 != 0")
+    @Query("SELECT guild_id, guild_name FROM guild")
     suspend fun getGuilds(): List<GuildData>
 
     /**
@@ -390,9 +390,7 @@ interface UnitDao {
                 LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id 
                 AND unit_profile.unit_id < $maxUnitId
                 AND unit_profile.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
-            ) 
-        WHERE
-            guild_master != 0 
+            )
         GROUP BY
             guild_id
     """

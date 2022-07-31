@@ -511,29 +511,27 @@ private fun FilterCharacterSheet(
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    if (reset || ok) {
-        LaunchedEffect(sheetState.currentValue) {
+    LaunchedEffect(sheetState.currentValue, reset, ok) {
+        //点击重置
+        if (reset) {
+            textState.value = TextFieldValue(text = "")
+            sortTypeIndex.value = 0
+            sortAscIndex.value = 1
+            loveIndex.value = 0
+            r6Index.value = 0
+            positionIndex.value = 0
+            atkIndex.value = 0
+            guildIndex.value = 0
+            typeIndex.value = 0
+            navViewModel.resetClick.postValue(false)
+            navViewModel.filterCharacter.postValue(FilterCharacter())
+        }
+        //点击确认
+        if (ok) {
             sheetState.hide()
-            //点击重置
-            if (reset) {
-                textState.value = TextFieldValue(text = "")
-                sortTypeIndex.value = 0
-                sortAscIndex.value = 1
-                loveIndex.value = 0
-                r6Index.value = 0
-                positionIndex.value = 0
-                atkIndex.value = 0
-                guildIndex.value = 0
-                typeIndex.value = 0
-                navViewModel.resetClick.postValue(false)
-                navViewModel.filterCharacter.postValue(FilterCharacter())
-            }
-            //点击确认
-            if (ok) {
-                navViewModel.filterCharacter.postValue(filter)
-                navViewModel.fabOKCilck.postValue(false)
-                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-            }
+            navViewModel.filterCharacter.postValue(filter)
+            navViewModel.fabOKCilck.postValue(false)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
 

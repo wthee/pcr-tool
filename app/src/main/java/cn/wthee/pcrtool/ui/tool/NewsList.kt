@@ -7,6 +7,8 @@ import android.webkit.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -196,7 +198,8 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.mediumPadding),
+                    .padding(Dimen.mediumPadding)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 MainText(
@@ -336,8 +339,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                 }
                 //分享
                 FabCompose(
-                    iconType = MainIconType.SHARE,
-                    text = stringResource(id = R.string.share),
+                    iconType = MainIconType.SHARE
                 ) {
                     ShareIntentUtil.text(originalTitle + "\n" + originalUrl)
                 }
