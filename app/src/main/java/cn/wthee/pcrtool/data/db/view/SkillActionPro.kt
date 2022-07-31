@@ -140,6 +140,7 @@ data class SkillActionPro(
         39 -> "攻击力（物理攻击力或魔法攻击力）最低的"
         40 -> ""
         41 -> ""
+        42 -> "多目标"
         else -> UNKNOWN
     }
 
@@ -191,6 +192,7 @@ data class SkillActionPro(
             1601 -> "隐匿状态"
             1700 -> "魔法防御减少状态"
             721, 6107 -> "龙眼状态"
+            1800 -> "多目标状态"
             else -> UNKNOWN
         }
 
@@ -484,9 +486,6 @@ data class SkillActionPro(
                             1300 -> {
                                 "目标是${getTarget()}时，使用动作(${action_detail_3 % 10})"
                             }
-                            1600 -> {
-                                "${getTarget()}在${status}时，使用动作(${action_detail_2 % 10})"
-                            }
                             else -> UNKNOWN
                         }
                     }
@@ -507,9 +506,6 @@ data class SkillActionPro(
                             }
                             1300 -> {
                                 "目标不是${getTarget()}时，使用动作(${action_detail_2 % 10})"
-                            }
-                            1600 -> {
-                                "${getTarget()}是不在${status}时，使用动作(${action_detail_3 % 10})"
                             }
                             else -> UNKNOWN
                         }
