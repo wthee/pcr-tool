@@ -308,19 +308,20 @@ private fun FilterEquipSheet(
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    if (reset || ok) {
-        LaunchedEffect(sheetState.currentValue) {
-            if (reset) {
-                textState.value = TextFieldValue(text = "")
-                loveIndex.value = 0
-                typeIndex.value = 0
-                craftIndex.value = 1
-                navViewModel.resetClick.postValue(false)
-                navViewModel.filterEquip.postValue(FilterEquipment())
-            }
-            if (ok) {
-                sheetState.hide()
-            }
+    LaunchedEffect(sheetState.currentValue, reset, ok) {
+        if (reset) {
+            textState.value = TextFieldValue(text = "")
+            loveIndex.value = 0
+            typeIndex.value = 0
+            craftIndex.value = 1
+            navViewModel.resetClick.postValue(false)
+            navViewModel.filterEquip.postValue(FilterEquipment())
+        }
+        if (ok) {
+            sheetState.hide()
+            navViewModel.filterEquip.postValue(filter)
+            navViewModel.fabOKCilck.postValue(false)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
 

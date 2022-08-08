@@ -110,7 +110,7 @@ class PvpViewModel @Inject constructor(
                     )
                 )
             }
-            val limit = 40
+            val limit = 50
             var list = unitList.sortedByDescending { it.count }
             if (list.size > limit) {
                 list = list.subList(0, limit)

@@ -13,10 +13,9 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-rc03"
-val composeCompilerVersion = "1.2.0"
-val appVersionCode = 340
-val appVersionName = "3.4.0"
+val composeVersion = "1.2.0"
+val appVersionCode = 341
+val appVersionName = "3.4.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -97,7 +96,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
+        kotlinCompilerExtensionVersion = composeVersion
     }
 
 }
@@ -122,7 +121,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha14")
 
     //Accompanist
-    val accompanistVersion = "0.24.13-rc"
+    val accompanistVersion = "0.25.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
