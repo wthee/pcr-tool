@@ -6,30 +6,6 @@ import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.*
 
-//fixme 8月台服更新后，可取消判断
-const val limitedIds = """
-    (
-		106101,
-		107001,
-		107101,
-		107501,
-		107701,
-		107801,
-		107901,
-		108101,
-		108301,
-		108401,
-		108601,
-		108701,
-		108801,
-		109101,
-		110001,
-		110301,
-		110401,
-		110601
-	)
-"""
-
 //角色最大编号
 const val maxUnitId = 200000
 
@@ -106,8 +82,8 @@ interface UnitDao {
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
-            WHEN  1 = :type AND is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  2 = :type AND ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 1 
+            WHEN  1 = :type AND is_limited = 0 THEN 1 
+            WHEN  2 = :type AND is_limited = 1 AND rarity = 3 THEN 1 
             WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
         END
         ORDER BY 
