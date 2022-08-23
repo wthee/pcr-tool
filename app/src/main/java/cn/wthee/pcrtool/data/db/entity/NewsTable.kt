@@ -4,16 +4,18 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * 官网公告
+ * 官网公告，api和本地数据公用
  */
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey
-    val id: String = "2-1",
+    val id: Int = 0,
+    val sourceId: String = "0",
     val title: String = "",
     val tags: String = "???",
     val url: String = "",
-    val date: String = "2021-01-01"
+    val date: String = "2021-01-01",
+    val region: Int = 2
 ) {
 
     fun getTag(): String {
@@ -45,7 +47,7 @@ val String.region: Int
         }
     }
 
-fun String.getNewsId(): String {
+fun String.getNewsSoureId(): String {
     val url = if (this.last() == '/') {
         this.substring(0, this.length - 1)
     } else {

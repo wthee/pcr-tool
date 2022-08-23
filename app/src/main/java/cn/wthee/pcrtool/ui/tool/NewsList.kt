@@ -66,7 +66,7 @@ fun NewsList(
     }
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(type.value + 2)
+    newsViewModel.getNews(type.value + 2, keyword = "")
     val flow = when (type.value + 2) {
         2 -> newsViewModel.newsPageList0
         3 -> newsViewModel.newsPageList1
@@ -150,7 +150,7 @@ fun NewsItem(
             .commonPlaceholder(visible = placeholder)
             .heightIn(min = Dimen.cardHeight),
             onClick = {
-                toNewsDetail(news.id)
+                toNewsDetail(news.sourceId)
             }
         ) {
             //内容

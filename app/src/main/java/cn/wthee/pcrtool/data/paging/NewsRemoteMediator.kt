@@ -18,80 +18,59 @@ import java.io.IOException
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
     private val region: Int,
+    private val keyword: String,
     private val database: AppNewsDatabase,
     private val repository: MyAPIRepository
 ) : RemoteMediator<Int, NewsTable>() {
 
     private val newsDao = database.getNewsDao()
     private val remoteKeyDao = database.getRemoteKeyDao()
-    private val pageDefaultIndex = 1
-    private var currPage = 1
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
     ): MediatorResult {
         try {
-            val page = when (loadType) {
-                LoadType.REFRESH -> {
-                    val remoteKey = state.anchorPosition?.let { position ->
-                        state.closestItemToPosition(position)?.id?.let { repoId ->
-                            database.getRemoteKeyDao().remoteKeys(repoId)
-                        }
-                    }
-                    remoteKey?.nextKey?.minus(pageDefaultIndex) ?: pageDefaultIndex
-                }
-                LoadType.PREPEND -> {
-                    val remoteKey = database.withTransaction {
-                        val key = state.firstItemOrNull()?.id
-                        if (key == null) null else remoteKeyDao.remoteKeys(key)
-                    }
-                    if (remoteKey?.prevKey == null) {
+            val after = when (loadType) {
+                LoadType.REFRESH -> null
+                LoadType.PREPEND -> return MediatorResult.Success(
+                    endOfPaginationReached = true
+                )
+                LoadType.APPEND -> {
+                    val key = state.lastItemOrNull()?.id
+                    val remoteKey =
+                        if (key == null) null else remoteKeyDao.remoteKeyByQuery(keyword)
+                    if (remoteKey?.nextKey == null) {
                         return MediatorResult.Success(
                             endOfPaginationReached = true
                         )
                     }
-                    remoteKey.prevKey
-                }
-                LoadType.APPEND -> {
-                    val key = state.lastItemOrNull()?.id
-                    val remoteKey = if (key == null) null else remoteKeyDao.remoteKeys(key)
-                    if (remoteKey?.nextKey == null) {
-                        currPage + 1
-//                        return MediatorResult.Success(
-//                            endOfPaginationReached = true
-//                        )
-                    } else {
-                        remoteKey.nextKey
-                    }
+                    remoteKey.nextKey
                 }
             }
-            currPage = page
-            val response = repository.getNews(region, page).data
-            val list = arrayListOf<NewsTable>()
-            response?.forEach {
-                list.add(
-                    NewsTable(
-                        "${region}-${it.id}-${it.date}",
-                        it.title,
-                        it.tags,
-                        it.url,
-                        it.date
-                    )
-                )
-            }
+
+            //获取数据
+            val response = repository.getNews(region, after, keyword).data
             val isEndOfList = response?.isEmpty() ?: false
+
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.clearRemoteKeys("${region}-%")
-                    newsDao.clearAll("${region}-%")
+                    remoteKeyDao.deleteByQuery(keyword)
+                    newsDao.deleteByRegionAndQuery(region, keyword)
                 }
-                val prevKey = if (page == pageDefaultIndex) null else page - 1
-                val nextKey = if (isEndOfList) null else page + 1
-                val keys = list.map {
-                    RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
+
+                //保存远程键
+                remoteKeyDao.insert(
+                    RemoteKey(
+                        repoId = "news${region}${keyword}",
+                        prevKey = null,
+                        nextKey = response?.last()?.id
+                    )
+                )
+
+                //保存到本地
+                if (!isEndOfList) {
+                    newsDao.insertAll(response!!)
                 }
-                remoteKeyDao.insertAll(keys)
-                newsDao.insertAll(list)
             }
 
             return MediatorResult.Success(

@@ -35,7 +35,7 @@ interface MyAPIService {
     /**
      * 获取公告
      */
-    @POST("news")
+    @POST("news/v2")
     suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsTable>>
 
     /**

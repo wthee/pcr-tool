@@ -59,13 +59,15 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 查询公告信息
      * @param region 区服 2：b服，3：台服，4：日服
-     * @param page 页码
+     * @param after 查询该id前的数据
+     * @param keyword 关键词
      */
-    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsTable>> {
+    suspend fun getNews(region: Int, after: Int?, keyword: String): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
-        json.addProperty("page", page)
+        json.addProperty("after", after)
+        json.addProperty("keyword", keyword)
         val body =
             json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 
@@ -80,7 +82,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$after")
             }
         }
         return error()

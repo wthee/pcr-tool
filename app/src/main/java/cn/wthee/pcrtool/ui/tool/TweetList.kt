@@ -21,7 +21,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.db.entity.getNewsId
+import cn.wthee.pcrtool.data.db.entity.getNewsSoureId
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -205,7 +205,7 @@ private fun TweetButton(
             stringResource(id = R.string.read_news), MainIconType.NEWS
         ) {
             //跳转至公告详情
-            toNewsDetail(url.getNewsId())
+            toNewsDetail(url.getNewsSoureId())
         }
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET

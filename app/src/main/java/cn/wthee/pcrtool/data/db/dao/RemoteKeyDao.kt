@@ -15,6 +15,9 @@ interface RemoteKeyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(remoteKey: List<RemoteKey>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(remoteKey: RemoteKey)
+
     @Query("SELECT * FROM remote_key WHERE repoId = :id")
     suspend fun remoteKeys(id: String): RemoteKey?
 
@@ -23,4 +26,10 @@ interface RemoteKeyDao {
 
     @Query("DELETE FROM remote_key")
     suspend fun clearAllRemoteKeys()
+
+    @Query("SELECT * FROM remote_key WHERE keyword = :query ")
+    suspend fun remoteKeyByQuery(query: String): RemoteKey?
+
+    @Query("DELETE FROM remote_key WHERE keyword = :query")
+    suspend fun deleteByQuery(query: String)
 }

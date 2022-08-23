@@ -40,7 +40,7 @@ class NewsViewModel @Inject constructor(
      * 公告数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getNews(region: Int) {
+    fun getNews(region: Int, keyword: String) {
         when (region) {
             2 -> {
                 if (newsPageList0 == null) {
@@ -50,7 +50,12 @@ class NewsViewModel @Inject constructor(
                             initialLoadSize = initSize,
                             enablePlaceholders = true
                         ),
-                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                        remoteMediator = NewsRemoteMediator(
+                            region,
+                            keyword,
+                            database,
+                            apiRepository
+                        )
                     ) {
                         newsDao.pagingSource("${region}-%")
                     }.flow
@@ -64,7 +69,12 @@ class NewsViewModel @Inject constructor(
                             initialLoadSize = initSize,
                             enablePlaceholders = true
                         ),
-                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                        remoteMediator = NewsRemoteMediator(
+                            region,
+                            keyword,
+                            database,
+                            apiRepository
+                        )
                     ) {
                         newsDao.pagingSource("${region}-%")
                     }.flow
@@ -78,7 +88,12 @@ class NewsViewModel @Inject constructor(
                             initialLoadSize = initSize,
                             enablePlaceholders = true
                         ),
-                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                        remoteMediator = NewsRemoteMediator(
+                            region,
+                            keyword,
+                            database,
+                            apiRepository
+                        )
                     ) {
                         newsDao.pagingSource("${region}-%")
                     }.flow
