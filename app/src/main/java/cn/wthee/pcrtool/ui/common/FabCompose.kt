@@ -23,6 +23,8 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 
 /**
  * 通用悬浮按钮
+ *
+ * @param hasNavBarPadding 适配导航栏
  */
 @Composable
 fun FabCompose(

@@ -10,7 +10,8 @@ import cn.wthee.pcrtool.utils.deleteSpace
 @Entity(tableName = "tweet")
 data class TweetData(
     @PrimaryKey
-    val id: String = "",
+    val id: Int = 0,
+    val sourceId: String = "",
     val date: String = "2021-01-01 12:00:00",
     val tweet: String = "",
     val photos: String = "",

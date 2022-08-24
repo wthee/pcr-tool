@@ -22,14 +22,13 @@ interface TweetDao {
     /**
      * 获取
      */
-    @Query("SELECT * FROM tweet")
-    fun pagingSource(): PagingSource<Int, TweetData>
+    @Query("SELECT * FROM tweet WHERE tweet LIKE '%' || :query || '%' ORDER BY id DESC")
+    fun pagingSource(query: String): PagingSource<Int, TweetData>
 
     /**
      * 清空数据
      */
-    @Query("DELETE FROM tweet")
-    suspend fun clearAll()
-
+    @Query("DELETE FROM tweet WHERE tweet LIKE '%' || :query || '%'")
+    suspend fun deleteByQuery(query: String)
 
 }

@@ -5,23 +5,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.db.entity.getNewsId
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -32,47 +31,56 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
-import kotlinx.coroutines.launch
 
 /**
  * 推特列表
  */
+@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun TweetList(
     scrollState: LazyListState,
-    toNewsDetail: (String) -> Unit,
     toComic: (Int) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    //推文
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    tweetViewModel.getTweet()
-    val flow = tweetViewModel.tweetPageList
-    val tweet = remember(flow, lifecycle) {
-        flow?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
+    //关键词输入
+    val keywordInputState = remember {
+        mutableStateOf("")
+    }
+    //关键词查询
+    val keywordState = remember {
+        mutableStateOf("")
+    }
+
+
+    //获取分页数据
+    LaunchedEffect(keywordState.value) {
+        tweetViewModel.getTweet(keywordState.value)
+    }
+    if (tweetViewModel.tweetPageList == null) {
+        tweetViewModel.getTweet(keywordState.value)
+    }
+    val tweetItems = tweetViewModel.tweetPageList?.collectAsLazyPagingItems()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        val visible = tweet != null && tweet.itemCount > 0
+        val visible = tweetItems != null && tweetItems.itemCount > 0
         FadeAnimation(visible = visible) {
             LazyColumn(state = scrollState) {
-                if (tweet!!.loadState.prepend is LoadState.Loading) {
+                if (tweetItems!!.loadState.prepend is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData(), toNewsDetail, toComic)
+                        TweetItem(TweetData(), toComic)
                     }
                 }
                 items(
-                    items = tweet,
+                    items = tweetItems,
                     key = {
                         it.id
                     }
                 ) {
-                    TweetItem(it ?: TweetData(), toNewsDetail, toComic)
+                    TweetItem(it ?: TweetData(), toComic)
                 }
-                if (tweet.loadState.append is LoadState.Loading) {
+                if (tweetItems.loadState.append is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData(), toNewsDetail, toComic)
+                        TweetItem(TweetData(), toComic)
                     }
                 }
                 item {
@@ -83,28 +91,24 @@ fun TweetList(
         FadeAnimation(visible = !visible) {
             LazyColumn(state = rememberLazyListState()) {
                 items(12) {
-                    TweetItem(TweetData(), toNewsDetail, toComic)
+                    TweetItem(TweetData(), toComic)
                 }
                 item {
                     CommonSpacer()
                 }
             }
         }
-        //回到顶部
-        FabCompose(
-            iconType = MainIconType.TWEET,
-            text = stringResource(id = R.string.tweet),
+
+        //搜索栏
+        BottomSearchBar(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
-            }
-        }
+                .align(Alignment.BottomEnd),
+            labelStringId = R.string.news_title,
+            keywordInputState = keywordInputState,
+            keywordState = keywordState,
+            leadingIcon = MainIconType.TWEET,
+            scrollState = scrollState
+        )
     }
 }
 
@@ -113,8 +117,8 @@ fun TweetList(
  * 推特内容
  */
 @Composable
-private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: (Int) -> Unit) {
-    val placeholder = data.id == ""
+private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
+    val placeholder = data.id == 0
     val photos = data.getImageList()
     var comicId = ""
     var url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
@@ -131,6 +135,7 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
     ) {
         MainTitleText(
             text = data.date,
+            modifier = Modifier.commonPlaceholder(placeholder)
         )
     }
     //内容
@@ -155,12 +160,14 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
         )
         //相关链接跳转
         if (!placeholder) {
-            Row(modifier = Modifier
-                .padding(vertical = Dimen.smallPadding)
-                .fillMaxWidth()) {
-                TweetButton(data.link, toNewsDetail = toNewsDetail, toComic = toComic)
+            Row(
+                modifier = Modifier
+                    .padding(vertical = Dimen.smallPadding)
+                    .fillMaxWidth()
+            ) {
+                TweetButton(data.link, toComic = toComic)
                 data.getUrlList().forEach {
-                    TweetButton(it, comicId, toNewsDetail = toNewsDetail, toComic = toComic)
+                    TweetButton(it, comicId, toComic = toComic)
                 }
             }
         }
@@ -190,7 +197,6 @@ private fun TweetItem(data: TweetData, toNewsDetail: (String) -> Unit, toComic: 
 private fun TweetButton(
     url: String,
     comicId: String = "",
-    toNewsDetail: (String) -> Unit,
     toComic: (Int) -> Unit
 ) {
     val context = LocalContext.current
@@ -204,8 +210,8 @@ private fun TweetButton(
         url.contains("priconne-redive.jp/news/") -> TweetButtonData(
             stringResource(id = R.string.read_news), MainIconType.NEWS
         ) {
-            //跳转至公告详情
-            toNewsDetail(url.getNewsId())
+            //公告详情
+            BrowserUtil.open(context, url)
         }
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET
@@ -251,7 +257,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewBox {
-        TweetItem(data = TweetData(id = "?"), toNewsDetail = {}, toComic = {})
+        TweetItem(data = TweetData(id = 0), toComic = {})
     }
 }
 
