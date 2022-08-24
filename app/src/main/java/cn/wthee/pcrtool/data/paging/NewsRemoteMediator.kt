@@ -36,15 +36,11 @@ class NewsRemoteMediator(
                     endOfPaginationReached = true
                 )
                 LoadType.APPEND -> {
-                    val key = state.lastItemOrNull()?.id
-                    val remoteKey =
-                        if (key == null) null else remoteKeyDao.remoteKeyByQuery(keyword)
-                    if (remoteKey?.nextKey == null) {
-                        return MediatorResult.Success(
+                    val lastItem = state.lastItemOrNull()
+                        ?: return MediatorResult.Success(
                             endOfPaginationReached = true
                         )
-                    }
-                    remoteKey.nextKey
+                    lastItem.id
                 }
             }
 
@@ -54,22 +50,21 @@ class NewsRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.deleteByQuery(keyword)
+                    remoteKeyDao.deleteByQuery("${region}|${keyword}")
                     newsDao.deleteByRegionAndQuery(region, keyword)
                 }
 
                 //保存远程键
                 remoteKeyDao.insert(
                     RemoteKey(
-                        repoId = "news${region}${keyword}",
-                        prevKey = null,
+                        query = "${region}|${keyword}",
                         nextKey = response?.last()?.id
                     )
                 )
 
                 //保存到本地
-                if (!isEndOfList) {
-                    newsDao.insertAll(response!!)
+                response?.let {
+                    newsDao.insertAll(it)
                 }
             }
 

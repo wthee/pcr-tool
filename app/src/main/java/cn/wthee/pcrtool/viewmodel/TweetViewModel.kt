@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.dao.TweetDao
 import cn.wthee.pcrtool.data.db.entity.TweetData
@@ -24,7 +25,6 @@ class TweetViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val pageSize = 10
-    private val initSize = 20
 
 
     var tweetPageList: Flow<PagingData<TweetData>>? = null
@@ -33,18 +33,14 @@ class TweetViewModel @Inject constructor(
      * 推特数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getTweet() {
-        if (tweetPageList == null) {
-            tweetPageList = Pager(
-                config = androidx.paging.PagingConfig(
-                    pageSize = pageSize,
-                    initialLoadSize = initSize,
-                    enablePlaceholders = true
-                ),
-                remoteMediator = TweetRemoteMediator(database, apiRepository)
-            ) {
-                tweetDao.pagingSource()
-            }.flow
-        }
+    fun getTweet(keyword: String) {
+        tweetPageList = Pager(
+            config = PagingConfig(
+                pageSize = pageSize
+            ),
+            remoteMediator = TweetRemoteMediator(keyword, database, apiRepository)
+        ) {
+            tweetDao.pagingSource(keyword)
+        }.flow
     }
 }

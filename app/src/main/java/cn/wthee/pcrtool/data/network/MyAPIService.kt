@@ -53,7 +53,7 @@ interface MyAPIService {
     /**
      * 获取推特
      */
-    @POST("tweet")
+    @POST("tweet/v2")
     suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
 
     /**

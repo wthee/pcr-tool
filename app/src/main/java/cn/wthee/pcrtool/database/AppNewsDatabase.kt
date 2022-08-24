@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
         NewsTable::class,
         RemoteKey::class,
     ],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 /**

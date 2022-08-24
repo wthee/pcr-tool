@@ -143,12 +143,14 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
     /**
      * 查询推特信息
-     * @param page 页码
+     * @param after 查询该id前的数据
+     * @param keyword 关键词
      */
-    suspend fun getTweet(page: Int): ResponseData<List<TweetData>> {
+    suspend fun getTweet(after: Int?, keyword: String): ResponseData<List<TweetData>> {
         //接口参数
         val json = JsonObject()
-        json.addProperty("page", page)
+        json.addProperty("keyword", keyword)
+        json.addProperty("after", after)
         val body =
             json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
 
@@ -163,7 +165,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$after")
             }
         }
         return error()

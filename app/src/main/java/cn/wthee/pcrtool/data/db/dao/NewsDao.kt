@@ -23,8 +23,8 @@ interface NewsDao {
      * 获取公告
      * @param query 查询筛选条件（区服区分）
      */
-    @Query("SELECT * FROM news WHERE title LIKE '%' || :query || '%'")
-    fun pagingSource(query: String): PagingSource<Int, NewsTable>
+    @Query("SELECT * FROM news WHERE region = :region AND title LIKE '%' || :query || '%' ORDER BY id DESC")
+    fun pagingSource(region: Int, query: String): PagingSource<Int, NewsTable>
 
     /**
      * 清空数据

@@ -36,8 +36,6 @@ data class NewsTable(
 
 }
 
-fun String.original() = replace('$', '/')
-
 val String.region: Int
     get() {
         return when {
@@ -47,7 +45,10 @@ val String.region: Int
         }
     }
 
-fun String.getNewsSoureId(): String {
+/**
+ * 获取推文链接中公告source_id
+ */
+fun String.getNewsSourceId(): String {
     val url = if (this.last() == '/') {
         this.substring(0, this.length - 1)
     } else {
