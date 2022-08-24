@@ -38,18 +38,20 @@ class NewsViewModel @Inject constructor(
      * 公告数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getNewsPager(region: Int, keyword: String) = Pager(
-        config = PagingConfig(
-            pageSize = pageSize
-        ),
-        remoteMediator = NewsRemoteMediator(
-            region,
-            keyword,
-            database,
-            apiRepository
-        )
-    ) {
-        newsDao.pagingSource(region, keyword)
+    fun getNewsPager(region: Int, keyword: String) {
+        newsPageList = Pager(
+            config = PagingConfig(
+                pageSize = pageSize
+            ),
+            remoteMediator = NewsRemoteMediator(
+                region,
+                keyword,
+                database,
+                apiRepository
+            )
+        ) {
+            newsDao.pagingSource(region, keyword)
+        }.flow
     }
 
     /**
@@ -63,4 +65,5 @@ class NewsViewModel @Inject constructor(
             }
         }
     }
+
 }

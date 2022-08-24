@@ -470,11 +470,7 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                NewsList(
-                    scrollState,
-                    actions.toNewsDetail
-                )
+                NewsList(actions.toNewsDetail)
             }
 
             //公告详情
@@ -500,9 +496,7 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val tweetScrollState = rememberLazyListState()
-
-                TweetList(tweetScrollState, actions.toComicListIndex)
+                TweetList(actions.toComicListIndex)
             }
 
             //漫画信息

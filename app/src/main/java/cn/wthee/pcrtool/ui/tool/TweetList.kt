@@ -2,14 +2,12 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,13 +33,12 @@ import cn.wthee.pcrtool.viewmodel.TweetViewModel
 /**
  * 推特列表
  */
-@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun TweetList(
-    scrollState: LazyListState,
     toComic: (Int) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberLazyListState()
     //关键词输入
     val keywordInputState = remember {
         mutableStateOf("")
@@ -51,35 +48,37 @@ fun TweetList(
         mutableStateOf("")
     }
 
-
     //获取分页数据
-    LaunchedEffect(keywordState.value) {
-        tweetViewModel.getTweet(keywordState.value)
-    }
     if (tweetViewModel.tweetPageList == null) {
         tweetViewModel.getTweet(keywordState.value)
     }
     val tweetItems = tweetViewModel.tweetPageList?.collectAsLazyPagingItems()
 
+    LaunchedEffect(keywordState.value) {
+        tweetItems?.refresh()
+        tweetViewModel.getTweet(keywordState.value)
+        scrollState.scrollToItem(0)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         val visible = tweetItems != null && tweetItems.itemCount > 0
         FadeAnimation(visible = visible) {
             LazyColumn(state = scrollState) {
-                if (tweetItems!!.loadState.prepend is LoadState.Loading) {
-                    item {
-                        TweetItem(TweetData(), toComic)
-                    }
-                }
                 items(
-                    items = tweetItems,
+                    items = tweetItems!!,
                     key = {
                         it.id
                     }
                 ) {
                     TweetItem(it ?: TweetData(), toComic)
                 }
-                if (tweetItems.loadState.append is LoadState.Loading) {
-                    item {
+                item {
+                    FadeAnimation(tweetItems.loadState.append is LoadState.NotLoading) {
+                        NoMoreDataText()
+                    }
+                }
+                item {
+                    FadeAnimation(tweetItems.loadState.append is LoadState.Loading) {
                         TweetItem(TweetData(), toComic)
                     }
                 }
@@ -88,7 +87,7 @@ fun TweetList(
                 }
             }
         }
-        FadeAnimation(visible = !visible) {
+        FadeAnimation(visible = tweetItems == null) {
             LazyColumn(state = rememberLazyListState()) {
                 items(12) {
                     TweetItem(TweetData(), toComic)
@@ -103,7 +102,7 @@ fun TweetList(
         BottomSearchBar(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
-            labelStringId = R.string.news_title,
+            labelStringId = R.string.tweet,
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.TWEET,

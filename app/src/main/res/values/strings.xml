@@ -224,5 +224,6 @@
     <string name="character_basic_info">资料</string>
     <string name="expand">展开</string>
     <string name="sp_skill">SP技能</string>
+    <string name="no_more">暂无更多</string>
 
 </resources>

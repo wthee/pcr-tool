@@ -37,11 +37,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -762,7 +764,7 @@ fun BottomSearchBar(
                 .focusRequester(focusRequester),
             value = keywordInputState.value,
             shape = MaterialTheme.shapes.medium,
-            onValueChange = { keywordInputState.value = it },
+            onValueChange = { keywordInputState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
@@ -793,7 +795,29 @@ fun BottomSearchBar(
                     text = stringResource(id = labelStringId),
                     style = MaterialTheme.typography.labelLarge
                 )
-            }
+            },
+            maxLines = 1,
+            singleLine = true,
+        )
+    }
+}
+
+/**
+ * 暂无更多
+ */
+@Composable
+fun NoMoreDataText() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Dimen.cardHeight),
+        contentAlignment = Alignment.Center
+    ) {
+        //内容
+        Subtitle1(
+            text = stringResource(R.string.no_more),
+            modifier = Modifier.padding(Dimen.mediumPadding),
+            selectable = true
         )
     }
 }

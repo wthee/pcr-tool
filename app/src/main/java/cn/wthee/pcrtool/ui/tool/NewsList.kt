@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -17,13 +17,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -48,13 +46,12 @@ import cn.wthee.pcrtool.viewmodel.NewsViewModel
 /**
  * 公告列表
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class, ExperimentalPagingApi::class)
 @Composable
 fun NewsList(
-    scrollState: LazyListState,
     toNewsDetail: (Int) -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
+    val scrollState = rememberLazyListState()
     //关键词输入
     val keywordInputState = remember {
         mutableStateOf("")
@@ -64,13 +61,17 @@ fun NewsList(
         mutableStateOf("")
     }
 
-
     //获取分页数据
-//    LaunchedEffect(keywordState.value) {
-//        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
-//    }
-    val pager = newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
-    val newsItems = pager.flow.collectAsLazyPagingItems()
+    if (newsViewModel.newsPageList == null) {
+        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
+    }
+    val newsItems = newsViewModel.newsPageList?.collectAsLazyPagingItems()
+
+    LaunchedEffect(keywordState.value) {
+        newsItems?.refresh()
+        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
+        scrollState.scrollToItem(0)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         val visible = newsItems != null && newsItems.itemCount > 0
@@ -86,9 +87,15 @@ fun NewsList(
                         NewsItem(news = it, toNewsDetail)
                     }
                 }
+                item {
+                    FadeAnimation(newsItems.loadState.append is LoadState.NotLoading) {
+                        NoMoreDataText()
+                    }
+                }
                 //加载中占位
-                if (newsItems.loadState.append is LoadState.Loading) {
-                    item {
+                item {
+                    FadeAnimation(newsItems.loadState.append is LoadState.Loading) {
+
                         NewsItem(news = NewsTable(), toNewsDetail)
                     }
                 }
@@ -97,11 +104,10 @@ fun NewsList(
                 }
             }
         }
-        FadeAnimation(visible = !visible) {
+        FadeAnimation(visible = newsItems == null) {
             LazyColumn(state = scrollState) {
                 items(count = 12) {
                     NewsItem(news = NewsTable(), toNewsDetail)
-
                 }
                 item {
                     CommonSpacer()

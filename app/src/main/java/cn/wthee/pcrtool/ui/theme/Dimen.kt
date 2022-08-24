@@ -58,4 +58,6 @@ object Dimen {
 
     val border = 3.dp
 
+    val fabTextMaxWidth = 120.dp
+
 }
