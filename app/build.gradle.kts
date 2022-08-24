@@ -13,7 +13,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0"
+val composeVersion = "1.2.1"
+val composeCompilerVersion = "1.3.0"
 val appVersionCode = 341
 val appVersionName = "3.4.1"
 val appId = "cn.wthee.pcrtool"
@@ -96,7 +97,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
 }
@@ -104,7 +105,7 @@ android {
 dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
@@ -121,22 +122,22 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha14")
 
     //Accompanist
-    val accompanistVersion = "0.25.0"
+    val accompanistVersion = "0.25.1"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-    implementation ("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
     //Browser
     implementation("androidx.browser:browser:1.4.0")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.0.4")
 
-    //Coil(compose verion 1.1.1)
-    val coilVersion = "2.1.0"
+    //Coil(compose verion 1.2.1)
+    val coilVersion = "2.2.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 

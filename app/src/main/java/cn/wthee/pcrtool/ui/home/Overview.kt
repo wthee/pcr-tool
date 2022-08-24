@@ -392,7 +392,6 @@ private fun CharacterSection(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.CHARACTER.id
-    val context = LocalContext.current
 
     //角色总数
     val characterCount =

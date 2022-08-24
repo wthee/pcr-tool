@@ -800,7 +800,7 @@ data class SkillActionPro(
             }
             // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
-                "追加 [${action_value_1.toInt()}] 层标记"
+                "追加 [1] 层标记，叠加上限 [${action_value_1.toInt()}]"
             }
             // 46：比例伤害
             SkillActionType.RATE_DAMAGE -> {

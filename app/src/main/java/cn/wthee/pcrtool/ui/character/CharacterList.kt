@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,10 +48,7 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GsonUtil
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
@@ -455,8 +451,8 @@ private fun FilterCharacterSheet(
 ) {
     val filter = navViewModel.filterCharacter.value ?: FilterCharacter()
 
-    val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
-    filter.name = textState.value.text
+    val textState = remember { mutableStateOf(filter.name) }
+    filter.name = textState.value
     //排序类型筛选
     val sortTypeIndex = remember {
         mutableStateOf(filter.sortType.type)
@@ -514,7 +510,7 @@ private fun FilterCharacterSheet(
     LaunchedEffect(sheetState.currentValue, reset, ok) {
         //点击重置
         if (reset) {
-            textState.value = TextFieldValue(text = "")
+            textState.value = ""
             sortTypeIndex.value = 0
             sortAscIndex.value = 1
             loveIndex.value = 0
@@ -547,7 +543,7 @@ private fun FilterCharacterSheet(
         OutlinedTextField(
             value = textState.value,
             shape = MaterialTheme.shapes.medium,
-            onValueChange = { textState.value = it },
+            onValueChange = { textState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
@@ -571,7 +567,8 @@ private fun FilterCharacterSheet(
                     navViewModel.fabOKCilck.postValue(true)
                 }
             ),
-            singleLine = false,
+            maxLines = 1,
+            singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.character_name),

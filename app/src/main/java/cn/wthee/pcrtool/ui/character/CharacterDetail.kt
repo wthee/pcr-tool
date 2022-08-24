@@ -91,13 +91,11 @@ fun CharacterDetail(
 
     //rank 装备选择监听
     LaunchedEffect(navSheetState.currentValue) {
-        val rankEquipSelectedValue = navController.currentBackStackEntry
-            ?.savedStateHandle
-            ?.get<Int>("currentRank")
+        val rankEquipSelectedValue =
+            navController.currentBackStackEntry?.savedStateHandle?.get<Int>("currentRank")
 
         if (rankEquipSelectedValue != null) {
-            currentValueState.value =
-                currentValueState.value.update(rank = rankEquipSelectedValue)
+            currentValueState.value = currentValueState.value.update(rank = rankEquipSelectedValue)
         }
     }
 
@@ -134,11 +132,7 @@ fun CharacterDetail(
             ) {
                 //角色卡面
                 CharacterCard(
-                    unitId,
-                    loved.value,
-                    characterAttrData,
-                    currentValueState.value,
-                    actions
+                    unitId, loved.value, characterAttrData, currentValueState.value, actions
                 )
                 //星级
                 StarSelect(
@@ -148,9 +142,7 @@ fun CharacterDetail(
                 CharacterLevel(currentValueState = currentValueState, maxValue.level)
                 //属性
                 AttrLists(
-                    unitId,
-                    characterAttrData,
-                    actions.toCharacterStoryDetail
+                    unitId, characterAttrData, actions.toCharacterStoryDetail
                 )
                 //RANK相关功能
                 Row(
@@ -203,14 +195,9 @@ fun CharacterDetail(
                 }
                 //技能列表
                 SkillCompose(
-                    unitId = currentIdState.value,
-                    property = currentValueState.value,
-                    atk = max(
-                        characterAttrData.sumAttr.atk.int,
-                        characterAttrData.sumAttr.magicStr.int
-                    ),
-                    unitType = UnitType.CHARACTER,
-                    toSummonDetail = actions.toSummonDetail
+                    unitId = currentIdState.value, property = currentValueState.value, atk = max(
+                        characterAttrData.sumAttr.atk.int, characterAttrData.sumAttr.magicStr.int
+                    ), unitType = UnitType.CHARACTER, toSummonDetail = actions.toSummonDetail
                 )
                 CommonSpacer()
                 Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
@@ -222,8 +209,7 @@ fun CharacterDetail(
                 modifier = Modifier
                     .padding(Dimen.largePadding)
                     .fillMaxSize()
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 //未知角色占位页面
                 Text(
@@ -239,8 +225,7 @@ fun CharacterDetail(
         //悬浮按钮
         if (!unknown) {
             Column(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                horizontalAlignment = Alignment.End
+                modifier = Modifier.align(Alignment.BottomEnd), horizontalAlignment = Alignment.End
             ) {
                 if (cutinId != 0) {
                     Row(
@@ -262,8 +247,7 @@ fun CharacterDetail(
                 }
                 Row(
                     modifier = Modifier.padding(
-                        end = Dimen.fabMarginEnd,
-                        bottom = Dimen.fabMargin
+                        end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin
                     )
                 ) {
                     //收藏
@@ -372,16 +356,14 @@ private fun CharacterCoe(
     val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
     val context = LocalContext.current
 
-    Row(
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.extraSmall)
-            .clickable {
-                VibrateUtil(context).single()
-                toCoe()
-            }
-            .padding(horizontal = Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(modifier = Modifier
+        .clip(MaterialTheme.shapes.extraSmall)
+        .clickable {
+            VibrateUtil(context).single()
+            toCoe()
+        }
+        .padding(horizontal = Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically) {
         val value = if (coe == null) {
             ""
         } else {
@@ -420,8 +402,7 @@ private fun CharacterCoe(
             text = stringResource(id = R.string.attr_all_value, value),
         )
         IconCompose(
-            data = MainIconType.HELP,
-            size = Dimen.smallIconSize
+            data = MainIconType.HELP, size = Dimen.smallIconSize
         )
     }
 }
@@ -447,7 +428,8 @@ private fun CharacterLevel(
     val isImeVisible = WindowInsets.isImeVisible
 
     //等级
-    Text(text = currentValueState.value.level.toString(),
+    Text(
+        text = currentValueState.value.level.toString(),
         color = MaterialTheme.colorScheme.primary,
         style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.Center,
@@ -466,51 +448,61 @@ private fun CharacterLevel(
                 }
             })
     //等级输入框
-    OutlinedTextField(value = inputLevel.value, onValueChange = {
-        var filterStr = ""
-        it.forEach { ch ->
-            if (Regex("\\d").matches(ch.toString())) {
-                filterStr += ch
+    OutlinedTextField(
+        value = inputLevel.value,
+        onValueChange = {
+            var filterStr = ""
+            it.deleteSpace.forEach { ch ->
+                if (Regex("\\d").matches(ch.toString())) {
+                    filterStr += ch
+                }
             }
-        }
-        inputLevel.value = when {
-            filterStr == "" -> ""
-            filterStr.toInt() < 1 -> "1"
-            filterStr.toInt() in 1..maxLevel -> filterStr
-            else -> maxLevel.toString()
-        }
-    }, textStyle = MaterialTheme.typography.bodyMedium, trailingIcon = {
-        IconCompose(
-            data = MainIconType.OK, size = Dimen.fabIconSize
-        ) {
-            keyboardController?.hide()
-            focusManager.clearFocus()
-            if (inputLevel.value != "") {
-                currentValueState.value = currentValueState.value.update(
-                    level = inputLevel.value.toInt()
-                )
+            inputLevel.value = when {
+                filterStr == "" -> ""
+                filterStr.toInt() < 1 -> "1"
+                filterStr.toInt() in 1..maxLevel -> filterStr
+                else -> maxLevel.toString()
             }
+        },
+        textStyle = MaterialTheme.typography.bodyMedium,
+        trailingIcon = {
+            IconCompose(
+                data = MainIconType.OK, size = Dimen.fabIconSize
+            ) {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    currentValueState.value = currentValueState.value.update(
+                        level = inputLevel.value.toInt()
+                    )
+                }
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Number
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    currentValueState.value = currentValueState.value.update(
+                        level = inputLevel.value.toInt()
+                    )
+                }
+            }
+        ),
+        modifier = if (isImeVisible) {
+            Modifier
+                .focusRequester(focusRequester)
+                .padding(Dimen.smallPadding)
+        } else {
+            Modifier
+                .focusRequester(focusRequester)
+                .height(1.dp)
+                .alpha(0f)
         }
-    }, keyboardOptions = KeyboardOptions(
-        imeAction = ImeAction.Done, keyboardType = KeyboardType.Number
-    ), keyboardActions = KeyboardActions(onDone = {
-        keyboardController?.hide()
-        focusManager.clearFocus()
-        if (inputLevel.value != "") {
-            currentValueState.value = currentValueState.value.update(
-                level = inputLevel.value.toInt()
-            )
-        }
-    }), modifier = if (isImeVisible) {
-        Modifier
-            .focusRequester(focusRequester)
-            .padding(Dimen.smallPadding)
-    } else {
-        Modifier
-            .focusRequester(focusRequester)
-            .height(1.dp)
-            .alpha(0f)
-    }
     )
 }
 
@@ -519,9 +511,7 @@ private fun CharacterLevel(
  */
 @Composable
 private fun AttrLists(
-    unitId: Int,
-    allData: AllAttrData,
-    toCharacterStoryDetail: (Int) -> Unit
+    unitId: Int, allData: AllAttrData, toCharacterStoryDetail: (Int) -> Unit
 ) {
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     val context = LocalContext.current
@@ -530,23 +520,20 @@ private fun AttrLists(
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
     if (allData.storyAttr.allNotZero().isNotEmpty()) {
-        Row(
-            modifier = Modifier
-                .padding(
-                    top = Dimen.largePadding, bottom = Dimen.smallPadding
-                )
-                .clip(MaterialTheme.shapes.extraSmall)
-                .clickable {
-                    VibrateUtil(context).single()
-                    toCharacterStoryDetail(unitId)
-                }
-                .padding(horizontal = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(modifier = Modifier
+            .padding(
+                top = Dimen.largePadding, bottom = Dimen.smallPadding
+            )
+            .clip(MaterialTheme.shapes.extraSmall)
+            .clickable {
+                VibrateUtil(context).single()
+                toCharacterStoryDetail(unitId)
+            }
+            .padding(horizontal = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically) {
             MainText(text = stringResource(id = R.string.title_story_attr))
             IconCompose(
-                data = MainIconType.HELP,
-                size = Dimen.smallIconSize
+                data = MainIconType.HELP, size = Dimen.smallIconSize
             )
         }
         AttrList(attrs = allData.storyAttr.allNotZero())
@@ -586,8 +573,7 @@ private fun CharacterEquip(
     val rank = currentValueState.value.rank
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //装备 6、 3
         Row(
@@ -680,8 +666,7 @@ private fun CharacterEquip(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .width(Dimen.iconSize * 4)
+            modifier = Modifier.width(Dimen.iconSize * 4)
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
@@ -757,7 +742,7 @@ private fun UniqueEquip(
                 shape = MaterialTheme.shapes.medium,
                 onValueChange = {
                     var filterStr = ""
-                    it.forEach { ch ->
+                    it.deleteSpace.forEach { ch ->
                         if (Regex("\\d").matches(ch.toString())) {
                             filterStr += ch
                         }
@@ -804,7 +789,9 @@ private fun UniqueEquip(
                         .focusRequester(focusRequester)
                         .height(1.dp)
                         .alpha(0f)
-                }
+                },
+                maxLines = 1,
+                singleLine = true
             )
             //图标描述
             Row(
