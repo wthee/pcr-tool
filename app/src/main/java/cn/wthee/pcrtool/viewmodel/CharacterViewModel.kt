@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -28,7 +29,19 @@ class CharacterViewModel @Inject constructor(
     fun getCharacters(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                emit(unitRepository.getInfoAndData(params, Int.MAX_VALUE))
+                var list = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
+
+                //六星排序
+                if (params.sortType == SortType.SORT_UNLOCK_6) {
+                    val sortedIdList = unitRepository.getR6UnitIdList(params.asc)
+                    list = list.sortedWith { o1, o2 ->
+                        val id1 = sortedIdList.indexOf(o1.id)
+                        val id2 = sortedIdList.indexOf(o2.id)
+                        if (params.asc) id2.compareTo(id1) else id1.compareTo(id2)
+                    }
+                }
+
+                emit(list)
             }
         } catch (_: Exception) {
 

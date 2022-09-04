@@ -31,6 +31,7 @@
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
     <string name="skill">技能信息</string>
+    <string name="title_unlock_6">六星解放顺序</string>
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>

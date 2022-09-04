@@ -582,14 +582,27 @@ private fun FilterCharacterSheet(
             text = stringResource(id = R.string.title_sort),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val sortChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.sort_date)),
-            ChipData(1, stringResource(id = R.string.age)),
-            ChipData(2, stringResource(id = R.string.title_height)),
-            ChipData(3, stringResource(id = R.string.title_weight)),
-            ChipData(4, stringResource(id = R.string.title_position)),
-            ChipData(5, stringResource(id = R.string.title_birth)),
-        )
+        val sortChipData =
+            if (r6Index.value == 1) {
+                arrayListOf(
+                    ChipData(0, stringResource(id = R.string.sort_date)),
+                    ChipData(1, stringResource(id = R.string.age)),
+                    ChipData(2, stringResource(id = R.string.title_height)),
+                    ChipData(3, stringResource(id = R.string.title_weight)),
+                    ChipData(4, stringResource(id = R.string.title_position)),
+                    ChipData(5, stringResource(id = R.string.title_birth)),
+                    ChipData(6, stringResource(id = R.string.title_unlock_6))
+                )
+            } else {
+                arrayListOf(
+                    ChipData(0, stringResource(id = R.string.sort_date)),
+                    ChipData(1, stringResource(id = R.string.age)),
+                    ChipData(2, stringResource(id = R.string.title_height)),
+                    ChipData(3, stringResource(id = R.string.title_weight)),
+                    ChipData(4, stringResource(id = R.string.title_position)),
+                    ChipData(5, stringResource(id = R.string.title_birth)),
+                )
+            }
         ChipGroup(
             sortChipData,
             sortTypeIndex,
