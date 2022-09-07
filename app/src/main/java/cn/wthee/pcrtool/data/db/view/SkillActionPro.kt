@@ -193,6 +193,7 @@ data class SkillActionPro(
             1700 -> "魔法防御减少状态"
             721, 6107 -> "龙眼状态"
             1800 -> "多目标状态"
+            1900 -> "护盾展开"
             else -> UNKNOWN
         }
 
@@ -1003,7 +1004,7 @@ data class SkillActionPro(
                     2 -> "伤害"
                     else -> UNKNOWN
                 }
-                "被动效果：每当${getTarget()}受到${effect}时，为自身追加 [${action_detail_2}] 层标记$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
+                "被动效果：每当${getTarget()}受到${effect}时，为自身追加 [${action_detail_2}] 层标记$time，叠加上限 [${action_value_1.int}]。被动效果$lifeTime"
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
@@ -1047,6 +1048,7 @@ data class SkillActionPro(
             SkillActionType.HIDE -> {
                 "${getTarget()}进入隐匿状态${getTimeText(1, action_value_1, action_value_2)}"
             }
+            // 96：范围tp回复
             SkillActionType.TP_FIELD -> {
                 val value =
                     "，每秒回复 ${getValueText(1, action_value_1, action_value_2)}TP"
@@ -1054,6 +1056,10 @@ data class SkillActionPro(
                 "展开领域 [${action_value_5.toInt()}] ${value}${
                     getTimeText(3, action_value_3, action_value_4)
                 }"
+            }
+            // 97：受击tp回复
+            SkillActionType.TP_HIT -> {
+                "受击时减少 [${action_value_3.int}]标记，TP回复 [$action_value_1]。标记叠加上限 [${action_value_4.int}]"
             }
             else -> "${UNKNOWN}目标：${getTarget()}；类型：${action_type}；数值：${
                 getValueText(
