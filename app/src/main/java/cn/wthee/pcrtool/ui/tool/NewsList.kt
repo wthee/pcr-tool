@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -19,12 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -38,6 +35,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -50,38 +48,37 @@ import cn.wthee.pcrtool.viewmodel.NewsViewModel
  */
 @Composable
 fun NewsList(
-    scrollState: LazyListState,
-    toNewsDetail: (String) -> Unit,
+    toNewsDetail: (Int) -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
-    //区服
-    val tabs = arrayListOf(
-        stringResource(id = R.string.db_cn),
-        stringResource(id = R.string.db_tw),
-        stringResource(id = R.string.db_jp)
-    )
-
-    val type = remember {
-        mutableStateOf(MainActivity.regionType - 2)
+    val scrollState = rememberLazyListState()
+    //关键词输入
+    val keywordInputState = remember {
+        mutableStateOf("")
+    }
+    //关键词查询
+    val keywordState = remember {
+        mutableStateOf("")
     }
 
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(type.value + 2)
-    val flow = when (type.value + 2) {
-        2 -> newsViewModel.newsPageList0
-        3 -> newsViewModel.newsPageList1
-        else -> newsViewModel.newsPageList2
+    //获取分页数据
+    if (newsViewModel.newsPageList == null) {
+        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
     }
-    val news = remember(flow, lifecycle) {
-        flow?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
+    val newsItems = newsViewModel.newsPageList?.collectAsLazyPagingItems()
 
+    LaunchedEffect(keywordState.value) {
+        newsItems?.refresh()
+        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
+        scrollState.scrollToItem(0)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
-            if (news != null && news.itemCount > 0) {
+        val visible = newsItems != null && newsItems.itemCount > 0
+        FadeAnimation(visible = visible) {
+            LazyColumn(state = scrollState) {
                 items(
-                    items = news,
+                    items = newsItems!!,
                     key = {
                         it.id
                     }
@@ -90,8 +87,15 @@ fun NewsList(
                         NewsItem(news = it, toNewsDetail)
                     }
                 }
-                if (news.loadState.append is LoadState.Loading) {
-                    item {
+                item {
+                    FadeAnimation(newsItems.loadState.append is LoadState.NotLoading) {
+                        NoMoreDataText()
+                    }
+                }
+                //加载中占位
+                item {
+                    FadeAnimation(newsItems.loadState.append is LoadState.Loading) {
+
                         NewsItem(news = NewsTable(), toNewsDetail)
                     }
                 }
@@ -100,19 +104,29 @@ fun NewsList(
                 }
             }
         }
+        FadeAnimation(visible = newsItems == null) {
+            LazyColumn(state = scrollState) {
+                items(count = 12) {
+                    NewsItem(news = NewsTable(), toNewsDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
 
-        //公告区服选择
-        SelectTypeCompose(
-            icon = MainIconType.NEWS,
-            tabs = tabs,
-            type = type,
+        //搜索栏
+        BottomSearchBar(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
+                .align(Alignment.BottomEnd),
+            labelStringId = R.string.news_title,
+            keywordInputState = keywordInputState,
+            keywordState = keywordState,
+            leadingIcon = MainIconType.NEWS,
+            scrollState = scrollState
         )
     }
 }
-
 
 /**
  * 新闻公告
@@ -120,7 +134,7 @@ fun NewsList(
 @Composable
 fun NewsItem(
     news: NewsTable,
-    toNewsDetail: (String) -> Unit,
+    toNewsDetail: (Int) -> Unit,
 ) {
     val placeholder = news.title == ""
     val tag = news.getTag()
@@ -150,7 +164,9 @@ fun NewsItem(
             .commonPlaceholder(visible = placeholder)
             .heightIn(min = Dimen.cardHeight),
             onClick = {
-                toNewsDetail(news.id)
+                if (!placeholder) {
+                    toNewsDetail(news.id)
+                }
             }
         ) {
             //内容
@@ -170,15 +186,11 @@ fun NewsItem(
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
+fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
     val loading = remember {
         mutableStateOf(true)
     }
-    val id = if (key.indexOf('-') != -1) {
-        key.split("-")[1]
-    } else {
-        key
-    }
+
     LaunchedEffect(navSheetState.currentValue) {
         if (navSheetState.isVisible) {
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -346,6 +358,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
             }
 
         }
+
 
     }
 }

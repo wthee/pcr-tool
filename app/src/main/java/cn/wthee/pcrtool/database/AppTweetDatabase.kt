@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_TWEET
         TweetData::class,
         RemoteKey::class,
     ],
-    version = 130,
+    version = 3,
     exportSchema = false
 )
 /**

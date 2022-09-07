@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.SmallFloatingActionButton
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -23,6 +25,8 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 
 /**
  * 通用悬浮按钮
+ *
+ * @param hasNavBarPadding 适配导航栏
  */
 @Composable
 fun FabCompose(
@@ -72,8 +76,12 @@ fun FabCompose(
                     Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
                 } else {
                     Modifier
-                }.animateContentSize(defaultTween()),
-                color = MaterialTheme.colorScheme.primary
+                }
+                    .animateContentSize(defaultTween())
+                    .widthIn(max = Dimen.fabTextMaxWidth),
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

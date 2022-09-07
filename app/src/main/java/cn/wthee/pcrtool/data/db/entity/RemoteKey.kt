@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "remote_key")
 data class RemoteKey(
-    @PrimaryKey val repoId: String,
-    val prevKey: Int?,
+    @PrimaryKey val query: String,
     val nextKey: Int?
 )

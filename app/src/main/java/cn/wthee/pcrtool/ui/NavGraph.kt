@@ -85,7 +85,7 @@ object Navigation {
     const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CLAN_BOSS_PHASE = "toolClanBattlePhase"
-    const val TOOL_NEWS_KEY = "toolNewsKey"
+    const val TOOL_NEWS_ID = "toolNewsId"
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
@@ -470,25 +470,21 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                NewsList(
-                    scrollState,
-                    actions.toNewsDetail
-                )
+                NewsList(actions.toNewsDetail)
             }
 
             //公告详情
             bottomSheet(
-                route = "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_KEY}}",
+                route = "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_ID}}",
                 arguments = listOf(
-                    navArgument(Navigation.TOOL_NEWS_KEY) {
+                    navArgument(Navigation.TOOL_NEWS_ID) {
                         type = NavType.StringType
                     },
                 )
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                NewsDetail(arguments.getString(Navigation.TOOL_NEWS_KEY) ?: "")
+                NewsDetail(arguments.getString(Navigation.TOOL_NEWS_ID) ?: "")
             }
 
             //推特信息
@@ -500,9 +496,7 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val tweetScrollState = rememberLazyListState()
-
-                TweetList(tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
+                TweetList(actions.toComicListIndex)
             }
 
             //漫画信息
@@ -775,8 +769,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 官方公告详情
      */
-    val toNewsDetail: (String) -> Unit = { key: String ->
-        navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${key}")
+    val toNewsDetail: (Int) -> Unit = { id: Int ->
+        navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${id}")
     }
 
     /**

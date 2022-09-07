@@ -425,6 +425,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 96：范围tp回复
      */
     TP_FIELD(96, ""),
+
+    /**
+     * 97：受击tp回复
+     */
+    TP_HIT(97, ""),
 }
 
 /**

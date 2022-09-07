@@ -198,9 +198,8 @@ private fun CardGridList(
                 }
             ) {
                 //图片
-                ImageCompose(
-                    data = picUrl,
-                    ratio = -1f
+                StoryImageCompose(
+                    data = picUrl
                 ) {
                     loadedPicMap[picUrl] = it.drawable
                 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -285,8 +284,8 @@ private fun FilterEquipSheet(
 ) {
     val filter = navViewModel.filterEquip.value ?: FilterEquipment()
 
-    val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
-    filter.name = textState.value.text
+    val textState = remember { mutableStateOf(filter.name) }
+    filter.name = textState.value
     //合成类型
     val craftIndex = remember {
         mutableStateOf(filter.craft)
@@ -310,7 +309,7 @@ private fun FilterEquipSheet(
     //重置或确认
     LaunchedEffect(sheetState.currentValue, reset, ok) {
         if (reset) {
-            textState.value = TextFieldValue(text = "")
+            textState.value = ""
             loveIndex.value = 0
             typeIndex.value = 0
             craftIndex.value = 1
@@ -339,7 +338,7 @@ private fun FilterEquipSheet(
         OutlinedTextField(
             value = textState.value,
             shape = MaterialTheme.shapes.medium,
-            onValueChange = { textState.value = it },
+            onValueChange = { textState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
@@ -363,7 +362,8 @@ private fun FilterEquipSheet(
                     navViewModel.fabOKCilck.postValue(true)
                 }
             ),
-            singleLine = false,
+            maxLines = 1,
+            singleLine = true,
             label = {
                 Text(
                     text = stringResource(id = R.string.equip_name),

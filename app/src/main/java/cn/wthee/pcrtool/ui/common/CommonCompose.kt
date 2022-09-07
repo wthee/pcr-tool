@@ -1,36 +1,49 @@
 package cn.wthee.pcrtool.ui.common
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -688,4 +701,123 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
         visible = visible,
         highlight = PlaceholderHighlight.shimmer()
     )
+}
+
+/**
+ * 底部搜索栏
+ */
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@Composable
+fun BottomSearchBar(
+    modifier: Modifier,
+    @StringRes labelStringId: Int,
+    keywordInputState: MutableState<String>,
+    keywordState: MutableState<String>,
+    leadingIcon: MainIconType,
+    scrollState: LazyListState
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
+    //获取焦点
+    val focusRequester = remember {
+        FocusRequester()
+    }
+    //键盘是否可见
+    val isImeVisible = WindowInsets.isImeVisible
+
+    if (!isImeVisible) {
+        Row(
+            modifier = modifier
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+            horizontalArrangement = Arrangement.End
+        ) {
+            //回到顶部
+            FabCompose(
+                iconType = MainIconType.TOP
+            ) {
+                coroutineScope.launch {
+                    scrollState.scrollToItem(0)
+                }
+            }
+            //搜索
+            FabCompose(
+                iconType = MainIconType.SEARCH,
+                text = keywordState.value
+            ) {
+                keyboardController?.show()
+                focusRequester.requestFocus()
+            }
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.background
+            )
+            .imePadding()
+    ) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(if (isImeVisible) 1f else 0f)
+                .padding(Dimen.smallPadding)
+                .focusRequester(focusRequester),
+            value = keywordInputState.value,
+            shape = MaterialTheme.shapes.medium,
+            onValueChange = { keywordInputState.value = it.deleteSpace },
+            textStyle = MaterialTheme.typography.labelLarge,
+            leadingIcon = {
+                IconCompose(
+                    data = leadingIcon,
+                    size = Dimen.fabIconSize
+                )
+            },
+            trailingIcon = {
+                IconCompose(
+                    data = MainIconType.SEARCH,
+                    size = Dimen.fabIconSize
+                ) {
+                    keyboardController?.hide()
+                    keywordState.value = keywordInputState.value
+                    focusRequester.freeFocus()
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    keywordState.value = keywordInputState.value
+                    focusRequester.freeFocus()
+                }
+            ),
+            label = {
+                Text(
+                    text = stringResource(id = labelStringId),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            },
+            maxLines = 1,
+            singleLine = true,
+        )
+    }
+}
+
+/**
+ * 暂无更多
+ */
+@Composable
+fun NoMoreDataText() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Dimen.cardHeight),
+        contentAlignment = Alignment.Center
+    ) {
+        //内容
+        Subtitle1(
+            text = stringResource(R.string.no_more),
+            modifier = Modifier.padding(Dimen.mediumPadding),
+            selectable = true
+        )
+    }
 }
