@@ -47,9 +47,6 @@
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
 
-# 友盟
--keep class com.umeng.** { *; }
-
 -keep class com.uc.** { *; }
 
 -keep class com.efs.** { *; }
