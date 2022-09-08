@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.equip
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -288,43 +289,38 @@ fun AreaItem(
                 .commonPlaceholder(visible = placeholder)
         )
 
-
-        MainCard(
-            modifier = Modifier.commonPlaceholder(visible = placeholder)
+        Column(
+            modifier = Modifier
+                .background(shape = MaterialTheme.shapes.medium, color = Color.Transparent)
+                .commonPlaceholder(visible = placeholder)
         ) {
-            Column {
-                VerticalGrid(
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    ),
-                    maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
-                ) {
-                    odds.forEach {
-                        Column(
-                            modifier = Modifier
-                                .padding(
-                                    bottom = Dimen.mediumPadding
-                                )
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            val selected = selectedId == it.eid
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance()
-                                    .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.eid)
+            VerticalGrid(
+                modifier = Modifier.padding(top = Dimen.mediumPadding),
+                maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+            ) {
+                odds.forEach {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                bottom = Dimen.mediumPadding
                             )
-                            if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
-                                SelectText(
-                                    selected = selected,
-                                    text = if (it.odd > 0) {
-                                        "${it.odd}%"
-                                    } else {
-                                        if (selected) "✓" else ""
-                                    }
-                                )
-                            }
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val selected = selectedId == it.eid
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.eid)
+                        )
+                        if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                            SelectText(
+                                selected = selected,
+                                text = if (it.odd > 0) {
+                                    "${it.odd}%"
+                                } else {
+                                    if (selected) "✓" else ""
+                                }
+                            )
                         }
                     }
                 }

@@ -8,13 +8,14 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -426,8 +427,8 @@ private fun CharacterTag(
 ) {
     Box(
         modifier = modifier
-            .clip(Shapes.Full)
-            .background(color = backgroundColor, shape = Shapes.Full)
+            .clip(CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
             .padding(horizontal = Dimen.mediumPadding),
         contentAlignment = Alignment.Center
     ) {
@@ -443,7 +444,10 @@ private fun CharacterTag(
 /**
  * 角色筛选
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,

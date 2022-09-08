@@ -196,7 +196,11 @@ fun SkillItem(
                 FlowRow {
                     //技能类型
                     CaptionText(
-                        text = type + if (skillDetail.isCutin) "(六星)" else "",
+                        text = type + if (skillDetail.isCutin) {
+                            stringResource(id = R.string.six_unlock)
+                        } else {
+                            ""
+                        },
                     )
                     //技能等级
                     if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {

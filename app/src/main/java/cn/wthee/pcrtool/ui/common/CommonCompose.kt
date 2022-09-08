@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -572,7 +573,7 @@ fun SelectTypeCompose(
                 bottom = Dimen.fabMargin,
             )
             .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
-        shape = if (openDialog) MaterialTheme.shapes.medium else Shapes.Full,
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -706,7 +707,10 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
 /**
  * 底部搜索栏
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun BottomSearchBar(
     modifier: Modifier,

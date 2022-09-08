@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -410,7 +411,10 @@ private fun CharacterCoe(
 /**
  * 角色等级
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun CharacterLevel(
     currentValueState: MutableState<CharacterProperty>, maxLevel: Int
@@ -691,7 +695,10 @@ private fun CharacterEquip(
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
-@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun UniqueEquip(
     currentValueState: MutableState<CharacterProperty>,
@@ -736,7 +743,6 @@ private fun UniqueEquip(
                         }
                     })
             //等级输入框
-
             OutlinedTextField(
                 value = inputLevel.value,
                 shape = MaterialTheme.shapes.medium,
