@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -582,27 +583,15 @@ private fun FilterCharacterSheet(
             text = stringResource(id = R.string.title_sort),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val sortChipData =
-            if (r6Index.value == 1) {
-                arrayListOf(
-                    ChipData(0, stringResource(id = R.string.sort_date)),
-                    ChipData(1, stringResource(id = R.string.age)),
-                    ChipData(2, stringResource(id = R.string.title_height)),
-                    ChipData(3, stringResource(id = R.string.title_weight)),
-                    ChipData(4, stringResource(id = R.string.title_position)),
-                    ChipData(5, stringResource(id = R.string.title_birth)),
-                    ChipData(6, stringResource(id = R.string.title_unlock_6))
-                )
-            } else {
-                arrayListOf(
-                    ChipData(0, stringResource(id = R.string.sort_date)),
-                    ChipData(1, stringResource(id = R.string.age)),
-                    ChipData(2, stringResource(id = R.string.title_height)),
-                    ChipData(3, stringResource(id = R.string.title_weight)),
-                    ChipData(4, stringResource(id = R.string.title_position)),
-                    ChipData(5, stringResource(id = R.string.title_birth)),
-                )
-            }
+        val sortChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.sort_date)),
+            ChipData(1, stringResource(id = R.string.age)),
+            ChipData(2, stringResource(id = R.string.title_height)),
+            ChipData(3, stringResource(id = R.string.title_weight)),
+            ChipData(4, stringResource(id = R.string.title_position)),
+            ChipData(5, stringResource(id = R.string.title_birth)),
+            ChipData(6, stringResource(id = R.string.title_unlock_6))
+        )
         ChipGroup(
             sortChipData,
             sortTypeIndex,
@@ -652,21 +641,30 @@ private fun FilterCharacterSheet(
             typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+
         //六星
-        MainText(
-            text = stringResource(id = R.string.title_rarity),
-            modifier = Modifier.padding(top = Dimen.largePadding)
-        )
         val r6ChipData = arrayListOf(
             ChipData(0, stringResource(id = R.string.all)),
             ChipData(1, stringResource(id = R.string.six_unlock)),
             ChipData(2, stringResource(id = R.string.six_locked)),
         )
-        ChipGroup(
-            r6ChipData,
-            r6Index,
-            modifier = Modifier.padding(Dimen.smallPadding),
-        )
+        //是否选择了六星解放排序
+        val isUnlock6SortType = sortTypeIndex.value == SortType.SORT_UNLOCK_6.type
+        //未选择六星解放排序是显示
+        ExpandAnimation(visible = !isUnlock6SortType) {
+            Column {
+                MainText(
+                    text = stringResource(id = R.string.title_rarity),
+                    modifier = Modifier.padding(top = Dimen.largePadding)
+                )
+                ChipGroup(
+                    r6ChipData,
+                    r6Index,
+                    modifier = Modifier.padding(Dimen.smallPadding)
+                )
+            }
+        }
+
         //位置
         MainText(
             text = stringResource(id = R.string.title_position),
