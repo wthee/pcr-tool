@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
@@ -340,7 +341,14 @@ data class SkillActionPro(
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)
-                "使${getTarget()}进入${tag}状态，每秒造成伤害 $value$time"
+                "使${getTarget()}进入${tag}状态，每秒造成伤害 $value${
+                    if (action_detail_1 == 5) {
+                        "，伤害每秒增加基础数值的 [${action_value_5}%]"
+                    } else {
+                        ""
+                    }
+                }$time"
+
             }
             // 10：buff/debuff
             SkillActionType.AURA -> {
@@ -1079,7 +1087,7 @@ data class SkillActionPro(
             SkillActionType.RATE_DAMAGE -> true
             else -> false
         }
-        return SkillActionText(
+        val skillActionText = SkillActionText(
             action_id,
             tag,
             "(${action_id % 10}) $formatDesc",
@@ -1088,6 +1096,10 @@ data class SkillActionPro(
             level,
             atk
         )
+        if (BuildConfig.DEBUG) {
+            skillActionText.debugText = this.toString()
+        }
+        return skillActionText
     }
 
     /**
@@ -1221,4 +1233,6 @@ data class SkillActionText(
     val showCoe: Boolean,
     val level: Int,
     val atk: Int
-)
+) {
+    var debugText = ""
+}

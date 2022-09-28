@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.utils.Constants
 
@@ -17,11 +16,7 @@ data class GuildAllMember(
     @ColumnInfo(name = "unit_ids") var unitIds: String = "0-0",
     @ColumnInfo(name = "unit_names") var unitNames: String = "0-0",
 ) {
-    @Ignore
-    var newAddUnitIds: List<Int> = listOf()
-
     fun getDesc() = description.ifBlank { "?" }
-
 }
 
 data class GuildMemberInfo(

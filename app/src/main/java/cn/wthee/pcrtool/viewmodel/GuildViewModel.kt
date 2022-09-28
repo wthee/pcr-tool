@@ -24,14 +24,6 @@ class GuildViewModel @Inject constructor(
         try {
             val data = unitRepository.getAllGuildMembers()
             val list = ArrayList(data)
-//            list.forEach {
-//                try {
-//                    val add = unitRepository.getGuildAddMembers(it.guildId)
-//                    it.newAddUnitIds = add?.getMemberIds() ?: arrayListOf()
-//                } catch (e: Exception) {
-//
-//                }
-//            }
             //无公会成员
             val noGuildData = unitRepository.getNoGuildMembers()
             noGuildData?.let {

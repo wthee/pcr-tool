@@ -116,6 +116,15 @@ class ImageResourceHelper() {
         return getUrl(ICON_UNIT, getStarId(unitId, 3))
     }
 
+    /**
+     * 获取角色图标
+     *
+     * @param unitId 角色编号
+     * @param star 星级
+     */
+    fun getUnitIconUrl(unitId: Int, star: Int): String {
+        return getUrl(ICON_UNIT, getStarId(unitId, star))
+    }
 
     /**
      * 获取星级 [star] id

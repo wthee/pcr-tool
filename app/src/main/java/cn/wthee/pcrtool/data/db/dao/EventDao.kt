@@ -188,7 +188,7 @@ interface EventDao {
             unit_profile
         WHERE unit_id < 200000 
         AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-        GROUP BY birth_month, birth_day
+        GROUP BY birth_month_int, birth_day_int
         ORDER BY birth_month_int, birth_day_int
     """
     )

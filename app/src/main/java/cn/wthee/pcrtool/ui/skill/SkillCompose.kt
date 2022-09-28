@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +31,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -341,9 +339,6 @@ fun SkillActionItem(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.extraSmall
             )
-            .clickable(enabled = BuildConfig.DEBUG) {
-                ToastUtil.short(skillAction.actionId.toString())
-            }
     ) {
         Column(
             modifier = Modifier
@@ -396,6 +391,11 @@ fun SkillActionItem(
                         property.rarity
                     )
                 }
+            }
+
+            //调试用
+            if (BuildConfig.DEBUG) {
+                CaptionText(text = skillAction.debugText)
             }
         }
     }
