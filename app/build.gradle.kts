@@ -22,14 +22,14 @@ val appId = "cn.wthee.pcrtool"
 android {
 
     namespace = appId
-    compileSdk = 32
+    compileSdk = 33
     buildToolsVersion = "31.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = appId
         minSdk = 23
-        targetSdk = 32
+        targetSdk = 33
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -134,10 +134,10 @@ dependencies {
     implementation("androidx.browser:browser:1.4.0")
 
     //Bugly
-    implementation("com.tencent.bugly:crashreport:4.0.4")
+    implementation("com.tencent.bugly:crashreport:4.1.9")
 
     //Coil(compose verion 1.2.1)
-    val coilVersion = "2.2.0"
+    val coilVersion = "2.2.1"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
