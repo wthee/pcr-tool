@@ -195,7 +195,12 @@ private fun ClanBattleBossItem(
             //属性
             AttrList(attrs = it.attr.enemy())
         }
-        DivCompose(Modifier.align(Alignment.CenterHorizontally))
+        MainText(
+            text = stringResource(R.string.skill),
+            modifier = Modifier
+                .padding(top = Dimen.largePadding + Dimen.mediumPadding)
+                .align(Alignment.CenterHorizontally)
+        )
         //技能
         BossSkillList(bossDataValue, UnitType.ENEMY, toSummonDetail)
         CommonSpacer()

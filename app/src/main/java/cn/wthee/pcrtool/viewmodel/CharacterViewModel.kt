@@ -42,7 +42,7 @@ class CharacterViewModel @Inject constructor(
                     filterList = filterList.sortedWith { o1, o2 ->
                         val id1 = sortedIdList.indexOf(o1.id)
                         val id2 = sortedIdList.indexOf(o2.id)
-                        if (params.asc) id2.compareTo(id1) else id1.compareTo(id2)
+                        id1.compareTo(id2)
                     }
                 }
 
