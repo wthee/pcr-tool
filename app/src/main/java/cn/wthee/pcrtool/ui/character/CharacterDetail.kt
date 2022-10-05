@@ -133,7 +133,12 @@ fun CharacterDetail(
             ) {
                 //角色卡面
                 CharacterCard(
-                    unitId, loved.value, characterAttrData, currentValueState.value, actions
+                    unitId = unitId,
+                    cutinId = cutinId,
+                    loved = loved.value,
+                    characterAttrData,
+                    currentValueState.value,
+                    actions
                 )
                 //星级
                 StarSelect(
@@ -241,6 +246,11 @@ fun CharacterDetail(
                             } else {
                                 MainIconType.CHARACTER_NORMAL_SKILL
                             },
+                            text = if (isCcutinSkill.value) {
+                                stringResource(id = R.string.cutin_skill)
+                            } else {
+                                ""
+                            },
                         ) {
                             isCcutinSkill.value = !isCcutinSkill.value
                         }
@@ -278,6 +288,7 @@ fun CharacterDetail(
 @Composable
 private fun CharacterCard(
     unitId: Int,
+    cutinId: Int = 0,
     loved: Boolean,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
@@ -336,7 +347,11 @@ private fun CharacterCard(
                     text = stringResource(id = R.string.model_preview),
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 ) {
-                    BrowserUtil.open(context, Constants.PREVIEW_UNIT_URL + unitId)
+                    BrowserUtil.open(
+                        context, Constants.PREVIEW_UNIT_URL + (
+                                if (cutinId != 0) cutinId else unitId
+                                )
+                    )
                 }
             }
         }

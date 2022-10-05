@@ -142,6 +142,7 @@ data class SkillActionPro(
         40 -> ""
         41 -> ""
         42 -> "多目标"
+        43 -> "物理攻击力最高（自身除外）的"
         else -> UNKNOWN
     }
 

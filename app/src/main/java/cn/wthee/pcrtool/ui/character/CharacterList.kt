@@ -649,7 +649,7 @@ private fun FilterCharacterSheet(
         //六星
         val r6ChipData = arrayListOf(
             ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.six_unlock)),
+            ChipData(1, stringResource(id = R.string.six_star)),
             ChipData(2, stringResource(id = R.string.six_locked)),
         )
         //是否选择了六星解放排序

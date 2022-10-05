@@ -90,7 +90,8 @@
     <string name="uncraft">素材</string>
     <string name="title_rarity">角色星级</string>
     <string name="title_type">类型</string>
-    <string name="six_unlock">★6</string>
+    <string name="six_star">★6</string>
+    <string name="cutin_skill">★6技能</string>
     <string name="six_locked">其他</string>
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>

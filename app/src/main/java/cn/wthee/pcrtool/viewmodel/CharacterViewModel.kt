@@ -29,11 +29,15 @@ class CharacterViewModel @Inject constructor(
     fun getCharacters(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                var filterList = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
-
                 //六星排序时，仅显示六星角色
                 if (params.sortType == SortType.SORT_UNLOCK_6) {
                     params.r6 = 1
+                }
+
+                var filterList = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
+
+                //按六星解放时间排序
+                if (params.sortType == SortType.SORT_UNLOCK_6) {
                     val sortedIdList = unitRepository.getR6UnitIdList(params.asc)
                     filterList = filterList.sortedWith { o1, o2 ->
                         val id1 = sortedIdList.indexOf(o1.id)

@@ -72,11 +72,15 @@ fun SkillCompose(
             .padding(Dimen.largePadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MainText(
-            text = stringResource(R.string.skill),
-            modifier = Modifier
-                .padding(top = Dimen.largePadding)
-        )
+        //技能信息标题
+        if (normalSkillData.isNotEmpty() or spSkillData.isNotEmpty()) {
+            MainText(
+                text = stringResource(R.string.skill),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+            )
+        }
+        //普通技能
         normalSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
@@ -86,6 +90,7 @@ fun SkillCompose(
                 toSummonDetail = toSummonDetail
             )
         }
+        //特殊技能
         if (spSkillData.isNotEmpty()) {
             MainText(
                 text = stringResource(R.string.sp_skill),
@@ -195,7 +200,7 @@ fun SkillItem(
                     //技能类型
                     CaptionText(
                         text = type + if (skillDetail.isCutin) {
-                            stringResource(id = R.string.six_unlock)
+                            stringResource(id = R.string.six_star)
                         } else {
                             ""
                         },
