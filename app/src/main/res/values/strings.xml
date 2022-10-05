@@ -31,7 +31,7 @@
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
     <string name="skill">技能信息</string>
-    <string name="title_unlock_6">六星解放顺序</string>
+    <string name="title_unlock_6">★6解放</string>
 
     <!-- 设置页面   -->
     <string name="random_area">额外掉落</string>
@@ -90,8 +90,9 @@
     <string name="uncraft">素材</string>
     <string name="title_rarity">角色星级</string>
     <string name="title_type">类型</string>
-    <string name="six_unlock">六星</string>
-    <string name="six_locked">未六星</string>
+    <string name="six_star">★6</string>
+    <string name="cutin_skill">★6技能</string>
+    <string name="six_locked">其他</string>
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>

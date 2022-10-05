@@ -96,6 +96,7 @@ fun MockGacha(
                 .padding(top = Dimen.largePadding)
                 .fillMaxSize()
         ) {
+            //选中的角色
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,7 +109,7 @@ fun MockGacha(
                 } else {
                     pickUpList.forEach {
                         IconCompose(
-                            data = ImageResourceHelper.getInstance().getMaxIconUrl(it.unitId),
+                            data = ImageResourceHelper.getInstance().getUnitIconUrl(it.unitId, 3),
                             modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                         ) {
                             //更新选中

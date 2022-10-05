@@ -19,6 +19,8 @@ import javax.net.ssl.X509TrustManager
  */
 object ApiUtil {
 
+    private final const val TIMEOUT_NORMAL_SECOND = 15L
+    private final const val TIMEOUT_DOWNLOAD_SECOND = 120L
 
     private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
         val client = this
@@ -63,9 +65,9 @@ object ApiUtil {
                     .build()
             })
             .retryOnConnectionFailure(true)
-            .connectTimeout(360, TimeUnit.SECONDS)
-            .writeTimeout(360, TimeUnit.SECONDS)
-            .readTimeout(360, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
         return builder.setSSL().build()
     }
 
@@ -76,7 +78,6 @@ object ApiUtil {
     fun getClient(second: Long): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
-//            .cache(CoilUtils.createDefaultCache(MyApplication.context))
             .connectTimeout(second, TimeUnit.SECONDS)
             .writeTimeout(second, TimeUnit.SECONDS)
             .readTimeout(second, TimeUnit.SECONDS)
@@ -89,11 +90,11 @@ object ApiUtil {
     /**
      * 创建服务
      */
-    fun <T> create(serviceClass: Class<T>, url: String, second: Long): T {
+    fun <T> create(serviceClass: Class<T>, url: String): T {
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getClient(second))
+            .client(getClient(TIMEOUT_NORMAL_SECOND))
 
         return builder.build().create(serviceClass)
     }

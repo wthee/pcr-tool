@@ -8,13 +8,14 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,6 +40,7 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -425,8 +427,8 @@ private fun CharacterTag(
 ) {
     Box(
         modifier = modifier
-            .clip(Shapes.Full)
-            .background(color = backgroundColor, shape = Shapes.Full)
+            .clip(CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
             .padding(horizontal = Dimen.mediumPadding),
         contentAlignment = Alignment.Center
     ) {
@@ -442,7 +444,10 @@ private fun CharacterTag(
 /**
  * 角色筛选
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,
@@ -582,27 +587,15 @@ private fun FilterCharacterSheet(
             text = stringResource(id = R.string.title_sort),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val sortChipData =
-            if (r6Index.value == 1) {
-                arrayListOf(
-                    ChipData(0, stringResource(id = R.string.sort_date)),
-                    ChipData(1, stringResource(id = R.string.age)),
-                    ChipData(2, stringResource(id = R.string.title_height)),
-                    ChipData(3, stringResource(id = R.string.title_weight)),
-                    ChipData(4, stringResource(id = R.string.title_position)),
-                    ChipData(5, stringResource(id = R.string.title_birth)),
-                    ChipData(6, stringResource(id = R.string.title_unlock_6))
-                )
-            } else {
-                arrayListOf(
-                    ChipData(0, stringResource(id = R.string.sort_date)),
-                    ChipData(1, stringResource(id = R.string.age)),
-                    ChipData(2, stringResource(id = R.string.title_height)),
-                    ChipData(3, stringResource(id = R.string.title_weight)),
-                    ChipData(4, stringResource(id = R.string.title_position)),
-                    ChipData(5, stringResource(id = R.string.title_birth)),
-                )
-            }
+        val sortChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.sort_date)),
+            ChipData(1, stringResource(id = R.string.age)),
+            ChipData(2, stringResource(id = R.string.title_height)),
+            ChipData(3, stringResource(id = R.string.title_weight)),
+            ChipData(4, stringResource(id = R.string.title_position)),
+            ChipData(5, stringResource(id = R.string.title_birth)),
+            ChipData(6, stringResource(id = R.string.title_unlock_6))
+        )
         ChipGroup(
             sortChipData,
             sortTypeIndex,
@@ -652,21 +645,30 @@ private fun FilterCharacterSheet(
             typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+
         //六星
-        MainText(
-            text = stringResource(id = R.string.title_rarity),
-            modifier = Modifier.padding(top = Dimen.largePadding)
-        )
         val r6ChipData = arrayListOf(
             ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.six_unlock)),
+            ChipData(1, stringResource(id = R.string.six_star)),
             ChipData(2, stringResource(id = R.string.six_locked)),
         )
-        ChipGroup(
-            r6ChipData,
-            r6Index,
-            modifier = Modifier.padding(Dimen.smallPadding),
-        )
+        //是否选择了六星解放排序
+        val isUnlock6SortType = sortTypeIndex.value == SortType.SORT_UNLOCK_6.type
+        //未选择六星解放排序是显示
+        ExpandAnimation(visible = !isUnlock6SortType) {
+            Column {
+                MainText(
+                    text = stringResource(id = R.string.title_rarity),
+                    modifier = Modifier.padding(top = Dimen.largePadding)
+                )
+                ChipGroup(
+                    r6ChipData,
+                    r6Index,
+                    modifier = Modifier.padding(Dimen.smallPadding)
+                )
+            }
+        }
+
         //位置
         MainText(
             text = stringResource(id = R.string.title_position),

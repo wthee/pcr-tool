@@ -140,22 +140,6 @@ private fun GuildItem(
                     icons = iconIdLlist,
                     onClickItem = toCharacterDetail
                 )
-                // 新加入的成员
-                if (guild.newAddUnitIds.isNotEmpty()) {
-                    MainContentText(
-                        text = stringResource(R.string.new_member),
-                        modifier = Modifier.padding(
-                            top = Dimen.largePadding,
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding
-                        ),
-                        textAlign = TextAlign.Start
-                    )
-                    GridIconListCompose(
-                        icons = guild.newAddUnitIds,
-                        onClickItem = toCharacterDetail
-                    )
-                }
             }
         }
     }
@@ -166,19 +150,28 @@ private fun GuildItem(
  * 按公会创建人、角色名排序
  */
 private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1, gm2 ->
-    if (gm1.unitName.contains(masterName)) {
-        if (gm2.unitName.contains(masterName)) {
-            //创建人，按 unitId 排序
-            gm1.unitName.compareTo(gm2.unitName)
-        } else {
-            -1
-        }
+    if (masterName == "") {
+        //无公会
+        gm1.unitName.compareTo(gm2.unitName)
     } else {
-        if (gm2.unitName.contains(masterName)) {
-            1
+        if (gm1.unitName == masterName) {
+            if (gm2.unitName == masterName) {
+                //创建人，按 unitId 排序
+                gm1.unitId.compareTo(gm2.unitId)
+            } else {
+                -1
+            }
         } else {
-            //非创建人，按 unitName 排序
-            gm1.unitName.compareTo(gm2.unitName)
+            if (gm2.unitName == masterName) {
+                1
+            } else {
+                //非创建人，按 unitName 排序
+                if (gm1.unitName == gm2.unitName) {
+                    gm1.unitId.compareTo(gm2.unitId)
+                } else {
+                    gm1.unitName.compareTo(gm2.unitName)
+                }
+            }
         }
     }
 }

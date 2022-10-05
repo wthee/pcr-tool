@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -344,12 +345,15 @@ private fun AppInfoCompose(actions: NavActions) {
                 },
                 onClick = {}
             )
-            DropdownMenuItem(
-                text = {
-                    ColorSetting(sp, context, false)
-                },
-                onClick = {}
-            )
+            //- 动态色彩，仅 Android 12 及以上可用
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
+                DropdownMenuItem(
+                    text = {
+                        ColorSetting(sp, context, false)
+                    },
+                    onClick = {}
+                )
+            }
             DropdownMenuItem(
                 text = {
                     Row(verticalAlignment = Alignment.CenterVertically) {

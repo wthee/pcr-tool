@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +52,7 @@ fun FabCompose(
             VibrateUtil(context).single()
             onClick()
         },
-        shape = Shapes.Full,
+        shape = CircleShape,
         modifier = mModifier,
     ) {
         Row(

@@ -29,19 +29,24 @@ class CharacterViewModel @Inject constructor(
     fun getCharacters(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                var list = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
+                //六星排序时，仅显示六星角色
+                if (params.sortType == SortType.SORT_UNLOCK_6) {
+                    params.r6 = 1
+                }
 
-                //六星排序
+                var filterList = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
+
+                //按六星解放时间排序
                 if (params.sortType == SortType.SORT_UNLOCK_6) {
                     val sortedIdList = unitRepository.getR6UnitIdList(params.asc)
-                    list = list.sortedWith { o1, o2 ->
+                    filterList = filterList.sortedWith { o1, o2 ->
                         val id1 = sortedIdList.indexOf(o1.id)
                         val id2 = sortedIdList.indexOf(o2.id)
-                        if (params.asc) id2.compareTo(id1) else id1.compareTo(id2)
+                        id1.compareTo(id2)
                     }
                 }
 
-                emit(list)
+                emit(filterList)
             }
         } catch (_: Exception) {
 
@@ -82,7 +87,7 @@ class CharacterViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getRoomComments(unitId: Int) = flow {
-        //校验是否未多角色卡
+        //校验是否为多角色卡
         val ids = arrayListOf(unitId)
         try {
             val multiIds = unitRepository.getMultiIds(unitId)

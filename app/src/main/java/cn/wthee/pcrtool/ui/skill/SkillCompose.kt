@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +31,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -74,11 +72,15 @@ fun SkillCompose(
             .padding(Dimen.largePadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MainText(
-            text = stringResource(R.string.skill),
-            modifier = Modifier
-                .padding(top = Dimen.largePadding)
-        )
+        //技能信息标题
+        if (normalSkillData.isNotEmpty() or spSkillData.isNotEmpty()) {
+            MainText(
+                text = stringResource(R.string.skill),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+            )
+        }
+        //普通技能
         normalSkillData.forEachIndexed { index, skillDetail ->
             SkillItem(
                 skillIndex = index,
@@ -88,6 +90,7 @@ fun SkillCompose(
                 toSummonDetail = toSummonDetail
             )
         }
+        //特殊技能
         if (spSkillData.isNotEmpty()) {
             MainText(
                 text = stringResource(R.string.sp_skill),
@@ -196,7 +199,11 @@ fun SkillItem(
                 FlowRow {
                     //技能类型
                     CaptionText(
-                        text = type + if (skillDetail.isCutin) "(六星)" else "",
+                        text = type + if (skillDetail.isCutin) {
+                            stringResource(id = R.string.six_star)
+                        } else {
+                            ""
+                        },
                     )
                     //技能等级
                     if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
@@ -337,9 +344,6 @@ fun SkillActionItem(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.extraSmall
             )
-            .clickable(enabled = BuildConfig.DEBUG) {
-                ToastUtil.short(skillAction.actionId.toString())
-            }
     ) {
         Column(
             modifier = Modifier
@@ -392,6 +396,11 @@ fun SkillActionItem(
                         property.rarity
                     )
                 }
+            }
+
+            //调试用
+            if (BuildConfig.DEBUG) {
+                CaptionText(text = skillAction.debugText)
             }
         }
     }

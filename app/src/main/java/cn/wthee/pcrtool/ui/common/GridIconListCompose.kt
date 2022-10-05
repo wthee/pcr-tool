@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -64,6 +65,9 @@ fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
             data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, iconId)
         ) {
             onClickItem(unitId)
+        }
+        if (BuildConfig.DEBUG) {
+            CaptionText(text = unitId.toString())
         }
     }
 

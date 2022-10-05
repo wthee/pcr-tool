@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -132,7 +133,12 @@ fun CharacterDetail(
             ) {
                 //角色卡面
                 CharacterCard(
-                    unitId, loved.value, characterAttrData, currentValueState.value, actions
+                    unitId = unitId,
+                    cutinId = cutinId,
+                    loved = loved.value,
+                    characterAttrData,
+                    currentValueState.value,
+                    actions
                 )
                 //星级
                 StarSelect(
@@ -240,6 +246,11 @@ fun CharacterDetail(
                             } else {
                                 MainIconType.CHARACTER_NORMAL_SKILL
                             },
+                            text = if (isCcutinSkill.value) {
+                                stringResource(id = R.string.cutin_skill)
+                            } else {
+                                ""
+                            },
                         ) {
                             isCcutinSkill.value = !isCcutinSkill.value
                         }
@@ -277,6 +288,7 @@ fun CharacterDetail(
 @Composable
 private fun CharacterCard(
     unitId: Int,
+    cutinId: Int = 0,
     loved: Boolean,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
@@ -335,7 +347,11 @@ private fun CharacterCard(
                     text = stringResource(id = R.string.model_preview),
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 ) {
-                    BrowserUtil.open(context, Constants.PREVIEW_UNIT_URL + unitId)
+                    BrowserUtil.open(
+                        context, Constants.PREVIEW_UNIT_URL + (
+                                if (cutinId != 0) cutinId else unitId
+                                )
+                    )
                 }
             }
         }
@@ -410,7 +426,10 @@ private fun CharacterCoe(
 /**
  * 角色等级
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun CharacterLevel(
     currentValueState: MutableState<CharacterProperty>, maxLevel: Int
@@ -691,7 +710,10 @@ private fun CharacterEquip(
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
-@OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun UniqueEquip(
     currentValueState: MutableState<CharacterProperty>,
@@ -736,7 +758,6 @@ private fun UniqueEquip(
                         }
                     })
             //等级输入框
-
             OutlinedTextField(
                 value = inputLevel.value,
                 shape = MaterialTheme.shapes.medium,

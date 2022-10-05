@@ -16,8 +16,7 @@ class APIServiceModule {
     fun provideMyAPIService(): MyAPIService {
         return ApiUtil.create(
             MyAPIService::class.java,
-            Constants.API_URL,
-            30
+            Constants.API_URL
         )
     }
 

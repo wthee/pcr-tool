@@ -43,7 +43,7 @@ object DatabaseUpdater {
     /**
      * 检查是否需要更新
      *
-     * @param from  -1:正常调用  0：强制更新  1：切换版本调用
+     * @param from  -1:正常调用 1：切换版本调用
      */
     suspend fun checkDBVersion(from: Int = -1) {
         //获取数据库最新版本
@@ -53,11 +53,7 @@ object DatabaseUpdater {
         }
         try {
             //创建服务
-            val service = ApiUtil.create(
-                MyAPIService::class.java,
-                API_URL,
-                10
-            )
+            val service = ApiUtil.create(MyAPIService::class.java, API_URL)
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
             downloadDB(version.data!!, from)
@@ -87,7 +83,6 @@ object DatabaseUpdater {
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
-                || from == 0
                 || (from == -1 && (FileUtil.needUpdate(region) || localVersion == "0"))  //打开应用，数据库wal被清空
                 || (from == 1 && !File(FileUtil.getDatabasePath(region)).exists()) //切换数据库时，数据库文件不存在时更新
         //下载远程备份
@@ -95,7 +90,7 @@ object DatabaseUpdater {
             remoteBackupMode && File(FileUtil.getDatabaseBackupPath(region)).length() < 1024 * 1024
         if (toDownload || toDownloadRemoteBackup) {
             //远程备份时
-            var fileName = when (region) {
+            val fileName = when (region) {
                 2 -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN
@@ -116,14 +111,6 @@ object DatabaseUpdater {
                     } else {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
                     }
-                }
-            }
-            //强制更新时
-            if (from == 0) {
-                fileName = when (region) {
-                    2 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
-                    3 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
-                    else -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
                 }
             }
             //开始下载
@@ -147,16 +134,16 @@ object DatabaseUpdater {
                 LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         } else {
-            //强制更新/切换成功
-            if (from != -1) {
-                handler.sendEmptyMessage(region)
-            }
             //更新数据库版本号
             try {
                 updateLocalDataBaseVersion(versionData.toString())
             } catch (_: Exception) {
             }
             navViewModel.downloadProgress.postValue(-2)
+            //切换成功
+            if (from == 1) {
+                handler.sendEmptyMessage(region)
+            }
         }
     }
 

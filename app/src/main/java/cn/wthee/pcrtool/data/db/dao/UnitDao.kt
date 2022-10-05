@@ -359,13 +359,14 @@ interface UnitDao {
                 guild.guild_name,
                 guild.description,
                 ( CASE WHEN guild.guild_master == guild.member1 THEN guild.guild_master ELSE guild.member1 END ) AS guild_master,
-                unit_profile.unit_id,
-                unit_profile.unit_name 
+                unit_data.unit_id,
+                unit_data.kana AS unit_name 
             FROM
                 guild
                 LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id 
                 AND unit_profile.unit_id < $maxUnitId
                 AND unit_profile.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
+                LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
             )
         GROUP BY
             guild_id
@@ -387,13 +388,14 @@ interface UnitDao {
     @Query(
         """
         SELECT 
-            GROUP_CONCAT(unit_id,'-') as unit_ids,
-            GROUP_CONCAT(unit_name,'-') as unit_names
+            GROUP_CONCAT(unit_data.unit_id,'-') as unit_ids,
+            GROUP_CONCAT(unit_data.kana,'-') as unit_names
         FROM
             unit_profile
+						LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
         WHERE unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-        AND guild_id = ''
-        GROUP BY guild_id
+        AND unit_profile.guild_id = ''
+        GROUP BY unit_profile.guild_id
     """
     )
     suspend fun getNoGuildMembers(): NoGuildMemberInfo?
