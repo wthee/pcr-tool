@@ -16,8 +16,8 @@ hilt {
 
 val composeVersion = "1.2.1"
 val composeCompilerVersion = "1.3.0"
-val appVersionCode = 343
-val appVersionName = "3.4.3"
+val appVersionCode = 344
+val appVersionName = "3.4.4"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -138,7 +138,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9")
 
     //Coil(compose verion 1.2.1)
-    val coilVersion = "2.2.1"
+    val coilVersion = "2.2.2"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
