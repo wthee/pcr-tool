@@ -904,7 +904,12 @@ data class SkillActionPro(
             }
             // 59：回复妨碍
             SkillActionType.INHIBIT_HEAL_ACTION -> {
-                "${getTarget()}受到回复效果时，使回复无效并给予其 [${action_value_1} * 回复量] 伤害"
+                "${getTarget()}，HP回复效果减少 [${action_value_1 * 100}%]${
+                    getTimeText(
+                        2,
+                        action_value_2
+                    )
+                }"
             }
             // 60：标记赋予
             SkillActionType.ATTACK_SEAL -> {
@@ -1108,7 +1113,7 @@ data class SkillActionPro(
      */
     private fun getPercent() = when (toSkillActionType(action_type)) {
         SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
-            if (action_value_1.int == 2 || action_detail_1 / 10 == 14 || action_detail_1 / 10 == 16 || action_detail_1 / 10 == 17) {
+            if (action_value_1.int == 2 || action_detail_1 / 10 in setOf(11, 12, 14, 16, 17)) {
                 "%"
             } else {
                 ""
@@ -1145,7 +1150,7 @@ data class SkillActionPro(
                 "[${(v2 * level).int}$percent] <{${index + 1}}$v2 * 技能等级>"
             } else if (v1 != 0.0 && v2 == 0.0) {
                 "{${index}}[${v1}$percent]"
-            } else if (v1 != 0.0 && v2 != 0.0) {
+            } else if (v1 != 0.0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级>"
             } else {
                 "{$index}$percent"
@@ -1153,9 +1158,9 @@ data class SkillActionPro(
         } else {
             if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * 攻击力>"
-            } else if (v1 == 0.0 && v2 == 0.0) {
+            } else if (v1 == 0.0) {
                 "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * 攻击力>"
-            } else if (v1 != 0.0 && v2 != 0.0) {
+            } else if (v2 != 0.0) {
                 "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级 + {${index + 2}}$v3 * 攻击力>"
             } else {
                 "{$index}$percent"
