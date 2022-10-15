@@ -23,7 +23,7 @@ import javax.inject.Inject
  */
 class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
-    private val MediaType = "application/json; charset=utf-8"
+    private val mediaType = "application/json; charset=utf-8"
 
     /**
      * 查询竞技场对战信息
@@ -35,11 +35,11 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         json.addProperty("region", MainActivity.regionType)
         json.add("ids", ids)
         val body =
-            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
         //发送请求
         try {
             val response = service.getPVPData(body)
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -69,12 +69,12 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         json.addProperty("after", after)
         json.addProperty("keyword", keyword)
         val body =
-            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
         //请求
         try {
             val response = service.getNewsData(body)
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -97,12 +97,12 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         val json = JsonObject()
         json.addProperty("id", id)
         val body =
-            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
         //请求
         try {
             val response = service.getNewsDetail(body)
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -125,9 +125,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             val json = JsonObject()
             json.addProperty("region", region)
             val body =
-                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
             val response = service.getNewsOverviewByRegion(body)
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -152,12 +152,12 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         json.addProperty("keyword", keyword)
         json.addProperty("after", after)
         val body =
-            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
         //请求
         try {
             val response = service.getTweetData(body)
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -178,7 +178,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         //请求
         try {
             val response = service.getComicData()
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -199,7 +199,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         //请求
         try {
             val response = service.getLeader()
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -224,10 +224,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             //测试版本显示更新布局
             json.addProperty("version", BuildConfig.VERSION_CODE)
             val body =
-                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
             val response = service.getUpdateContent(body)
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -251,10 +251,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             val json = JsonObject()
             json.addProperty("equipId", equipId)
             val body =
-                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
             val response = service.getEquipArea(body)
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -279,10 +279,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             json.addProperty("id", id)
             json.addProperty("region", MainActivity.regionType)
             val body =
-                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
             val response = service.getStoryList(body)
-            if (response.message == "failure" || response.data == null) {
+            if (isError(response)) {
                 return error()
             }
             return response
@@ -295,4 +295,16 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         }
         return error()
     }
+
+    private
+    fun <T> isError(response: ResponseData<T>): Boolean {
+        if (response.message == "failure" || response.data == null) {
+            return true
+        } else if (response.data is List<*>) {
+            return (response.data as List<*>).isEmpty()
+        } else {
+            return false
+        }
+    }
+
 }

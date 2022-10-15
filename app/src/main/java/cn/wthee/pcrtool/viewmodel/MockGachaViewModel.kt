@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
-import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.MockGachaRepository
+import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.model.UnitsInGacha
@@ -25,12 +25,12 @@ import javax.inject.Inject
 /**
  * 模拟卡池 ViewModel
  *
- * @param gachaRepository
+ * @param unitRepository
  * @param mockGachaRepository
  */
 @HiltViewModel
 class MockGachaViewModel @Inject constructor(
-    private val gachaRepository: GachaRepository,
+    private val unitRepository: UnitRepository,
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
 
@@ -42,7 +42,7 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getGachaUnits() = flow {
         try {
-            val fesUnitInfo = gachaRepository.getFesUnitIds()
+            val fesUnitInfo = unitRepository.getFesUnitIds()
             val fesList = arrayListOf<GachaUnitInfo>()
             fesUnitInfo.getIds().forEachIndexed { index, i ->
                 fesList.add(
@@ -56,10 +56,10 @@ class MockGachaViewModel @Inject constructor(
             }
 
             val units = UnitsInGacha(
-                gachaRepository.getGachaUnits(1),
-                gachaRepository.getGachaUnits(2),
-                gachaRepository.getGachaUnits(3),
-                gachaRepository.getGachaUnits(4).filter {
+                unitRepository.getGachaUnits(1),
+                unitRepository.getGachaUnits(2),
+                unitRepository.getGachaUnits(3),
+                unitRepository.getGachaUnits(4).filter {
                     !fesUnitInfo.getIds().contains(it.unitId)
                 },
                 fesList

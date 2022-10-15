@@ -46,7 +46,16 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterList() = flow {
         try {
-            emit(unitRepository.getInfoAndData(FilterCharacter(), 10))
+            var filterList = unitRepository.getInfoAndData(FilterCharacter(), 50)
+            filterList = filterList.sortedWith { o1, o2 ->
+                val sd1 = o1.startTime.formatTime
+                val sd2 = o2.startTime.formatTime
+                when {
+                    sd1.second(sd2) > 0 -> -1
+                    else -> 1
+                }
+            }
+            emit(filterList.subList(0, 10))
         } catch (_: Exception) {
 
         }
@@ -80,7 +89,8 @@ class OverviewViewModel @Inject constructor(
     fun getGachaList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = gachaRepository.getGachaHistory(10)
+            //数据库时间格式问题，导致查询不出最新的，先多查询一些数据
+            val data = gachaRepository.getGachaHistory(200)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(

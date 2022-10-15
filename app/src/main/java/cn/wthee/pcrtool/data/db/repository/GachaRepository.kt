@@ -12,8 +12,5 @@ class GachaRepository @Inject constructor(private val gachaDao: GachaDao) {
 
     suspend fun getGachaHistory(limit: Int) = gachaDao.getGachaHistory(limit)
 
-    suspend fun getGachaUnits(type: Int) = gachaDao.getGachaUnits(type)
-
-    suspend fun getFesUnitIds() = gachaDao.getFesUnitIds()
 
 }

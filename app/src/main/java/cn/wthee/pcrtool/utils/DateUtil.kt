@@ -42,21 +42,6 @@ val Long.simpleDateFormat: String
 /**
  * 小时 - 1
  */
-fun fixJpTime(date: String): String = if (date != "") {
-    if (MainActivity.regionType == 4) {
-        try {
-            val d = df1.parse(date)!!.time - 60 * 60 * 1000
-            df1.format(Date(d))
-        } catch (e: Exception) {
-            date
-        }
-    } else {
-        date
-    }
-} else {
-    ""
-}
-
 val String.fixJpTime: String
     get() =
         if (this != "") {
@@ -169,15 +154,15 @@ fun isInProgress(
     fixJpTime: Boolean = true
 ): Boolean {
     val sd = if (fixJpTime) startTime.formatTime.fixJpTime else startTime.formatTime
-    val ed = if (fixJpTime) fixJpTime(endTime.formatTime) else endTime.formatTime
+    val ed = if (fixJpTime) endTime.formatTime.fixJpTime else endTime.formatTime
     return today.second(sd) > 0 && ed.second(today) > 0 && ed.second(today) < 31536000
 }
 
 /**
- * 进行中判断
+ * 预告判断
  */
 fun isComingSoon(today: String, startTime: String, fixJpTime: Boolean = true): Boolean {
-    val sd = if (fixJpTime) fixJpTime(startTime.formatTime) else startTime.formatTime
+    val sd = if (fixJpTime) startTime.formatTime.fixJpTime else startTime.formatTime
     return today.second(sd) < 0
 }
 
