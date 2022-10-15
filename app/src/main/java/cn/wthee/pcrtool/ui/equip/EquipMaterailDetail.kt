@@ -84,15 +84,19 @@ fun EquipMaterialDetail(
                 color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 selectable = true
             )
-            if (dropInfoList != null && areaList != null) {
+            if (dropInfoList != null) {
                 if (dropInfoList.isNotEmpty()) {
                     var pagerCount = 0
-                    val lists = arrayListOf(
+
+                    val lists = arrayListOf<List<Any>>(
                         dropInfoList.filter { it.questId / 1000000 == 11 },
                         dropInfoList.filter { it.questId / 1000000 == 12 },
                         dropInfoList.filter { it.questId / 1000000 == 13 },
-                        areaList,
                     )
+                    //随机掉落列表
+                    if (areaList != null) {
+                        lists.add(areaList)
+                    }
                     val tabs = arrayListOf<String>()
                     //颜色
                     val colorList = arrayListOf<Color>()
