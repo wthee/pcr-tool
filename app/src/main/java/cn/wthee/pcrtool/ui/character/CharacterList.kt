@@ -402,7 +402,7 @@ fun CharacterItem(
 
                     //最近登场日期
                     CaptionText(
-                        text = character.startTime.formatTime,
+                        text = character.startTime.formatTime.substring(0, 10),
                         color = textColor,
                         modifier = Modifier.padding(Dimen.mediumPadding)
                     )
