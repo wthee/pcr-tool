@@ -135,27 +135,27 @@ fun Overview(
                         when (OverviewType.getByValue(it)) {
                             OverviewType.CHARACTER -> CharacterSection(
                                 actions = actions,
-                                isEditMode = isEditMode.value
+                                isEditMode = false
                             )
                             OverviewType.EQUIP -> EquipSection(
                                 actions = actions,
-                                isEditMode = isEditMode.value
+                                isEditMode = false
                             )
                             OverviewType.TOOL -> ToolSection(
                                 actions = actions,
-                                isEditMode = isEditMode.value
+                                isEditMode = false
                             )
                             OverviewType.NEWS -> NewsSection(
                                 actions = actions,
-                                isEditMode = isEditMode.value
+                                isEditMode = false
                             )
                             OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
                                 confirmState,
-                                actions = actions, isEditMode = isEditMode.value
+                                actions = actions, isEditMode = false
                             )
                             OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
                                 confirmState,
-                                actions = actions, isEditMode = isEditMode.value
+                                actions = actions, isEditMode = false
                             )
                         }
                     }
@@ -174,32 +174,32 @@ fun Overview(
 
                 //角色
                 item {
-                    CharacterSection(actions, isEditMode = isEditMode.value)
+                    CharacterSection(actions, isEditMode = true)
                 }
 
                 //装备
                 item {
-                    EquipSection(actions, isEditMode = isEditMode.value)
+                    EquipSection(actions, isEditMode = true)
                 }
 
                 //更多功能
                 item {
-                    ToolSection(actions, isEditMode = isEditMode.value)
+                    ToolSection(actions, isEditMode = true)
                 }
 
                 //新闻
                 item {
-                    NewsSection(actions, isEditMode = isEditMode.value)
+                    NewsSection(actions, isEditMode = true)
                 }
 
                 //进行中
                 item {
-                    InProgressEventSection(confirmState, actions, isEditMode = isEditMode.value)
+                    InProgressEventSection(confirmState, actions, isEditMode = true)
                 }
 
                 //活动预告
                 item {
-                    ComingSoonEventSection(confirmState, actions, isEditMode = isEditMode.value)
+                    ComingSoonEventSection(confirmState, actions, isEditMode = true)
                 }
             }
 
