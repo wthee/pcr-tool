@@ -810,7 +810,7 @@ fun BottomSearchBar(
  * 暂无更多
  */
 @Composable
-fun NoMoreDataText() {
+fun NoMoreDataText(text: String = stringResource(R.string.no_more)) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -819,7 +819,7 @@ fun NoMoreDataText() {
     ) {
         //内容
         Subtitle1(
-            text = stringResource(R.string.no_more),
+            text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )

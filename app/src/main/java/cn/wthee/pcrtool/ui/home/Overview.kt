@@ -257,7 +257,7 @@ private fun NewsSection(
     val id = OverviewType.NEWS.id
     //公告列表
     val newsList =
-        overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getNewsOverview().collectAsState(initial = null).value
 
     Section(
         id = id,
@@ -272,7 +272,14 @@ private fun NewsSection(
         }
     ) {
         Column {
-            if (newsList.isNotEmpty()) {
+            if (newsList == null) {
+                for (i in 0 until 3) {
+                    NewsItem(
+                        news = NewsTable(),
+                        toNewsDetail = actions.toNewsDetail
+                    )
+                }
+            } else if (newsList.isNotEmpty()) {
                 newsList.forEach {
                     NewsItem(
                         news = it,
@@ -280,12 +287,7 @@ private fun NewsSection(
                     )
                 }
             } else {
-                for (i in 0 until 3) {
-                    NewsItem(
-                        news = NewsTable(),
-                        toNewsDetail = actions.toNewsDetail
-                    )
-                }
+                NoMoreDataText(stringResource(id = R.string.no_data))
             }
         }
     }

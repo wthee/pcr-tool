@@ -227,5 +227,6 @@
     <string name="expand">展开</string>
     <string name="sp_skill">SP技能</string>
     <string name="no_more">暂无更多</string>
+    <string name="no_data">暂无数据</string>
 
 </resources>

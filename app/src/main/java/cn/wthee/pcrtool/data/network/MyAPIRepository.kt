@@ -298,13 +298,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
     private
     fun <T> isError(response: ResponseData<T>): Boolean {
-        if (response.message == "failure" || response.data == null) {
-            return true
-        } else if (response.data is List<*>) {
-            return (response.data as List<*>).isEmpty()
-        } else {
-            return false
-        }
+        return response.message == "failure" || response.data == null
     }
 
 }
