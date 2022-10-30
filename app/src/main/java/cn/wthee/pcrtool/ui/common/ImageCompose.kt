@@ -32,6 +32,7 @@ const val RATIO = 1.78f
 const val RATIO_COMIC = 0.6175f
 const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 682f
+const val RATIO_TEASER = 1280 / 576f
 
 
 @Composable

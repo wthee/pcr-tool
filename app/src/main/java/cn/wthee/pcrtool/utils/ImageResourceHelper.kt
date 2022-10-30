@@ -51,6 +51,7 @@ class ImageResourceHelper() {
 
         //剧情活动 banner
         const val EVENT_BANNER = "event/banner/"
+        const val EVENT_TEASER = "event/teaser/"
 
         //剧情活动剧情
         const val EVENT_STORY = "event/story/"
