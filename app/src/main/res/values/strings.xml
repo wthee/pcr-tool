@@ -45,7 +45,6 @@
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
     <string name="color_off">使用默认主题</string>
-    <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">Unity Texture Toolkit</string>
     <string name="data_from_hint">资源获取工具 by esterTion</string>
@@ -112,7 +111,6 @@
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_upload">上传记录</string>
-    <string name="pvp_info_add_tip">上传对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
@@ -127,8 +125,6 @@
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
     <string name="sp_dungeon">特殊地下城</string>
-    <string name="visit_detail">在 AppMedia 中查看</string>
-    <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
     <string name="team_no">进攻队伍 %s</string>
     <string name="team_win">进攻</string>
@@ -179,11 +175,9 @@
     <!-- 下载相关-->
     <string name="wait_pic_load">请等待图片加载完成</string>
 
-    <string name="project_url">https://github.com/wthee/pcr-tool</string>
     <string name="qq_group">反馈交流群</string>
     <string name="github">Github</string>
 
-    <string name="new_member">新加入成员</string>
     <string name="save_image">保存图片</string>
     <string name="ask_save_image">是否要保存图片？</string>
 

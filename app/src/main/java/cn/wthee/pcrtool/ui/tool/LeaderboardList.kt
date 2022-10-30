@@ -104,12 +104,11 @@ fun LeaderboardList(
         ) {
             //来源
             val url = stringResource(id = R.string.leader_source_url)
-            val tip = stringResource(id = R.string.visit_detail)
             FabCompose(
                 iconType = MainIconType.FRIEND_LINK
             ) {
                 //打开网页
-                BrowserUtil.open(context, url, tip)
+                BrowserUtil.open(context, url)
             }
 
             //更新说明
@@ -169,7 +168,6 @@ fun LeaderboardList(
 private fun LeaderboardItem(info: LeaderboardData) {
     val placeholder = info.icon == ""
     val context = LocalContext.current
-    val title = stringResource(id = R.string.visit_detail)
     Column(
         modifier = Modifier.padding(
             vertical = Dimen.mediumPadding
@@ -187,7 +185,7 @@ private fun LeaderboardItem(info: LeaderboardData) {
             onClick = {
                 //打开浏览器
                 if (!placeholder) {
-                    BrowserUtil.open(context, info.url, title)
+                    BrowserUtil.open(context, info.url)
                 }
             }
         ) {

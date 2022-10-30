@@ -105,9 +105,7 @@ fun PvpSearchCompose(
             //标题
             if (!floatWindow) {
                 val url = stringResource(id = R.string.pcrdfans_url)
-                val urlTip = stringResource(id = R.string.pcrdfans_com)
                 val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-                val addTip = stringResource(id = R.string.pvp_info_add_tip)
 
                 Row(
                     modifier = Modifier.padding(Dimen.largePadding),
@@ -117,7 +115,7 @@ fun PvpSearchCompose(
                         text = stringResource(id = R.string.pcrdfans),
                         modifier = Modifier
                             .clickable {
-                                BrowserUtil.open(context, url, urlTip)
+                                BrowserUtil.open(context, url)
                             }
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -127,7 +125,7 @@ fun PvpSearchCompose(
                         text = stringResource(id = R.string.pvp_upload)
                     ) {
                         //打开网页
-                        BrowserUtil.open(context, addUrl, addTip)
+                        BrowserUtil.open(context, addUrl)
                     }
                 }
 
@@ -286,7 +284,7 @@ fun PvpSearchCompose(
                         scope.launch {
                             resultListState.scrollToItem(0)
                         }
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
 
                     }
                     pvpViewModel.pvpResult.postValue(null)
