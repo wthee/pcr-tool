@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.stringArrayList
 import java.util.*
 
 /**
@@ -35,4 +35,29 @@ data class BirthdayData(
     fun getStartTime() = getDate() + " 00:00:00"
 
     fun getEndTime() = getDate() + " 23:59:59"
+
+    /**
+     * 按角色名重新升序排序
+     */
+    fun getOrderUnitIdList(): ArrayList<Int> {
+        val icons = unitIds.intArrayList
+        val names = unitNames.stringArrayList
+        val list = arrayListOf<UnitInfo>()
+        icons.forEachIndexed { index, id ->
+            list.add(UnitInfo(id, names[index]))
+        }
+        list.sortWith() { o1, o2 ->
+            o1.unitName.compareTo(o2.unitName)
+        }
+        val idList = arrayListOf<Int>()
+        list.forEach {
+            idList.add(it.unitId)
+        }
+        return idList
+    }
+
+    inner class UnitInfo(
+        val unitId: Int,
+        val unitName: String
+    )
 }
