@@ -94,6 +94,15 @@ class DatabaseModule {
     }
 
     @Provides
+    fun provideExtraEquipmentDao(): ExtraEquipmentDao {
+        return when (getType()) {
+            2 -> provideAppDatabaseCN().getExtraEquipmentDao()
+            3 -> provideAppDatabaseTW().getExtraEquipmentDao()
+            else -> provideAppDatabaseJP().getExtraEquipmentDao()
+        }
+    }
+
+    @Provides
     fun provideEventDao(): EventDao {
         return when (getType()) {
             2 -> provideAppDatabaseCN().getEventDao()
