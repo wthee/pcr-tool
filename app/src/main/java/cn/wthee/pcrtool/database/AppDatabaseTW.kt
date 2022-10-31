@@ -25,6 +25,7 @@ abstract class AppDatabaseTW : RoomDatabase() {
     abstract fun getUnitDao(): UnitDao
     abstract fun getSkillDao(): SkillDao
     abstract fun getEquipmentDao(): EquipmentDao
+    abstract fun getExtraEquipmentDao(): ExtraEquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
     abstract fun getClanDao(): ClanBattleDao

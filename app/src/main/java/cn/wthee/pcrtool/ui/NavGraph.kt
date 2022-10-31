@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -94,6 +95,7 @@ object Navigation {
     const val TOOL_BIRTHDAY = "toolBirthday"
     const val TOOL_CALENDAR_EVENT = "toolCalendarEvent"
     const val CHARACTER_SKILL_LOOP = "characterSkillLoop"
+    const val TOOL_EXTRA_EQUIP = "toolExtraEquip"
 }
 
 /**
@@ -227,6 +229,22 @@ fun NavGraph(
                     scrollState,
                     toEquipDetail = actions.toEquipDetail,
                     toEquipMaterial = actions.toEquipMaterial
+                )
+            }
+
+            //ex装备列表
+            composable(
+                route = Navigation.TOOL_EXTRA_EQUIP,
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
+            ) {
+                val scrollState = rememberLazyListState()
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                ExtraEquipList(
+                    scrollState,
+                    toEquipDetail = actions.toEquipDetail
                 )
             }
 
@@ -834,6 +852,13 @@ class NavActions(navController: NavHostController) {
      */
     val toEquipList = {
         navController.navigate(Navigation.EQUIP_LIST)
+    }
+
+    /**
+     * ex装备列表
+     */
+    val toExtraEquipList = {
+        navController.navigate(Navigation.TOOL_EXTRA_EQUIP)
     }
 
     /**
