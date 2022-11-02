@@ -121,3 +121,12 @@ enum class SkillType {
     NORMAL,
     SP
 }
+
+/**
+ * 属性值类型
+ */
+enum class AttrValueType {
+    INT,
+    DOUBLE,
+    PERCENT
+}

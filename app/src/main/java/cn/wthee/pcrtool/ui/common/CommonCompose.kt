@@ -154,13 +154,14 @@ fun Subtitle1(
     color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign = TextAlign.Start,
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
             Text(
                 text = text,
                 color = color,
-                textAlign = TextAlign.Start,
+                textAlign = textAlign,
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
@@ -170,7 +171,7 @@ fun Subtitle1(
         Text(
             text = text,
             color = color,
-            textAlign = TextAlign.Start,
+            textAlign = textAlign,
             style = MaterialTheme.typography.titleMedium,
             modifier = modifier,
             maxLines = maxLines,
@@ -810,7 +811,7 @@ fun BottomSearchBar(
  * 暂无更多
  */
 @Composable
-fun NoMoreDataText(text: String = stringResource(R.string.no_more)) {
+fun NoMoreDataText() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -819,9 +820,28 @@ fun NoMoreDataText(text: String = stringResource(R.string.no_more)) {
     ) {
         //内容
         Subtitle1(
-            text = text,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            selectable = true
+            text = stringResource(R.string.no_more),
+            modifier = Modifier.padding(Dimen.mediumPadding)
+        )
+    }
+}
+
+
+/**
+ * 暂无数据
+ */
+@Composable
+fun NoDataText() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Dimen.cardHeight),
+        contentAlignment = Alignment.Center
+    ) {
+        //内容
+        Subtitle1(
+            text = stringResource(R.string.no_data),
+            modifier = Modifier.padding(Dimen.mediumPadding)
         )
     }
 }

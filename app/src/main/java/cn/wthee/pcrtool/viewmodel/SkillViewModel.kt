@@ -47,6 +47,27 @@ class SkillViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * 获取ex装备被动技能信息
+     *
+     * @param skillIds 技能编号列表
+     */
+    fun getExtraEquipPassiveSkills(skillIds: List<Int>) = flow {
+        try {
+            val skillList = getSkills(
+                skillIds,
+                arrayListOf(0),
+                0,
+            )
+            emit(skillList)
+        } catch (e: Exception) {
+            if (e !is CancellationException) {
+                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "skillId:$skillIds")
+            }
+        }
+    }
+
     /**
      * 获取角色技能 id
      */

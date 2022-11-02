@@ -17,6 +17,7 @@ object Constants {
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
+    const val SP_STAR_EXTRA_EQUIP = "star_extra_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
     const val SP_COLOR_STATE = "dynamic_color_state"

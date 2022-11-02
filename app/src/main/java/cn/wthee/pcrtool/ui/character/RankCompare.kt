@@ -1,11 +1,8 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -18,14 +15,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.RankCompareData
+import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.AttrCompare
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.RankText
+import cn.wthee.pcrtool.ui.common.Subtitle1
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
 
@@ -74,7 +72,12 @@ fun RankCompare(
             .padding(top = Dimen.largePadding)
     ) {
         Column {
-            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
+            Row(
+                modifier = Modifier.padding(
+                    vertical = Dimen.mediumPadding,
+                    horizontal = Dimen.mediumPadding + Dimen.smallPadding
+                )
+            ) {
                 Spacer(modifier = Modifier.weight(0.3f))
                 RankText(
                     rank = rank0.value,
@@ -88,15 +91,14 @@ fun RankCompare(
                     textAlign = TextAlign.End,
                     modifier = Modifier.weight(0.2f)
                 )
-                Text(
+                Subtitle1(
                     text = stringResource(id = R.string.result),
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(0.2f),
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            AttrCompare(attrCompareData)
+            AttrCompare(attrCompareData, isExtraEquip = false, attrValueType = AttrValueType.INT)
         }
 
         FabCompose(
@@ -121,55 +123,12 @@ fun RankCompare(
     }
 }
 
-/**
- * 属性对比
- */
-@Composable
-fun AttrCompare(compareData: List<RankCompareData>) {
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediumPadding)
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-    ) {
-        compareData.forEach {
-            Row(modifier = Modifier.padding(Dimen.smallPadding)) {
-                MainTitleText(
-                    text = it.title,
-                    modifier = Modifier.weight(0.3f)
-                )
-                MainContentText(
-                    text = it.attr0.int.toString(),
-                    modifier = Modifier.weight(0.2f)
-                )
-                MainContentText(
-                    text = it.attr1.int.toString(),
-                    modifier = Modifier.weight(0.2f)
-                )
-                val color = when {
-                    it.attrCompare.int > 0 -> colorGreen
-                    it.attrCompare.int < 0 -> colorRed
-                    else -> MaterialTheme.colorScheme.onSurface
-                }
-                Text(
-                    text = it.attrCompare.int.toString(),
-                    color = color,
-                    textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(0.2f)
-                )
-            }
-        }
-        CommonSpacer()
-    }
-}
-
 
 @Preview
 @Composable
 private fun Preview() {
-    val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+    val data = listOf(AttrCompareData(), AttrCompareData(), AttrCompareData())
     PreviewBox {
-        AttrCompare(compareData = data)
+        AttrCompare(compareData = data, isExtraEquip = false, attrValueType = AttrValueType.INT)
     }
 }

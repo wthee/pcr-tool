@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
-import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
@@ -52,7 +52,7 @@ fun ExtraEquipList(
     toEquipDetail: (Int) -> Unit
 ) {
     //筛选状态
-    val filter = navViewModel.filterEquip.observeAsState()
+    val filter = navViewModel.filterExtraEquip.observeAsState()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -74,7 +74,7 @@ fun ExtraEquipList(
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
-            GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
+            GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EXTRA_EQUIP, "")) ?: arrayListOf()
 
         val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
         //分组
@@ -96,7 +96,7 @@ fun ExtraEquipList(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
             sheetShape = shapeTop(),
             sheetContent = {
-                FilterExtraEquipSheet(colorNum, state)
+                FilterExtraEquipSheet(colorNum, state, viewModel)
             }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -117,8 +117,9 @@ fun ExtraEquipList(
                                 ) {
                                     Subtitle2(
                                         text = stringResource(
-                                            id = R.string.equip_require_level,
-                                            equipGroupData.rarity
+                                            id = R.string.extra_equip_rarity_and_type,
+                                            equipGroupData.rarity,
+                                            equipGroupData.categoryName
                                         ),
                                         color = colorWhite
                                     )
@@ -183,7 +184,7 @@ fun ExtraEquipList(
                     val count = equips.size
                     // 数量显示&筛选按钮
                     FabCompose(
-                        iconType = MainIconType.EQUIP,
+                        iconType = MainIconType.EXTRA_EQUIP,
                         text = "$count"
                     ) {
                         coroutineScope.launch {
@@ -206,7 +207,7 @@ fun ExtraEquipList(
  */
 @Composable
 private fun ExtraEquipItem(
-    filter: FilterEquipment,
+    filter: FilterExtraEquipment,
     equip: ExtraEquipmentBasicInfo,
     toEquipDetail: (Int) -> Unit
 ) {
@@ -226,7 +227,8 @@ private fun ExtraEquipItem(
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getEquipPic(equipState.equipmentId)
+                    data = ImageResourceHelper.getInstance()
+                        .getExtraEquipPic(equipState.equipmentId)
                 )
             }
         )
@@ -276,27 +278,36 @@ private fun ExtraEquipItem(
 @Composable
 private fun FilterExtraEquipSheet(
     colorNum: Int,
-    sheetState: ModalBottomSheetState
+    sheetState: ModalBottomSheetState,
+    extraEquipmentViewModel: ExtraEquipmentViewModel
 ) {
-    val filter = navViewModel.filterEquip.value ?: FilterEquipment()
+    val filter = navViewModel.filterExtraEquip.value ?: FilterExtraEquipment()
 
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
-    //合成类型
-    val craftIndex = remember {
-        mutableStateOf(filter.craft)
+    //适用场景
+    val flagIndex = remember {
+        mutableStateOf(filter.flag)
     }
-    filter.craft = craftIndex.value
+    filter.flag = flagIndex.value
     //收藏筛选
     val loveIndex = remember {
         mutableStateOf(if (filter.all) 0 else 1)
     }
     filter.all = loveIndex.value == 0
-    //装备类型
-    val typeIndex = remember {
-        mutableStateOf(filter.colorType)
+    //装备稀有度
+    val rarityIndex = remember {
+        mutableStateOf(filter.rarity)
     }
-    filter.colorType = typeIndex.value
+    filter.rarity = rarityIndex.value
+    //装备类型
+    val equipCategoryList by extraEquipmentViewModel.getEquipCategoryList()
+        .collectAsState(initial = arrayListOf())
+    val categoryIndex = remember {
+        mutableStateOf(filter.category)
+    }
+    filter.category = categoryIndex.value
+
 
     //确认操作
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
@@ -307,14 +318,14 @@ private fun FilterExtraEquipSheet(
         if (reset) {
             textState.value = ""
             loveIndex.value = 0
-            typeIndex.value = 0
-            craftIndex.value = 1
+            rarityIndex.value = 0
+            flagIndex.value = 0
             navViewModel.resetClick.postValue(false)
-            navViewModel.filterEquip.postValue(FilterEquipment())
+            navViewModel.filterExtraEquip.postValue(FilterExtraEquipment())
         }
         if (ok) {
             sheetState.hide()
-            navViewModel.filterEquip.postValue(filter)
+            navViewModel.filterExtraEquip.postValue(filter)
             navViewModel.fabOKCilck.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
@@ -368,18 +379,19 @@ private fun FilterExtraEquipSheet(
             },
             modifier = Modifier.fillMaxWidth()
         )
-        //TODO 装备类型（普通、会战）
+        //装备类型（普通、会战）
         MainText(
-            text = stringResource(id = R.string.equip_craft),
+            text = stringResource(id = R.string.extra_equip_flag),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val craftChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.uncraft)),
-            ChipData(1, stringResource(id = R.string.craft)),
+        val flagChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.all)),
+            ChipData(1, stringResource(id = R.string.extra_equip_normal)),
+            ChipData(2, stringResource(id = R.string.extra_equip_clan)),
         )
         ChipGroup(
-            craftChipData,
-            craftIndex,
+            flagChipData,
+            flagIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //收藏
@@ -396,21 +408,41 @@ private fun FilterExtraEquipSheet(
             loveIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
-        //品级
+        //稀有度
         MainText(
-            text = stringResource(id = R.string.equip_level_color),
+            text = stringResource(id = R.string.extra_equip_rarity),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val colorChipData =
+        val rarityChipData =
             arrayListOf(ChipData(0, stringResource(id = R.string.all)))
         for (i in 1..colorNum) {
-            colorChipData.add(ChipData(i, getEquipColorText(i)))
+            rarityChipData.add(ChipData(i, getEquipColorText(i)))
         }
         ChipGroup(
-            colorChipData,
-            typeIndex,
+            rarityChipData,
+            rarityIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        //装备类型
+        if (equipCategoryList.isNotEmpty()) {
+            MainText(
+                text = stringResource(id = R.string.extra_equip_category),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val categoryChipData = arrayListOf(
+                ChipData(0, stringResource(id = R.string.all)),
+            )
+            equipCategoryList.forEachIndexed { index, categoryData ->
+                categoryChipData.add(ChipData(index + 1, categoryData.categoryName))
+            }
+            ChipGroup(
+                categoryChipData,
+                categoryIndex,
+                modifier = Modifier.padding(Dimen.smallPadding),
+            )
+            CommonSpacer()
+        }
+
         CommonSpacer()
     }
 }
@@ -420,14 +452,11 @@ private fun FilterExtraEquipSheet(
  */
 private fun getEquipColorText(colorType: Int): String {
     return when (colorType) {
-        1 -> "蓝"
-        2 -> "铜"
-        3 -> "银"
-        4 -> "金"
-        5 -> "紫"
-        6 -> "红"
-        7 -> "绿"
-        8 -> "橙"
+        1 -> "★1"
+        2 -> "★2"
+        3 -> "★3"
+        4 -> "★4"
+        5 -> "★5"
         else -> Constants.UNKNOWN
     }
 }
@@ -437,14 +466,10 @@ private fun getEquipColorText(colorType: Int): String {
  */
 private fun getEquipColor(colorType: Int): Color {
     return when (colorType) {
-        1 -> colorBlue
-        2 -> colorCopper
-        3 -> colorSilver
-        4 -> colorGold
-        5 -> colorPurple
-        6 -> colorRed
-        7 -> colorGreen
-        8 -> colorOrange
+        1 -> colorCopper
+        2 -> colorSilver
+        3 -> colorGold
+        4 -> colorPink
         else -> colorGray
     }
 }

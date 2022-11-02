@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -64,6 +65,11 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 装备筛选
      */
     var filterEquip = MutableLiveData(FilterEquipment())
+
+    /**
+     * ex装备筛选
+     */
+    var filterExtraEquip = MutableLiveData(FilterExtraEquipment())
 
     /**
      * 竞技场查询角色

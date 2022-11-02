@@ -223,4 +223,17 @@
     <string name="no_more">暂无更多</string>
     <string name="no_data">暂无数据</string>
 
+    <!--ex装备-->
+    <string name="extra_equip_normal">普通</string>
+    <string name="extra_equip_clan">团队战</string>
+    <string name="extra_equip_flag">适用场景</string>
+    <string name="extra_equip_category">类型</string>
+    <string name="extra_equip_poassive_skill">被动技能</string>
+    <string name="extra_equip_default_value">初始</string>
+    <string name="extra_equip_max_value">上限</string>
+    <string name="tool_extra_equip">EX装备</string>
+    <string name="extra_equip_rarity_and_type">★%d  %s</string>
+    <string name="extra_equip_rarity">稀有度</string>
+    <string name="extra_equip_unit">适用角色</string>
+
 </resources>

@@ -126,7 +126,8 @@ fun SkillItem(
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    isExtraEquipSKill: Boolean = false
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -194,46 +195,55 @@ fun SkillItem(
                     text = name,
                     color = color,
                     selectable = true,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
+                    style = if (!isExtraEquipSKill) {
+                        MaterialTheme.typography.titleMedium
+                    } else {
+                        MaterialTheme.typography.titleSmall
+                    }
                 )
-                FlowRow {
-                    //技能类型
-                    CaptionText(
-                        text = type + if (skillDetail.isCutin) {
-                            stringResource(id = R.string.six_star)
-                        } else {
-                            ""
-                        },
-                    )
-                    //技能等级
-                    if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
+
+                //非装备技能时显示
+                if (!isExtraEquipSKill) {
+                    FlowRow {
+                        //技能类型
                         CaptionText(
-                            text = stringResource(id = R.string.skill_level, skillDetail.level),
-                            modifier = Modifier.padding(start = Dimen.largePadding)
+                            text = type + if (skillDetail.isCutin) {
+                                stringResource(id = R.string.six_star)
+                            } else {
+                                ""
+                            },
                         )
-                    }
-                    //冷却时间
-                    if ((unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) && skillDetail.bossUbCooltime > 0.0) {
-                        CaptionText(
-                            text = stringResource(
-                                id = R.string.skill_cooltime,
-                                skillDetail.bossUbCooltime
-                            ),
-                            modifier = Modifier
-                                .padding(start = Dimen.largePadding)
-                        )
-                    }
-                    //准备时间，显示：时间大于 0 或 角色1、2技能
-                    val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
-                    if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
-                        CaptionText(
-                            text = stringResource(
-                                id = R.string.skill_cast_time,
-                                skillDetail.castTime
-                            ),
-                            modifier = Modifier
-                                .padding(start = Dimen.largePadding)
-                        )
+                        //技能等级
+                        if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
+                            CaptionText(
+                                text = stringResource(id = R.string.skill_level, skillDetail.level),
+                                modifier = Modifier.padding(start = Dimen.largePadding)
+                            )
+                        }
+                        //冷却时间
+                        if ((unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) && skillDetail.bossUbCooltime > 0.0) {
+                            CaptionText(
+                                text = stringResource(
+                                    id = R.string.skill_cooltime,
+                                    skillDetail.bossUbCooltime
+                                ),
+                                modifier = Modifier
+                                    .padding(start = Dimen.largePadding)
+                            )
+                        }
+                        //准备时间，显示：时间大于 0 或 角色1、2技能
+                        val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
+                        if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
+                            CaptionText(
+                                text = stringResource(
+                                    id = R.string.skill_cast_time,
+                                    skillDetail.castTime
+                                ),
+                                modifier = Modifier
+                                    .padding(start = Dimen.largePadding)
+                            )
+                        }
                     }
                 }
             }
@@ -458,7 +468,7 @@ fun getSkillColor(type: String): Color {
         type.contains("EX") -> colorCopper
         type.contains("1") -> colorPurple
         type.contains("2") -> colorRed
-        else -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.onSurface
     }
 }
 

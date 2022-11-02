@@ -194,7 +194,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_calendar_event,
             MainIconType.CALENDAR
         )
-        ToolMenuType.EXTRA_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP)
+        ToolMenuType.EXTRA_EQUIP -> ToolMenuData(
+            R.string.tool_extra_equip,
+            MainIconType.EXTRA_EQUIP
+        )
     }
     tool.type = toolMenuType
     return tool

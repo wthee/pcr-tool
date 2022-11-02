@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -254,7 +253,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
             val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
-            emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
+            emit(attr0.sumAttr.compareWith(attr1.sumAttr))
         } catch (_: Exception) {
 
         }
@@ -283,4 +282,5 @@ class CharacterAttrViewModel @Inject constructor(
             emit(0)
         }
     }
+
 }

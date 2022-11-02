@@ -56,8 +56,4 @@ data class BirthdayData(
         return idList
     }
 
-    inner class UnitInfo(
-        val unitId: Int,
-        val unitName: String
-    )
 }

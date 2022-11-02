@@ -108,6 +108,11 @@ enum class MainIconType(val icon: ImageVector) {
     EQUIP(Icons.Rounded.FitnessCenter),
 
     /**
+     * ex装备
+     */
+    EXTRA_EQUIP(Icons.Rounded.Token),
+
+    /**
      * 角色
      */
     CHARACTER(Icons.Rounded.AutoAwesome),

@@ -287,7 +287,7 @@ private fun NewsSection(
                     )
                 }
             } else {
-                NoMoreDataText(stringResource(id = R.string.no_data))
+                NoDataText()
             }
         }
     }

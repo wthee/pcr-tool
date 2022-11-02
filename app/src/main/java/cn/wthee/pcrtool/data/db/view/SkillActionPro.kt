@@ -213,9 +213,8 @@ data class SkillActionPro(
                     else -> ""
                 }
 
-                val value = getValueText(1, action_value_1, action_value_2, action_value_3)
-                "对${getTarget()}造成 $value 的${atkType}伤害${adaptive}" + if (action_value_6 > 0) {
-                    //暴伤倍率
+                //暴伤倍率
+                val multipleDamage = if (action_value_6 > 0) {
                     val multiple = if (action_value_6 > 1) {
                         "[${action_value_6 * 2}]"
                     } else {
@@ -225,6 +224,13 @@ data class SkillActionPro(
                 } else {
                     ""
                 }
+
+                //必定暴击
+                val mustCritical = if (action_value_5.int == 1) "；必定暴击" else ""
+
+                val value = getValueText(1, action_value_1, action_value_2, action_value_3)
+
+                "对${getTarget()}造成 $value 的${atkType}伤害${adaptive}${multipleDamage}${mustCritical}"
             }
             // 2：位移
             SkillActionType.MOVE -> {
@@ -979,6 +985,7 @@ data class SkillActionPro(
                 val type = when (action_detail_1) {
                     1 -> "物理"
                     2 -> "魔法"
+                    3 -> "物理、魔法"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
@@ -1045,6 +1052,10 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
                 "自身的${name}提升 ${getValueText(2, action_value_2, action_value_3)}"
+            }
+            // 901：ex装备被动被动 902：45秒
+            SkillActionType.EX_EQUIP, SkillActionType.EX_EQUIP_HALF -> {
+                "装备技能"
             }
             // 92：改变 TP 获取倍率
             SkillActionType.CHANGE_TP_RATIO -> {
