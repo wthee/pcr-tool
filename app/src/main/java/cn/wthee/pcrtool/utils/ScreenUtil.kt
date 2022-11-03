@@ -15,15 +15,14 @@ object ScreenUtil {
     /**
      * 获取 DisplayMetrics
      */
+    @Suppress("DEPRECATION")
     private fun getDm(): DisplayMetrics {
         val outMetrics = DisplayMetrics()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val display = ActivityHelper.instance.currentActivity?.display
             display?.getRealMetrics(outMetrics)
         } else {
-            @Suppress("DEPRECATION")
             val display = ActivityHelper.instance.currentActivity?.windowManager?.defaultDisplay
-            @Suppress("DEPRECATION")
             display?.getMetrics(outMetrics)
         }
         return outMetrics

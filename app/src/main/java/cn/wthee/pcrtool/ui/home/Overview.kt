@@ -287,7 +287,7 @@ private fun NewsSection(
                     )
                 }
             } else {
-                NoDataText()
+                CenterTipText(stringResource(id = R.string.no_data))
             }
         }
     }
@@ -595,12 +595,7 @@ private fun CalendarEventOperation(
     gachaList: List<GachaInfo>,
 ) {
     val context = LocalContext.current
-    val regionName = when (MainActivity.regionType) {
-        2 -> stringResource(id = R.string.db_cn)
-        3 -> stringResource(id = R.string.db_tw)
-        4 -> stringResource(id = R.string.db_jp)
-        else -> ""
-    }
+    val regionName = getRegionName(MainActivity.regionType)
 
     // 添加日历确认
     MainCard(

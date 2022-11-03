@@ -222,6 +222,7 @@
     <string name="sp_skill">SP技能</string>
     <string name="no_more">暂无更多</string>
     <string name="no_data">暂无数据</string>
+    <string name="not_installed">暂未实装的功能（%s）</string>
 
     <!--ex装备-->
     <string name="extra_equip_normal">普通</string>

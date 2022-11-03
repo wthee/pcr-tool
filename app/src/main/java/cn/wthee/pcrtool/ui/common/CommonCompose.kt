@@ -808,10 +808,10 @@ fun BottomSearchBar(
 }
 
 /**
- * 暂无更多
+ * 居中文本
  */
 @Composable
-fun NoMoreDataText() {
+fun CenterTipText(text: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -820,28 +820,21 @@ fun NoMoreDataText() {
     ) {
         //内容
         Subtitle1(
-            text = stringResource(R.string.no_more),
-            modifier = Modifier.padding(Dimen.mediumPadding)
+            text = text,
+            modifier = Modifier.padding(Dimen.mediumPadding),
+            selectable = true
         )
     }
 }
-
 
 /**
- * 暂无数据
+ * 服务器版本名称
  */
 @Composable
-fun NoDataText() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = Dimen.cardHeight),
-        contentAlignment = Alignment.Center
-    ) {
-        //内容
-        Subtitle1(
-            text = stringResource(R.string.no_data),
-            modifier = Modifier.padding(Dimen.mediumPadding)
-        )
+fun getRegionName(region: Int) = stringResource(
+    id = when (region) {
+        2 -> R.string.db_cn
+        3 -> R.string.db_tw
+        else -> R.string.db_jp
     }
-}
+)

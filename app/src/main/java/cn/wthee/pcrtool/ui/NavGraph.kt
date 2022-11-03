@@ -10,15 +10,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllCardList
-import cn.wthee.pcrtool.ui.common.NoDataText
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.getRegionName
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
@@ -240,7 +243,12 @@ fun NavGraph(
                     )
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        NoDataText()
+                        CenterTipText(
+                            stringResource(
+                                id = R.string.not_installed,
+                                getRegionName(MainActivity.regionType)
+                            )
+                        )
                     }
                 }
 
