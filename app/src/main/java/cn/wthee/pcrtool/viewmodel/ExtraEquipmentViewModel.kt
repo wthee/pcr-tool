@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
-import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -46,20 +45,6 @@ class ExtraEquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 根据掉率排序
-     *
-     * @param equipId 装备编号
-     */
-    private fun getSort(equipId: Int): java.util.Comparator<EquipmentDropInfo> {
-        val str = equipId.toString()
-        return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
-            val a = o1.getOddOfEquip(str)
-            val b = o2.getOddOfEquip(str)
-            b.compareTo(a)
-        }
-    }
-
-    /**
      * 获取装备颜色种类数
      */
     fun getEquipColorNum() = flow {
@@ -78,5 +63,19 @@ class ExtraEquipmentViewModel @Inject constructor(
      */
     fun getEquipUnitList(category: Int) = flow {
         emit(equipmentRepository.getEquipUnitList(category))
+    }
+
+    /**
+     * 装备掉落信息
+     */
+    fun getDropAreaList(equipId: Int) = flow {
+        emit(equipmentRepository.getDropAreaList(equipId))
+    }
+
+    /**
+     * 次要掉落信息
+     */
+    fun getSubRewardList(questId: Int) = flow {
+        emit(equipmentRepository.getSubRewardList(questId))
     }
 }

@@ -236,5 +236,8 @@
     <string name="extra_equip_rarity_and_type">★%d  %s</string>
     <string name="extra_equip_rarity">稀有度</string>
     <string name="extra_equip_unit">适用角色</string>
+    <string name="extra_equip_main_reward">主要掉落</string>
+    <string name="extra_equip_sub_reward">次要掉落</string>
+    <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
 
 </resources>

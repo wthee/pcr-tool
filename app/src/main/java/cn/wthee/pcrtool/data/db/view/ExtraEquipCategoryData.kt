@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 
 /**
- * 公会信息
+ * ex装备类型信息
  */
 data class ExtraEquipCategoryData(
     @PrimaryKey

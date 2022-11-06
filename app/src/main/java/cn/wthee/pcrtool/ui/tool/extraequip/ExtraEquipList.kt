@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -76,127 +77,155 @@ fun ExtraEquipList(
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EXTRA_EQUIP, "")) ?: arrayListOf()
 
-        val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
-        //分组
-        val equipGroupList = arrayListOf<ExtraEquipGroupData>()
-        equips.forEach { equip ->
-            var group = equipGroupList.find {
-                it.rarity == equip.rarity && it.categoryName == equip.categoryName
+        val equips by viewModel.getEquips(filterValue).collectAsState(initial = null)
+        if (equips != null) {
+            //分组
+            val equipGroupList = arrayListOf<ExtraEquipGroupData>()
+            equips!!.forEach { equip ->
+                var group = equipGroupList.find {
+                    it.rarity == equip.rarity && it.category == equip.category
+                }
+                if (group == null) {
+                    group = ExtraEquipGroupData(equip.rarity, equip.category, equip.categoryName)
+                    equipGroupList.add(group)
+                }
+                group.equipIdList.add(equip)
             }
-            if (group == null) {
-                group = ExtraEquipGroupData(equip.rarity, equip.categoryName)
-                equipGroupList.add(group)
-            }
-            group.equipIdList.add(equip)
-        }
 
-        ModalBottomSheetLayout(
-            sheetState = state,
-            scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-            sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-            sheetShape = shapeTop(),
-            sheetContent = {
-                FilterExtraEquipSheet(colorNum, state, viewModel)
-            }
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                FadeAnimation(visible = equips.isNotEmpty()) {
-                    LazyColumn(state = scrollState) {
-                        equipGroupList.forEach { equipGroupData ->
-                            //分组标题
-                            item {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(Dimen.largePadding)
-                                        .fillMaxWidth()
-                                        .background(
-                                            getEquipColor(equipGroupData.rarity),
-                                            shape = MaterialTheme.shapes.extraSmall
+            ModalBottomSheetLayout(
+                sheetState = state,
+                scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+                sheetShape = shapeTop(),
+                sheetContent = {
+                    FilterExtraEquipSheet(colorNum, state, viewModel)
+                }
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    FadeAnimation(visible = equips!!.isNotEmpty()) {
+                        LazyColumn(state = scrollState) {
+                            equipGroupList.forEach { equipGroupData ->
+                                //分组标题
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .padding(Dimen.largePadding)
+                                            .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        IconCompose(
+                                            data = ImageResourceHelper.getInstance()
+                                                .getUrl(
+                                                    ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                                                    equipGroupData.category
+                                                ),
+                                            size = Dimen.smallIconSize,
                                         )
-                                        .padding(horizontal = Dimen.mediumPadding)
-                                ) {
-                                    Subtitle2(
-                                        text = stringResource(
-                                            id = R.string.extra_equip_rarity_and_type,
-                                            equipGroupData.rarity,
-                                            equipGroupData.categoryName
-                                        ),
-                                        color = colorWhite
-                                    )
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Subtitle2(
-                                        text = "${equipGroupData.equipIdList.size}",
-                                        color = colorWhite
-                                    )
+                                        Row(
+                                            modifier = Modifier
+                                                .padding(start = Dimen.smallPadding)
+                                                .weight(1f)
+                                                .background(
+                                                    getEquipColor(equipGroupData.rarity),
+                                                    shape = MaterialTheme.shapes.extraSmall
+                                                )
+                                                .padding(horizontal = Dimen.mediumPadding)
+                                        ) {
+                                            Subtitle2(
+                                                text = stringResource(
+                                                    id = R.string.extra_equip_rarity_and_type,
+                                                    equipGroupData.rarity,
+                                                    equipGroupData.categoryName
+                                                ),
+                                                color = colorWhite
+                                            )
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Subtitle2(
+                                                text = "${equipGroupData.equipIdList.size}",
+                                                color = colorWhite
+                                            )
+                                        }
+                                    }
                                 }
-                            }
-                            //分组内容
-                            item {
-                                VerticalGrid(
-                                    spanCount = equipSpanCount,
-                                    modifier = Modifier.padding(
-                                        bottom = Dimen.largePadding,
-                                        start = Dimen.commonItemPadding,
-                                        end = Dimen.commonItemPadding
-                                    ),
-                                ) {
-                                    equipGroupData.equipIdList.forEach { equip ->
-                                        ExtraEquipItem(
-                                            filterValue,
-                                            equip,
-                                            toEquipDetail
-                                        )
+                                //分组内容
+                                item {
+                                    VerticalGrid(
+                                        spanCount = equipSpanCount,
+                                        modifier = Modifier.padding(
+                                            bottom = Dimen.largePadding,
+                                            start = Dimen.commonItemPadding,
+                                            end = Dimen.commonItemPadding
+                                        ),
+                                    ) {
+                                        equipGroupData.equipIdList.forEach { equip ->
+                                            ExtraEquipItem(
+                                                filterValue,
+                                                equip,
+                                                toEquipDetail
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        }
-                        item {
-                            CommonSpacer()
+                            item {
+                                CommonSpacer()
+                            }
                         }
                     }
-                }
 
-                Row(
-                    modifier = Modifier
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                        .align(Alignment.BottomEnd),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    //回到顶部
-                    FabCompose(
-                        iconType = MainIconType.TOP
+                    Row(
+                        modifier = Modifier
+                            .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                            .align(Alignment.BottomEnd),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        coroutineScope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    }
-                    //重置筛选
-                    if (filter.value != null && filter.value!!.isFilter()) {
+                        //回到顶部
                         FabCompose(
-                            iconType = MainIconType.RESET
+                            iconType = MainIconType.TOP
                         ) {
                             coroutineScope.launch {
-                                state.hide()
+                                scrollState.scrollToItem(0)
                             }
-                            navViewModel.resetClick.postValue(true)
+                        }
+                        //重置筛选
+                        if (filter.value != null && filter.value!!.isFilter()) {
+                            FabCompose(
+                                iconType = MainIconType.RESET
+                            ) {
+                                coroutineScope.launch {
+                                    state.hide()
+                                }
+                                navViewModel.resetClick.postValue(true)
+                            }
+                        }
+                        val count = equips!!.size
+                        // 数量显示&筛选按钮
+                        FabCompose(
+                            iconType = MainIconType.EXTRA_EQUIP,
+                            text = "$count"
+                        ) {
+                            coroutineScope.launch {
+                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                state.show()
+                            }
                         }
                     }
-                    val count = equips.size
-                    // 数量显示&筛选按钮
-                    FabCompose(
-                        iconType = MainIconType.EXTRA_EQUIP,
-                        text = "$count"
-                    ) {
-                        coroutineScope.launch {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
-                        }
-                    }
+
                 }
 
             }
-
+        } else {
+            //功能未实装
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CenterTipText(
+                    stringResource(
+                        id = R.string.not_installed,
+                        getRegionName(MainActivity.regionType)
+                    )
+                )
+            }
         }
+
     }
 
 
@@ -228,7 +257,7 @@ private fun ExtraEquipItem(
             {
                 IconCompose(
                     data = ImageResourceHelper.getInstance()
-                        .getExtraEquipPic(equipState.equipmentId)
+                        .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equip.equipmentId)
                 )
             }
         )
@@ -320,6 +349,7 @@ private fun FilterExtraEquipSheet(
             loveIndex.value = 0
             rarityIndex.value = 0
             flagIndex.value = 0
+            categoryIndex.value = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterExtraEquip.postValue(FilterExtraEquipment())
         }

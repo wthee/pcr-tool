@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
  */
 data class ExtraEquipGroupData(
     var rarity: Int = 0,
+    var category: Int = 0,
     var categoryName: String = "",
     var equipIdList: ArrayList<ExtraEquipmentBasicInfo> = arrayListOf()
 )

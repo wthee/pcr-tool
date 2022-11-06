@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 
 /**
- * ex装备最大强化后属性视图
+ * ex装备属性
  */
 data class ExtraEquipmentData(
     @ColumnInfo(name = "equipment_id") var equipmentId: Int = UNKNOWN_EQUIP_ID,

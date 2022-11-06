@@ -13,7 +13,7 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
 
     suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
 
-    suspend fun getEquipments(filter: FilterExtraEquipment, limit: Int) =
+    suspend fun getEquipments(filter: FilterExtraEquipment, limit: Int) = try {
         equipmentDao.getEquipments(
             filter.flag,
             filter.rarity,
@@ -28,13 +28,28 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
             filter.starIds,
             limit
         )
+    } catch (_: Exception) {
+        null
+    }
 
     suspend fun getCount() = equipmentDao.getCount()
 
-    suspend fun getEquipColorNum() = equipmentDao.getEquipColorNum()
+    suspend fun getEquipColorNum() = try {
+        equipmentDao.getEquipColorNum()
+    } catch (_: Exception) {
+        0
+    }
 
-    suspend fun getEquipCategoryList() = equipmentDao.getEquipCategoryList()
+    suspend fun getEquipCategoryList() = try {
+        equipmentDao.getEquipCategoryList()
+    } catch (_: Exception) {
+        arrayListOf()
+    }
 
     suspend fun getEquipUnitList(category: Int) = equipmentDao.getEquipUnitList(category)
+
+    suspend fun getDropAreaList(equipId: Int) = equipmentDao.getDropAreaList(equipId)
+
+    suspend fun getSubRewardList(questId: Int) = equipmentDao.getSubRewardList(questId)
 
 }

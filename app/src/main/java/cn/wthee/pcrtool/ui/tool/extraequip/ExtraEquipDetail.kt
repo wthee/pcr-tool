@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_CATEGORY
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -45,6 +46,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 fun ExtraEquipDetail(
     equipId: Int,
     toExtraEquipUnit: (Int) -> Unit,
+    toExtraEquipDrop: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
     val extraEquipmentData =
@@ -65,7 +67,6 @@ fun ExtraEquipDetail(
                 ?: arrayListOf()
         loved.value = filterValue.starIds.contains(equipId)
     }
-    val loveText = if (loved.value) "" else stringResource(id = R.string.title_love)
 
     Box(
         modifier = Modifier
@@ -88,13 +89,29 @@ fun ExtraEquipDetail(
                     selectable = true
                 )
                 Row(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance()
+                            .getUrl(ICON_EXTRA_EQUIPMENT_CATEGORY, extraEquipmentData.category),
+                        size = Dimen.smallIconSize,
+                    )
+                    Subtitle2(
+                        text = extraEquipmentData.categoryName,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
+                }
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(Dimen.largePadding)
                 ) {
                     //图标
                     IconCompose(
-                        data = ImageResourceHelper.getInstance().getExtraEquipPic(equipId)
+                        data = ImageResourceHelper.getInstance()
+                            .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equipId)
                     )
                     //描述
                     Subtitle2(
@@ -107,7 +124,6 @@ fun ExtraEquipDetail(
                 //属性变化
                 Row(
                     modifier = Modifier.padding(
-                        vertical = Dimen.mediumPadding,
                         horizontal = Dimen.mediumPadding + Dimen.smallPadding
                     )
                 ) {
@@ -148,7 +164,6 @@ fun ExtraEquipDetail(
             //装备收藏
             FabCompose(
                 iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                text = loveText
             ) {
                 filter.value?.addOrRemove(equipId)
                 loved.value = !loved.value
@@ -159,6 +174,12 @@ fun ExtraEquipDetail(
                 text = unitIds.size.toString()
             ) {
                 toExtraEquipUnit(extraEquipmentData.category)
+            }
+            //掉落信息
+            FabCompose(
+                iconType = MainIconType.EXTRA_EQUIP_DROP
+            ) {
+                toExtraEquipDrop(extraEquipmentData.equipmentId)
             }
         }
 
@@ -217,7 +238,9 @@ fun ExtraEquipUnitList(
         .collectAsState(initial = arrayListOf()).value
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
         //标题
         MainTitleText(

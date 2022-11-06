@@ -2,26 +2,24 @@ package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllCardList
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.getRegionName
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
@@ -32,6 +30,7 @@ import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
@@ -102,7 +101,8 @@ object Navigation {
     const val CHARACTER_SKILL_LOOP = "characterSkillLoop"
     const val TOOL_EXTRA_EQUIP = "toolExtraEquip"
     const val TOOL_EXTRA_EQUIP_UNIT = "toolExtraEquipUnit"
-    const val EXTRA_CATEGROY = "toolExtraEquipCategory"
+    const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
+    const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
 }
 
 /**
@@ -235,23 +235,10 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }) {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                //日服可用
-                if (MainActivity.regionType == 4) {
-                    ExtraEquipList(
-                        scrollState = scrollState,
-                        toEquipDetail = actions.toExtraEquipDetail
-                    )
-                } else {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CenterTipText(
-                            stringResource(
-                                id = R.string.not_installed,
-                                getRegionName(MainActivity.regionType)
-                            )
-                        )
-                    }
-                }
-
+                ExtraEquipList(
+                    scrollState = scrollState,
+                    toEquipDetail = actions.toExtraEquipDetail
+                )
             }
 
             //装备详情
@@ -282,19 +269,31 @@ fun NavGraph(
                 val arguments = requireNotNull(it.arguments)
                 ExtraEquipDetail(
                     equipId = arguments.getInt(Navigation.EQUIP_ID),
-                    toExtraEquipUnit = actions.toExtraEquipUnit
+                    toExtraEquipUnit = actions.toExtraEquipUnit,
+                    toExtraEquipDrop = actions.toExtraEquipDrop
                 )
             }
 
             //ex装备关联角色
             bottomSheet(
-                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_CATEGROY}}",
-                arguments = listOf(navArgument(Navigation.EXTRA_CATEGROY) {
+                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_EQUIP_CATEGROY}}",
+                arguments = listOf(navArgument(Navigation.EXTRA_EQUIP_CATEGROY) {
                     type = NavType.IntType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_CATEGROY))
+                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_EQUIP_CATEGROY))
+            }
+
+            //ex装备掉落信息
+            bottomSheet(
+                route = "${Navigation.EXTRA_EQUIP_DROP}/{${Navigation.EQUIP_ID}}",
+                arguments = listOf(navArgument(Navigation.EQUIP_ID) {
+                    type = NavType.IntType
+                })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                ExtraEquipDropList(equipId = arguments.getInt(Navigation.EQUIP_ID))
             }
 
             //装备素材详情
@@ -719,6 +718,13 @@ class NavActions(navController: NavHostController) {
      */
     val toExtraEquipDetail: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EXTRA_EQUIP_DETAIL}/${equipId}")
+    }
+
+    /**
+     * ex装备掉落
+     */
+    val toExtraEquipDrop: (Int) -> Unit = { equipId: Int ->
+        navController.navigate("${Navigation.EXTRA_EQUIP_DROP}/${equipId}")
     }
 
     /**

@@ -43,6 +43,7 @@ class ImageResourceHelper() {
         const val UNKNOWN_EQUIP_ID = 999999
         const val ICON_EQUIPMENT = "icon/equipment/"
         const val ICON_EXTRA_EQUIPMENT = "icon/ex_equipment/"
+        const val ICON_EXTRA_EQUIPMENT_CATEGORY = "icon/ex_equipment/category/"
 
         //角色图标
         const val ICON_UNIT = "icon/unit/"
@@ -74,13 +75,6 @@ class ImageResourceHelper() {
         R.drawable.unknown_item
     } else {
         RESOURCE_PREFIX_URL + type + RESOURCE + ICON_EQUIPMENT + id.toString() + WEBP
-    }
-
-    //获取ex装备图标
-    fun getExtraEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {
-        R.drawable.unknown_item
-    } else {
-        RESOURCE_PREFIX_URL + type + RESOURCE + ICON_EXTRA_EQUIPMENT + id.toString() + WEBP
     }
 
     /**

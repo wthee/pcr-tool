@@ -387,4 +387,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 技能形态
      */
     CHARACTER_CUTIN_SKILL(Icons.Rounded.Category),
+
+    /**
+     * ex装备掉落信息
+     */
+    EXTRA_EQUIP_DROP(Icons.Rounded.Map),
 }

@@ -89,7 +89,8 @@ interface ExtraEquipmentDao {
             a.name,
             a.clan_battle_equip_flag,
             a.rarity,
-            b.category_name
+            b.category_name,
+            b.category
         FROM
             ex_equipment_data AS a
             LEFT JOIN ex_equipment_category AS b ON a.category = b.category
@@ -184,13 +185,71 @@ interface ExtraEquipmentDao {
             b.unit_id
         FROM
             unit_ex_equipment_slot AS a
-            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+            LEFT JOIN unit_profile AS b ON a.unit_id = b.unit_id 
+                AND b.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = b.unit_id )
         WHERE
-            a.slot_category_1 = :category 
-            OR a.slot_category_2 = :category 
-            OR a.slot_category_3 = :category
+            b.unit_id IS NOT NULL 
+            AND(
+                a.slot_category_1 = :category 
+                OR a.slot_category_2 = :category 
+                OR a.slot_category_3 = :category
+            )
         ORDER BY b.unit_name
     """
     )
     suspend fun getEquipUnitList(category: Int): List<Int>
+
+    /**
+     * 装备掉落信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.travel_quest_id,
+            a.travel_area_id,
+            a.travel_quest_name,
+            a.travel_time,
+            a.travel_time_decrease_limit,
+            a.travel_decrease_flag,
+            a.need_power,
+            a.icon_id,
+            a.limit_unit_num,
+            (
+                a.main_reward_1 || '-' || a.main_reward_2 || '-' || a.main_reward_3 || '-' || a.main_reward_4 || '-' || a.main_reward_5 
+            ) AS main_reward_ids
+        FROM
+            travel_quest_data AS a
+        WHERE :equipId IN(a.main_reward_1, a.main_reward_2, a.main_reward_3, a.main_reward_4, a.main_reward_5)
+        GROUP BY
+            a.travel_quest_id
+        """
+    )
+    suspend fun getDropAreaList(equipId: Int): List<ExtraEquipQuestData>
+
+    /**
+     * 次要掉落信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.travel_quest_id,
+            b.category,
+            c.category_name,
+            GROUP_CONCAT( b.ex_equipment_id, '-' ) AS sub_reward_ids 
+        FROM
+            travel_quest_sub_reward AS a
+            LEFT JOIN ex_equipment_data AS b ON a.reward_id = b.ex_equipment_id
+            LEFT JOIN ex_equipment_category AS c ON b.category = c.category 
+        WHERE
+            a.reward_type = 18 
+            AND a.travel_quest_id = :questId 
+        GROUP BY
+            b.category
+        """
+    )
+    suspend fun getSubRewardList(questId: Int): List<ExtraEquipSubRewardData>
 }
