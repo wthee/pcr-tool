@@ -239,5 +239,6 @@
     <string name="extra_equip_main_reward">主要掉落</string>
     <string name="extra_equip_sub_reward">次要掉落</string>
     <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
+    <string name="tool_travel">EX冒险</string>
 
 </resources>

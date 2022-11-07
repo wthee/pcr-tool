@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
-import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -69,8 +68,8 @@ class ExtraEquipmentViewModel @Inject constructor(
     /**
      * 装备掉落信息
      */
-    fun getDropAreaList(equipId: Int) = flow {
-        emit(equipmentRepository.getDropAreaList(equipId))
+    fun getDropQuestList(equipId: Int) = flow {
+        emit(equipmentRepository.getDropQuestList(equipId))
     }
 
     /**
@@ -78,6 +77,13 @@ class ExtraEquipmentViewModel @Inject constructor(
      */
     fun getSubRewardList(questId: Int) = flow {
         emit(equipmentRepository.getSubRewardList(questId))
+    }
+
+    /**
+     * 冒险区域详情
+     */
+    fun getTravelQuest(questId: Int) = flow {
+        emit(equipmentRepository.getTravelQuest(questId))
     }
 
     /**

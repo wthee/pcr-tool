@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelList
+import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelQuestDetail
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -105,7 +106,8 @@ object Navigation {
     const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
     const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
-    const val EXTRA_CATEGROY = "toolExtraEquipCategory"
+    const val TOOL_TRAVEL_AREA_DETAIL = "toolExtraEquipTravelAreaDetail"
+    const val TRAVEL_QUEST_ID = "travelQuestId"
     const val CHARACTER_EXTRA_EQUIP_SLOT = "characterExtraEquipSlot"
 }
 
@@ -241,7 +243,7 @@ fun NavGraph(
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipList(
                     scrollState = scrollState,
-                    toEquipDetail = actions.toExtraEquipDetail
+                    toExtraEquipDetail = actions.toExtraEquipDetail
                 )
             }
 
@@ -254,7 +256,25 @@ fun NavGraph(
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipTravelList(
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    toExtraEquipTravelAreaDetail = actions.toExtraEquipTravelAreaDetail
+                )
+            }
+
+            //ex装备冒险区域详情
+            composable(route = "${Navigation.TOOL_TRAVEL_AREA_DETAIL}/{${Navigation.TRAVEL_QUEST_ID}}",
+                arguments = listOf(navArgument(Navigation.TRAVEL_QUEST_ID) {
+                    type = NavType.IntType
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }) {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val arguments = requireNotNull(it.arguments)
+                ExtraEquipTravelQuestDetail(
+                    arguments.getInt(Navigation.TRAVEL_QUEST_ID),
+                    actions.toExtraEquipDetail
                 )
             }
 
@@ -909,6 +929,14 @@ class NavActions(navController: NavHostController) {
      */
     val toExtraEquipTravelAreaList = {
         navController.navigate(Navigation.TOOL_TRAVEL_AREA)
+    }
+
+    /**
+     * ex装备冒险区域详情
+     */
+    val toExtraEquipTravelAreaDetail: (Int) -> Unit = { questId ->
+        navController.navigate("${Navigation.TOOL_TRAVEL_AREA_DETAIL}/${questId}")
+
     }
 
     /**

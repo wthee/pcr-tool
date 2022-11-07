@@ -213,15 +213,18 @@ interface ExtraEquipmentDao {
             a.limit_unit_num,
             (
                 a.main_reward_1 || '-' || a.main_reward_2 || '-' || a.main_reward_3 || '-' || a.main_reward_4 || '-' || a.main_reward_5 
-            ) AS main_reward_ids
+            ) AS main_reward_ids 
         FROM
             travel_quest_data AS a
-        WHERE :equipId IN(a.main_reward_1, a.main_reward_2, a.main_reward_3, a.main_reward_4, a.main_reward_5)
+            LEFT JOIN travel_quest_sub_reward AS b ON a.travel_quest_id = b.travel_quest_id 
+        WHERE
+            :equipId IN ( a.main_reward_1, a.main_reward_2, a.main_reward_3, a.main_reward_4, a.main_reward_5 ) 
+            OR b.reward_id = :equipId 
         GROUP BY
             a.travel_quest_id
         """
     )
-    suspend fun getDropAreaList(equipId: Int): List<ExtraEquipQuestData>
+    suspend fun getDropQuestList(equipId: Int): List<ExtraEquipQuestData>
 
     /**
      * 次要掉落信息
@@ -270,6 +273,37 @@ interface ExtraEquipmentDao {
     )
     suspend fun getTravelAreaList(): List<ExtraEquipTravelData>
 
+
+    /**
+     * 冒险区域详情
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.travel_quest_id,
+            a.travel_area_id,
+            a.travel_quest_name,
+            a.travel_time,
+            a.travel_time_decrease_limit,
+            a.travel_decrease_flag,
+            a.need_power,
+            a.icon_id,
+            a.limit_unit_num,
+            (
+                a.main_reward_1 || '-' || a.main_reward_2 || '-' || a.main_reward_3 || '-' || a.main_reward_4 || '-' || a.main_reward_5 
+            ) AS main_reward_ids 
+        FROM
+            travel_quest_data AS a
+            LEFT JOIN travel_quest_sub_reward AS b ON a.travel_quest_id = b.travel_quest_id 
+        WHERE
+            a.travel_quest_id = :questId
+        GROUP BY
+            a.travel_quest_id
+        """
+    )
+    suspend fun getTravelQuest(questId: Int): ExtraEquipQuestData
 
     /**
      * 获取角色可使用的ex装备列表

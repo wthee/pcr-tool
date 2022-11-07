@@ -60,25 +60,43 @@ private fun CharacterExtraEquipItem(
     toExtraEquipDetail: (Int) -> Unit,
 ) {
 
-    val equipIds = data.exEquipmentIds.intArrayList
+    val equipIdList = data.exEquipmentIds.intArrayList
 
     //分组标题
     Row(
         modifier = Modifier
             .padding(Dimen.largePadding)
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primary)
-            .padding(horizontal = Dimen.mediumPadding)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Subtitle2(
-            text = data.categoryName,
-            color = colorWhite
+        IconCompose(
+            data = ImageResourceHelper.getInstance()
+                .getUrl(
+                    ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                    data.category
+                ),
+            size = Dimen.smallIconSize,
         )
-        Spacer(modifier = Modifier.weight(1f))
-        Subtitle2(
-            text = "${equipIds.size}",
-            color = colorWhite
-        )
+        Row(
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .weight(1f)
+                .background(
+                    MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.extraSmall
+                )
+                .padding(horizontal = Dimen.mediumPadding)
+        ) {
+            Subtitle2(
+                text = data.categoryName,
+                color = colorWhite
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Subtitle2(
+                text = "${equipIdList.size}",
+                color = colorWhite
+            )
+        }
     }
     VerticalGrid(
         modifier = Modifier.padding(
@@ -88,7 +106,7 @@ private fun CharacterExtraEquipItem(
         ),
         maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
     ) {
-        equipIds.forEach { equipId ->
+        equipIdList.forEach { equipId ->
             Column(
                 modifier = Modifier
                     .padding(

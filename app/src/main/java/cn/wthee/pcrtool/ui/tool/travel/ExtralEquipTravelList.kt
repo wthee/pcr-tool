@@ -1,13 +1,16 @@
 package cn.wthee.pcrtool.ui.tool.travel
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -29,6 +32,7 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun ExtraEquipTravelList(
     scrollState: LazyListState,
+    toExtraEquipTravelAreaDetail: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
 
@@ -38,7 +42,7 @@ fun ExtraEquipTravelList(
         if (areaList != null) {
             LazyColumn(state = scrollState) {
                 items(areaList) {
-                    TravelItem(it)
+                    TravelItem(it, toExtraEquipTravelAreaDetail)
                 }
             }
         } else {
@@ -59,7 +63,10 @@ fun ExtraEquipTravelList(
  * 冒险区域item
  */
 @Composable
-private fun TravelItem(travelData: ExtraEquipTravelData) {
+private fun TravelItem(
+    travelData: ExtraEquipTravelData,
+    toExtraEquipTravelAreaDetail: (Int) -> Unit,
+) {
 
     Column(
         modifier = Modifier
@@ -85,7 +92,8 @@ private fun TravelItem(travelData: ExtraEquipTravelData) {
         MainCard {
             Row(
                 modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 //area
                 IconCompose(
@@ -94,13 +102,21 @@ private fun TravelItem(travelData: ExtraEquipTravelData) {
                     size = Dimen.toolMenuWidth
                 )
                 //quest图标
-                Column {
+                Column(modifier = Modifier.padding(Dimen.largePadding)) {
                     val travelQuestNames = travelData.questNames.stringArrayList
-                    travelData.questIds.intArrayList.forEachIndexed { index, it ->
-                        Row {
+                    travelData.questIds.intArrayList.forEachIndexed { index, questId ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clip(MaterialTheme.shapes.medium)
+                                .padding(Dimen.smallPadding)
+                                .clickable {
+                                    toExtraEquipTravelAreaDetail(questId)
+                                }
+                        ) {
                             IconCompose(
                                 data = ImageResourceHelper.getInstance()
-                                    .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, it)
+                                    .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questId)
                             )
                             Subtitle2(text = travelQuestNames[index].replace("\\n", "·"))
                         }

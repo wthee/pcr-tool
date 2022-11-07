@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 fun ExtraEquipList(
     scrollState: LazyListState,
     viewModel: ExtraEquipmentViewModel = hiltViewModel(),
-    toEquipDetail: (Int) -> Unit
+    toExtraEquipDetail: (Int) -> Unit
 ) {
     //筛选状态
     val filter = navViewModel.filterExtraEquip.observeAsState()
@@ -161,7 +161,7 @@ fun ExtraEquipList(
                                             ExtraEquipItem(
                                                 filterValue,
                                                 equip,
-                                                toEquipDetail
+                                                toExtraEquipDetail
                                             )
                                         }
                                     }
