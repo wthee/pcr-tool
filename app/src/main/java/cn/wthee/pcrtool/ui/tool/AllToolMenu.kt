@@ -57,6 +57,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EXTRA_EQUIP))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.TRAVEL_AREA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //活动信息

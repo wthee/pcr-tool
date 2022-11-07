@@ -35,6 +35,7 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
+import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelList
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -103,6 +104,7 @@ object Navigation {
     const val TOOL_EXTRA_EQUIP_UNIT = "toolExtraEquipUnit"
     const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
+    const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
 }
 
 /**
@@ -238,6 +240,19 @@ fun NavGraph(
                 ExtraEquipList(
                     scrollState = scrollState,
                     toEquipDetail = actions.toExtraEquipDetail
+                )
+            }
+
+            //ex装备冒险区域
+            composable(route = Navigation.TOOL_TRAVEL_AREA,
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }) {
+                val scrollState = rememberLazyListState()
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                ExtraEquipTravelList(
+                    scrollState = scrollState
                 )
             }
 
@@ -860,6 +875,13 @@ class NavActions(navController: NavHostController) {
      */
     val toExtraEquipList = {
         navController.navigate(Navigation.TOOL_EXTRA_EQUIP)
+    }
+
+    /**
+     * ex装备冒险区域
+     */
+    val toExtraEquipTravelAreaList = {
+        navController.navigate(Navigation.TOOL_TRAVEL_AREA)
     }
 
     /**

@@ -44,6 +44,7 @@ class ImageResourceHelper() {
         const val ICON_EQUIPMENT = "icon/equipment/"
         const val ICON_EXTRA_EQUIPMENT = "icon/ex_equipment/"
         const val ICON_EXTRA_EQUIPMENT_CATEGORY = "icon/ex_equipment/category/"
+        const val ICON_EXTRA_EQUIPMENT_TRAVEL_MAP = "icon/ex_equipment/map/"
 
         //角色图标
         const val ICON_UNIT = "icon/unit/"

@@ -252,4 +252,27 @@ interface ExtraEquipmentDao {
         """
     )
     suspend fun getSubRewardList(questId: Int): List<ExtraEquipSubRewardData>
+
+    /**
+     * ex冒险区域
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.travel_area_id,
+            a.travel_area_name,
+            COUNT( b.travel_quest_id ) AS quest_count,
+            GROUP_CONCAT( b.travel_quest_id, '-' ) AS quest_ids,
+            GROUP_CONCAT( b.travel_quest_name, '-' ) AS quest_names 
+        FROM
+            travel_area_data AS a
+            LEFT JOIN travel_quest_data AS b ON a.travel_area_id = b.travel_area_id 
+        GROUP BY
+            a.travel_area_id
+        """
+    )
+    suspend fun getTravelAreaList(): List<ExtraEquipTravelData>
+
 }
