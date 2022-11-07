@@ -79,4 +79,11 @@ class ExtraEquipmentViewModel @Inject constructor(
     fun getEquipUnitList(category: Int) = flow {
         emit(equipmentRepository.getEquipUnitList(category))
     }
+
+    /**
+     * 获取角色可使用的ex装备列表
+     */
+    fun getCharacterExtraEquipList(unitId: Int) = flow {
+        emit(equipmentRepository.getCharacterExtraEquipList(unitId))
+    }
 }

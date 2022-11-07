@@ -193,4 +193,27 @@ interface ExtraEquipmentDao {
     """
     )
     suspend fun getEquipUnitList(category: Int): List<Int>
+
+    /**
+     * 获取角色可使用的ex装备列表
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            a.unit_id,
+            b.category,
+            c.category_name,
+            GROUP_CONCAT( b.ex_equipment_id, '-' ) AS ex_equipment_ids 
+        FROM
+            unit_ex_equipment_slot AS a
+            LEFT JOIN ex_equipment_data AS b ON b.category IN ( a.slot_category_1, a.slot_category_2, a.slot_category_3 )
+            LEFT JOIN ex_equipment_category AS c ON b.category = c.category 
+        WHERE
+            a.unit_id = :unitId 
+        GROUP BY
+            b.category
+    """
+    )
+    suspend fun getCharacterExtraEquipList(unitId: Int): List<CharacterExtraEquipData>
 }

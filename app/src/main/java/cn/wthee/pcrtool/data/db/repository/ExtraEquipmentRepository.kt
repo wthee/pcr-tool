@@ -37,4 +37,10 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
 
     suspend fun getEquipUnitList(category: Int) = equipmentDao.getEquipUnitList(category)
 
+    suspend fun getCharacterExtraEquipList(unitId: Int) = try {
+        equipmentDao.getCharacterExtraEquipList(unitId)
+    } catch (_: Exception) {
+        null
+    }
+
 }
