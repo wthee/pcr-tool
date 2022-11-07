@@ -105,6 +105,8 @@ object Navigation {
     const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
     const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
+    const val EXTRA_CATEGROY = "toolExtraEquipCategory"
+    const val CHARACTER_EXTRA_EQUIP_SLOT = "characterExtraEquipSlot"
 }
 
 /**
@@ -362,6 +364,22 @@ fun NavGraph(
                     level = arguments.getInt(Navigation.LEVEL),
                     rarity = arguments.getInt(Navigation.RARITY),
                     uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL)
+                )
+            }
+
+            //角色ex装备列表
+            composable(
+                route = "${Navigation.CHARACTER_EXTRA_EQUIP_SLOT}/{${Navigation.UNIT_ID}}",
+                arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                    type = NavType.IntType
+                })
+            ) {
+                val scrollState = rememberLazyListState()
+                val arguments = requireNotNull(it.arguments)
+                CharacterExtraEquip(
+                    scrollState = scrollState,
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    toExtraEquipDetail = actions.toExtraEquipDetail
                 )
             }
 
@@ -773,17 +791,26 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色 RANK 装备
      */
-    val toCharacteRankEquip: (Int, Int) -> Unit = { unitId: Int, currentRank: Int ->
+    val toCharacterRankEquip: (Int, Int) -> Unit = { unitId: Int, currentRank: Int ->
         navController.navigate("${Navigation.RANK_EQUIP}/${unitId}/${currentRank}")
     }
 
     /**
      * 角色 RANK 对比
      */
-    val toCharacteRankCompare: (Int, Int, Int, Int, Int) -> Unit =
+    val toCharacterRankCompare: (Int, Int, Int, Int, Int) -> Unit =
         { unitId: Int, maxRank: Int, level: Int, rarity: Int, uniqueEquipLevel: Int ->
             navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${level}/${rarity}/${uniqueEquipLevel}")
         }
+
+
+    /**
+     * 角色ex装备列表
+     */
+    val toCharacterExtraEquip: (Int) -> Unit = { unitId ->
+        navController.navigate("${Navigation.CHARACTER_EXTRA_EQUIP_SLOT}/${unitId}")
+    }
+
 
     /**
      * 角装备统计

@@ -50,6 +50,9 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.math.max
 
 
@@ -151,11 +154,13 @@ fun CharacterDetail(
                     unitId, characterAttrData, actions.toCharacterStoryDetail
                 )
                 //RANK相关功能
-                Row(
+                FlowRow(
                     modifier = Modifier
                         .padding(Dimen.largePadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    crossAxisAlignment = FlowCrossAxisAlignment.Center,
+                    mainAxisAlignment = MainAxisAlignment.Center,
+                    lastLineMainAxisAlignment = MainAxisAlignment.Center,
                 ) {
                     //RANK对比
                     IconTextButton(
@@ -164,7 +169,7 @@ fun CharacterDetail(
                         iconSize = Dimen.fabIconSize,
                         textStyle = MaterialTheme.typography.bodyMedium
                     ) {
-                        actions.toCharacteRankCompare(
+                        actions.toCharacterRankCompare(
                             unitId,
                             maxValue.rank,
                             currentValueState.value.level,
@@ -181,6 +186,15 @@ fun CharacterDetail(
                     ) {
                         actions.toCharacteEquipCount(unitId, maxValue.rank)
                     }
+                    //ex装备
+                    IconTextButton(
+                        icon = MainIconType.EXTRA_EQUIP,
+                        text = stringResource(id = R.string.tool_extra_equip),
+                        iconSize = Dimen.fabIconSize,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    ) {
+                        actions.toCharacterExtraEquip(unitId)
+                    }
                 }
                 //RANK 装备
                 CharacterEquip(
@@ -189,7 +203,7 @@ fun CharacterDetail(
                     maxRank = maxValue.rank,
                     equips = characterAttrData.equips,
                     toEquipDetail = actions.toEquipDetail,
-                    toCharacteRankEquip = actions.toCharacteRankEquip
+                    toCharacteRankEquip = actions.toCharacterRankEquip
                 )
                 //显示专武
                 if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {

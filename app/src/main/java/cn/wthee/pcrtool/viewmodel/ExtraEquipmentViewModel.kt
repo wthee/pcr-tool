@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
+import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -84,5 +85,12 @@ class ExtraEquipmentViewModel @Inject constructor(
      */
     fun getTravelAreaList() = flow {
         emit(equipmentRepository.getTravelAreaList())
+    }
+
+    /**
+     * 获取角色可使用的ex装备列表
+     */
+    fun getCharacterExtraEquipList(unitId: Int) = flow {
+        emit(equipmentRepository.getCharacterExtraEquipList(unitId))
     }
 }
