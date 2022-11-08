@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.Subtitle2
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -39,7 +39,12 @@ fun CharacterExtraEquip(
         if(equipList != null){
             LazyColumn(state = scrollState) {
                 item {
-                    //TODO 适用装备
+                    //标题
+                    MainTitleText(
+                        text = stringResource(R.string.unit_extra_equip_slot),
+                        modifier = Modifier
+                            .padding(Dimen.largePadding)
+                    )
                 }
                 items(equipList) {
                     CharacterExtraEquipItem(it, toExtraEquipDetail)
@@ -48,8 +53,16 @@ fun CharacterExtraEquip(
                     CommonSpacer()
                 }
             }
-        }else{
-            //TODO 未实装提示
+        }else {
+            //功能未实装
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CenterTipText(
+                    stringResource(
+                        id = R.string.not_installed,
+                        getRegionName(MainActivity.regionType)
+                    )
+                )
+            }
         }
     }
 }

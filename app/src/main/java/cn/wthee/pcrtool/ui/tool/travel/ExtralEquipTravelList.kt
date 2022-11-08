@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
@@ -21,7 +22,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.stringArrayList
+import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -102,25 +103,89 @@ private fun TravelItem(
                     size = Dimen.toolMenuWidth
                 )
                 //quest图标
-                Column(modifier = Modifier.padding(Dimen.largePadding)) {
-                    val travelQuestNames = travelData.questNames.stringArrayList
-                    travelData.questIds.intArrayList.forEachIndexed { index, questId ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clip(MaterialTheme.shapes.medium)
-                                .padding(Dimen.smallPadding)
-                                .clickable {
-                                    toExtraEquipTravelAreaDetail(questId)
-                                }
-                        ) {
-                            IconCompose(
-                                data = ImageResourceHelper.getInstance()
-                                    .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questId)
-                            )
-                            Subtitle2(text = travelQuestNames[index].replace("\\n", "·"))
-                        }
+                Column(
+                    modifier = Modifier
+                        .padding(Dimen.largePadding)
+                        .fillMaxWidth()
+                ) {
+                    travelData.questIds.intArrayList.forEachIndexed { _, questId ->
+                        TravelQuestHeader(
+                            questId = questId,
+                            toExtraEquipTravelAreaDetail = toExtraEquipTravelAreaDetail
+                        )
                     }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * ex冒险区域公用头部布局
+ * questId 为0时，从装备详情-掉落区域调整，不重新查询
+ */
+@Composable
+fun TravelQuestHeader(
+    questId: Int,
+    questData: ExtraEquipQuestData? = null,
+    toExtraEquipTravelAreaDetail: ((Int) -> Unit)? = null,
+    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
+) {
+    val mQuestData = if (questId == 0) {
+        questData
+    } else {
+        extraEquipmentViewModel.getTravelQuest(questId)
+            .collectAsState(initial = null).value
+    }
+    mQuestData?.let {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(Dimen.smallPadding)
+                .clip(MaterialTheme.shapes.medium)
+                .clickable {
+                    if (toExtraEquipTravelAreaDetail != null) {
+                        toExtraEquipTravelAreaDetail(questId)
+                    }
+                }
+        ) {
+            IconCompose(
+                data = ImageResourceHelper.getInstance()
+                    .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, mQuestData.travelQuestId)
+            )
+            Column {
+                //标题
+                Subtitle1(text = mQuestData.travelQuestName.replace("\\n", "·"))
+                //其它参数
+                FlowRow {
+                    CaptionText(
+                        text = stringResource(
+                            id = R.string.travel_limit_unit_num,
+                            mQuestData.limitUnitNum
+                        ),
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
+                    CaptionText(
+                        text = stringResource(
+                            id = R.string.travel_need_power,
+                            mQuestData.needPower
+                        ),
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
+                    CaptionText(
+                        text = stringResource(
+                            id = R.string.travel_time,
+                            toTimeText(mQuestData.travelTime * 1000)
+                        ),
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
+                    CaptionText(
+                        text = stringResource(
+                            id = R.string.travel_time_decrease_limit,
+                            toTimeText(mQuestData.travelTimeDecreaseLimit * 1000)
+                        ),
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    )
                 }
             }
         }

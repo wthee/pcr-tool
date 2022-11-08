@@ -89,6 +89,7 @@ interface ExtraEquipmentDao {
             a.name,
             a.clan_battle_equip_flag,
             a.rarity,
+            b.category,
             b.category_name
         FROM
             ex_equipment_data AS a

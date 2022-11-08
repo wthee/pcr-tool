@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.travel
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -29,22 +27,12 @@ fun ExtraEquipTravelQuestDetail(
 
     Box(modifier = Modifier.fillMaxSize()) {
         questData?.let {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questId),
-                )
-                TravelQuestItem(
-                    selectedId = 0,
-                    questData = questData,
-                    extraEquipmentViewModel = extraEquipmentViewModel,
-                    toExtraEquipDetail = toExtraEquipDetail
-                )
-            }
-
+            TravelQuestItem(
+                selectedId = 0,
+                questData = questData,
+                extraEquipmentViewModel = extraEquipmentViewModel,
+                toExtraEquipDetail = toExtraEquipDetail
+            )
         }
     }
 }
@@ -74,15 +62,9 @@ fun TravelQuestItem(
         )
     ) {
         //标题
-        MainText(
-            text = questData.travelQuestName.replace("\\n", "·"),
-            modifier = Modifier
-                .padding(bottom = Dimen.mediumPadding)
-                .align(Alignment.CenterHorizontally)
-        )
-
+        TravelQuestHeader(0, questData)
         //主要掉落
-        ExtraEquipDropIcon(questData.main_reward_ids.intArrayList, selectedId, toExtraEquipDetail)
+        ExtraEquipDropIcon(questData.mainRewardIds.intArrayList, selectedId, toExtraEquipDetail)
         //次要掉落
         ExtraEquipSubRewardIcon(subRewardList, selectedId, toExtraEquipDetail)
 

@@ -285,7 +285,7 @@ data class SkillActionPro(
             SkillActionType.BARRIER -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)
-                val type = getBarrierTtpe(action_detail_1)
+                val type = getBarrierType(action_detail_1)
                 if (type != UNKNOWN) {
                     "对${getTarget()}展开${type} ${value}${time}"
                 } else {
@@ -595,13 +595,13 @@ data class SkillActionPro(
                     4 -> "$commonDesc * [目标数量]"
                     5 -> "$commonDesc * [受到伤害的目标数量]"
                     6 -> "$commonDesc * [造成的伤害]"
+                    in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
                     12 -> "$commonDesc * [后方${getTarget()}数量]"
                     13 -> "$commonDesc * [损失的HP比例]"
                     102 -> "$commonDesc * [小眼球数量]"
-                    in 200 until 300 -> "$commonDesc * [标记层数]"
-                    in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
-                    in 20 until 30 -> "$commonDesc * [标记层数]"
-                    in 2112 until 2200 -> "$commonDesc * [标记层数]"
+                    in 20 until 30 -> "$commonDesc * [技能计数]"
+                    in 200 until 300,
+                    in 2112 until 3000 -> "$commonDesc * [标记层数]"
                     else -> UNKNOWN
                 }
                 //上限判断
@@ -728,7 +728,7 @@ data class SkillActionPro(
             // 33：反伤
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
-                val type = getBarrierTtpe(action_detail_1)
+                val type = getBarrierType(action_detail_1)
                 val shieldText = "对${getTarget()}展开${type} $value"
 
                 when (action_detail_1) {
@@ -749,8 +749,9 @@ data class SkillActionPro(
             // 35：特殊标记
             SkillActionType.SEAL -> {
                 if (action_value_4.toInt() > 0) {
-                    val time = getTimeText(3, action_value_3)
-                    "对${getTarget()}追加 [${action_value_4.toInt()}] 层标记${time}，叠加上限 [${action_value_1.toInt()}]"
+                    val value = getValueText(4, action_value_4, 0.0)
+                    val time = getTimeText(3, action_value_3, hideIndex = true)
+                    "对${getTarget()}追加 $value 层标记${time}，叠加上限 [${action_value_1.toInt()}]"
                 } else {
                     "${getTarget()}减少 [${abs(action_value_4).toInt()}] 层标记"
                 }
@@ -816,7 +817,7 @@ data class SkillActionPro(
             }
             // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
-                "追加 [1] 层标记，叠加上限 [${action_value_1.toInt()}]"
+                "技能计数加 [1]，上限 [${action_value_1.toInt()}]"
             }
             // 46：比例伤害
             SkillActionType.RATE_DAMAGE -> {
@@ -1025,7 +1026,8 @@ data class SkillActionPro(
                     2 -> "伤害"
                     else -> UNKNOWN
                 }
-                "被动效果：每当${getTarget()}受到${effect}时，为自身追加 [${action_detail_2}] 层标记$time，叠加上限 [${action_value_1.int}]。被动效果$lifeTime"
+                "被动效果：每当${getTarget()}受到${effect}时，为自身追加 [${action_detail_2}] 层标记$time" +
+                        "，叠加上限 [${action_value_1.int}]。被动效果$lifeTime"
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
@@ -1084,7 +1086,7 @@ data class SkillActionPro(
             }
             // 97：受击tp回复
             SkillActionType.TP_HIT -> {
-                "受击时减少 [${action_value_3.int}]标记，TP回复 [$action_value_1]。标记叠加上限 [${action_value_4.int}]"
+                "受击时减少 [${action_value_3.int}]标记，TP回复 [$action_value_1]。叠加上限 [${action_value_4.int}]"
             }
             else -> "${UNKNOWN}目标：${getTarget()}；类型：${action_type}；数值：${
                 getValueText(
@@ -1138,8 +1140,13 @@ data class SkillActionPro(
     /**
      * 持续时间
      */
-    private fun getTimeText(index: Int, v1: Double, v2: Double = 0.0): String {
-        return "，持续 ${getValueText(index, v1, v2)} 秒"
+    private fun getTimeText(
+        index: Int,
+        v1: Double,
+        v2: Double = 0.0,
+        hideIndex: Boolean = false
+    ): String {
+        return "，持续 ${getValueText(index, v1, v2, hideIndex = hideIndex)} 秒"
     }
 
     /**
@@ -1226,7 +1233,7 @@ data class SkillActionPro(
     /**
      * 护盾类型
      */
-    private fun getBarrierTtpe(v1: Int): String {
+    private fun getBarrierType(v1: Int): String {
         return when (v1) {
             1 -> "无效物理伤害的护盾"
             2 -> "无效魔法伤害的护盾"
@@ -1237,6 +1244,7 @@ data class SkillActionPro(
             else -> UNKNOWN
         }
     }
+
 }
 
 /**

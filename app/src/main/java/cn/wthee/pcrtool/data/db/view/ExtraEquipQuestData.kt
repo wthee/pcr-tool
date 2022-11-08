@@ -11,13 +11,13 @@ data class ExtraEquipQuestData(
     @ColumnInfo(name = "travel_quest_id") val travelQuestId: Int,
     @ColumnInfo(name = "travel_area_id") val travelAreaId: Int,
     @ColumnInfo(name = "travel_quest_name") val travelQuestName: String,
-    @ColumnInfo(name = "travel_time") val travelTime: Int,
-    @ColumnInfo(name = "travel_time_decrease_limit") val travelTimeDecreaseLimit: Int,
-    @ColumnInfo(name = "travel_decrease_flag") val travel_decrease_flag: Int,
-    @ColumnInfo(name = "need_power") val need_power: Int,
-    @ColumnInfo(name = "icon_id") val icon_id: Int,
-    @ColumnInfo(name = "limit_unit_num") val limit_unit_num: Int,
-    @ColumnInfo(name = "main_reward_ids") val main_reward_ids: String
+    @ColumnInfo(name = "limit_unit_num") val limitUnitNum: Int,
+    @ColumnInfo(name = "travel_time") val travelTime: Long,
+    @ColumnInfo(name = "travel_time_decrease_limit") val travelTimeDecreaseLimit: Long,
+    @ColumnInfo(name = "travel_decrease_flag") val travelDecreaseFlag: Int,
+    @ColumnInfo(name = "need_power") val needPower: Int,
+    @ColumnInfo(name = "icon_id") val iconId: Int,
+    @ColumnInfo(name = "main_reward_ids") val mainRewardIds: String
 )
 
 /**

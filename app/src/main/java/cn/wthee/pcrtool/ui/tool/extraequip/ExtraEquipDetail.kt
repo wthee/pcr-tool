@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -237,24 +239,27 @@ fun ExtraEquipUnitList(
     val unitIds = extraEquipmentViewModel.getEquipUnitList(category)
         .collectAsState(initial = arrayListOf()).value
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        state = rememberLazyListState()
     ) {
         //标题
-        MainTitleText(
-            text = stringResource(R.string.extra_equip_unit),
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-        )
-
-        //角色图标
-        GridIconListCompose(unitIds) {
-
+        item {
+            MainTitleText(
+                text = stringResource(R.string.extra_equip_unit),
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+            )
         }
 
-        CommonSpacer()
+        //角色图标
+        item {
+            GridIconListCompose(unitIds) {}
+        }
+
+        item {
+            CommonSpacer()
+        }
     }
 
 }
