@@ -7,6 +7,9 @@ import cn.wthee.pcrtool.BuildConfig
  */
 object Constants {
 
+    //tp属性变化等级，260级后，tp回复将转化为攻击力
+    const val TP_LIMIT_LEVEL = 260
+
     //本地数据库版本
     const val SQLITE_VERSION = 315
 
