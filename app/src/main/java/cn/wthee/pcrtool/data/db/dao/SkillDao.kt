@@ -19,7 +19,7 @@ interface SkillDao {
     suspend fun getUnitSkill(unitId: Int): UnitSkillData?
 
     /**
-     * 获取技能数值数据
+     * 获取技能动作等数据
      * @param skillId 技能编号
      */
     @SkipQueryVerification
@@ -46,7 +46,7 @@ interface SkillDao {
          WHERE action_id IN (:actionIds)
     """
     )
-    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>): List<SkillActionPro>
+    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>): List<SkillActionDetail>
 
     /**
      * 获取角色动作循环列表
@@ -56,7 +56,6 @@ interface SkillDao {
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
     suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
 
-
     /**
      * 获取角色特殊技能标签
      * @param unitId 角色编号
@@ -65,5 +64,12 @@ interface SkillDao {
     @Query("SELECT * FROM spskill_label_data where unit_id = :unitId")
     suspend fun getSpSkillLabel(unitId: Int): SpSkillLabelData
 
+    /**
+     * 获取受tp限制的技能信息
+     * @param skillId 技能编号
+     */
+    @SkipQueryVerification
+    @Query("SELECT rf_skill_id FROM unit_skill_data_rf WHERE min_lv > 260 AND skill_id = :skillId")
+    suspend fun getRfSkillId(skillId: Int): Int?
 
 }

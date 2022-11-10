@@ -190,6 +190,7 @@ fun SkillItem(
                     .heightIn(min = Dimen.iconSize),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
+
                 //技能名
                 MainText(
                     text = name,
@@ -202,6 +203,12 @@ fun SkillItem(
                         MaterialTheme.typography.titleSmall
                     }
                 )
+                //调试用，技能编号
+                if(BuildConfig.DEBUG){
+                    CaptionText(
+                        text = skillDetail.skillId.toString()
+                    )
+                }
 
                 //非装备技能时显示
                 if (!isExtraEquipSKill) {
@@ -250,7 +257,7 @@ fun SkillItem(
         }
 
         //标签
-        val tags = getTags(skillDetail.getActionInfo())
+        val tags = getTags(actionData)
         FlowRow {
             tags.forEach {
                 SkillActionTag(it)
@@ -391,20 +398,30 @@ fun SkillActionItem(
 
                 }
             )
-
-            if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+            Row(verticalAlignment = Alignment.CenterVertically){
                 //查看召唤物
-                IconTextButton(
-                    icon = MainIconType.SUMMON,
-                    text = stringResource(R.string.to_summon)
-                ) {
-                    toSummonDetail(
-                        skillAction.summonUnitId,
-                        unitType.type,
-                        property.level,
-                        property.rank,
-                        property.rarity
-                    )
+                if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+                    IconTextButton(
+                        icon = MainIconType.SUMMON,
+                        text = stringResource(R.string.to_summon)
+                    ) {
+                        toSummonDetail(
+                            skillAction.summonUnitId,
+                            unitType.type,
+                            property.level,
+                            property.rank,
+                            property.rarity
+                        )
+                    }
+                }
+                //技能等级超过tp限制等级的，添加标识
+                if(skillAction.isTpLimitAction){
+                    IconTextButton(
+                        icon = MainIconType.HELP,
+                        text = stringResource(R.string.tp_limit_level_action)
+                    ) {
+
+                    }
                 }
             }
 
@@ -418,7 +435,7 @@ fun SkillActionItem(
 
 
 /**
- * 获取标签状态
+ * 获取技能动作标签
  */
 private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
     val list = arrayListOf<String>()
@@ -431,7 +448,7 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 }
 
 /**
- * 获取技能
+ * 获取技能类型
  */
 private fun getSkillType(skillId: Int): String {
     return when (skillId % 1000) {

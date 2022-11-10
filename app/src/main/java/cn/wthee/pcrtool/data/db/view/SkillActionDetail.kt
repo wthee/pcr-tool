@@ -17,7 +17,7 @@ import kotlin.math.abs
  * 技能效果
  */
 @Suppress("RegExpRedundantEscape")
-data class SkillActionPro(
+data class SkillActionDetail(
     @PrimaryKey
     @ColumnInfo(name = "lv") var level: Int = 0,
     @ColumnInfo(name = "atk") var atk: Int = 0,
@@ -43,162 +43,25 @@ data class SkillActionPro(
     @ColumnInfo(name = "description") var description: String = "",
     @ColumnInfo(name = "ailment_name") var tag: String,
     @Ignore
-    var dependId: Int = 0
+    var dependId: Int = 0,
+    @Ignore
+    var isTpLimitAction: Boolean = false
 ) {
-
-    constructor() : this(
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        "",
-        "0",
-        0
-    )
-
-    /**
-     * 技能目标分配
-     */
-    private fun getTargetAssignment() = when (target_assignment) {
-        0 -> "自身"
-        1 -> "敌人"
-        2 -> "己方"
-        3 -> "敌人和己方"
-        else -> ""
-    }
-
-    /**
-     * 首个目标位置
-     */
-    private fun getTargetNumber() = when (target_number) {
-        in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
-        else -> ""
-    }
-
-    /**
-     * 作用对象数量
-     */
-    private fun getTargetCount() = when (target_count) {
-        0, 1, 99 -> ""
-        else -> "（$target_count 名）"
-    }
-
-    /**
-     * 作用范围
-     */
-    private fun getTargetRange() = when (target_range) {
-        in 1 until 2160 -> "范围($target_range)内"
-        else -> ""
-    }
-
-    /**
-     * 目标类型
-     */
-    private fun getTargetType() = when (target_type) {
-        0, 1, 3 -> ""
-        2, 8 -> "随机的"
-        4 -> "最远的"
-        5, 25 -> "HP最低的"
-        6, 26 -> "HP最高的"
-        7 -> "自身"
-        9 -> "最后方的"
-        10 -> "最前方的"
-        11 -> "范围内的"
-        12, 27, 37 -> "TP最高的"
-        13, 19, 28 -> "TP最低的"
-        14, 29 -> "物理攻击力最高的"
-        15, 30 -> "物理攻击力最低的"
-        16, 31 -> "魔法攻击力最高的"
-        17, 32 -> "魔法攻击力最低的"
-        18 -> "召唤物"
-        20 -> "物理攻击的"
-        21 -> "魔法攻击的"
-        22 -> "随机的召唤物"
-        23 -> "自身的随机召唤物"
-        24 -> "领主"
-        33 -> "暗影"
-        34 -> "除自身以外"
-        35 -> "剩余HP最高的"
-        36 -> "剩余HP最低的"
-        38 -> "攻击力（物理攻击力或魔法攻击力）最高的"
-        39 -> "攻击力（物理攻击力或魔法攻击力）最低的"
-        40 -> ""
-        41 -> ""
-        42 -> "多目标"
-        43 -> "物理攻击力最高（自身除外）的"
-        else -> UNKNOWN
-    }
-
-    /**
-     * 获取目标具体描述
-     */
-    private fun getTarget(): String {
-        val target = if (dependId != 0) {
-            "受到动作(${dependId % 10})影响的"
-        } else {
-            ""
-        } + getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
-        return target.replace("己方自身", "自身")
-            .replace("自身己方", "自身")
-            .replace("自身全体", "自身")
-            .replace("自身敌人", "自身")
-    }
-
 
     /**
      * 获取技能效果
-     *
      * 判断逻辑参考  MalitsPlus [https://github.com/MalitsPlus]
      */
     fun getActionDesc(): SkillActionText {
         //设置状态标签
-        val p = getAilment(action_type)
-        if (p.isNotEmpty()) {
-            tag = p
+        val ailmentName = getAilment(action_type)
+        if (ailmentName.isNotEmpty()) {
+            tag = ailmentName
         }
-
+        //召唤物编号
         var summonUnitId = 0
-        val status = when (action_detail_1) {
-            100 -> "无法行动"
-            101 -> "加速状态"
-            200 -> "失明"
-            300 -> "魅惑状态"
-            400 -> "挑衅状态"
-            500 -> "烧伤状态"
-            501 -> "诅咒状态"
-            502 -> "中毒状态"
-            503 -> "猛毒状态"
-            504 -> "咒术状态"
-            511 -> "诅咒或咒术状态"
-            512 -> "中毒或猛毒状态"
-            710 -> "BREAK 状态"
-            1400 -> "变身状态"
-            1600 -> "恐慌状态"
-            1601 -> "隐匿状态"
-            1700 -> "魔法防御减少状态"
-            721, 6107 -> "龙眼状态"
-            1800 -> "多目标状态"
-            1900 -> "护盾展开"
-            else -> UNKNOWN
-        }
 
+        //生成技能效果文本
         val formatDesc = when (toSkillActionType(action_type)) {
             // 1：造成伤害
             SkillActionType.DAMAGE -> {
@@ -483,6 +346,7 @@ data class SkillActionPro(
             }
             // 23：判定对象状态
             SkillActionType.IF_STATUS -> {
+                val status = getStatus(action_detail_1)
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
                 if (action_detail_2 != 0) {
@@ -537,7 +401,7 @@ data class SkillActionPro(
                             "随机：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
                         }
                         action_detail_3 != 0 -> {
-                            "随机：[${100 - action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})"
+                            "随机：[${100 - action_detail_1}%] 的概率使用动作(${action_detail_3 % 10})"
                         }
                         else -> UNKNOWN
                     }
@@ -615,9 +479,10 @@ data class SkillActionPro(
             }
             // 28：特殊条件
             SkillActionType.IF_SP_STATUS -> {
+                val status = getStatus(action_detail_1)
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
-                if (action_detail_2 != 0 || (action_detail_2 == 0 && action_detail_3 == 0)) {
+                if (action_detail_2 != 0 || action_detail_3 == 0) {
                     trueClause =
                         when (action_detail_1) {
                             in 0..99 -> {
@@ -1113,7 +978,8 @@ data class SkillActionPro(
             summonUnitId,
             showCoe,
             level,
-            atk
+            atk,
+            isTpLimitAction
         )
         if (BuildConfig.DEBUG) {
             skillActionText.debugText = this.toString()
@@ -1245,6 +1111,149 @@ data class SkillActionPro(
         }
     }
 
+    /**
+     * 技能目标分配
+     */
+    private fun getTargetAssignment() = when (target_assignment) {
+        0 -> "自身"
+        1 -> "敌人"
+        2 -> "己方"
+        3 -> "敌人和己方"
+        else -> ""
+    }
+
+    /**
+     * 首个目标位置
+     */
+    private fun getTargetNumber() = when (target_number) {
+        in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
+        else -> ""
+    }
+
+    /**
+     * 作用对象数量
+     */
+    private fun getTargetCount() = when (target_count) {
+        0, 1, 99 -> ""
+        else -> "（$target_count 名）"
+    }
+
+    /**
+     * 作用范围
+     */
+    private fun getTargetRange() = when (target_range) {
+        in 1 until 2160 -> "范围($target_range)内"
+        else -> ""
+    }
+
+    /**
+     * 目标类型
+     */
+    private fun getTargetType() = when (target_type) {
+        0, 1, 3 -> ""
+        2, 8 -> "随机的"
+        4 -> "最远的"
+        5, 25 -> "HP最低的"
+        6, 26 -> "HP最高的"
+        7 -> "自身"
+        9 -> "最后方的"
+        10 -> "最前方的"
+        11 -> "范围内的"
+        12, 27, 37 -> "TP最高的"
+        13, 19, 28 -> "TP最低的"
+        14, 29 -> "物理攻击力最高的"
+        15, 30 -> "物理攻击力最低的"
+        16, 31 -> "魔法攻击力最高的"
+        17, 32 -> "魔法攻击力最低的"
+        18 -> "召唤物"
+        20 -> "物理攻击的"
+        21 -> "魔法攻击的"
+        22 -> "随机的召唤物"
+        23 -> "自身的随机召唤物"
+        24 -> "领主"
+        33 -> "暗影"
+        34 -> "除自身以外"
+        35 -> "剩余HP最高的"
+        36 -> "剩余HP最低的"
+        38 -> "攻击力（物理攻击力或魔法攻击力）最高的"
+        39 -> "攻击力（物理攻击力或魔法攻击力）最低的"
+        40 -> ""
+        41 -> ""
+        42 -> "多目标"
+        43 -> "物理攻击力最高（自身除外）的"
+        else -> UNKNOWN
+    }
+
+    /**
+     * 获取目标具体描述
+     */
+    private fun getTarget(): String {
+        val target = if (dependId != 0) {
+            "受到动作(${dependId % 10})影响的"
+        } else {
+            ""
+        } + getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
+        return target.replace("己方自身", "自身")
+            .replace("自身己方", "自身")
+            .replace("自身全体", "自身")
+            .replace("自身敌人", "自身")
+    }
+
+
+    /**
+     * 获取技能附带的状态
+     */
+    private fun getStatus(value: Int) = when (value) {
+        100 -> "无法行动"
+        101 -> "加速状态"
+        200 -> "失明"
+        300 -> "魅惑状态"
+        400 -> "挑衅状态"
+        500 -> "烧伤状态"
+        501 -> "诅咒状态"
+        502 -> "中毒状态"
+        503 -> "猛毒状态"
+        504 -> "咒术状态"
+        511 -> "诅咒或咒术状态"
+        512 -> "中毒或猛毒状态"
+        710 -> "BREAK 状态"
+        1400 -> "变身状态"
+        1600 -> "恐慌状态"
+        1601 -> "隐匿状态"
+        1700 -> "魔法防御减少状态"
+        721, 6107 -> "龙眼状态"
+        1800 -> "多目标状态"
+        1900 -> "护盾展开"
+        else -> UNKNOWN
+    }
+
+    constructor() : this(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        "",
+        "0",
+        0,
+        false
+    )
 }
 
 /**
@@ -1257,7 +1266,8 @@ data class SkillActionText(
     val summonUnitId: Int,
     val showCoe: Boolean,
     val level: Int,
-    val atk: Int
+    val atk: Int,
+    val isTpLimitAction: Boolean
 ) {
     var debugText = ""
 }

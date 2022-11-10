@@ -42,6 +42,7 @@
     <string name="model_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
+    <string name="tp_limit_level_action">追加动作（TP技能等级 > 260）</string>
 
     <!--设置页面-->
     <string name="random_area">额外掉落</string>
@@ -244,9 +245,9 @@
     <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
     <string name="tool_travel">EX冒险</string>
     <string name="unit_extra_equip_slot">适用装备</string>
-    <string name="travel_limit_unit_num">角色数量：%d</string>
-    <string name="travel_need_power">战力需求：%d</string>
-    <string name="travel_time">冒险时间：%s</string>
-    <string name="travel_time_decrease_limit">最大缩减时间：%s</string>
+    <string name="travel_limit_unit_num">角色数量限制：%d</string>
+    <string name="travel_need_power">最低战力需求：%d</string>
+    <string name="travel_time">冒险总耗时：%s</string>
+    <string name="travel_time_decrease_limit">可缩减时间：%s</string>
 
 </resources>

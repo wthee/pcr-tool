@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -204,7 +204,7 @@ class CharacterAttrViewModel @Inject constructor(
     /**
      * 获取被动技能数据
      */
-    private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {
+    private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionDetail {
         //100101
         val skillActionId = if (rarity >= 5) {
             unitId / 100 * 1000 + 511
@@ -212,10 +212,10 @@ class CharacterAttrViewModel @Inject constructor(
             unitId / 100 * 1000 + 501
         } * 100 + 1
         val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))
-        if (list.isNotEmpty()) {
-            return list[0]
+        return if (list.isNotEmpty()) {
+            list[0]
         } else {
-            return SkillActionPro()
+            SkillActionDetail()
         }
     }
 

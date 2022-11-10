@@ -99,4 +99,17 @@ class ExtraEquipmentViewModel @Inject constructor(
     fun getCharacterExtraEquipList(unitId: Int) = flow {
         emit(equipmentRepository.getCharacterExtraEquipList(unitId))
     }
+
+    /**
+     * 获取装所有备技能id
+     *
+     */
+    fun getAllEquipSkillIdList() = flow {
+        try {
+            val data = equipmentRepository.getAllEquipSkillIdList()
+            emit(data)
+        } catch (_: Exception) {
+
+        }
+    }
 }

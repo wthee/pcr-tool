@@ -103,7 +103,13 @@ class SkillViewModel @Inject constructor(
                     skillIds.addAll(data.getSpSkillId())
                 }
             }
-            emit(getSkills(skillIds, arrayListOf(lv), atk))
+            emit(
+                getSkills(
+                    skillIds.distinct().filter { it / 1000000 != 2 },
+                    arrayListOf(lv),
+                    atk
+                )
+            )
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
         }
@@ -129,14 +135,14 @@ class SkillViewModel @Inject constructor(
                 val lv = if (lvs.size == 1) lvs[0] else lvs[index]
 
                 val info = SkillDetail(
-                    skill.skill_id,
+                    skill.skillId,
                     skill.name ?: "",
                     skill.description,
-                    skill.icon_type,
-                    skill.skill_cast_time,
+                    skill.iconType,
+                    skill.skillCastTime,
                     lv,
                     atk,
-                    skill.boss_ub_cool_time
+                    skill.bossUbCoolTime
                 )
                 val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
                 val dependIds = skill.getSkillDependData()
@@ -146,6 +152,19 @@ class SkillViewModel @Inject constructor(
                     }
                 }
                 info.actions = actions
+                //TODO 超过tp限制等级的技能动作
+                if (skill.rfActionIdList.isNotEmpty()) {
+                    val rfActions = skillRepository.getSkillActions(
+                        lv - Constants.TP_LIMIT_LEVEL,
+                        atk,
+                        skill.rfActionIdList
+                    )
+                    rfActions.forEach {
+                        it.level = lv
+                        it.isTpLimitAction = true
+                    }
+                    info.actions = info.actions + rfActions
+                }
                 infos.add(info)
             }
         }
@@ -164,11 +183,11 @@ class SkillViewModel @Inject constructor(
             skillIds.forEachIndexed { _, sid ->
                 val skill = skillRepository.getSkillData(sid)
                 if (skill != null) {
-                    var aid = skill.skill_id % 1000
+                    var aid = skill.skillId % 1000
                     if (aid < 100) {
                         aid %= 10
                     }
-                    map[aid] = skill.icon_type
+                    map[aid] = skill.iconType
                 }
             }
             emit(map)
