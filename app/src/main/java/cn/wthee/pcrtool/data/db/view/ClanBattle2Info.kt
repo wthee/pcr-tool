@@ -37,19 +37,6 @@ data class ClanBattleInfo(
     }
 
     /**
-     * 获取多目标信息
-     *
-     * @param bossIndex boss 下标
-     */
-    fun getMultiEnemyIds(bossIndex: Int): List<Int> {
-        return if (bossIndex + 1 == targetCountData.multiEnemyId % 10) {
-            targetCountData.enemyPartIds.intArrayList.filter { it > 0 }
-        } else {
-            arrayListOf()
-        }
-    }
-
-    /**
      * 获取年月
      */
     fun getDate(): String {

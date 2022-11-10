@@ -400,7 +400,7 @@ private fun CharacterSection(
         overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
     //角色列表
     val characterList =
-        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCharacterInfoList().collectAsState(initial = arrayListOf()).value
     Section(
         id = id,
         titleId = R.string.character,

@@ -40,10 +40,11 @@ fun CharacterExtraEquip(
             LazyColumn(state = scrollState) {
                 item {
                     //标题
-                    MainTitleText(
+                    MainText(
                         text = stringResource(R.string.unit_extra_equip_slot),
                         modifier = Modifier
                             .padding(Dimen.largePadding)
+                            .align(Alignment.Center)
                     )
                 }
                 items(equipList) {

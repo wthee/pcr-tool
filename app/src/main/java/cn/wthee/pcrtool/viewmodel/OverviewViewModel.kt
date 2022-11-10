@@ -44,17 +44,9 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取角色列表
      */
-    fun getCharacterList() = flow {
+    fun getCharacterInfoList() = flow {
         try {
-            var filterList = unitRepository.getInfoAndData(FilterCharacter(), 50)
-            filterList = filterList.sortedWith { o1, o2 ->
-                val sd1 = o1.startTime.formatTime
-                val sd2 = o2.startTime.formatTime
-                when {
-                    sd1.second(sd2) > 0 -> -1
-                    else -> 1
-                }
-            }
+            val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
             emit(filterList.subList(0, 10))
         } catch (_: Exception) {
 

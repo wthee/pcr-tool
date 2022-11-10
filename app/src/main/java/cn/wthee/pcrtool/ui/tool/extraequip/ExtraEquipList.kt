@@ -1,11 +1,15 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -104,68 +108,18 @@ fun ExtraEquipList(
                 Box(modifier = Modifier.fillMaxSize()) {
                     FadeAnimation(visible = equips!!.isNotEmpty()) {
                         LazyColumn(state = scrollState) {
-                            equipGroupList.forEach { equipGroupData ->
-                                //分组标题
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .padding(Dimen.largePadding)
-                                            .fillMaxWidth(),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        IconCompose(
-                                            data = ImageResourceHelper.getInstance()
-                                                .getUrl(
-                                                    ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
-                                                    equipGroupData.category
-                                                ),
-                                            size = Dimen.smallIconSize,
-                                        )
-                                        Row(
-                                            modifier = Modifier
-                                                .padding(start = Dimen.smallPadding)
-                                                .weight(1f)
-                                                .background(
-                                                    getEquipColor(equipGroupData.rarity),
-                                                    shape = MaterialTheme.shapes.extraSmall
-                                                )
-                                                .padding(horizontal = Dimen.mediumPadding)
-                                        ) {
-                                            Subtitle2(
-                                                text = stringResource(
-                                                    id = R.string.extra_equip_rarity_and_type,
-                                                    equipGroupData.rarity,
-                                                    equipGroupData.categoryName
-                                                ),
-                                                color = colorWhite
-                                            )
-                                            Spacer(modifier = Modifier.weight(1f))
-                                            Subtitle2(
-                                                text = "${equipGroupData.equipIdList.size}",
-                                                color = colorWhite
-                                            )
-                                        }
-                                    }
+                            items(
+                                items = equipGroupList,
+                                key = {
+                                    "${it.rarity}-${it.category}"
                                 }
-                                //分组内容
-                                item {
-                                    VerticalGrid(
-                                        spanCount = equipSpanCount,
-                                        modifier = Modifier.padding(
-                                            bottom = Dimen.largePadding,
-                                            start = Dimen.commonItemPadding,
-                                            end = Dimen.commonItemPadding
-                                        ),
-                                    ) {
-                                        equipGroupData.equipIdList.forEach { equip ->
-                                            ExtraEquipItem(
-                                                filterValue,
-                                                equip,
-                                                toExtraEquipDetail
-                                            )
-                                        }
-                                    }
-                                }
+                            ) { equipGroupData ->
+                                ExtraEquipGroup(
+                                    equipGroupData,
+                                    equipSpanCount,
+                                    filterValue,
+                                    toExtraEquipDetail
+                                )
                             }
                             item {
                                 CommonSpacer()
@@ -228,7 +182,53 @@ fun ExtraEquipList(
 
     }
 
+}
 
+/**
+ * ex装备分组
+ */
+@Composable
+private fun ExtraEquipGroup(
+    equipGroupData: ExtraEquipGroupData,
+    equipSpanCount: Int,
+    filterValue: FilterExtraEquipment,
+    toExtraEquipDetail: (Int) -> Unit
+) {
+    //分组标题
+    CommonGroupTitle(
+        iconData = ImageResourceHelper.getInstance()
+            .getUrl(
+                ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                equipGroupData.category
+            ),
+        iconSize = Dimen.smallIconSize,
+        backgroundColor = getEquipColor(equipGroupData.rarity),
+        titleStart = stringResource(
+            id = R.string.extra_equip_rarity_and_type,
+            equipGroupData.rarity,
+            equipGroupData.categoryName
+        ),
+        titleEnd = equipGroupData.equipIdList.size.toString(),
+        modifier = Modifier.padding(Dimen.largePadding)
+    )
+
+    //分组内容
+    VerticalGrid(
+        spanCount = equipSpanCount,
+        modifier = Modifier.padding(
+            bottom = Dimen.largePadding,
+            start = Dimen.commonItemPadding,
+            end = Dimen.commonItemPadding
+        ),
+    ) {
+        equipGroupData.equipIdList.forEach { equip ->
+            ExtraEquipItem(
+                filterValue,
+                equip,
+                toExtraEquipDetail
+            )
+        }
+    }
 }
 
 /**
@@ -283,7 +283,11 @@ private fun ExtraEquipItem(
 
     Row(
         modifier = Modifier
-            .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding)
+            .padding(
+                start = Dimen.smallPadding,
+                end = Dimen.smallPadding,
+                bottom = Dimen.mediumPadding
+            )
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {

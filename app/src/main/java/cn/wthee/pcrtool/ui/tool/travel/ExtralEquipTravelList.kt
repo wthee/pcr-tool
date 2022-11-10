@@ -1,7 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.travel
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -11,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -19,13 +23,9 @@ import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
-import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * ex冒险区域
@@ -44,6 +44,9 @@ fun ExtraEquipTravelList(
             LazyColumn(state = scrollState) {
                 items(areaList) {
                     TravelItem(it, toExtraEquipTravelAreaDetail)
+                }
+                item{
+                    CommonSpacer()
                 }
             }
         } else {
@@ -76,45 +79,23 @@ private fun TravelItem(
                 vertical = Dimen.mediumPadding
             )
     ) {
-        //标题
-        FlowRow(
-            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
-        ) {
-            MainTitleText(
-                text = travelData.travelAreaName
-            )
-            MainTitleText(
-                text = "${travelData.questCount}",
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-        }
+        //area
+        CommonGroupTitle(
+            iconData = ImageResourceHelper.getInstance()
+                .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, travelData.travelAreaId),
+            iconSize = Dimen.menuIconSize,
+            titleStart = travelData.travelAreaName,
+            titleEnd = travelData.questCount.toString(),
+            modifier = Modifier.padding(vertical = Dimen.smallPadding)
+        )
 
-        MainCard {
-            Row(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                //area
-                IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, travelData.travelAreaId),
-                    size = Dimen.toolMenuWidth
+        //quest图标
+        travelData.questIds.intArrayList.forEachIndexed { _, questId ->
+            MainCard(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
+                TravelQuestHeader(
+                    questId = questId,
+                    toExtraEquipTravelAreaDetail = toExtraEquipTravelAreaDetail
                 )
-                //quest图标
-                Column(
-                    modifier = Modifier
-                        .padding(Dimen.largePadding)
-                        .fillMaxWidth()
-                ) {
-                    travelData.questIds.intArrayList.forEachIndexed { _, questId ->
-                        TravelQuestHeader(
-                            questId = questId,
-                            toExtraEquipTravelAreaDetail = toExtraEquipTravelAreaDetail
-                        )
-                    }
-                }
             }
         }
     }
@@ -131,62 +112,56 @@ fun TravelQuestHeader(
     toExtraEquipTravelAreaDetail: ((Int) -> Unit)? = null,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+
     val mQuestData = if (questId == 0) {
         questData
     } else {
         extraEquipmentViewModel.getTravelQuest(questId)
             .collectAsState(initial = null).value
     }
+
     mQuestData?.let {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(Dimen.smallPadding)
                 .clip(MaterialTheme.shapes.medium)
-                .clickable {
+                .clickable(enabled = questId != 0) {
                     if (toExtraEquipTravelAreaDetail != null) {
+                        VibrateUtil(context).single()
                         toExtraEquipTravelAreaDetail(questId)
                     }
                 }
+                .padding(vertical = Dimen.mediumPadding)
         ) {
+            //图标
             IconCompose(
                 data = ImageResourceHelper.getInstance()
                     .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, mQuestData.travelQuestId)
             )
-            Column {
-                //标题
-                Subtitle1(text = mQuestData.travelQuestName.replace("\\n", "·"))
-                //其它参数
-                FlowRow {
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.travel_limit_unit_num,
-                            mQuestData.limitUnitNum
-                        ),
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.travel_need_power,
-                            mQuestData.needPower
-                        ),
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.travel_time,
-                            toTimeText(mQuestData.travelTime * 1000)
-                        ),
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.travel_time_decrease_limit,
-                            toTimeText(mQuestData.travelTimeDecreaseLimit * 1000)
-                        ),
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
+            //标题
+            Subtitle1(text = mQuestData.travelQuestName.replace("\\n", "·"))
+            //其它参数
+            VerticalGrid(
+                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+            ) {
+                CommonTitleContentText(
+                    stringResource(id = R.string.travel_limit_unit_num),
+                    mQuestData.limitUnitNum.toString()
+                )
+                CommonTitleContentText(
+                    stringResource(id = R.string.travel_need_power),
+                    mQuestData.needPower.toString()
+                )
+                CommonTitleContentText(
+                    stringResource(id = R.string.travel_time),
+                    toTimeText(mQuestData.travelTime * 1000)
+                )
+                CommonTitleContentText(
+                    stringResource(id = R.string.travel_time_decrease_limit),
+                    toTimeText(mQuestData.travelTimeDecreaseLimit * 1000)
+                )
             }
         }
     }

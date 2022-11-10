@@ -28,16 +28,11 @@ class CharacterViewModel @Inject constructor(
      *
      * @param params 角色筛选
      */
-    fun getCharacters(params: FilterCharacter?) = flow {
+    fun getCharacterInfoList(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                //六星排序时，仅显示六星角色
-                if (params.sortType == SortType.SORT_UNLOCK_6) {
-                    params.r6 = 1
-                }
-
-                var filterList = unitRepository.getInfoAndData(params, Int.MAX_VALUE)
-                //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，重新排序一些
+                var filterList = unitRepository.getCharacterInfoList(params, Int.MAX_VALUE)
+                //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
                 if (params.sortType == SortType.SORT_DATE) {
                     filterList = filterList.sortedWith { o1, o2 ->
                         val sd1 = o1.startTime.formatTime
@@ -48,17 +43,6 @@ class CharacterViewModel @Inject constructor(
                         } * (if (params.asc) 1 else -1)
                     }
                 }
-
-                //按六星解放时间排序
-                if (params.sortType == SortType.SORT_UNLOCK_6) {
-                    val sortedIdList = unitRepository.getR6UnitIdList(params.asc)
-                    filterList = filterList.sortedWith { o1, o2 ->
-                        val id1 = sortedIdList.indexOf(o1.id)
-                        val id2 = sortedIdList.indexOf(o2.id)
-                        id1.compareTo(id2)
-                    }
-                }
-
                 emit(filterList)
             }
         } catch (_: Exception) {
@@ -74,7 +58,7 @@ class CharacterViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getCharacterBasicInfo(unitId: Int) = flow {
-        emit(unitRepository.getInfoAndData(unitId))
+        emit(unitRepository.getCharacterBasicInfo(unitId))
     }
 
     /**

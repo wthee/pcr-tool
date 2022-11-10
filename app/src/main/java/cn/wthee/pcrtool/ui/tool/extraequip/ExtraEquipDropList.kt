@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.travel.TravelQuestItem
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
@@ -32,6 +33,9 @@ fun ExtraEquipDropList(
             LazyColumn {
                 items(dropList) {
                     TravelQuestItem(equipId, it, extraEquipmentViewModel)
+                }
+                item{
+                    CommonSpacer()
                 }
             }
         } else {

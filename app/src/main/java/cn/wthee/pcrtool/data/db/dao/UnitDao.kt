@@ -54,12 +54,13 @@ interface UnitDao {
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS start_time
+            COALESCE(quest_data.quest_id, 0 ) AS r6Id,
+            COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+            LEFT JOIN item_data ON item_data.item_id = 32000 + unit_data.unit_id / 100 % 1000
+            LEFT JOIN quest_data ON quest_data.quest_id LIKE '13%' AND quest_data.daily_limit <> 0 AND quest_data.reward_image_1 = 32000 + unit_data.unit_id / 100 % 1000
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_name like '%' || :unitName || '%'
@@ -94,8 +95,8 @@ interface UnitDao {
             WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
         END
         ORDER BY 
-        CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN start_time END ASC,
-        CASE WHEN :sortType = 0 AND :asc = 'desc'  THEN start_time END DESC,
+        CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN unit_start_time END ASC,
+        CASE WHEN :sortType = 0 AND :asc = 'desc'  THEN unit_start_time END DESC,
         CASE WHEN :sortType = 1 AND :asc = 'asc'  THEN age_int END ASC,
         CASE WHEN :sortType = 1 AND :asc = 'desc'  THEN age_int END DESC,
         CASE WHEN :sortType = 2 AND :asc = 'asc'  THEN height_int END ASC,
@@ -108,11 +109,13 @@ interface UnitDao {
         CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_month_int END DESC,
         CASE WHEN :sortType = 5 AND :asc = 'asc'  THEN birth_day_int END ASC,
         CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_day_int END DESC,
+        CASE WHEN :sortType = 6 AND :asc = 'asc'  THEN r6Id END ASC,
+        CASE WHEN :sortType = 6 AND :asc = 'desc'  THEN r6Id END DESC,
         gacha.exchange_id DESC, gacha.id
         LIMIT :limit
             """
     )
-    suspend fun getInfoAndData(
+    suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
         type: Int,
@@ -161,18 +164,17 @@ interface UnitDao {
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_data.search_area_width,
             unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            COALESCE(unit_data.start_time, '2015/04/01') AS start_time
+            0 AS r6Id,
+            COALESCE(unit_data.start_time, '2015/04/01') AS unit_start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_id = :unitId
         """
     )
-    suspend fun getInfoAndData(unitId: Int): CharacterInfo
+    suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo
 
     /**
      * 获取角色详情基本资料
@@ -516,28 +518,6 @@ interface UnitDao {
     """
     )
     suspend fun getActualId(unitId: Int): Int?
-
-    /**
-     * 获取六星解放顺序
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            unit_data.unit_id
-        FROM
-            quest_data
-        LEFT JOIN item_data ON quest_data.reward_image_1 = item_data.item_id
-        LEFT JOIN unit_data ON item_data.item_id % 1000 = unit_data.unit_id / 100 % 1000
-        AND unit_data.unit_id / 100000 = 1
-        WHERE
-            quest_data.quest_id LIKE '13%'
-        ORDER BY
-          CASE WHEN :asc = 1  THEN quest_data.quest_id END ASC,
-          CASE WHEN :asc = 0  THEN quest_data.quest_id END DESC
-    """
-    )
-    suspend fun getR6UnitIdList(asc: Boolean): List<Int>
 
     /**
      * 获取卡池角色

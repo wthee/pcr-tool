@@ -109,15 +109,24 @@ fun toTimeText(time: Long): String {
     val day = time / (60 * 60 * 1000 * 24)
     val hour = time / (60 * 60 * 1000) - day * 24
     val min = time % (60 * 60 * 1000) / (60 * 1000)
-    return if (day == 0L) {
-        if (hour == 0L) {
-            "${min}分"
-        } else {
-            "${hour}时${min}分"
-        }
+
+    val dayText = if (day > 0) {
+        "${day}天"
     } else {
-        "${day}天${hour}时${min}分"
+        ""
     }
+    val hourText = if (hour > 0) {
+        "${hour}时"
+    } else {
+       ""
+    }
+    val minText = if (min > 0) {
+        "${min}分"
+    } else {
+        ""
+    }
+
+    return "$dayText$hourText$minText"
 }
 
 /**

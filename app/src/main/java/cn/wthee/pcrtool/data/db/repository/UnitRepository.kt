@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import javax.inject.Inject
 
@@ -11,8 +12,8 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    suspend fun getInfoAndData(filter: FilterCharacter, limit: Int) =
-        unitDao.getInfoAndData(
+    suspend fun getCharacterInfoList(filter: FilterCharacter, limit: Int) =
+        unitDao.getCharacterInfoList(
             filter.sortType.type,
             if (filter.asc) "asc" else "desc",
             filter.name,
@@ -28,7 +29,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
                 else -> 0
             },
             if (filter.all) 1 else 0,
-            filter.r6,
+            //六星排序时，仅显示六星角色
+            if(filter.sortType == SortType.SORT_UNLOCK_6) 1 else filter.r6,
             filter.starIds,
             filter.type,
             limit,
@@ -36,7 +38,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getCount() = unitDao.getCount()
 
-    suspend fun getInfoAndData(unitId: Int) = unitDao.getInfoAndData(unitId)
+    suspend fun getCharacterBasicInfo(unitId: Int) = unitDao.getCharacterBasicInfo(unitId)
 
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
@@ -83,8 +85,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getSummonData(unitId: Int) = unitDao.getSummonData(unitId)
 
     suspend fun getActualId(unitId: Int) = unitDao.getActualId(unitId)
-
-    suspend fun getR6UnitIdList(asc: Boolean) = unitDao.getR6UnitIdList(asc)
 
     suspend fun getGachaUnits(type: Int) = unitDao.getGachaUnits(type)
 

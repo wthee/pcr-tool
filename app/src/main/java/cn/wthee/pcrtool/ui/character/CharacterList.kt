@@ -88,7 +88,7 @@ fun CharacterList(
                 ?: arrayListOf()
     }
     val characterList =
-        viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
+        viewModel.getCharacterInfoList(filter.value).collectAsState(initial = arrayListOf()).value
 
     ModalBottomSheetLayout(
         sheetState = state,

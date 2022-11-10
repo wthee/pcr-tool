@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.travel
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -25,7 +27,11 @@ fun ExtraEquipTravelQuestDetail(
     val questData =
         extraEquipmentViewModel.getTravelQuest(questId).collectAsState(initial = null).value
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         questData?.let {
             TravelQuestItem(
                 selectedId = 0,
@@ -33,6 +39,7 @@ fun ExtraEquipTravelQuestDetail(
                 extraEquipmentViewModel = extraEquipmentViewModel,
                 toExtraEquipDetail = toExtraEquipDetail
             )
+            CommonSpacer()
         }
     }
 }
@@ -54,21 +61,17 @@ fun TravelQuestItem(
             initial = arrayListOf()
         ).value
 
-
     Column(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
-        )
+        modifier = Modifier
+            .padding(vertical = Dimen.largePadding)
+            .fillMaxWidth()
     ) {
         //标题
         TravelQuestHeader(0, questData)
         //主要掉落
-        ExtraEquipDropIcon(questData.mainRewardIds.intArrayList, selectedId, toExtraEquipDetail)
+        ExtraEquipMainRewardList(questData.mainRewardIds.intArrayList, selectedId, toExtraEquipDetail)
         //次要掉落
-        ExtraEquipSubRewardIcon(subRewardList, selectedId, toExtraEquipDetail)
-
-        CommonSpacer()
+        ExtraEquipSubRewardList(subRewardList, selectedId, toExtraEquipDetail)
     }
 
 }
@@ -77,72 +80,28 @@ fun TravelQuestItem(
  * 掉落列表——ex装备图标
  */
 @Composable
-private fun ExtraEquipDropIcon(
+private fun ExtraEquipMainRewardList(
     iconIds: List<Int>,
     selectedId: Int,
     toExtraEquipDetail: ((Int) -> Unit)? = null
 ) {
 
-    MainTitleText(text = stringResource(R.string.extra_equip_main_reward))
-
-    VerticalGrid(
-        modifier = Modifier.padding(top = Dimen.mediumPadding),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = Dimen.largePadding)
     ) {
-        iconIds.forEach {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        bottom = Dimen.mediumPadding
-                    )
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val selected = selectedId == it
-                Box(contentAlignment = Alignment.Center) {
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance()
-                            .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, it)
-                    ) {
-                        if (toExtraEquipDetail != null) {
-                            toExtraEquipDetail(it)
-                        }
-                    }
-                    if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
-                        SelectText(
-                            selected = selected,
-                            text = if (selected) "✓" else ""
-                        )
-                    }
-                }
-
-            }
-        }
-    }
-
-}
-
-
-/**
- * 次要掉落装备
- */
-@Composable
-private fun ExtraEquipSubRewardIcon(
-    subRewardList: List<ExtraEquipSubRewardData>,
-    selectedId: Int,
-    toExtraEquipDetail: ((Int) -> Unit)? = null
-) {
-
-    MainTitleText(text = stringResource(R.string.extra_equip_sub_reward))
-
-    subRewardList.forEach { subRewardData ->
-//        MainTitleText(text = subRewardData.categoryName)
+        MainText(text = stringResource(R.string.extra_equip_main_reward))
 
         VerticalGrid(
-            modifier = Modifier.padding(top = Dimen.mediumPadding),
+            modifier = Modifier.padding(
+                top = Dimen.largePadding,
+                bottom = Dimen.largePadding,
+                start = Dimen.commonItemPadding,
+                end = Dimen.commonItemPadding
+            ),
             maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
         ) {
-            subRewardData.subRewardIds.intArrayList.forEach {
+            iconIds.forEach {
                 Column(
                     modifier = Modifier
                         .padding(
@@ -172,5 +131,82 @@ private fun ExtraEquipSubRewardIcon(
                 }
             }
         }
+
     }
+
+}
+
+
+/**
+ * 次要掉落装备
+ */
+@Composable
+private fun ExtraEquipSubRewardList(
+    subRewardList: List<ExtraEquipSubRewardData>,
+    selectedId: Int,
+    toExtraEquipDetail: ((Int) -> Unit)? = null
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = Dimen.largePadding)
+    ){
+        Subtitle2(text = stringResource(R.string.extra_equip_sub_reward))
+
+        subRewardList.forEach { subRewardData ->
+            val equipIdList = subRewardData.subRewardIds.intArrayList
+
+            CommonGroupTitle(
+                iconData = ImageResourceHelper.getInstance()
+                    .getUrl(
+                        ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                        subRewardData.category
+                    ),
+                iconSize = Dimen.smallIconSize,
+                titleStart = subRewardData.categoryName,
+                titleEnd = equipIdList.size.toString(),
+                modifier = Modifier.padding(Dimen.largePadding)
+            )
+
+            VerticalGrid(
+                modifier = Modifier.padding(
+                    bottom = Dimen.largePadding,
+                    start = Dimen.commonItemPadding,
+                    end = Dimen.commonItemPadding
+                ),
+                maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+            ) {
+                equipIdList.forEach {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                bottom = Dimen.mediumPadding
+                            )
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val selected = selectedId == it
+                        Box(contentAlignment = Alignment.Center) {
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance()
+                                    .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, it)
+                            ) {
+                                if (toExtraEquipDetail != null) {
+                                    toExtraEquipDetail(it)
+                                }
+                            }
+                            if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                                SelectText(
+                                    selected = selected,
+                                    text = if (selected) "✓" else ""
+                                )
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
 }

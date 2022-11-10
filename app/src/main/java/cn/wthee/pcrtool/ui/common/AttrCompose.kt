@@ -33,34 +33,10 @@ fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueTyp
         modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
         spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
     ) {
-        attrs.forEach {
-            AttrItem(it, attrValueType)
+        attrs.forEach { attr ->
+            val valueText = fixedAttrValueText(attr.value, attrValueType)
+            CommonTitleContentText(attr.title, valueText)
         }
-    }
-}
-
-/**
- * 属性
- */
-@Composable
-fun AttrItem(attrValue: AttrValue, attrValueType: AttrValueType) {
-    val valueText = fixedAttrValueText(attrValue.value, attrValueType)
-    Row(
-        modifier = Modifier.padding(
-            top = Dimen.smallPadding,
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
-        )
-    ) {
-        MainTitleText(
-            text = attrValue.title, modifier = Modifier
-                .weight(0.3f)
-        )
-        MainContentText(
-            text = valueText,
-            modifier = Modifier
-                .weight(0.2f)
-        )
     }
 }
 
