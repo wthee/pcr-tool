@@ -56,4 +56,8 @@ data class BirthdayData(
         return idList
     }
 
+    /**
+     * 获取角色名
+     */
+    fun getDesc() = "角色生日：" + unitNames.replace("-", "、")
 }
