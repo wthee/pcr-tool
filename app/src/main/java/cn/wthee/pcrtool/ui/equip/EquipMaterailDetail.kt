@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
@@ -40,31 +40,26 @@ import kotlinx.coroutines.launch
 
 
 /**
- * 装备素材信息
+ * 装备素材掉落信息
  *
  * @param equipId 装备编号
  */
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun EquipMaterialDetail(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
-    randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel(),
 ) {
 
     val dropInfoList =
         equipmentViewModel.getDropInfos(equipId).collectAsState(initial = null).value
     val basicInfo =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
-    val areaList =
-        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
+
     val filter = navViewModel.filterEquip.observeAsState()
     val loved = remember {
         mutableStateOf(false)
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
-    val scope = rememberCoroutineScope()
-    val randomDrop = stringResource(id = R.string.random_area)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -77,6 +72,7 @@ fun EquipMaterialDetail(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            //基本信息
             MainText(
                 text = basicInfo.equipmentName,
                 modifier = Modifier
@@ -84,140 +80,10 @@ fun EquipMaterialDetail(
                 color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 selectable = true
             )
+            //掉落信息
             if (dropInfoList != null) {
                 if (dropInfoList.isNotEmpty()) {
-                    var pagerCount = 0
-
-                    val lists = arrayListOf<List<Any>>(
-                        dropInfoList.filter { it.questId / 1000000 == 11 },
-                        dropInfoList.filter { it.questId / 1000000 == 12 },
-                        dropInfoList.filter { it.questId / 1000000 == 13 },
-                    )
-                    //随机掉落列表
-                    if (areaList != null) {
-                        lists.add(areaList)
-                    }
-                    val tabs = arrayListOf<String>()
-                    //颜色
-                    val colorList = arrayListOf<Color>()
-
-                    lists.forEachIndexed { index, data ->
-                        if (data.isNotEmpty()) {
-                            pagerCount++
-                            tabs.add(
-                                when (index) {
-                                    0 -> "Normal"
-                                    1 -> "Hard"
-                                    2 -> "Very Hard"
-                                    3 -> randomDrop
-                                    else -> "？"
-                                }
-                            )
-                            colorList.add(
-                                when (index) {
-                                    0 -> colorBlue
-                                    1 -> colorRed
-                                    2 -> colorPurple
-                                    else -> colorGreen
-                                }
-                            )
-                        }
-                    }
-                    val pagerState = rememberPagerState()
-                    //按照地图难度分类
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        //Tab
-                        TabRow(
-                            modifier = Modifier
-                                .padding(
-                                    top = Dimen.mediumPadding,
-                                    start = Dimen.largePadding,
-                                    end = Dimen.largePadding
-                                )
-                                .fillMaxWidth(tabs.size * 0.25f),
-                            selectedTabIndex = pagerState.currentPage,
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                            indicator = { tabPositions ->
-                                TabRowDefaults.Indicator(
-                                    Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                                )
-                            }
-                        ) {
-                            tabs.forEachIndexed { index, s ->
-                                Tab(
-                                    selected = index == pagerState.currentPage,
-                                    onClick = {
-                                        scope.launch {
-                                            pagerState.scrollToPage(index)
-                                        }
-                                    }
-                                ) {
-                                    Subtitle1(
-                                        text = s,
-                                        modifier = Modifier.padding(Dimen.smallPadding),
-                                        color = colorList[index],
-                                    )
-                                }
-                            }
-                        }
-                        //pager
-                        HorizontalPager(
-                            count = pagerCount,
-                            state = pagerState,
-                            modifier = Modifier.fillMaxSize()
-                        ) { pagerIndex ->
-                            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                                items(
-                                    items = when (tabs[pagerIndex]) {
-                                        "Normal" -> lists[0]
-                                        "Hard" -> lists[1]
-                                        "Very Hard" -> lists[2]
-                                        else -> lists[3]
-                                    },
-                                    key = {
-                                        if (tabs[pagerIndex] != randomDrop) {
-                                            (it as EquipmentDropInfo)
-                                            it.questId
-                                        } else {
-                                            it as RandomEquipDropArea
-                                            it.area
-                                        }
-                                    }
-                                ) {
-                                    if (tabs[pagerIndex] != randomDrop) {
-                                        AreaItem(
-                                            equipId,
-                                            (it as EquipmentDropInfo).getAllOdd(),
-                                            it.getNum(),
-                                            colorList[pagerIndex]
-                                        )
-                                    } else {
-                                        it as RandomEquipDropArea
-                                        val odds = arrayListOf<EquipmentIdWithOdd>()
-                                        it.equipIds.intArrayList.forEach { id ->
-                                            odds.add(EquipmentIdWithOdd(id, 0))
-                                        }
-                                        odds.sortWith(equipCompare())
-                                        AreaItem(
-                                            equipId,
-                                            odds,
-                                            "区域 ${it.area}",
-                                            colorList[pagerIndex]
-                                        )
-                                    }
-
-                                }
-                                item {
-                                    CommonSpacer()
-                                }
-                            }
-                        }
-                    }
+                    EquipDropPager(dropInfoList, equipId)
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         MainText(text = stringResource(id = R.string.tip_no_equip_get_area))
@@ -229,7 +95,7 @@ fun EquipMaterialDetail(
                     odds.add(EquipmentIdWithOdd())
                 }
                 LazyColumn {
-                    items(10) {
+                    items(odds.size) {
                         AreaItem(
                             -1,
                             odds,
@@ -265,6 +131,156 @@ fun EquipMaterialDetail(
 
 }
 
+/**
+ * 装备掉落信息
+ */
+@Composable
+@OptIn(ExperimentalPagerApi::class)
+private fun EquipDropPager(
+    dropInfoList: List<EquipmentDropInfo>,
+    equipId: Int,
+    randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
+) {
+    val areaList =
+        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
+
+    val scope = rememberCoroutineScope()
+    val randomDrop = stringResource(id = R.string.random_area)
+    val pagerState = rememberPagerState()
+    var pagerCount = 0
+
+    val lists = arrayListOf<List<Any>>(
+        dropInfoList.filter { it.questId / 1000000 == 11 },
+        dropInfoList.filter { it.questId / 1000000 == 12 },
+        dropInfoList.filter { it.questId / 1000000 == 13 },
+    )
+    //随机掉落列表
+    if (areaList != null) {
+        lists.add(areaList)
+    }
+    val tabs = arrayListOf<String>()
+    //颜色
+    val colorList = arrayListOf<Color>()
+
+    lists.forEachIndexed { index, data ->
+        if (data.isNotEmpty()) {
+            pagerCount++
+            tabs.add(
+                when (index) {
+                    0 -> "Normal"
+                    1 -> "Hard"
+                    2 -> "Very Hard"
+                    3 -> randomDrop
+                    else -> "？"
+                }
+            )
+            colorList.add(
+                when (index) {
+                    0 -> colorBlue
+                    1 -> colorRed
+                    2 -> colorPurple
+                    else -> colorGreen
+                }
+            )
+        }
+    }
+
+    //按照地图难度分类
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        //Tab
+        TabRow(
+            modifier = Modifier
+                .padding(
+                    top = Dimen.mediumPadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth(tabs.size * 0.25f),
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = Color.Transparent,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = colorList[pagerState.currentPage]
+                )
+            }
+        ) {
+            tabs.forEachIndexed { index, s ->
+                Tab(
+                    selected = index == pagerState.currentPage,
+                    onClick = {
+                        scope.launch {
+                            pagerState.scrollToPage(index)
+                        }
+                    }
+                ) {
+                    Subtitle1(
+                        text = s,
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        color = colorList[index],
+                    )
+                }
+            }
+        }
+        //pager
+        HorizontalPager(
+            count = pagerCount,
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { pagerIndex ->
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(
+                    items = when (tabs[pagerIndex]) {
+                        "Normal" -> lists[0]
+                        "Hard" -> lists[1]
+                        "Very Hard" -> lists[2]
+                        else -> lists[3]
+                    },
+                    key = {
+                        if (tabs[pagerIndex] != randomDrop) {
+                            (it as EquipmentDropInfo)
+                            it.questId
+                        } else {
+                            it as RandomEquipDropArea
+                            it.area
+                        }
+                    }
+                ) {
+                    if (tabs[pagerIndex] != randomDrop) {
+                        AreaItem(
+                            equipId,
+                            (it as EquipmentDropInfo).getAllOdd(),
+                            it.questName,
+                            colorList[pagerIndex]
+                        )
+                    } else {
+                        it as RandomEquipDropArea
+                        val odds = arrayListOf<EquipmentIdWithOdd>()
+                        it.equipIds.intArrayList.forEach { id ->
+                            odds.add(EquipmentIdWithOdd(id, 0))
+                        }
+                        odds.sortWith(equipCompare())
+                        AreaItem(
+                            equipId,
+                            odds,
+                            "区域 ${it.area}",
+                            colorList[pagerIndex]
+                        )
+                    }
+
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
+    }
+}
+
 
 /**
  * 掉落区域信息
@@ -278,54 +294,49 @@ fun AreaItem(
 ) {
     val placeholder = selectedId == -1
 
-    Column(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
-        )
-    ) {
-        //标题
-        MainTitleText(
-            text = num,
-            backgroundColor = color,
-            modifier = Modifier
-                .padding(bottom = Dimen.mediumPadding)
-                .commonPlaceholder(visible = placeholder)
-        )
+    val selectedOdd = odds.find {
+        it.equipId == selectedId
+    }
 
-        Column(
-            modifier = Modifier
-                .background(shape = MaterialTheme.shapes.medium, color = Color.Transparent)
-                .commonPlaceholder(visible = placeholder)
-        ) {
-            VerticalGrid(
-                modifier = Modifier.padding(top = Dimen.mediumPadding),
-                maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+    //标题
+    CommonGroupTitle(
+        titleStart = num,
+        titleEnd = (if (selectedOdd != null) "${selectedOdd.odd}" else Constants.UNKNOWN) + "%",
+        backgroundColor = color,
+        modifier = Modifier
+            .padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
+            .commonPlaceholder(placeholder)
+    )
+
+    VerticalGrid(
+        modifier = Modifier
+            .padding(
+                bottom = Dimen.largePadding,
+                start = Dimen.commonItemPadding,
+                end = Dimen.commonItemPadding
+            )
+            .commonPlaceholder(placeholder),
+        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+    ) {
+        odds.forEach {
+            Column(
+                modifier = Modifier
+                    .padding(bottom = Dimen.mediumPadding)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                odds.forEach {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                bottom = Dimen.mediumPadding
-                            )
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val selected = selectedId == it.eid
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance()
-                                .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.eid)
+                val selected = selectedId == it.equipId
+                Box(contentAlignment = Alignment.Center) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance()
+                            .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.equipId)
+                    )
+                    if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                        SelectText(
+                            selected = selected,
+                            text = if (selected) "✓" else "",
+                            margin = 0.dp
                         )
-                        if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
-                            SelectText(
-                                selected = selected,
-                                text = if (it.odd > 0) {
-                                    "${it.odd}%"
-                                } else {
-                                    if (selected) "✓" else ""
-                                }
-                            )
-                        }
                     }
                 }
             }

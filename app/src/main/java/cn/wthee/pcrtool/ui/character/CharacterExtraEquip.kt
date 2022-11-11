@@ -1,11 +1,12 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -13,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.getRegionName
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT
+import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipSubGroup
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 
@@ -44,11 +45,17 @@ fun CharacterExtraEquip(
                         text = stringResource(R.string.unit_extra_equip_slot),
                         modifier = Modifier
                             .padding(Dimen.largePadding)
-                            .align(Alignment.Center)
+                            .fillMaxWidth()
                     )
                 }
                 items(equipList) {
-                    CharacterExtraEquipItem(it, toExtraEquipDetail)
+                    ExtraEquipSubGroup(
+                        it.category,
+                        it.categoryName,
+                        it.exEquipmentIds.intArrayList,
+                        0,
+                        toExtraEquipDetail
+                    )
                 }
                 item {
                     CommonSpacer()
@@ -63,77 +70,6 @@ fun CharacterExtraEquip(
                         getRegionName(MainActivity.regionType)
                     )
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun CharacterExtraEquipItem(
-    data: CharacterExtraEquipData,
-    toExtraEquipDetail: (Int) -> Unit,
-) {
-
-    val equipIdList = data.exEquipmentIds.intArrayList
-
-    //分组标题
-    Row(
-        modifier = Modifier
-            .padding(Dimen.largePadding)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconCompose(
-            data = ImageResourceHelper.getInstance()
-                .getUrl(
-                    ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
-                    data.category
-                ),
-            size = Dimen.smallIconSize,
-        )
-        Row(
-            modifier = Modifier
-                .padding(start = Dimen.smallPadding)
-                .weight(1f)
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                    shape = MaterialTheme.shapes.extraSmall
-                )
-                .padding(horizontal = Dimen.mediumPadding)
-        ) {
-            Subtitle2(
-                text = data.categoryName,
-                color = colorWhite
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Subtitle2(
-                text = "${equipIdList.size}",
-                color = colorWhite
-            )
-        }
-    }
-    VerticalGrid(
-        modifier = Modifier.padding(
-            top = Dimen.mediumPadding,
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding
-        ),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
-    ) {
-        equipIdList.forEach { equipId ->
-            Column(
-                modifier = Modifier
-                    .padding(
-                        bottom = Dimen.mediumPadding
-                    )
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconCompose(
-                    data = ImageResourceHelper.getInstance().getUrl(ICON_EXTRA_EQUIPMENT, equipId)
-                ) {
-                    toExtraEquipDetail(equipId)
-                }
             }
         }
     }

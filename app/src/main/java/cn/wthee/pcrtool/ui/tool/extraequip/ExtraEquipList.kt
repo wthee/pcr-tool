@@ -209,7 +209,7 @@ private fun ExtraEquipGroup(
             equipGroupData.categoryName
         ),
         titleEnd = equipGroupData.equipIdList.size.toString(),
-        modifier = Modifier.padding(Dimen.largePadding)
+        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
     )
 
     //分组内容

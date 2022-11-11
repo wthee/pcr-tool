@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -163,11 +161,6 @@ fun PvpSearchCompose(
                 //查询、收藏、历史
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                        )
-                    },
                     containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier

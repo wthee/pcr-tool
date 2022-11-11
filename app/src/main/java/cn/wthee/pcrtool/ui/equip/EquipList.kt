@@ -189,7 +189,8 @@ private fun EquipGroup(
             equipGroupData.requireLevel
         ),
         titleEnd = equipGroupData.equipIdList.size.toString(),
-        modifier = Modifier.padding(Dimen.largePadding)
+        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding),
+        backgroundColor = getEquipColor(equipGroupData.promotionLevel)
     )
 
     //分组内容
