@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.utils.Constants
 data class CharacterInfo(
     @ColumnInfo(name = "unit_id") val id: Int = 1001,
     @ColumnInfo(name = "unit_name") val name: String = "?",
-    @ColumnInfo(name = "is_limited") val isLimited: Int = 0,
     @ColumnInfo(name = "rarity") val rarity: Int = 3,
     @ColumnInfo(name = "kana") val kana: String = "?",
     @ColumnInfo(name = "age_int") val age: String = "?",
@@ -24,6 +23,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "atk_type") val atkType: Int = 1,
     @ColumnInfo(name = "unit_start_time") val startTime: String = "2020-01-01 00:00:00",
     @ColumnInfo(name = "r6Id") val r6Id: Int = 1,
+    @ColumnInfo(name = "limit_type") val limitType: Int = 0,
 ) {
 
     /**

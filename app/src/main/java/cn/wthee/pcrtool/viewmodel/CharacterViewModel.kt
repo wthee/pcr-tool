@@ -3,12 +3,9 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
-import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.utils.second
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -32,17 +29,6 @@ class CharacterViewModel @Inject constructor(
         try {
             if (params != null) {
                 var filterList = unitRepository.getCharacterInfoList(params, Int.MAX_VALUE)
-                //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
-                if (params.sortType == SortType.SORT_DATE) {
-                    filterList = filterList.sortedWith { o1, o2 ->
-                        val sd1 = o1.startTime.formatTime
-                        val sd2 = o2.startTime.formatTime
-                        when {
-                            sd1.second(sd2) > 0 -> 1
-                            else -> -1
-                        } * (if (params.asc) 1 else -1)
-                    }
-                }
                 emit(filterList)
             }
         } catch (_: Exception) {

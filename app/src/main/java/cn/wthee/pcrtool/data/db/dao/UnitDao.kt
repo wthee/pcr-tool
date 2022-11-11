@@ -16,6 +16,7 @@ const val limitedIds = """
 		170201
 	)
 """
+
 /**
  * 角色数据 DAO
  */
@@ -34,6 +35,8 @@ interface UnitDao {
      * @param showAll 0：仅收藏，1：全部
      * @param r6 0：全部，1：仅六星解放
      * @param starIds 收藏的角色编号
+     * @param type 获取类型
+     * @param exUnitIdList 额外角色编号
      */
     @SkipQueryVerification
     @Transaction
@@ -42,7 +45,6 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_data.unit_name,
-            unit_data.is_limited,
             unit_data.rarity,
             COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%-%' OR unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
@@ -55,7 +57,15 @@ interface UnitDao {
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE(quest_data.quest_id, 0 ) AS r6Id,
-            COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time
+            COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time,
+            (
+                CASE
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id NOT IN (:exUnitIdList) THEN 3
+                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
+                END
+            ) AS limit_type
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
@@ -90,9 +100,7 @@ interface UnitDao {
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
-            WHEN  1 = :type AND is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  2 = :type AND ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 1
-            WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
+            WHEN  0 <> :type AND limit_type = :type THEN 1
         END
         ORDER BY 
         CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN unit_start_time END ASC,
@@ -113,13 +121,12 @@ interface UnitDao {
         CASE WHEN :sortType = 6 AND :asc = 'desc'  THEN r6Id END DESC,
         gacha.exchange_id DESC, gacha.id
         LIMIT :limit
-            """
+        """
     )
     suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
-        type: Int,
-        limit: Int,
+        type: Int, limit: Int, exUnitIdList: List<Int>
     ): List<CharacterInfo>
 
     /**
@@ -152,7 +159,6 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_data.unit_name,
-            unit_data.is_limited,
             unit_data.rarity,
             COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%-%' OR unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
@@ -165,7 +171,15 @@ interface UnitDao {
             unit_data.search_area_width,
             unit_data.atk_type,
             0 AS r6Id,
-            COALESCE(unit_data.start_time, '2015/04/01') AS unit_start_time
+            COALESCE(unit_data.start_time, '2015/04/01') AS unit_start_time,
+            (
+                CASE
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id NOT IN (:exUnitIdList) THEN 3
+                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
+                END
+            ) AS limit_type
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
@@ -174,7 +188,7 @@ interface UnitDao {
             unit_data.unit_id = :unitId
         """
     )
-    suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo
+    suspend fun getCharacterBasicInfo(unitId: Int, exUnitIdList: List<Int>): CharacterInfo
 
     /**
      * 获取角色详情基本资料
@@ -572,4 +586,11 @@ interface UnitDao {
     """
     )
     suspend fun getFesUnitIds(): GachaFesUnitInfo
+
+    /**
+     * 获取ex角色id
+     */
+    @SkipQueryVerification
+    @Query("SELECT DISTINCT unit_id FROM redeem_unit")
+    suspend fun getExUnitIdList(): List<Int>
 }

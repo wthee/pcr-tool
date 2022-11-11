@@ -12,16 +12,46 @@ import com.google.gson.Gson
  */
 @Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterCharacter(
+    /**
+     * 是否全部显示：0全部、1仅收藏
+     */
     var all: Boolean = true,
+    /**
+     * 位置：0全部、1前、2中、3后
+     */
     var positon: Int = 0,
+    /**
+     * 攻击类型
+     */
     var atk: Int = 0,
+    /**
+     * 六星：0全部、1六星、2非六星
+     */
     var r6: Int = 0,
+    /**
+     * 公会下标
+     */
     var guild: Int = 0,
+    /**
+     * 排序种类
+     */
     var sortType: SortType = SortType.SORT_DATE,
+    /**
+     * 角色名
+     */
     var name: String = "",
+    /**
+     * 升降序
+     */
     var asc: Boolean = false,
-    var type: Int = 0 // 1:常驻 2：限定 3：活动限定
+    /**
+     *  1:常驻 2：限定 3：活动限定 4：额外角色
+      */
+    var type: Int = 0
 ) {
+    /**
+     * 收藏的角色编号
+     */
     var starIds = arrayListOf<Int>()
         set(value) {
             val list = arrayListOf<Int>()

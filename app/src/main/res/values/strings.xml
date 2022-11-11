@@ -107,6 +107,7 @@
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
+    <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
 
     <!--装备相关-->

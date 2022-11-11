@@ -200,15 +200,18 @@ fun CharacterItem(
     //获取方式
     val limitColor: Color
     val limitType: String
-    when (character.isLimited) {
-        1 -> {
-            if (character.rarity == 1) {
-                limitType = stringResource(id = R.string.type_event_limit)
-                limitColor = colorGreen
-            } else {
-                limitType = stringResource(id = R.string.type_limit)
-                limitColor = colorRed
-            }
+    when (character.limitType) {
+        2 -> {
+            limitType = stringResource(id = R.string.type_limit)
+            limitColor = colorRed
+        }
+        3 -> {
+            limitType = stringResource(id = R.string.type_event_limit)
+            limitColor = colorGreen
+        }
+        4 -> {
+            limitType = stringResource(id = R.string.type_extra_character)
+            limitColor = colorSilver
         }
         else -> {
             limitType = stringResource(id = R.string.type_normal)
@@ -639,6 +642,7 @@ private fun FilterCharacterSheet(
             ChipData(1, stringResource(id = R.string.type_normal)),
             ChipData(2, stringResource(id = R.string.type_limit)),
             ChipData(3, stringResource(id = R.string.type_event_limit)),
+            ChipData(4, stringResource(id = R.string.type_extra_character)),
         )
         ChipGroup(
             typeChipData,
