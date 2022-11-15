@@ -211,7 +211,7 @@ fun CharacterItem(
         }
         4 -> {
             limitType = stringResource(id = R.string.type_extra_character)
-            limitColor = colorSilver
+            limitColor = colorOrange
         }
         else -> {
             limitType = stringResource(id = R.string.type_normal)

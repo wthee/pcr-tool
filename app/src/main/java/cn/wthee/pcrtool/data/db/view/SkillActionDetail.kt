@@ -722,13 +722,13 @@ data class SkillActionDetail(
             SkillActionType.DISPEL -> {
                 val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
                 val type = when (action_detail_1) {
-                    1 -> "BUFF"
-                    2 -> "DEBUFF"
+                    1, 3 -> "增益状态"
+                    2 -> "减益状态"
                     10 -> "护盾"
                     else -> UNKNOWN
                 }
                 if (type != UNKNOWN) {
-                    " $value 概率使${getTarget()}的${type}全部移除"
+                    " $value 概率移除${getTarget()}的${type}"
                 } else {
                     UNKNOWN
                 }

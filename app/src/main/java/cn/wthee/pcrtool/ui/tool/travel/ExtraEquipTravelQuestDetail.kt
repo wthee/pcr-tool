@@ -158,7 +158,7 @@ fun ExtraEquipSubGroup(
         iconSize = Dimen.smallIconSize,
         titleStart = categoryName,
         titleEnd = equipIdList.size.toString(),
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding),
+        modifier = Modifier.padding(Dimen.largePadding),
         backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
         textColor = MaterialTheme.colorScheme.onSurface
     )

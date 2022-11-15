@@ -85,7 +85,7 @@ fun ExtraEquipList(
         if (equips != null) {
             //分组
             val equipGroupList = arrayListOf<ExtraEquipGroupData>()
-            equips!!.forEach { equip ->
+            equips?.forEach { equip ->
                 var group = equipGroupList.find {
                     it.rarity == equip.rarity && it.category == equip.category
                 }
@@ -106,7 +106,7 @@ fun ExtraEquipList(
                 }
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    FadeAnimation(visible = equips!!.isNotEmpty()) {
+                    FadeAnimation(visible = equips?.isNotEmpty() == true) {
                         LazyColumn(state = scrollState) {
                             items(
                                 items = equipGroupList,
@@ -152,7 +152,7 @@ fun ExtraEquipList(
                                 navViewModel.resetClick.postValue(true)
                             }
                         }
-                        val count = equips!!.size
+                        val count = equips?.size ?: 0
                         // 数量显示&筛选按钮
                         FabCompose(
                             iconType = MainIconType.EXTRA_EQUIP,
@@ -209,7 +209,7 @@ private fun ExtraEquipGroup(
             equipGroupData.categoryName
         ),
         titleEnd = equipGroupData.equipIdList.size.toString(),
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
+        modifier = Modifier.padding(Dimen.largePadding)
     )
 
     //分组内容

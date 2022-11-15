@@ -72,6 +72,7 @@ fun LeaderboardList(
                     text = "GameWith",
                     modifier = Modifier
                         .clickable {
+                            VibrateUtil(context).single()
                             BrowserUtil.open(context, url)
                         }
                 )

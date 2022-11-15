@@ -376,7 +376,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val arguments = requireNotNull(it.arguments)
                 RankCompare(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
@@ -392,7 +393,11 @@ fun NavGraph(
                 route = "${Navigation.CHARACTER_EXTRA_EQUIP_SLOT}/{${Navigation.UNIT_ID}}",
                 arguments = listOf(navArgument(Navigation.UNIT_ID) {
                     type = NavType.IntType
-                })
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
             ) {
                 val scrollState = rememberLazyListState()
                 val arguments = requireNotNull(it.arguments)

@@ -61,9 +61,9 @@ interface UnitDao {
             (
                 CASE
                     WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
                     WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
-                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id NOT IN (:exUnitIdList) THEN 3
-                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
+                    WHEN is_limited = 1 AND rarity = 1 THEN 3
                 END
             ) AS limit_type
         FROM
@@ -175,9 +175,10 @@ interface UnitDao {
             (
                 CASE
                     WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
                     WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
-                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id NOT IN (:exUnitIdList) THEN 3
-                    WHEN is_limited = 1 AND rarity = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
+                    WHEN is_limited = 1 AND rarity = 1 THEN 3
+                    
                 END
             ) AS limit_type
         FROM
@@ -556,12 +557,12 @@ interface UnitDao {
             WHEN  1 = :type AND b.is_limited = 0 AND b.rarity = 1 THEN 1 
             WHEN  2 = :type AND b.is_limited = 0 AND b.rarity = 2 THEN 1 
             WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3) OR a.unit_id IN ${limitedIds}) THEN 1
+            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id IN (:exUnitIdList)) OR a.unit_id IN ${limitedIds}) THEN 1
             END
         ORDER BY b.start_time DESC
     """
     )
-    suspend fun getGachaUnits(type: Int): List<GachaUnitInfo>
+    suspend fun getGachaUnits(type: Int, exUnitIdList: List<Int>): List<GachaUnitInfo>
 
     /**
      * 获取 Fes 角色编号

@@ -301,7 +301,11 @@ fun AreaItem(
     //标题
     CommonGroupTitle(
         titleStart = num,
-        titleEnd = (if (selectedOdd != null) "${selectedOdd.odd}" else Constants.UNKNOWN) + "%",
+        titleEnd = (if (selectedOdd != null && selectedOdd.odd != 0) {
+            "${selectedOdd.odd}"
+        } else {
+            Constants.UNKNOWN
+        }) + "%",
         backgroundColor = color,
         modifier = Modifier
             .padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
@@ -331,13 +335,19 @@ fun AreaItem(
                         data = ImageResourceHelper.getInstance()
                             .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.equipId)
                     )
-                    if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                    if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && it.odd == 0) {
                         SelectText(
                             selected = selected,
                             text = if (selected) "✓" else "",
                             margin = 0.dp
                         )
                     }
+                }
+                if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && it.odd > 0) {
+                    SelectText(
+                        selected = selected,
+                        text = "${it.odd}%"
+                    )
                 }
             }
         }

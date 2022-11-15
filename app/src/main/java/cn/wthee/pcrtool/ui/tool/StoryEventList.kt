@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
@@ -133,7 +134,12 @@ fun StoryEventItem(
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!preEvent)
-//    val id = 10000 + event.storyId % 1000
+    val eventId = if (showDays) {
+        event.eventId
+    } else {
+        //支线
+        10000 + event.storyId % 1000
+    }
 
 
     Column(
@@ -210,7 +216,7 @@ fun StoryEventItem(
                         ) {
                             ImageCompose(
                                 data = ImageResourceHelper.getInstance()
-                                    .getUrl(EVENT_BANNER, event.eventId),
+                                    .getUrl(EVENT_BANNER, eventId),
                                 ratio = RATIO_BANNER,
                                 modifier = Modifier.clip(MaterialTheme.shapes.medium)
                             )
@@ -218,7 +224,7 @@ fun StoryEventItem(
                     } else {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(EVENT_TEASER, event.eventId),
+                                .getUrl(if (showDays) EVENT_TEASER else EVENT_BANNER, eventId),
                             ratio = RATIO_TEASER,
                             modifier = Modifier.clip(shapeTop())
                         )
@@ -249,6 +255,11 @@ fun StoryEventItem(
                     textAlign = TextAlign.Start,
                     selectable = true
                 )
+                //调试用
+                if (BuildConfig.DEBUG) {
+                    CaptionText(text = event.toString())
+                }
+
                 Row(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)

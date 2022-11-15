@@ -113,6 +113,7 @@ fun PvpSearchCompose(
                         text = stringResource(id = R.string.pcrdfans),
                         modifier = Modifier
                             .clickable {
+                                VibrateUtil(context).single()
                                 BrowserUtil.open(context, url)
                             }
                     )

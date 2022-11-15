@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.formatTime
@@ -73,7 +74,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         } catch (_: Exception) {
             arrayListOf()
         }
-       return unitDao.getCharacterBasicInfo(unitId, exUnitIdList)
+        return unitDao.getCharacterBasicInfo(unitId, exUnitIdList)
     }
 
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
@@ -122,7 +123,15 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getActualId(unitId: Int) = unitDao.getActualId(unitId)
 
-    suspend fun getGachaUnits(type: Int) = unitDao.getGachaUnits(type)
+    suspend fun getGachaUnits(type: Int): List<GachaUnitInfo> {
+        //额外角色编号
+        val exUnitIdList = try {
+            unitDao.getExUnitIdList()
+        } catch (_: Exception) {
+            arrayListOf()
+        }
+        return unitDao.getGachaUnits(type, exUnitIdList)
+    }
 
     suspend fun getFesUnitIds() = unitDao.getFesUnitIds()
 }
