@@ -14,17 +14,17 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.1"
+val composeVersion = "1.3.0"
 val composeCompilerVersion = "1.3.0"
-val appVersionCode = 344
-val appVersionName = "3.4.4"
+val appVersionCode = 350
+val appVersionName = "3.5.0"
 val appId = "cn.wthee.pcrtool"
 
 android {
 
     namespace = appId
     compileSdk = 33
-    buildToolsVersion = "31.0.0"
+    buildToolsVersion = "33.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
@@ -77,7 +77,7 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            resValue("string", "app_name", "BETA: PCR Tool")
+            resValue("string", "app_name", "Beta: PCR tool")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -120,10 +120,10 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0-beta03")
+    implementation("androidx.compose.material3:material3:1.0.0")
 
     //Accompanist
-    val accompanistVersion = "0.25.1"
+    val accompanistVersion = "0.27.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -131,6 +131,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
+
     //Browser
     implementation("androidx.browser:browser:1.4.0")
 
