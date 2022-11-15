@@ -67,9 +67,9 @@
     <string name="pcrdfans_tip">竞技场查询数据来源</string>
     <string name="pcrdfans_url">https://pcrdfans.com</string>
     <string name="pcrdfans_upload_url">https://pcrdfans.com/battle/upload</string>
-    <string name="leader_source">AppMedia</string>
+    <string name="leader_source">GameWith</string>
     <string name="leader_tip">角色排行数据来源</string>
-    <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
+    <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
@@ -125,7 +125,7 @@
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
     <string name="pvp_no_history">暂无查询历史</string>
-    <string name="tool_clan">团队战</string>
+    <string name="tool_clan">公会战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
@@ -138,7 +138,7 @@
     <string name="tool_news">公告</string>
     <string name="read_news">查看公告</string>
     <string name="news_title">公告标题</string>
-    <string name="grade">综合</string>
+    <string name="quest">主线</string>
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
@@ -166,6 +166,7 @@
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="title_recently_used">常用</string>
     <string name="phase">%s阶段</string>
+    <string name="last_update">最近</string>
 
     <!--操作-->
     <string name="cancel">取消</string>
@@ -231,7 +232,7 @@
 
     <!--ex装备相关-->
     <string name="extra_equip_normal">普通</string>
-    <string name="extra_equip_clan">团队战</string>
+    <string name="extra_equip_clan">公会战</string>
     <string name="extra_equip_flag">适用场景</string>
     <string name="extra_equip_category">类型</string>
     <string name="extra_equip_poassive_skill">被动技能</string>
@@ -249,6 +250,6 @@
     <string name="travel_limit_unit_num">角色限制</string>
     <string name="travel_need_power">最低战力</string>
     <string name="travel_time">冒险时间</string>
-    <string name="travel_time_decrease_limit">可缩减时间</string>
+    <string name="travel_time_decrease_limit">缩减时间</string>
 
 </resources>

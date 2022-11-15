@@ -90,6 +90,8 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
 
 /**
  * 图标
+ * @param tint [MainIconType]类型适用
+ * @param colorFilter 其他类型图标中适用
  */
 @Composable
 fun IconCompose(
