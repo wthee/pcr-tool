@@ -42,7 +42,8 @@
     <string name="model_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
-    <string name="tp_limit_level_action">追加动作（TP技能等级 > 260）</string>
+    <string name="tp_limit_level_action">技能等级 > 260</string>
+    <string name="tip_tp_limit_level_action">技能等级 > 260 时，继续提升技能等级时，TP 数值不会继续增加</string>
 
     <!--设置页面-->
     <string name="random_area">额外掉落</string>

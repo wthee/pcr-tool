@@ -130,9 +130,9 @@ class SkillViewModel @Inject constructor(
         val infos = mutableListOf<SkillDetail>()
         //技能信息
         skillIds.forEachIndexed { index, sid ->
-            val skill = skillRepository.getSkillData(sid)
+            val lv = if (lvs.size == 1) lvs[0] else lvs[index]
+            val skill = skillRepository.getSkillData(sid, lv)
             if (skill != null) {
-                val lv = if (lvs.size == 1) lvs[0] else lvs[index]
 
                 val info = SkillDetail(
                     skill.skillId,
@@ -144,7 +144,12 @@ class SkillViewModel @Inject constructor(
                     atk,
                     skill.bossUbCoolTime
                 )
-                val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
+                val actions = skillRepository.getSkillActions(
+                    lv,
+                    atk,
+                    skill.getAllActionId(),
+                    isRfSkill = skill.isRfSkill
+                )
                 val dependIds = skill.getSkillDependData()
                 actions.forEachIndexed { i, action ->
                     if (i != 0) {
@@ -152,19 +157,6 @@ class SkillViewModel @Inject constructor(
                     }
                 }
                 info.actions = actions
-                //TODO 超过tp限制等级的技能动作
-                if (skill.rfActionIdList.isNotEmpty()) {
-                    val rfActions = skillRepository.getSkillActions(
-                        lv - Constants.TP_LIMIT_LEVEL,
-                        atk,
-                        skill.rfActionIdList
-                    )
-                    rfActions.forEach {
-                        it.level = lv
-                        it.isTpLimitAction = true
-                    }
-                    info.actions = info.actions + rfActions
-                }
                 infos.add(info)
             }
         }
@@ -181,7 +173,7 @@ class SkillViewModel @Inject constructor(
             val map = hashMapOf<Int, Int>()
             //技能信息
             skillIds.forEachIndexed { _, sid ->
-                val skill = skillRepository.getSkillData(sid)
+                val skill = skillRepository.getSkillData(sid, 0)
                 if (skill != null) {
                     var aid = skill.skillId % 1000
                     if (aid < 100) {

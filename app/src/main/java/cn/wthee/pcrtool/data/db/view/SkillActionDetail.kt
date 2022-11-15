@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.int
@@ -42,6 +43,7 @@ data class SkillActionDetail(
     @ColumnInfo(name = "target_count") var target_count: Int = 0,
     @ColumnInfo(name = "description") var description: String = "",
     @ColumnInfo(name = "ailment_name") var tag: String,
+    @ColumnInfo(name = "isRfSkill") var isRfSkill: Boolean = false,
     @Ignore
     var dependId: Int = 0,
     @Ignore
@@ -284,6 +286,10 @@ data class SkillActionDetail(
             }
             // 16：TP 相关
             SkillActionType.CHANGE_TP -> {
+                //tp技能限制
+                if (level > Constants.TP_LIMIT_LEVEL && isRfSkill) {
+                    isTpLimitAction = true
+                }
                 val value = getValueText(1, action_value_1, action_value_2)
                 tag = when (action_detail_1) {
                     1 -> "TP回复"
@@ -1251,6 +1257,7 @@ data class SkillActionDetail(
         0,
         "",
         "0",
+        false,
         0,
         false
     )

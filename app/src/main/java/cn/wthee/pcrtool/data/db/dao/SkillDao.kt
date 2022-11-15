@@ -36,17 +36,23 @@ interface SkillDao {
     @Query(
         """
         SELECT
-            :lv as lv,
-            :atk as atk,
+            :lv AS lv,
+            :atk AS atk,
             a.*,
-           COALESCE( b.ailment_name,"") as ailment_name
+           COALESCE( b.ailment_name,"") as ailment_name,
+           :isRfSkill AS isRfSkill
         FROM
             skill_action AS a
             LEFT JOIN ailment_data as b ON a.action_type = b.ailment_action AND (a.action_detail_1 = b.ailment_detail_1 OR b.ailment_detail_1 = -1)
          WHERE action_id IN (:actionIds)
     """
     )
-    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>): List<SkillActionDetail>
+    suspend fun getSkillActions(
+        lv: Int,
+        atk: Int,
+        actionIds: List<Int>,
+        isRfSkill: Boolean
+    ): List<SkillActionDetail>
 
     /**
      * 获取角色动作循环列表

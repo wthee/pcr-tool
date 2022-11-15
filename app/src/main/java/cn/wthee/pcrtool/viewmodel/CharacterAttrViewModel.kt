@@ -211,7 +211,7 @@ class CharacterAttrViewModel @Inject constructor(
         } else {
             unitId / 100 * 1000 + 501
         } * 100 + 1
-        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))
+        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId), false)
         return if (list.isNotEmpty()) {
             list[0]
         } else {

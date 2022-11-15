@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -204,7 +205,7 @@ fun SkillItem(
                     }
                 )
                 //调试用，技能编号
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     CaptionText(
                         text = skillDetail.skillId.toString()
                     )
@@ -398,7 +399,7 @@ fun SkillActionItem(
 
                 }
             )
-            Row(verticalAlignment = Alignment.CenterVertically){
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 //查看召唤物
                 if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
                     IconTextButton(
@@ -415,12 +416,13 @@ fun SkillActionItem(
                     }
                 }
                 //技能等级超过tp限制等级的，添加标识
-                if(skillAction.isTpLimitAction){
+                if (skillAction.isTpLimitAction) {
+                    val tip = stringResource(id = R.string.tip_tp_limit_level_action)
                     IconTextButton(
                         icon = MainIconType.HELP,
                         text = stringResource(R.string.tp_limit_level_action)
                     ) {
-
+                        ToastUtil.long(tip)
                     }
                 }
             }
