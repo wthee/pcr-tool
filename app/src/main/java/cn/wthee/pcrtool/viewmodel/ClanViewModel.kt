@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * 团队战 ViewModel
+ * 公会战 ViewModel
  *
  * @param clanRepository
  */
@@ -20,7 +20,7 @@ class ClanViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * 获取团队战记录
+     * 获取公会战记录
      */
     fun getAllClanBattleData(clanBattleId: Int = 0, pharse: Int = 1) = flow {
         try {

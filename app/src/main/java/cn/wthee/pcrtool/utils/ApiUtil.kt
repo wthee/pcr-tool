@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -96,6 +97,7 @@ object ApiUtil {
             .addConverterFactory(GsonConverterFactory.create())
             .client(getClient(TIMEOUT_NORMAL_SECOND))
 
+
         return builder.build().create(serviceClass)
     }
 
@@ -124,6 +126,9 @@ class RetryInterceptor(  //最大重试次数
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+            .newBuilder()
+            .addHeader("app-version", BuildConfig.VERSION_NAME)
+            .build()
         var response = chain.proceed(request)
         while (!response.isSuccessful && retryNum < maxRetry) {
             response.close()

@@ -42,6 +42,9 @@ class ImageResourceHelper() {
         //装备图标
         const val UNKNOWN_EQUIP_ID = 999999
         const val ICON_EQUIPMENT = "icon/equipment/"
+        const val ICON_EXTRA_EQUIPMENT = "icon/ex_equipment/"
+        const val ICON_EXTRA_EQUIPMENT_CATEGORY = "icon/ex_equipment/category/"
+        const val ICON_EXTRA_EQUIPMENT_TRAVEL_MAP = "icon/ex_equipment/map/"
 
         //角色图标
         const val ICON_UNIT = "icon/unit/"
@@ -51,6 +54,7 @@ class ImageResourceHelper() {
 
         //剧情活动 banner
         const val EVENT_BANNER = "event/banner/"
+        const val EVENT_TEASER = "event/teaser/"
 
         //剧情活动剧情
         const val EVENT_STORY = "event/story/"

@@ -6,11 +6,10 @@ import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -205,18 +204,18 @@ class CharacterAttrViewModel @Inject constructor(
     /**
      * 获取被动技能数据
      */
-    private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {
+    private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionDetail {
         //100101
         val skillActionId = if (rarity >= 5) {
             unitId / 100 * 1000 + 511
         } else {
             unitId / 100 * 1000 + 501
         } * 100 + 1
-        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))
-        if (list.isNotEmpty()) {
-            return list[0]
+        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId), false)
+        return if (list.isNotEmpty()) {
+            list[0]
         } else {
-            return SkillActionPro()
+            SkillActionDetail()
         }
     }
 
@@ -254,7 +253,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
             val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
-            emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
+            emit(attr0.sumAttr.compareWith(attr1.sumAttr))
         } catch (_: Exception) {
 
         }
@@ -283,4 +282,5 @@ class CharacterAttrViewModel @Inject constructor(
             emit(0)
         }
     }
+
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -257,7 +256,7 @@ private fun NewsSection(
     val id = OverviewType.NEWS.id
     //公告列表
     val newsList =
-        overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getNewsOverview().collectAsState(initial = null).value
 
     Section(
         id = id,
@@ -272,7 +271,14 @@ private fun NewsSection(
         }
     ) {
         Column {
-            if (newsList.isNotEmpty()) {
+            if (newsList == null) {
+                for (i in 0 until 3) {
+                    NewsItem(
+                        news = NewsTable(),
+                        toNewsDetail = actions.toNewsDetail
+                    )
+                }
+            } else if (newsList.isNotEmpty()) {
                 newsList.forEach {
                     NewsItem(
                         news = it,
@@ -280,12 +286,7 @@ private fun NewsSection(
                     )
                 }
             } else {
-                for (i in 0 until 3) {
-                    NewsItem(
-                        news = NewsTable(),
-                        toNewsDetail = actions.toNewsDetail
-                    )
-                }
+                CenterTipText(stringResource(id = R.string.no_data))
             }
         }
     }
@@ -384,7 +385,7 @@ private fun ComingSoonEventSection(
 /**
  * 角色
  */
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun CharacterSection(
     actions: NavActions,
@@ -398,7 +399,7 @@ private fun CharacterSection(
         overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
     //角色列表
     val characterList =
-        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCharacterInfoList().collectAsState(initial = arrayListOf()).value
     Section(
         id = id,
         titleId = R.string.character,
@@ -555,7 +556,9 @@ private fun CalendarEventLayout(
                     confirmState,
                     eventList,
                     storyEventList,
-                    gachaList
+                    gachaList,
+                    freeGachaList,
+                    birthdayList
                 )
             }
             VerticalGrid(
@@ -591,14 +594,11 @@ private fun CalendarEventOperation(
     eventList: List<CalendarEvent>,
     storyEventList: List<EventData>,
     gachaList: List<GachaInfo>,
+    freeGachaList: List<FreeGachaInfo>,
+    birthdayList: List<BirthdayData>,
 ) {
     val context = LocalContext.current
-    val regionName = when (MainActivity.regionType) {
-        2 -> stringResource(id = R.string.db_cn)
-        3 -> stringResource(id = R.string.db_tw)
-        4 -> stringResource(id = R.string.db_jp)
-        else -> ""
-    }
+    val regionName = getRegionName(MainActivity.regionType)
 
     // 添加日历确认
     MainCard(
@@ -647,6 +647,36 @@ private fun CalendarEventOperation(
                                     )
                                 )
                             }
+                            //免费十连
+                            freeGachaList.forEach {
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.endTime,
+                                        it.getDesc()
+                                    )
+                                )
+                            }
+                            //免费十连
+                            freeGachaList.forEach {
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.endTime,
+                                        it.getDesc()
+                                    )
+                                )
+                            }
+                            //生日日程
+                            birthdayList.forEach {
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.getStartTime(),
+                                        it.getEndTime(),
+                                        it.getDesc()
+                                    )
+                                )
+                            }
                             //添加至系统日历
                             SystemCalendarHelper().insertEvents(allEvents)
 
@@ -674,23 +704,17 @@ private fun CalendarEventOperation(
                         //掉落活动
                         var eventText = ""
                         eventList.forEach {
-                            val date = it.startTime.formatTime.fixJpTime.substring(
-                                0,
-                                10
-                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
+                            val date = getCalendarEventDateText(it.startTime, it.endTime)
                             eventText += "• $date\n${getTypeDataToString(it)}\n"
                         }
                         if (eventText != "") {
-                            allText += "▶ 掉落活动\n$eventText\n\n"
+                            allText += "▶ 掉落活动\n$eventText\n"
                         }
 
                         //剧情活动
                         var storyText = ""
                         storyEventList.forEach {
-                            val date = it.startTime.formatTime.fixJpTime.substring(
-                                0,
-                                10
-                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
+                            val date = getCalendarEventDateText(it.startTime, it.endTime)
                             storyText += "• $date\n${it.getEventTitle()}"
                         }
                         if (storyText != "") {
@@ -700,15 +724,34 @@ private fun CalendarEventOperation(
                         //卡池
                         var gachaText = ""
                         gachaList.forEach {
-                            val date = it.startTime.formatTime.fixJpTime.substring(
-                                0,
-                                10
-                            ) + " ~ " + it.endTime.formatTime.fixJpTime.substring(0, 10)
+                            val date = getCalendarEventDateText(it.startTime, it.endTime)
                             gachaText += "• $date\n${it.getDesc()}"
 
                         }
                         if (gachaText != "") {
-                            allText += "▶ 卡池信息\n$gachaText\n"
+                            allText += "▶ 卡池信息\n$gachaText\n\n"
+                        }
+
+                        //免费十连
+                        var freeGachaText = ""
+                        freeGachaList.forEach {
+                            val date = getCalendarEventDateText(it.startTime, it.endTime)
+                            freeGachaText += "• $date\n${it.getDesc()}"
+
+                        }
+                        if (freeGachaText != "") {
+                            allText += "▶ 免费十连\n$freeGachaText\n\n"
+                        }
+
+                        //免费十连
+                        var birthdayText = ""
+                        birthdayList.forEach {
+                            val date = getCalendarEventDateText(it.getStartTime(), it.getEndTime())
+                            birthdayText += "• $date\n${it.getDesc()}"
+
+                        }
+                        if (birthdayText != "") {
+                            allText += "▶ 角色生日\n$birthdayText\n"
                         }
                         //复制
                         copyText(context, "——$regionName——\n\n$allText")
@@ -960,7 +1003,7 @@ private fun getTypeDataToString(data: CalendarEvent): String {
         else -> {
             //正常活动
             val list = data.type.intArrayList
-            list.forEach { type ->
+            list.forEachIndexed { index, type ->
                 val title = when (type) {
                     31, 41 -> "普通关卡"
                     32, 42 -> "困难关卡"
@@ -976,7 +1019,10 @@ private fun getTypeDataToString(data: CalendarEvent): String {
                     multiple.toInt().toString()
                 } else {
                     multiple.toString()
-                }) + "倍\n"
+                }) + "倍"
+                if (index != list.size - 1) {
+                    eventTitle += "\n"
+                }
             }
         }
     }
@@ -1004,3 +1050,14 @@ private fun editOverviewMenuOrder(id: Int) {
         navViewModel.overviewOrderData.postValue(edited)
     }
 }
+
+/**
+ * 日历日程时间范围文本
+ */
+private fun getCalendarEventDateText(
+    startTime: String,
+    endTime: String
+) = startTime.formatTime.fixJpTime.substring(
+    0,
+    10
+) + " ~ " + endTime.formatTime.fixJpTime.substring(0, 10)

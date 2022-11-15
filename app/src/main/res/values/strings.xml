@@ -1,8 +1,7 @@
 <resources>
-    <string name="date_m_d">%s 月 %s 日</string>
-    <string name="phase">%s阶段</string>
 
-    <!-- 角色 -->
+    <!-- 角色相关 -->
+    <string name="date_m_d">%s 月 %s 日</string>
     <string name="unknown_character">角色暂未登场</string>
     <string name="age">年龄</string>
     <string name="title_height">身高</string>
@@ -32,8 +31,21 @@
     <string name="function">功能</string>
     <string name="skill">技能信息</string>
     <string name="title_unlock_6">★6解放</string>
+    <string name="rank_select">RANK选择</string>
+    <string name="rank_compare">RANK 对比</string>
+    <string name="calc_equip_count">装备统计</string>
+    <string name="character_pic">立绘</string>
+    <string name="character_basic_info">资料</string>
+    <string name="basic_info">基本信息</string>
+    <string name="story_pic">剧情立绘</string>
+    <string name="to_summon">召唤物</string>
+    <string name="model_preview">模型</string>
+    <string name="no_guild">无公会</string>
+    <string name="sp_skill">SP技能</string>
+    <string name="tp_limit_level_action">技能等级 > 260</string>
+    <string name="tip_tp_limit_level_action">技能等级 > 260 后，继续提高技能等级时，TP数值不会继续增加</string>
 
-    <!-- 设置页面   -->
+    <!--设置页面-->
     <string name="random_area">额外掉落</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
@@ -45,7 +57,6 @@
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
     <string name="color_off">使用默认主题</string>
-    <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">Unity Texture Toolkit</string>
     <string name="data_from_hint">资源获取工具 by esterTion</string>
@@ -57,9 +68,9 @@
     <string name="pcrdfans_tip">竞技场查询数据来源</string>
     <string name="pcrdfans_url">https://pcrdfans.com</string>
     <string name="pcrdfans_upload_url">https://pcrdfans.com/battle/upload</string>
-    <string name="leader_source">AppMedia</string>
+    <string name="leader_source">GameWith</string>
     <string name="leader_tip">角色排行数据来源</string>
-    <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
+    <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
@@ -68,7 +79,8 @@
     <string name="data_export_hint">导出收藏数据到本地</string>
     <string name="data_import">数据导入</string>
     <string name="data_import_hint">从本地导入收藏数据</string>
-    <!--筛选  -->
+
+    <!-- 筛选  -->
     <string name="title_sort">排序类型</string>
     <string name="sort_date">登场日期</string>
     <string name="position_2">后卫</string>
@@ -96,10 +108,17 @@
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>
     <string name="type_event_limit">活动</string>
+    <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
-    <string name="equip_require_level">需求等级：%s</string>
 
-    <!--  工具  -->
+    <!--装备相关-->
+    <string name="equip_require_level">需求等级：%s</string>
+    <string name="equip_name">装备名</string>
+    <string name="love_equip">收藏装备</string>
+    <string name="love_equip_material">收藏素材</string>
+    <string name="tool_equip">装备</string>
+
+    <!--其它工具-->
     <string name="tool_leader">排行</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
@@ -107,12 +126,11 @@
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
     <string name="pvp_no_history">暂无查询历史</string>
-    <string name="tool_clan">团队战</string>
+    <string name="tool_clan">公会战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_upload">上传记录</string>
-    <string name="pvp_info_add_tip">上传对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_free_gacha">免费十连</string>
@@ -121,27 +139,18 @@
     <string name="tool_news">公告</string>
     <string name="read_news">查看公告</string>
     <string name="news_title">公告标题</string>
-    <string name="rank_select">RANK选择</string>
-    <string name="grade">综合</string>
+    <string name="quest">主线</string>
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
     <string name="sp_dungeon">特殊地下城</string>
-    <string name="visit_detail">在 AppMedia 中查看</string>
-    <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
     <string name="team_no">进攻队伍 %s</string>
     <string name="team_win">进攻</string>
     <string name="team_lose">防守</string>
-    <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
-    <string name="equip_name">装备名</string>
-    <string name="love_equip">收藏装备</string>
-    <string name="love_equip_material">收藏素材</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="to_update">前往更新</string>
-    <string name="rank_compare">RANK 对比</string>
-    <string name="calc_equip_count">装备统计</string>
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
@@ -151,13 +160,27 @@
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其它</string>
+    <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
+    <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
+    <string name="activity_info">活动日程</string>
+    <string name="no_limit">无限制</string>
+    <string name="tip_no_equip_get_area">暂无掉落区域</string>
+    <string name="title_recently_used">常用</string>
+    <string name="phase">%s阶段</string>
+    <string name="last_update">最近</string>
+
+    <!--操作-->
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
     <string name="close">关闭</string>
     <string name="add_to_calendar">添加至系统日历</string>
     <string name="copy_event">复制活动信息</string>
+    <string name="expand">展开</string>
+    <string name="to_add_tool">添加功能</string>
+    <string name="edit">管理功能</string>
+    <string name="done">完成</string>
 
-    <!--  活动相关-->
+    <!--活动相关-->
     <string name="normal">普通关卡</string>
     <string name="hard">困难关卡</string>
     <string name="very_hard">高难关卡</string>
@@ -170,23 +193,7 @@
     <string name="progressing">%s</string>
     <string name="coming_soon">%s</string>
 
-    <!--  异常提示-->
-    <string name="check_db_error">数据版本校验失败~</string>
-    <string name="data_get_error">数据获取失败</string>
-    <string name="database_remote_backup">已启用远程备用数据~</string>
-
-
-    <!-- 下载相关-->
-    <string name="wait_pic_load">请等待图片加载完成</string>
-
-    <string name="project_url">https://github.com/wthee/pcr-tool</string>
-    <string name="qq_group">反馈交流群</string>
-    <string name="github">Github</string>
-
-    <string name="new_member">新加入成员</string>
-    <string name="save_image">保存图片</string>
-    <string name="ask_save_image">是否要保存图片？</string>
-
+    <!--战力系数-->
     <string name="title_ex_skill_add">EX+ 额外数值</string>
     <string name="title_skill_1_add">技能1+ 额外数值</string>
     <string name="title_skill_1_coe">技能1+ 系数</string>
@@ -196,36 +203,54 @@
     <string name="title_attr_tip">属性数值说明</string>
     <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
-    <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
-    <string name="to_summon">召唤物</string>
-    <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
-    <string name="activity_info">活动日程</string>
-    <string name="basic_info">基本信息</string>
-    <string name="story_pic">剧情立绘</string>
-    <string name="no_limit">无限制</string>
+
+    <!--提示相关-->
+    <string name="no_more">暂无更多</string>
+    <string name="no_data">暂无数据</string>
+    <string name="not_installed">暂未实装的功能（%s）</string>
+    <string name="tip_click_to_add">点击下列功能，添加至首页</string>
+    <string name="check_db_error">数据版本校验失败~</string>
+    <string name="data_get_error">数据获取失败</string>
+    <string name="database_remote_backup">已启用远程备用数据~</string>
+    <string name="save_image">保存图片</string>
+    <string name="ask_save_image">是否要保存图片？</string>
+    <string name="wait_pic_load">请等待图片加载完成</string>
+    <string name="qq_group">反馈交流群</string>
+    <string name="github">Github</string>
+    <string name="change_failed">切换失败</string>
+
+    <!--模拟抽卡-->
+    <string name="gacha_fes">Fes限定★3</string>
+    <string name="gacha_limit">限定★3</string>
+    <string name="gacha_normal">常驻★3</string>
     <string name="tool_mock_gacha">抽卡模拟</string>
     <string name="gacha_pick_up_normal">自选 UP</string>
     <string name="gacha_pick_up_fes">Fes UP</string>
     <string name="tip_to_pick_up">请选择 UP 角色</string>
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
-    <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="delete_gacha">删除卡池</string>
-    <string name="to_add_tool">添加功能</string>
-    <string name="edit">管理功能</string>
-    <string name="done">完成</string>
-    <string name="tip_click_to_add">点击下列功能，添加至首页</string>
-    <string name="title_recently_used">常用</string>
-    <string name="gacha_fes">Fes限定★3</string>
-    <string name="gacha_limit">限定★3</string>
-    <string name="gacha_normal">常驻★3</string>
-    <string name="model_preview">模型</string>
-    <string name="change_failed">切换失败</string>
-    <string name="no_guild">无公会</string>
-    <string name="character_pic">立绘</string>
-    <string name="character_basic_info">资料</string>
-    <string name="expand">展开</string>
-    <string name="sp_skill">SP技能</string>
-    <string name="no_more">暂无更多</string>
+
+    <!--ex装备相关-->
+    <string name="extra_equip_normal">普通</string>
+    <string name="extra_equip_clan">公会战</string>
+    <string name="extra_equip_flag">适用场景</string>
+    <string name="extra_equip_category">类型</string>
+    <string name="extra_equip_poassive_skill">被动技能</string>
+    <string name="extra_equip_default_value">初始</string>
+    <string name="extra_equip_max_value">上限</string>
+    <string name="tool_extra_equip">EX装备</string>
+    <string name="extra_equip_rarity_and_type">★%d  %s</string>
+    <string name="extra_equip_rarity">稀有度</string>
+    <string name="extra_equip_unit">适用角色</string>
+    <string name="extra_equip_main_reward">主要奖励</string>
+    <string name="extra_equip_sub_reward">次要奖励</string>
+    <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
+    <string name="tool_travel">EX冒险</string>
+    <string name="unit_extra_equip_slot">适用装备</string>
+    <string name="travel_limit_unit_num">角色限制</string>
+    <string name="travel_need_power">最低战力</string>
+    <string name="travel_time">冒险时间</string>
+    <string name="travel_time_decrease_limit">缩减时间</string>
 
 </resources>

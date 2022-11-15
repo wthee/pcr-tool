@@ -58,13 +58,7 @@ fun MainSettings() {
     }
 
     //数据库版本
-    val typeName = stringResource(
-        id = when (region) {
-            2 -> R.string.db_cn
-            3 -> R.string.db_tw
-            else -> R.string.db_jp
-        }
-    )
+    val typeName = getRegionName(region)
     val localVersion = sp.getString(
         when (region) {
             2 -> Constants.SP_DATABASE_VERSION_CN

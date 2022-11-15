@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -126,7 +127,8 @@ fun SkillItem(
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    isExtraEquipSKill: Boolean = false
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -189,58 +191,74 @@ fun SkillItem(
                     .heightIn(min = Dimen.iconSize),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
+
                 //技能名
                 MainText(
                     text = name,
                     color = color,
                     selectable = true,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
+                    style = if (!isExtraEquipSKill) {
+                        MaterialTheme.typography.titleMedium
+                    } else {
+                        MaterialTheme.typography.titleSmall
+                    }
                 )
-                FlowRow {
-                    //技能类型
+                //调试用，技能编号
+                if (BuildConfig.DEBUG) {
                     CaptionText(
-                        text = type + if (skillDetail.isCutin) {
-                            stringResource(id = R.string.six_star)
-                        } else {
-                            ""
-                        },
+                        text = skillDetail.skillId.toString()
                     )
-                    //技能等级
-                    if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
+                }
+
+                //非装备技能时显示
+                if (!isExtraEquipSKill) {
+                    FlowRow {
+                        //技能类型
                         CaptionText(
-                            text = stringResource(id = R.string.skill_level, skillDetail.level),
-                            modifier = Modifier.padding(start = Dimen.largePadding)
+                            text = type + if (skillDetail.isCutin) {
+                                stringResource(id = R.string.six_star)
+                            } else {
+                                ""
+                            },
                         )
-                    }
-                    //冷却时间
-                    if ((unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) && skillDetail.bossUbCooltime > 0.0) {
-                        CaptionText(
-                            text = stringResource(
-                                id = R.string.skill_cooltime,
-                                skillDetail.bossUbCooltime
-                            ),
-                            modifier = Modifier
-                                .padding(start = Dimen.largePadding)
-                        )
-                    }
-                    //准备时间，显示：时间大于 0 或 角色1、2技能
-                    val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
-                    if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
-                        CaptionText(
-                            text = stringResource(
-                                id = R.string.skill_cast_time,
-                                skillDetail.castTime
-                            ),
-                            modifier = Modifier
-                                .padding(start = Dimen.largePadding)
-                        )
+                        //技能等级
+                        if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
+                            CaptionText(
+                                text = stringResource(id = R.string.skill_level, skillDetail.level),
+                                modifier = Modifier.padding(start = Dimen.largePadding)
+                            )
+                        }
+                        //冷却时间
+                        if ((unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) && skillDetail.bossUbCooltime > 0.0) {
+                            CaptionText(
+                                text = stringResource(
+                                    id = R.string.skill_cooltime,
+                                    skillDetail.bossUbCooltime
+                                ),
+                                modifier = Modifier
+                                    .padding(start = Dimen.largePadding)
+                            )
+                        }
+                        //准备时间，显示：时间大于 0 或 角色1、2技能
+                        val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
+                        if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
+                            CaptionText(
+                                text = stringResource(
+                                    id = R.string.skill_cast_time,
+                                    skillDetail.castTime
+                                ),
+                                modifier = Modifier
+                                    .padding(start = Dimen.largePadding)
+                            )
+                        }
                     }
                 }
             }
         }
 
         //标签
-        val tags = getTags(skillDetail.getActionInfo())
+        val tags = getTags(actionData)
         FlowRow {
             tags.forEach {
                 SkillActionTag(it)
@@ -381,20 +399,31 @@ fun SkillActionItem(
 
                 }
             )
-
-            if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 //查看召唤物
-                IconTextButton(
-                    icon = MainIconType.SUMMON,
-                    text = stringResource(R.string.to_summon)
-                ) {
-                    toSummonDetail(
-                        skillAction.summonUnitId,
-                        unitType.type,
-                        property.level,
-                        property.rank,
-                        property.rarity
-                    )
+                if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+                    IconTextButton(
+                        icon = MainIconType.SUMMON,
+                        text = stringResource(R.string.to_summon)
+                    ) {
+                        toSummonDetail(
+                            skillAction.summonUnitId,
+                            unitType.type,
+                            property.level,
+                            property.rank,
+                            property.rarity
+                        )
+                    }
+                }
+                //技能等级超过tp限制等级的，添加标识
+                if (skillAction.isTpLimitAction) {
+                    val tip = stringResource(id = R.string.tip_tp_limit_level_action)
+                    IconTextButton(
+                        icon = MainIconType.HELP,
+                        text = stringResource(R.string.tp_limit_level_action)
+                    ) {
+                        ToastUtil.long(tip)
+                    }
                 }
             }
 
@@ -408,7 +437,7 @@ fun SkillActionItem(
 
 
 /**
- * 获取标签状态
+ * 获取技能动作标签
  */
 private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
     val list = arrayListOf<String>()
@@ -421,7 +450,7 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 }
 
 /**
- * 获取技能
+ * 获取技能类型
  */
 private fun getSkillType(skillId: Int): String {
     return when (skillId % 1000) {
@@ -458,7 +487,7 @@ fun getSkillColor(type: String): Color {
         type.contains("EX") -> colorCopper
         type.contains("1") -> colorPurple
         type.contains("2") -> colorRed
-        else -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.onSurface
     }
 }
 

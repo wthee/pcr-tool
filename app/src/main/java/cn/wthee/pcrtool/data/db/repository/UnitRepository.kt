@@ -1,7 +1,12 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.second
 import javax.inject.Inject
 
 /**
@@ -11,8 +16,15 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    suspend fun getInfoAndData(filter: FilterCharacter, limit: Int) =
-        unitDao.getInfoAndData(
+    suspend fun getCharacterInfoList(filter: FilterCharacter, limit: Int): List<CharacterInfo> {
+        //额外角色编号
+        val exUnitIdList = try {
+            unitDao.getExUnitIdList()
+        } catch (_: Exception) {
+            arrayListOf()
+        }
+
+        var filterList = unitDao.getCharacterInfoList(
             filter.sortType.type,
             if (filter.asc) "asc" else "desc",
             filter.name,
@@ -28,15 +40,42 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
                 else -> 0
             },
             if (filter.all) 1 else 0,
-            filter.r6,
+            //六星排序时，仅显示六星角色
+            if (filter.sortType == SortType.SORT_UNLOCK_6) 1 else filter.r6,
             filter.starIds,
             filter.type,
             limit,
+            exUnitIdList
         )
+
+        //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
+        if (filter.sortType == SortType.SORT_DATE) {
+            filterList = filterList.sortedWith { o1, o2 ->
+                val sd1 = o1.startTime.formatTime
+                val sd2 = o2.startTime.formatTime
+                when {
+                    sd1.second(sd2) > 0 -> 1
+                    else -> -1
+                } * (if (filter.asc) 1 else -1)
+            }
+        }
+
+
+        return filterList
+    }
+
 
     suspend fun getCount() = unitDao.getCount()
 
-    suspend fun getInfoAndData(unitId: Int) = unitDao.getInfoAndData(unitId)
+    suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo {
+        //额外角色编号
+        val exUnitIdList = try {
+            unitDao.getExUnitIdList()
+        } catch (_: Exception) {
+            arrayListOf()
+        }
+        return unitDao.getCharacterBasicInfo(unitId, exUnitIdList)
+    }
 
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
@@ -84,9 +123,15 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getActualId(unitId: Int) = unitDao.getActualId(unitId)
 
-    suspend fun getR6UnitIdList(asc: Boolean) = unitDao.getR6UnitIdList(asc)
-
-    suspend fun getGachaUnits(type: Int) = unitDao.getGachaUnits(type)
+    suspend fun getGachaUnits(type: Int): List<GachaUnitInfo> {
+        //额外角色编号
+        val exUnitIdList = try {
+            unitDao.getExUnitIdList()
+        } catch (_: Exception) {
+            arrayListOf()
+        }
+        return unitDao.getGachaUnits(type, exUnitIdList)
+    }
 
     suspend fun getFesUnitIds() = unitDao.getFesUnitIds()
 }

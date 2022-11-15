@@ -86,7 +86,8 @@ enum class ToolMenuType(val id: Int) {
     MOCK_GACHA(215),
     BIRTHDAY(216),
     CALENDAR_EVENT(217),
-    EXTRA_EQUIP(218);
+    EXTRA_EQUIP(218),
+    TRAVEL_AREA(219);
 
     companion object {
         fun getByValue(value: Int) = values()
@@ -120,4 +121,13 @@ enum class SkillType {
     ALL,
     NORMAL,
     SP
+}
+
+/**
+ * 属性值类型
+ */
+enum class AttrValueType {
+    INT,
+    DOUBLE,
+    PERCENT
 }

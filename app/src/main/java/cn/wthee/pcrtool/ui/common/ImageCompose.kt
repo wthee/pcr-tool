@@ -32,6 +32,7 @@ const val RATIO = 1.78f
 const val RATIO_COMIC = 0.6175f
 const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 682f
+const val RATIO_TEASER = 1280 / 576f
 
 
 @Composable
@@ -89,6 +90,8 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
 
 /**
  * 图标
+ * @param tint [MainIconType]类型适用
+ * @param colorFilter 其他类型图标中适用
  */
 @Composable
 fun IconCompose(

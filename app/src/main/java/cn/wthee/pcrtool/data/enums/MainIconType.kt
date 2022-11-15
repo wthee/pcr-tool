@@ -108,6 +108,11 @@ enum class MainIconType(val icon: ImageVector) {
     EQUIP(Icons.Rounded.FitnessCenter),
 
     /**
+     * ex装备
+     */
+    EXTRA_EQUIP(Icons.Rounded.Token),
+
+    /**
      * 角色
      */
     CHARACTER(Icons.Rounded.AutoAwesome),
@@ -153,12 +158,12 @@ enum class MainIconType(val icon: ImageVector) {
     LEADER(Icons.Rounded.EmojiEvents),
 
     /**
-     * 团队战
+     * 公会战
      */
     CLAN(Icons.Rounded.Security),
 
     /**
-     * 团队战阶段
+     * 公会战阶段
      */
     CLAN_SECTION(Icons.Rounded.SignalCellularAlt),
 
@@ -319,11 +324,6 @@ enum class MainIconType(val icon: ImageVector) {
     EXPORT(Icons.Rounded.Upload),
 
     /**
-     * 更新信息
-     */
-    UPDATE_INFO(Icons.Rounded.Info),
-
-    /**
      * 随机掉落地区
      */
     RANDOM_AREA(Icons.Rounded.TrackChanges),
@@ -382,4 +382,29 @@ enum class MainIconType(val icon: ImageVector) {
      * 技能形态
      */
     CHARACTER_CUTIN_SKILL(Icons.Rounded.Category),
+
+    /**
+     * ex装备掉落信息
+     */
+    EXTRA_EQUIP_DROP(Icons.Rounded.Map),
+
+    /**
+     * 筛选
+     */
+    FILTER(Icons.Rounded.FilterAlt),
+
+    /**
+     * 降序
+     */
+    SORT_DESC(Icons.Rounded.KeyboardArrowDown),
+
+    /**
+     * 升序
+     */
+    SORT_ASC(Icons.Rounded.KeyboardArrowUp),
+
+    /**
+     * 不排序
+     */
+    SORT_NULL(Icons.Rounded.UnfoldMore),
 }

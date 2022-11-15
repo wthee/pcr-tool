@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 
 /**
  * 角色图标列表
@@ -44,13 +43,13 @@ fun GridIconListCompose(
 @Composable
 fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
     val unitId: Int
-    val iconId: Int
+//    val iconId: Int
     if (id / 10000 == 3) {
         //item 转 unit
-        iconId = id % 10000 * 100 + 11
+//        iconId = id % 10000 * 100 + 11
         unitId = id % 10000 * 100 + 1
     } else {
-        iconId = id + 30
+//        iconId = id + 30
         unitId = id
     }
     Column(
@@ -62,7 +61,7 @@ fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(
-            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, iconId)
+            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId)
         ) {
             onClickItem(unitId)
         }

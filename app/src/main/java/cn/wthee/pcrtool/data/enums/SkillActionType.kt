@@ -5,7 +5,7 @@ package cn.wthee.pcrtool.data.enums
  *
  * @param type action_type
  * @param desc 技能标签
- * @sample cn.wthee.pcrtool.data.db.view.SkillActionPro.action_type
+ * @sample cn.wthee.pcrtool.data.db.view.SkillActionDetail.action_type
  */
 enum class SkillActionType(val type: Int, val desc: String) {
 
@@ -397,9 +397,10 @@ enum class SkillActionType(val type: Int, val desc: String) {
     EX(90, "被动"),
 
     /**
-     * 91：EX+被动
+     * 901：ex装备被动被动
      */
-    EX_PLUS(91, "被动"),
+    EX_EQUIP(901, "装备"),
+    EX_EQUIP_HALF(902, "装备"),
 
     /**
      * 92：改变 TP 获取倍率

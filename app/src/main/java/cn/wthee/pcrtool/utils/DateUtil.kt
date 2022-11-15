@@ -96,22 +96,37 @@ fun String.dates(str2: String): String {
         val d2 = df1.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
-        val day = time / (60 * 60 * 1000 * 24)
-        val hour = time / (60 * 60 * 1000) - day * 24
-        val min = time % (60 * 60 * 1000) / (60 * 1000)
-        if (day == 0L) {
-            if (hour == 0L) {
-                "${min}分"
-            } else {
-                "${hour}时${min}分"
-            }
-        } else {
-            "${day}天${hour}时${min}分"
-
-        }
+        toTimeText(time)
     } catch (e: Exception) {
         "0"
     }
+}
+
+/**
+ * 秒数转时分秒字符串
+ */
+fun toTimeText(time: Long): String {
+    val day = time / (60 * 60 * 1000 * 24)
+    val hour = time / (60 * 60 * 1000) - day * 24
+    val min = time % (60 * 60 * 1000) / (60 * 1000)
+
+    val dayText = if (day > 0) {
+        "${day}天"
+    } else {
+        ""
+    }
+    val hourText = if (hour > 0) {
+        "${hour}时"
+    } else {
+       ""
+    }
+    val minText = if (min > 0) {
+        "${min}分"
+    } else {
+        ""
+    }
+
+    return "$dayText$hourText$minText"
 }
 
 /**

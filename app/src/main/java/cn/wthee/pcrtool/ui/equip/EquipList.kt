@@ -1,11 +1,15 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -43,8 +47,7 @@ import kotlinx.coroutines.launch
  * 装备列表
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 fun EquipList(
@@ -104,53 +107,17 @@ fun EquipList(
             Box(modifier = Modifier.fillMaxSize()) {
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
-                        equipGroupList.forEach { equipGroupData ->
-                            //分组标题
-                            item {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(Dimen.largePadding)
-                                        .fillMaxWidth()
-                                        .background(
-                                            getEquipColor(equipGroupData.promotionLevel),
-                                            shape = MaterialTheme.shapes.extraSmall
-                                        )
-                                        .padding(horizontal = Dimen.mediumPadding)
-                                ) {
-                                    Subtitle2(
-                                        text = stringResource(
-                                            id = R.string.equip_require_level,
-                                            equipGroupData.requireLevel
-                                        ),
-                                        color = colorWhite
-                                    )
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Subtitle2(
-                                        text = "${equipGroupData.equipIdList.size}",
-                                        color = colorWhite
-                                    )
-                                }
-                            }
-                            //分组内容
-                            item {
-                                VerticalGrid(
-                                    spanCount = equipSpanCount,
-                                    modifier = Modifier.padding(
-                                        bottom = Dimen.largePadding,
-                                        start = Dimen.commonItemPadding,
-                                        end = Dimen.commonItemPadding
-                                    ),
-                                ) {
-                                    equipGroupData.equipIdList.forEach { equip ->
-                                        EquipItem(
-                                            filterValue,
-                                            equip,
-                                            toEquipDetail,
-                                            toEquipMaterial
-                                        )
-                                    }
-                                }
-                            }
+                        items(items = equipGroupList,
+                            key = {
+                                "${it.requireLevel}-${it.promotionLevel}"
+                            }) { equipGroupData ->
+                            EquipGroup(
+                                equipGroupData,
+                                equipSpanCount,
+                                filterValue,
+                                toEquipDetail,
+                                toEquipMaterial
+                            )
                         }
                         item {
                             CommonSpacer()
@@ -205,6 +172,48 @@ fun EquipList(
 }
 
 /**
+ * 装备分组
+ */
+@Composable
+private fun EquipGroup(
+    equipGroupData: EquipGroupData,
+    equipSpanCount: Int,
+    filterValue: FilterEquipment,
+    toEquipDetail: (Int) -> Unit,
+    toEquipMaterial: (Int) -> Unit
+) {
+    //分组标题
+    CommonGroupTitle(
+        titleStart = stringResource(
+            id = R.string.equip_require_level,
+            equipGroupData.requireLevel
+        ),
+        titleEnd = equipGroupData.equipIdList.size.toString(),
+        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding),
+        backgroundColor = getEquipColor(equipGroupData.promotionLevel)
+    )
+
+    //分组内容
+    VerticalGrid(
+        spanCount = equipSpanCount,
+        modifier = Modifier.padding(
+            bottom = Dimen.largePadding,
+            start = Dimen.commonItemPadding,
+            end = Dimen.commonItemPadding
+        ),
+    ) {
+        equipGroupData.equipIdList.forEach { equip ->
+            EquipItem(
+                filterValue,
+                equip,
+                toEquipDetail,
+                toEquipMaterial
+            )
+        }
+    }
+}
+
+/**
  * 装备
  */
 @Composable
@@ -256,7 +265,11 @@ private fun EquipItem(
 
     Row(
         modifier = Modifier
-            .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding)
+            .padding(
+                start = Dimen.smallPadding,
+                end = Dimen.smallPadding,
+                bottom = Dimen.mediumPadding
+            )
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {

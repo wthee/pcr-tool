@@ -49,10 +49,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.ui.tool.AnimSetting
@@ -296,13 +293,7 @@ private fun AppInfoCompose(actions: NavActions) {
     val region = MainActivity.regionType
 
     //数据库版本
-    val typeName = stringResource(
-        id = when (region) {
-            2 -> R.string.db_cn
-            3 -> R.string.db_tw
-            else -> R.string.db_jp
-        }
-    )
+    val typeName = getRegionName(region)
     val localVersion = sp.getString(
         when (region) {
             2 -> Constants.SP_DATABASE_VERSION_CN

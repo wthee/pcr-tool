@@ -280,9 +280,10 @@ interface EquipmentDao {
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
             a.equipment_id IS NOT NULL AND c.unit_id = :unitId
+            AND((1 = :tpLimitLevelFlag AND b.min_lv > 260) OR (0 = :tpLimitLevelFlag AND b.min_lv = 2))
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, tpLimitLevelFlag: Int): UniqueEquipmentMaxData?
 
     /**
      * 根获取专武最大强化等级

@@ -57,7 +57,14 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
     dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EXTRA_EQUIP))
+    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.TRAVEL_AREA))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
+
+    //查询
+    val searchList = arrayListOf<ToolMenuData>()
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.PVP_SEARCH))
+    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.LEADER))
+    itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //活动信息
     val infoList = arrayListOf<ToolMenuData>()
@@ -68,12 +75,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
     infoList.add(getToolMenuData(toolMenuType = ToolMenuType.CALENDAR_EVENT))
     itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
-
-    //查询
-    val searchList = arrayListOf<ToolMenuData>()
-    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.PVP_SEARCH))
-    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.LEADER))
-    itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()

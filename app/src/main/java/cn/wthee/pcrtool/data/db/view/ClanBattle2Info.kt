@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
- * 团队战信息
+ * 公会战信息
  */
 data class ClanBattleInfo(
     @ColumnInfo(name = "clan_battle_id") var clanBattleId: Int = -1,
@@ -33,19 +33,6 @@ data class ClanBattleInfo(
             targetCountData.enemyPartIds.intArrayList.filter { it > 0 }.size
         } else {
             0
-        }
-    }
-
-    /**
-     * 获取多目标信息
-     *
-     * @param bossIndex boss 下标
-     */
-    fun getMultiEnemyIds(bossIndex: Int): List<Int> {
-        return if (bossIndex + 1 == targetCountData.multiEnemyId % 10) {
-            targetCountData.enemyPartIds.intArrayList.filter { it > 0 }
-        } else {
-            arrayListOf()
         }
     }
 

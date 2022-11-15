@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
 import kotlin.random.Random
@@ -225,5 +226,27 @@ data class Attr(
         return this
     }
 
+    /**
+     * 角色属性 [Attr] ，转 [AttrCompareData] 角色 Rank 对比列表
+     */
+    fun compareWith(attr1: Attr): List<AttrCompareData> {
+        val datas = arrayListOf<AttrCompareData>()
+        val list0 = this.all()
+        val list1 = attr1.all()
+        val list2 = attr1.compare(this)
+        list0.forEachIndexed { index, attrValue ->
+            datas.add(
+                AttrCompareData(
+                    attrValue.title,
+                    attrValue.value,
+                    list1[index].value,
+                    list2[index].value
+                )
+            )
+        }
+        return datas
+    }
+
 }
+
 

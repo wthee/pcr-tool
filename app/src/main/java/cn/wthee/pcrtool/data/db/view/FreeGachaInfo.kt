@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 
 /**
@@ -18,13 +17,14 @@ data class FreeGachaInfo(
     /**
      * 获取数量
      */
-    fun getCount(): Int {
-        return if (maxCount != 0) {
+    fun getDesc(): String {
+        val count =  if (maxCount != 0) {
             maxCount
         } else {
             val st = startTime.formatTime
             val ed = endTime.formatTime
-            return ed.days(st).replace("天", "").toInt()
+            ed.days(st).replace("天", "").toInt()
         }
+        return "「免费十连」 $count 次"
     }
 }

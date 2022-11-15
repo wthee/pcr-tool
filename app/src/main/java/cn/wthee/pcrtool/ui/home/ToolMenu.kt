@@ -164,6 +164,7 @@ fun getAction(
             ToolMenuType.BIRTHDAY -> actions.toBirthdayList()
             ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
             ToolMenuType.EXTRA_EQUIP -> actions.toExtraEquipList()
+            ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
         }
     }
 
@@ -190,12 +191,18 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
-        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(
-            R.string.tool_calendar_event,
-            MainIconType.CALENDAR
+        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(R.string.tool_calendar_event, MainIconType.CALENDAR)
+        ToolMenuType.EXTRA_EQUIP -> ToolMenuData(
+            R.string.tool_extra_equip,
+            MainIconType.EXTRA_EQUIP
         )
-        ToolMenuType.EXTRA_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP)
+        ToolMenuType.TRAVEL_AREA -> ToolMenuData(
+            R.string.tool_travel,
+            MainIconType.EXTRA_EQUIP_DROP
+        )
+
     }
+    //设置模块类别
     tool.type = toolMenuType
     return tool
 }

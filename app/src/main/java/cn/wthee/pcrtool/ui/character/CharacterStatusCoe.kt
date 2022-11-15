@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
+import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -99,7 +100,7 @@ private fun StatusDesc(coe: UnitStatusCoefficient) {
                     bottom = Dimen.smallPadding
                 )
         )
-        AttrList(attrs = coeList, toInt = false)
+        AttrList(attrs = coeList, AttrValueType.DOUBLE)
         //技能相关系数
         MainText(
             text = stringResource(id = R.string.title_skill_basic_coe),

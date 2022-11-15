@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
@@ -26,6 +27,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_TEASER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -132,7 +134,12 @@ fun StoryEventItem(
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!preEvent)
-    val id = 10000 + event.storyId % 1000
+    val eventId = if (showDays) {
+        event.eventId
+    } else {
+        //支线
+        10000 + event.storyId % 1000
+    }
 
 
     Column(
@@ -201,17 +208,30 @@ fun StoryEventItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //banner 图片
-                    Box(modifier = Modifier
-                        .padding(Dimen.smallPadding)
-                        .weight(3f)) {
+                    if (inProgress) {
+                        Box(
+                            modifier = Modifier
+                                .padding(Dimen.smallPadding)
+                                .weight(3f)
+                        ) {
+                            ImageCompose(
+                                data = ImageResourceHelper.getInstance()
+                                    .getUrl(EVENT_BANNER, eventId),
+                                ratio = RATIO_BANNER,
+                                modifier = Modifier.clip(MaterialTheme.shapes.medium)
+                            )
+                        }
+                    } else {
                         ImageCompose(
-                            data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
-                            ratio = RATIO_BANNER,
-                            modifier = Modifier.clip(MaterialTheme.shapes.medium)
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(if (showDays) EVENT_TEASER else EVENT_BANNER, eventId),
+                            ratio = RATIO_TEASER,
+                            modifier = Modifier.clip(shapeTop())
                         )
                     }
-                    //图标
-                    if (event.getUnitIdList().isNotEmpty()) {
+
+                    //活动掉落角色图标，仅进行中活动显示
+                    if (inProgress && event.getUnitIdList().isNotEmpty()) {
                         Column(
                             modifier = Modifier
                                 .weight(1f)
@@ -235,6 +255,11 @@ fun StoryEventItem(
                     textAlign = TextAlign.Start,
                     selectable = true
                 )
+                //调试用
+                if (BuildConfig.DEBUG) {
+                    CaptionText(text = event.toString())
+                }
+
                 Row(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)

@@ -74,7 +74,7 @@ fun TweetList(
                 }
                 item {
                     FadeAnimation(tweetItems.loadState.append is LoadState.NotLoading) {
-                        NoMoreDataText()
+                        CenterTipText(stringResource(id = R.string.no_more))
                     }
                 }
                 item {

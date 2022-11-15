@@ -2,12 +2,8 @@ package cn.wthee.pcrtool.utils
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
-import android.os.Build
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsService
 import cn.wthee.pcrtool.R
 
 object BrowserUtil {
@@ -16,72 +12,23 @@ object BrowserUtil {
      * 在浏览器中打开 [url]
      *
      * @param url 链接
-     * @param title 标题
      */
-    fun open(context: Context, url: String, title: String = "请选择浏览器") {
-        val packageList = getCustomTabsPackages(context)
-
-        if (packageList.isNotEmpty()) {
+    fun open(context: Context, url: String) {
+        try {
             val builder = CustomTabsIntent.Builder().apply {
                 setStartAnimations(context, R.anim.fade_in, R.anim.fade_out)
                 setExitAnimations(context, R.anim.fade_out, R.anim.fade_in)
                 setShowTitle(true)
             }
-
             val customTabsIntent = builder.build()
-            //设置默认应用
-            customTabsIntent.intent.setPackage(packageList[0].activityInfo.packageName)
             customTabsIntent.launchUrl(context, Uri.parse(url))
-        } else {
+        } catch (e: Exception) {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.data = Uri.parse(url)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(Intent.createChooser(intent, title))
+            context.startActivity(Intent.createChooser(intent, "在浏览器中打开"))
         }
-    }
-
-    /**
-     * 获取支持自定义标签的应用信息
-     */
-    private fun getCustomTabsPackages(context: Context): ArrayList<ResolveInfo> {
-        val pm = context.packageManager
-        // Get default VIEW intent handler.
-        val activityIntent = Intent()
-            .setAction(Intent.ACTION_VIEW)
-            .addCategory(Intent.CATEGORY_BROWSABLE)
-            .setData(Uri.fromParts("http", "", null))
-
-        // Get all apps that can handle VIEW intents.
-        val resolvedActivityList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            pm.queryIntentActivities(
-                activityIntent,
-                PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
-            )
-        } else {
-            @Suppress("DEPRECATION")
-            pm.queryIntentActivities(activityIntent, PackageManager.MATCH_DEFAULT_ONLY)
-        }
-        val packagesSupportingCustomTabs: ArrayList<ResolveInfo> = ArrayList()
-        for (info in resolvedActivityList) {
-            val serviceIntent = Intent()
-            serviceIntent.action = CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION
-            serviceIntent.setPackage(info.activityInfo.packageName)
-            // Check if this package also resolves the Custom Tabs service.
-            val rs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pm.resolveService(
-                    activityIntent,
-                    PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
-                )
-            } else {
-                @Suppress("DEPRECATION")
-                pm.resolveService(activityIntent, PackageManager.MATCH_DEFAULT_ONLY)
-            }
-            if (rs != null) {
-                packagesSupportingCustomTabs.add(info)
-            }
-        }
-        return packagesSupportingCustomTabs
     }
 
 }

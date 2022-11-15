@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -24,7 +24,7 @@ data class SkillDetail(
      * 角色技能效果
      * 在 SkillViewModel#getCharacterSkills 获取并中设置
      */
-    var actions = listOf<SkillActionPro>()
+    var actions = listOf<SkillActionDetail>()
 
     /**
      * 获取技能效果信息

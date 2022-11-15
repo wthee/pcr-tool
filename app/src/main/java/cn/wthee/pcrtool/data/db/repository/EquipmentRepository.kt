@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
-import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.utils.Constants
 import javax.inject.Inject
 
 /**
@@ -32,12 +32,24 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
-    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int): UniqueEquipmentMaxData? {
-        return try {
-            equipmentDao.getUniqueEquipInfos(unitId, lv)
-        } catch (e: Exception) {
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {
+        //TODO 校验逻辑是否正确
+        if (lv > Constants.TP_LIMIT_LEVEL) {
+            // <= 260 的总属性
+            val attr0 = equipmentDao.getUniqueEquipInfosV2(unitId, Constants.TP_LIMIT_LEVEL, 0)
+            // > 260 的部分
+            val att1 = equipmentDao.getUniqueEquipInfosV2(unitId, lv - Constants.TP_LIMIT_LEVEL, 1)
+            //计算总属性
+            val sumAttr = att1?.let { attr0?.attr?.add(it.attr) }
+            if (sumAttr != null) {
+                attr0?.attr = sumAttr
+            }
+            attr0
+        } else {
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv, 0)
         }
+    } catch (e: Exception) {
+        equipmentDao.getUniqueEquipInfos(unitId, lv)
     }
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()

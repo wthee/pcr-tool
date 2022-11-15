@@ -195,10 +195,16 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 获取排名信息
      */
-    suspend fun getLeader(): ResponseData<LeaderData> {
+    suspend fun getLeader(sort: Int, asc: Boolean): ResponseData<LeaderData> {
         //请求
         try {
-            val response = service.getLeader()
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("type", sort)
+            json.addProperty("order", if (asc) "ASC" else "DESC")
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+            val response = service.getLeader(body)
             if (isError(response)) {
                 return error()
             }
@@ -298,13 +304,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
     private
     fun <T> isError(response: ResponseData<T>): Boolean {
-        if (response.message == "failure" || response.data == null) {
-            return true
-        } else if (response.data is List<*>) {
-            return (response.data as List<*>).isEmpty()
-        } else {
-            return false
-        }
+        return response.message == "failure" || response.data == null
     }
 
 }

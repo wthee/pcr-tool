@@ -7,47 +7,48 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AllSkillList(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
-    clanViewModel: ClanViewModel = hiltViewModel()
+    clanViewModel: ClanViewModel = hiltViewModel(),
+    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
     val allCharacter =
         characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
     val bossIds = clanViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
+    val exEquipSkillIds = extraEquipmentViewModel.getAllEquipSkillIdList()
+        .collectAsState(initial = arrayListOf()).value
 
-    val type = remember {
-        mutableStateOf(1)
-    }
 
     val ids = arrayListOf<Int>()
-    if (type.value == 0) {
-        ids.clear()
-        allCharacter.forEach {
-            ids.add(it.unitId)
-        }
-    } else {
-        ids.clear()
-        ids.addAll(bossIds)
+    allCharacter.forEach {
+        ids.add(it.unitId)
     }
+    ids.addAll(bossIds)
 
-    val skills = skillViewModel.getCharacterSkills(201, 1000, ids)
+    val skills = skillViewModel.getCharacterSkills(201, 1000, ids.distinct())
         .collectAsState(initial = arrayListOf()).value
+    val equipSkills = skillViewModel.getExtraEquipPassiveSkills(exEquipSkillIds).collectAsState(
+        initial = arrayListOf()
+    ).value
 
 
     Column(
@@ -56,33 +57,33 @@ fun AllSkillList(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        skills.let { skillValue ->
+        HorizontalPager(count = 2) { index ->
             LazyColumn(modifier = Modifier.fillMaxSize()) {
+                item {
+                    MainText(text = "$index：${if (index == 0) skills.size else equipSkills.size}")
+                }
                 items(
-                    items = skillValue,
+                    items = if (index == 0) skills else equipSkills,
                     key = {
                         it.skillId
                     }
                 ) {
-                    if (type.value == 0 || (type.value == 1 && it.skillId > 3000000)) {
-                        var error = false
-                        it.getActionInfo().forEach { action ->
-                            if (action.action.contains("?")) {
-                                error = true
-                                return@forEach
-                            }
-                        }
-                        if (error) {
-                            SkillItem(
-                                1,
-                                skillDetail = it,
-                                unitType = UnitType.CHARACTER,
-                                toSummonDetail = toSummonDetail,
-                                property = CharacterProperty(100,1,1)
-                            )
+                    var error = false
+                    it.getActionInfo().forEach { action ->
+                        if (action.action.contains("?")) {
+                            error = true
+                            return@forEach
                         }
                     }
-
+                    if (error) {
+                        SkillItem(
+                            1,
+                            skillDetail = it,
+                            unitType = UnitType.CHARACTER,
+                            toSummonDetail = toSummonDetail,
+                            property = CharacterProperty(100, 1, 1)
+                        )
+                    }
                 }
             }
         }

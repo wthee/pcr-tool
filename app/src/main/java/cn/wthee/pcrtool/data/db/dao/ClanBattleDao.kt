@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 
 
 /**
- * 团队战 DAO
+ * 公会战 DAO
  */
 @Dao
 interface ClanBattleDao {
@@ -52,7 +52,7 @@ interface ClanBattleDao {
 
 
     /**
-     * 获取所有团队战信息
+     * 获取所有公会战信息
      */
     @SkipQueryVerification
     @Query(
@@ -88,7 +88,7 @@ interface ClanBattleDao {
 
 
     /**
-     * 获取所有团队战多目标
+     * 获取所有公会战多目标
      */
     @SkipQueryVerification
     @Query(

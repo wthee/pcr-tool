@@ -143,7 +143,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //描述
                 MainContentText(
-                    text = "「免费十连」 ${freeGachaInfo.getCount()} 次",
+                    text = freeGachaInfo.getDesc(),
                     modifier = Modifier.padding(
                         top = Dimen.mediumPadding,
                         start = Dimen.mediumPadding,

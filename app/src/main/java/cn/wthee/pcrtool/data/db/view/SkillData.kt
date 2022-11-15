@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /**
@@ -8,29 +9,33 @@ import androidx.room.PrimaryKey
  */
 data class SkillData(
     @PrimaryKey
-    @ColumnInfo(name = "skill_id") val skill_id: Int,
-    @ColumnInfo(name = "name") val name: String?,
-    @ColumnInfo(name = "skill_type") val skill_type: Int,
-    @ColumnInfo(name = "skill_area_width") val skill_area_width: Int,
-    @ColumnInfo(name = "skill_cast_time") val skill_cast_time: Double,
-    @ColumnInfo(name = "action_1") val action_1: Int,
-    @ColumnInfo(name = "action_2") val action_2: Int,
-    @ColumnInfo(name = "action_3") val action_3: Int,
-    @ColumnInfo(name = "action_4") val action_4: Int,
-    @ColumnInfo(name = "action_5") val action_5: Int,
-    @ColumnInfo(name = "action_6") val action_6: Int,
-    @ColumnInfo(name = "action_7") val action_7: Int,
-    @ColumnInfo(name = "depend_action_1") val depend_action_1: Int,
-    @ColumnInfo(name = "depend_action_2") val depend_action_2: Int,
-    @ColumnInfo(name = "depend_action_3") val depend_action_3: Int,
-    @ColumnInfo(name = "depend_action_4") val depend_action_4: Int,
-    @ColumnInfo(name = "depend_action_5") val depend_action_5: Int,
-    @ColumnInfo(name = "depend_action_6") val depend_action_6: Int,
-    @ColumnInfo(name = "depend_action_7") val depend_action_7: Int,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "icon_type") val icon_type: Int,
-    @ColumnInfo(name = "boss_ub_cool_time") val boss_ub_cool_time: Double,
+    @ColumnInfo(name = "skill_id") var skillId: Int = 0,
+    @ColumnInfo(name = "name") var name: String? = null,
+    @ColumnInfo(name = "skill_type") var skillType: Int= 0,
+    @ColumnInfo(name = "skill_area_width") var skillAreaWidth: Int= 0,
+    @ColumnInfo(name = "skill_cast_time") var skillCastTime: Double = 0.0,
+    @ColumnInfo(name = "action_1") var action_1: Int= 0,
+    @ColumnInfo(name = "action_2") var action_2: Int= 0,
+    @ColumnInfo(name = "action_3") var action_3: Int= 0,
+    @ColumnInfo(name = "action_4") var action_4: Int= 0,
+    @ColumnInfo(name = "action_5") var action_5: Int= 0,
+    @ColumnInfo(name = "action_6") var action_6: Int= 0,
+    @ColumnInfo(name = "action_7") var action_7: Int= 0,
+    @ColumnInfo(name = "depend_action_1") var depend_action_1: Int = 0,
+    @ColumnInfo(name = "depend_action_2") var depend_action_2: Int = 0,
+    @ColumnInfo(name = "depend_action_3") var depend_action_3: Int = 0,
+    @ColumnInfo(name = "depend_action_4") var depend_action_4: Int = 0,
+    @ColumnInfo(name = "depend_action_5") var depend_action_5: Int = 0,
+    @ColumnInfo(name = "depend_action_6") var depend_action_6: Int = 0,
+    @ColumnInfo(name = "depend_action_7") var depend_action_7: Int = 0,
+    @ColumnInfo(name = "description") var description: String = "",
+    @ColumnInfo(name = "icon_type") var iconType: Int = 0,
+    @ColumnInfo(name = "boss_ub_cool_time") var bossUbCoolTime: Double = 0.0,
+    @Ignore var isRfSkill: Boolean = false,
 ) {
+    /**
+     * 获取技能所有动作id
+     */
     fun getAllActionId() = arrayListOf(
         action_1,
         action_2,
@@ -43,6 +48,9 @@ data class SkillData(
         it != 0
     }
 
+    /**
+     * 获取技能依赖信息
+     */
     fun getSkillDependData(): MutableMap<Int, Int> {
         val map = mutableMapOf<Int, Int>()
         val actionList = arrayListOf(

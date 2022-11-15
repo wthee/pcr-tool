@@ -47,6 +47,27 @@ class SkillViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * 获取ex装备被动技能信息
+     *
+     * @param skillIds 技能编号列表
+     */
+    fun getExtraEquipPassiveSkills(skillIds: List<Int>) = flow {
+        try {
+            val skillList = getSkills(
+                skillIds,
+                arrayListOf(0),
+                0,
+            )
+            emit(skillList)
+        } catch (e: Exception) {
+            if (e !is CancellationException) {
+                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "skillId:$skillIds")
+            }
+        }
+    }
+
     /**
      * 获取角色技能 id
      */
@@ -82,7 +103,13 @@ class SkillViewModel @Inject constructor(
                     skillIds.addAll(data.getSpSkillId())
                 }
             }
-            emit(getSkills(skillIds, arrayListOf(lv), atk))
+            emit(
+                getSkills(
+                    skillIds.distinct().filter { it / 1000000 != 2 },
+                    arrayListOf(lv),
+                    atk
+                )
+            )
         } catch (e: Exception) {
             Log.e("DEBUG", e.message ?: "")
         }
@@ -103,21 +130,26 @@ class SkillViewModel @Inject constructor(
         val infos = mutableListOf<SkillDetail>()
         //技能信息
         skillIds.forEachIndexed { index, sid ->
-            val skill = skillRepository.getSkillData(sid)
+            val lv = if (lvs.size == 1) lvs[0] else lvs[index]
+            val skill = skillRepository.getSkillData(sid, lv)
             if (skill != null) {
-                val lv = if (lvs.size == 1) lvs[0] else lvs[index]
 
                 val info = SkillDetail(
-                    skill.skill_id,
+                    skill.skillId,
                     skill.name ?: "",
                     skill.description,
-                    skill.icon_type,
-                    skill.skill_cast_time,
+                    skill.iconType,
+                    skill.skillCastTime,
                     lv,
                     atk,
-                    skill.boss_ub_cool_time
+                    skill.bossUbCoolTime
                 )
-                val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
+                val actions = skillRepository.getSkillActions(
+                    lv,
+                    atk,
+                    skill.getAllActionId(),
+                    isRfSkill = skill.isRfSkill
+                )
                 val dependIds = skill.getSkillDependData()
                 actions.forEachIndexed { i, action ->
                     if (i != 0) {
@@ -141,13 +173,13 @@ class SkillViewModel @Inject constructor(
             val map = hashMapOf<Int, Int>()
             //技能信息
             skillIds.forEachIndexed { _, sid ->
-                val skill = skillRepository.getSkillData(sid)
+                val skill = skillRepository.getSkillData(sid, 0)
                 if (skill != null) {
-                    var aid = skill.skill_id % 1000
+                    var aid = skill.skillId % 1000
                     if (aid < 100) {
                         aid %= 10
                     }
-                    map[aid] = skill.icon_type
+                    map[aid] = skill.iconType
                 }
             }
             emit(map)

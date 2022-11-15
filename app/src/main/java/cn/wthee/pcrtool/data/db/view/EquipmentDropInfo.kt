@@ -15,12 +15,14 @@ data class EquipmentDropInfo(
     @ColumnInfo(name = "rewards") val rewards: String,
     @ColumnInfo(name = "odds") val odds: String
 ) {
-    fun getNum() = questName.split(" ")[1]
 
-    fun getOddOfEquip(eid: String): String {
+    /**
+     * 获取掉率
+     */
+    fun getOddOfEquip(equipId: String): String {
         val list1 = rewards.split('-')
         val list2 = odds.split('-')
-        return list2[list1.indexOf(eid)]
+        return list2[list1.indexOf(equipId)]
     }
 
     fun getAllOdd(): List<EquipmentIdWithOdd> {
@@ -50,13 +52,13 @@ fun equipCompare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
     } else if (o1.odd < o2.odd) {
         1
     } else {
-        if (o1.eid / 100 % 100 < o2.eid / 100 % 100) 1 else -1
+        if (o1.equipId / 100 % 100 < o2.equipId / 100 % 100) 1 else -1
     }
 }
 
 
 data class EquipmentIdWithOdd(
-    val eid: Int = UNKNOWN_EQUIP_ID,
+    val equipId: Int = UNKNOWN_EQUIP_ID,
     val odd: Int = 0
 )
 

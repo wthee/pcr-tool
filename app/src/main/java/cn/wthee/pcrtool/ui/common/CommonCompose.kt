@@ -154,13 +154,14 @@ fun Subtitle1(
     color: Color = MaterialTheme.colorScheme.onSurface,
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
+    textAlign: TextAlign = TextAlign.Start,
 ) {
     if (selectable) {
         SelectionContainer(modifier = modifier) {
             Text(
                 text = text,
                 color = color,
-                textAlign = TextAlign.Start,
+                textAlign = textAlign,
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
@@ -170,7 +171,7 @@ fun Subtitle1(
         Text(
             text = text,
             color = color,
-            textAlign = TextAlign.Start,
+            textAlign = textAlign,
             style = MaterialTheme.typography.titleMedium,
             modifier = modifier,
             maxLines = maxLines,
@@ -368,7 +369,6 @@ fun CommonSpacer() {
 /**
  * 卡片布局
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
@@ -807,10 +807,10 @@ fun BottomSearchBar(
 }
 
 /**
- * 暂无更多
+ * 居中文本
  */
 @Composable
-fun NoMoreDataText() {
+fun CenterTipText(text: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -819,9 +819,92 @@ fun NoMoreDataText() {
     ) {
         //内容
         Subtitle1(
-            text = stringResource(R.string.no_more),
+            text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )
+    }
+}
+
+/**
+ * 服务器版本名称
+ */
+@Composable
+fun getRegionName(region: Int) = stringResource(
+    id = when (region) {
+        2 -> R.string.db_cn
+        3 -> R.string.db_tw
+        else -> R.string.db_jp
+    }
+)
+
+/**
+ * 通用标题内容组件，用例：角色属性
+ */
+@Composable
+fun CommonTitleContentText(title: String, content: String) {
+    Row(
+        modifier = Modifier.padding(
+            top = Dimen.smallPadding,
+            start = Dimen.commonItemPadding,
+            end = Dimen.commonItemPadding
+        )
+    ) {
+        MainTitleText(
+            text = title, modifier = Modifier
+                .weight(0.3f)
+        )
+        MainContentText(
+            text = content,
+            modifier = Modifier
+                .weight(0.2f)
+        )
+    }
+}
+
+/**
+ * 通用分组标题
+ */
+@Composable
+fun CommonGroupTitle(
+    modifier: Modifier = Modifier,
+    iconData: Any? = null,
+    titleStart: String,
+    titleEnd: String,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = colorWhite,
+    iconSize:Dp = Dimen.iconSize
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        iconData?.let {
+            IconCompose(
+                data = iconData,
+                size = iconSize
+            )
+        }
+        Row(
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .weight(1f)
+                .background(
+                    color = backgroundColor,
+                    shape = MaterialTheme.shapes.extraSmall
+                )
+                .padding(horizontal = Dimen.mediumPadding)
+        ) {
+            Subtitle2(
+                text = titleStart,
+                color = textColor
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Subtitle2(
+                text = titleEnd,
+                color = textColor
+            )
+        }
     }
 }
