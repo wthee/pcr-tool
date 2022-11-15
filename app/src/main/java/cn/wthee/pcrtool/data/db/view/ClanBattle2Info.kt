@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
- * 团队战信息
+ * 公会战信息
  */
 data class ClanBattleInfo(
     @ColumnInfo(name = "clan_battle_id") var clanBattleId: Int = -1,

@@ -180,7 +180,7 @@ private fun ClanBattleItem(
 
 
 /**
- * 获取团队战阶段字体颜色
+ * 获取公会战阶段字体颜色
  */
 @Composable
 fun getSectionTextColor(section: Int) = when (section) {

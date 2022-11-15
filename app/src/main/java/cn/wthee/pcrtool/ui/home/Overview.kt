@@ -708,7 +708,7 @@ private fun CalendarEventOperation(
                             eventText += "• $date\n${getTypeDataToString(it)}\n"
                         }
                         if (eventText != "") {
-                            allText += "▶ 掉落活动\n$eventText\n\n"
+                            allText += "▶ 掉落活动\n$eventText\n"
                         }
 
                         //剧情活动
@@ -729,7 +729,7 @@ private fun CalendarEventOperation(
 
                         }
                         if (gachaText != "") {
-                            allText += "▶ 卡池信息\n$gachaText\n"
+                            allText += "▶ 卡池信息\n$gachaText\n\n"
                         }
 
                         //免费十连
@@ -740,7 +740,7 @@ private fun CalendarEventOperation(
 
                         }
                         if (freeGachaText != "") {
-                            allText += "▶ 免费十连\n$freeGachaText\n"
+                            allText += "▶ 免费十连\n$freeGachaText\n\n"
                         }
 
                         //免费十连
@@ -1003,7 +1003,7 @@ private fun getTypeDataToString(data: CalendarEvent): String {
         else -> {
             //正常活动
             val list = data.type.intArrayList
-            list.forEach { type ->
+            list.forEachIndexed { index, type ->
                 val title = when (type) {
                     31, 41 -> "普通关卡"
                     32, 42 -> "困难关卡"
@@ -1019,7 +1019,10 @@ private fun getTypeDataToString(data: CalendarEvent): String {
                     multiple.toInt().toString()
                 } else {
                     multiple.toString()
-                }) + "倍\n"
+                }) + "倍"
+                if (index != list.size - 1) {
+                    eventTitle += "\n"
+                }
             }
         }
     }

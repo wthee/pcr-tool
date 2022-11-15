@@ -478,7 +478,7 @@ fun NavGraph(
                 GuildList(scrollState, actions.toCharacterDetail)
             }
 
-            //团队战
+            //公会战
             composable(route = Navigation.TOOL_CLAN,
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
@@ -489,7 +489,7 @@ fun NavGraph(
                 ClanBattleList(scrollState, actions.toClanBossInfo)
             }
 
-            //团队战详情
+            //公会战详情
             composable(route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_Battle_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}/{${Navigation.TOOL_CLAN_BOSS_PHASE}}",
                 arguments = listOf(navArgument(Navigation.TOOL_CLAN_Battle_ID) {
                     type = NavType.IntType
@@ -841,7 +841,7 @@ class NavActions(navController: NavHostController) {
 
 
     /**
-     * 团队战 BOSS
+     * 公会战 BOSS
      */
     val toClanBossInfo: (Int, Int, Int) -> Unit = { clanId: Int, index: Int, phase: Int ->
         navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${phase}")
@@ -869,7 +869,7 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 团队战
+     * 公会战
      */
     val toClan = {
         navController.navigate(Navigation.TOOL_CLAN)

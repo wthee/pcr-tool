@@ -36,7 +36,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 
 /**
- * 团队战 BOSS 详情
+ * 公会战 BOSS 详情
  */
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -63,7 +63,7 @@ fun ClanBattleDetail(
         modifier = Modifier.fillMaxSize()
     ) {
         clanBattleInfo?.let { clanBattleList ->
-            //该期团队战数据
+            //该期公会战数据
             val clanBattleValue = clanBattleList[0]
 
             //五个Boss信息

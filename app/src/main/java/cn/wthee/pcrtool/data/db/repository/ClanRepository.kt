@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.data.db.dao.ClanBattleDao
 import javax.inject.Inject
 
 /**
- * 团队战 Repository
+ * 公会战 Repository
  *
  * @param clanBattleDao
  */
