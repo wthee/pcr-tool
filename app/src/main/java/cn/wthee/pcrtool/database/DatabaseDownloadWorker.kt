@@ -66,7 +66,7 @@ class DatabaseDownloadWorker(
             //创建Retrofit服务
             service = ApiUtil.createWithClient(
                 DatabaseService::class.java, Constants.DATABASE_URL,
-                ApiUtil.downloadClientBuild(object : DownloadListener {
+                ApiUtil.buildDownloadClient(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         try {

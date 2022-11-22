@@ -88,7 +88,7 @@ class PvpViewModel @Inject constructor(
         try {
             val today = getToday()
             //获取前30天
-            val beforeDate = calcDate(today, 30, true)
+            val beforeDate = calcDate(today, 60, true)
             val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
             val unitList = arrayListOf<PvpCharacterData>()
             val map = hashMapOf<Int, Int>()

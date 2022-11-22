@@ -447,7 +447,7 @@ fun NavGraph(
                 popExitTransition = { myFadeOut }) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
-                GachaList(scrollState, actions.toCharacterDetail)
+                GachaList(scrollState, actions.toCharacterDetail, actions.toMockGacha)
             }
 
             //免费十连

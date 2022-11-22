@@ -42,15 +42,11 @@ fun GridIconListCompose(
  */
 @Composable
 fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
-    val unitId: Int
-//    val iconId: Int
-    if (id / 10000 == 3) {
+    val unitId: Int = if (id / 10000 == 3) {
         //item 转 unit
-//        iconId = id % 10000 * 100 + 11
-        unitId = id % 10000 * 100 + 1
+        id % 10000 * 100 + 1
     } else {
-//        iconId = id + 30
-        unitId = id
+        id
     }
     Column(
         modifier = Modifier

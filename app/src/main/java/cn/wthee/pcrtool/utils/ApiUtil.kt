@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.annotation.SuppressLint
 import cn.wthee.pcrtool.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -20,9 +21,10 @@ import javax.net.ssl.X509TrustManager
  */
 object ApiUtil {
 
-    private final const val TIMEOUT_NORMAL_SECOND = 15L
-    private final const val TIMEOUT_DOWNLOAD_SECOND = 120L
+    private const val TIMEOUT_NORMAL_SECOND = 15L
+    private const val TIMEOUT_DOWNLOAD_SECOND = 120L
 
+    @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
     private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
         val client = this
         //初始 SSL
@@ -57,7 +59,7 @@ object ApiUtil {
     /**
      * 带下载进度 client
      */
-    fun downloadClientBuild(listener: DownloadListener): OkHttpClient {
+    fun buildDownloadClient(listener: DownloadListener): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .addInterceptor(Interceptor {
                 val originalResponse: Response = it.proceed(it.request())
@@ -76,12 +78,12 @@ object ApiUtil {
     /**
      * 创建 [OkHttpClient]
      */
-    fun getClient(second: Long): OkHttpClient {
+    fun buildClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
-            .connectTimeout(second, TimeUnit.SECONDS)
-            .writeTimeout(second, TimeUnit.SECONDS)
-            .readTimeout(second, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
             .addInterceptor(RetryInterceptor(3))
 
         return builder.setSSL().build()
@@ -95,8 +97,7 @@ object ApiUtil {
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getClient(TIMEOUT_NORMAL_SECOND))
-
+            .client(buildClient())
 
         return builder.build().create(serviceClass)
     }

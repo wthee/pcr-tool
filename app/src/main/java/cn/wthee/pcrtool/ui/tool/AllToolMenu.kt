@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.home.*
+import cn.wthee.pcrtool.ui.home.module.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.colorWhite
