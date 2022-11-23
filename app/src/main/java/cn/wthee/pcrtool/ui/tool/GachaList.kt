@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
@@ -34,9 +35,12 @@ import kotlinx.coroutines.launch
 fun GachaList(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
+    toMockGacha: () -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
     val gachaList = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val fesUnitIds =
+        gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -50,7 +54,12 @@ fun GachaList(
                         it.gachaId
                     }
                 ) {
-                    GachaItem(it, toCharacterDetail)
+                    GachaItem(
+                        gachaInfo = it,
+                        fesUnitIds = fesUnitIds,
+                        toCharacterDetail = toCharacterDetail,
+                        toMockGacha = toMockGacha
+                    )
                 }
                 item {
                     CommonSpacer()
@@ -81,7 +90,12 @@ fun GachaList(
  * 单个卡池
  */
 @Composable
-fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
+fun GachaItem(
+    gachaInfo: GachaInfo,
+    fesUnitIds: List<Int>,
+    toCharacterDetail: (Int) -> Unit,
+    toMockGacha: () -> Unit
+) {
     val today = getToday()
     val sd = gachaInfo.startTime.formatTime.fixJpTime
     val ed = gachaInfo.endTime.formatTime.fixJpTime
@@ -97,7 +111,13 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         GachaType.ANNIV -> colorOrange
         GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
     }
-
+    //是否普通角色、fes混合卡池
+    val isMixedGachaPool =
+        icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
+    val gachaType = when {
+        icons.find { !fesUnitIds.contains(it) } == null -> 1
+        else -> 0
+    }
 
     Column(
         modifier = Modifier.padding(
@@ -175,14 +195,31 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     GridIconListCompose(icons = icons, onClickItem = toCharacterDetail)
                 }
 
-                //结束日期
-                CaptionText(
-                    text = ed,
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = Dimen.mediumPadding)
-
-                )
+                        .padding(horizontal = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //模拟抽卡 fixme 暂不支持普通和fes角色混合池
+                    if (!isMixedGachaPool) {
+                        IconTextButton(
+                            icon = MainIconType.MOCK_GACHA,
+                            text = stringResource(R.string.tool_mock_gacha)
+                        ) {
+                            navViewModel.gachaType.postValue(gachaType)
+                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaUnitList())
+                            //跳转
+                            toMockGacha()
+                        }
+                    }
+                    //结束日期
+                    CaptionText(
+                        text = ed,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
     }
@@ -194,7 +231,12 @@ fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 private fun GachaItemPreview() {
     PreviewBox {
         Column {
-            GachaItem(gachaInfo = GachaInfo(), toCharacterDetail = {})
+            GachaItem(
+                gachaInfo = GachaInfo(),
+                toCharacterDetail = {},
+                toMockGacha = {},
+                fesUnitIds = arrayListOf()
+            )
         }
     }
 }

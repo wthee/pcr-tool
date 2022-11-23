@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.stringArrayList
 
 /**
  * 卡池记录
@@ -15,7 +16,9 @@ data class GachaInfo(
     @ColumnInfo(name = "start_time") val startTime: String = "2020/01/01 00:00:00",
     @ColumnInfo(name = "end_time") val endTime: String = "2020/01/07 00:00:00",
     @ColumnInfo(name = "unit_ids") val unitIds: String = "100101",
+    @ColumnInfo(name = "unit_names") val unitNames: String = "",
     @ColumnInfo(name = "is_limiteds") val isLimiteds: String = "0-0",
+    @ColumnInfo(name = "is_ups") val isUps: String = "0-0",
 ) {
 
     /**
@@ -57,34 +60,38 @@ data class GachaInfo(
     fun fixTypeName() = gachaName.replace("ガチャ", "").replace("扭蛋", "").replace("轉蛋", "")
 
     /**
-     * 是否包含限定 fixme 8月台服更新后，可取消判断
+     * 是否包含限定  国服环奈
      */
-    fun isLimited(): Boolean {
-        val limitIdsTw = arrayListOf(
-            106101,
-            107001,
-            107101,
-            107501,
-            107701,
-            107801,
-            107901,
-            108101,
-            108301,
-            108401,
-            108601,
-            108701,
-            108801,
-            109101,
-            110001,
-            110301,
-            110401,
-            110601
+    private fun isLimited(): Boolean {
+        val limitIdsCn = arrayListOf(
+            170101,
+            170201
         )
         var isLimit = false
         unitIds.intArrayList.forEach {
-            isLimit = limitIdsTw.contains(it)
+            isLimit = limitIdsCn.contains(it)
             if (isLimit) return@forEach
         }
         return isLimit || isLimiteds.intArrayList.contains(1)
+    }
+
+    /**
+     * 获取模拟抽卡角色信息
+     */
+    fun getMockGachaUnitList(): List<GachaUnitInfo> {
+        val ids = unitIds.intArrayList
+        val names = unitNames.stringArrayList
+        val isLimits = isLimiteds.intArrayList
+        val upIds = isUps.intArrayList
+        val list = arrayListOf<GachaUnitInfo>()
+        ids.forEachIndexed { index, id ->
+            if (ids.size <= 4 || upIds[index] > 0) {
+                //正常卡池、或fes卡池up的角色
+                list.add(
+                    GachaUnitInfo(id, names[index], isLimits[index], 3)
+                )
+            }
+        }
+        return list
     }
 }
