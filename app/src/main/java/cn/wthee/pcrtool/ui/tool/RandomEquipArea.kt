@@ -52,7 +52,7 @@ fun RandomEquipArea(
                     items(
                         items = areaList,
                         key = {
-                            it.area
+                            "${it.area}-${it.type}"
                         }
                     ) {
                         val odds = arrayListOf<EquipmentIdWithOdd>()
@@ -64,7 +64,11 @@ fun RandomEquipArea(
                         AreaItem(
                             ImageResourceHelper.UNKNOWN_EQUIP_ID,
                             odds,
-                            "区域 ${it.area}",
+                            "区域 ${it.area} " + when (it.type) {
+                                1 -> "1~7"
+                                2 -> "8~14"
+                                else -> ""
+                            },
                             colorGreen
                         )
                     }
