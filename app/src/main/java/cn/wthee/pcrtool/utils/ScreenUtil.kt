@@ -4,7 +4,6 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.ui.common.RATIO
 
 
 /**
@@ -66,7 +65,6 @@ object ScreenUtil {
         }
     }
 
-    fun getCharacterCardHeight() = getWidth() / RATIO
 }
 
 /**

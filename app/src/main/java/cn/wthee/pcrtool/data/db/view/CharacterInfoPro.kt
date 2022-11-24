@@ -46,7 +46,6 @@ data class CharacterInfoPro(
      */
     fun getFixedWeight() = if (weight == "999") "?" else weight
 
-
     /**
      * 角色自我介绍
      */
@@ -56,7 +55,6 @@ data class CharacterInfoPro(
         this.selfText.replace("\\n", "")
     }
 
-
     /**
      * 角色介绍
      */
@@ -65,8 +63,8 @@ data class CharacterInfoPro(
     /**
      * 交流
      */
-    fun getCommentsText() =
-        comments.replace("\\n", "").replace("-", "\n\n")
+    fun getCommentList() =
+        comments.replace("\\n", "").split("-")
 
 
 }

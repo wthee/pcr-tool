@@ -67,7 +67,10 @@ fun LeaderboardList(
                 .fillMaxSize()
         ) {
             //更新
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.padding(vertical = Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 MainTitleText(
                     text = "GameWith",
                     modifier = Modifier

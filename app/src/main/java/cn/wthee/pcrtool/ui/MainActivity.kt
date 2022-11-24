@@ -185,6 +185,8 @@ class MainActivity : ComponentActivity() {
                 finish()
                 startActivity(intent)
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                //振动提示
+                VibrateUtil(this).done()
             } catch (e: Exception) {
                 LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 ToastUtil.short(getString(R.string.change_failed))

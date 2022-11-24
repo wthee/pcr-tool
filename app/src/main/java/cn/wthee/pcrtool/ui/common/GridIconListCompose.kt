@@ -41,7 +41,7 @@ fun GridIconListCompose(
  * 角色图标
  */
 @Composable
-fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
+private fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
     val unitId: Int = if (id / 10000 == 3) {
         //item 转 unit
         id % 10000 * 100 + 1

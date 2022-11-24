@@ -157,11 +157,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.2")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

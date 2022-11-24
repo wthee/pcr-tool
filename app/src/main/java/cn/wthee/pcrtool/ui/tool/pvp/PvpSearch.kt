@@ -106,7 +106,10 @@ fun PvpSearchCompose(
                 val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
 
                 Row(
-                    modifier = Modifier.padding(Dimen.largePadding),
+                    modifier = Modifier.padding(
+                        horizontal = Dimen.largePadding,
+                        vertical = Dimen.mediumPadding
+                    ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MainTitleText(

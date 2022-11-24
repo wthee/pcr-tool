@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -117,7 +119,7 @@ object Navigation {
 @OptIn(
     ExperimentalPagerApi::class,
     ExperimentalAnimationApi::class,
-    ExperimentalMaterialNavigationApi::class
+    ExperimentalMaterialNavigationApi::class, ExperimentalFoundationApi::class
 )
 @Composable
 fun NavGraph(
@@ -468,7 +470,7 @@ fun NavGraph(
                 popEnterTransition = { myFadeIn },
                 popExitTransition = { myFadeOut }) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyGridState()
+                val scrollState = rememberLazyStaggeredGridState()
                 StoryEventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
             }
 
@@ -719,7 +721,7 @@ fun NavGraph(
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
                 popExitTransition = { myFadeOut }) {
-                val scrollState = rememberLazyGridState()
+                val scrollState = rememberLazyStaggeredGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 BirthdayList(scrollState, actions.toCharacterDetail)
             }

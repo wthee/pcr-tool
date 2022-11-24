@@ -1,10 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,26 +31,25 @@ import kotlinx.coroutines.launch
 /**
  * 生日日程
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BirthdayList(
-    scrollState: LazyGridState,
+    scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
     birthdayViewModel: BirthdayViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val dataList =
-        birthdayViewModel.getBirthDayList().collectAsState(initial = arrayListOf()).value
+    val dataList = birthdayViewModel.getBirthDayList().collectAsState(initial = arrayListOf()).value
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
         if (dataList.isNotEmpty()) {
-            LazyVerticalGrid(state = scrollState, columns = GridCells.Adaptive(getItemWidth())) {
-                items(
-                    items = dataList,
-                    key = {
-                        "${it.month}/${it.day}"
-                    }
-                ) {
+            LazyVerticalStaggeredGrid(
+                state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
+            ) {
+                items(items = dataList, key = {
+                    "${it.month}/${it.day}"
+                }) {
                     BirthdayItem(it, toCharacterDetail)
                 }
                 item {
@@ -91,8 +91,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
 
     Column(
         modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
+            horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding
         )
     ) {
         //标题
@@ -101,8 +100,7 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             MainTitleText(
-                text = stringResource(id = R.string.title_birth),
-                backgroundColor = colorRed
+                text = stringResource(id = R.string.title_birth), backgroundColor = colorRed
             )
             MainTitleText(
                 text = if (data.month == 999) {

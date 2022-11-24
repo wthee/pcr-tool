@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.ui.home.module
-
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -20,6 +18,8 @@ import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -37,13 +37,13 @@ fun CharacterSection(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.CHARACTER.id
-
     //角色总数
     val characterCount =
         overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
     //角色列表
     val characterList =
         overviewViewModel.getCharacterInfoList().collectAsState(initial = arrayListOf()).value
+
     Section(
         id = id,
         titleId = R.string.character,
@@ -59,31 +59,56 @@ fun CharacterSection(
         }
     ) {
         if (characterList.isNotEmpty()) {
-            HorizontalPager(
-                count = characterList.size,
-                state = rememberPagerState(),
-                modifier = Modifier
-                    .padding(vertical = Dimen.mediumPadding)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = Dimen.largePadding),
-                itemSpacing = Dimen.mediumPadding
-            ) { index ->
-                val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
-                MainCard(
-                    modifier = Modifier.width(getItemWidth()),
-                    onClick = {
-                        actions.toCharacterDetail(unitId)
+            //正常
+            if (ScreenUtil.getWidth() < getItemWidth().value.dp2px * 1.5) {
+                //宽屏幕时
+                HorizontalPager(
+                    count = characterList.size,
+                    state = rememberPagerState(),
+                    modifier = Modifier
+                        .padding(vertical = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = Dimen.largePadding),
+                    itemSpacing = Dimen.mediumPadding
+                ) { index ->
+                    val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
+                    CharacterImageItem(unitId, actions.toCharacterDetail)
+                }
+            } else {
+                //屏幕较宽时
+                LazyRow {
+                    items(characterList) {
+                        Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
+                            CharacterImageItem(it.id, actions.toCharacterDetail)
+                        }
                     }
-//                    elevation = CardDefaults.cardElevation(0.dp),
-//                    shape = MaterialTheme.shapes.medium,
-//                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
-                ) {
-                    ImageCompose(
-                        data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
-                        ratio = RATIO
-                    )
+                    item {
+                        Spacer(modifier = Modifier.padding(end = Dimen.largePadding))
+                    }
                 }
             }
+
         }
+    }
+}
+
+/**
+ * 角色图片
+ */
+@Composable
+private fun CharacterImageItem(
+    unitId: Int,
+    toCharacterDetail: (Int) -> Unit
+) {
+    MainCard(
+        modifier = Modifier.width(getItemWidth()),
+        onClick = {
+            toCharacterDetail(unitId)
+        }
+    ) {
+        ImageCompose(
+            data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
+            ratio = RATIO
+        )
     }
 }

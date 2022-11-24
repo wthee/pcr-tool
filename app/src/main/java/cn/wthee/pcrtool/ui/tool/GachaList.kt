@@ -199,7 +199,6 @@ fun GachaItem(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //模拟抽卡 fixme 暂不支持普通和fes角色混合池
