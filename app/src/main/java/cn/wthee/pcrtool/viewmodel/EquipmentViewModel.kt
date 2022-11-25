@@ -2,10 +2,11 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.QuestRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
-import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
-import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.QuestDetail
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,10 +17,12 @@ import javax.inject.Inject
  * 装备 ViewModel
  *
  * @param equipmentRepository
+ * @param questRepository
  */
 @HiltViewModel
 class EquipmentViewModel @Inject constructor(
-    private val equipmentRepository: EquipmentRepository
+    private val equipmentRepository: EquipmentRepository,
+    private val questRepository: QuestRepository
 ) : ViewModel() {
 
     /**
@@ -216,7 +219,7 @@ class EquipmentViewModel @Inject constructor(
                     equipId
                 //获取装备掉落信息
                 val infos =
-                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
+                    questRepository.getEquipDropQuestList(fixedId).sortedWith(getSort(equipId))
                 emit(infos)
             }
         } catch (_: Exception) {
@@ -229,9 +232,9 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equipId 装备编号
      */
-    private fun getSort(equipId: Int): java.util.Comparator<EquipmentDropInfo> {
+    private fun getSort(equipId: Int): java.util.Comparator<QuestDetail> {
         val str = equipId.toString()
-        return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
+        return Comparator { o1: QuestDetail, o2: QuestDetail ->
             val a = o1.getOddOfEquip(str)
             val b = o2.getOddOfEquip(str)
             b.compareTo(a)

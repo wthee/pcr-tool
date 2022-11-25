@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox

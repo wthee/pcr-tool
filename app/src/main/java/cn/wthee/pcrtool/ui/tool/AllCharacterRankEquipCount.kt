@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.IconCompose

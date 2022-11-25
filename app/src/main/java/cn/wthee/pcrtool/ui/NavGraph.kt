@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
+import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelList
 import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelQuestDetail
 import com.google.accompanist.navigation.animation.AnimatedNavHost

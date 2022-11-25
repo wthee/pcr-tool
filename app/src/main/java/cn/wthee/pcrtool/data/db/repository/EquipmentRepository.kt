@@ -28,8 +28,6 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getCount() = equipmentDao.getCount()
 
-    suspend fun getEquipDropAreas(equipId: Int) = equipmentDao.getEquipDropAreas(equipId)
-
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {

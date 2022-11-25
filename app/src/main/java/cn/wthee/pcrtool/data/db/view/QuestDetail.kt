@@ -1,16 +1,19 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
-import java.io.Serializable
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.equipCompare
 
 
 /**
- * 最终掉落信息视图
+ * 主线掉落信息视图
+ *
+ * questType 1：普通、2：困难、3：非常困难
  */
-data class EquipmentDropInfo(
+data class QuestDetail(
     @ColumnInfo(name = "equip_id") val equipId: Int,
     @ColumnInfo(name = "quest_id") val questId: Int,
+    @ColumnInfo(name = "quest_type") val questType: Int,
     @ColumnInfo(name = "quest_name") val questName: String,
     @ColumnInfo(name = "rewards") val rewards: String,
     @ColumnInfo(name = "odds") val odds: String
@@ -43,31 +46,5 @@ data class EquipmentDropInfo(
     }
 }
 
-/**
- * 排序
- */
-fun equipCompare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
-    if (o1.odd > o2.odd) {
-        -1
-    } else if (o1.odd < o2.odd) {
-        1
-    } else {
-        if (o1.equipId / 100 % 100 < o2.equipId / 100 % 100) 1 else -1
-    }
-}
 
-
-data class EquipmentIdWithOdd(
-    val equipId: Int = UNKNOWN_EQUIP_ID,
-    val odd: Int = 0
-)
-
-/**
- * 装备合成信息
- */
-data class EquipmentMaterial(
-    var id: Int = UNKNOWN_EQUIP_ID,
-    var name: String = "???",
-    var count: Int = 0
-) : Serializable
 
