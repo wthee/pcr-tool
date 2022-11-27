@@ -237,21 +237,28 @@ fun StoryEventItem(
                 //标题
                 Subtitle1(
                     text = event.getEventTitle(),
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        top = Dimen.mediumPadding,
-                    ),
+                    modifier = Modifier.padding(Dimen.mediumPadding),
                     textAlign = TextAlign.Start,
                     selectable = true
                 )
 
                 //掉落角色图标
                 if (event.getUnitIdList().isNotEmpty()) {
-                    GridIconListCompose(
-                        icons = event.getUnitIdList(),
-                        onClickItem = toCharacterDetail
-                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = Dimen.mediumPadding)
+                            .align(Alignment.End)
+                    ) {
+                        event.getUnitIdList().forEach { itemId ->
+                            val unitId = itemId % 10000 * 100 + 1
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+                                modifier = Modifier.padding(end = Dimen.mediumPadding)
+                            ) {
+                                toCharacterDetail(unitId)
+                            }
+                        }
+                    }
                 }
 
                 Row(

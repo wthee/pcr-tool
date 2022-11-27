@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +33,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -353,6 +354,11 @@ fun SkillActionItem(
     map[2] = mark2
     map[3] = mark3
 
+    //等级提示
+    val expandTip = remember {
+        mutableStateOf(false)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -417,13 +423,19 @@ fun SkillActionItem(
                 }
                 //技能等级超过tp限制等级的，添加标识
                 if (skillAction.isTpLimitAction) {
-                    val tip = stringResource(id = R.string.tip_tp_limit_level_action)
                     IconTextButton(
-                        icon = MainIconType.HELP,
+                        icon = if (!expandTip.value) MainIconType.HELP else MainIconType.CLOSE,
                         text = stringResource(R.string.tp_limit_level_action)
                     ) {
-                        ToastUtil.long(tip)
+                        expandTip.value = !expandTip.value
                     }
+                }
+            }
+
+            if (skillAction.isTpLimitAction) {
+                val tip = stringResource(id = R.string.tip_tp_limit_level_action)
+                ExpandAnimation(visible = expandTip.value) {
+                    CaptionText(text = tip, textAlign = TextAlign.Start)
                 }
             }
 

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -754,6 +755,8 @@ fun BottomSearchBar(
         }
     }
 
+
+    //focusRequester
     Box(
         modifier = modifier
             .background(
@@ -765,7 +768,8 @@ fun BottomSearchBar(
             modifier = Modifier
                 .fillMaxWidth(if (isImeVisible) 1f else 0f)
                 .padding(Dimen.smallPadding)
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .alpha(if (isImeVisible) 1f else 0f),
             value = keywordInputState.value,
             shape = MaterialTheme.shapes.medium,
             onValueChange = { keywordInputState.value = it.deleteSpace },

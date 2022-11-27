@@ -43,10 +43,9 @@
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action">技能等级 > 260</string>
-    <string name="tip_tp_limit_level_action">技能等级 > 260 后，继续提高技能等级时，TP数值不会继续增加</string>
+    <string name="tip_tp_limit_level_action">该技能等级大于 260，继续提高技能等级不会增加TP数值</string>
 
     <!--设置页面-->
-    <string name="random_area">额外掉落</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
@@ -168,6 +167,10 @@
     <string name="title_recently_used">常用</string>
     <string name="phase">%s阶段</string>
     <string name="last_update">最近</string>
+    <string name="random_area">额外掉落</string>
+    <string name="random_drop_area_title">区域 %d</string>
+    <string name="random_drop_area_1">（前半：1 ~ 7）</string>
+    <string name="random_drop_area_2">（后半：8 ~ 14）</string>
 
     <!--操作-->
     <string name="cancel">取消</string>
@@ -230,6 +233,7 @@
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="delete_gacha">删除卡池</string>
+    <string name="go_to_mock">去抽卡</string>
 
     <!--ex装备相关-->
     <string name="extra_equip_normal">普通</string>

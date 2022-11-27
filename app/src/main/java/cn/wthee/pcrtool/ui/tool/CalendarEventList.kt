@@ -1,9 +1,8 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,9 +28,10 @@ import kotlinx.coroutines.launch
 /**
  * 日程记录
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarEventList(
-    scrollState: LazyListState,
+    scrollState: LazyStaggeredGridState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -40,7 +40,10 @@ fun CalendarEventList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
+        LazyVerticalStaggeredGrid(
+            state = scrollState,
+            columns = StaggeredGridCells.Adaptive(getItemWidth())
+        ) {
             items(dataList) {
                 CalendarEventItem(it)
             }

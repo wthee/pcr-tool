@@ -256,7 +256,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewBox {
-        TweetItem(data = TweetData(id = 0), toComic = {})
+        TweetItem(data = TweetData(id = 1), toComic = {})
     }
 }
 

@@ -107,7 +107,7 @@ fun CharacterList(
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                    contentPadding = PaddingValues(Dimen.commonItemPadding)
                 ) {
                     items(
                         items = characterList,

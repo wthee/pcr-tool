@@ -19,11 +19,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.equipCompare
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.equip.AreaItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.intArrayList
@@ -124,14 +122,13 @@ fun RandomDropAreaList(
             it.equipIds.intArrayList.forEach { id ->
                 odds.add(EquipmentIdWithOdd(id, 0))
             }
-            odds.sortWith(equipCompare())
 
             AreaItem(
                 selectId,
                 odds,
-                "区域 ${it.area} " + when (it.type) {
-                    1 -> "1~7"
-                    2 -> "8~14"
+                stringResource(id = R.string.random_drop_area_title, it.area) + when (it.type) {
+                    1 -> stringResource(id = R.string.random_drop_area_1)
+                    2 -> stringResource(id = R.string.random_drop_area_2)
                     else -> ""
                 },
                 colorGreen

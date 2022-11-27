@@ -20,6 +20,6 @@ fun equipCompare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
     } else if (o1.odd < o2.odd) {
         1
     } else {
-        if (o1.equipId / 100 % 100 < o2.equipId / 100 % 100) 1 else -1
+        o2.equipId.compareTo(o1.equipId)
     }
 }

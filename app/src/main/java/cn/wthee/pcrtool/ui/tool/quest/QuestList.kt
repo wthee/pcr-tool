@@ -7,20 +7,20 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.equip.AreaItem
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -193,6 +193,111 @@ fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
         }
         item {
             CommonSpacer()
+        }
+    }
+}
+
+
+/**
+ * 掉落区域信息
+ * @param selectedId unknow 随机掉落；非0 主线掉落，titleEnd显示概率；0 隐藏titleEnd
+ */
+@Composable
+fun AreaItem(
+    selectedId: Int,
+    odds: List<EquipmentIdWithOdd>,
+    num: String,
+    color: Color
+) {
+    val placeholder = selectedId == -1
+
+    val selectedOdd = odds.find {
+        it.equipId == selectedId
+    }
+    //标题显示概率文本
+    val titleEnd = if (selectedId != 0) {
+        (if (selectedOdd != null && selectedOdd.odd != 0) {
+            "${selectedOdd.odd}"
+        } else {
+            Constants.UNKNOWN
+        }) + "%"
+    } else {
+        ""
+    }
+
+
+    //标题
+    CommonGroupTitle(
+        titleStart = num,
+        titleEnd = titleEnd,
+        backgroundColor = color,
+        modifier = Modifier
+            .padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
+            .commonPlaceholder(placeholder)
+    )
+
+    VerticalGrid(
+        modifier = Modifier
+            .padding(
+                bottom = Dimen.largePadding,
+                start = Dimen.commonItemPadding,
+                end = Dimen.commonItemPadding
+            )
+            .commonPlaceholder(placeholder),
+        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+    ) {
+        odds.forEach {
+            EquipWithOddCompose(selectedId, it)
+        }
+    }
+}
+
+
+/**
+ * 带掉率装备图标
+ */
+@Composable
+private fun EquipWithOddCompose(
+    selectedId: Int,
+    oddData: EquipmentIdWithOdd
+) {
+    var dataState by remember { mutableStateOf(oddData) }
+    if (dataState != oddData) {
+        dataState = oddData
+    }
+    val equipIcon: @Composable () -> Unit by remember {
+        mutableStateOf(
+            {
+                IconCompose(
+                    data = ImageResourceHelper.getInstance()
+                        .getUrl(ImageResourceHelper.ICON_EQUIPMENT, dataState.equipId)
+                )
+            }
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(bottom = Dimen.mediumPadding)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val selected = selectedId == dataState.equipId
+        Box(contentAlignment = Alignment.Center) {
+            equipIcon()
+            if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {
+                SelectText(
+                    selected = selected,
+                    text = if (selected) "✓" else "",
+                    margin = 0.dp
+                )
+            }
+        }
+        if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && dataState.odd > 0) {
+            SelectText(
+                selected = selected,
+                text = "${dataState.odd}%"
+            )
         }
     }
 }

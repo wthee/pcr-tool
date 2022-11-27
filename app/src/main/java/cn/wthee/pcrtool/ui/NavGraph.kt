@@ -460,7 +460,7 @@ fun NavGraph(
                 popEnterTransition = { myFadeIn },
                 popExitTransition = { myFadeOut }) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
+                val scrollState = rememberLazyStaggeredGridState()
                 FreeGachaList(scrollState)
             }
 
@@ -733,7 +733,7 @@ fun NavGraph(
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
                 popExitTransition = { myFadeOut }) {
-                val scrollState = rememberLazyListState()
+                val scrollState = rememberLazyStaggeredGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 CalendarEventList(scrollState)
             }

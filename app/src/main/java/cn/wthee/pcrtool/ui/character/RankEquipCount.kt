@@ -4,11 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,7 +15,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
@@ -71,8 +67,7 @@ fun RankEquipCount(
         ) {
             filter.value?.let { filterValue ->
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     //标题
                     Row(
@@ -105,7 +100,11 @@ fun RankEquipCount(
                                 it.id
                             }
                         ) { item ->
-                            EquipCountItem(item, filterValue, toEquipMaterial)
+                            EquipCountItem(
+                                item,
+                                filterValue.starIds.contains(item.id),
+                                toEquipMaterial
+                            )
                         }
                         items(5) {
                             CommonSpacer()
@@ -118,7 +117,7 @@ fun RankEquipCount(
                         contentPadding = PaddingValues(Dimen.mediumPadding)
                     ) {
                         items(count =10) {
-                            EquipCountItem(EquipmentMaterial(), filterValue, toEquipMaterial)
+                            EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
                         }
                     }
                 }
@@ -153,26 +152,47 @@ fun RankEquipCount(
 @Composable
 private fun EquipCountItem(
     item: EquipmentMaterial,
-    filter: FilterEquipment,
+    loved: Boolean,
     toEquipMaterial: (Int) -> Unit
 ) {
-    val placeholder = item.id == ImageResourceHelper.UNKNOWN_EQUIP_ID
-    val loved = filter.starIds.contains(item.id)
+
+    var dataState by remember {
+        mutableStateOf(item)
+    }
+    if (dataState != item) {
+        dataState = item
+    }
+
+    var lovedState by remember { mutableStateOf(loved) }
+    if (lovedState != loved) {
+        lovedState = loved
+    }
+
+    val equipIcon: @Composable () -> Unit by remember {
+        mutableStateOf({
+            IconCompose(
+                data = ImageResourceHelper.getInstance().getEquipPic(dataState.id)
+            ) {
+                toEquipMaterial(dataState.id)
+            }
+        })
+    }
+    val count: @Composable () -> Unit by remember {
+        mutableStateOf({
+            SelectText(
+                selected = lovedState,
+                text = dataState.count.toString()
+            )
+        })
+    }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(Dimen.mediumPadding)
     ) {
-        IconCompose(
-            modifier = Modifier.commonPlaceholder(visible = placeholder),
-            data = ImageResourceHelper.getInstance().getEquipPic(item.id)
-        ) {
-            toEquipMaterial(item.id)
-        }
-        SelectText(
-            selected = loved,
-            text = item.count.toString()
-        )
+        equipIcon()
+        count()
     }
 }
 
@@ -190,7 +210,7 @@ private fun EquipCountItemPreview() {
             contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(items = rankEquipMaterials) { item ->
-                EquipCountItem(item, FilterEquipment()) { }
+                EquipCountItem(item, false) { }
             }
         }
     }

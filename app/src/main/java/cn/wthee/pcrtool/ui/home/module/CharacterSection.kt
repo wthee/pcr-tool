@@ -60,7 +60,7 @@ fun CharacterSection(
     ) {
         if (characterList.isNotEmpty()) {
             //正常
-            if (ScreenUtil.getWidth() < getItemWidth().value.dp2px * 1.5) {
+            if (ScreenUtil.getWidth() < getItemWidth().value.dp2px * 1.3) {
                 //宽屏幕时
                 HorizontalPager(
                     count = characterList.size,

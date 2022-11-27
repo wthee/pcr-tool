@@ -193,7 +193,7 @@ fun MockGacha(
 
             FabCompose(
                 iconType = if (showResult) MainIconType.MOCK_GACHA_PAY else MainIconType.MOCK_GACHA,
-                text = if (showResult) "-1500" else stringResource(id = R.string.tool_mock_gacha)
+                text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
                 if (pickUpList.isNotEmpty()) {
                     if (!showResult) {

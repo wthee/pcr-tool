@@ -27,7 +27,6 @@ class RandomEquipAreaViewModel @Inject constructor(
             val maxArea = equipmentRepository.getMaxArea() % 100
             emit(
                 it.filter { areaData -> areaData.area <= maxArea }
-                    .sortedByDescending { areaData -> areaData.area }
             )
         }
     }

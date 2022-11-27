@@ -1,6 +1,9 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -10,23 +13,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.tool.quest.AreaItem
 import cn.wthee.pcrtool.ui.tool.quest.QuestPager
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -118,88 +121,6 @@ fun EquipMaterialDetail(
         ) {
             filter.value?.addOrRemove(equipId)
             loved.value = !loved.value
-        }
-    }
-
-}
-
-
-
-/**
- * 掉落区域信息
- * @param selectedId unknow 随机掉落；非0 主线掉落，titleEnd显示概率；0 隐藏titleEnd
- */
-@Composable
-fun AreaItem(
-    selectedId: Int,
-    odds: List<EquipmentIdWithOdd>,
-    num: String,
-    color: Color
-) {
-    val placeholder = selectedId == -1
-
-    val selectedOdd = odds.find {
-        it.equipId == selectedId
-    }
-    //标题显示概率文本
-    val titleEnd = if (selectedId != 0) {
-        (if (selectedOdd != null && selectedOdd.odd != 0) {
-            "${selectedOdd.odd}"
-        } else {
-            Constants.UNKNOWN
-        }) + "%"
-    } else {
-        ""
-    }
-
-    //标题
-    CommonGroupTitle(
-        titleStart = num,
-        titleEnd = titleEnd,
-        backgroundColor = color,
-        modifier = Modifier
-            .padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
-            .commonPlaceholder(placeholder)
-    )
-
-    VerticalGrid(
-        modifier = Modifier
-            .padding(
-                bottom = Dimen.largePadding,
-                start = Dimen.commonItemPadding,
-                end = Dimen.commonItemPadding
-            )
-            .commonPlaceholder(placeholder),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
-    ) {
-        odds.forEach {
-            Column(
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val selected = selectedId == it.equipId
-                Box(contentAlignment = Alignment.Center) {
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance()
-                            .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.equipId)
-                    )
-                    if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && it.odd == 0) {
-                        SelectText(
-                            selected = selected,
-                            text = if (selected) "✓" else "",
-                            margin = 0.dp
-                        )
-                    }
-                }
-                if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && it.odd > 0) {
-                    SelectText(
-                        selected = selected,
-                        text = "${it.odd}%"
-                    )
-                }
-            }
         }
     }
 
