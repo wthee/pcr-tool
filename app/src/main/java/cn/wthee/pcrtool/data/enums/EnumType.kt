@@ -19,10 +19,6 @@ enum class EventType(val type: Int) {
     UNKNOWN(0),
     IN_PROGRESS(1),
     COMING_SOON(2);
-
-    companion object {
-        fun getByValue(value: Int) = values().find { it.type == value } ?: UNKNOWN
-    }
 }
 
 /**
@@ -45,10 +41,6 @@ enum class UnitType(val type: Int) {
 enum class RankSelectType(val type: Int) {
     DEFAULT(0),
     LIMIT(1);
-
-    companion object {
-        fun getByValue(value: Int) = values().find { it.type == value } ?: DEFAULT
-    }
 }
 
 /**
@@ -132,7 +124,6 @@ enum class AttrValueType {
     PERCENT
 }
 
-
 /**
  * 首页
  */
@@ -149,3 +140,22 @@ enum class OverviewType(val id: Int) {
             .find { it.id == value } ?: CHARACTER
     }
 }
+
+/**
+ * 设置枚举
+ */
+enum class SettingSwitchType {
+    /**
+     * 振动设置
+     */
+    VIBRATE,
+    /**
+     * 动画效果设置
+     */
+    ANIMATION,
+    /**
+     * 动态色彩设置
+     */
+    DYNAMIC_COLOR
+}
+

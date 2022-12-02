@@ -1131,9 +1131,17 @@ data class SkillActionDetail(
     /**
      * 首个目标位置
      */
-    private fun getTargetNumber() = when (target_number) {
-        in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
-        else -> ""
+    private fun getTargetNumber() = if(target_assignment == 1){
+        when (target_number) {
+            in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
+            else -> ""
+        }
+    }else{
+        when (target_number) {
+            1 -> "(最近)"
+            in 2..10 -> "(第${getZhNumberText(target_number)}近)"
+            else -> ""
+        }
     }
 
     /**

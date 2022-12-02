@@ -5,7 +5,7 @@ package cn.wthee.pcrtool.data.enums
  *
  * @param type action_type
  * @param desc 技能标签
- * @sample cn.wthee.pcrtool.data.db.view.SkillActionDetail.action_type
+ * @see cn.wthee.pcrtool.data.db.view.SkillActionDetail.action_type
  */
 enum class SkillActionType(val type: Int, val desc: String) {
 

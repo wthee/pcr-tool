@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +37,7 @@ import com.google.accompanist.pager.rememberPagerState
 /**
  * 公会战 BOSS 详情
  */
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ClanBattleDetail(
     clanBattleId: Int,
