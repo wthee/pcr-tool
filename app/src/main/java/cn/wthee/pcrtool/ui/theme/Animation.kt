@@ -24,65 +24,56 @@ fun <T> defaultTween(): TweenSpec<T> {
     return tween(durationMillis = 300, easing = FastOutSlowInEasing)
 }
 
+/**
+ * 持续时间：短
+ */
 fun <T> fastTween(): TweenSpec<T> {
     return tween(durationMillis = 100, easing = LinearEasing)
 }
 
 
-//页面退出动画
-val myFadeOut = if (animOnFlag) {
-    fadeOut(animationSpec = defaultTween())
-} else {
-    fadeOut(animationSpec = fastTween())
-}
+/**
+ * 页面退出动画
+ */
+val myFadeOut = fadeOut(animationSpec = defaultTween())
 
+/**
+ * 页面进入动画：从下向上滚动
+ */
+val mySlideIn = slideInVertically(
+    initialOffsetY = { it },
+    animationSpec = defaultSpring()
+)
 
-//页面进入动画：从下向上滚动
-val mySlideIn = if (animOnFlag) {
-    slideInVertically(
-        initialOffsetY = { it },
-        animationSpec = defaultSpring()
-    )
-} else {
-    fadeIn(animationSpec = fastTween())
-}
+/**
+ * 页面进入动画：渐入
+ */
+val myFadeIn = fadeIn(animationSpec = defaultTween())
 
-//页面进入动画：渐入
-val myFadeIn = if (animOnFlag) {
-    fadeIn(animationSpec = defaultTween())
-} else {
-    fadeIn(animationSpec = fastTween())
-}
+/**
+ * 展开
+ */
+val myExpandIn = expandVertically(
+    expandFrom = Alignment.Top,
+    animationSpec = defaultSpring()
+) + fadeIn(animationSpec = defaultSpring())
 
-//展开
-val myExpandIn = if (animOnFlag) {
-    expandVertically(
-        expandFrom = Alignment.Top,
-        animationSpec = defaultSpring()
-    ) + fadeIn(animationSpec = defaultSpring())
-} else {
-    fadeIn(animationSpec = fastTween())
-}
+/**
+ * 折叠
+ */
+val myShrinkIn = shrinkVertically(
+    shrinkTowards = Alignment.Top,
+    animationSpec = defaultSpring()
+) + fadeOut(animationSpec = defaultSpring())
 
-//折叠
-val myShrinkIn = if (animOnFlag) {
-    shrinkVertically(
-        shrinkTowards = Alignment.Top,
-        animationSpec = defaultSpring()
-    ) + fadeOut(animationSpec = defaultSpring())
-} else {
-    fadeOut(animationSpec = fastTween())
-}
+/**
+ * 页面进入动画：从右向左
+ */
+val mySlideInRTL = slideInHorizontally(
+    initialOffsetX = { 30 },
+    animationSpec = defaultTween()
+)
 
-//页面进入动画：从右向左
-val mySlideInRTL = if (animOnFlag) {
-    slideInHorizontally(
-        initialOffsetX = { 30 },
-        animationSpec = defaultTween()
-    )
-} else {
-    fadeIn(animationSpec = fastTween())
-}
 
 /**
  * 页面进入动画
@@ -96,8 +87,8 @@ fun SlideAnimation(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        enter = mySlideIn,
-        exit = fadeOut(),
+        enter = if (animOnFlag) mySlideIn else noAnimIn(),
+        exit = if (animOnFlag) myFadeOut else noAnimOut(),
         content = content,
     )
 }
@@ -113,13 +104,12 @@ fun FadeAnimation(
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = myFadeIn,
-        exit = fadeOut(),
+        enter = if (animOnFlag) myFadeIn else noAnimIn(),
+        exit = if (animOnFlag) myFadeOut else noAnimOut(),
         content = content,
         modifier = modifier
     )
 }
-
 
 /**
  * 页面展开动画，从上到下
@@ -133,12 +123,11 @@ fun ExpandAnimation(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        enter = myExpandIn,
-        exit = myShrinkIn,
+        enter = if (animOnFlag) myExpandIn else noAnimIn(),
+        exit = if (animOnFlag) myShrinkIn else noAnimOut(),
         content = content,
     )
 }
-
 
 /**
  * 从右向左滑动
@@ -152,8 +141,18 @@ fun SlideRTLAnimation(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        enter = mySlideInRTL,
-        exit = fadeOut(),
+        enter = if (animOnFlag) mySlideInRTL else noAnimIn(),
+        exit = if (animOnFlag) myFadeOut else noAnimOut(),
         content = content,
     )
 }
+
+/**
+ * 减弱进入动画效果
+ */
+private fun noAnimIn() = fadeIn(animationSpec = fastTween())
+
+/**
+ * 减弱退出动画效果
+ */
+private fun noAnimOut() = fadeOut(animationSpec = fastTween())

@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
@@ -41,6 +40,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.database.AppDatabaseCN
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppDatabaseTW
@@ -49,12 +49,14 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.getRegionName
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.ui.tool.AnimSetting
-import cn.wthee.pcrtool.ui.tool.ColorSetting
-import cn.wthee.pcrtool.ui.tool.VibrateSetting
+import cn.wthee.pcrtool.ui.tool.SettingItem
+import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -77,9 +79,6 @@ fun mainSP(): SharedPreferences =
 fun settingSP(): SharedPreferences =
     context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
-fun settingSP(context: Context): SharedPreferences =
-    context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -88,8 +87,10 @@ class MainActivity : ComponentActivity() {
         lateinit var handler: Handler
 
         lateinit var navViewModel: NavViewModel
+
         @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
+
         @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
 
@@ -197,7 +198,8 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class,
+@OptIn(
+    ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class,
     ExperimentalMaterialApi::class
 )
 @Composable
@@ -241,7 +243,7 @@ fun Home(
         NavGraph(bottomSheetNavigator, navController, navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             //菜单
-            AppInfoCompose(actions)
+            SettingDropMenu(actions)
             //Home 按钮
             FabMain(
                 modifier = Modifier
@@ -285,13 +287,13 @@ fun FabMain(modifier: Modifier = Modifier) {
 }
 
 /**
- * 应用信息
+ * 设置页面
  */
 @Composable
-private fun AppInfoCompose(actions: NavActions) {
+private fun SettingDropMenu(actions: NavActions) {
     val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val context = LocalContext.current
-    val sp = settingSP(context)
+    val sp = settingSP()
     val region = MainActivity.regionType
 
     //数据库版本
@@ -304,7 +306,7 @@ private fun AppInfoCompose(actions: NavActions) {
         },
         ""
     )
-    val dbVersionGroup = if (localVersion != null) {
+    val dbVersionCode = if (localVersion != null) {
         localVersion.split("/")[0]
     } else {
         ""
@@ -328,13 +330,13 @@ private fun AppInfoCompose(actions: NavActions) {
         ) {
             DropdownMenuItem(
                 text = {
-                    AnimSetting(sp, context, false)
+                    SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = false)
                 },
                 onClick = {}
             )
             DropdownMenuItem(
                 text = {
-                    VibrateSetting(sp, context, false)
+                    SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = false)
                 },
                 onClick = {}
             )
@@ -342,33 +344,28 @@ private fun AppInfoCompose(actions: NavActions) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
                 DropdownMenuItem(
                     text = {
-                        ColorSetting(sp, context, false)
+                        SettingSwitchCompose(
+                            type = SettingSwitchType.DYNAMIC_COLOR,
+                            showSummary = false
+                        )
                     },
                     onClick = {}
                 )
             }
+            //应用信息
             DropdownMenuItem(
                 text = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconCompose(
-                            data = R.drawable.ic_logo_large,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                            size = Dimen.mediumIconSize
-                        )
-                        Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
-                            MainText(
-                                text = "v" + BuildConfig.VERSION_NAME,
-                                modifier = Modifier.padding(top = Dimen.smallPadding)
-                            )
-                            Subtitle2(
-                                text = "${typeName}：${dbVersionGroup}",
-                            )
+                    SettingItem(
+                        iconType = R.drawable.ic_logo_large,
+                        iconSize = Dimen.menuIconSize,
+                        title = "v" + BuildConfig.VERSION_NAME,
+                        summary = "${typeName}：${dbVersionCode}",
+                        titleColor = MaterialTheme.colorScheme.primary,
+                        summaryColor = MaterialTheme.colorScheme.onSurface,
+                        onClick = {
+                            actions.toSetting()
                         }
-                        Spacer(
-                            modifier = Modifier
-                                .padding(horizontal = Dimen.largePadding)
-                                .weight(1f)
-                        )
+                    ) {
                         Subtitle2(
                             text = stringResource(id = R.string.expand),
                             color = MaterialTheme.colorScheme.primary
@@ -376,10 +373,7 @@ private fun AppInfoCompose(actions: NavActions) {
                         IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
                     }
                 },
-                onClick = {
-                    VibrateUtil(context).single()
-                    actions.toSetting()
-                }
+                onClick = {}
             )
         }
     }

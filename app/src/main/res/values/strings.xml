@@ -26,8 +26,8 @@
     <string name="title_skill_coe">技能基本系数</string>
     <string name="title_skill_basic_coe">技能相关系数</string>
     <string name="title_rank_bonus">RANK 奖励属性</string>
-    <string name="cur_rank">当前</string>
-    <string name="target_rank">目标</string>
+    <string name="cur_rank">当前 RANK</string>
+    <string name="target_rank">目标 RANK</string>
     <string name="function">功能</string>
     <string name="skill">技能信息</string>
     <string name="title_unlock_6">★6解放</string>
@@ -46,7 +46,7 @@
     <string name="tip_tp_limit_level_action">该技能等级大于 260，继续提高技能等级不会增加TP数值</string>
 
     <!--设置页面-->
-    <string name="app_setting">应用</string>
+    <string name="app_setting">设置</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
     <string name="dynamic_color">动态色彩</string>
@@ -57,6 +57,7 @@
     <string name="animation_off">动画关闭</string>
     <string name="color_off">使用默认主题</string>
     <string name="thanks">感谢</string>
+    <string name="feedback">反馈</string>
     <string name="data_from">Unity Texture Toolkit</string>
     <string name="data_from_hint">资源获取工具 by esterTion</string>
     <string name="data_from_url">https://github.com/esterTion/unity-texture-toolkit</string>
@@ -73,11 +74,6 @@
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
-    <string name="data_backup">备份</string>
-    <string name="data_export">数据导出</string>
-    <string name="data_export_hint">导出收藏数据到本地</string>
-    <string name="data_import">数据导入</string>
-    <string name="data_import_hint">从本地导入收藏数据</string>
 
     <!-- 筛选  -->
     <string name="title_sort">排序类型</string>
@@ -171,6 +167,11 @@
     <string name="random_drop_area_title">区域 %d</string>
     <string name="random_drop_area_1">（前半：1 ~ 7）</string>
     <string name="random_drop_area_2">（后半：8 ~ 14）</string>
+    <string name="qq_group">反馈交流群</string>
+    <string name="qq_group_summary">有任何意见或建议，可在群反馈</string>
+    <string name="to_join_qq_group">一键加群</string>
+    <string name="github">Github</string>
+    <string name="github_release_url">https://github.com/wthee/pcr-tool/releases/tag/v%s</string>
 
     <!--操作-->
     <string name="cancel">取消</string>
@@ -218,8 +219,6 @@
     <string name="save_image">保存图片</string>
     <string name="ask_save_image">是否要保存图片？</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
-    <string name="qq_group">反馈交流群</string>
-    <string name="github">Github</string>
     <string name="change_failed">切换失败</string>
 
     <!--模拟抽卡-->

@@ -188,9 +188,13 @@ enum class MainIconType(val icon: ImageVector) {
     RANK_COMPARE(Icons.Rounded.CompareArrows),
 
     /**
-     * 日历
+     * 日历 - 进行中
      */
     CALENDAR_TODAY(Icons.Rounded.EventAvailable),
+
+    /**
+     * 日历
+     */
     CALENDAR(Icons.Rounded.EventNote),
 
     /**
@@ -204,19 +208,9 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
-     * 反馈
-     */
-    ISSUE(Icons.Rounded.BugReport),
-
-    /**
      * 反馈交流群
      */
     SUPPORT(Icons.Rounded.ContactSupport),
-
-    /**
-     * 友链
-     */
-    FRIEND_LINK(Icons.Rounded.Link),
 
     /**
      * 添加对战信息
@@ -319,11 +313,6 @@ enum class MainIconType(val icon: ImageVector) {
     IMPORT(Icons.Rounded.Download),
 
     /**
-     * 导出
-     */
-    EXPORT(Icons.Rounded.Upload),
-
-    /**
      * 随机掉落地区
      */
     RANDOM_AREA(Icons.Rounded.TrackChanges),
@@ -337,11 +326,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 添加日历
      */
     ADD_CALENDAR(Icons.Rounded.EditCalendar),
-
-    /**
-     * 更新日志记录
-     */
-    UPDATE_LOG(Icons.Rounded.History),
 
     /**
      * 发布详情
