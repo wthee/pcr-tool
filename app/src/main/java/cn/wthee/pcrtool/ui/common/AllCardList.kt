@@ -213,7 +213,12 @@ private fun CardGridList(
  */
 private fun getFileName(url: String): String {
     return try {
-        url.split('/').last().split('.')[0]
+        val type = when {
+            url.contains("story") -> "story"
+            url.contains("actual_profile") -> "unit_actual"
+            else -> "unit"
+        } + "_"
+        type + url.split('/').last().split('.')[0]
     } catch (e: Exception) {
         System.currentTimeMillis().toString()
     }
