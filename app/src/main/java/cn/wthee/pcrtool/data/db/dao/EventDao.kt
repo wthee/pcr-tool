@@ -21,9 +21,13 @@ interface EventDao {
     @Query(
         """
             SELECT
-                event.*,
+                event.event_id,
+                event.story_id,
+                (event.story_id % 1000 + 10000) AS original_event_id,
+                event.start_time,
+                event.end_time,
                 c.title,
-                COALESCE(e.unit_ids, "") as unit_ids
+                COALESCE(e.unit_ids, '') as unit_ids
             FROM
                 (
                     SELECT
@@ -58,7 +62,7 @@ interface EventDao {
                         d.story_group_id
                 ) as e ON c.story_group_id = e.story_group_id
             GROUP BY event.start_time
-            ORDER BY event.start_time DESC     
+            ORDER BY event.start_time DESC       
             LIMIT 0,:limit
         """
     )

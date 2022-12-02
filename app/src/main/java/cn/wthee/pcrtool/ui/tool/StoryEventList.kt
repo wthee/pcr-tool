@@ -102,15 +102,15 @@ fun StoryEventItem(
     val today = getToday()
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
-    val preEvent = sd.substring(0, 10) == "2030/12/30"
+    val previewEvent = sd.substring(0, 10) == "2030/12/30"
     val days = ed.days(sd)
     if (days == "0" || days == "0天") {
         showDays = false
     }
 
-    //类型判断
     //支线
     val isSub = event.eventId / 10000 == 2
+    //类型判断
     when {
         //支线
         isSub -> {
@@ -119,12 +119,12 @@ fun StoryEventItem(
             showDays = false
         }
         //复刻
-        event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
+        event.eventId / 10000 == 1 && event.eventId != event.originalEventId -> {
             type = "复刻"
             typeColor = colorGold
         }
         //预告
-        sd.second(today) > 0 || preEvent -> {
+        sd.second(today) > 0 || previewEvent -> {
             type = "预告"
             typeColor = colorPurple
         }
@@ -137,15 +137,7 @@ fun StoryEventItem(
 
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
-    val comingSoon = today.second(sd) < 0 && (!preEvent)
-
-    // 处理id
-    val eventId = if (showDays) {
-        event.eventId
-    } else {
-        //支线
-        10000 + event.storyId % 1000
-    }
+    val comingSoon = today.second(sd) < 0 && (!previewEvent)
 
 
     Column(
@@ -163,7 +155,7 @@ fun StoryEventItem(
                 text = type,
                 backgroundColor = typeColor
             )
-            if (!preEvent) {
+            if (!previewEvent) {
                 MainTitleText(
                     text = sd.substring(0, 10),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -219,7 +211,7 @@ fun StoryEventItem(
                     ) {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(EVENT_BANNER, eventId),
+                                .getUrl(EVENT_BANNER, event.originalEventId),
                             ratio = RATIO_BANNER,
                             modifier = Modifier.clip(MaterialTheme.shapes.medium),
                             placeholder = false
@@ -228,7 +220,7 @@ fun StoryEventItem(
                 } else {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance()
-                            .getUrl(EVENT_TEASER, eventId),
+                            .getUrl(EVENT_TEASER, event.originalEventId),
                         ratio = RATIO_TEASER,
                         modifier = Modifier.clip(shapeTop())
                     )
