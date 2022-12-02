@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,17 +18,14 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.tool.quest.AreaItem
 import cn.wthee.pcrtool.ui.tool.quest.QuestPager
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -49,17 +45,12 @@ fun EquipMaterialDetail(
     val basicInfo =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
 
-    val filter = navViewModel.filterEquip.observeAsState()
+    val starIds = FilterEquipment.getStarIdList()
     val loved = remember {
-        mutableStateOf(false)
+        mutableStateOf(starIds.contains(equipId))
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
 
-    filter.value?.let { filterValue ->
-        filterValue.starIds =
-            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
-        loved.value = filterValue.starIds.contains(equipId)
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -106,7 +97,7 @@ fun EquipMaterialDetail(
         }
 
 
-        //装备收藏
+        //装备素材收藏
         FabCompose(
             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             modifier = Modifier
@@ -119,7 +110,7 @@ fun EquipMaterialDetail(
                 .align(Alignment.BottomEnd),
             text = text
         ) {
-            filter.value?.addOrRemove(equipId)
+            FilterEquipment.addOrRemove(equipId)
             loved.value = !loved.value
         }
     }

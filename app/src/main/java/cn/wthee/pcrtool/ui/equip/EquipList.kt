@@ -37,7 +37,6 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -63,7 +62,6 @@ fun EquipList(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    val sp = mainSP()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
@@ -78,9 +76,7 @@ fun EquipList(
         ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
 
     filter.value?.let { filterValue ->
-        filterValue.starIds =
-            GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
-
+        filterValue.starIds = FilterEquipment.getStarIdList()
         val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
         //分组
         val equipGroupList = arrayListOf<EquipGroupData>()

@@ -1,11 +1,12 @@
 package cn.wthee.pcrtool.ui.character
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,16 +16,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 
 /**
  * rank 范围装备素材数量统计
@@ -32,13 +30,13 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
-@OptIn(ExperimentalMaterialNavigationApi::class)
+@SuppressLint("MutableCollectionMutableState")
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
     maxRank: Int,
     toEquipMaterial: (Int) -> Unit,
-    navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val rank0 = remember {
@@ -53,10 +51,15 @@ fun RankEquipCount(
             initial = arrayListOf()
         ).value
 
-    val filter = navViewModel.filterEquip.observeAsState()
-
     val dialogState = remember {
         mutableStateOf(false)
+    }
+
+    val starIds = remember {
+        mutableStateOf(arrayListOf<Int>())
+    }
+    LaunchedEffect(MainActivity.navSheetState.currentValue) {
+        starIds.value = FilterEquipment.getStarIdList()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -65,60 +68,55 @@ fun RankEquipCount(
                 .padding(top = Dimen.largePadding)
                 .fillMaxWidth()
         ) {
-            filter.value?.let { filterValue ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //标题
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    //标题
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        MainTitleText(text = stringResource(id = R.string.cur_rank))
-                        RankText(
-                            rank = rank0.value,
+                    MainTitleText(text = stringResource(id = R.string.cur_rank))
+                    RankText(
+                        rank = rank0.value,
+                    )
+                    MainTitleText(text = stringResource(id = R.string.target_rank))
+                    RankText(
+                        rank = rank1.value,
+                    )
+                }
+            }
+
+            if (rankEquipMaterials.isNotEmpty()) {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
+                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                ) {
+                    items(
+                        items = rankEquipMaterials,
+                        key = {
+                            it.id
+                        }
+                    ) { item ->
+                        EquipCountItem(
+                            item,
+                            starIds.value.contains(item.id),
+                            toEquipMaterial
                         )
-                        MainTitleText(text = stringResource(id = R.string.target_rank))
-                        RankText(
-                            rank = rank1.value,
-                        )
+                    }
+                    items(5) {
+                        CommonSpacer()
                     }
                 }
-                //装备素材列表
-                filterValue.starIds =
-                    GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
-                        ?: arrayListOf()
-                if (rankEquipMaterials.isNotEmpty()) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                        contentPadding = PaddingValues(Dimen.mediumPadding)
-                    ) {
-                        items(
-                            items = rankEquipMaterials,
-                            key = {
-                                it.id
-                            }
-                        ) { item ->
-                            EquipCountItem(
-                                item,
-                                filterValue.starIds.contains(item.id),
-                                toEquipMaterial
-                            )
-                        }
-                        items(5) {
-                            CommonSpacer()
-                        }
-                    }
-                } else {
-                    //加载中
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                        contentPadding = PaddingValues(Dimen.mediumPadding)
-                    ) {
-                        items(count =10) {
-                            EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
-                        }
+            } else {
+                //加载中
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
+                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                ) {
+                    items(count = 10) {
+                        EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
                     }
                 }
             }

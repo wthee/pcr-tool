@@ -426,8 +426,7 @@ fun NavGraph(
                 RankEquipCount(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    actions.toEquipMaterial,
-                    navViewModel = viewModel
+                    actions.toEquipMaterial
                 )
             }
 

@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -279,7 +280,7 @@ fun CharacterDetail(
                     FabCompose(
                         iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     ) {
-                        filter.value?.addOrRemove(unitId)
+                        FilterCharacter.addOrRemove(unitId)
                         loved.value = !loved.value
                     }
 
