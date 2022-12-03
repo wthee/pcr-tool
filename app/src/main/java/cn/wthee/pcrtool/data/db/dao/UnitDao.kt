@@ -220,14 +220,12 @@ interface UnitDao {
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             unit_data.rarity,
-            COALESCE( actual_unit_background.unit_name, '' ) AS actual_name,
-            COALESCE(cts.comments, '......') AS comments
+            COALESCE( actual_unit_background.unit_name, '' ) AS actual_name
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
-            LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
         WHERE 
             unit_profile.unit_id = :unitId 
         GROUP BY unit_profile.unit_id """
@@ -570,4 +568,23 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT DISTINCT unit_id FROM redeem_unit")
     suspend fun getExUnitIdList(): List<Int>
+
+    /**
+     * 获取角色主页交流信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            unit_id,
+            GROUP_CONCAT(description, '-') AS comments
+        FROM
+            unit_comments 
+        WHERE
+            unit_id LIKE SUBSTR( :unitId, 0, 5 ) || '%'
+        GROUP BY
+            unit_id
+        """
+    )
+    suspend fun getHomePageComments(unitId: Int): List<CharacterHomePageComment>
 }

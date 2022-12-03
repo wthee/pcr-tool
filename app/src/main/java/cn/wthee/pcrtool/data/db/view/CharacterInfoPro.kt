@@ -7,8 +7,8 @@ import androidx.room.ColumnInfo
  * 角色详情信息视图
  */
 data class CharacterInfoPro(
-    @ColumnInfo(name = "unit_id") val id: Int = 100101,
-    @ColumnInfo(name = "unit_name") val name: String = "???",
+    @ColumnInfo(name = "unit_id") val unitId: Int = 100101,
+    @ColumnInfo(name = "unit_name") val unitName: String = "???",
     @ColumnInfo(name = "kana") val kana: String = "???",
     @ColumnInfo(name = "actual_name") val actualName: String = "???",
     @ColumnInfo(name = "age_int") val age: String = "999",
@@ -28,7 +28,6 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "atk_type") val atkType: Int = 1,
     @ColumnInfo(name = "r6Id") val r6Id: Int = 0,
     @ColumnInfo(name = "rarity") val rarity: Int = 3,
-    @ColumnInfo(name = "comments") val comments: String = "???",
 ) {
 
     /**
@@ -59,12 +58,5 @@ data class CharacterInfoPro(
      * 角色介绍
      */
     fun getIntroText() = intro.replace("\\n", "")
-
-    /**
-     * 交流
-     */
-    fun getCommentList() =
-        comments.replace("\\n", "").split("-")
-
 
 }

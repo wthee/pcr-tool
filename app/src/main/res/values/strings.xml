@@ -20,6 +20,7 @@
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
     <string name="title_comments">交流</string>
+    <string name="title_home_page_comments">主页</string>
     <string name="title_room_comments">小屋</string>
     <string name="title_story_attr">剧情属性</string>
     <string name="title_basic_coe">基本系数</string>
@@ -168,10 +169,11 @@
     <string name="random_drop_area_1">（前半：1 ~ 7）</string>
     <string name="random_drop_area_2">（后半：8 ~ 14）</string>
     <string name="qq_group">反馈交流群</string>
-    <string name="qq_group_summary">有任何意见或建议，可在群反馈</string>
-    <string name="to_join_qq_group">一键加群</string>
+    <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
+    <string name="to_join_qq_group">加入QQ群</string>
     <string name="github">Github</string>
     <string name="github_release_url">https://github.com/wthee/pcr-tool/releases/tag/v%s</string>
+    <string name="mode">MODE%d</string>
 
     <!--操作-->
     <string name="cancel">取消</string>
@@ -179,10 +181,10 @@
     <string name="close">关闭</string>
     <string name="add_to_calendar">添加至系统日历</string>
     <string name="copy_event">复制活动信息</string>
-    <string name="expand">展开</string>
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
+    <string name="copy">复制</string>
 
     <!--活动相关-->
     <string name="normal">普通关卡</string>

@@ -44,7 +44,7 @@ fun CharacterBasicInfo(
                     .verticalScroll(scrollState)
             ) {
                 BasicInfo(info = info)
-                HomePageCommentInfo(info.getSelf(), info.getCommentList())
+                HomePageCommentInfo(info.getSelf(), unitId, viewModel)
                 RoomComment(unitId = unitId, viewModel = viewModel)
             }
         }
@@ -79,7 +79,11 @@ private fun BasicInfo(info: CharacterInfoPro) {
                 text = stringResource(id = R.string.character),
                 modifier = Modifier.weight(0.15f)
             )
-            MainContentText(text = info.name, modifier = Modifier.weight(0.85f), selectable = true)
+            MainContentText(
+                text = info.unitName,
+                modifier = Modifier.weight(0.85f),
+                selectable = true
+            )
         }
         Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
@@ -176,7 +180,15 @@ private fun BasicInfo(info: CharacterInfoPro) {
  * 主页交流信息
  */
 @Composable
-private fun HomePageCommentInfo(selfText: String?, commentList: List<String>) {
+private fun HomePageCommentInfo(
+    selfText: String?,
+    unitId: Int,
+    characterViewModel: CharacterViewModel
+) {
+    val homePageCommentList =
+        characterViewModel.getHomePageComments(unitId).collectAsState(initial = arrayListOf()).value
+
+
     //介绍信息
     selfText?.let {
         Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
@@ -189,16 +201,30 @@ private fun HomePageCommentInfo(selfText: String?, commentList: List<String>) {
         CommentTextCard(text = it)
     }
 
-    Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
-        MainTitleText(
-            text = stringResource(id = R.string.title_comments),
-            modifier = Modifier.weight(0.15f)
-        )
-        Spacer(modifier = Modifier.weight(0.85f))
+    //主页交流
+    homePageCommentList.forEach { comment ->
+        Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
+            MainTitleText(
+                text = stringResource(id = R.string.title_comments),
+                modifier = Modifier.weight(0.15f)
+            )
+            MainTitleText(
+                text = "★" + if (comment.unitId % 100 / 10 == 0) {
+                    "1"
+                } else {
+                    "${comment.unitId % 100 / 10}"
+                },
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .weight(0.15f)
+            )
+            Spacer(modifier = Modifier.weight(0.85f))
+        }
+        comment.getCommentList().forEach {
+            CommentTextCard(it)
+        }
     }
-    commentList.forEach {
-        CommentTextCard(it)
-    }
+
 }
 
 /**
@@ -248,8 +274,14 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
 
     Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
         MainTitleText(
-            text = stringResource(id = R.string.title_room_comments),
+            text = stringResource(id = R.string.title_comments),
             modifier = Modifier.weight(0.15f)
+        )
+        MainTitleText(
+            text = stringResource(id = R.string.title_room_comments),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .weight(0.15f)
         )
         Spacer(modifier = Modifier.weight(0.85f))
     }
