@@ -266,7 +266,6 @@ fun CharacterItem(
                 modifier = Modifier.align(Alignment.BottomStart)
             )
 
-
             //其它信息
             SlideRTLAnimation(
                 visible = loadSuccess,
@@ -368,26 +367,23 @@ fun CharacterItem(
                         }
                     }
 
-                    Row {
-                        FadeAnimation(visible = loved) {
-                            IconCompose(
-                                data = MainIconType.LOVE_FILL,
-                                size = Dimen.smallIconSize,
-                                modifier = Modifier.padding(Dimen.mediumPadding)
-                            )
-                        }
-                        //最近登场日期
-                        CaptionText(
-                            text = character.startTime.formatTime.substring(0, 10),
-                            color = textColor,
-                            modifier = Modifier.padding(Dimen.mediumPadding)
-                        )
-                    }
-
-
+                    //最近登场日期
+                    CaptionText(
+                        text = character.startTime.formatTime.substring(0, 10),
+                        color = textColor,
+                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    )
                 }
             }
 
+            //收藏标识
+            FadeAnimation(visible = loved) {
+                IconCompose(
+                    data = MainIconType.LOVE_FILL,
+                    size = Dimen.textIconSize,
+                    modifier = Modifier.padding(Dimen.mediumPadding)
+                )
+            }
         }
 
     }

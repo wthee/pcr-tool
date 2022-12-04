@@ -72,7 +72,8 @@ private fun BasicInfo(info: CharacterInfoPro) {
         )
         //介绍
         Subtitle2(
-            text = info.getIntroText()
+            text = info.getIntroText(),
+            selectable = true
         )
         Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
@@ -272,7 +273,13 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
     val pagerState = rememberPagerState()
 
 
-    Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
+    Row(
+        modifier = Modifier.padding(
+            start = Dimen.largePadding,
+            top = Dimen.mediumPadding,
+            bottom = Dimen.mediumPadding
+        )
+    ) {
         MainTitleText(
             text = stringResource(id = R.string.title_comments),
             modifier = Modifier.weight(0.15f)
@@ -329,8 +336,7 @@ private fun CommentTextCard(text: String) {
         MainContentText(
             text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
+            textAlign = TextAlign.Start
         )
     }
 }

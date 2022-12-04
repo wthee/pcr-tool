@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -49,10 +48,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.Subtitle2
-import cn.wthee.pcrtool.ui.common.getRegionName
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.ui.tool.SettingItem
@@ -252,12 +248,7 @@ fun Home(
             )
         }
         if (loading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(Dimen.fabIconSize)
-                    .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.primary,
-            )
+            CircularProgressCompose(Modifier.align(Alignment.Center))
         }
     }
 }
@@ -357,19 +348,16 @@ private fun SettingDropMenu(actions: NavActions) {
                 text = {
                     SettingItem(
                         iconType = R.drawable.ic_logo_large,
-                        iconSize = Dimen.menuIconSize,
+                        iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
                         summary = "${typeName}：${dbVersionCode}",
                         titleColor = MaterialTheme.colorScheme.primary,
                         summaryColor = MaterialTheme.colorScheme.onSurface,
+                        padding = Dimen.smallPadding,
                         onClick = {
                             actions.toSetting()
                         }
                     ) {
-                        Subtitle2(
-                            text = stringResource(id = R.string.expand),
-                            color = MaterialTheme.colorScheme.primary
-                        )
                         IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
                     }
                 },

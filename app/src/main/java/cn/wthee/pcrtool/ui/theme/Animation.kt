@@ -80,8 +80,8 @@ val mySlideInRTL = slideInHorizontally(
  */
 @Composable
 fun SlideAnimation(
-    modifier: Modifier = Modifier,
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     AnimatedVisibility(
@@ -116,8 +116,8 @@ fun FadeAnimation(
  */
 @Composable
 fun ExpandAnimation(
-    modifier: Modifier = Modifier,
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     AnimatedVisibility(
@@ -134,8 +134,8 @@ fun ExpandAnimation(
  */
 @Composable
 fun SlideRTLAnimation(
-    modifier: Modifier = Modifier,
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     AnimatedVisibility(

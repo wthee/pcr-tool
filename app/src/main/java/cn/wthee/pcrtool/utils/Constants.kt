@@ -34,7 +34,9 @@ object Constants {
     const val API_URL = "https://wthee.xyz:8848/api/"
 
     //Spine 预览地址
-    const val PREVIEW_UNIT_URL = "https://wthee.xyz/spine/index.html?unitId="
+    const val PREVIEW_URL = "https://wthee.xyz/spine/index.html"
+    const val PREVIEW_UNIT_URL = "$PREVIEW_URL?unitId="
+    const val PREVIEW_ENEMY_URL = "$PREVIEW_URL?enemyId="
 
     //国服数据库
     const val DATABASE_VERSION_URL_CN = "last_version_cn.json"

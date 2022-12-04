@@ -36,10 +36,7 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.joinQQGroup
+import cn.wthee.pcrtool.utils.*
 
 /**
  * 设置页面
@@ -101,10 +98,26 @@ fun MainSettings(
             )
         }
 
-        //反馈相关
+
+        //其它设置
         Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
         MainText(
-            text = stringResource(id = R.string.feedback),
+            text = stringResource(id = R.string.app_setting),
+            modifier = Modifier.padding(Dimen.largePadding)
+        )
+        //- 振动开关
+        SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = true)
+        //- 动画效果
+        SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = true)
+        //- 动态色彩，仅 Android 12 及以上可用
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
+            SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
+        }
+
+        //其它相关
+        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
+        MainText(
+            text = stringResource(id = R.string.other),
             modifier = Modifier.padding(Dimen.largePadding)
         )
         //- 加入反馈群
@@ -122,23 +135,15 @@ fun MainSettings(
             )
             IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
         }
-
-
-        //其它设置
-        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
-        MainText(
-            text = stringResource(id = R.string.app_setting),
-            modifier = Modifier.padding(Dimen.largePadding)
+        //- 模型预览
+        SettingItem(
+            iconType = MainIconType.PREVIEW_UNIT_SPINE,
+            title = stringResource(id = R.string.title_spine),
+            summary = stringResource(id = R.string.spine_tip),
+            onClick = {
+                BrowserUtil.open(context, Constants.PREVIEW_URL)
+            }
         )
-        //- 振动开关
-        SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = true)
-        //- 动画效果
-        SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = true)
-        //- 动态色彩，仅 Android 12 及以上可用
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
-            SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
-        }
-
 
         //感谢友链
         Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
@@ -308,6 +313,7 @@ fun SettingItem(
     summary: String,
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     summaryColor: Color = MaterialTheme.colorScheme.outline,
+    padding: Dp = Dimen.largePadding,
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -321,7 +327,7 @@ fun SettingItem(
                 onClick()
             })
     ) {
-        Spacer(modifier = Modifier.width(Dimen.largePadding))
+        Spacer(modifier = Modifier.width(padding))
         IconCompose(
             data = iconType,
             size = iconSize,
@@ -330,7 +336,7 @@ fun SettingItem(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(Dimen.largePadding),
+                .padding(padding),
             verticalArrangement = Arrangement.Center
         ) {
             Subtitle1(text = title, color = titleColor)
@@ -345,7 +351,7 @@ fun SettingItem(
         extraContent?.let {
             extraContent()
         }
-        Spacer(modifier = Modifier.width(Dimen.mediumPadding))
+        Spacer(modifier = Modifier.width(padding))
     }
 }
 

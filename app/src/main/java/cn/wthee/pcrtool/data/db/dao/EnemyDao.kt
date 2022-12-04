@@ -23,10 +23,13 @@ interface EnemyDao {
         SELECT
             enemy_parameter.*,
             unit_enemy_data.normal_atk_cast_time,
-            unit_enemy_data.comment 
+            unit_enemy_data.comment,
+            unit_enemy_data.prefab_id,
+            d.m_unit_id
         FROM
             enemy_parameter
             LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
+            LEFT JOIN (SELECT MIN(c.unit_id) AS m_unit_id, c.unit_name AS m_unit_name FROM unit_enemy_data AS c GROUP BY c.unit_name) AS d ON d.m_unit_name = unit_enemy_data.unit_name
         WHERE enemy_id = :enemyId"""
     )
     suspend fun getEnemyAttr(enemyId: Int): EnemyParameterPro
@@ -40,10 +43,13 @@ interface EnemyDao {
         SELECT
             enemy_parameter.*,
             unit_enemy_data.normal_atk_cast_time,
-            COALESCE(unit_enemy_data.comment, "") AS comment
+            COALESCE(unit_enemy_data.comment, "") AS comment,
+            unit_enemy_data.prefab_id,
+            d.m_unit_id
         FROM
             enemy_parameter
             LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
+            LEFT JOIN (SELECT MIN(c.unit_id) AS m_unit_id, c.unit_name AS m_unit_name FROM unit_enemy_data AS c GROUP BY c.unit_name) AS d ON d.m_unit_name = unit_enemy_data.unit_name
         WHERE enemy_id > 400000000
         """
     )
@@ -64,7 +70,7 @@ interface EnemyDao {
         FROM
             enemy_m_parts AS d
         WHERE
-            c.enemy_id_1 = :enemyId
+            enemy_id = :enemyId
     """
     )
     suspend fun getMultiTargetEnemyInfo(enemyId: Int): MultiTargetEnemyInfo

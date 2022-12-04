@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -42,7 +41,6 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
@@ -120,9 +118,9 @@ fun CharacterDetail(
     val unknown = maxValue.level == -1
 
     //收藏状态
-    val filter = navViewModel.filterCharacter.observeAsState()
+    val starIds = FilterCharacter.getStarIdList()
     val loved = remember {
-        mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
+        mutableStateOf(starIds.contains(unitId))
     }
 
     //页面
@@ -224,24 +222,9 @@ fun CharacterDetail(
                 Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
             }
         }
-
+        //未登场角色
         if (unknown) {
-            Column(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxSize()
-                    .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //未知角色占位页面
-                Text(
-                    text = stringResource(R.string.unknown_character),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(Dimen.largePadding)
-                )
-            }
-
+            CenterTipText(text = stringResource(R.string.unknown_character))
         }
         //悬浮按钮
         if (!unknown) {
@@ -359,13 +342,12 @@ private fun CharacterCard(
                 //模型预览
                 IconTextButton(
                     icon = MainIconType.PREVIEW_UNIT_SPINE,
-                    text = stringResource(id = R.string.model_preview),
+                    text = stringResource(id = R.string.spine_preview),
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 ) {
                     BrowserUtil.open(
-                        context, Constants.PREVIEW_UNIT_URL + (
-                                if (cutinId != 0) cutinId else unitId
-                                )
+                        context,
+                        Constants.PREVIEW_UNIT_URL + (if (cutinId != 0) cutinId else unitId)
                     )
                 }
             }

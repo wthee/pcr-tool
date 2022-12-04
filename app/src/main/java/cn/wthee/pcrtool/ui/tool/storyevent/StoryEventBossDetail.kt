@@ -24,7 +24,6 @@ fun StoryEventBossDetail(
     enemyId: Int,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)
 ) {
-
     val modeIndex = remember {
         mutableStateOf(0)
     }
@@ -44,12 +43,11 @@ fun StoryEventBossDetail(
             )
         }
 
-        //阶段选择
+        //mode选择
         val tabs = arrayListOf<String>()
         for (i in 1..3) {
             tabs.add(stringResource(id = R.string.mode, i))
         }
-
         SelectTypeCompose(
             icon = MainIconType.CLAN_SECTION,
             tabs = tabs,

@@ -40,7 +40,7 @@
     <string name="basic_info">基本信息</string>
     <string name="story_pic">剧情立绘</string>
     <string name="to_summon">召唤物</string>
-    <string name="model_preview">模型</string>
+    <string name="spine_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action">技能等级 > 260</string>
@@ -58,7 +58,6 @@
     <string name="animation_off">动画关闭</string>
     <string name="color_off">使用默认主题</string>
     <string name="thanks">感谢</string>
-    <string name="feedback">反馈</string>
     <string name="data_from">Unity Texture Toolkit</string>
     <string name="data_from_hint">资源获取工具 by esterTion</string>
     <string name="data_from_url">https://github.com/esterTion/unity-texture-toolkit</string>
@@ -75,6 +74,8 @@
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
+    <string name="title_spine">模型预览</string>
+    <string name="spine_tip">可预览游戏内战斗小人模型</string>
 
     <!-- 筛选  -->
     <string name="title_sort">排序类型</string>

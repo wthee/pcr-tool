@@ -525,9 +525,12 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
  * 加载中
  */
 @Composable
-fun CircularProgressCompose(size: Dp = Dimen.menuIconSize) {
+fun CircularProgressCompose(
+    modifier: Modifier = Modifier,
+    size: Dp = Dimen.menuIconSize
+) {
     CircularProgressIndicator(
-        modifier = Modifier
+        modifier = modifier
             .size(size)
             .padding(Dimen.smallPadding),
         color = MaterialTheme.colorScheme.primary,
@@ -817,7 +820,7 @@ fun BottomSearchBar(
 fun CenterTipText(text: String) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .heightIn(min = Dimen.cardHeight),
         contentAlignment = Alignment.Center
     ) {
@@ -877,7 +880,7 @@ fun CommonGroupTitle(
     titleEnd: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = colorWhite,
-    iconSize:Dp = Dimen.iconSize
+    iconSize: Dp = Dimen.iconSize
 ) {
     Row(
         modifier = modifier

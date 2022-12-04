@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -255,11 +254,7 @@ private fun LeaderboardItem(info: LeaderboardData, index: Int) {
                     .commonPlaceholder(visible = placeholder)
             )
         }
-        if (BuildConfig.DEBUG) {
-            IconTextButton(icon = MainIconType.BROWSER, text = info.icon) {
-                BrowserUtil.open(context, info.icon)
-            }
-        }
+
         MainCard(modifier = Modifier
             .commonPlaceholder(visible = placeholder),
             onClick = {

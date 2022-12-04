@@ -77,7 +77,7 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            resValue("string", "app_name", "Beta: PCR tool")
+            resValue("string", "app_name", "B: PCR Tool")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }

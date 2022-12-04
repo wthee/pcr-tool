@@ -327,9 +327,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     LOOP(63, "持续效果"),
 
     /**
-     * 69：驯鹿化
+     * 69：变身
      */
-    REINDEER(69, "驯鹿化"),
+    REINDEER(69, "变身"),
 
     /**
      * 70：HP 变化

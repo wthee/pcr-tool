@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -29,7 +28,6 @@ import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 /**
  * 抽取结果详情
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MockGachaResult(
     gachaId: String,
@@ -68,12 +66,12 @@ fun MockGachaResult(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainText(
+            CaptionText(
                 text = sumText,
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
             )
-            Row {
+            Row(modifier = Modifier.padding(vertical = Dimen.smallPadding)) {
                 MainTitleText(
                     text = "UP：$upCount",
                     backgroundColor = colorRed,
@@ -85,7 +83,6 @@ fun MockGachaResult(
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
-            DivCompose()
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberLazyGridState(),

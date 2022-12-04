@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -25,6 +26,8 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
@@ -37,7 +40,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 @Composable
 fun EnemyDetail(
     enemyId: Int,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit),
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     enemyViewModel: EnemyViewModel = hiltViewModel()
 ) {
     val enemyData = enemyViewModel.getEnemyAttr(enemyId).collectAsState(initial = null).value
@@ -65,7 +68,7 @@ fun EnemyAllInfo(
     enemyData: EnemyParameterPro,
     isMultiEnemy: Boolean,
     partEnemyList: List<EnemyParameterPro>?,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit),
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val expanded = remember {
@@ -88,12 +91,15 @@ fun EnemyAllInfo(
                 data = ImageResourceHelper.getInstance()
                     .getUrl(
                         ImageResourceHelper.ICON_UNIT,
-                        enemyData.getId()
+                        enemyData.unitIconId
                     ),
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
                     .align(Alignment.CenterHorizontally)
             )
+        }
+        if (BuildConfig.DEBUG) {
+            MainText(text = "${enemyData.enemyId}/${enemyData.unitId}/${enemyData.prefabId}/${enemyData.unitIconId}")
         }
         //名称
         MainText(
@@ -108,6 +114,18 @@ fun EnemyAllInfo(
             text = enemyData.level.toString(),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+        //模型预览
+        IconTextButton(
+            icon = MainIconType.PREVIEW_UNIT_SPINE,
+            text = stringResource(id = R.string.spine_preview),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+        ) {
+            BrowserUtil.open(
+                context,
+                Constants.PREVIEW_ENEMY_URL + enemyData.prefabId
+            )
+        }
         //描述
         Text(
             text = enemyData.getDesc(),
