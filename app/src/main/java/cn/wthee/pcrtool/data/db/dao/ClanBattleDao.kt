@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBattleTargetCountData
-import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 
 
 /**
@@ -13,43 +12,6 @@ import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
  */
 @Dao
 interface ClanBattleDao {
-
-    /**
-     * 获取怪物基本参数
-     * @param enemyId 怪物编号
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            enemy_parameter.*,
-            unit_enemy_data.normal_atk_cast_time,
-            unit_enemy_data.comment 
-        FROM
-            enemy_parameter
-            LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
-        WHERE enemy_id = :enemyId"""
-    )
-    suspend fun getBossAttr(enemyId: Int): EnemyParameterPro
-
-    /**
-     * 获取所有 Boss 信息，测试用
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            enemy_parameter.*,
-            unit_enemy_data.normal_atk_cast_time,
-            COALESCE(unit_enemy_data.comment, "") AS comment
-        FROM
-            enemy_parameter
-            LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
-        WHERE enemy_id > 400000000
-        """
-    )
-    suspend fun getAllBossAttr(): List<EnemyParameterPro>
-
 
     /**
      * 获取所有公会战信息

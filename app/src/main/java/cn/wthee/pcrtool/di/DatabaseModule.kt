@@ -153,4 +153,13 @@ class DatabaseModule {
             else -> provideAppDatabaseJP().getQuestDao()
         }
     }
+
+    @Provides
+    fun provideEnemyDao(): EnemyDao {
+        return when (getType()) {
+            2 -> provideAppDatabaseCN().getEnemyDao()
+            3 -> provideAppDatabaseTW().getEnemyDao()
+            else -> provideAppDatabaseJP().getEnemyDao()
+        }
+    }
 }

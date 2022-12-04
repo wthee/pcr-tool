@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -34,11 +34,11 @@ import kotlinx.coroutines.launch
 fun ClanBattleList(
     scrollState: LazyGridState,
     toClanBossInfo: (Int, Int, Int) -> Unit,
-    clanViewModel: ClanViewModel = hiltViewModel()
+    clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
 
     val clanList =
-        clanViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
+        clanBattleViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(

@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
@@ -41,6 +42,7 @@ import kotlinx.coroutines.launch
 fun StoryEventList(
     scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
+    toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
@@ -60,7 +62,12 @@ fun StoryEventList(
                         it.eventId
                     }
                 ) {
-                    StoryEventItem(it, toCharacterDetail, toAllPics)
+                    StoryEventItem(
+                        event = it,
+                        toCharacterDetail = toCharacterDetail,
+                        toEventEnemyDetail = toEventEnemyDetail,
+                        toAllPics = toAllPics
+                    )
                 }
                 item {
                     CommonSpacer()
@@ -94,6 +101,7 @@ fun StoryEventList(
 fun StoryEventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
+    toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
 ) {
     val type: String
@@ -203,7 +211,7 @@ fun StoryEventItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //banner 图片
-                if (inProgress || isSub) {
+                if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
@@ -220,7 +228,7 @@ fun StoryEventItem(
                 } else {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance()
-                            .getUrl(EVENT_TEASER, event.originalEventId),
+                            .getUrl(EVENT_TEASER, event.eventId),
                         ratio = RATIO_TEASER,
                         modifier = Modifier.clip(shapeTop())
                     )
@@ -236,11 +244,22 @@ fun StoryEventItem(
 
                 //掉落角色图标
                 if (event.getUnitIdList().isNotEmpty()) {
-                    Row(
-                        modifier = Modifier
-                            .padding(vertical = Dimen.mediumPadding)
-                            .align(Alignment.End)
-                    ) {
+                    Row {
+                        //sp boss 图标，处理id 311403 -> 311400
+                        if (!isSub && event.bossUnitId != 0) {
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance()
+                                    .getUrl(
+                                        ImageResourceHelper.ICON_UNIT,
+                                        event.bossUnitId / 10 * 10
+                                    ),
+                                modifier = Modifier.padding(start = Dimen.mediumPadding)
+                            ) {
+                                toEventEnemyDetail(event.bossEnemyId)
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        //活动掉落角色图标
                         event.getUnitIdList().forEach { itemId ->
                             val unitId = itemId % 10000 * 100 + 1
                             IconCompose(
@@ -283,12 +302,26 @@ fun StoryEventItem(
 
 }
 
+/**
+ * 设置是否有teaser
+ */
+private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
+    2 -> eventId >= 10002
+    3 -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
+    4 -> eventId >= 10052 && eventId != 10055
+    else -> false
+} && eventId / 10000 == 1
+
 @Preview
 @Composable
 private fun StoryEventItemPreview() {
     PreviewBox {
         Column {
-            StoryEventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
+            StoryEventItem(
+                event = EventData(),
+                toCharacterDetail = {},
+                toEventEnemyDetail = {},
+                toAllPics = { _, _ -> })
         }
     }
 }

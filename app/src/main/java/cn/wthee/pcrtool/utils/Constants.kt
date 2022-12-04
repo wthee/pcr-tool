@@ -11,7 +11,7 @@ object Constants {
     const val TP_LIMIT_LEVEL = 260
 
     //本地数据库版本
-    const val SQLITE_VERSION = 351
+    const val SQLITE_VERSION = 352
 
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"

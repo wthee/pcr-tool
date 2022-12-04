@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
@@ -38,6 +39,7 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
+import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelList
 import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipTravelQuestDetail
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -112,6 +114,9 @@ object Navigation {
     const val TOOL_TRAVEL_AREA_DETAIL = "toolExtraEquipTravelAreaDetail"
     const val TRAVEL_QUEST_ID = "travelQuestId"
     const val CHARACTER_EXTRA_EQUIP_SLOT = "characterExtraEquipSlot"
+    const val EVENT_ENEMY_DETAIL = "eventEnemyDetail"
+    const val ENEMY_DETAIL = "enemyDetail"
+    const val ENEMY_ID = "enemyId"
 }
 
 /**
@@ -147,7 +152,8 @@ fun NavGraph(
             composable(route = Navigation.HOME,
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
-                popEnterTransition = { myFadeIn }) {
+                popEnterTransition = { myFadeIn })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                 val scrollState = rememberLazyListState()
                 Overview(actions = actions, scrollState)
@@ -158,7 +164,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyGridState()
                 CharacterList(scrollState, actions.toCharacterDetail)
@@ -172,7 +179,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberScrollState()
@@ -226,7 +234,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 EquipList(
@@ -241,7 +250,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipList(
@@ -255,7 +265,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipTravelList(
@@ -272,7 +283,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
                 ExtraEquipTravelQuestDetail(
@@ -289,7 +301,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
                 EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterial)
@@ -304,7 +317,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
                 ExtraEquipDetail(
@@ -421,7 +435,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val arguments = requireNotNull(it.arguments)
                 RankEquipCount(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
@@ -435,7 +450,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
                 LeaderboardList(scrollState)
@@ -446,7 +462,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
                 GachaList(scrollState, actions.toCharacterDetail, actions.toMockGacha)
@@ -457,7 +474,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyStaggeredGridState()
                 FreeGachaList(scrollState)
@@ -468,10 +486,16 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyStaggeredGridState()
-                StoryEventList(scrollState, actions.toCharacterDetail, actions.toAllPics)
+                StoryEventList(
+                    scrollState = scrollState,
+                    toCharacterDetail = actions.toCharacterDetail,
+                    toEventEnemyDetail = actions.toEventEnemyDetail,
+                    toAllPics = actions.toAllPics
+                )
             }
 
             //角色公会
@@ -479,7 +503,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
                 GuildList(scrollState, actions.toCharacterDetail)
@@ -490,7 +515,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val scrollState = rememberLazyGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ClanBattleList(scrollState, actions.toClanBossInfo)
@@ -508,7 +534,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val arguments = requireNotNull(it.arguments)
                 ClanBattleDetail(
                     arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
@@ -523,7 +550,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val pagerState = rememberPagerState()
                 val selectListState = rememberLazyGridState()
                 val usedListState = rememberLazyGridState()
@@ -556,7 +584,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 NewsList(actions.toNewsDetail)
             }
@@ -580,7 +609,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 TweetList(actions.toComicListIndex)
             }
@@ -590,7 +620,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ComicList()
             }
@@ -611,7 +642,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 AllSkillList(actions.toSummonDetail)
             }
@@ -666,7 +698,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 AllCharacterRankEquipCount(actions.toEquipMaterial)
             }
@@ -679,7 +712,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
                 val arguments = requireNotNull(it.arguments)
@@ -696,7 +730,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
@@ -710,7 +745,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 MockGacha()
             }
@@ -720,7 +756,8 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut }
+            ) {
                 val scrollState = rememberLazyStaggeredGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 BirthdayList(scrollState, actions.toCharacterDetail)
@@ -731,10 +768,47 @@ fun NavGraph(
                 enterTransition = { myFadeIn },
                 exitTransition = { myFadeOut },
                 popEnterTransition = { myFadeIn },
-                popExitTransition = { myFadeOut }) {
+                popExitTransition = { myFadeOut })
+            {
                 val scrollState = rememberLazyStaggeredGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 CalendarEventList(scrollState)
+            }
+
+            //怪物详情信息
+            composable(route = "${Navigation.ENEMY_DETAIL}/{${Navigation.ENEMY_ID}}",
+                arguments = listOf(navArgument(Navigation.ENEMY_ID) {
+                    type = NavType.IntType
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
+            ) {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val arguments = requireNotNull(it.arguments)
+                EnemyDetail(
+                    arguments.getInt(Navigation.ENEMY_ID),
+                    actions.toSummonDetail
+                )
+            }
+
+            //活动剧情怪物详情信息
+            composable(route = "${Navigation.EVENT_ENEMY_DETAIL}/{${Navigation.ENEMY_ID}}",
+                arguments = listOf(navArgument(Navigation.ENEMY_ID) {
+                    type = NavType.IntType
+                }),
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut }
+            ) {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val arguments = requireNotNull(it.arguments)
+                StoryEventBossDetail(
+                    arguments.getInt(Navigation.ENEMY_ID),
+                    actions.toSummonDetail
+                )
             }
         }
     }
@@ -1043,5 +1117,19 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterSkillLoop: (Int) -> Unit = { unitId ->
         navController.navigate("${Navigation.CHARACTER_SKILL_LOOP}/${unitId}")
+    }
+
+    /**
+     * 怪物详情信息
+     */
+    val toEnemyDetail: (Int) -> Unit = { enemyId ->
+        navController.navigate("${Navigation.ENEMY_DETAIL}/${enemyId}")
+    }
+
+    /**
+     * 活动剧情怪物详情信息
+     */
+    val toEventEnemyDetail: (Int) -> Unit = { enemyId ->
+        navController.navigate("${Navigation.EVENT_ENEMY_DETAIL}/${enemyId}")
     }
 }

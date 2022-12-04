@@ -12,10 +12,10 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.clan.BossSkillList
+import cn.wthee.pcrtool.ui.tool.enemy.EnemySkillList
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import cn.wthee.pcrtool.viewmodel.SummonViewModel
 import kotlin.math.max
@@ -140,9 +140,9 @@ private fun CharacterSummonDetail(
 @Composable
 private fun EnemySummonDetail(
     unitId: Int,
-    clanViewModel: ClanViewModel = hiltViewModel(),
+    enemyViewModel: EnemyViewModel = hiltViewModel(),
 ) {
-    val enemyInfo = clanViewModel.getEnemyAttr(unitId).collectAsState(initial = null).value
+    val enemyInfo = enemyViewModel.getEnemyAttr(unitId).collectAsState(initial = null).value
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -173,7 +173,7 @@ private fun EnemySummonDetail(
             //属性
             val attr = enemyData.attr.enemy()
             AttrList(attrs = attr)
-            BossSkillList(enemyData, UnitType.ENEMY_SUMMON)
+            EnemySkillList(enemyData, UnitType.ENEMY_SUMMON)
             CommonSpacer()
         }
     }

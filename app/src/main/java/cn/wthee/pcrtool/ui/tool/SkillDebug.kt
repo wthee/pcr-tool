@@ -15,10 +15,7 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
-import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import cn.wthee.pcrtool.viewmodel.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 
@@ -28,12 +25,12 @@ fun AllSkillList(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
-    clanViewModel: ClanViewModel = hiltViewModel(),
+    enemyViewModel: EnemyViewModel = hiltViewModel(),
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
     val allCharacter =
         characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
-    val bossIds = clanViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
+    val bossIds = enemyViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
     val exEquipSkillIds = extraEquipmentViewModel.getAllEquipSkillIdList()
         .collectAsState(initial = arrayListOf()).value
 

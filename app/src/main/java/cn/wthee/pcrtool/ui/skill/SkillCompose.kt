@@ -441,7 +441,7 @@ fun SkillActionItem(
 
             //调试用
             if (BuildConfig.DEBUG) {
-                CaptionText(text = skillAction.debugText)
+                CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
             }
         }
     }

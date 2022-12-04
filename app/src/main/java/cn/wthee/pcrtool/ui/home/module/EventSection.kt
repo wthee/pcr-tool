@@ -201,7 +201,12 @@ private fun CalendarEventLayout(
                     )
                 }
                 storyEventList.forEach {
-                    StoryEventItem(it, actions.toCharacterDetail, actions.toAllPics)
+                    StoryEventItem(
+                        event = it,
+                        toCharacterDetail = actions.toCharacterDetail,
+                        toEventEnemyDetail = actions.toEventEnemyDetail,
+                        toAllPics = actions.toAllPics
+                    )
                 }
                 eventList.forEach {
                     CalendarEventItem(it)

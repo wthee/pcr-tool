@@ -988,7 +988,12 @@ data class SkillActionDetail(
             isTpLimitAction
         )
         if (BuildConfig.DEBUG) {
-            skillActionText.debugText = this.toString()
+            skillActionText.debugText = """
+                action_id:${this.action_id}
+                action_type:${this.action_type}
+                detail:${this.action_detail_1}/${this.action_detail_2}/${this.action_detail_3}
+                value:${this.action_value_1}/${this.action_value_2}/${this.action_value_3}/${this.action_value_4}/${this.action_value_5}
+            """.trimIndent()
         }
         return skillActionText
     }
@@ -1131,12 +1136,12 @@ data class SkillActionDetail(
     /**
      * 首个目标位置
      */
-    private fun getTargetNumber() = if(target_assignment == 1){
+    private fun getTargetNumber() = if (target_assignment == 1) {
         when (target_number) {
             in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
             else -> ""
         }
-    }else{
+    } else {
         when (target_number) {
             1 -> "(最近)"
             in 2..10 -> "(第${getZhNumberText(target_number)}近)"

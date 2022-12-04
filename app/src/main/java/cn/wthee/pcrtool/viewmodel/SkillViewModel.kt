@@ -206,7 +206,7 @@ class SkillViewModel @Inject constructor(
      */
     fun getAllEnemySkill(enemyParameterPro: EnemyParameterPro) = flow {
         try {
-            val data = skillRepository.getUnitSkill(enemyParameterPro.unit_id)
+            val data = skillRepository.getUnitSkill(enemyParameterPro.unitId)
             data?.let {
                 val infoList = getSkills(
                     data.getEnemySkillId(),
@@ -219,7 +219,7 @@ class SkillViewModel @Inject constructor(
             if (e !is CancellationException) {
                 LogReportUtil.upload(
                     e,
-                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemy_id}"
+                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemyId}"
                 )
             }
         }
@@ -232,7 +232,7 @@ class SkillViewModel @Inject constructor(
      */
     fun getAllEnemySkillLoopIcon(enemyParameterPro: EnemyParameterPro) = flow {
         try {
-            val data = skillRepository.getUnitSkill(enemyParameterPro.unit_id)
+            val data = skillRepository.getUnitSkill(enemyParameterPro.unitId)
             data?.let {
                 emitAll(getskillIconTypes(0, ids = data.getEnemySkillId()))
             }
@@ -240,7 +240,7 @@ class SkillViewModel @Inject constructor(
             if (e !is CancellationException) {
                 LogReportUtil.upload(
                     e,
-                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemy_id}"
+                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemyId}"
                 )
             }
         }
@@ -253,7 +253,7 @@ class SkillViewModel @Inject constructor(
      */
     fun getAllSkillLoops(enemyParameterPro: EnemyParameterPro) = flow {
         //技能循环
-        val pattern = skillRepository.getAttackPattern(enemyParameterPro.unit_id)
+        val pattern = skillRepository.getAttackPattern(enemyParameterPro.unitId)
         emit(pattern)
     }
 
