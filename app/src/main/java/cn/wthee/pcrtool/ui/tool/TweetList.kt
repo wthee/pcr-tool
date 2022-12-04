@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +23,7 @@ import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
@@ -49,52 +49,39 @@ fun TweetList(
     }
 
     //获取分页数据
-    if (tweetViewModel.tweetPageList == null) {
+    val tweetPager = remember(keywordState.value) {
         tweetViewModel.getTweet(keywordState.value)
     }
-    val tweetItems = tweetViewModel.tweetPageList?.collectAsLazyPagingItems()
-
-    LaunchedEffect(keywordState.value) {
-        tweetItems?.refresh()
-        tweetViewModel.getTweet(keywordState.value)
-        scrollState.scrollToItem(0)
-    }
+    val tweetItems = tweetPager.flow.collectAsLazyPagingItems()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        val visible = tweetItems != null && tweetItems.itemCount > 0
-        FadeAnimation(visible = visible) {
-            LazyColumn(state = scrollState) {
-                items(
-                    items = tweetItems!!,
-                    key = {
-                        it.id
+        LazyColumn(state = scrollState) {
+            //头部加载中提示
+            item {
+                ExpandAnimation(tweetItems.loadState.refresh == LoadState.Loading) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        CircularProgressCompose(Modifier.align(Alignment.Center))
                     }
-                ) {
-                    TweetItem(it ?: TweetData(), toComic)
                 }
+            }
+            items(
+                items = tweetItems,
+                key = {
+                    it.id
+                }
+            ) {
+                TweetItem(it ?: TweetData(), toComic)
+            }
+            //暂无更多提示
+            if (tweetItems.loadState.refresh != LoadState.Loading) {
                 item {
                     FadeAnimation(tweetItems.loadState.append is LoadState.NotLoading) {
                         CenterTipText(stringResource(id = R.string.no_more))
                     }
                 }
-                item {
-                    FadeAnimation(tweetItems.loadState.append is LoadState.Loading) {
-                        TweetItem(TweetData(), toComic)
-                    }
-                }
-                item {
-                    CommonSpacer()
-                }
             }
-        }
-        FadeAnimation(visible = tweetItems == null) {
-            LazyColumn(state = rememberLazyListState()) {
-                items(12) {
-                    TweetItem(TweetData(), toComic)
-                }
-                item {
-                    CommonSpacer()
-                }
+            item {
+                CommonSpacer()
             }
         }
 

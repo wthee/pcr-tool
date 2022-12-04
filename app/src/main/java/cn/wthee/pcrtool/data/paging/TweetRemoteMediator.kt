@@ -53,17 +53,19 @@ class TweetRemoteMediator(
                     tweetDao.deleteByQuery(keyword)
                 }
 
-                //保存远程键
-                remoteKeyDao.insert(
-                    RemoteKey(
-                        query = keyword,
-                        nextKey = response?.last()?.id
+                if (response?.isNotEmpty() == true) {
+                    //保存远程键
+                    remoteKeyDao.insert(
+                        RemoteKey(
+                            query = keyword,
+                            nextKey = response.last().id
+                        )
                     )
-                )
 
-                //保存到本地
-                response?.let {
-                    tweetDao.insertAll(it)
+                    //保存到本地
+                    response.let {
+                        tweetDao.insertAll(it)
+                    }
                 }
             }
 
