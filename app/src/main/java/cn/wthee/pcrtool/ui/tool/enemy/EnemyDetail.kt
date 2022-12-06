@@ -85,13 +85,13 @@ fun EnemyAllInfo(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        //图标，非会战boss
-        if (enemyData.enemyId > 600000000) {
+        //图标，仅剧情活动boss显示
+        if (enemyData.enemyId.toString()[0] == '6') {
             IconCompose(
                 data = ImageResourceHelper.getInstance()
                     .getUrl(
                         ImageResourceHelper.ICON_UNIT,
-                        enemyData.unitIconId
+                        enemyData.prefabId
                     ),
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
@@ -99,7 +99,7 @@ fun EnemyAllInfo(
             )
         }
         if (BuildConfig.DEBUG) {
-            MainText(text = "${enemyData.enemyId}/${enemyData.unitId}/${enemyData.prefabId}/${enemyData.unitIconId}")
+            MainText(text = "${enemyData.enemyId}/${enemyData.unitId}/${enemyData.prefabId}")
         }
         //名称
         MainText(
@@ -142,7 +142,7 @@ fun EnemyAllInfo(
         if (expanded.value) {
             IconTextButton(
                 icon = MainIconType.COPY,
-                text = stringResource(id = R.string.copy),
+                text = stringResource(id = R.string.copy_text),
                 modifier = Modifier
                     .padding(bottom = Dimen.mediumPadding)
                     .align(Alignment.CenterHorizontally)
@@ -193,27 +193,22 @@ fun EnemySkillList(
         skillViewModel.getAllEnemySkill(enemyData).collectAsState(initial = null).value
     val allLoopData =
         skillViewModel.getAllSkillLoops(enemyData).collectAsState(initial = null).value
-    val allIcon = skillViewModel.getAllEnemySkillLoopIcon(enemyData)
-        .collectAsState(initial = null).value
-
 
     Column(
         modifier = Modifier
             .padding(Dimen.largePadding)
             .fillMaxSize()
     ) {
-        if (allLoopData != null && allIcon != null) {
+        if (allLoopData != null) {
             SkillLoopList(
                 allLoopData,
-                allIcon,
                 unitType = unitType
             )
         }
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
-        allSkillList?.let {
-            it.forEachIndexed { index, skillDetail ->
+        allSkillList?.let { skillList ->
+            skillList.forEach { skillDetail ->
                 SkillItem(
-                    skillIndex = index,
                     skillDetail = skillDetail,
                     unitType = unitType,
                     toSummonDetail = toSummonDetail

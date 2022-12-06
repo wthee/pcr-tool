@@ -27,6 +27,14 @@ interface SkillDao {
     suspend fun getSkillData(skillId: Int): SkillData?
 
     /**
+     * 获取技能图标
+     * @param skillId 技能编号
+     */
+    @SkipQueryVerification
+    @Query("SELECT icon_type FROM skill_data  WHERE skill_id = :skillId")
+    suspend fun getSkillIconType(skillId: Int): Int
+
+    /**
      * 获取角色技能动作效果列表
      * @param lv 技能等级
      * @param atk 角色攻击力

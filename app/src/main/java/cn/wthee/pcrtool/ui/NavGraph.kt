@@ -674,7 +674,7 @@ fun NavGraph(
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 SummonDetail(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    id = arguments.getInt(Navigation.UNIT_ID),
                     unitType = UnitType.getByValue(arguments.getInt(Navigation.UNIT_TYPE)),
                     level = arguments.getInt(Navigation.LEVEL),
                     rank = arguments.getInt(Navigation.RANK),

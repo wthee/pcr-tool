@@ -83,9 +83,8 @@ fun SkillCompose(
             )
         }
         //普通技能
-        normalSkillData.forEachIndexed { index, skillDetail ->
+        normalSkillData.forEach { skillDetail ->
             SkillItem(
-                skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -104,9 +103,8 @@ fun SkillCompose(
             }
         }
 
-        spSkillData.forEachIndexed { index, skillDetail ->
+        spSkillData.forEach { skillDetail ->
             SkillItem(
-                skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -124,7 +122,6 @@ fun SkillCompose(
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
-    skillIndex: Int,
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
@@ -166,10 +163,61 @@ fun SkillItem(
     }
 
     //技能类型名
+    var isNormalSkill = true
     val type = when (unitType) {
-        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
-        UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
-        UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
+        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> {
+            when (skillDetail.skillId % 1000) {
+                501 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.ex_skill)
+                }
+                511 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.ex_skill) + "+"
+                }
+                100 -> {
+                    isNormalSkill = false
+                    "SP" + stringResource(id = R.string.union_burst)
+                }
+                //sp 技能
+                101, 111, 102, 112, 103, 113 -> {
+                    "SP" + stringResource(
+                        id = R.string.skill_index,
+                        skillDetail.skillId % 10
+                    ) + if (skillDetail.skillId % 100 / 10 == 1) {
+                        "+"
+                    } else {
+                        ""
+                    }
+                }
+                1, 21 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.union_burst)
+                }
+                11 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.union_burst) + "+"
+                }
+                else -> {
+                    val skillIndex = skillDetail.skillId % 10 - 1
+                    stringResource(
+                        id = R.string.skill_index,
+                        skillIndex
+                    ) + if (skillDetail.skillId % 1000 / 10 == 1) {
+                        "+"
+                    } else {
+                        ""
+                    }
+                }
+            }
+        }
+        UnitType.ENEMY, UnitType.ENEMY_SUMMON -> {
+            if (skillDetail.enemySkillIndex == 0) {
+                stringResource(id = R.string.union_burst)
+            } else {
+                stringResource(id = R.string.skill_index, skillDetail.enemySkillIndex)
+            }
+        }
     }
     val color = getSkillColor(type)
     val name =
@@ -242,7 +290,6 @@ fun SkillItem(
                             )
                         }
                         //准备时间，显示：时间大于 0 或 角色1、2技能
-                        val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
                         if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
                             CaptionText(
                                 text = stringResource(
@@ -385,24 +432,21 @@ fun SkillActionItem(
                 modifier = Modifier.padding(Dimen.smallPadding),
                 color = MaterialTheme.colorScheme.onSurface,
                 text = buildAnnotatedString {
-                    skillAction.action.forEachIndexed { index, c ->
-                        var added = false
+                    skillAction.action.forEachIndexed { index, char ->
+                        //替换括号及括号内字体颜色
                         for (i in 0..3) {
                             map[i]?.forEach {
                                 if (index >= it.start && index <= it.end) {
-                                    added = true
                                     withStyle(style = SpanStyle(color = colors[i])) {
-                                        append(c)
+                                        append(char)
                                     }
                                     return@forEachIndexed
                                 }
                             }
                         }
-                        if (!added) {
-                            append(c)
-                        }
+                        //添加非括号标记的参数
+                        append(char)
                     }
-
                 }
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -460,34 +504,6 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
     }
     return list
 }
-
-/**
- * 获取技能类型
- */
-private fun getSkillType(skillId: Int): String {
-    return when (skillId % 1000) {
-        501 -> "EX技能"
-        511 -> "EX技能+"
-        100 -> "SP连结爆发"
-        101 -> "SP技能 1"
-        111 -> "SP技能 1+"
-        102 -> "SP技能 2"
-        112 -> "SP技能 2+"
-        103 -> "SP技能 3"
-        113 -> "SP技能 3+"
-        1, 21 -> "连结爆发"
-        11 -> "连结爆发+"
-        else -> {
-            val skillIndex = skillId % 10 - 1
-            if (skillId % 1000 / 10 == 1) {
-                "技能 ${skillIndex}+"
-            } else {
-                "技能 $skillIndex"
-            }
-        }
-    }
-}
-
 
 /**
  * 获取技能名称颜色

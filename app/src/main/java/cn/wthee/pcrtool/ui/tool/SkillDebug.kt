@@ -15,7 +15,10 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.viewmodel.*
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import cn.wthee.pcrtool.viewmodel.EnemyViewModel
+import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
+import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 
@@ -64,9 +67,9 @@ fun AllSkillList(
                     key = {
                         it.skillId
                     }
-                ) {
+                ) { skillDetail ->
                     var error = false
-                    it.getActionInfo().forEach { action ->
+                    skillDetail.getActionInfo().forEach { action ->
                         if (action.action.contains("?")) {
                             error = true
                             return@forEach
@@ -74,8 +77,7 @@ fun AllSkillList(
                     }
                     if (error) {
                         SkillItem(
-                            1,
-                            skillDetail = it,
+                            skillDetail = skillDetail,
                             unitType = UnitType.CHARACTER,
                             toSummonDetail = toSummonDetail,
                             property = CharacterProperty(100, 1, 1)

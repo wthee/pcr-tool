@@ -18,15 +18,21 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
         val skillData = skillDao.getSkillData(skillId)
         //等级大于260时，查询新技能信息
         if (lv > Constants.TP_LIMIT_LEVEL) {
-            val rfSkillId = skillDao.getRfSkillId(skillId)
-            rfSkillId?.let { id ->
-                val rfSkillData = skillDao.getSkillData(id)
-                rfSkillData?.isRfSkill = true
-                return rfSkillData
+            try {
+                val rfSkillId = skillDao.getRfSkillId(skillId)
+                rfSkillId?.let { id ->
+                    val rfSkillData = skillDao.getSkillData(id)
+                    rfSkillData?.isRfSkill = true
+                    return rfSkillData
+                }
+            } catch (_: Exception) {
+
             }
         }
         return skillData
     }
+
+    suspend fun getSkillIconType(skillId: Int) = skillDao.getSkillIconType(skillId)
 
     suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>, isRfSkill: Boolean) =
         skillDao.getSkillActions(lv, atk, actionIds, isRfSkill)

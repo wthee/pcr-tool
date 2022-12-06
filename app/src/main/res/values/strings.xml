@@ -45,6 +45,9 @@
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action">技能等级 > 260</string>
     <string name="tip_tp_limit_level_action">该技能等级大于 260，继续提高技能等级不会增加TP数值</string>
+    <string name="basic">基本</string>
+    <string name="no_story_info">暂无剧情信息</string>
+    <string name="character_birthday">角色生日：%s</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>
@@ -185,7 +188,8 @@
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
-    <string name="copy">复制</string>
+    <string name="copy_text">复制</string>
+    <string name="open_browser">在浏览器中打开</string>
 
     <!--活动相关-->
     <string name="normal">普通关卡</string>
@@ -258,5 +262,12 @@
     <string name="travel_need_power">最低战力</string>
     <string name="travel_time">冒险时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
+
+    <!--技能相关-->
+    <string name="union_burst">连结爆发</string>
+    <string name="skill_index">技能 %d</string>
+    <string name="ex_skill">EX技能</string>
+    <string name="character_summon_info">等级：%d / RANK：%d / 星级：%d</string>
+    <string name="normal_attack">普攻</string>
 
 </resources>

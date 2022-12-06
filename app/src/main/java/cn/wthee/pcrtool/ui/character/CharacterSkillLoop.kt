@@ -21,12 +21,9 @@ fun CharacterSkillLoop(
     //技能循环
     val loopData =
         skillViewModel.getCharacterSkillLoops(unitId).collectAsState(initial = arrayListOf()).value
-    val iconTypes = skillViewModel.getskillIconTypes(unitId)
-        .collectAsState(initial = hashMapOf()).value
 
     SkillLoopList(
         loopData,
-        iconTypes,
         modifier = Modifier.padding(Dimen.largePadding),
         unitType = UnitType.CHARACTER
     )

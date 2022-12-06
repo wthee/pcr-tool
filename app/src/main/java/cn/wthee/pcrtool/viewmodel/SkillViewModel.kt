@@ -9,7 +9,6 @@ import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -129,35 +128,37 @@ class SkillViewModel @Inject constructor(
     ): MutableList<SkillDetail> {
         val infos = mutableListOf<SkillDetail>()
         //技能信息
-        skillIds.forEachIndexed { index, sid ->
+        skillIds.forEachIndexed { index, skillId ->
             val lv = if (lvs.size == 1) lvs[0] else lvs[index]
-            val skill = skillRepository.getSkillData(sid, lv)
-            if (skill != null) {
-
-                val info = SkillDetail(
-                    skill.skillId,
-                    skill.name ?: "",
-                    skill.description,
-                    skill.iconType,
-                    skill.skillCastTime,
-                    lv,
-                    atk,
-                    skill.bossUbCoolTime
-                )
-                val actions = skillRepository.getSkillActions(
-                    lv,
-                    atk,
-                    skill.getAllActionId(),
-                    isRfSkill = skill.isRfSkill
-                )
-                val dependIds = skill.getSkillDependData()
-                actions.forEachIndexed { i, action ->
-                    if (i != 0) {
-                        action.dependId = dependIds[action.action_id] ?: 0
+            if (skillId != 0) {
+                val skill = skillRepository.getSkillData(skillId, lv)
+                if (skill != null) {
+                    val info = SkillDetail(
+                        skillId = skill.skillId,
+                        name = skill.name ?: "",
+                        desc = skill.description,
+                        iconType = skill.iconType,
+                        castTime = skill.skillCastTime,
+                        level = lv,
+                        atk = atk,
+                        bossUbCooltime = skill.bossUbCoolTime,
+                        enemySkillIndex = index
+                    )
+                    val actions = skillRepository.getSkillActions(
+                        lv,
+                        atk,
+                        skill.getAllActionId(),
+                        isRfSkill = skill.isRfSkill
+                    )
+                    val dependIds = skill.getSkillDependData()
+                    actions.forEachIndexed { i, action ->
+                        if (i != 0) {
+                            action.dependId = dependIds[action.action_id] ?: 0
+                        }
                     }
+                    info.actions = actions
+                    infos.add(info)
                 }
-                info.actions = actions
-                infos.add(info)
             }
         }
         return infos
@@ -166,28 +167,53 @@ class SkillViewModel @Inject constructor(
     /**
      * 获取技能图标信息
      */
-    fun getskillIconTypes(unitId: Int, ids: ArrayList<Int>? = null) = flow {
+    fun getSkillIconTypes(loopIdList: List<Int>, unitId: Int) = flow {
         try {
-            val skillIds = ids ?: getSkillIds(unitId, SkillType.ALL)
-            //保存技能对应的图标类型，用于技能循环页面展示
             val map = hashMapOf<Int, Int>()
-            //技能信息
-            skillIds.forEachIndexed { _, sid ->
-                val skill = skillRepository.getSkillData(sid, 0)
-                if (skill != null) {
-                    var aid = skill.skillId % 1000
-                    if (aid < 100) {
-                        aid %= 10
+            val unitSkill = skillRepository.getUnitSkill(unitId)
+            val mLoopIdList = loopIdList.distinct()
+
+            unitSkill?.let {
+                //技能id
+                val mainSkillIdList = arrayListOf(
+                    unitSkill.main_skill_1,
+                    unitSkill.main_skill_2,
+                    unitSkill.main_skill_3,
+                    unitSkill.main_skill_4,
+                    unitSkill.main_skill_5,
+                    unitSkill.main_skill_6,
+                    unitSkill.main_skill_7,
+                    unitSkill.main_skill_8,
+                    unitSkill.main_skill_9,
+                    unitSkill.main_skill_10,
+                )
+                //sp技能id
+                val spSkillIdList = arrayListOf(
+                    unitSkill.sp_skill_1,
+                    unitSkill.sp_skill_2,
+                    unitSkill.sp_skill_3,
+                    unitSkill.sp_skill_4,
+                    unitSkill.sp_skill_5,
+                )
+
+                //处理循环技能id对应的技能图标
+                mLoopIdList.forEach { loopId ->
+                    val skillId = when {
+                        loopId / 1000 == 1 -> mainSkillIdList[loopId % 100 - 1]
+                        loopId / 1000 == 2 -> spSkillIdList[loopId % 100 - 1]
+                        else -> null
                     }
-                    map[aid] = skill.iconType
+                    skillId?.let {
+                        map[loopId] = skillRepository.getSkillIconType(skillId)
+                    }
                 }
             }
+
             emit(map)
         } catch (_: Exception) {
 
         }
     }
-
 
     /**
      * 获取角色技能循环
@@ -214,27 +240,6 @@ class SkillViewModel @Inject constructor(
                     maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr)
                 )
                 emit(infoList)
-            }
-        } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(
-                    e,
-                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemyId}"
-                )
-            }
-        }
-    }
-
-    /**
-     * 获取怪物技能图标
-     *
-     * @param enemyParameterPro 怪物基本参数
-     */
-    fun getAllEnemySkillLoopIcon(enemyParameterPro: EnemyParameterPro) = flow {
-        try {
-            val data = skillRepository.getUnitSkill(enemyParameterPro.unitId)
-            data?.let {
-                emitAll(getskillIconTypes(0, ids = data.getEnemySkillId()))
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {

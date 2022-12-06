@@ -9,7 +9,6 @@ data class EnemyParameterPro(
     @ColumnInfo(name = "enemy_id") val enemyId: Int,
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "prefab_id") val prefabId: Int,
-    @ColumnInfo(name = "m_unit_id") val unitIconId: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "comment") val comment: String,
     @ColumnInfo(name = "normal_atk_cast_time") val atkTime: Double,

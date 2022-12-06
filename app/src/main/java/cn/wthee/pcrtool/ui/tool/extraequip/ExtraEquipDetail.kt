@@ -202,9 +202,8 @@ private fun ExtraEquipSkill(
                     .padding(top = Dimen.largePadding)
             )
 
-            skills.forEachIndexed { index, skillDetail ->
+            skills.forEach { skillDetail ->
                 SkillItem(
-                    skillIndex = index,
                     skillDetail = skillDetail,
                     unitType = UnitType.CHARACTER,
                     property = CharacterProperty(),

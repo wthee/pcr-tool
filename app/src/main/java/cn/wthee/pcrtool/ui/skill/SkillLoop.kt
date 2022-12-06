@@ -8,9 +8,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -21,6 +23,7 @@ import cn.wthee.pcrtool.ui.common.MainTitleText
 import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
 /**
@@ -29,25 +32,51 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper
 @Composable
 fun SkillLoopList(
     loopData: List<AttackPattern>,
-    iconTypes: HashMap<Int, Int>,
     modifier: Modifier = Modifier,
-    unitType: UnitType
+    unitType: UnitType,
+    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     val loops = arrayListOf<SkillLoop>()
+    val loopList = arrayListOf<Int>()
+    var unitId = 0
+
     loopData.forEach { attackPattern ->
         if (attackPattern.getBefore().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.before_loop), attackPattern.getBefore()))
+            loopList.addAll(attackPattern.getBefore())
+            loops.add(
+                SkillLoop(
+                    attackPattern.unitId,
+                    attackPattern.patternId,
+                    stringResource(R.string.before_loop),
+                    attackPattern.getBefore()
+                )
+            )
         }
         if (attackPattern.getLoop().size > 0) {
-            loops.add(SkillLoop(stringResource(R.string.looping), attackPattern.getLoop()))
+            loopList.addAll(attackPattern.getLoop())
+            loops.add(
+                SkillLoop(
+                    attackPattern.unitId,
+                    attackPattern.patternId,
+                    stringResource(R.string.looping),
+                    attackPattern.getLoop()
+                )
+            )
         }
+        unitId = attackPattern.unitId
     }
+    //获取循环对应的图标
+    val skillLoopList =
+        skillViewModel.getSkillIconTypes(loopList, unitId).collectAsState(initial = hashMapOf())
+            .value
+
+
     Column(
         modifier = if (unitType == UnitType.CHARACTER) modifier.verticalScroll(rememberScrollState()) else modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
-                SkillLoopItem(loop = it, iconTypes)
+                SkillLoopItem(loop = it, skillLoopList)
             }
         }
         if (unitType == UnitType.CHARACTER) {
@@ -60,7 +89,10 @@ fun SkillLoopList(
  * 技能循环 item
  */
 @Composable
-private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
+private fun SkillLoopItem(
+    loop: SkillLoop,
+    iconTypes: HashMap<Int, Int>,
+) {
     Column {
         MainTitleText(text = loop.loopTitle)
         SkillLoopIconList(loop.loopList, iconTypes)
@@ -68,37 +100,30 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
 }
 
 /**
- * 技能循环图标列表
+ * 技能循环图标列表V2
  */
 @Composable
 private fun SkillLoopIconList(
-    iconList: List<Int>,
+    loopList: List<Int>,
     iconTypes: HashMap<Int, Int>
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
         maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
     ) {
-        iconList.forEach {
+        loopList.forEach {
             val type: String
             val url: Any
             if (it == 1) {
-                type = "普攻"
+                type = stringResource(id = R.string.normal_attack)
                 url = R.drawable.unknown_item
             } else {
                 type = when (it / 1000) {
-                    1 -> "技能 ${it % 10}"
-                    2 -> "SP技能 ${it % 10}"
+                    1 -> stringResource(id = R.string.skill_index, it % 10)
+                    2 -> "SP" + stringResource(id = R.string.skill_index, it % 10)
                     else -> ""
                 }
-                val iconType = when (it) {
-                    1001 -> iconTypes[2]
-                    1002 -> iconTypes[3]
-                    1003 -> iconTypes[1]
-                    in 1004..1100 -> iconTypes[it % 10]
-                    in 2001..2100 -> iconTypes[100 + it % 10]
-                    else -> null
-                }
+                val iconType = iconTypes[it]
                 url = if (iconType == null) {
                     R.drawable.unknown_item
                 } else {
