@@ -205,7 +205,6 @@ fun getAction(
 /**
  * 获取菜单数据
  */
-@Composable
 fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
     val tool = when (toolMenuType) {
         ToolMenuType.CHARACTER -> ToolMenuData(R.string.character, MainIconType.CHARACTER)

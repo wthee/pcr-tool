@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -43,13 +44,14 @@ fun ClanBattleList(
 
     Box(
         modifier = Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         val visible = clanList.isNotEmpty()
-        FadeAnimation(visible = visible) {
-            LazyVerticalGrid(
-                state = scrollState,
-                columns = GridCells.Adaptive(getItemWidth())
-            ) {
+        LazyVerticalGrid(
+            state = scrollState,
+            columns = GridCells.Adaptive(getItemWidth())
+        ) {
+            if(visible){
                 items(
                     items = clanList,
                     key = {
@@ -58,18 +60,14 @@ fun ClanBattleList(
                 ) {
                     ClanBattleItem(it, toClanBossInfo)
                 }
-                item {
-                    CommonSpacer()
-                }
-            }
-        }
-        FadeAnimation(visible = !visible) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(getItemWidth())
-            ) {
+            }else{
                 items(20) {
                     ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
                 }
+            }
+
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部

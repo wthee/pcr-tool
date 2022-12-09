@@ -46,11 +46,9 @@ interface EnemyDao {
         FROM
             enemy_parameter
             LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
-        WHERE enemy_id > 400000000
         """
     )
-    suspend fun getAllClanBattleBossAttr(): List<EnemyParameterPro>
-
+    suspend fun getAllBossIds(): List<EnemyParameterPro>
 
     /**
      * 获取多目标

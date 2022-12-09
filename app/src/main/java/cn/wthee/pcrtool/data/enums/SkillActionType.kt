@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.utils.getString
  *
  * @param type action_type
  * @param desc 技能标签
- * @see cn.wthee.pcrtool.data.db.view.SkillActionDetail.action_type
+ * @see cn.wthee.pcrtool.data.db.view.SkillActionDetail.actionType
  */
 enum class SkillActionType(val type: Int, val descId: Int) {
 

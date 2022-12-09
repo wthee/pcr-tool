@@ -77,15 +77,20 @@ fun getToday(ms: Boolean = false): String {
  *  计算日期字符串间隔天数 yyyy/MM/dd  this - str2 相差天数
  */
 fun String.days(str2: String, showDay: Boolean = true): String {
-    return (try {
+    val day  = try {
         val d1 = df.parse(this.formatTime)!!
         val d2 = df.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
-        "${time / (60 * 60 * 1000 * 24)}"
+        time / (60 * 60 * 1000 * 24)
     } catch (e: Exception) {
-        "0"
-    }) + if (showDay) getString(R.string.day) else ""
+        0
+    }
+    return  if (showDay) {
+        getString(R.string.day, day)
+    } else {
+        day.toString()
+    }
 }
 
 /**

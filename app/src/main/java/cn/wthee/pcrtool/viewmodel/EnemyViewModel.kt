@@ -58,7 +58,7 @@ class EnemyViewModel @Inject constructor(
     fun getAllBossIds() = flow {
         try {
             val list = arrayListOf<Int>()
-            val boss = enemyRepository.getAllClanBattleBossAttr()
+            val boss = enemyRepository.getAllBossIds()
             boss.forEach {
                 list.add(it.unitId)
             }

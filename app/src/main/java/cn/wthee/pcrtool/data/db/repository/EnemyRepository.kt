@@ -10,10 +10,9 @@ import javax.inject.Inject
  */
 class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
 
-
     suspend fun getEnemyAttr(enemyId: Int) = enemyDao.getEnemyAttr(enemyId)
 
-    suspend fun getAllClanBattleBossAttr() = enemyDao.getAllClanBattleBossAttr()
+    suspend fun getAllBossIds() = enemyDao.getAllBossIds()
 
     suspend fun getMultiTargetEnemyInfo(enemyId: Int) = enemyDao.getMultiTargetEnemyInfo(enemyId)
 }
