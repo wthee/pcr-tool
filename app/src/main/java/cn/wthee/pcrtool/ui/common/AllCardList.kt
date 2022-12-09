@@ -183,7 +183,7 @@ private fun CardGridList(
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier
-                    .padding(Dimen.largePadding),
+                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding),
                 onClick = {
                     //下载
                     val loaded = loadedPicMap[picUrl] != null

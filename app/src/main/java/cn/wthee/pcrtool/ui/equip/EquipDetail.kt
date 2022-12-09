@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.SlideAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -93,10 +93,8 @@ private fun EquipDetail(
                 AttrList(attrs = equipMaxData.attr.allNotZero())
 
             }
-            SlideAnimation(visible = equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
-                //合成素材
-                EquipMaterialList(equipMaxData, toEquipMaterial)
-            }
+            //合成素材
+            EquipMaterialList(equipMaxData, toEquipMaterial)
         }
         //装备收藏
         FabCompose(
@@ -140,29 +138,36 @@ private fun EquipMaterialList(
     }
 
     Column {
-        DivCompose(Modifier.align(Alignment.CenterHorizontally))
+        MainText(
+            text = stringResource(R.string.equip_material),
+            modifier = Modifier
+                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                .align(Alignment.CenterHorizontally)
+        )
         //装备合成素材
-        VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-            materialList.forEach { material ->
-                val loved = starIds.value.contains(material.id)
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding,
-                            bottom = Dimen.largePadding
-                        ), horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance().getEquipPic(material.id)
+        FadeAnimation(visible = equip.equipmentId != UNKNOWN_EQUIP_ID) {
+            VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+                materialList.forEach { material ->
+                    val loved = starIds.value.contains(material.id)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding,
+                                bottom = Dimen.largePadding
+                            ), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        toEquipMaterial(material.id)
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance().getEquipPic(material.id)
+                        ) {
+                            toEquipMaterial(material.id)
+                        }
+                        SelectText(
+                            selected = loved,
+                            text = material.count.toString()
+                        )
                     }
-                    SelectText(
-                        selected = loved,
-                        text = material.count.toString()
-                    )
                 }
             }
         }

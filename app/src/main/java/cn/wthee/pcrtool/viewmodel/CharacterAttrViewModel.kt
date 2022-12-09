@@ -142,8 +142,8 @@ class CharacterAttrViewModel @Inject constructor(
             //被动技能数值
             val skillActionData = getExSkillAttr(unitId, rarity, level)
             val skillAttr = Attr()
-            val skillValue = skillActionData.action_value_2 + skillActionData.action_value_3 * level
-            when (skillActionData.action_detail_1) {
+            val skillValue = skillActionData.actionValue2 + skillActionData.actionValue3 * level
+            when (skillActionData.actionDetail1) {
                 1 -> skillAttr.hp = skillValue
                 2 -> skillAttr.atk = skillValue
                 3 -> skillAttr.def = skillValue

@@ -243,20 +243,6 @@ fun CaptionText(
 }
 
 /**
- * 分割线
- */
-@Composable
-fun DivCompose(modifier: Modifier = Modifier) {
-    Spacer(
-        modifier = modifier
-            .padding(Dimen.largePadding)
-            .width(Dimen.lineWidth)
-            .height(Dimen.lineHeight)
-            .background(MaterialTheme.colorScheme.primary)
-    )
-}
-
-/**
  * 主操作按钮
  */
 @Composable

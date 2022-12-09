@@ -99,7 +99,11 @@ fun EnemyAllInfo(
             )
         }
         if (BuildConfig.DEBUG) {
-            MainText(text = "${enemyData.enemyId}/${enemyData.unitId}/${enemyData.prefabId}")
+            Subtitle2(
+                text = "${enemyData.enemyId}/${enemyData.unitId}/${enemyData.prefabId}",
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+            )
         }
         //名称
         MainText(
@@ -165,12 +169,6 @@ fun EnemyAllInfo(
             //属性
             AttrList(attrs = it.attr.enemy())
         }
-        MainText(
-            text = stringResource(R.string.skill),
-            modifier = Modifier
-                .padding(top = Dimen.largePadding + Dimen.mediumPadding)
-                .align(Alignment.CenterHorizontally)
-        )
         //技能
         EnemySkillList(enemyData, UnitType.ENEMY, toSummonDetail)
         CommonSpacer()
@@ -199,6 +197,14 @@ fun EnemySkillList(
             .padding(Dimen.largePadding)
             .fillMaxSize()
     ) {
+        if (allSkillList?.isNotEmpty() == true || allLoopData?.isNotEmpty() == true) {
+            MainText(
+                text = stringResource(R.string.skill),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding + Dimen.mediumPadding)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
         if (allLoopData != null) {
             SkillLoopList(
                 allLoopData,

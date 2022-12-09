@@ -28,8 +28,8 @@ interface EventDao {
                 event.end_time,
                 c.title,
                 COALESCE(e.unit_ids, '') as unit_ids,
-								enemy_parameter.enemy_id AS boss_enemy_id,
-								enemy_parameter.unit_id AS boss_unit_id
+                enemy_parameter.enemy_id AS boss_enemy_id,
+                enemy_parameter.unit_id AS boss_unit_id
             FROM
                 (
                     SELECT

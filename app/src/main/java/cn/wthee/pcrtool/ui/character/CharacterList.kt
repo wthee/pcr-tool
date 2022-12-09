@@ -287,7 +287,10 @@ fun CharacterItem(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(Dimen.mediumPadding),
+                            .padding(
+                                horizontal = Dimen.mediumPadding,
+                                vertical = Dimen.smallPadding
+                            ),
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.SpaceAround
                     ) {
@@ -309,13 +312,13 @@ fun CharacterItem(
                         )
                         //体重
                         Subtitle2(
-                            text = getFixed(character.weight) + "KG",
+                            text = getFixed(character.weight) + " KG",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
                         //身高
                         Subtitle2(
-                            text = getFixed(character.height) + "CM",
+                            text = getFixed(character.height) + " CM",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
@@ -330,7 +333,7 @@ fun CharacterItem(
                         Row {
                             //获取方式
                             CharacterTag(
-                                modifier = Modifier.padding(end = Dimen.mediumPadding),
+                                modifier = Modifier.padding(end = Dimen.smallPadding),
                                 text = limitType,
                                 backgroundColor = limitColor,
                                 textColor = textColor
@@ -375,7 +378,11 @@ fun CharacterItem(
                     CaptionText(
                         text = character.startTime.formatTime.substring(0, 10),
                         color = textColor,
-                        modifier = Modifier.padding(Dimen.mediumPadding)
+                        modifier = Modifier.padding(
+                            top = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding,
+                            bottom = Dimen.smallPadding
+                        )
                     )
                 }
             }

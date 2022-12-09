@@ -44,7 +44,7 @@
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action">技能等级 > 260</string>
-    <string name="tip_tp_limit_level_action">该技能等级大于 260，继续提高技能等级不会增加TP数值</string>
+    <string name="tip_tp_limit_level_action">该技能等级大于 260 后，继续提高技能等级不会增加TP数值</string>
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
@@ -126,6 +126,7 @@
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
     <string name="tool_equip">装备</string>
+    <string name="equip_material">合成素材</string>
 
     <!--其它工具-->
     <string name="tool_leader">排行</string>
@@ -367,7 +368,7 @@
     <string name="skill_type_32">HP吸收</string>
     <string name="skill_type_33">反伤</string>
     <string name="skill_type_34">伤害递增</string>
-    <string name="skill_type_35">标记</string>
+    <string name="skill_type_35_43_60_77">标记</string>
     <string name="skill_type_36_37_38_39_40">领域</string>
     <string name="skill_type_42">触发</string>
     <string name="skill_type_44">进场</string>
@@ -446,8 +447,8 @@
     <string name="skill_target_34">除自身以外</string>
     <string name="skill_target_35">剩余HP最高的</string>
     <string name="skill_target_36">剩余HP最低的</string>
-    <string name="skill_target_38">攻击力（物理攻击力或魔法攻击力）最高的</string>
-    <string name="skill_target_39">攻击力（物理攻击力或魔法攻击力）最低的</string>
+    <string name="skill_target_38">攻击力最高的</string>
+    <string name="skill_target_39">攻击力最低的</string>
     <string name="skill_target_42">多目标</string>
     <string name="skill_target_43">物理攻击力最高（自身除外）的</string>
 
@@ -479,7 +480,7 @@
     <string name="skill_physical_damage_take">受到的物理伤害</string>
     <string name="skill_magic_damage_take">受到的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
-    <string name="skill_range">范围(%d)内</string>
+    <string name="skill_range">范围 [%d] 内</string>
     <string name="skill_target_count">（%d 名）</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
@@ -494,7 +495,7 @@
     <string name="skill_adaptive_lower_defense">（适应物理/魔法防御中较低的防御）</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
-    <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s</string>
+    <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s</string>
     <string name="skill_forward">向前</string>
     <string name="skill_backward">向后</string>
     <string name="skill_ahead">前方</string>
@@ -524,9 +525,6 @@
     <string name="skill_action_type_desc_10_break">BREAK 期间，%s%s</string>
     <string name="skill_charm_0">魅惑</string>
     <string name="skill_charm_1">混乱</string>
-    <!--fixme-->
-    <string name="skill_charm_rate_100">成功率 [%d%%]</string>
-    <string name="skill_charm_rate">成功率 [100%%]</string>
     <string name="skill_action_type_desc_12_13">以 %s 的概率使%s进入%s状态%s</string>
     <string name="skill_action_atk_miss">；对象进行物理攻击时有 [%d%%] 的概率被回避</string>
     <string name="skill_action_loop_change">技能循环改变%s</string>
@@ -547,6 +545,7 @@
     <string name="skill_action_type_desc_17_9">BREAK 时 [%d%%] 的概率%s</string>
     <string name="skill_action_type_desc_17_10">受到持续伤害时 [%d%%] 概率</string>
     <string name="skill_action_type_desc_17_11">所有部位 BREAK</string>
+    <string name="skill_action_type_desc_17_13">HP减少 [%d] 时</string>
     <string name="skill_action_type_desc_18_19">蓄力 [%s] 秒，动作(%d)效果增加 %s * 蓄力中受到的伤害</string>
     <string name="skill_action_type_desc_20">使%s进入%s状态%s</string>
     <string name="skill_action_type_desc_21_1">无敌</string>
@@ -557,8 +556,8 @@
     <string name="skill_action_if_status_not">当%s不在[%s]时，使用动作(%d)</string>
     <string name="skill_action_if_mark">%s持有标记时，使用动作(%d)</string>
     <string name="skill_action_if_mark_not">%s未持有标记时，使用动作(%d)</string>
-    <string name="skill_action_if_alone">%s是单独时，使用动作(%d)</string>
-    <string name="skill_action_if_alone_not">%s不是单独时，使用动作(%d)</string>
+    <string name="skill_action_if_alone">%s仅剩一名时，使用动作(%d)</string>
+    <string name="skill_action_if_alone_not">%s多于一名时，使用动作(%d)</string>
     <string name="skill_action_if_hp_below">%s的HP在 [%d%%] 以下时，使用动作(%d)</string>
     <string name="skill_action_if_hp_above">%s的HP在 [%d%%] 以上时，使用动作(%d)</string>
     <string name="skill_action_if_target">目标是%s时，使用动作(%d)</string>
@@ -587,7 +586,7 @@
     <string name="skill_action_sp_if_dot">%s身上有持续伤害时，使用动作(%d)</string>
     <string name="skill_action_sp_if_dot_not">%s身上没有持续伤害时，使用动作(%d)</string>
     <string name="skill_action_sp_if_mark_count">%s的标记层数在 [%d] 及以上时，使用动作(%d)</string>
-    <string name="skill_action_sp_if_mark_count_not">%s的标记层数小于 [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_sp_if_mark_count_not">%s的标记层数在 [%d] 以下时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_count">隐身状态的单位除外，%s的数量是 [%d] 时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_count_not">隐身状态的单位除外，%s的数量不是 [%d] 时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_exist">隐身状态的单位除外，%s中存在单位时，使用动作(%d)</string>
@@ -599,10 +598,10 @@
     <string name="skill_action_type_desc_29">无 UB 技能</string>
     <string name="skill_action_type_desc_30">%s死亡</string>
     <string name="skill_action_type_desc_32">为%s的下 [%d] 次攻击附加%s %s 的效果</string>
-    <string name="skill_action_type_desc_33">%s，受到%s伤害时反弹 [%d] 倍伤害%s</string>
+    <string name="skill_action_type_desc_33">%s，受到%s伤害时反弹 %s 伤害%s， 生效 [%d] 次</string>
     <string name="skill_action_type_desc_33_hp">，并回复HP</string>
     <string name="skill_action_type_desc_34">每次攻击当前的目标，将会追加伤害 %s%s</string>
-    <string name="skill_action_type_desc_35">对%s追加 %s 层标记%s%s</string>
+    <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">，每秒造成 %s %s伤害</string>
     <string name="skill_action_type_desc_field">展开领域 [%d] %s%s</string>
@@ -655,7 +654,7 @@
     <string name="skill_action_type_desc_94">%s附加技能特效</string>
     <string name="skill_action_type_desc_95">%s进入隐匿状态%s</string>
     <string name="skill_action_type_desc_96_tp">，每秒回复 %s TP</string>
-    <string name="skill_action_type_desc_97">受击时减少 [%d]标记，TP回复 [%d]%s</string>
+    <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
@@ -690,7 +689,7 @@
     <string name="attr_def">物理防御力</string>
     <string name="attr_magic_def">魔法防御力</string>
     <string name="attr_physical_critical">物理暴击</string>
-    <string name="attr_magic_critical">物理暴击</string>
+    <string name="attr_magic_critical">魔法暴击</string>
     <string name="attr_physical_penetrate">物理穿透</string>
     <string name="attr_magic_penetrate">魔法穿透</string>
     <string name="attr_accuracy">命 中</string>

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.foundation.clickable
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -31,7 +29,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -287,6 +284,10 @@ fun SettingSwitchCompose(
                 checkedState.value = it
                 sp.edit().putBoolean(spKey, it).apply()
                 VibrateUtil(context).single()
+                //动态色彩变更后，重启应用
+                if (type == SettingSwitchType.DYNAMIC_COLOR) {
+                    MainActivity.handler.sendEmptyMessage(1)
+                }
             }
         )
     }
@@ -364,32 +365,4 @@ private fun SwitchThumbIcon(checked: Boolean) {
         contentDescription = "",
         modifier = Modifier.size(SwitchDefaults.IconSize)
     )
-}
-
-@Preview
-@Composable
-private fun MainSettingsPreview() {
-    val context = LocalContext.current
-    PreviewBox(1) {
-        MainSettings(
-            sp = context.getSharedPreferences(
-                "setting",
-                Context.MODE_PRIVATE
-            )!!
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MainSettingsDarkPreview() {
-    val context = LocalContext.current
-    PreviewBox(2) {
-        MainSettings(
-            sp = context.getSharedPreferences(
-                "setting",
-                Context.MODE_PRIVATE
-            )!!
-        )
-    }
 }

@@ -546,7 +546,8 @@ private fun AttrLists(
                 toCharacterStoryDetail(unitId)
             }
             .padding(horizontal = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             MainText(text = stringResource(id = R.string.title_story_attr))
             IconCompose(
                 data = MainIconType.HELP, size = Dimen.smallIconSize

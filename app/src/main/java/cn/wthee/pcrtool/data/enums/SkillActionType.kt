@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.utils.getString
  *
  * @param type action_type
  * @param desc 技能标签
- * @see cn.wthee.pcrtool.data.db.view.SkillActionDetail.action_type
+ * @see cn.wthee.pcrtool.data.db.view.SkillActionDetail.actionType
  */
 enum class SkillActionType(val type: Int, val descId: Int) {
 
@@ -187,7 +187,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 35：特殊标记
      */
-    SEAL(35, R.string.skill_type_35),
+    SEAL(35, R.string.skill_type_35_43_60_77),
 
     /**
      * 36：攻击领域展开
@@ -227,7 +227,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 43：拥有标记时触发
      */
-    IF_TARGETED(43, R.string.none),
+    IF_TARGETED(43, R.string.skill_type_35_43_60_77),
 
     /**
      * 44：每场战斗开始时
@@ -312,7 +312,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 60：标记赋予
      */
-    ATTACK_SEAL(60,  R.string.skill_type_60),
+    ATTACK_SEAL(60, R.string.skill_type_35_43_60_77),
 
     /**
      * 61：恐慌
@@ -372,7 +372,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 77：被动叠加标记
      */
-    IF_BUFF_SEAL(77,  R.string.skill_type_77),
+    IF_BUFF_SEAL(77, R.string.skill_type_35_43_60_77),
 
     /**
      * 78：被击伤害上升

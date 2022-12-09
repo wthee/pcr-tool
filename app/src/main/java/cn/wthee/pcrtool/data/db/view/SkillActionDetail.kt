@@ -21,25 +21,25 @@ data class SkillActionDetail(
     @PrimaryKey
     @ColumnInfo(name = "lv") var level: Int = 0,
     @ColumnInfo(name = "atk") var atk: Int = 0,
-    @ColumnInfo(name = "action_id") var action_id: Int = 0,
-    @ColumnInfo(name = "class_id") var class_id: Int = 0,
-    @ColumnInfo(name = "action_type") var action_type: Int = 0,
-    @ColumnInfo(name = "action_detail_1") var action_detail_1: Int = 0,
-    @ColumnInfo(name = "action_detail_2") var action_detail_2: Int = 0,
-    @ColumnInfo(name = "action_detail_3") var action_detail_3: Int = 0,
-    @ColumnInfo(name = "action_value_1") var action_value_1: Double = 0.0,
-    @ColumnInfo(name = "action_value_2") var action_value_2: Double = 0.0,
-    @ColumnInfo(name = "action_value_3") var action_value_3: Double = 0.0,
-    @ColumnInfo(name = "action_value_4") var action_value_4: Double = 0.0,
-    @ColumnInfo(name = "action_value_5") var action_value_5: Double = 0.0,
-    @ColumnInfo(name = "action_value_6") var action_value_6: Double = 0.0,
-    @ColumnInfo(name = "action_value_7") var action_value_7: Double = 0.0,
-    @ColumnInfo(name = "target_assignment") var target_assignment: Int = 0,
-    @ColumnInfo(name = "target_area") var target_area: Int = 0,
-    @ColumnInfo(name = "target_range") var target_range: Int = 0,
-    @ColumnInfo(name = "target_type") var target_type: Int = 0,
-    @ColumnInfo(name = "target_number") var target_number: Int = 0,
-    @ColumnInfo(name = "target_count") var target_count: Int = 0,
+    @ColumnInfo(name = "action_id") var actionId: Int = 0,
+    @ColumnInfo(name = "class_id") var classId: Int = 0,
+    @ColumnInfo(name = "action_type") var actionType: Int = 0,
+    @ColumnInfo(name = "action_detail_1") var actionDetail1: Int = 0,
+    @ColumnInfo(name = "action_detail_2") var actionDetail2: Int = 0,
+    @ColumnInfo(name = "action_detail_3") var actionDetail3: Int = 0,
+    @ColumnInfo(name = "action_value_1") var actionValue1: Double = 0.0,
+    @ColumnInfo(name = "action_value_2") var actionValue2: Double = 0.0,
+    @ColumnInfo(name = "action_value_3") var actionValue3: Double = 0.0,
+    @ColumnInfo(name = "action_value_4") var actionValue4: Double = 0.0,
+    @ColumnInfo(name = "action_value_5") var actionValue5: Double = 0.0,
+    @ColumnInfo(name = "action_value_6") var actionValue6: Double = 0.0,
+    @ColumnInfo(name = "action_value_7") var actionValue7: Double = 0.0,
+    @ColumnInfo(name = "target_assignment") var targetAssignment: Int = 0,
+    @ColumnInfo(name = "target_area") var targetArea: Int = 0,
+    @ColumnInfo(name = "target_range") var targetRange: Int = 0,
+    @ColumnInfo(name = "target_type") var targetType: Int = 0,
+    @ColumnInfo(name = "target_number") var targetNumber: Int = 0,
+    @ColumnInfo(name = "target_count") var targetCount: Int = 0,
     @ColumnInfo(name = "description") var description: String = "",
     @ColumnInfo(name = "ailment_name") var tag: String,
     @ColumnInfo(name = "isRfSkill") var isRfSkill: Boolean = false,
@@ -56,8 +56,8 @@ data class SkillActionDetail(
     fun getActionDesc(): SkillActionText {
         //召唤物编号
         var summonUnitId = 0
-        if (toSkillActionType(action_type) == SkillActionType.SUMMON) {
-            summonUnitId = action_detail_2
+        if (toSkillActionType(actionType) == SkillActionType.SUMMON) {
+            summonUnitId = actionDetail2
         }
         //生成技能效果文本
         val formatDescText = try {
@@ -67,7 +67,7 @@ data class SkillActionDetail(
             UNKNOWN
         }
         //是否显示系数判断
-        val showCoe = when (toSkillActionType(action_type)) {
+        val showCoe = when (toSkillActionType(actionType)) {
             SkillActionType.ADDITIVE,
             SkillActionType.MULTIPLE,
             SkillActionType.DIVIDE,
@@ -75,9 +75,9 @@ data class SkillActionDetail(
             else -> false
         }
         val skillActionText = SkillActionText(
-            action_id,
+            actionId,
             tag,
-            "(${action_id % 10}) $formatDescText",
+            "(${actionId % 10}) $formatDescText",
             summonUnitId,
             showCoe,
             level,
@@ -94,10 +94,10 @@ data class SkillActionDetail(
      * 调试用信息
      */
     private fun getDebugText() = """
-                    action_id:${this.action_id}
-                    action_type:${this.action_type}
-                    detail:${this.action_detail_1}/${this.action_detail_2}/${this.action_detail_3}
-                    value:${this.action_value_1}/${this.action_value_2}/${this.action_value_3}/${this.action_value_4}/${this.action_value_5}
+                    action_id:${this.actionId}
+                    action_type:${this.actionType}
+                    detail:${this.actionDetail1}/${this.actionDetail2}/${this.actionDetail3}
+                    value:${this.actionValue1}/${this.actionValue2}/${this.actionValue3}/${this.actionValue4}/${this.actionValue5}
                 """.trimIndent()
 
     /**
@@ -105,26 +105,26 @@ data class SkillActionDetail(
      */
     private fun formatDesc(): String {
         //设置状态标签
-        val ailmentName = getAilment(action_type)
+        val ailmentName = getAilment(actionType)
         if (ailmentName.isNotEmpty()) {
             tag = ailmentName
         }
 
-        return when (toSkillActionType(action_type)) {
+        return when (toSkillActionType(actionType)) {
             // 1：造成伤害
             SkillActionType.DAMAGE -> {
                 val atkType = getAtkType()
                 val adaptive = getString(
-                    when (action_detail_2) {
+                    when (actionDetail2) {
                         1 -> R.string.skill_adaptive_lower_defense
                         else -> R.string.none
                     }
                 )
 
                 //暴伤倍率
-                val multipleDamage = if (action_value_6 > 0) {
-                    val multiple = if (action_value_6 > 1) {
-                        "[${action_value_6 * 2}]"
+                val multipleDamage = if (actionValue6 > 0) {
+                    val multiple = if (actionValue6 > 1) {
+                        "[${actionValue6 * 2}]"
                     } else {
                         "[2]"
                     }
@@ -135,14 +135,14 @@ data class SkillActionDetail(
 
                 //必定暴击
                 val mustCritical = getString(
-                    if (action_value_5.toInt() == 1) {
+                    if (actionValue5.toInt() == 1) {
                         R.string.skill_must_critical
                     } else {
                         R.string.none
                     }
                 )
 
-                val value = getValueText(1, action_value_1, action_value_2, action_value_3)
+                val value = getValueText(1, actionValue1, actionValue2, actionValue3)
 
                 getString(
                     R.string.skill_action_type_desc_1,
@@ -157,14 +157,14 @@ data class SkillActionDetail(
             SkillActionType.MOVE -> {
 
                 val directionText = getString(
-                    if (action_value_1 > 0) {
+                    if (actionValue1 > 0) {
                         R.string.skill_forward
                     } else {
                         R.string.skill_backward
                     }
                 )
                 val positionText = getString(
-                    if (action_value_1 > 0) {
+                    if (actionValue1 > 0) {
                         R.string.skill_ahead
                     } else {
                         R.string.skill_rear
@@ -175,11 +175,11 @@ data class SkillActionDetail(
                         R.string.skill_move,
                         getTarget(),
                         positionText,
-                        abs(action_value_1).toInt()
+                        abs(actionValue1).toInt()
                     )
                 val returnText = getString(R.string.skill_return)
-                val speedText = getString(R.string.skill_move_speed, action_value_2.toInt())
-                when (action_detail_1) {
+                val speedText = getString(R.string.skill_move_speed, actionValue2.toInt())
+                when (actionDetail1) {
                     //移动后返回
                     1 -> moveText + returnText
                     //前、后移动后返回
@@ -197,19 +197,19 @@ data class SkillActionDetail(
             }
             // 3：改变对方位置
             SkillActionType.CHANGE_ENEMY_POSITION -> {
-                when (action_detail_1) {
+                when (actionDetail1) {
                     1, 9 -> {
                         tag = getString(R.string.skill_hit_up)
                         getString(
                             R.string.skill_action_type_desc_3_up,
                             tag,
                             getTarget(),
-                            (abs(action_value_1)).toInt()
+                            (abs(actionValue1)).toInt()
                         )
                     }
                     3, 6 -> {
                         tag = getString(
-                            if (action_value_1 > 0) {
+                            if (actionValue1 > 0) {
                                 R.string.skill_push
                             } else {
                                 R.string.skill_pull
@@ -219,7 +219,7 @@ data class SkillActionDetail(
                             R.string.skill_action_type_desc_3_move,
                             tag,
                             getTarget(),
-                            (abs(action_value_1)).toInt()
+                            (abs(actionValue1)).toInt()
                         )
                     }
                     8 -> {
@@ -228,7 +228,7 @@ data class SkillActionDetail(
                             R.string.skill_action_type_desc_3_pull,
                             getTarget(),
                             tag,
-                            action_value_1.toInt()
+                            actionValue1.toInt()
                         )
                     }
                     else -> UNKNOWN
@@ -236,16 +236,16 @@ data class SkillActionDetail(
             }
             // 4：回复 HP
             SkillActionType.HEAL -> {
-                val value = getValueText(2, action_value_2, action_value_3, action_value_4)
+                val value = getValueText(2, actionValue2, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_4, getTarget(), value)
             }
             // 5：回复 HP
             SkillActionType.CURE -> UNKNOWN
             // 6：护盾
             SkillActionType.BARRIER -> {
-                val value = getValueText(1, action_value_1, action_value_2)
-                val time = getTimeText(3, action_value_3, action_value_4)
-                val type = getBarrierType(action_detail_1)
+                val value = getValueText(1, actionValue1, actionValue2)
+                val time = getTimeText(3, actionValue3, actionValue4)
+                val type = getBarrierType(actionDetail1)
                 if (type != UNKNOWN) {
                     getString(R.string.skill_action_type_desc_6, getTarget(), type, value, time)
                 } else {
@@ -260,7 +260,7 @@ data class SkillActionDetail(
             SkillActionType.CHANGE_ACTION_SPEED, SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED -> {
                 //判断异常状态
                 tag = getString(
-                    when (action_detail_1) {
+                    when (actionDetail1) {
                         1 -> R.string.skill_ailment_1
                         2 -> R.string.skill_ailment_2
                         3 -> R.string.skill_ailment_3
@@ -276,12 +276,12 @@ data class SkillActionDetail(
                         else -> R.string.unknown
                     }
                 )
-                val value = getValueText(1, action_value_1, action_value_2)
-                val time = getTimeText(3, action_value_3, action_value_4)
-                when (action_detail_1) {
+                val value = getValueText(1, actionValue1, actionValue2)
+                val time = getTimeText(3, actionValue3, actionValue4)
+                when (actionDetail1) {
                     1, 2 -> {
                         val descText =
-                            if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
+                            if (actionType == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
                                 tag += getString(R.string.skill_ailment_extra)
                                 getString(R.string.skill_action_speed_add, value)
                             } else {
@@ -292,7 +292,7 @@ data class SkillActionDetail(
                     else -> {
                         getString(R.string.skill_action_type_desc_8, getTarget(), tag, time)
                     }
-                } + if (action_detail_2 == 1) {
+                } + if (actionDetail2 == 1) {
                     getString(R.string.skill_action_hit_remove)
                 } else {
                     ""
@@ -301,7 +301,7 @@ data class SkillActionDetail(
             // 9：持续伤害
             SkillActionType.DOT -> {
                 tag = getString(
-                    when (action_detail_1) {
+                    when (actionDetail1) {
                         0 -> R.string.skill_dot_0
                         1, 7 -> R.string.skill_dot_1_7
                         2 -> R.string.skill_dot_2
@@ -311,10 +311,10 @@ data class SkillActionDetail(
                         else -> R.string.unknown
                     }
                 )
-                val value = getValueText(1, action_value_1, action_value_2)
-                val time = getTimeText(3, action_value_3, action_value_4)
-                val dotIncrease = if (action_detail_1 == 5) {
-                    getString(R.string.skill_action_dot_increase, action_value_5.toInt())
+                val value = getValueText(1, actionValue1, actionValue2)
+                val time = getTimeText(3, actionValue3, actionValue4)
+                val dotIncrease = if (actionDetail1 == 5) {
+                    getString(R.string.skill_action_dot_increase, actionValue5.toInt())
                 } else {
                     ""
                 }
@@ -330,61 +330,63 @@ data class SkillActionDetail(
             // 10：buff/debuff
             SkillActionType.AURA -> {
                 tag = getString(
-                    if (action_detail_1 % 10 == 0) {
+                    if (actionDetail1 % 10 == 0) {
                         R.string.skill_buff
                     } else {
                         R.string.skill_debuff
                     }
                 )
-                val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
-                val aura = getAura(action_detail_1, value)
-                val time = getTimeText(4, action_value_4, action_value_5)
+                val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
+                val aura = getAura(actionDetail1, value)
+                val time = getTimeText(4, actionValue4, actionValue5)
 
-                if (action_detail_2 == 2) {
+                if (actionDetail2 == 2) {
                     getString(R.string.skill_action_type_desc_10_break, getTargetType(), aura)
                 } else {
                     "${getTarget()}${aura}$time"
                 }
             }
-            // 11：魅惑/混乱
-            SkillActionType.CHARM -> {
-                tag = getString(
-                    when (action_detail_1) {
-                        0 -> R.string.skill_charm_0
-                        1 -> R.string.skill_charm_1
-                        else -> R.string.unknown
-                    }
-                )
-                val time = getTimeText(1, action_value_1, action_value_2)
-                //fixme 校验逻辑
-                val chance = getValueText(3, action_value_3, 1.0, 0.0, "%")
-                "${tag}${getTarget()}${time}，$chance"
-            }
-            // 12：黑暗 13：沉默 fixme 校验逻辑
-            SkillActionType.BLIND, SkillActionType.SILENCE -> {
-                val chance = getValueText(3, action_value_3, action_value_4, 0.0, "%")
-                val time = getTimeText(1, action_value_1, action_value_2)
+            //11：魅惑/混乱12：黑暗 13：沉默
+            SkillActionType.CHARM, SkillActionType.BLIND, SkillActionType.SILENCE -> {
+                val chance =
+                    getValueText(
+                        3,
+                        actionValue3,
+                        if (actionValue3.toInt() == 100) 0.0 else 1.0,
+                        0.0,
+                        "%"
+                    )
+                val time = getTimeText(1, actionValue1, actionValue2)
+                if (toSkillActionType(actionType) == SkillActionType.CHARM) {
+                    tag = getString(
+                        when (actionDetail1) {
+                            0 -> R.string.skill_charm_0
+                            1 -> R.string.skill_charm_1
+                            else -> R.string.unknown
+                        }
+                    )
+                }
 
                 getString(
                     R.string.skill_action_type_desc_12_13,
                     chance,
                     getTarget(),
-                    ailmentName,
+                    tag,
                     time
-                ) + if (action_type == 12) {
-                    getString(R.string.skill_action_atk_miss, 100 - action_detail_1)
+                ) + if (actionType == 12) {
+                    getString(R.string.skill_action_atk_miss, 100 - actionDetail1)
                 } else {
                     ""
                 }
             }
             // 14：行动模式变更
             SkillActionType.CHANGE_MODE -> {
-                when (action_detail_1) {
+                when (actionDetail1) {
                     1 -> getString(
                         R.string.skill_action_loop_change,
-                        getTimeText(1, action_value_1)
+                        getTimeText(1, actionValue1)
                     )
-                    2 -> getString(R.string.skill_action_type_desc_14_2, action_value_1.toInt())
+                    2 -> getString(R.string.skill_action_type_desc_14_2, actionValue1.toInt())
                     3 -> getString(R.string.skill_action_type_desc_14_3)
                     else -> UNKNOWN
                 }
@@ -393,21 +395,21 @@ data class SkillActionDetail(
             SkillActionType.SUMMON -> {
                 val desc = getString(R.string.skill_action_summon_unit)
                 when {
-                    action_value_7 > 0 -> {
+                    actionValue7 > 0 -> {
                         getString(
                             R.string.skill_action_type_desc_15,
                             getTarget(),
                             getString(R.string.skill_ahead),
-                            action_value_7.toInt(),
+                            actionValue7.toInt(),
                             desc
                         )
                     }
-                    action_value_7 < 0 -> {
+                    actionValue7 < 0 -> {
                         getString(
                             R.string.skill_action_type_desc_15,
                             getTarget(),
                             getString(R.string.skill_rear),
-                            abs(action_value_7).toInt(),
+                            abs(actionValue7).toInt(),
                             desc
                         )
                     }
@@ -422,9 +424,9 @@ data class SkillActionDetail(
                 if (level > Constants.TP_LIMIT_LEVEL && isRfSkill) {
                     isTpLimitAction = true
                 }
-                val value = getValueText(1, action_value_1, action_value_2)
+                val value = getValueText(1, actionValue1, actionValue2)
                 tag = getString(
-                    when (action_detail_1) {
+                    when (actionDetail1) {
                         1 -> R.string.skill_action_tp_recovery
                         else -> R.string.skill_action_tp_reduce
                     }
@@ -433,23 +435,22 @@ data class SkillActionDetail(
             }
             // 17：触发条件
             SkillActionType.TRIGGER -> {
-                val desc = when (action_detail_1) {
-                    2 -> getString(R.string.skill_action_type_desc_17_2, action_value_1.toInt())
-                    3 -> getString(R.string.skill_action_type_desc_17_3, action_value_3.toInt())
-                    4 -> getString(R.string.skill_action_type_desc_17_4, action_value_1.toInt())
-                    5 -> getString(R.string.skill_action_type_desc_17_5, action_value_1.toInt())
-                    7 -> getString(R.string.skill_action_type_desc_17_7, action_value_3.toInt())
-                    8 -> getString(R.string.skill_action_type_desc_17_8, action_value_1.toInt())
+                val desc = when (actionDetail1) {
+                    2 -> getString(R.string.skill_action_type_desc_17_2, actionValue1.toInt())
+                    3 -> getString(R.string.skill_action_type_desc_17_3, actionValue3.toInt())
+                    4 -> getString(R.string.skill_action_type_desc_17_4, actionValue1.toInt())
+                    5 -> getString(R.string.skill_action_type_desc_17_5, actionValue1.toInt())
+                    7 -> getString(R.string.skill_action_type_desc_17_7, actionValue3.toInt())
+                    8 -> getString(R.string.skill_action_type_desc_17_8, actionValue1.toInt())
                     9 -> getString(
                         R.string.skill_action_type_desc_17_9,
-                        action_value_1.toInt(),
-                        getTimeText(3, action_value_3)
+                        actionValue1.toInt(),
+                        getTimeText(3, actionValue3)
                     )
-                    10 -> getString(R.string.skill_action_type_desc_17_10, action_value_1.toInt())
+                    10 -> getString(R.string.skill_action_type_desc_17_10, actionValue1.toInt())
                     11 -> getString(R.string.skill_action_type_desc_17_11)
                     13 -> {
-                        //fixme
-                        UNKNOWN
+                        getString(R.string.skill_action_type_desc_17_13, actionValue3.toInt())
                     }
                     else -> UNKNOWN
                 }
@@ -458,31 +459,31 @@ data class SkillActionDetail(
             }
             // 18：蓄力、19：伤害充能
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
-                val value = getValueText(1, action_value_1, action_value_2)
+                val value = getValueText(1, actionValue1, actionValue2)
                 getString(
                     R.string.skill_action_type_desc_18_19,
-                    action_value_3.toString(),
-                    action_detail_2 % 10,
+                    actionValue3.toString(),
+                    actionDetail2 % 10,
                     value
                 )
             }
             // 20：挑衅
             SkillActionType.TAUNT -> {
-                val time = getTimeText(1, action_value_1, action_value_2)
+                val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_20, getTarget(), ailmentName, time)
             }
             // 21：回避
             SkillActionType.INVINCIBLE -> {
                 tag = getString(
-                    when (action_detail_1) {
+                    when (actionDetail1) {
                         1 -> R.string.skill_action_type_desc_21_1
                         2 -> R.string.skill_action_type_desc_21_2
                         3 -> R.string.skill_action_type_desc_21_3
                         else -> R.string.unknown
                     }
                 )
-                if (action_value_1 > 0) {
-                    val time = getTimeText(1, action_value_1, action_value_2)
+                if (actionValue1 > 0) {
+                    val time = getTimeText(1, actionValue1, actionValue2)
                     "$tag$time"
                 } else {
                     tag
@@ -490,107 +491,107 @@ data class SkillActionDetail(
             }
             // 22：改变模式
             SkillActionType.CHANGE_PATTERN -> {
-                when (action_detail_1) {
+                when (actionDetail1) {
                     1 -> getString(
                         R.string.skill_action_loop_change,
-                        if (action_value_1 > 0) {
-                            getTimeText(1, action_value_1)
+                        if (actionValue1 > 0) {
+                            getTimeText(1, actionValue1)
                         } else {
                             ""
                         }
                     )
                     2 -> getString(
                         R.string.skill_action_skill_anim_change,
-                        getTimeText(1, action_value_1)
+                        getTimeText(1, actionValue1)
                     )
                     else -> UNKNOWN
                 }
             }
             // 23：判定对象状态
             SkillActionType.IF_STATUS -> {
-                val status = getStatus(action_detail_1)
+                val status = getStatus(actionDetail1)
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
-                if (action_detail_2 != 0) {
+                if (actionDetail2 != 0) {
                     trueClause = if (status != UNKNOWN) {
                         getString(
                             R.string.skill_action_if_status,
                             getTarget(),
                             status,
-                            action_detail_2 % 10
+                            actionDetail2 % 10
                         )
                     } else {
-                        when (action_detail_1) {
+                        when (actionDetail1) {
                             in 600..699, 710 -> {
                                 getString(
                                     R.string.skill_action_if_mark,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             700 -> {
                                 getString(
                                     R.string.skill_action_if_alone,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             in 901..999 -> {
                                 getString(
                                     R.string.skill_action_if_hp_below,
                                     getTarget(),
-                                    action_detail_1 - 900,
-                                    action_detail_2 % 10
+                                    actionDetail1 - 900,
+                                    actionDetail2 % 10
                                 )
                             }
                             1300 -> {
                                 getString(
                                     R.string.skill_action_if_target,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             else -> UNKNOWN
                         }
                     }
                 }
-                if (action_detail_3 != 0) {
+                if (actionDetail3 != 0) {
                     falseClause = if (status != UNKNOWN) {
                         getString(
                             R.string.skill_action_if_status_not,
                             getTarget(),
                             status,
-                            action_detail_3 % 10
+                            actionDetail3 % 10
                         )
                     } else {
-                        when (action_detail_1) {
+                        when (actionDetail1) {
                             in 600..699, 710 -> {
                                 getString(
                                     R.string.skill_action_if_mark_not,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             700 -> {
                                 getString(
                                     R.string.skill_action_if_alone_not,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             in 901..999 -> {
                                 getString(
                                     R.string.skill_action_if_hp_above,
                                     getTarget(),
-                                    action_detail_1 - 900,
-                                    action_detail_3 % 10
+                                    actionDetail1 - 900,
+                                    actionDetail3 % 10
                                 )
                             }
                             1300 -> {
                                 getString(
                                     R.string.skill_action_if_target_not,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             else -> UNKNOWN
@@ -598,28 +599,28 @@ data class SkillActionDetail(
                     }
                 }
                 //条件
-                if (action_detail_1 in 0..99) {
+                if (actionDetail1 in 0..99) {
                     when {
-                        action_detail_2 != 0 && action_detail_3 != 0 -> {
+                        actionDetail2 != 0 && actionDetail3 != 0 -> {
                             getString(
                                 R.string.skill_action_random_1,
-                                action_detail_1,
-                                action_detail_2 % 10,
-                                action_detail_3 % 10
+                                actionDetail1,
+                                actionDetail2 % 10,
+                                actionDetail3 % 10
                             )
                         }
-                        action_detail_2 != 0 -> {
+                        actionDetail2 != 0 -> {
                             getString(
                                 R.string.skill_action_random_2,
-                                action_detail_1,
-                                action_detail_2 % 10
+                                actionDetail1,
+                                actionDetail2 % 10
                             )
                         }
-                        action_detail_3 != 0 -> {
+                        actionDetail3 != 0 -> {
                             getString(
                                 R.string.skill_action_random_2,
-                                100 - action_detail_1,
-                                action_detail_3 % 10
+                                100 - actionDetail1,
+                                actionDetail3 % 10
                             )
                         }
                         else -> UNKNOWN
@@ -644,51 +645,51 @@ data class SkillActionDetail(
             }
             // 24：复活
             SkillActionType.REVIVAL -> {
-                getString(R.string.skill_action_type_desc_24, getTarget(), action_value_2 * 100)
+                getString(R.string.skill_action_type_desc_24, getTarget(), actionValue2 * 100)
             }
             // 25：连续攻击
             SkillActionType.CONTINUOUS_ATTACK -> UNKNOWN
             // 26：系数提升
             SkillActionType.ADDITIVE, SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
-                val attrType = when (action_value_1.toInt()) {
+                val attrType = when (actionValue1.toInt()) {
                     7 -> getString(R.string.skill_physical_str)
                     8 -> getString(R.string.skill_magic_str)
                     9 -> getString(R.string.skill_physical_def)
                     10 -> getString(R.string.skill_magic_def)
                     else -> UNKNOWN
                 }
-                val changeType = when (toSkillActionType(action_type)) {
+                val changeType = when (toSkillActionType(actionType)) {
                     SkillActionType.ADDITIVE -> getString(R.string.skill_action_type_desc_additive)
                     SkillActionType.MULTIPLE -> getString(R.string.skill_action_type_desc_multiple)
                     SkillActionType.DIVIDE -> getString(R.string.skill_action_type_desc_divide)
                     else -> UNKNOWN
                 }
-                val value = getValueText(2, action_value_2, action_value_3, hideIndex = true)
+                val value = getValueText(2, actionValue2, actionValue3, hideIndex = true)
                 val commonDesc = getString(
                     R.string.skill_action_change_coe,
-                    action_detail_1 % 10,
-                    action_detail_2,
+                    actionDetail1 % 10,
+                    actionDetail2,
                     changeType,
                     value
                 )
 
-                val extraDesc = when (action_value_1.toInt()) {
+                val extraDesc = when (actionValue1.toInt()) {
                     2 -> {
                         val mValue = when {
-                            action_detail_3 == 0 -> {
-                                "[${action_value_2}]"
+                            actionDetail3 == 0 -> {
+                                "[${actionValue2}]"
                             }
-                            action_detail_2 == 0 -> {
-                                "[${action_value_3}]"
+                            actionDetail2 == 0 -> {
+                                "[${actionValue3}]"
                             }
                             else -> {
-                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                                "[${(actionValue2 + 2 * actionValue3 * level)}] <$actionValue2 + ${2 * actionValue3} * 技能等级> "
                             }
                         }
                         val mDesc = getString(
                             R.string.skill_action_change_coe,
-                            action_detail_1 % 10,
-                            action_detail_2,
+                            actionDetail1 % 10,
+                            actionDetail2,
                             changeType,
                             mValue
                         )
@@ -720,8 +721,8 @@ data class SkillActionDetail(
                     else -> UNKNOWN
                 }
                 //上限判断
-                if (action_value_4.toInt() != 0 && action_value_5.toInt() != 0) {
-                    val limitValue = getValueText(4, action_value_4, action_value_5)
+                if (actionValue4.toInt() != 0 && actionValue5.toInt() != 0) {
+                    val limitValue = getValueText(4, actionValue4, actionValue5)
                     val limit = getString(R.string.skill_action_limit, limitValue)
                     extraDesc + limit
                 } else {
@@ -730,192 +731,170 @@ data class SkillActionDetail(
             }
             // 28：特殊条件
             SkillActionType.IF_SP_STATUS -> {
-                val status = getStatus(action_detail_1)
+                val status = getStatus(actionDetail1)
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
-                if (action_detail_2 != 0 || action_detail_3 == 0) {
+                if (actionDetail2 != 0 || actionDetail3 == 0) {
                     trueClause =
-                        when (action_detail_1) {
+                        when (actionDetail1) {
                             in 0..99 -> {
                                 getString(
                                     R.string.skill_action_sp_if_rate,
-                                    action_detail_1,
-                                    action_detail_2 % 10
+                                    actionDetail1,
+                                    actionDetail2 % 10
                                 )
                             }
                             599 -> {
                                 getString(
                                     R.string.skill_action_sp_if_dot,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
-                            in 600..699 -> {
+                            in 600..699,
+                            in 6000..6999 -> {
                                 getString(
                                     R.string.skill_action_sp_if_mark_count,
                                     getTarget(),
-                                    action_value_3.toInt(),
-                                    action_detail_2 % 10
+                                    actionValue3.toInt(),
+                                    actionDetail2 % 10
                                 )
                             }
                             700 -> {
                                 getString(
                                     R.string.skill_action_if_alone,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             in 701..709 -> {
                                 getString(
                                     R.string.skill_action_sp_if_unit_count,
                                     getTarget(),
-                                    action_detail_1 - 700,
-                                    action_detail_2 % 10
+                                    actionDetail1 - 700,
+                                    actionDetail2 % 10
                                 )
                             }
                             720 -> {
                                 getString(
                                     R.string.skill_action_sp_if_unit_exist,
                                     getTarget(),
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             in 901..999 -> {
                                 getString(
                                     R.string.skill_action_if_hp_below,
                                     getTarget(),
-                                    action_detail_1 - 900,
-                                    action_detail_2 % 10
+                                    actionDetail1 - 900,
+                                    actionDetail2 % 10
                                 )
                             }
                             1000 -> {
-                                getString(R.string.skill_action_sp_if_kill, action_detail_2 % 10)
+                                getString(R.string.skill_action_sp_if_kill, actionDetail2 % 10)
                             }
                             1001 -> {
                                 getString(
                                     R.string.skill_action_sp_if_critical,
-                                    action_detail_2 % 10
+                                    actionDetail2 % 10
                                 )
                             }
                             in 1200..1299 -> {
                                 getString(
                                     R.string.skill_action_sp_if_mark_count,
                                     getTarget(),
-                                    action_detail_1 % 10,
-                                    action_detail_2 % 10
+                                    actionDetail1 % 10,
+                                    actionDetail2 % 10
                                 )
                             }
-                            in 6112..6200 -> {
-                                getString(
-                                    R.string.skill_action_sp_if_mark_count,
-                                    getTarget(),
-                                    action_value_3.toInt(),
-                                    action_detail_2 % 10
-                                )
-                            }
-                            else -> if (status != UNKNOWN) {
-                                getString(
-                                    R.string.skill_action_if_status,
-                                    getTarget(),
-                                    status,
-                                    action_detail_2 % 10
-                                )
-                            } else {
-                                UNKNOWN
-                            }
+                            else -> getString(
+                                R.string.skill_action_if_status,
+                                getTarget(),
+                                status,
+                                actionDetail2 % 10
+                            )
                         }
                 }
 
-                if (action_detail_3 != 0) {
+                if (actionDetail3 != 0) {
                     falseClause =
-                        when (action_detail_1) {
+                        when (actionDetail1) {
                             in 0..99 -> {
                                 getString(
                                     R.string.skill_action_sp_if_rate,
-                                    100 - action_detail_1,
-                                    action_detail_3 % 10
+                                    100 - actionDetail1,
+                                    actionDetail3 % 10
                                 )
                             }
                             599 -> {
                                 getString(
                                     R.string.skill_action_sp_if_dot_not,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
-                            in 600..699 -> {
+                            in 600..699,
+                            in 6000..6999 -> {
                                 getString(
                                     R.string.skill_action_sp_if_mark_count_not,
                                     getTarget(),
-                                    action_value_3.toInt(),
-                                    action_detail_3 % 10
+                                    actionValue3.toInt(),
+                                    actionDetail3 % 10
                                 )
                             }
                             700 -> {
                                 getString(
                                     R.string.skill_action_if_alone_not,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             in 701..709 -> {
                                 getString(
                                     R.string.skill_action_sp_if_unit_count_not,
                                     getTarget(),
-                                    action_detail_1 - 700,
-                                    action_detail_3 % 10
+                                    actionDetail1 - 700,
+                                    actionDetail3 % 10
                                 )
                             }
                             720 -> {
                                 getString(
                                     R.string.skill_action_sp_if_unit_exist,
                                     getTarget(),
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             in 901..999 -> {
                                 getString(
                                     R.string.skill_action_if_hp_above,
                                     getTarget(),
-                                    action_detail_1 - 900,
-                                    action_detail_3 % 100
+                                    actionDetail1 - 900,
+                                    actionDetail3 % 100
                                 )
                             }
                             1000 -> {
-                                getString(R.string.skill_action_sp_if_kill, action_detail_3 % 10)
+                                getString(R.string.skill_action_sp_if_kill, actionDetail3 % 10)
                             }
                             1001 -> {
                                 getString(
                                     R.string.skill_action_sp_if_critical_not,
-                                    action_detail_3 % 10
+                                    actionDetail3 % 10
                                 )
                             }
                             in 1200..1299 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_mark_count,
-                                    getTarget(),
-                                    action_detail_1 % 10,
-                                    action_detail_3 % 10
-                                )
-                            }
-                            in 6112..6200 -> {
-                                getString(
                                     R.string.skill_action_sp_if_mark_count_not,
                                     getTarget(),
-                                    action_value_3.toInt(),
-                                    action_detail_3 % 10
+                                    actionDetail1 % 10,
+                                    actionDetail3 % 10
                                 )
                             }
-                            else -> if (status != UNKNOWN) {
-                                getString(
-                                    R.string.skill_action_if_status_not,
-                                    getTarget(),
-                                    status,
-                                    action_detail_3 % 10
-                                )
-                            } else {
-                                UNKNOWN
-                            }
+                            else -> getString(
+                                R.string.skill_action_if_status_not,
+                                getTarget(),
+                                status,
+                                actionDetail3 % 10
+                            )
                         }
                 }
 
@@ -940,38 +919,39 @@ data class SkillActionDetail(
             SkillActionType.CONTINUOUS_ATTACK_NEARBY -> UNKNOWN
             // 32：HP吸收
             SkillActionType.LIFE_STEAL -> {
-                val value = getValueText(1, action_value_1, action_value_2)
+                val value = getValueText(1, actionValue1, actionValue2)
                 getString(
                     R.string.skill_action_type_desc_32,
                     getTarget(),
-                    action_value_3.toInt(),
+                    actionValue3.toInt(),
                     ailmentName,
                     value
                 )
             }
             // 33：反伤
             SkillActionType.STRIKE_BACK -> {
-                val value = getValueText(1, action_value_1, action_value_2)
-                val type = getBarrierType(action_detail_1)
+                val value = getValueText(1, actionValue1, actionValue2)
+                val type = getBarrierType(actionDetail1)
                 val shieldText =
-                    getString(R.string.skill_action_type_desc_6, getTarget(), type, value, "")
-                val backType = when (action_detail_1) {
+                    getString(R.string.skill_action_type_desc_6, getTarget(), type, "", "")
+                val backType = when (actionDetail1) {
                     1, 3 -> getString(R.string.skill_physical)
                     2, 4 -> getString(R.string.skill_magic)
                     else -> ""
                 }
-                val hpRecovery = when (action_detail_1) {
+                val hpRecovery = when (actionDetail1) {
                     3, 4, 6 -> getString(R.string.skill_action_type_desc_33_hp)
                     else -> ""
                 }
 
-                if (action_detail_1 <= 6) {
+                if (actionDetail1 <= 6) {
                     getString(
                         R.string.skill_action_type_desc_33,
                         shieldText,
                         backType,
-                        action_value_3.toInt(),
-                        hpRecovery
+                        value,
+                        hpRecovery,
+                        actionValue3.toInt()
                     )
                 } else {
                     UNKNOWN
@@ -979,24 +959,24 @@ data class SkillActionDetail(
             }
             // 34：伤害递增
             SkillActionType.ACCUMULATIVE_DAMAGE -> {
-                val value = getValueText(2, action_value_2, action_value_3)
+                val value = getValueText(2, actionValue2, actionValue3)
                 val limit =
-                    getString(R.string.skill_action_limit, action_value_4.toInt().toString())
+                    getString(R.string.skill_action_limit, actionValue4.toInt().toString())
                 getString(R.string.skill_action_type_desc_34, value, limit)
             }
             // 35：特殊标记
             SkillActionType.SEAL -> {
-                if (action_value_4.toInt() > 0) {
-                    val value = getValueText(4, action_value_4, 0.0)
-                    val time = getTimeText(3, action_value_3, hideIndex = true)
+                val count = abs(actionValue4.toInt())
+                if (actionValue4.toInt() > 0) {
+                    val time = getTimeText(3, actionValue3, hideIndex = true)
                     val limit =
-                        getString(R.string.skill_action_limit, action_value_1.toInt().toString())
-                    getString(R.string.skill_action_type_desc_35, getTarget(), value, time, limit)
+                        getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                    getString(R.string.skill_action_type_desc_35, getTarget(), count, time, limit)
                 } else {
                     getString(
                         R.string.skill_action_type_desc_35_reduce,
                         getTarget(),
-                        action_value_4.toInt()
+                        abs(actionValue4.toInt())
                     )
                 }
             }
@@ -1005,50 +985,50 @@ data class SkillActionDetail(
                 val atkType = getAtkType()
                 val value = getValueText(
                     1,
-                    action_value_1,
-                    action_value_2,
-                    action_value_3
+                    actionValue1,
+                    actionValue2,
+                    actionValue3
                 )
-                val time = getTimeText(5, action_value_5, action_value_6)
+                val time = getTimeText(5, actionValue5, actionValue6)
                 val damage = getString(R.string.skill_action_type_desc_36_damage, value, atkType)
 
                 getString(
                     R.string.skill_action_type_desc_field,
-                    action_value_7.toInt(),
+                    actionValue7.toInt(),
                     damage,
                     time
                 )
             }
             // 37：治疗领域展开
             SkillActionType.HEAL_FIELD -> {
-                val value = getValueText(1, action_value_1, action_value_2, action_value_3)
+                val value = getValueText(1, actionValue1, actionValue2, actionValue3)
                 val heal = getString(R.string.skill_action_type_desc_37_heal, value)
-                val time = getTimeText(5, action_value_5, action_value_6)
+                val time = getTimeText(5, actionValue5, actionValue6)
 
-                getString(R.string.skill_action_type_desc_field, action_value_7.toInt(), heal, time)
+                getString(R.string.skill_action_type_desc_field, actionValue7.toInt(), heal, time)
             }
             // 38：buff/debuff领域展开
             SkillActionType.AURA_FIELD -> {
-                val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
-                val time = getTimeText(3, action_value_3, action_value_4)
-                val aura = getAura(action_detail_1, value)
+                val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
+                val time = getTimeText(3, actionValue3, actionValue4)
+                val aura = getAura(actionDetail1, value)
 
                 getTarget() + getString(
                     R.string.skill_action_type_desc_field,
-                    action_value_5.toInt(),
+                    actionValue5.toInt(),
                     aura,
                     time
                 )
             }
             // 39：持续伤害领域展开
             SkillActionType.DOT_FIELD -> {
-                val time = getTimeText(1, action_value_1, action_value_2)
+                val time = getTimeText(1, actionValue1, actionValue2)
                 val action =
-                    getString(R.string.skill_action_type_desc_38_action, action_detail_1 % 10)
+                    getString(R.string.skill_action_type_desc_38_action, actionDetail1 % 10)
 
                 getTarget() + getString(
                     R.string.skill_action_type_desc_field,
-                    action_value_3.toInt(),
+                    actionValue3.toInt(),
                     action,
                     time
                 )
@@ -1057,15 +1037,15 @@ data class SkillActionDetail(
             SkillActionType.CHANGE_UB_TIME -> UNKNOWN
             // 42：触发
             SkillActionType.LOOP_TRIGGER -> {
-                when (action_detail_1) {
+                when (actionDetail1) {
                     2 -> {
-                        val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
+                        val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
 
                         getString(
                             R.string.skill_action_type_desc_42,
-                            action_value_4.toInt(),
+                            actionValue4.toInt(),
                             value,
-                            action_detail_2 % 10
+                            actionDetail2 % 10
                         )
                     }
                     else -> UNKNOWN
@@ -1074,18 +1054,18 @@ data class SkillActionDetail(
             SkillActionType.IF_TARGETED -> UNKNOWN
             // 44：进场等待
             SkillActionType.WAVE_START -> {
-                getString(R.string.skill_action_type_desc_44, action_value_1.toInt())
+                getString(R.string.skill_action_type_desc_44, actionValue1.toInt())
             }
             // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
                 val limit =
-                    getString(R.string.skill_action_limit, action_value_1.toInt().toString())
+                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
                 getString(R.string.skill_action_type_desc_45, limit)
             }
             // 46：比例伤害
             SkillActionType.RATE_DAMAGE -> {
-                val value = getValueText(1, action_value_1, action_value_2, percent = "%")
-                when (action_detail_1) {
+                val value = getValueText(1, actionValue1, actionValue2, percent = "%")
+                when (actionDetail1) {
                     1 -> getString(R.string.skill_action_type_desc_46_1, getTarget(), value)
                     2 -> getString(R.string.skill_action_type_desc_46_2, getTarget(), value)
                     3 -> getString(R.string.skill_action_type_desc_46_3, getTarget(), value)
@@ -1097,13 +1077,13 @@ data class SkillActionDetail(
             }
             // 48：持续治疗
             SkillActionType.HOT -> {
-                val type = when (action_detail_2) {
+                val type = when (actionDetail2) {
                     1 -> getString(R.string.attr_hp)
                     2 -> getString(R.string.attr_tp)
                     else -> UNKNOWN
                 }
-                val value = getValueText(1, action_value_1, action_value_2, action_value_3)
-                val time = getTimeText(5, action_value_5, action_value_6)
+                val value = getValueText(1, actionValue1, actionValue2, actionValue3)
+                val time = getTimeText(5, actionValue5, actionValue6)
                 if (type != UNKNOWN) {
                     getString(R.string.skill_action_type_desc_48, getTarget(), type, value, time)
                 } else {
@@ -1112,8 +1092,8 @@ data class SkillActionDetail(
             }
             // 49：移除增益
             SkillActionType.DISPEL -> {
-                val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
-                val type = when (action_detail_1) {
+                val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
+                val type = when (actionDetail1) {
                     1, 3 -> getString(R.string.skill_buff)
                     2 -> getString(R.string.skill_debuff)
                     10 -> getString(R.string.skill_barrier)
@@ -1127,15 +1107,15 @@ data class SkillActionDetail(
             }
             // 50：持续动作
             SkillActionType.CHANNEL -> {
-                val time = getTimeText(4, action_value_4, action_value_5)
-                val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
-                val aura = getAura(action_detail_1, value)
+                val time = getTimeText(4, actionValue4, actionValue5)
+                val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
+                val aura = getAura(actionDetail1, value)
                 getString(
                     R.string.skill_action_type_desc_50,
                     getTarget(),
                     aura,
                     time,
-                    action_detail_3
+                    actionDetail3
                 )
             }
             // 52：改变单位距离
@@ -1144,12 +1124,12 @@ data class SkillActionDetail(
             }
             // 53：特殊状态：领域存在时；如：情姐
             SkillActionType.IF_HAS_FIELD -> {
-                val content = if (action_detail_2 != 0 && action_detail_3 != 0) {
+                val content = if (actionDetail2 != 0 && actionDetail3 != 0) {
                     val otherwise =
-                        getString(R.string.skill_action_type_desc_53_2, action_detail_3 % 10)
-                    getString(R.string.skill_action_type_desc_53, action_detail_2 % 10, otherwise)
-                } else if (action_detail_2 != 0) {
-                    getString(R.string.skill_action_type_desc_53, action_detail_2 % 10, "")
+                        getString(R.string.skill_action_type_desc_53_2, actionDetail3 % 10)
+                    getString(R.string.skill_action_type_desc_53, actionDetail2 % 10, otherwise)
+                } else if (actionDetail2 != 0) {
+                    getString(R.string.skill_action_type_desc_53, actionDetail2 % 10, "")
                 } else {
                     UNKNOWN
                 }
@@ -1157,24 +1137,24 @@ data class SkillActionDetail(
             }
             // 54：隐身
             SkillActionType.STEALTH -> {
-                val time = getTimeText(1, action_value_1)
+                val time = getTimeText(1, actionValue1)
                 getString(R.string.skill_action_type_desc_54, time)
             }
             // 55：部位移动
             SkillActionType.MOVE_PART -> {
                 getString(
                     R.string.skill_action_type_desc_55,
-                    action_value_4.toInt(),
-                    -action_value_1.toInt()
+                    actionValue4.toInt(),
+                    -actionValue1.toInt()
                 )
             }
             // 56：千里眼
             SkillActionType.COUNT_BLIND -> {
-                val time = getTimeText(2, action_value_2, action_value_3)
-                when (action_value_1.toInt()) {
+                val time = getTimeText(2, actionValue2, actionValue3)
+                when (actionValue1.toInt()) {
                     1 -> getString(R.string.skill_action_type_desc_56_1, time)
                     2 -> {
-                        val value = getValueText(2, action_value_2, action_value_3)
+                        val value = getValueText(2, actionValue2, actionValue3)
                         getString(R.string.skill_action_type_desc_56_2, getTarget(), value)
                     }
                     else -> UNKNOWN
@@ -1185,40 +1165,40 @@ data class SkillActionDetail(
                 getString(
                     R.string.skill_action_type_desc_57,
                     getTarget(),
-                    action_value_1.toInt(),
-                    action_detail_1 % 10
+                    actionValue1.toInt(),
+                    actionDetail1 % 10
                 )
             }
             // 58：解除领域 如：晶姐 UB
             SkillActionType.STOP_FIELD -> {
                 getString(
                     R.string.skill_action_type_desc_58,
-                    action_detail_1 / 100 % 10,
-                    action_detail_1 % 10
+                    actionDetail1 / 100 % 10,
+                    actionDetail1 % 10
                 )
             }
             // 59：回复妨碍
             SkillActionType.INHIBIT_HEAL_ACTION -> {
-                val time = getTimeText(2, action_value_2)
+                val time = getTimeText(2, actionValue2)
                 getString(
                     R.string.skill_action_type_desc_59,
                     getTarget(),
-                    (action_value_1 * 100).toInt(),
+                    (actionValue1 * 100).toInt(),
                     time
                 )
             }
             // 60：标记赋予
             SkillActionType.ATTACK_SEAL -> {
                 val limit =
-                    getString(R.string.skill_action_limit, action_value_1.toInt().toString())
-                val time = getTimeText(3, action_value_3, action_value_4)
+                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                val time = getTimeText(3, actionValue3, actionValue4)
                 val target = getTarget()
                 val desc = getString(R.string.skill_action_type_desc_60_0, time, limit)
-                if (action_detail_1 == 3) {
+                if (actionDetail1 == 3) {
                     getString(R.string.skill_action_type_desc_60_1, target, desc)
-                } else if (action_detail_1 == 1 && action_detail_3 == 1) {
+                } else if (actionDetail1 == 1 && actionDetail3 == 1) {
                     getString(R.string.skill_action_type_desc_60_2, target, desc)
-                } else if (action_detail_1 == 4 && action_detail_3 == 1) {
+                } else if (actionDetail1 == 4 && actionDetail3 == 1) {
                     getString(R.string.skill_action_type_desc_60_3, target, desc)
                 } else {
                     UNKNOWN
@@ -1226,15 +1206,15 @@ data class SkillActionDetail(
             }
             // 61：恐慌
             SkillActionType.FEAR -> {
-                val value = getValueText(3, action_value_3, action_value_4, 0.0, "%")
-                val time = getTimeText(1, action_value_1, action_value_2)
+                val value = getValueText(3, actionValue3, actionValue4, 0.0, "%")
+                val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_61, value, getTarget(), ailmentName, time)
             }
             // 62：畏惧
             SkillActionType.AWE -> {
-                val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
-                val time = getTimeText(3, action_value_3, action_value_4)
-                when (action_detail_1) {
+                val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
+                val time = getTimeText(3, actionValue3, actionValue4)
+                when (actionDetail1) {
                     0 -> getString(R.string.skill_action_type_desc_62_0, getTarget(), value, time)
                     1 -> getString(R.string.skill_action_type_desc_62_1, getTarget(), value, time)
                     else -> UNKNOWN
@@ -1242,20 +1222,20 @@ data class SkillActionDetail(
             }
             // 63: 循环动作
             SkillActionType.LOOP -> {
-                val successClause = if (action_detail_2 != 0)
-                    getString(R.string.skill_action_type_desc_63_success, action_detail_2 % 10)
+                val successClause = if (actionDetail2 != 0)
+                    getString(R.string.skill_action_type_desc_63_success, actionDetail2 % 10)
                 else
                     UNKNOWN
-                val failureClause = if (action_detail_3 != 0)
-                    getString(R.string.skill_action_type_desc_63_failure, action_detail_3 % 10)
+                val failureClause = if (actionDetail3 != 0)
+                    getString(R.string.skill_action_type_desc_63_failure, actionDetail3 % 10)
                 else
                     UNKNOWN
                 val main = getString(
                     R.string.skill_action_type_desc_63,
-                    action_value_2.toString(),
-                    action_detail_1 % 10,
-                    action_value_1.toString(),
-                    action_value_3.toString()
+                    actionValue2.toString(),
+                    actionDetail1 % 10,
+                    actionValue1.toString(),
+                    actionValue3.toString()
                 )
 
                 main + if (successClause != UNKNOWN && failureClause != UNKNOWN)
@@ -1269,47 +1249,47 @@ data class SkillActionDetail(
             }
             // 69：变身
             SkillActionType.REINDEER -> {
-                val time = getTimeText(1, action_value_1, action_value_2)
+                val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_69, getTarget(), time)
             }
             // 71：特殊状态：公主佩可 UB 后不死BUFF
             SkillActionType.KNIGHT_BARRIER -> {
-                val value = getValueText(2, action_value_2, action_value_3, action_value_4)
-                val time = getTimeText(6, action_value_6, action_value_7)
+                val value = getValueText(2, actionValue2, actionValue3, actionValue4)
+                val time = getTimeText(6, actionValue6, actionValue7)
                 getString(R.string.skill_action_type_desc_71, getTarget(), value, time)
             }
             // 72：伤害减免
             SkillActionType.DAMAGE_REDUCE -> {
-                val type = when (action_detail_1) {
+                val type = when (actionDetail1) {
                     1 -> getString(R.string.skill_physical)
                     2 -> getString(R.string.skill_magic)
                     3 -> getString(R.string.skill_all)
                     else -> UNKNOWN
                 }
                 val value =
-                    getValueText(1, action_value_1, action_value_2, percent = getPercent())
-                val time = getTimeText(3, action_value_3, action_value_4)
+                    getValueText(1, actionValue1, actionValue2, percent = getPercent())
+                val time = getTimeText(3, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_72, getTarget(), type, value, time)
             }
             // 73：伤害护盾
             SkillActionType.LOG_BARRIER -> {
-                val time = getTimeText(3, action_value_3, action_value_4)
+                val time = getTimeText(3, actionValue3, actionValue4)
                 getString(
                     R.string.skill_action_type_desc_73,
                     getTarget(),
-                    action_value_5.toInt(),
+                    actionValue5.toInt(),
                     time
                 )
             }
             // 75：次数触发
             SkillActionType.HIT_COUNT -> {
-                val time = getTimeText(3, action_value_3, action_value_4)
+                val time = getTimeText(3, actionValue3, actionValue4)
 
-                when (action_detail_1) {
+                when (actionDetail1) {
                     3 -> getString(
                         R.string.skill_action_type_desc_75,
-                        action_value_1.toInt(),
-                        action_detail_2 % 10,
+                        actionValue1.toInt(),
+                        actionDetail2 % 10,
                         time
                     )
                     else -> UNKNOWN
@@ -1318,27 +1298,27 @@ data class SkillActionDetail(
             // 76：HP 回复量减少
             SkillActionType.HEAL_DOWN -> {
                 val value =
-                    getValueText(1, action_value_1, action_value_2, percent = getPercent())
-                val time = getTimeText(3, action_value_3, action_value_4)
+                    getValueText(1, actionValue1, actionValue2, percent = getPercent())
+                val time = getTimeText(3, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_76, getTarget(), value, time)
             }
             // 77：被动叠加标记
             SkillActionType.IF_BUFF_SEAL -> {
-                val time = getTimeText(3, action_value_3, action_value_4)
-                val lifeTime = getTimeText(5, action_value_5, action_value_6)
-                val effect = when (action_detail_1) {
+                val time = getTimeText(3, actionValue3, actionValue4)
+                val lifeTime = getTimeText(5, actionValue5, actionValue6)
+                val effect = when (actionDetail1) {
                     1 -> getString(R.string.skill_buff)
                     2 -> getString(R.string.skill_damage)
                     else -> UNKNOWN
                 }
                 val limit =
-                    getString(R.string.skill_action_limit, action_value_1.toInt().toString())
+                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
 
                 getString(
                     R.string.skill_action_type_desc_77,
                     getTarget(),
                     effect,
-                    action_detail_2,
+                    actionDetail2,
                     time,
                     limit,
                     lifeTime
@@ -1346,8 +1326,8 @@ data class SkillActionDetail(
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
-                val value = getValueText(1, action_value_1, action_value_2)
-                val time = getTimeText(3, action_value_3, action_value_4)
+                val value = getValueText(1, actionValue1, actionValue2)
+                val time = getTimeText(3, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_79, getTarget(), value, time)
             }
             // 81：无效目标
@@ -1356,7 +1336,7 @@ data class SkillActionDetail(
             }
             // 90：EX被动
             SkillActionType.EX -> {
-                val type = when (action_detail_1) {
+                val type = when (actionDetail1) {
                     1 -> getString(R.string.attr_hp)
                     2 -> getString(R.string.attr_atk)
                     3 -> getString(R.string.attr_def)
@@ -1364,7 +1344,7 @@ data class SkillActionDetail(
                     5 -> getString(R.string.attr_magic_def)
                     else -> UNKNOWN
                 }
-                val value = getValueText(2, action_value_2, action_value_3)
+                val value = getValueText(2, actionValue2, actionValue3)
 
                 getString(R.string.skill_action_type_desc_90, type, value)
             }
@@ -1377,7 +1357,7 @@ data class SkillActionDetail(
                 getString(
                     R.string.skill_action_type_desc_92,
                     getTarget(),
-                    action_value_1.toString()
+                    actionValue1.toString()
                 )
             }
             // 93：无视挑衅
@@ -1390,52 +1370,58 @@ data class SkillActionDetail(
             }
             // 95：隐匿
             SkillActionType.HIDE -> {
-                val time = getTimeText(1, action_value_1, action_value_2)
+                val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_95, getTarget(), time)
             }
             // 96：范围tp回复
             SkillActionType.TP_FIELD -> {
-                val value = getValueText(1, action_value_1, action_value_2)
+                val value = getValueText(1, actionValue1, actionValue2)
                 val tp = getString(R.string.skill_action_type_desc_96_tp, value)
-                val time = getTimeText(3, action_value_3, action_value_4)
+                val time = getTimeText(3, actionValue3, actionValue4)
 
-                getString(R.string.skill_action_type_desc_field, action_value_5.toInt(), tp, time)
+                getString(R.string.skill_action_type_desc_field, actionValue5.toInt(), tp, time)
             }
             // 97：受击tp回复
             SkillActionType.TP_HIT -> {
                 val limit =
-                    getString(R.string.skill_action_limit, action_value_4.toInt().toString())
-
-                getString(
-                    R.string.skill_action_type_desc_97,
-                    action_value_3.toInt(),
-                    action_value_1.toInt(),
+                    getString(R.string.skill_action_limit, actionValue4.toInt().toString())
+                val time = getTimeText(5, actionValue5)
+                val desc = getString(
+                    R.string.skill_action_type_desc_35,
+                    getTarget(),
+                    actionValue3.toInt(),
+                    time,
                     limit
                 )
+                val tpDesc = getString(
+                    R.string.skill_action_type_desc_97,
+                    actionValue1.toInt()
+                )
+                desc + tpDesc
             }
             // 98：改变 TP 获取倍率
             SkillActionType.TP_HIT_REDUCE -> {
-                val time = getTimeText(2, action_value_2, action_value_3)
+                val time = getTimeText(2, actionValue2, actionValue3)
                 getString(
                     R.string.skill_action_type_desc_92,
                     getTarget(),
-                    action_value_1.toString()
+                    actionValue1.toString()
                 ) + time
             }
             else -> {
                 val value = getValueText(
                     1,
-                    action_value_1,
-                    action_value_2,
+                    actionValue1,
+                    actionValue2,
                     percent = getPercent()
                 )
-                val time = getTimeText(3, action_value_3, action_value_4)
+                val time = getTimeText(3, actionValue3, actionValue4)
 
                 getString(
                     R.string.skill_action_type_unknown,
                     UNKNOWN,
                     getTarget(),
-                    action_type,
+                    actionType,
                     value,
                     time
                 )
@@ -1447,7 +1433,7 @@ data class SkillActionDetail(
      * 伤害类型
      */
     private fun getAtkType() = getString(
-        when (action_detail_1) {
+        when (actionDetail1) {
             1 -> R.string.skill_physical
             2 -> R.string.skill_magic
             3 -> R.string.skill_must_hit_physical
@@ -1459,15 +1445,15 @@ data class SkillActionDetail(
     /**
      * 获取 %
      */
-    private fun getPercent() = when (toSkillActionType(action_type)) {
+    private fun getPercent() = when (toSkillActionType(actionType)) {
         SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
-            if (action_value_1.toInt() == 2 || action_detail_1 / 10 in setOf(11, 12, 14, 16, 17)) {
+            if (actionValue1.toInt() == 2 || actionDetail1 / 10 in setOf(11, 12, 14, 16, 17)) {
                 "%"
             } else {
                 ""
             }
         }
-        SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (action_detail_2 == 2) "%" else ""
+        SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (actionDetail2 == 2) "%" else ""
         SkillActionType.DAMAGE_REDUCE -> "%"
         else -> ""
     }
@@ -1510,7 +1496,7 @@ data class SkillActionDetail(
             } else if (v1 != 0.0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText>"
             } else {
-                "{$index}$percent"
+                "{$index}0$percent"
             }
         } else {
             if (v1 == 0.0 && v2 != 0.0) {
@@ -1520,7 +1506,7 @@ data class SkillActionDetail(
             } else if (v2 != 0.0) {
                 "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + {${index + 2}}$v3 * $skillAtkStrText>"
             } else {
-                "{$index}$percent"
+                "{$index}0$percent"
             }
         }
         return if (hideIndex) {
@@ -1620,11 +1606,11 @@ data class SkillActionDetail(
      * 技能目标分配
      */
     private fun getTargetAssignment() = getString(
-        if (target_type == 7) {
+        if (targetType == 7) {
             //target 类型为 7（仅自身），不再添加目标分配
             R.string.none
         } else {
-            when (target_assignment) {
+            when (targetAssignment) {
                 0 -> R.string.skill_target_assignment_0
                 1 -> R.string.skill_target_assignment_1
                 2 -> R.string.skill_target_assignment_2
@@ -1637,18 +1623,18 @@ data class SkillActionDetail(
     /**
      * 首个目标位置
      */
-    private fun getTargetNumber() = if (target_assignment == 1) {
-        when (target_number) {
+    private fun getTargetNumber() = if (targetAssignment == 1) {
+        when (targetNumber) {
             in 1..10 -> {
-                getString(R.string.skill_target_order_num, getZhNumberText(target_number + 1))
+                getString(R.string.skill_target_order_num, getZhNumberText(targetNumber + 1))
             }
             else -> ""
         }
     } else {
-        when (target_number) {
+        when (targetNumber) {
             1 -> getString(R.string.skill_target_order_1)
             in 2..10 -> {
-                getString(R.string.skill_target_order_num, getZhNumberText(target_number))
+                getString(R.string.skill_target_order_num, getZhNumberText(targetNumber))
             }
             else -> ""
         }
@@ -1657,17 +1643,17 @@ data class SkillActionDetail(
     /**
      * 作用对象数量
      */
-    private fun getTargetCount() = when (target_count) {
+    private fun getTargetCount() = when (targetCount) {
         0, 1, 99 -> ""
-        else -> getString(R.string.skill_target_count, target_count)
+        else -> getString(R.string.skill_target_count, targetCount)
     }
 
     /**
      * 作用范围
      */
-    private fun getTargetRange() = when (target_range) {
+    private fun getTargetRange() = when (targetRange) {
         in 1 until 2160 -> {
-            getString(R.string.skill_range, target_range)
+            getString(R.string.skill_range, targetRange)
         }
         else -> ""
     }
@@ -1676,7 +1662,7 @@ data class SkillActionDetail(
      * 目标类型
      */
     private fun getTargetType() = getString(
-        when (target_type) {
+        when (targetType) {
             0, 1, 3, 40, 41 -> R.string.none
             2, 8 -> R.string.skill_target_2_8
             4 -> R.string.skill_target_4
@@ -1750,6 +1736,7 @@ data class SkillActionDetail(
             1601 -> R.string.skill_status_1601
             1700 -> R.string.skill_status_1700
             721, 6107 -> R.string.skill_status_721_6107
+            1513 -> R.string.skill_ailment_13
             1800 -> R.string.skill_status_1800
             1900 -> R.string.skill_status_1900
             else -> R.string.unknown

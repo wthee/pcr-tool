@@ -153,7 +153,7 @@ class SkillViewModel @Inject constructor(
                     val dependIds = skill.getSkillDependData()
                     actions.forEachIndexed { i, action ->
                         if (i != 0) {
-                            action.dependId = dependIds[action.action_id] ?: 0
+                            action.dependId = dependIds[action.actionId] ?: 0
                         }
                     }
                     info.actions = actions

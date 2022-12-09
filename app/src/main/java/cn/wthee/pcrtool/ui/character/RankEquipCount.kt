@@ -88,11 +88,11 @@ fun RankEquipCount(
                 }
             }
 
-            if (rankEquipMaterials.isNotEmpty()) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                    contentPadding = PaddingValues(Dimen.mediumPadding)
-                ) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
+                contentPadding = PaddingValues(Dimen.mediumPadding)
+            ) {
+                if (rankEquipMaterials.isNotEmpty()) {
                     items(
                         items = rankEquipMaterials,
                         key = {
@@ -105,19 +105,13 @@ fun RankEquipCount(
                             toEquipMaterial
                         )
                     }
-                    items(5) {
-                        CommonSpacer()
-                    }
-                }
-            } else {
-                //加载中
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                    contentPadding = PaddingValues(Dimen.mediumPadding)
-                ) {
+                } else {
                     items(count = 10) {
                         EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
                     }
+                }
+                items(5) {
+                    CommonSpacer()
                 }
             }
         }
@@ -153,7 +147,7 @@ private fun EquipCountItem(
     loved: Boolean,
     toEquipMaterial: (Int) -> Unit
 ) {
-
+    val placeholder = item.id == ImageResourceHelper.UNKNOWN_EQUIP_ID
     var dataState by remember {
         mutableStateOf(item)
     }
@@ -169,7 +163,8 @@ private fun EquipCountItem(
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf({
             IconCompose(
-                data = ImageResourceHelper.getInstance().getEquipPic(dataState.id)
+                data = ImageResourceHelper.getInstance().getEquipPic(dataState.id),
+                modifier = Modifier.commonPlaceholder(placeholder)
             ) {
                 toEquipMaterial(dataState.id)
             }
@@ -179,7 +174,7 @@ private fun EquipCountItem(
         mutableStateOf({
             SelectText(
                 selected = lovedState,
-                text = dataState.count.toString()
+                text = dataState.count.toString(),
             )
         })
     }

@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -73,7 +74,10 @@ fun RankSelectCompose(
                     currentRank = maxRank - selectIndex0.value
                 )
                 //目标
-                MainText(text = stringResource(id = R.string.target_rank))
+                MainText(
+                    text = stringResource(id = R.string.target_rank),
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                )
                 RankSelectItem(
                     selectIndex = selectIndex1,
                     rankList = rankList,

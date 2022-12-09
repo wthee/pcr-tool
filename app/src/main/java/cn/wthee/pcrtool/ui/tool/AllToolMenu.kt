@@ -47,45 +47,45 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         mutableStateOf(initEditMode)
     }
 
-    val itemsList = arrayListOf<ToolMenuGroup>()
+    val itemGroupList = arrayListOf<ToolMenuGroup>()
 
     //游戏数据
     val dataList = arrayListOf<ToolMenuData>()
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CHARACTER))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EQUIP))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.GUILD))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.RANDOM_AREA))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.EXTRA_EQUIP))
-    dataList.add(getToolMenuData(toolMenuType = ToolMenuType.TRAVEL_AREA))
-    itemsList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
+    dataList.addItem(ToolMenuType.CHARACTER)
+    dataList.addItem(ToolMenuType.EQUIP)
+    dataList.addItem(ToolMenuType.GUILD)
+    dataList.addItem(ToolMenuType.CLAN)
+    dataList.addItem(ToolMenuType.RANDOM_AREA)
+    dataList.addItem(ToolMenuType.EXTRA_EQUIP)
+    dataList.addItem(ToolMenuType.TRAVEL_AREA)
+    itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询
     val searchList = arrayListOf<ToolMenuData>()
-    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.PVP_SEARCH))
-    searchList.add(getToolMenuData(toolMenuType = ToolMenuType.LEADER))
-    itemsList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
+    searchList.addItem(ToolMenuType.PVP_SEARCH)
+    searchList.addItem(ToolMenuType.LEADER)
+    itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //活动信息
     val infoList = arrayListOf<ToolMenuData>()
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.EVENT))
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.NEWS))
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
-    infoList.add(getToolMenuData(toolMenuType = ToolMenuType.CALENDAR_EVENT))
-    itemsList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
+    infoList.addItem(ToolMenuType.GACHA)
+    infoList.addItem(ToolMenuType.EVENT)
+    infoList.addItem(ToolMenuType.NEWS)
+    infoList.addItem(ToolMenuType.FREE_GACHA)
+    infoList.addItem(ToolMenuType.BIRTHDAY)
+    infoList.addItem(ToolMenuType.CALENDAR_EVENT)
+    itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.activity_info), infoList))
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
-    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.TWEET))
-    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.COMIC))
-    otherList.add(getToolMenuData(toolMenuType = ToolMenuType.MOCK_GACHA))
+    otherList.addItem(ToolMenuType.TWEET)
+    otherList.addItem(ToolMenuType.COMIC)
+    otherList.addItem(ToolMenuType.MOCK_GACHA)
     if (BuildConfig.DEBUG) {
-        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_SKILL))
-        otherList.add(getToolMenuData(toolMenuType = ToolMenuType.ALL_EQUIP))
+        otherList.addItem(ToolMenuType.ALL_SKILL)
+        otherList.addItem(ToolMenuType.ALL_EQUIP)
     }
-    itemsList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
+    itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -118,7 +118,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
                 state = scrollState
             ) {
                 items(
-                    items = itemsList,
+                    items = itemGroupList,
                     key = {
                         it.groupTitle
                     }
@@ -225,4 +225,11 @@ private fun MenuItem(
             )
         }
     }
+}
+
+/**
+ * 列表扩展函数
+ */
+private fun ArrayList<ToolMenuData>.addItem(toolMenuType: ToolMenuType) {
+    this.add(getToolMenuData(toolMenuType = toolMenuType))
 }

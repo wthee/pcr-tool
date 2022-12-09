@@ -59,7 +59,10 @@ fun TweetList(
             //头部加载中提示
             item {
                 ExpandAnimation(tweetItems.loadState.refresh == LoadState.Loading) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.largePadding)
+                    ) {
                         CircularProgressCompose(Modifier.align(Alignment.Center))
                     }
                 }
