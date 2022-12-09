@@ -435,17 +435,18 @@ private fun FilterEquipSheet(
 /**
  * 装备品级颜色名
  */
+@Composable
 private fun getEquipColorText(colorType: Int): String {
     return when (colorType) {
-        1 -> "蓝"
-        2 -> "铜"
-        3 -> "银"
-        4 -> "金"
-        5 -> "紫"
-        6 -> "红"
-        7 -> "绿"
-        8 -> "橙"
-        else -> Constants.UNKNOWN
+        1 -> stringResource(id = R.string.color_blue)
+        2 -> stringResource(id = R.string.color_copper)
+        3 -> stringResource(id = R.string.color_silver)
+        4 -> stringResource(id = R.string.color_gold)
+        5 -> stringResource(id = R.string.color_purple)
+        6 -> stringResource(id = R.string.color_red)
+        7 -> stringResource(id = R.string.color_green)
+        8 -> stringResource(id = R.string.color_orange)
+        else ->  stringResource(id = R.string.unknown)
     }
 }
 

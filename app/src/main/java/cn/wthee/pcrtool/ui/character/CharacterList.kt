@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.SortType
@@ -49,10 +48,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
@@ -303,7 +299,11 @@ fun CharacterItem(
                         )
                         //生日
                         Subtitle2(
-                            text = "${getFixed(character.birthMonth)}月${getFixed(character.birthDay)}日",
+                            text = stringResource(
+                                id = R.string.date_m_d,
+                                getFixed(character.birthMonth),
+                                getFixed(character.birthDay)
+                            ),
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
@@ -338,7 +338,11 @@ fun CharacterItem(
                             //攻击
                             CharacterTag(
                                 modifier = Modifier.padding(end = Dimen.mediumPadding),
-                                text = character.getAtkType(),
+                                text = when (character.atkType) {
+                                    1 -> stringResource(id = R.string.physical)
+                                    2 -> stringResource(id = R.string.magic)
+                                    else -> stringResource(id = R.string.unknown)
+                                },
                                 backgroundColor = getAtkColor(atkType = character.atkType),
                                 textColor = textColor
                             )

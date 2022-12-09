@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.getString
 import java.io.Serializable
 
 /**
@@ -14,10 +16,10 @@ class ResponseData<T>(
 /**
  * 错误
  */
-fun <T> error(): ResponseData<T> = ResponseData(-1, null, "未正常获取数据，请重试~")
+fun <T> error(): ResponseData<T> = ResponseData(-1, null, getString(R.string.respon_error))
 
 /**
  * 中断
  */
-fun <T> cancel(): ResponseData<T> = ResponseData(-2, null, "查询取消~")
+fun <T> cancel(): ResponseData<T> = ResponseData(-2, null, getString(R.string.respon_cancel))
 

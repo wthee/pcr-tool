@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.getString
 
 /**
  * 角色技能信息
@@ -51,7 +53,8 @@ data class SkillDetail(
                     if (actionDesc.showCoe) {
                         val coe = Regex("\\{.\\}").findAll(actionDesc.action).first().value
                         list.add(ShowCoe(index, 0, coe))
-                        Regex("动作\\(.\\)").findAll(actionDesc.action).forEach { result ->
+                        val actionText = getString(R.string.skill_action)
+                        Regex("${actionText}\\(.\\)").findAll(actionDesc.action).forEach { result ->
                             val next = result.value.substring(3, 4).toInt() - 1
                             list.add(ShowCoe(next, 1, coe))
                         }

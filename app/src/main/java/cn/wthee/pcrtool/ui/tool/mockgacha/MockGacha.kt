@@ -23,10 +23,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.MockGachaHelper
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -353,7 +350,7 @@ private fun updatePickUpList(data: GachaUnitInfo) {
         newList.remove(data)
     } else {
         if (pickUpList.size >= maxPick) {
-            ToastUtil.short("最多可选 $maxPick 名角色")
+            ToastUtil.short(getString(R.string.gacha_max_select_count, maxPick))
             return
         } else {
             newList.add(data)

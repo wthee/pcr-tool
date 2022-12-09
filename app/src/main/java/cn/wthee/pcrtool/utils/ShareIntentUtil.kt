@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Intent
+import cn.wthee.pcrtool.R
 
 /**
  * 分享
@@ -18,7 +19,7 @@ object ShareIntentUtil {
             Intent.EXTRA_TEXT,
             str
         )
-        shareIntent = Intent.createChooser(shareIntent, "分享到：")
+        shareIntent = Intent.createChooser(shareIntent, getString(R.string.share_to))
         ActivityHelper.instance.currentActivity?.startActivity(shareIntent)
     }
 }

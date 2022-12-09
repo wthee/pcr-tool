@@ -103,11 +103,11 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                 text = stringResource(id = R.string.title_birth), backgroundColor = colorRed
             )
             MainTitleText(
-                text = if (data.month == 999) {
-                    "??/??"
-                } else {
-                    "${data.month.toString().fillZero()}/${data.day.toString().fillZero()}"
-                },
+                text = stringResource(
+                    id = R.string.date_m_d,
+                    getFixed(data.month.toString()),
+                    getFixed(data.day.toString())
+                ),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 backgroundColor = colorRed
             )

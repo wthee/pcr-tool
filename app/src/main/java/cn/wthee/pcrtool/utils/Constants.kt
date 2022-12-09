@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.R
 
 /**
  * 常量
@@ -83,44 +84,39 @@ object Constants {
     const val DATABASE_TWEET = "tweet.db"
     const val DATABASE_PVP = "pvp.db"
     const val DATABASE_MOCK_GACHA = "mock_gacha.db"
-
-
-    const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"
-    const val PVPSEARCH_NOTICE_TITLE = "竞技场查询服务正在运行"
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(
-        "HP",
-        "HP 吸收",
-        "物理攻击",
-        "魔法攻击",
-        "物理防御",
-        "魔法防御",
-        "物理暴击",
-        "魔法暴击",
-        "物理穿透",
-        "魔法穿透",
-        "命 中",
-        "回 避",
-        "HP 回复",
-        "回复上升",
-        "TP 回复",
-        "TP 上升",
-        "TP 减少",
+        getString(R.string.attr_hp),
+        getString(R.string.attr_life_steal),
+        getString(R.string.attr_atk),
+        getString(R.string.attr_magic_str),
+        getString(R.string.attr_def),
+        getString(R.string.attr_magic_def),
+        getString(R.string.attr_physical_critical),
+        getString(R.string.attr_magic_critical),
+        getString(R.string.attr_physical_penetrate),
+        getString(R.string.attr_magic_penetrate),
+        getString(R.string.attr_accuracy),
+        getString(R.string.attr_dodge),
+        getString(R.string.attr_wave_hp_recovery),
+        getString(R.string.attr_hp_recovery_rate),
+        getString(R.string.attr_wave_energy_recovery),
+        getString(R.string.attr_energy_recovery_rate),
+        getString(R.string.attr_energy_reduce_rate),
     )
 
-    const val UNKNOWN = "?"
+    val UNKNOWN = getString(R.string.unknown)
 
 
     // 异常
-    private const val EXCEPTION = "异常"
-    const val EXCEPTION_API = "接口$EXCEPTION"
-    const val EXCEPTION_DOWNLOAD_DB = "数据库文件下载$EXCEPTION"
-    const val EXCEPTION_SAVE_DB = "数据库文件保存$EXCEPTION"
-    const val EXCEPTION_LOAD_ATTR = "获取属性$EXCEPTION"
-    const val EXCEPTION_UNIT_NULL = "角色信息空值$EXCEPTION"
-    const val EXCEPTION_SKILL = "角色技能$EXCEPTION"
-    const val EXCEPTION_PVP_SERVICE = "竞技场查询服务$EXCEPTION"
-    const val EXCEPTION_DATA_CHANGE = "数据切换$EXCEPTION"
+    const val EXCEPTION_API = "api exception"
+    const val EXCEPTION_DOWNLOAD_DB = "db download exception"
+    const val EXCEPTION_SAVE_DB = "db file save exception"
+    const val EXCEPTION_LOAD_ATTR = "character attr exception"
+    const val EXCEPTION_UNIT_NULL = "character info exception"
+    const val EXCEPTION_SKILL = "skill exception"
+    const val EXCEPTION_PVP_SERVICE = "pvp search exception"
+    const val EXCEPTION_DATA_CHANGE = "db change exception"
 
 }

@@ -346,7 +346,10 @@ private fun CalendarEventOperation(
                             eventText += "• $date\n${getTypeDataToString(it)}\n"
                         }
                         if (eventText != "") {
-                            allText += "▶ 掉落活动\n$eventText\n"
+                            allText += getString(
+                                R.string.title_drop_event,
+                                "\n$eventText\n"
+                            )
                         }
 
                         //剧情活动
@@ -356,7 +359,10 @@ private fun CalendarEventOperation(
                             storyText += "• $date\n${it.getEventTitle()}"
                         }
                         if (storyText != "") {
-                            allText += "▶ 剧情活动\n$storyText\n\n"
+                            allText += getString(
+                                R.string.title_story_event,
+                                "\n$storyText\n\n"
+                            )
                         }
 
                         //卡池
@@ -367,7 +373,10 @@ private fun CalendarEventOperation(
 
                         }
                         if (gachaText != "") {
-                            allText += "▶ 卡池信息\n$gachaText\n\n"
+                            allText += getString(
+                                R.string.title_gacha_event,
+                                "\n$gachaText\n\n"
+                            )
                         }
 
                         //免费十连
@@ -378,7 +387,10 @@ private fun CalendarEventOperation(
 
                         }
                         if (freeGachaText != "") {
-                            allText += "▶ 免费十连\n$freeGachaText\n\n"
+                            allText += getString(
+                                R.string.title_free_gacha_event,
+                                "\n$freeGachaText\n\n"
+                            )
                         }
 
                         //免费十连
@@ -389,7 +401,10 @@ private fun CalendarEventOperation(
 
                         }
                         if (birthdayText != "") {
-                            allText += "▶ 角色生日\n$birthdayText\n"
+                            allText += getString(
+                                R.string.title_character_birthday_event,
+                                "\n$birthdayText\n"
+                            )
                         }
                         //复制
                         copyText(context, "——$regionName——\n\n$allText")
@@ -418,32 +433,37 @@ private fun getTypeDataToString(data: CalendarEvent): String {
     when (data.type) {
         "1" -> {
             //露娜塔
-            eventTitle = "露娜塔"
+            eventTitle = getString(R.string.tower)
         }
         "-1" -> {
             //特殊地下城
-            eventTitle = "特殊地下城"
+            eventTitle = getString(R.string.sp_dungeon)
         }
         else -> {
             //正常活动
             val list = data.type.intArrayList
             list.forEachIndexed { index, type ->
                 val title = when (type) {
-                    31, 41 -> "普通关卡"
-                    32, 42 -> "困难关卡"
-                    39, 49 -> "高难关卡"
-                    34 -> "探索"
-                    37 -> "圣迹调查"
-                    38 -> "神殿调查"
-                    45 -> "地下城"
+                    31, 41 -> getString(R.string.normal)
+                    32, 42 -> getString(R.string.hard)
+                    39, 49 -> getString(R.string.very_hard)
+                    34 -> getString(R.string.explore)
+                    37 -> getString(R.string.shrine)
+                    38 -> getString(R.string.temple)
+                    45 -> getString(R.string.dungeon)
                     else -> ""
                 }
                 val multiple = data.getFixedValue()
-                eventTitle += title + (if (type > 40) "玛那掉落量" else "掉落量") + (if ((multiple * 10).toInt() % 10 == 0) {
-                    multiple.toInt().toString()
-                } else {
-                    multiple.toString()
-                }) + "倍"
+                val typeName = getString(if (type > 40) R.string.mana else R.string.drop)
+                val multipleText = getString(
+                    R.string.multiple,
+                    if ((multiple * 10).toInt() % 10 == 0) {
+                        multiple.toInt().toString()
+                    } else {
+                        multiple.toString()
+                    }
+                )
+                eventTitle += title + typeName + multipleText
                 if (index != list.size - 1) {
                     eventTitle += "\n"
                 }

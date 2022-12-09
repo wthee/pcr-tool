@@ -112,7 +112,7 @@ fun StoryEventItem(
     val ed = event.endTime.formatTime.fixJpTime
     val previewEvent = sd.substring(0, 10) == "2030/12/30"
     val days = ed.days(sd)
-    if (days == "0" || days == "0天") {
+    if (days == stringResource(id = R.string.day, 0)) {
         showDays = false
     }
 
@@ -122,23 +122,23 @@ fun StoryEventItem(
     when {
         //支线
         isSub -> {
-            type = "支线"
+            type = stringResource(id = R.string.story_event_sub)
             typeColor = colorGreen
             showDays = false
         }
         //复刻
         event.eventId / 10000 == 1 && event.eventId != event.originalEventId -> {
-            type = "复刻"
+            type = stringResource(id = R.string.story_event_re)
             typeColor = colorGold
         }
         //预告
         sd.second(today) > 0 || previewEvent -> {
-            type = "预告"
+            type = stringResource(id = R.string.story_event_preview)
             typeColor = colorPurple
         }
         //正常
         else -> {
-            type = "活动"
+            type = stringResource(id = R.string.story_event_new)
             typeColor = colorRed
         }
     }

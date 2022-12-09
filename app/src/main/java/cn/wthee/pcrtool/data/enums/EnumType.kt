@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.data.enums
 
+import cn.wthee.pcrtool.R
+
 /**
  * 立绘类型
  */
@@ -46,14 +48,14 @@ enum class RankSelectType(val type: Int) {
 /**
  * 卡池类型
  */
-enum class GachaType(val typeName: String) {
-    UNKNOWN(""),
-    LIMIT("限定"),
-    RE_LIMIT("复刻限定"),
-    NORMAL("常驻"),
-    RE_NORMAL("复刻常驻"),
-    FES("公主庆典"),
-    ANNIV("周年");
+enum class GachaType(val stringId: Int) {
+    UNKNOWN(R.string.unknown),
+    LIMIT(R.string.type_limit),
+    RE_LIMIT(R.string.limit_re),
+    NORMAL(R.string.type_normal),
+    RE_NORMAL(R.string.normal_re),
+    FES(R.string.fes),
+    ANNIV(R.string.anv);
 }
 
 /**
@@ -159,3 +161,15 @@ enum class SettingSwitchType {
     DYNAMIC_COLOR
 }
 
+
+/**
+ * 公告
+ */
+enum class NewsType(val stringId: Int) {
+    UPDATE(R.string.update),
+    SYSTEM(R.string.system),
+    NEWS(R.string.tool_news),
+    EVENT(R.string.event),
+    SHOP(R.string.shop),
+    LOCAL(R.string.local_note);
+}

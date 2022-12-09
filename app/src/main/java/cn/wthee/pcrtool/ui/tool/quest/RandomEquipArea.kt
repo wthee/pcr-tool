@@ -69,7 +69,7 @@ fun RandomEquipArea(
                     AreaItem(
                         -1,
                         odds,
-                        "区域 xx",
+                        "????",
                         colorGreen
                     )
                 }

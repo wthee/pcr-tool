@@ -5,6 +5,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 
 /**
@@ -27,12 +28,7 @@ class SystemCalendarHelper {
     private val addedEvents = arrayListOf<SystemCalendarEventData>()
 
 
-    private val regionName = when (region) {
-        2 -> "国服"
-        3 -> "台服"
-        4 -> "日服"
-        else -> ""
-    }
+    private val regionName = getRegionName(region = region)
 
     private val CALENDAR_PROJECTION: Array<String> = arrayOf(
         CalendarContract.Calendars._ID,
@@ -65,11 +61,12 @@ class SystemCalendarHelper {
                 cur.moveToFirst()
                 if (cur.count > 0) {
                     //获取已添加的日程信息
+                    val queryLike = getString(R.string.query_calendar_event)
                     val eventUri = CalendarContract.Events.CONTENT_URI
                     val eventCur = contentResolver.query(
                         eventUri,
                         EVENT_PROJECTION,
-                        EVENT_PROJECTION[0] + " like '%服：%'",
+                        EVENT_PROJECTION[0] + " like '%${queryLike}%'",
                         null,
                         null
                     )
@@ -130,20 +127,25 @@ class SystemCalendarHelper {
                         }
                     }
                     if (newAddedCount > 0) {
-                        ToastUtil.short("已更新${newAddedCount}项日程~")
+                        ToastUtil.short(
+                            getString(
+                                R.string.calendar_update_success,
+                                newAddedCount
+                            )
+                        )
                     } else {
                         //无更新
-                        ToastUtil.short("日程已存在~")
+                        ToastUtil.short(getString(R.string.calendar_exist))
                     }
                 } else {
-                    ToastUtil.short("无法添加日程，未找到日历程序~")
+                    ToastUtil.short(getString(R.string.calendar_not_found))
                 }
                 cur.close()
             } else {
-                ToastUtil.short("无法添加日程，未找到日历程序~")
+                ToastUtil.short(getString(R.string.calendar_not_found))
             }
         } catch (e: Exception) {
-            ToastUtil.short("日程添加失败~")
+            ToastUtil.short(getString(R.string.calendar_add_failure))
         }
     }
 }

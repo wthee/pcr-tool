@@ -309,7 +309,7 @@ fun GradeText(
         )
         if (flag == 1) {
             CaptionText(
-                text = "暂定",
+                text = stringResource(id = R.string.experimental),
             )
         }
     }

@@ -2,7 +2,9 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.fillZero
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
@@ -40,7 +42,11 @@ data class ClanBattleInfo(
      * 获取年月
      */
     fun getDate(): String {
-        return startTime.substring(0, 4) + "年" + releaseMonth.toString().fillZero() + "月"
+        return getString(
+            R.string.clan_battle_y_m,
+            startTime.substring(0, 4),
+            releaseMonth.toString().fillZero()
+        )
     }
 }
 

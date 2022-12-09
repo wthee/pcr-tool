@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.getFixed
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -100,16 +101,16 @@ private fun BasicInfo(info: CharacterInfoPro) {
         //身高、体重
         TwoColumnsInfo(
             stringResource(id = R.string.title_height),
-            info.getFixedHeight() + " CM",
+            getFixed(info.height) + " CM",
             stringResource(id = R.string.title_weight),
-            info.getFixedWeight() + " KG"
+            getFixed(info.weight) + " KG"
         )
         //生日、年龄
         TwoColumnsInfo(
             stringResource(id = R.string.title_birth),
             stringResource(id = R.string.date_m_d, info.birthMonth, info.birthDay),
             stringResource(id = R.string.age),
-            info.getFixedAge()
+            getFixed(info.age)
         )
         //血型、位置
         Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {

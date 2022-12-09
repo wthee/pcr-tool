@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import android.os.Looper
 import android.provider.MediaStore
+import cn.wthee.pcrtool.R
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ class FileSaveHelper(private val context: Context) {
                 val file = File("$path/$displayName")
                 if (file.exists()) {
                     Looper.prepare()
-                    ToastUtil.short("图片已存在")
+                    ToastUtil.short(getString(R.string.pic_exist))
                     Looper.loop()
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -78,11 +79,11 @@ class FileSaveHelper(private val context: Context) {
                 }
                 VibrateUtil(context).done()
                 Looper.prepare()
-                ToastUtil.short("保存成功\n$displayName")
+                ToastUtil.short(getString(R.string.save_success, "\n$displayName"))
                 Looper.loop()
             } catch (e: Exception) {
                 Looper.prepare()
-                ToastUtil.short("保存失败")
+                ToastUtil.short(getString(R.string.save_failure))
                 Looper.loop()
             } finally {
                 stream?.close()

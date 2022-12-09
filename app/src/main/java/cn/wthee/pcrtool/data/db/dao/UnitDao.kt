@@ -9,7 +9,11 @@ import cn.wthee.pcrtool.data.db.view.*
 //角色最大编号
 const val maxUnitId = 200000
 
-//国服环奈
+/**
+ * 国服环奈
+ * 调整时需注意同步调整
+ * @see cn.wthee.pcrtool.data.db.view.GachaInfo
+ */
 const val limitedIds = """
     (
 		170101,
@@ -208,8 +212,8 @@ interface UnitDao {
             unit_profile.race,
             CAST((CASE WHEN unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
             CAST((CASE WHEN unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
-            unit_profile.birth_month,
-            unit_profile.birth_day,
+            CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR  unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
+            CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_profile.blood_type,
             unit_profile.favorite,
             unit_profile.voice,

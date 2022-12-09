@@ -2,7 +2,10 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -223,11 +226,14 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
                 events.add(
                     CalendarEventData(
                         title,
-                        (if ((multiple * 10).toInt() % 10 == 0) {
-                            multiple.toInt().toString()
-                        } else {
-                            multiple.toString()
-                        }) + "倍",
+                        stringResource(
+                            R.string.multiple,
+                            if ((multiple * 10).toInt() % 10 == 0) {
+                                multiple.toInt().toString()
+                            } else {
+                                multiple.toString()
+                            }
+                        ),
                         stringResource(id = if (type > 40) R.string.mana else R.string.drop),
                         dropMumColor
                     )

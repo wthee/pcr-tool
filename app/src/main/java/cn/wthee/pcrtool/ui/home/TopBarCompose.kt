@@ -159,7 +159,12 @@ private fun AppUpdateContent(appNotice: AppNotice) {
             }
 
             //日期
-            CaptionText(text = "${appNotice.date.formatTime.substring(0, 10)} 发布")
+            CaptionText(
+                text = stringResource(
+                    id = R.string.release,
+                    appNotice.date.formatTime.substring(0, 10)
+                )
+            )
 
             //内容
             MainContentText(
@@ -201,7 +206,7 @@ private fun AppUpdateContentPreview() {
             AppNotice(
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- 更新测试\n- BUGBUGBUG",
+                message = "- BUGBUGBUG",
                 file_url = "123"
             )
         )

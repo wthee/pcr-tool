@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
@@ -373,7 +372,7 @@ private fun MainSettingsPreview() {
     val context = LocalContext.current
     PreviewBox(1) {
         MainSettings(
-            sp = MyApplication.context.getSharedPreferences(
+            sp = context.getSharedPreferences(
                 "setting",
                 Context.MODE_PRIVATE
             )!!
@@ -387,7 +386,7 @@ private fun MainSettingsDarkPreview() {
     val context = LocalContext.current
     PreviewBox(2) {
         MainSettings(
-            sp = MyApplication.context.getSharedPreferences(
+            sp = context.getSharedPreferences(
                 "setting",
                 Context.MODE_PRIVATE
             )!!

@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -832,18 +831,6 @@ fun CenterTipText(text: String) {
         )
     }
 }
-
-/**
- * 服务器版本名称
- */
-@Composable
-fun getRegionName(region: Int) = stringResource(
-    id = when (region) {
-        2 -> R.string.db_cn
-        3 -> R.string.db_tw
-        else -> R.string.db_jp
-    }
-)
 
 /**
  * 通用标题内容组件，用例：角色属性

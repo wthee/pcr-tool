@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.data.enums.NewsType
 
 /**
  * 官网公告，api和本地数据公用
@@ -18,18 +19,18 @@ data class NewsTable(
     val region: Int = 2
 ) {
 
-    fun getTag(): String {
+    fun getTag(): NewsType {
         val tags = tags.split(",").filter {
             it.isNotEmpty() && it != "すべて"
         } as ArrayList<String>
         if (tags.size > 1) tags.remove("お知らせ")
         return when (tags[0]) {
-            "アップデート" -> "更新"
-            "系統", "メンテナンス" -> "系统"
-            "お知らせ" -> "新闻"
-            "活動", "イベント" -> "活动"
-            "グッズ" -> "周边"
-            else -> tags[0]
+            "更新", "アップデート" -> NewsType.UPDATE
+            "系統", "メンテナンス" -> NewsType.SYSTEM
+            "活动", "活動", "イベント" -> NewsType.EVENT
+            "グッズ" -> NewsType.SHOP
+            "本地化笔记" -> NewsType.LOCAL
+            else -> NewsType.NEWS
         }
     }
 

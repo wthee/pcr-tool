@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.getString
 
 /**
  * 免费十连卡池记录
@@ -23,8 +25,8 @@ data class FreeGachaInfo(
         } else {
             val st = startTime.formatTime
             val ed = endTime.formatTime
-            ed.days(st).replace("天", "").toInt()
+            ed.days(st, false).toInt()
         }
-        return "「免费十连」 $count 次"
+        return getString(R.string.free_gacha_content, count)
     }
 }

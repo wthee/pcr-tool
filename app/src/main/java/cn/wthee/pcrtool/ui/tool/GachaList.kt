@@ -132,7 +132,11 @@ fun GachaItem(
         ) {
             //类型
             MainTitleText(
-                text = if (type.typeName != "") type.typeName else gachaInfo.fixTypeName(),
+                text = if (type.stringId != R.string.unknown) {
+                    stringResource(id = type.stringId)
+                } else {
+                    gachaInfo.fixTypeName()
+                },
                 backgroundColor = color,
             )
             //日期

@@ -59,7 +59,7 @@ object DatabaseUpdater {
             downloadDB(version.data!!, from)
         } catch (e: Exception) {
             if (e !is CancellationException) {
-                ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
+                ToastUtil.short(getString(R.string.check_db_error))
             }
             navViewModel.downloadProgress.postValue(-2)
         }
@@ -184,19 +184,19 @@ fun tryOpenDatabase(): Int {
     val open: () -> Unit
     when (MainActivity.regionType) {
         2 -> {
-            msg = "更新国服数据结构！！！"
+            msg = "db error: cn"
             open = {
                 openDatabase(AppDatabaseCN.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
             }
         }
         3 -> {
-            msg = "更新台服数据结构！！!"
+            msg = "db error: tw"
             open = {
                 openDatabase(AppDatabaseTW.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
             }
         }
         else -> {
-            msg = "更新日服数据结构！！！"
+            msg = "db error: jp"
             open = {
                 openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
             }
@@ -210,7 +210,7 @@ fun tryOpenDatabase(): Int {
     } catch (e: Exception) {
         //启用远程备份数据库
         MainScope().launch {
-            ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+            ToastUtil.short(getString(R.string.database_remote_backup))
             LogReportUtil.upload(e, msg)
         }
         return 0

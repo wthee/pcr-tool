@@ -60,7 +60,7 @@ fun MockGachaResult(
     } else {
         //显示相关信息
         val payCount = resultRecordList.size
-        val sumText = "消耗宝石：1500 * $payCount = ${1500 * payCount}"
+        val sumText = stringResource(id = R.string.gacha_used_gem, payCount, payCount * 1500)
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -145,7 +145,7 @@ private fun MockGachaResultRecordItem(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             MainTitleText(
-                text = "第 $order 次"
+                text = stringResource(id = R.string.gacha_order, order)
             )
             //抽中 pickUp 角色，添加标注
             if (pickUpIndexList.isNotEmpty()) {

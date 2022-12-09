@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -75,16 +76,16 @@ fun getToday(ms: Boolean = false): String {
 /**
  *  计算日期字符串间隔天数 yyyy/MM/dd  this - str2 相差天数
  */
-fun String.days(str2: String): String {
-    return try {
+fun String.days(str2: String, showDay: Boolean = true): String {
+    return (try {
         val d1 = df.parse(this.formatTime)!!
         val d2 = df.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
-        "${time / (60 * 60 * 1000 * 24)}天"
+        "${time / (60 * 60 * 1000 * 24)}"
     } catch (e: Exception) {
-        "0天"
-    }
+        "0"
+    }) + if (showDay) getString(R.string.day) else ""
 }
 
 /**
@@ -108,20 +109,20 @@ fun String.dates(str2: String): String {
 fun toTimeText(time: Long): String {
     val day = time / (60 * 60 * 1000 * 24)
     val hour = time / (60 * 60 * 1000) - day * 24
-    val min = time % (60 * 60 * 1000) / (60 * 1000)
+    val minute = time % (60 * 60 * 1000) / (60 * 1000)
 
     val dayText = if (day > 0) {
-        "${day}天"
+        getString(R.string.day, day)
     } else {
         ""
     }
     val hourText = if (hour > 0) {
-        "${hour}时"
+        getString(R.string.hour, hour)
     } else {
-       ""
+        ""
     }
-    val minText = if (min > 0) {
-        "${min}分"
+    val minText = if (minute > 0) {
+        getString(R.string.minute, minute)
     } else {
         ""
     }

@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
+import cn.wthee.pcrtool.utils.getString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -30,7 +32,7 @@ class GuildViewModel @Inject constructor(
                 list.add(
                     GuildAllMember(
                         guildId = 999,
-                        guildName = "无公会",
+                        guildName = getString(R.string.no_guild),
                         unitIds = it.unitIds,
                         unitNames = it.unitNames
                     )

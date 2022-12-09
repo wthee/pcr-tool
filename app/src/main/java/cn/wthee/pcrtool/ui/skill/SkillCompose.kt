@@ -511,7 +511,7 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 @Composable
 fun getSkillColor(type: String): Color {
     return when {
-        type.contains("连结") -> colorGold
+        type.contains(stringResource(id = R.string.union_burst)) -> colorGold
         type.contains("EX") -> colorCopper
         type.contains("1") -> colorPurple
         type.contains("2") -> colorRed

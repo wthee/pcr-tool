@@ -16,8 +16,8 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "race") val race: String = "???",
     @ColumnInfo(name = "height_int") val height: String = "999",
     @ColumnInfo(name = "weight_int") val weight: String = "999",
-    @ColumnInfo(name = "birth_month") val birthMonth: String = "12",
-    @ColumnInfo(name = "birth_day") val birthDay: String = "11",
+    @ColumnInfo(name = "birth_month_int") val birthMonth: String = "999",
+    @ColumnInfo(name = "birth_day_int") val birthDay: String = "999",
     @ColumnInfo(name = "blood_type") val bloodType: String = "A",
     @ColumnInfo(name = "favorite") val favorite: String = "???",
     @ColumnInfo(name = "voice") val voice: String = "???",
@@ -29,21 +29,6 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "r6Id") val r6Id: Int = 0,
     @ColumnInfo(name = "rarity") val rarity: Int = 3,
 ) {
-
-    /**
-     * 格式化年龄
-     */
-    fun getFixedAge() = if (age == "999") "?" else age
-
-    /**
-     * 格式化身高
-     */
-    fun getFixedHeight() = if (height == "999") "?" else height
-
-    /**
-     * 格式化体重
-     */
-    fun getFixedWeight() = if (weight == "999") "?" else weight
 
     /**
      * 角色自我介绍

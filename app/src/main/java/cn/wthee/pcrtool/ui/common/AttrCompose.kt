@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
@@ -21,6 +22,7 @@ import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.int
 
 
@@ -104,8 +106,12 @@ fun AttrCompare(
  */
 fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType) =
     when (attrValue.int) {
-        in 100000000..Int.MAX_VALUE -> "${attrValue.toInt() / 100000000f}亿"
-        in 100000 until 100000000 -> "${attrValue.toInt() / 10000}万"
+        in 100000000..Int.MAX_VALUE -> {
+            getString(R.string.hp_100_m, (attrValue.toInt() / 100000000f).toString())
+        }
+        in 100000 until 100000000 -> {
+            getString(R.string.hp_10_k, attrValue.toInt() / 10000)
+        }
         else -> {
             when (attrValueType) {
                 AttrValueType.INT -> attrValue.int.toString()

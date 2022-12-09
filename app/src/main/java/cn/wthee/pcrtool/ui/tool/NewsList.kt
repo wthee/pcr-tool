@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.NewsType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -123,8 +124,8 @@ fun NewsItem(
     val placeholder = news.title == ""
     val tag = news.getTag()
     val color = when (tag) {
-        "公告", "更新" -> colorRed
-        "系統" -> colorPurple
+        NewsType.NEWS, NewsType.UPDATE -> colorRed
+        NewsType.SYSTEM -> colorPurple
         else -> MaterialTheme.colorScheme.primary
     }
     Column(
@@ -133,7 +134,7 @@ fun NewsItem(
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
             MainTitleText(
-                text = tag,
+                text = stringResource(id = tag.stringId),
                 backgroundColor = color,
                 modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
@@ -238,6 +239,7 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                     return true
                                 }
 
+                                @SuppressLint("WebViewClientOnReceivedSslError")
                                 override fun onReceivedSslError(
                                     view: WebView?,
                                     handler: SslErrorHandler?,

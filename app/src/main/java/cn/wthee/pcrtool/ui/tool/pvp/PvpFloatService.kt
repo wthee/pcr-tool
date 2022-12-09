@@ -57,12 +57,16 @@ class PvpFloatService : LifecycleService() {
             val notice = NotificationUtil.createNotice(
                 MyApplication.context,
                 "2",
-                "竞技场查询服务",
-                Constants.PVPSEARCH_NOTICE_TITLE,
+                getString(R.string.pvp_service),
+                getString(R.string.pvp_service_running),
                 notificationManager
             )
                 .addAction(
-                    NotificationCompat.Action(R.drawable.unknown_gray, "关闭应用", finishPendingIntent)
+                    NotificationCompat.Action(
+                        R.drawable.unknown_gray,
+                        getString(R.string.close_app),
+                        finishPendingIntent
+                    )
                 )
                 .build()
 
