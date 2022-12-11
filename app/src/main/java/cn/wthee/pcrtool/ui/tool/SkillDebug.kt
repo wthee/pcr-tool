@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -28,12 +28,12 @@ fun AllSkillList(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
-    clanViewModel: ClanViewModel = hiltViewModel(),
+    enemyViewModel: EnemyViewModel = hiltViewModel(),
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
     val allCharacter =
         characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
-    val bossIds = clanViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
+    val bossIds = enemyViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
     val exEquipSkillIds = extraEquipmentViewModel.getAllEquipSkillIdList()
         .collectAsState(initial = arrayListOf()).value
 
@@ -67,9 +67,9 @@ fun AllSkillList(
                     key = {
                         it.skillId
                     }
-                ) {
+                ) { skillDetail ->
                     var error = false
-                    it.getActionInfo().forEach { action ->
+                    skillDetail.getActionInfo().forEach { action ->
                         if (action.action.contains("?")) {
                             error = true
                             return@forEach
@@ -77,8 +77,7 @@ fun AllSkillList(
                     }
                     if (error) {
                         SkillItem(
-                            1,
-                            skillDetail = it,
+                            skillDetail = skillDetail,
                             unitType = UnitType.CHARACTER,
                             toSummonDetail = toSummonDetail,
                             property = CharacterProperty(100, 1, 1)

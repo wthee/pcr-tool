@@ -133,5 +133,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         return unitDao.getGachaUnits(type, exUnitIdList)
     }
 
-    suspend fun getFesUnitIds() = unitDao.getFesUnitIds()
+    suspend fun getHomePageComments(unitId: Int) = unitDao.getHomePageComments(unitId)
+
 }

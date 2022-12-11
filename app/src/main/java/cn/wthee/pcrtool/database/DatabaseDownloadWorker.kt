@@ -6,6 +6,7 @@ import android.content.Context.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -24,7 +25,7 @@ class DatabaseDownloadWorker(
     parameters: WorkerParameters?,
 ) : CoroutineWorker(context, parameters!!) {
 
-
+    private val downloadNotice = getString(R.string.title_download_database)
     //通知栏
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -66,7 +67,7 @@ class DatabaseDownloadWorker(
             //创建Retrofit服务
             service = ApiUtil.createWithClient(
                 DatabaseService::class.java, Constants.DATABASE_URL,
-                ApiUtil.downloadClientBuild(object : DownloadListener {
+                ApiUtil.buildDownloadClient(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         try {
@@ -78,7 +79,7 @@ class DatabaseDownloadWorker(
                         //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "${Constants.DOWNLOAD_NOTICE_TITLE} ${currSize / 1024}  / ${totalSize / 1024}"
+                                "$downloadNotice ${currSize / 1024}  / ${totalSize / 1024}"
                             )
                         notificationManager.notify(noticeId, notification.build())
                     }
@@ -141,8 +142,8 @@ class DatabaseDownloadWorker(
         notification = NotificationUtil.createNotice(
             context = context,
             channelId = channelId,
-            channelName = "数据更新",
-            noticeTitle = Constants.DOWNLOAD_NOTICE_TITLE,
+            channelName = getString(R.string.update_database),
+            noticeTitle = downloadNotice,
             notificationManager = notificationManager
         )
         notification.setOngoing(true)

@@ -8,7 +8,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,14 +23,11 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_CATEGORY
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
@@ -58,16 +54,9 @@ fun ExtraEquipDetail(
     val unitIds = extraEquipmentViewModel.getEquipUnitList(extraEquipmentData.category)
         .collectAsState(initial = arrayListOf()).value
     //收藏状态
-    val filter = navViewModel.filterExtraEquip.observeAsState()
-
+    val starIds = FilterExtraEquipment.getStarIdList()
     val loved = remember {
-        mutableStateOf(filter.value?.starIds?.contains(equipId) ?: false)
-    }
-    filter.value?.let { filterValue ->
-        filterValue.starIds =
-            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EXTRA_EQUIP, ""))
-                ?: arrayListOf()
-        loved.value = filterValue.starIds.contains(equipId)
+        mutableStateOf(starIds.contains(equipId))
     }
 
     Box(
@@ -167,7 +156,7 @@ fun ExtraEquipDetail(
             FabCompose(
                 iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             ) {
-                filter.value?.addOrRemove(equipId)
+                FilterExtraEquipment.addOrRemove(equipId)
                 loved.value = !loved.value
             }
             //关联角色
@@ -213,9 +202,8 @@ private fun ExtraEquipSkill(
                     .padding(top = Dimen.largePadding)
             )
 
-            skills.forEachIndexed { index, skillDetail ->
+            skills.forEach { skillDetail ->
                 SkillItem(
-                    skillIndex = index,
                     skillDetail = skillDetail,
                     unitType = UnitType.CHARACTER,
                     property = CharacterProperty(),

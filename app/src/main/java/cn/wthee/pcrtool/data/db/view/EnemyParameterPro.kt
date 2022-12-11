@@ -6,8 +6,9 @@ import androidx.room.PrimaryKey
 
 data class EnemyParameterPro(
     @PrimaryKey
-    @ColumnInfo(name = "enemy_id") val enemy_id: Int,
-    @ColumnInfo(name = "unit_id") val unit_id: Int,
+    @ColumnInfo(name = "enemy_id") val enemyId: Int,
+    @ColumnInfo(name = "unit_id") val unitId: Int,
+    @ColumnInfo(name = "prefab_id") val prefabId: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "comment") val comment: String,
     @ColumnInfo(name = "normal_atk_cast_time") val atkTime: Double,
@@ -49,4 +50,5 @@ data class EnemyParameterPro(
         .replace("・", "\n\n- ")
         .replace("‧", "\n\n- ")
         .replace("　", "")
+
 }

@@ -182,7 +182,10 @@ private fun MockGachaHistoryItem(
                         })
                     //日期
                     CaptionText(
-                        text = "上次抽卡 ${gachaData.lastUpdateTime}",
+                        text = stringResource(
+                            id = R.string.last_gacha_date,
+                            gachaData.lastUpdateTime
+                        ),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = Dimen.mediumPadding)

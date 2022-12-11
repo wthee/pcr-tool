@@ -16,8 +16,8 @@ hilt {
 
 val composeVersion = "1.3.0"
 val composeCompilerVersion = "1.3.0"
-val appVersionCode = 350
-val appVersionName = "3.5.0"
+val appVersionCode = 351
+val appVersionName = "3.5.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -77,7 +77,7 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            resValue("string", "app_name", "Beta: PCR tool")
+            resValue("string", "app_name", "B: PCR Tool")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -113,9 +113,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose
-    implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
@@ -157,11 +155,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.2")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

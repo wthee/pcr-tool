@@ -71,7 +71,7 @@ interface MyAPIService {
     /**
      * 查询额外装备掉落信息
      */
-    @POST("equip/area")
+    @POST("equip/area/v2")
     suspend fun getEquipArea(@Body body: RequestBody): ResponseData<List<RandomEquipDropArea>>
 
 

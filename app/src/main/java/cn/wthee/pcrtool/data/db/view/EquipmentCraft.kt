@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 
 /**
  * 装备合成信息

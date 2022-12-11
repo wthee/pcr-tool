@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -86,7 +88,7 @@ val String.deleteSpace: String
     }
 
 /**
- * [Double] 转 [Int]，四舍五入
+ * [Double] 转 [Int]，小数非0进位
  */
 val Double.int: Int
     get() {
@@ -102,5 +104,56 @@ fun copyText(context: Context, text: String) {
         context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val mClipData = ClipData.newPlainText("OcrText", text)
     clipboardManager.setPrimaryClip(mClipData)
-    ToastUtil.short("已复制~")
+    ToastUtil.short(getString(R.string.copy_success))
+}
+
+/**
+ * 服务器版本名称
+ */
+fun getRegionName(region: Int) = getString(
+    when (region) {
+        2 -> R.string.db_cn
+        3 -> R.string.db_tw
+        else -> R.string.db_jp
+    }
+)
+
+/**
+ * 获取文本
+ */
+fun getString(resId: Int, vararg formatArgs: Any) =
+    MyApplication.context.getString(resId, *formatArgs)
+
+/**
+ * 格式化文本
+ * 999 -> ?
+ */
+fun getFixed(str: String) = if (str == "999") Constants.UNKNOWN else str
+
+/**
+ * Rank 格式化
+ */
+fun getFormatText(rank: Int, preStr: String = Constants.RANK_UPPER): String {
+    val text = when (rank) {
+        in 0..9 -> "  $rank"
+        else -> "$rank"
+
+    }
+    return "$preStr $text"
+}
+
+/**
+ * 阶段格式化
+ */
+fun getZhNumberText(section: Int): String {
+    return when (section) {
+        1 -> getString(R.string.no1)
+        2 -> getString(R.string.no2)
+        3 -> getString(R.string.no3)
+        4 -> getString(R.string.no4)
+        5 -> getString(R.string.no5)
+        6 -> getString(R.string.no6)
+        7 -> getString(R.string.no7)
+        else -> section.toString()
+    }
 }

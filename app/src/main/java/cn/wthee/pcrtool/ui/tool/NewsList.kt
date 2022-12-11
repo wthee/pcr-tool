@@ -30,15 +30,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.NewsType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
@@ -63,56 +61,45 @@ fun NewsList(
     }
 
     //获取分页数据
-    if (newsViewModel.newsPageList == null) {
+    val newsPager = remember(keywordState.value) {
         newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
     }
-    val newsItems = newsViewModel.newsPageList?.collectAsLazyPagingItems()
+    val newsItems = newsPager.flow.collectAsLazyPagingItems()
 
-    LaunchedEffect(keywordState.value) {
-        newsItems?.refresh()
-        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
-        scrollState.scrollToItem(0)
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        val visible = newsItems != null && newsItems.itemCount > 0
-        FadeAnimation(visible = visible) {
-            LazyColumn(state = scrollState) {
-                items(
-                    items = newsItems!!,
-                    key = {
-                        it.id
-                    }
-                ) {
-                    if (it != null) {
-                        NewsItem(news = it, toNewsDetail)
+        LazyColumn(state = scrollState) {
+            //头部加载中提示
+            item {
+                ExpandAnimation(newsItems.loadState.refresh == LoadState.Loading) {
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.largePadding)
+                    ) {
+                        CircularProgressCompose(Modifier.align(Alignment.Center))
                     }
                 }
+            }
+            items(
+                items = newsItems,
+                key = {
+                    it.id
+                }
+            ) {
+                if (it != null) {
+                    NewsItem(news = it, toNewsDetail)
+                }
+            }
+            //暂无更多提示
+            if (newsItems.loadState.refresh != LoadState.Loading) {
                 item {
                     FadeAnimation(newsItems.loadState.append is LoadState.NotLoading) {
                         CenterTipText(stringResource(id = R.string.no_more))
                     }
                 }
-                //加载中占位
-                item {
-                    FadeAnimation(newsItems.loadState.append is LoadState.Loading) {
-
-                        NewsItem(news = NewsTable(), toNewsDetail)
-                    }
-                }
-                item {
-                    CommonSpacer()
-                }
             }
-        }
-        FadeAnimation(visible = newsItems == null) {
-            LazyColumn(state = scrollState) {
-                items(count = 12) {
-                    NewsItem(news = NewsTable(), toNewsDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
+            item {
+                CommonSpacer()
             }
         }
 
@@ -140,8 +127,8 @@ fun NewsItem(
     val placeholder = news.title == ""
     val tag = news.getTag()
     val color = when (tag) {
-        "公告", "更新" -> colorRed
-        "系統" -> colorPurple
+        NewsType.NEWS, NewsType.UPDATE -> colorRed
+        NewsType.SYSTEM -> colorPurple
         else -> MaterialTheme.colorScheme.primary
     }
     Column(
@@ -150,7 +137,7 @@ fun NewsItem(
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
             MainTitleText(
-                text = tag,
+                text = stringResource(id = tag.stringId),
                 backgroundColor = color,
                 modifier = Modifier.commonPlaceholder(visible = placeholder)
             )
@@ -255,6 +242,7 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                     return true
                                 }
 
+                                @SuppressLint("WebViewClientOnReceivedSslError")
                                 override fun onReceivedSslError(
                                     view: WebView?,
                                     handler: SslErrorHandler?,

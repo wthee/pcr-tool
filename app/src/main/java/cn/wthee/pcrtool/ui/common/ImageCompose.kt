@@ -41,6 +41,7 @@ fun ImageCompose(
     data: Any,
     ratio: Float,
     contentScale: ContentScale = ContentScale.FillWidth,
+    placeholder:Boolean = true,
     onSuccess: (SuccessResult) -> Unit = {}
 ) {
 
@@ -65,7 +66,11 @@ fun ImageCompose(
         onError = {
             loading.value = false
         },
-        modifier = mModifier.commonPlaceholder(visible = loading.value)
+        modifier = if(placeholder){
+            mModifier.commonPlaceholder(visible = loading.value)
+        }else{
+            mModifier
+        }
     )
 }
 

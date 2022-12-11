@@ -10,10 +10,13 @@ import cn.wthee.pcrtool.utils.intArrayList
 data class EventData(
     @ColumnInfo(name = "event_id") val eventId: Int = 10001,
     @ColumnInfo(name = "story_id") val storyId: Int = 1001,
+    @ColumnInfo(name = "original_event_id") val originalEventId: Int = 10001,
     @ColumnInfo(name = "start_time") val startTime: String = "2020/01/01 00:00:00",
     @ColumnInfo(name = "end_time") val endTime: String = "2020/01/07 00:00:00",
     @ColumnInfo(name = "title") val title: String = "???",
     @ColumnInfo(name = "unit_ids") val unitIds: String = "100101",
+    @ColumnInfo(name = "boss_enemy_id") val bossEnemyId: Int = 0,
+    @ColumnInfo(name = "boss_unit_id") val bossUnitId: Int = 0,
 ) {
 
     fun getEventTitle() = title.deleteSpace
@@ -27,4 +30,5 @@ data class EventData(
             arrayListOf()
         }
     }
+
 }

@@ -10,5 +10,5 @@ data class RoomCommentData(
     @ColumnInfo(name = "unit_name") val unitName: String = "",
     @ColumnInfo(name = "room_comments") val roomComment: String = ""
 ) {
-    fun getComment() = roomComment.replace("\\n", "").replace("-", "\n\n")
+    fun getCommentList() = roomComment.replace("\\n", "").split("-")
 }

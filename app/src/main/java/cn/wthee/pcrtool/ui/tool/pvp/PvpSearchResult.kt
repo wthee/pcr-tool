@@ -152,7 +152,7 @@ fun PvpSearchResult(
                         text = stringResource(id = R.string.data_get_error)
                     )
                     SubButton(
-                        text = "重新查询",
+                        text = stringResource(id = R.string.pvp_research),
                         modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
                         pvpViewModel.pvpResult.postValue(null)

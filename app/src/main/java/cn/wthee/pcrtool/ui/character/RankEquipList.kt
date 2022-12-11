@@ -70,11 +70,30 @@ fun RankEquipListItem(
     currentRank: MutableState<Int>,
     unitPromotion: UnitPromotion
 ) {
+    var dataState by remember { mutableStateOf(unitPromotion) }
+    if (dataState != unitPromotion) {
+        dataState = unitPromotion
+    }
+    val equipIconList: @Composable () -> Unit by remember {
+        mutableStateOf(
+            {
+                val allIds = dataState.getAllOrderIds()
+                VerticalGrid(spanCount = 2) {
+                    allIds.forEach {
+                        IconCompose(
+                            modifier = Modifier.padding(Dimen.smallPadding),
+                            data = ImageResourceHelper.getInstance().getEquipPic(it)
+                        )
+                    }
+                }
+            }
+        )
+    }
 
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
-            currentRank.value = unitPromotion.promotionLevel
+            currentRank.value = dataState.promotionLevel
             navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.set("currentRank", currentRank.value)
@@ -89,20 +108,12 @@ fun RankEquipListItem(
         ) {
             //RANK
             RankText(
-                rank = unitPromotion.promotionLevel,
+                rank = dataState.promotionLevel,
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                type = if (unitPromotion.promotionLevel == currentRank.value) 1 else 0
+                type = if (dataState.promotionLevel == currentRank.value) 1 else 0
             )
 
-            val allIds = unitPromotion.getAllOrderIds()
-            VerticalGrid(spanCount = 2) {
-                allIds.forEach {
-                    IconCompose(
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        data = ImageResourceHelper.getInstance().getEquipPic(it)
-                    )
-                }
-            }
+            equipIconList()
         }
     }
 }

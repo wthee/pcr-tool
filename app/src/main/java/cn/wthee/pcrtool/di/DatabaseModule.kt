@@ -144,4 +144,22 @@ class DatabaseModule {
     fun provideMockGachaDao(): MockGachaDao {
         return provideMockGachaDatabase().getMockGachaDao()
     }
+
+    @Provides
+    fun provideQuestDao(): QuestDao {
+        return when (getType()) {
+            2 -> provideAppDatabaseCN().getQuestDao()
+            3 -> provideAppDatabaseTW().getQuestDao()
+            else -> provideAppDatabaseJP().getQuestDao()
+        }
+    }
+
+    @Provides
+    fun provideEnemyDao(): EnemyDao {
+        return when (getType()) {
+            2 -> provideAppDatabaseCN().getEnemyDao()
+            3 -> provideAppDatabaseTW().getEnemyDao()
+            else -> provideAppDatabaseJP().getEnemyDao()
+        }
+    }
 }

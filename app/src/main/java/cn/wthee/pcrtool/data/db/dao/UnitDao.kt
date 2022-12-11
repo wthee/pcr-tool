@@ -9,7 +9,11 @@ import cn.wthee.pcrtool.data.db.view.*
 //角色最大编号
 const val maxUnitId = 200000
 
-//国服环奈
+/**
+ * 国服环奈
+ * 调整时需注意同步调整
+ * @see cn.wthee.pcrtool.data.db.view.GachaInfo
+ */
 const val limitedIds = """
     (
 		170101,
@@ -208,8 +212,8 @@ interface UnitDao {
             unit_profile.race,
             CAST((CASE WHEN unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
             CAST((CASE WHEN unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
-            unit_profile.birth_month,
-            unit_profile.birth_day,
+            CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR  unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
+            CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR  unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
             unit_profile.blood_type,
             unit_profile.favorite,
             unit_profile.voice,
@@ -220,14 +224,12 @@ interface UnitDao {
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
             unit_data.rarity,
-            COALESCE( actual_unit_background.unit_name, '' ) AS actual_name,
-            COALESCE(cts.comments, '......') AS comments
+            COALESCE( actual_unit_background.unit_name, '' ) AS actual_name
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
-            LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
         WHERE 
             unit_profile.unit_id = :unitId 
         GROUP BY unit_profile.unit_id """
@@ -557,7 +559,7 @@ interface UnitDao {
             WHEN  1 = :type AND b.is_limited = 0 AND b.rarity = 1 THEN 1 
             WHEN  2 = :type AND b.is_limited = 0 AND b.rarity = 2 THEN 1 
             WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id IN (:exUnitIdList)) OR a.unit_id IN ${limitedIds}) THEN 1
+            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id NOT IN (:exUnitIdList)) OR a.unit_id IN ${limitedIds}) THEN 1
             END
         ORDER BY b.start_time DESC
     """
@@ -565,33 +567,28 @@ interface UnitDao {
     suspend fun getGachaUnits(type: Int, exUnitIdList: List<Int>): List<GachaUnitInfo>
 
     /**
-     * 获取 Fes 角色编号
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            COALESCE( GROUP_CONCAT( b.unit_id, '-' ), '' ) AS unit_ids,
-            COALESCE( GROUP_CONCAT( c.unit_name, '-' ), '' ) AS unit_names
-        FROM
-            gacha_data AS a
-            LEFT JOIN gacha_exchange_lineup AS b ON a.exchange_id = b.exchange_id
-            LEFT JOIN unit_data AS c ON b.unit_id = c.unit_id 
-        WHERE
-            a.gacha_id LIKE '5%' 
-        GROUP BY
-            a.gacha_id 
-        ORDER BY
-            a.start_time DESC 
-        LIMIT 0, 1
-    """
-    )
-    suspend fun getFesUnitIds(): GachaFesUnitInfo
-
-    /**
      * 获取ex角色id
      */
     @SkipQueryVerification
     @Query("SELECT DISTINCT unit_id FROM redeem_unit")
     suspend fun getExUnitIdList(): List<Int>
+
+    /**
+     * 获取角色主页交流信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            unit_id,
+            GROUP_CONCAT(description, '-') AS comments
+        FROM
+            unit_comments 
+        WHERE
+            unit_id LIKE SUBSTR( :unitId, 0, 5 ) || '%'
+        GROUP BY
+            unit_id
+        """
+    )
+    suspend fun getHomePageComments(unitId: Int): List<CharacterHomePageComment>
 }

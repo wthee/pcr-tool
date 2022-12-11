@@ -23,10 +23,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.MockGachaHelper
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -193,7 +190,7 @@ fun MockGacha(
 
             FabCompose(
                 iconType = if (showResult) MainIconType.MOCK_GACHA_PAY else MainIconType.MOCK_GACHA,
-                text = if (showResult) "-1500" else stringResource(id = R.string.tool_mock_gacha)
+                text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
                 if (pickUpList.isNotEmpty()) {
                     if (!showResult) {
@@ -353,7 +350,7 @@ private fun updatePickUpList(data: GachaUnitInfo) {
         newList.remove(data)
     } else {
         if (pickUpList.size >= maxPick) {
-            ToastUtil.short("最多可选 $maxPick 名角色")
+            ToastUtil.short(getString(R.string.gacha_max_select_count, maxPick))
             return
         } else {
             newList.add(data)

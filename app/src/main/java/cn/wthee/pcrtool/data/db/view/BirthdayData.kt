@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.stringArrayList
 import java.util.*
@@ -59,5 +61,5 @@ data class BirthdayData(
     /**
      * 获取角色名
      */
-    fun getDesc() = "角色生日：" + unitNames.replace("-", "、")
+    fun getDesc() = getString(R.string.character_birthday, unitNames.replace("-", "、"))
 }

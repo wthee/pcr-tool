@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.MockGachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
@@ -30,6 +31,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MockGachaViewModel @Inject constructor(
+    private val gachaRepository: GachaRepository,
     private val unitRepository: UnitRepository,
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
@@ -42,7 +44,7 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getGachaUnits() = flow {
         try {
-            val fesUnitInfo = unitRepository.getFesUnitIds()
+            val fesUnitInfo = gachaRepository.getFesUnitIds()
             val fesList = arrayListOf<GachaUnitInfo>()
             fesUnitInfo.getIds().forEachIndexed { index, i ->
                 fesList.add(

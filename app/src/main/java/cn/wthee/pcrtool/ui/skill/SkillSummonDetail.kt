@@ -7,15 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.clan.BossSkillList
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import cn.wthee.pcrtool.viewmodel.SummonViewModel
 import kotlin.math.max
@@ -23,30 +24,30 @@ import kotlin.math.max
 /**
  * 技能召唤物信息
  *
- * @param unitId    召唤物id
+ * @param id    召唤物id 或敌人id enemyId
  * @param unitType  召唤物类型
  */
 @Composable
 fun SummonDetail(
-    unitId: Int,
+    id: Int,
     unitType: UnitType,
     level: Int,
     rank: Int,
-    rarity: Int,
+    rarity: Int
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxWidth()
     ) {
         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
-            EnemySummonDetail(unitId)
+            //敌人召唤物
+            EnemyDetail(enemyId = id)
         } else {
+            //角色召唤物
             CharacterSummonDetail(
-                unitId,
-                level,
-                rank,
-                rarity
+                unitId = id,
+                level = level,
+                rank = rank,
+                rarity = rarity
             )
         }
     }
@@ -72,17 +73,16 @@ private fun CharacterSummonDetail(
     //数值信息
     val attrs =
         attrViewModel.getCharacterInfo(unitId, property).collectAsState(initial = null).value
-
-
     //技能信息
     val loopData =
         skillViewModel.getCharacterSkillLoops(unitId)
             .collectAsState(initial = arrayListOf()).value
-    val iconTypes =
-        skillViewModel.getskillIconTypes(unitId).collectAsState(initial = hashMapOf()).value
+
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         basicInfo?.let {
@@ -96,7 +96,12 @@ private fun CharacterSummonDetail(
             )
             //等级等属性
             CaptionText(
-                text = "等级：${level} / Rank：${rank} / 星级：${rarity}",
+                text = stringResource(
+                    id = R.string.character_summon_info,
+                    level,
+                    rank,
+                    rarity
+                ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //位置
@@ -117,7 +122,6 @@ private fun CharacterSummonDetail(
                 //技能循环
                 SkillLoopList(
                     loopData,
-                    iconTypes,
                     unitType = UnitType.CHARACTER_SUMMON,
                     modifier = Modifier.padding(Dimen.largePadding)
                 )
@@ -132,51 +136,4 @@ private fun CharacterSummonDetail(
             }
         }
     }
-}
-
-/**
- * 敌人召唤物信息
- */
-@Composable
-private fun EnemySummonDetail(
-    unitId: Int,
-    clanViewModel: ClanViewModel = hiltViewModel(),
-) {
-    val enemyInfo = clanViewModel.getEnemyAttr(unitId).collectAsState(initial = null).value
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        enemyInfo?.let { enemyData ->
-            //名称
-            MainText(
-                text = enemyData.name,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.mediumPadding),
-                selectable = true
-            )
-            //等级
-            CaptionText(
-                text = enemyData.level.toString(),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            //描述
-            val desc = enemyData.getDesc()
-            Subtitle2(
-                text = desc,
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                )
-            )
-            //属性
-            val attr = enemyData.attr.enemy()
-            AttrList(attrs = attr)
-            BossSkillList(enemyData, UnitType.ENEMY_SUMMON)
-            CommonSpacer()
-        }
-    }
-
-
 }

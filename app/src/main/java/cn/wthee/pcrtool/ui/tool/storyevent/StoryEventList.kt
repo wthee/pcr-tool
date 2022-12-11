@@ -1,10 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,11 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
@@ -36,10 +37,12 @@ import kotlinx.coroutines.launch
 /**
  * 剧情活动
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StoryEventList(
-    scrollState: LazyGridState,
+    scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
+    toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
@@ -49,9 +52,9 @@ fun StoryEventList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (events.isNotEmpty()) {
-            LazyVerticalGrid(
+            LazyVerticalStaggeredGrid(
                 state = scrollState,
-                columns = GridCells.Adaptive(getItemWidth())
+                columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
                 items(
                     items = events,
@@ -59,7 +62,12 @@ fun StoryEventList(
                         it.eventId
                     }
                 ) {
-                    StoryEventItem(it, toCharacterDetail, toAllPics)
+                    StoryEventItem(
+                        event = it,
+                        toCharacterDetail = toCharacterDetail,
+                        toEventEnemyDetail = toEventEnemyDetail,
+                        toAllPics = toAllPics
+                    )
                 }
                 item {
                     CommonSpacer()
@@ -93,6 +101,7 @@ fun StoryEventList(
 fun StoryEventItem(
     event: EventData,
     toCharacterDetail: (Int) -> Unit,
+    toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
 ) {
     val type: String
@@ -101,45 +110,42 @@ fun StoryEventItem(
     val today = getToday()
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
-    val preEvent = sd.substring(0, 10) == "2030/12/30"
+    val previewEvent = sd.substring(0, 10) == "2030/12/30"
     val days = ed.days(sd)
-    if (days == "0" || days == "0天") {
+    if (days == stringResource(id = R.string.day, 0)) {
         showDays = false
     }
 
-
+    //支线
+    val isSub = event.eventId / 10000 == 2
+    //类型判断
     when {
         //支线
-        event.eventId / 10000 == 2 -> {
-            type = "支线"
+        isSub -> {
+            type = stringResource(id = R.string.story_event_sub)
             typeColor = colorGreen
             showDays = false
         }
         //复刻
-        event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
-            type = "复刻"
+        event.eventId / 10000 == 1 && event.eventId != event.originalEventId -> {
+            type = stringResource(id = R.string.story_event_re)
             typeColor = colorGold
         }
         //预告
-        sd.second(today) > 0 || preEvent -> {
-            type = "预告"
+        sd.second(today) > 0 || previewEvent -> {
+            type = stringResource(id = R.string.story_event_preview)
             typeColor = colorPurple
         }
         //正常
         else -> {
-            type = "活动"
+            type = stringResource(id = R.string.story_event_new)
             typeColor = colorRed
         }
     }
+
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
-    val comingSoon = today.second(sd) < 0 && (!preEvent)
-    val eventId = if (showDays) {
-        event.eventId
-    } else {
-        //支线
-        10000 + event.storyId % 1000
-    }
+    val comingSoon = today.second(sd) < 0 && (!previewEvent)
 
 
     Column(
@@ -157,7 +163,7 @@ fun StoryEventItem(
                 text = type,
                 backgroundColor = typeColor
             )
-            if (!preEvent) {
+            if (!previewEvent) {
                 MainTitleText(
                     text = sd.substring(0, 10),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -201,70 +207,75 @@ fun StoryEventItem(
                 }
             }
         }
+
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //banner 图片
-                    if (inProgress) {
-                        Box(
-                            modifier = Modifier
-                                .padding(Dimen.smallPadding)
-                                .weight(3f)
-                        ) {
-                            ImageCompose(
-                                data = ImageResourceHelper.getInstance()
-                                    .getUrl(EVENT_BANNER, eventId),
-                                ratio = RATIO_BANNER,
-                                modifier = Modifier.clip(MaterialTheme.shapes.medium)
-                            )
-                        }
-                    } else {
+                //banner 图片
+                if (inProgress || isSub || !hasTeaser(event.eventId)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.75f)
+                            .align(Alignment.CenterHorizontally)
+                    ) {
                         ImageCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(if (showDays) EVENT_TEASER else EVENT_BANNER, eventId),
-                            ratio = RATIO_TEASER,
-                            modifier = Modifier.clip(shapeTop())
+                                .getUrl(EVENT_BANNER, event.originalEventId),
+                            ratio = RATIO_BANNER,
+                            modifier = Modifier.clip(MaterialTheme.shapes.medium),
+                            placeholder = false
                         )
                     }
-
-                    //活动掉落角色图标，仅进行中活动显示
-                    if (inProgress && event.getUnitIdList().isNotEmpty()) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            horizontalAlignment = Alignment.End,
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            event.getUnitIdList().forEach {
-                                UnitIcon(
-                                    id = it,
-                                    onClickItem = toCharacterDetail
-                                )
-                            }
-                        }
-                    }
+                } else {
+                    ImageCompose(
+                        data = ImageResourceHelper.getInstance()
+                            .getUrl(EVENT_TEASER, event.eventId),
+                        ratio = RATIO_TEASER,
+                        modifier = Modifier.clip(shapeTop())
+                    )
                 }
-                //内容
-                MainContentText(
+
+                //标题
+                Subtitle1(
                     text = event.getEventTitle(),
                     modifier = Modifier.padding(Dimen.mediumPadding),
                     textAlign = TextAlign.Start,
                     selectable = true
                 )
-                //调试用
-                if (BuildConfig.DEBUG) {
-                    CaptionText(text = event.toString())
+
+                //掉落角色图标
+                if (event.getUnitIdList().isNotEmpty()) {
+                    Row {
+                        //sp boss 图标，处理id 311403 -> 311400
+                        if (!isSub && event.bossUnitId != 0) {
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance()
+                                    .getUrl(
+                                        ImageResourceHelper.ICON_UNIT,
+                                        event.bossUnitId / 10 * 10
+                                    ),
+                                modifier = Modifier.padding(start = Dimen.mediumPadding)
+                            ) {
+                                toEventEnemyDetail(event.bossEnemyId)
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        //活动掉落角色图标
+                        event.getUnitIdList().forEach { itemId ->
+                            val unitId = itemId % 10000 * 100 + 1
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+                                modifier = Modifier.padding(end = Dimen.mediumPadding)
+                            ) {
+                                toCharacterDetail(unitId)
+                            }
+                        }
+                    }
                 }
 
                 Row(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //查看立绘
@@ -276,11 +287,12 @@ fun StoryEventItem(
                     }
                     //结束日期
                     CaptionText(
-                        text = if (event.eventId / 10000 != 2) {
-                            ed
-                        } else {
+                        text = if (isSub) {
                             stringResource(R.string.no_limit)
-                        }
+                        } else {
+                            ed
+                        },
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -290,12 +302,26 @@ fun StoryEventItem(
 
 }
 
+/**
+ * 设置是否有teaser
+ */
+private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
+    2 -> eventId >= 10002
+    3 -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
+    4 -> eventId >= 10052 && eventId != 10055
+    else -> false
+} && eventId / 10000 == 1
+
 @Preview
 @Composable
 private fun StoryEventItemPreview() {
     PreviewBox {
         Column {
-            StoryEventItem(event = EventData(), toCharacterDetail = {}, toAllPics = { _, _ -> })
+            StoryEventItem(
+                event = EventData(),
+                toCharacterDetail = {},
+                toEventEnemyDetail = {},
+                toAllPics = { _, _ -> })
         }
     }
 }

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -24,7 +25,7 @@ import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -34,22 +35,23 @@ import kotlinx.coroutines.launch
 fun ClanBattleList(
     scrollState: LazyGridState,
     toClanBossInfo: (Int, Int, Int) -> Unit,
-    clanViewModel: ClanViewModel = hiltViewModel()
+    clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
 
     val clanList =
-        clanViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
+        clanBattleViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         val visible = clanList.isNotEmpty()
-        FadeAnimation(visible = visible) {
-            LazyVerticalGrid(
-                state = scrollState,
-                columns = GridCells.Adaptive(getItemWidth())
-            ) {
+        LazyVerticalGrid(
+            state = scrollState,
+            columns = GridCells.Adaptive(getItemWidth())
+        ) {
+            if(visible){
                 items(
                     items = clanList,
                     key = {
@@ -58,18 +60,14 @@ fun ClanBattleList(
                 ) {
                     ClanBattleItem(it, toClanBossInfo)
                 }
-                item {
-                    CommonSpacer()
-                }
-            }
-        }
-        FadeAnimation(visible = !visible) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(getItemWidth())
-            ) {
+            }else{
                 items(20) {
                     ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
                 }
+            }
+
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部

@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +33,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -82,9 +83,8 @@ fun SkillCompose(
             )
         }
         //普通技能
-        normalSkillData.forEachIndexed { index, skillDetail ->
+        normalSkillData.forEach { skillDetail ->
             SkillItem(
-                skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -103,9 +103,8 @@ fun SkillCompose(
             }
         }
 
-        spSkillData.forEachIndexed { index, skillDetail ->
+        spSkillData.forEach { skillDetail ->
             SkillItem(
-                skillIndex = index,
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -123,7 +122,6 @@ fun SkillCompose(
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
-    skillIndex: Int,
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
@@ -165,10 +163,61 @@ fun SkillItem(
     }
 
     //技能类型名
+    var isNormalSkill = true
     val type = when (unitType) {
-        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> getSkillType(skillDetail.skillId)
-        UnitType.ENEMY -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
-        UnitType.ENEMY_SUMMON -> "技能${skillIndex + 1}"
+        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> {
+            when (skillDetail.skillId % 1000) {
+                501 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.ex_skill)
+                }
+                511 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.ex_skill) + "+"
+                }
+                100 -> {
+                    isNormalSkill = false
+                    "SP" + stringResource(id = R.string.union_burst)
+                }
+                //sp 技能
+                101, 111, 102, 112, 103, 113 -> {
+                    "SP" + stringResource(
+                        id = R.string.skill_index,
+                        skillDetail.skillId % 10
+                    ) + if (skillDetail.skillId % 100 / 10 == 1) {
+                        "+"
+                    } else {
+                        ""
+                    }
+                }
+                1, 21 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.union_burst)
+                }
+                11 -> {
+                    isNormalSkill = false
+                    stringResource(id = R.string.union_burst) + "+"
+                }
+                else -> {
+                    val skillIndex = skillDetail.skillId % 10 - 1
+                    stringResource(
+                        id = R.string.skill_index,
+                        skillIndex
+                    ) + if (skillDetail.skillId % 1000 / 10 == 1) {
+                        "+"
+                    } else {
+                        ""
+                    }
+                }
+            }
+        }
+        UnitType.ENEMY, UnitType.ENEMY_SUMMON -> {
+            if (skillDetail.enemySkillIndex == 0) {
+                stringResource(id = R.string.union_burst)
+            } else {
+                stringResource(id = R.string.skill_index, skillDetail.enemySkillIndex)
+            }
+        }
     }
     val color = getSkillColor(type)
     val name =
@@ -241,7 +290,6 @@ fun SkillItem(
                             )
                         }
                         //准备时间，显示：时间大于 0 或 角色1、2技能
-                        val isNormalSkill = !(type.contains("连结") || type.contains("EX"))
                         if (skillDetail.castTime > 0 || (unitType == UnitType.CHARACTER && isNormalSkill)) {
                             CaptionText(
                                 text = stringResource(
@@ -353,6 +401,11 @@ fun SkillActionItem(
     map[2] = mark2
     map[3] = mark3
 
+    //等级提示
+    val expandTip = remember {
+        mutableStateOf(false)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -379,24 +432,21 @@ fun SkillActionItem(
                 modifier = Modifier.padding(Dimen.smallPadding),
                 color = MaterialTheme.colorScheme.onSurface,
                 text = buildAnnotatedString {
-                    skillAction.action.forEachIndexed { index, c ->
-                        var added = false
+                    skillAction.action.forEachIndexed { index, char ->
+                        //替换括号及括号内字体颜色
                         for (i in 0..3) {
                             map[i]?.forEach {
                                 if (index >= it.start && index <= it.end) {
-                                    added = true
                                     withStyle(style = SpanStyle(color = colors[i])) {
-                                        append(c)
+                                        append(char)
                                     }
                                     return@forEachIndexed
                                 }
                             }
                         }
-                        if (!added) {
-                            append(c)
-                        }
+                        //添加非括号标记的参数
+                        append(char)
                     }
-
                 }
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -417,19 +467,25 @@ fun SkillActionItem(
                 }
                 //技能等级超过tp限制等级的，添加标识
                 if (skillAction.isTpLimitAction) {
-                    val tip = stringResource(id = R.string.tip_tp_limit_level_action)
                     IconTextButton(
-                        icon = MainIconType.HELP,
+                        icon = if (!expandTip.value) MainIconType.HELP else MainIconType.CLOSE,
                         text = stringResource(R.string.tp_limit_level_action)
                     ) {
-                        ToastUtil.long(tip)
+                        expandTip.value = !expandTip.value
                     }
+                }
+            }
+
+            if (skillAction.isTpLimitAction) {
+                val tip = stringResource(id = R.string.tip_tp_limit_level_action)
+                ExpandAnimation(visible = expandTip.value) {
+                    CaptionText(text = tip, textAlign = TextAlign.Start)
                 }
             }
 
             //调试用
             if (BuildConfig.DEBUG) {
-                CaptionText(text = skillAction.debugText)
+                CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
             }
         }
     }
@@ -450,40 +506,12 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 }
 
 /**
- * 获取技能类型
- */
-private fun getSkillType(skillId: Int): String {
-    return when (skillId % 1000) {
-        501 -> "EX技能"
-        511 -> "EX技能+"
-        100 -> "SP连结爆发"
-        101 -> "SP技能 1"
-        111 -> "SP技能 1+"
-        102 -> "SP技能 2"
-        112 -> "SP技能 2+"
-        103 -> "SP技能 3"
-        113 -> "SP技能 3+"
-        1, 21 -> "连结爆发"
-        11 -> "连结爆发+"
-        else -> {
-            val skillIndex = skillId % 10 - 1
-            if (skillId % 1000 / 10 == 1) {
-                "技能 ${skillIndex}+"
-            } else {
-                "技能 $skillIndex"
-            }
-        }
-    }
-}
-
-
-/**
  * 获取技能名称颜色
  */
 @Composable
 fun getSkillColor(type: String): Color {
     return when {
-        type.contains("连结") -> colorGold
+        type.contains(stringResource(id = R.string.union_burst)) -> colorGold
         type.contains("EX") -> colorCopper
         type.contains("1") -> colorPurple
         type.contains("2") -> colorRed

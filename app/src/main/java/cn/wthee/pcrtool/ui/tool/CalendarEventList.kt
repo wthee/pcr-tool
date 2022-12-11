@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,9 +31,10 @@ import kotlinx.coroutines.launch
 /**
  * 日程记录
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarEventList(
-    scrollState: LazyListState,
+    scrollState: LazyStaggeredGridState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -40,7 +43,10 @@ fun CalendarEventList(
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
+        LazyVerticalStaggeredGrid(
+            state = scrollState,
+            columns = StaggeredGridCells.Adaptive(getItemWidth())
+        ) {
             items(dataList) {
                 CalendarEventItem(it)
             }
@@ -220,11 +226,14 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
                 events.add(
                     CalendarEventData(
                         title,
-                        (if ((multiple * 10).toInt() % 10 == 0) {
-                            multiple.toInt().toString()
-                        } else {
-                            multiple.toString()
-                        }) + "倍",
+                        stringResource(
+                            R.string.multiple,
+                            if ((multiple * 10).toInt() % 10 == 0) {
+                                multiple.toInt().toString()
+                            } else {
+                                multiple.toString()
+                            }
+                        ),
                         stringResource(id = if (type > 40) R.string.mana else R.string.drop),
                         dropMumColor
                     )

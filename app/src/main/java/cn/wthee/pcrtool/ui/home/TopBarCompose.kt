@@ -23,7 +23,10 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
 
@@ -41,6 +44,7 @@ fun TopBarCompose(
         mutableStateOf(false)
     }
 
+    //检查应用更新
     LaunchedEffect(null) {
         noticeViewModel.check()
     }
@@ -113,6 +117,7 @@ fun TopBarCompose(
 @Composable
 private fun AppUpdateContent(appNotice: AppNotice) {
     val context = LocalContext.current
+    val releaseUrl = stringResource(id = R.string.github_release_url, appNotice.title)
 
     MainCard(
         modifier = Modifier.padding(
@@ -149,15 +154,17 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     icon = MainIconType.GITHUB_RELEASE,
                     text = stringResource(id = R.string.github),
                 ) {
-                    BrowserUtil.open(
-                        context,
-                        Constants.GITHUB_RELEASE_URL + appNotice.title
-                    )
+                    BrowserUtil.open(context, releaseUrl)
                 }
             }
 
             //日期
-            CaptionText(text = "${appNotice.date.formatTime.substring(0, 10)} 发布")
+            CaptionText(
+                text = stringResource(
+                    id = R.string.release,
+                    appNotice.date.formatTime.substring(0, 10)
+                )
+            )
 
             //内容
             MainContentText(
@@ -199,7 +206,7 @@ private fun AppUpdateContentPreview() {
             AppNotice(
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- 更新测试\n- BUGBUGBUG",
+                message = "- BUGBUGBUG",
                 file_url = "123"
             )
         )

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.utils.Constants
 
 
 /**
@@ -51,15 +50,4 @@ data class CharacterInfo(
         }
     }
 
-    /**
-     * 攻击
-     */
-    fun getAtkType() = when (atkType) {
-        1 -> "物理"
-        2 -> "魔法"
-        else -> "未知"
-    }
 }
-
-//格式化
-fun getFixed(str: String) = if (str == "999") Constants.UNKNOWN else str

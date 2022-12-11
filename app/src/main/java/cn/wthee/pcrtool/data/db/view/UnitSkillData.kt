@@ -99,6 +99,9 @@ data class UnitSkillData(
         return list
     }
 
+    /**
+     * 获取所有技能id，不过滤为0的
+     */
     fun getEnemySkillId(): ArrayList<Int> {
         return arrayListOf(
             union_burst,

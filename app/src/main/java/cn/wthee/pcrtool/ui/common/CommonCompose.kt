@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -38,7 +39,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -239,20 +239,6 @@ fun CaptionText(
         modifier = modifier,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
-    )
-}
-
-/**
- * 分割线
- */
-@Composable
-fun DivCompose(modifier: Modifier = Modifier) {
-    Spacer(
-        modifier = modifier
-            .padding(Dimen.largePadding)
-            .width(Dimen.lineWidth)
-            .height(Dimen.lineHeight)
-            .background(MaterialTheme.colorScheme.primary)
     )
 }
 
@@ -524,9 +510,12 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
  * 加载中
  */
 @Composable
-fun CircularProgressCompose(size: Dp = Dimen.menuIconSize) {
+fun CircularProgressCompose(
+    modifier: Modifier = Modifier,
+    size: Dp = Dimen.menuIconSize
+) {
     CircularProgressIndicator(
-        modifier = Modifier
+        modifier = modifier
             .size(size)
             .padding(Dimen.smallPadding),
         color = MaterialTheme.colorScheme.primary,
@@ -754,6 +743,8 @@ fun BottomSearchBar(
         }
     }
 
+
+    //focusRequester
     Box(
         modifier = modifier
             .background(
@@ -765,7 +756,8 @@ fun BottomSearchBar(
             modifier = Modifier
                 .fillMaxWidth(if (isImeVisible) 1f else 0f)
                 .padding(Dimen.smallPadding)
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .alpha(if (isImeVisible) 1f else 0f),
             value = keywordInputState.value,
             shape = MaterialTheme.shapes.medium,
             onValueChange = { keywordInputState.value = it.deleteSpace },
@@ -813,7 +805,7 @@ fun BottomSearchBar(
 fun CenterTipText(text: String) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .heightIn(min = Dimen.cardHeight),
         contentAlignment = Alignment.Center
     ) {
@@ -825,18 +817,6 @@ fun CenterTipText(text: String) {
         )
     }
 }
-
-/**
- * 服务器版本名称
- */
-@Composable
-fun getRegionName(region: Int) = stringResource(
-    id = when (region) {
-        2 -> R.string.db_cn
-        3 -> R.string.db_tw
-        else -> R.string.db_jp
-    }
-)
 
 /**
  * 通用标题内容组件，用例：角色属性
@@ -873,7 +853,7 @@ fun CommonGroupTitle(
     titleEnd: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = colorWhite,
-    iconSize:Dp = Dimen.iconSize
+    iconSize: Dp = Dimen.iconSize
 ) {
     Row(
         modifier = modifier

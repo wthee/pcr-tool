@@ -10,5 +10,4 @@ data class GachaUnitInfo(
     @ColumnInfo(name = "unit_name") val unitName: String,
     @ColumnInfo(name = "is_limited") val isLimited: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
-) {
-}
+)

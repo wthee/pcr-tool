@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.stringArrayList
 
 /**
  * 公会人员信息
@@ -17,6 +18,18 @@ data class GuildAllMember(
     @ColumnInfo(name = "unit_names") var unitNames: String = "0-0",
 ) {
     fun getDesc() = description.ifBlank { "?" }
+
+    /**
+     * 获取名字，（之前的
+     */
+    fun getNameList(): ArrayList<String> {
+        val names = unitNames.stringArrayList
+        val newNames = arrayListOf<String>()
+        names.forEach {
+            newNames.add(it.substringBefore('（'))
+        }
+        return newNames
+    }
 }
 
 data class GuildMemberInfo(

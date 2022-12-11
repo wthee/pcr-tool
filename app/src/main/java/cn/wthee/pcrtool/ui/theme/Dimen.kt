@@ -6,7 +6,7 @@ object Dimen {
 
     val cardElevation = 4.dp
 
-    val textElevation = 1.dp
+    val textElevation = 1.5.dp
 
     val fabSize = 40.dp
 

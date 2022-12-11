@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.ui.MainActivity
 
+/**
+ * 默认暗色主题
+ */
 private val DarkColorPalette = darkColorScheme(
     primary = colorPrimaryDark,
     onPrimary = colorWhite,
@@ -30,6 +33,9 @@ private val DarkColorPalette = darkColorScheme(
     outline = colorGrayDark,
 )
 
+/**
+ * 默认亮色主题
+ */
 private val LightColorPalette = lightColorScheme(
     primary = colorPrimary,
     onPrimary = colorWhite,
@@ -60,6 +66,7 @@ fun PCRToolComposeTheme(
     content: @Composable () -> Unit
 ) {
 
+    //启用动态色彩判断
     val dynamicColor =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
 
@@ -69,6 +76,7 @@ fun PCRToolComposeTheme(
         darkTheme -> DarkColorPalette
         else -> LightColorPalette
     }
+
     MaterialTheme(
         colorScheme = colorScheme,
         content = content,

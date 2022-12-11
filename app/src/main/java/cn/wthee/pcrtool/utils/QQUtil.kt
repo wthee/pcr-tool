@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import cn.wthee.pcrtool.R
 
 
 /**
@@ -23,6 +24,6 @@ fun joinQQGroup(context: Context) {
             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val mClipData = ClipData.newPlainText("OcrText", qqGroup)
         clipboardManager.setPrimaryClip(mClipData)
-        ToastUtil.short("已复制QQ群号：$qqGroup")
+        ToastUtil.short(getString(R.string.copy_qq_group, qqGroup))
     }
 }

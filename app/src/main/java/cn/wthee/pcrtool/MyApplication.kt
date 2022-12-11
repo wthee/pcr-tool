@@ -60,7 +60,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             .networkCachePolicy(CachePolicy.ENABLED)
             .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.5).build())
             .okHttpClient {
-                ApiUtil.getClient(60)
+                ApiUtil.buildClient()
             }
             .build()
     }

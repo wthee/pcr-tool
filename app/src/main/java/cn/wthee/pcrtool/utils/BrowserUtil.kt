@@ -27,7 +27,12 @@ object BrowserUtil {
             intent.action = Intent.ACTION_VIEW
             intent.data = Uri.parse(url)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(Intent.createChooser(intent, "在浏览器中打开"))
+            context.startActivity(
+                Intent.createChooser(
+                    intent,
+                    getString(R.string.open_browser)
+                )
+            )
         }
     }
 

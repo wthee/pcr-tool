@@ -65,6 +65,17 @@ class CharacterViewModel @Inject constructor(
     }
 
     /**
+     * 获取角色基本资料
+     *
+     * @param unitId 角色编号
+     */
+    fun getHomePageComments(unitId: Int) = flow {
+        //校验是否未多角色卡
+        val data = unitRepository.getHomePageComments(unitId)
+        emit(data)
+    }
+
+    /**
      * 获取角色小屋对话
      *
      * @param unitId 角色编号

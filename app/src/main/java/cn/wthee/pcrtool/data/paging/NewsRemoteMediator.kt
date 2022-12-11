@@ -54,17 +54,19 @@ class NewsRemoteMediator(
                     newsDao.deleteByRegionAndQuery(region, keyword)
                 }
 
-                //保存远程键
-                remoteKeyDao.insert(
-                    RemoteKey(
-                        query = "${region}|${keyword}",
-                        nextKey = response?.last()?.id
+                if (response?.isNotEmpty() == true) {
+                    //保存远程键
+                    remoteKeyDao.insert(
+                        RemoteKey(
+                            query = "${region}|${keyword}",
+                            nextKey = response.last().id
+                        )
                     )
-                )
 
-                //保存到本地
-                response?.let {
-                    newsDao.insertAll(it)
+                    //保存到本地
+                    response.let {
+                        newsDao.insertAll(it)
+                    }
                 }
             }
 

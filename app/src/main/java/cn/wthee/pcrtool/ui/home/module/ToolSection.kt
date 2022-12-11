@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.home.module
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.edit
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
@@ -24,6 +25,8 @@ import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.IconTextButton
 import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.home.Section
+import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -36,6 +39,33 @@ data class ToolMenuData(
     val iconType: MainIconType,
     var type: ToolMenuType = ToolMenuType.CHARACTER
 )
+
+
+/**
+ * 功能模块
+ */
+@Composable
+fun ToolSection(
+    actions: NavActions,
+    isEditMode: Boolean,
+) {
+    val id = OverviewType.TOOL.id
+    Section(
+        id = id,
+        titleId = R.string.function,
+        iconType = MainIconType.FUNCTION,
+        isEditMode = isEditMode,
+        onClick = {
+            if (isEditMode)
+                editOverviewMenuOrder(id)
+            else
+                actions.toToolMore(false)
+        }
+    ) {
+        ToolMenu(actions = actions)
+    }
+}
+
 
 /**
  * 菜单
@@ -137,7 +167,9 @@ private fun MenuItem(
     }
 }
 
-//菜单跳转
+/**
+ * 菜单跳转
+ */
 fun getAction(
     actions: NavActions,
     tool: ToolMenuData
@@ -170,8 +202,9 @@ fun getAction(
 
 }
 
-//获取菜单数据
-@Composable
+/**
+ * 获取菜单数据
+ */
 fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
     val tool = when (toolMenuType) {
         ToolMenuType.CHARACTER -> ToolMenuData(R.string.character, MainIconType.CHARACTER)
@@ -207,7 +240,9 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
     return tool
 }
 
-//编辑排序
+/**
+ * 编辑模块排序
+ */
 fun editToolMenuOrder(id: Int) {
     val sp = mainSP()
     val orderStr = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""

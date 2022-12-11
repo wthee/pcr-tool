@@ -26,7 +26,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.stringArrayList
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -87,7 +86,7 @@ private fun GuildItem(
     toCharacterDetail: (Int) -> Unit
 ) {
     val memberList = arrayListOf<GuildMemberInfo>()
-    val names = guild.unitNames.stringArrayList
+    val names = guild.getNameList()
     var masterName = ""
     guild.unitIds.intArrayList.forEachIndexed { index, unitId ->
         try {

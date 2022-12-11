@@ -85,7 +85,7 @@ fun AllCardList(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    MainTitleText(text = "基本")
+                    MainTitleText(text = stringResource(id = R.string.basic))
                     Spacer(modifier = Modifier.weight(1f))
                     MainText(text = basicUrls.size.toString())
                 }
@@ -104,7 +104,7 @@ fun AllCardList(
                     .fillMaxWidth(),
             ) {
                 MainTitleText(
-                    text = "剧情"
+                    text = stringResource(id = R.string.story)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (storyUrls == null) {
@@ -116,7 +116,7 @@ fun AllCardList(
             if (storyUrls != null) {
                 if (storyUrls.isEmpty()) {
                     MainText(
-                        text = "暂无剧情信息",
+                        text = stringResource(id = R.string.no_story_info),
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(
@@ -183,7 +183,7 @@ private fun CardGridList(
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier
-                    .padding(Dimen.largePadding),
+                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding),
                 onClick = {
                     //下载
                     val loaded = loadedPicMap[picUrl] != null
@@ -213,7 +213,12 @@ private fun CardGridList(
  */
 private fun getFileName(url: String): String {
     return try {
-        url.split('/').last().split('.')[0]
+        val type = when {
+            url.contains("story") -> "story"
+            url.contains("actual_profile") -> "unit_actual"
+            else -> "unit"
+        } + "_"
+        type + url.split('/').last().split('.')[0]
     } catch (e: Exception) {
         System.currentTimeMillis().toString()
     }

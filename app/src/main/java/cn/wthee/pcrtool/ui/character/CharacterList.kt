@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.getFixed
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.SortType
@@ -48,7 +47,6 @@ import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -83,9 +81,7 @@ fun CharacterList(
     }
 
     filter.value?.let { filterValue ->
-        filterValue.starIds =
-            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
-                ?: arrayListOf()
+        filterValue.starIds = FilterCharacter.getStarIdList()
     }
     val characterList =
         viewModel.getCharacterInfoList(filter.value).collectAsState(initial = arrayListOf()).value
@@ -107,7 +103,7 @@ fun CharacterList(
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                    contentPadding = PaddingValues(Dimen.commonItemPadding)
                 ) {
                     items(
                         items = characterList,
@@ -220,11 +216,12 @@ fun CharacterItem(
     }
     //主色
     val initColor = colorWhite
-    var cardMainColor by remember {
+    var cardMaskColor by remember {
         mutableStateOf(initColor)
     }
     //主要字体颜色
     val textColor = if (loadSuccess) colorWhite else colorBlack
+
 
     MainCard(
         modifier = modifier,
@@ -242,65 +239,28 @@ fun CharacterItem(
                 //取色
                 Palette.from(result.drawable.toBitmap()).generate { palette ->
                     palette?.let {
-                        cardMainColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
+                        cardMaskColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
                     }
                 }
             }
-            SlideAnimation(visible = loved) {
-                IconCompose(
-                    data = MainIconType.LOVE_FILL,
-                    size = Dimen.mediumIconSize,
-                    modifier = Modifier.padding(Dimen.mediumPadding)
-                )
-            }
             //名称阴影效果
             if (loadSuccess) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            start = Dimen.mediumPadding + Dimen.textElevation,
-                            end = Dimen.mediumPadding,
-                            top = Dimen.mediumPadding + Dimen.textElevation,
-                            bottom = Dimen.mediumPadding
-                        )
-                        .fillMaxWidth(1f - RATIO_SHAPE)
-                        .align(Alignment.BottomStart),
-                ) {
-                    Subtitle1(
-                        text = character.getNameL(),
-                        color = MaterialTheme.colorScheme.primary,
-                        selectable = true
-                    )
-                    MainText(
-                        text = character.getNameF(),
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.titleLarge,
-                        selectable = true
-                    )
-                }
+                CharacterName(
+                    color = MaterialTheme.colorScheme.primary,
+                    name = character.getNameF(),
+                    nameExtra = character.getNameL(),
+                    isBorder = true,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                )
             }
             //名称
-            Column(
-                modifier = Modifier
-                    .padding(Dimen.mediumPadding)
-                    .fillMaxWidth(1f - RATIO_SHAPE)
-                    .align(Alignment.BottomStart),
-            ) {
-                Subtitle1(
-                    text = character.getNameL(),
-                    color = textColor,
-                    selectable = true
-                )
-                MainText(
-                    text = character.getNameF(),
-                    color = textColor,
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.titleLarge,
-                    selectable = true
-                )
-            }
-
+            CharacterName(
+                color = textColor,
+                name = character.getNameF(),
+                nameExtra = character.getNameL(),
+                isBorder = false,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
 
             //其它信息
             SlideRTLAnimation(
@@ -316,8 +276,8 @@ fun CharacterItem(
                         .background(
                             brush = Brush.horizontalGradient(
                                 colors = listOf(
-                                    cardMainColor,
-                                    cardMainColor,
+                                    cardMaskColor,
+                                    cardMaskColor,
                                     MaterialTheme.colorScheme.primary,
                                 ),
                             ),
@@ -327,7 +287,10 @@ fun CharacterItem(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(Dimen.mediumPadding),
+                            .padding(
+                                horizontal = Dimen.mediumPadding,
+                                vertical = Dimen.smallPadding
+                            ),
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.SpaceAround
                     ) {
@@ -339,19 +302,23 @@ fun CharacterItem(
                         )
                         //生日
                         Subtitle2(
-                            text = "${getFixed(character.birthMonth)}月${getFixed(character.birthDay)}日",
+                            text = stringResource(
+                                id = R.string.date_m_d,
+                                getFixed(character.birthMonth),
+                                getFixed(character.birthDay)
+                            ),
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
                         //体重
                         Subtitle2(
-                            text = getFixed(character.weight) + "KG",
+                            text = getFixed(character.weight) + " KG",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
                         //身高
                         Subtitle2(
-                            text = getFixed(character.height) + "CM",
+                            text = getFixed(character.height) + " CM",
                             fontWeight = FontWeight.Bold,
                             color = textColor
                         )
@@ -366,7 +333,7 @@ fun CharacterItem(
                         Row {
                             //获取方式
                             CharacterTag(
-                                modifier = Modifier.padding(end = Dimen.mediumPadding),
+                                modifier = Modifier.padding(end = Dimen.smallPadding),
                                 text = limitType,
                                 backgroundColor = limitColor,
                                 textColor = textColor
@@ -374,7 +341,11 @@ fun CharacterItem(
                             //攻击
                             CharacterTag(
                                 modifier = Modifier.padding(end = Dimen.mediumPadding),
-                                text = character.getAtkType(),
+                                text = when (character.atkType) {
+                                    1 -> stringResource(id = R.string.physical)
+                                    2 -> stringResource(id = R.string.magic)
+                                    else -> stringResource(id = R.string.unknown)
+                                },
                                 backgroundColor = getAtkColor(atkType = character.atkType),
                                 textColor = textColor
                             )
@@ -407,12 +378,23 @@ fun CharacterItem(
                     CaptionText(
                         text = character.startTime.formatTime.substring(0, 10),
                         color = textColor,
-                        modifier = Modifier.padding(Dimen.mediumPadding)
+                        modifier = Modifier.padding(
+                            top = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding,
+                            bottom = Dimen.smallPadding
+                        )
                     )
-
                 }
             }
 
+            //收藏标识
+            FadeAnimation(visible = loved) {
+                IconCompose(
+                    data = MainIconType.LOVE_FILL,
+                    size = Dimen.textIconSize,
+                    modifier = Modifier.padding(Dimen.mediumPadding)
+                )
+            }
         }
 
     }
@@ -440,6 +422,50 @@ private fun CharacterTag(
             color = textColor,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.ExtraBold
+        )
+    }
+}
+
+/**
+ * 角色名称
+ */
+@Composable
+private fun CharacterName(
+    color: Color,
+    name: String,
+    nameExtra: String,
+    isBorder: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val mModifier = if (isBorder) {
+        modifier
+            .padding(
+                start = Dimen.mediumPadding + Dimen.textElevation,
+                end = Dimen.mediumPadding,
+                top = Dimen.mediumPadding + Dimen.textElevation,
+                bottom = Dimen.mediumPadding
+            )
+
+    } else {
+        modifier
+            .padding(Dimen.mediumPadding)
+    }
+
+    Column(
+        modifier = mModifier
+            .fillMaxWidth(1f - RATIO_SHAPE)
+    ) {
+        Subtitle1(
+            text = nameExtra,
+            color = color,
+            selectable = !isBorder
+        )
+        MainText(
+            text = name,
+            color = color,
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.titleLarge,
+            selectable = !isBorder
         )
     }
 }

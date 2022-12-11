@@ -4,6 +4,8 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
 
 /**
@@ -46,43 +48,50 @@ class FilterCharacter(
     var asc: Boolean = false,
     /**
      *  1:常驻 2：限定 3：活动限定 4：额外角色
-      */
-    var type: Int = 0
-) {
+     */
+    var type: Int = 0,
     /**
      * 收藏的角色编号
      */
-    var starIds = arrayListOf<Int>()
-        set(value) {
-            val list = arrayListOf<Int>()
-            value.forEach {
-                list.add(it.toInt())
-            }
-            field = list
-        }
+    var starIds: ArrayList<Int> = arrayListOf()
 
-
-    fun addOrRemove(vararg id: Int) {
-        val sp = mainSP()
-        val list = starIds
-        id.forEach {
-            if (list.contains(it)) {
-                list.remove(it)
-            } else {
-                list.add(it)
-            }
-        }
-        //保存
-        sp.edit {
-            putString(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
-        }
-    }
+) {
 
     fun position() = when (this.positon) {
         1 -> arrayListOf(0, 299)
         2 -> arrayListOf(300, 599)
         3 -> arrayListOf(600, 9999)
         else -> arrayListOf(0, 9999)
+    }
+
+    companion object {
+
+        /**
+         * 获取收藏列表
+         */
+        fun getStarIdList() =
+            (GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
+                ?: arrayListOf<Double>())
+                .toIntList()
+
+        /**
+         * 新增或删除
+         */
+        fun addOrRemove(vararg id: Int) {
+            val sp = mainSP()
+            val list = getStarIdList()
+            id.forEach {
+                if (list.contains(it)) {
+                    list.remove(it)
+                } else {
+                    list.add(it)
+                }
+            }
+            //保存
+            sp.edit {
+                putString(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
+            }
+        }
     }
 
 }

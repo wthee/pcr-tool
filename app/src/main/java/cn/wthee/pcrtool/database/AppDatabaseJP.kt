@@ -29,6 +29,8 @@ abstract class AppDatabaseJP : RoomDatabase() {
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
     abstract fun getClanDao(): ClanBattleDao
+    abstract fun getQuestDao(): QuestDao
+    abstract fun getEnemyDao(): EnemyDao
 
     companion object {
 

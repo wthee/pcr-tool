@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -14,7 +13,6 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,29 +27,24 @@ class NewsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val pageSize = 10
-
-
-    var newsPageList: Flow<PagingData<NewsTable>>? = null
     val newsDetail = MutableLiveData<ResponseData<NewsTable>>()
 
     /**
      * 公告数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getNewsPager(region: Int, keyword: String) {
-        newsPageList = Pager(
-            config = PagingConfig(
-                pageSize = pageSize
-            ),
-            remoteMediator = NewsRemoteMediator(
-                region,
-                keyword,
-                database,
-                apiRepository
-            )
-        ) {
-            newsDao.pagingSource(region, keyword)
-        }.flow
+    fun getNewsPager(region: Int, keyword: String) = Pager(
+        config = PagingConfig(
+            pageSize = pageSize
+        ),
+        remoteMediator = NewsRemoteMediator(
+            region,
+            keyword,
+            database,
+            apiRepository
+        )
+    ) {
+        newsDao.pagingSource(region, keyword)
     }
 
     /**

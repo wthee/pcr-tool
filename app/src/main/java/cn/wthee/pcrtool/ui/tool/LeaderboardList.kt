@@ -67,7 +67,10 @@ fun LeaderboardList(
                 .fillMaxSize()
         ) {
             //更新
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.padding(vertical = Dimen.mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 MainTitleText(
                     text = "GameWith",
                     modifier = Modifier
@@ -145,7 +148,7 @@ fun LeaderboardList(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-        stringResource(id = R.string.quest),
+//        stringResource(id = R.string.quest),
         stringResource(id = R.string.tower),
         stringResource(id = R.string.jjc),
         stringResource(id = R.string.clan),
@@ -201,7 +204,8 @@ private fun SortTitleButton(
                     asc.value = false
                 }
             },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         MainText(
             text = text,
@@ -266,7 +270,7 @@ private fun LeaderboardItem(info: LeaderboardData, index: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconCompose(data = info.icon, size = Dimen.iconSize)
-                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
+//                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
                 GradeText(info.tower, info.towerFlag, modifier = Modifier.weight(0.25f))
                 GradeText(info.pvp, info.pvpFlag, modifier = Modifier.weight(0.25f))
                 GradeText(info.clan, info.clanFlag, modifier = Modifier.weight(0.25f))
@@ -306,7 +310,7 @@ fun GradeText(
         )
         if (flag == 1) {
             CaptionText(
-                text = "暂定",
+                text = stringResource(id = R.string.experimental),
             )
         }
     }

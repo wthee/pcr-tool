@@ -13,5 +13,16 @@ object GsonUtil {
     inline fun <reified T : Any> fromJson(json: String?): T? {
         return Gson().fromJson(json, T::class.java)
     }
+
 }
 
+/**
+ * fromJson 列表默认 double，再转成 int
+ */
+fun ArrayList<Double>.toIntList():ArrayList<Int>{
+    val list = arrayListOf<Int>()
+    this.forEach {
+        list.add(it.toInt())
+    }
+    return list
+}
