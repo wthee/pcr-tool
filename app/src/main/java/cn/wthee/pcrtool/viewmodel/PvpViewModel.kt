@@ -87,7 +87,7 @@ class PvpViewModel @Inject constructor(
     fun getRecentlyUsedUnitList(characterDataList: List<PvpCharacterData>) = flow {
         try {
             val today = getToday()
-            //获取前30天
+            //获取前60天
             val beforeDate = calcDate(today, 60, true)
             val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
             val unitList = arrayListOf<PvpCharacterData>()
@@ -110,6 +110,7 @@ class PvpViewModel @Inject constructor(
                     )
                 )
             }
+            //数量限制
             val limit = 50
             var list = unitList.sortedByDescending { it.count }
             if (list.size > limit) {
