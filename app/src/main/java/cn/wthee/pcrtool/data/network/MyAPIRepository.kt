@@ -302,9 +302,42 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
-    private
-    fun <T> isError(response: ResponseData<T>): Boolean {
-        return response.message == "failure" || response.data == null
+
+    /**
+     * 查询网站信息
+     */
+    suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>> {
+        //请求
+        try {
+            val response = service.getWebsiteList()
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "website")
+            }
+        }
+        return error()
     }
 
+    /**
+     * 校验接口是否正常返回
+     */
+    private fun <T> isError(response: ResponseData<T>): Boolean {
+        return response.message == "failure" || response.data == null
+    }
 }
+
+/**
+ * 已返回结果，校验结果是否正常
+ * response 为 null 时，为加载中
+ */
+fun <T> isResultError(response: ResponseData<T>?): Boolean {
+    return response != null && response.status != 0
+}
+
+

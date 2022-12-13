@@ -133,6 +133,7 @@
     <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
+    <string name="tool_website">常用网站</string>
     <string name="tool_clan">公会战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
@@ -159,7 +160,7 @@
     <string name="comic_order">第%s话</string>
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
-    <string name="other">其它</string>
+    <string name="other">其他</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
@@ -709,5 +710,11 @@
     <!--请求-->
     <string name="respon_error">未正常获取数据，请重试~</string>
     <string name="respon_cancel">查询取消~</string>
+
+    <!--网站类型-->
+    <string name="website_type_1">第三方网站</string>
+    <string name="website_type_2">官方网站</string>
+    <string name="website_type_3">第三方社交账号</string>
+    <string name="website_type_4">官方社交账号</string>
 
 </resources>

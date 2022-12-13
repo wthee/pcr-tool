@@ -197,6 +197,7 @@ fun getAction(
             ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
             ToolMenuType.EXTRA_EQUIP -> actions.toExtraEquipList()
             ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
+            ToolMenuType.WEBSITE -> actions.toWebsiteList()
         }
     }
 
@@ -233,6 +234,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_travel,
             MainIconType.EXTRA_EQUIP_DROP
         )
+        ToolMenuType.WEBSITE -> ToolMenuData(R.string.tool_website, MainIconType.WEBSITE_BOOKMARK)
 
     }
     //设置模块类别

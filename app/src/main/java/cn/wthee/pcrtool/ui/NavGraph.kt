@@ -117,6 +117,7 @@ object Navigation {
     const val EVENT_ENEMY_DETAIL = "eventEnemyDetail"
     const val ENEMY_DETAIL = "enemyDetail"
     const val ENEMY_ID = "enemyId"
+    const val PCR_WEBSITE = "pcrWebsite"
 }
 
 /**
@@ -810,6 +811,18 @@ fun NavGraph(
                     actions.toSummonDetail
                 )
             }
+
+            //网站
+            composable(route = Navigation.PCR_WEBSITE,
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut })
+            {
+                val scrollState = rememberLazyListState()
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                WebsiteList(scrollState)
+            }
         }
     }
 }
@@ -1131,5 +1144,12 @@ class NavActions(navController: NavHostController) {
      */
     val toEventEnemyDetail: (Int) -> Unit = { enemyId ->
         navController.navigate("${Navigation.EVENT_ENEMY_DETAIL}/${enemyId}")
+    }
+
+    /**
+     * 网站聚合
+     */
+    val toWebsiteList = {
+        navController.navigate(Navigation.PCR_WEBSITE)
     }
 }

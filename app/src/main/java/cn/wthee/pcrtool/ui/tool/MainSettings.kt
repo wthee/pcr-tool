@@ -314,6 +314,7 @@ fun SettingItem(
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     summaryColor: Color = MaterialTheme.colorScheme.outline,
     padding: Dp = Dimen.largePadding,
+    colorFilter: ColorFilter? = ColorFilter.tint(MaterialTheme.colorScheme.primary),
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -331,7 +332,7 @@ fun SettingItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            colorFilter = colorFilter,
         )
         Column(
             modifier = Modifier
