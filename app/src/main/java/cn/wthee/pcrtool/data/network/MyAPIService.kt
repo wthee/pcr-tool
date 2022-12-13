@@ -81,6 +81,12 @@ interface MyAPIService {
     suspend fun getStoryList(@Body body: RequestBody): ResponseData<String>
 
     /**
+     * 获取网站列表
+     */
+    @POST("website/list")
+    suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>>
+
+    /**
      * 排行评级信息
      */
     @POST("leaders/tier")

@@ -393,6 +393,11 @@ enum class MainIconType(val icon: ImageVector) {
     SORT_NULL(Icons.Rounded.UnfoldMore),
 
     /**
+     * 网站收藏
+     */
+    WEBSITE_BOOKMARK(Icons.Rounded.Bookmarks),
+
+    /**
      * 角色评级
      */
     LEADER_TIER(Icons.Rounded.WorkspacePremium),

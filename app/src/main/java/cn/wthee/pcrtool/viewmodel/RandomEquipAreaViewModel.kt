@@ -22,13 +22,13 @@ class RandomEquipAreaViewModel @Inject constructor(
      * 获取掉落地信息
      */
     fun getEquipArea(equipId: Int) = flow {
-        val data = apiRepository.getEquipArea(equipId).data
-        data?.let {
+        val response = apiRepository.getEquipArea(equipId)
+        response.data?.let {
             val maxArea = equipmentRepository.getMaxArea() % 100
-            emit(
-                it.filter { areaData -> areaData.area <= maxArea }
-            )
+            val filterList =  it.filter { areaData -> areaData.area <= maxArea }
+            response.data = filterList
         }
+        emit(response)
     }
 
 }

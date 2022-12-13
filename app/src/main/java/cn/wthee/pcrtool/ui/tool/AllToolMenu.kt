@@ -65,6 +65,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     searchList.addItem(ToolMenuType.PVP_SEARCH)
     searchList.addItem(ToolMenuType.LEADER)
     searchList.addItem(ToolMenuType.LEADER_TIER)
+    searchList.addItem(ToolMenuType.WEBSITE)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //活动信息

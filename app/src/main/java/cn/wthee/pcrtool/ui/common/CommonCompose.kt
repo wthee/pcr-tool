@@ -39,8 +39,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -895,5 +898,28 @@ fun CommonGroupTitle(
             )
         }
 
+    }
+}
+
+@Composable
+fun <T> CommonResponseBox(
+    responseData: ResponseData<T>?,
+    fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
+    content: @Composable (BoxScope.(T) -> Unit),
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        FadeAnimation(visible = isResultError(responseData)) {
+            CenterTipText(text = stringResource(id = R.string.respon_error))
+        }
+        FadeAnimation(visible = responseData != null) {
+            content(responseData!!.data!!)
+        }
+        FadeAnimation(visible = responseData == null, modifier = Modifier.align(Alignment.Center)) {
+            CircularProgressCompose()
+        }
+
+        if (responseData != null && fabContent != null) {
+            fabContent(responseData.data!!)
+        }
     }
 }

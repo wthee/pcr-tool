@@ -303,6 +303,27 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 查询网站信息
+     */
+    suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>> {
+        //请求
+        try {
+            val response = service.getWebsiteList()
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "website")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 获取排名评级信息
      */
     suspend fun getLeaderTier(type: Int): ResponseData<LeaderTierData> {
@@ -328,9 +349,17 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
-    private
-    fun <T> isError(response: ResponseData<T>): Boolean {
+    private fun <T> isError(response: ResponseData<T>): Boolean {
         return response.message == "failure" || response.data == null
     }
-
 }
+
+/**
+ * 已返回结果，校验结果是否正常
+ * response 为 null 时，为加载中
+ */
+fun <T> isResultError(response: ResponseData<T>?): Boolean {
+    return response != null && response.status != 0
+}
+
+

@@ -45,22 +45,53 @@ fun LeaderboardList(
     val asc = remember {
         mutableStateOf(false)
     }
-    val leaderData = leaderViewModel.getLeader(sort.value, asc.value)
-        .collectAsState(initial = null).value
+    val flow = remember(sort.value, asc.value) {
+        leaderViewModel.getLeader(sort.value, asc.value)
+    }
+    val responseData = flow.collectAsState(initial = null).value
     val filterLeaderData = if (onlyLast.value) {
-        leaderData?.leader?.filter {
+        responseData?.data?.leader?.filter {
             it.isNew == 1
         }
     } else {
-        leaderData?.leader
+        responseData?.data?.leader
     }
-    val leaderList = if (onlyLast.value) filterLeaderData else leaderData?.leader
+    val leaderList = if (onlyLast.value) filterLeaderData else responseData?.data?.leader
     val coroutineScope = rememberCoroutineScope()
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    CommonResponseBox(
+        responseData = responseData,
+        fabContent = {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                //切换显示
+                FabCompose(
+                    iconType = MainIconType.FILTER,
+                    text = stringResource(id = if (onlyLast.value) R.string.last_update else R.string.all)
+                ) {
+                    onlyLast.value = !onlyLast.value
+                }
+                //回到顶部
+                FabCompose(
+                    iconType = MainIconType.LEADER,
+                    text = (leaderList?.size ?: 0).toString()
+                ) {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+            }
+        }
+    ) { data ->
         Column(
             modifier = Modifier
                 .padding(horizontal = Dimen.largePadding)
@@ -79,62 +110,28 @@ fun LeaderboardList(
                             BrowserUtil.open(context, url)
                         }
                 )
-                FadeAnimation(visible = leaderData != null && leaderData.desc != "") {
-                    CaptionText(text = leaderData!!.desc, modifier = Modifier.fillMaxWidth())
+                FadeAnimation(visible = data.desc != "") {
+                    CaptionText(
+                        text = data.desc,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
             //标题
             SortTitleGroup(sort, asc)
-            if (leaderData == null) {
-                //显示占位图
-                LazyColumn {
-                    items(20) {
-                        LeaderboardItem(LeaderboardData(), 0)
-                    }
-                }
-            } else if (leaderList != null) {
-                LazyColumn(
-                    state = scrollState
-                ) {
-                    itemsIndexed(
-                        items = leaderList,
-                        key = { _, it ->
-                            it.name
-                        }
-                    ) { index, it ->
-                        LeaderboardItem(it, index)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
-                }
-            } else {
-                CenterTipText(text = stringResource(id = R.string.no_data))
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            //切换显示
-            FabCompose(
-                iconType = MainIconType.FILTER,
-                text = stringResource(id = if (onlyLast.value) R.string.last_update else R.string.all)
+            LazyColumn(
+                state = scrollState
             ) {
-                onlyLast.value = !onlyLast.value
-            }
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.LEADER,
-                text = (leaderList?.size ?: 0).toString()
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                itemsIndexed(
+                    items = leaderList!!,
+                    key = { _, it ->
+                        it.name
                     }
+                ) { index, it ->
+                    LeaderboardItem(it, index)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -233,7 +230,6 @@ private fun SortTitleButton(
  */
 @Composable
 private fun LeaderboardItem(info: LeaderboardData, index: Int) {
-    val placeholder = info.icon == ""
     val context = LocalContext.current
     Column(
         modifier = Modifier.padding(
@@ -246,23 +242,18 @@ private fun LeaderboardItem(info: LeaderboardData, index: Int) {
                 text = "${index + 1}",
                 modifier = Modifier
                     .padding(bottom = Dimen.mediumPadding)
-                    .commonPlaceholder(visible = placeholder)
             )
             MainTitleText(
                 text = info.name,
                 modifier = Modifier
                     .padding(bottom = Dimen.mediumPadding, start = Dimen.smallPadding)
-                    .commonPlaceholder(visible = placeholder)
             )
         }
 
-        MainCard(modifier = Modifier
-            .commonPlaceholder(visible = placeholder),
+        MainCard(
             onClick = {
                 //打开浏览器
-                if (!placeholder) {
-                    BrowserUtil.open(context, info.url)
-                }
+                BrowserUtil.open(context, info.url)
             }
         ) {
             Row(

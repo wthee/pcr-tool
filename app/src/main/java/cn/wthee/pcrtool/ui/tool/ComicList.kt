@@ -29,7 +29,10 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -48,8 +51,11 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
     val selectIndex = remember {
         mutableStateOf(0)
     }
-    val comicList = comicViewModel.getComic().collectAsState(initial = arrayListOf()).value
-    val visible = comicList.isNotEmpty()
+    val flow = remember {
+        comicViewModel.getComic()
+    }
+    val responseData = flow.collectAsState(initial = null).value
+
     // dialog 状态
     val sheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -60,70 +66,64 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
     }
 
 
+    CommonResponseBox(responseData) { data ->
+        val pagerState = rememberPagerState(
+            initialPage = if (comicId != -1) data.size - comicId else 0
+        )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        FadeAnimation(visible = visible) {
-
-            val pagerState = rememberPagerState(
-                initialPage = if (comicId != -1) comicList.size - comicId else 0
-            )
-
-            //关闭监听
-            val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
-            //确认
-            if (ok) {
-                LaunchedEffect(selectIndex) {
-                    pagerState.scrollToPage(selectIndex.value)
-                    sheetState.hide()
-                }
-            }
-
-
-            ModalBottomSheetLayout(
-                sheetState = sheetState,
-                scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-                sheetShape = shapeTop(),
-                sheetContent = {
-                    //章节选择
-                    SelectPager(scrollState, selectIndex, comicList)
-                }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    HorizontalPager(count = comicList.size, state = pagerState) { pageIndex ->
-                        if (comicList.isNotEmpty()) {
-                            ComicItem(data = comicList[pageIndex])
-                        }
-                    }
-
-                    //选择
-                    FabCompose(
-                        iconType = MainIconType.COMIC_NAV,
-                        text = stringResource(id = R.string.comic_nav),
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                    ) {
-                        coroutineScope.launch {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            selectIndex.value = pagerState.currentPage
-                            scrollState.scrollToItem(selectIndex.value)
-                            sheetState.show()
-                        }
-                    }
-
-                }
+        //关闭监听
+        val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+        //确认
+        if (ok) {
+            LaunchedEffect(selectIndex) {
+                pagerState.scrollToPage(selectIndex.value)
+                sheetState.hide()
             }
         }
 
-        FadeAnimation(visible = !visible) {
-            ComicItem(data = ComicData())
+
+        ModalBottomSheetLayout(
+            sheetState = sheetState,
+            scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+            sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+            sheetShape = shapeTop(),
+            sheetContent = {
+                //章节选择
+                SelectPager(scrollState, selectIndex, data)
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                HorizontalPager(
+                    count = data.size,
+                    state = pagerState
+                ) { pageIndex ->
+                    if (data.isNotEmpty()) {
+                        ComicItem(data = data[pageIndex])
+                    }
+                }
+
+                //选择
+                FabCompose(
+                    iconType = MainIconType.COMIC_NAV,
+                    text = stringResource(id = R.string.comic_nav),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    coroutineScope.launch {
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                        selectIndex.value = pagerState.currentPage
+                        scrollState.scrollToItem(selectIndex.value)
+                        sheetState.show()
+                    }
+                }
+
+            }
         }
     }
-
 }
 
 /**
@@ -131,7 +131,6 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
  */
 @Composable
 private fun ComicItem(data: ComicData) {
-    val placeholder = data.id == -1
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,7 +143,7 @@ private fun ComicItem(data: ComicData) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Subtitle2(
-                text = if (placeholder) "" else stringResource(
+                text = stringResource(
                     id = R.string.comic_order,
                     data.id.toString()
                 )
@@ -154,16 +153,11 @@ private fun ComicItem(data: ComicData) {
             )
         }
 
-        if (placeholder) {
-            navViewModel.loading.postValue(true)
-        } else {
-            navViewModel.loading.postValue(false)
-            ImageCompose(
-                data = data.url,
-                ratio = RATIO_COMIC,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        ImageCompose(
+            data = data.url,
+            ratio = RATIO_COMIC,
+            modifier = Modifier.fillMaxWidth()
+        )
         CommonSpacer()
     }
 }

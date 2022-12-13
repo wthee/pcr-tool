@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.home.module
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -28,8 +29,10 @@ fun NewsSection(
 ) {
     val id = OverviewType.NEWS.id
     //公告列表
-    val newsList =
-        overviewViewModel.getNewsOverview().collectAsState(initial = null).value
+    val flow = remember {
+        overviewViewModel.getNewsOverview()
+    }
+    val newsList =flow.collectAsState(initial = null).value
 
     Section(
         id = id,
@@ -51,8 +54,8 @@ fun NewsSection(
                         toNewsDetail = actions.toNewsDetail
                     )
                 }
-            } else if (newsList.isNotEmpty()) {
-                newsList.forEach {
+            } else if (newsList.data?.isNotEmpty() == true) {
+                newsList.data?.forEach {
                     NewsItem(
                         news = it,
                         toNewsDetail = actions.toNewsDetail

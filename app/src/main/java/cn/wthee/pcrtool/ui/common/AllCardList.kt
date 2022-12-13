@@ -51,8 +51,10 @@ fun AllCardList(
         arrayListOf()
     }
     //剧情活动
-    val storyUrls =
-        picsViewModel.getStoryList(id, allPicsType.type).collectAsState(initial = null).value
+    val flow = remember(id, allPicsType.type) {
+        picsViewModel.getStoryList(id, allPicsType.type)
+    }
+    val responseData = flow.collectAsState(initial = null).value
 
     val checkedPicUrl = remember {
         mutableStateOf("")
@@ -63,6 +65,8 @@ fun AllCardList(
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
+
+    val hasStory = responseData?.data?.isNotEmpty() == true
 
 
     Box(
@@ -107,26 +111,24 @@ fun AllCardList(
                     text = stringResource(id = R.string.story)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (storyUrls == null) {
-                    CircularProgressCompose()
-                } else {
-                    MainText(text = storyUrls.size.toString())
+                if(hasStory){
+                    MainText(text = responseData!!.data!!.size.toString())
                 }
             }
-            if (storyUrls != null) {
-                if (storyUrls.isEmpty()) {
+            CommonResponseBox(responseData){ data ->
+                if (data.isNotEmpty()) {
+                    CardGridList(
+                        checkedPicUrl = checkedPicUrl,
+                        urls = data
+                    )
+                } else {
                     MainText(
                         text = stringResource(id = R.string.no_story_info),
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.Center)
                             .padding(
                                 Dimen.largePadding
                             )
-                    )
-                } else {
-                    CardGridList(
-                        checkedPicUrl = checkedPicUrl,
-                        urls = storyUrls
                     )
                 }
             }

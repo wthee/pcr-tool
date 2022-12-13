@@ -82,7 +82,9 @@ enum class ToolMenuType(val id: Int) {
     CALENDAR_EVENT(217),
     EXTRA_EQUIP(218),
     TRAVEL_AREA(219),
+    WEBSITE(220),
     LEADER_TIER(221);
+
 
     companion object {
         fun getByValue(value: Int) = values()

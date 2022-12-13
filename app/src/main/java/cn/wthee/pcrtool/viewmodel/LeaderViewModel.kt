@@ -20,10 +20,8 @@ class LeaderViewModel @Inject constructor(
      * 获取排行
      */
     fun getLeader(sort: Int, asc: Boolean) = flow {
-        val data = apiRepository.getLeader(sort, asc).data
-        data?.let {
-            emit(data)
-        }
+        val data = apiRepository.getLeader(sort, asc)
+        emit(data)
     }
 
     /**
