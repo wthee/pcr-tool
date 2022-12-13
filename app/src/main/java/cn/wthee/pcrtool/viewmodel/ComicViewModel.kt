@@ -18,9 +18,7 @@ class ComicViewModel @Inject constructor(
      * 漫画数据
      */
     fun getComic() = flow {
-        val data = apiRepository.getComic().data
-        data?.let {
-            emit(it)
-        }
+        val data = apiRepository.getComic()
+        emit(data)
     }
 }

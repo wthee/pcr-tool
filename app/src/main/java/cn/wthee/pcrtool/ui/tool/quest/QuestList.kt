@@ -58,8 +58,10 @@ fun QuestPager(
     equipId: Int,
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
-    val randomDropList =
-        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
+    val flow = remember(equipId) {
+        randomEquipAreaViewModel.getEquipArea(equipId)
+    }
+    val randomDropResponseData = flow.collectAsState(initial = null).value
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
@@ -95,7 +97,7 @@ fun QuestPager(
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
-    if (randomDropList?.isNotEmpty() == true) {
+    if (randomDropResponseData?.data?.isNotEmpty() == true) {
         pagerCount++
         tabs.add(randomDrop)
         colorList.add(colorGreen)
@@ -151,7 +153,9 @@ fun QuestPager(
         ) { pagerIndex ->
             if (tabs[pagerIndex] == randomDrop) {
                 //随机掉落
-                RandomDropAreaList(selectId = equipId, areaList = randomDropList!!)
+                CommonResponseBox(responseData = randomDropResponseData) { data ->
+                    RandomDropAreaList(selectId = equipId, areaList = data)
+                }
             } else {
                 //主线掉落
                 val list = when (tabs[pagerIndex]) {

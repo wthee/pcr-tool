@@ -895,21 +895,22 @@ fun CommonGroupTitle(
 @Composable
 fun <T> CommonResponseBox(
     responseData: ResponseData<T>?,
-    fabContent: @Composable (BoxScope.() -> Unit)? = null,
-    content: @Composable (BoxScope.() -> Unit),
+    fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
+    content: @Composable (BoxScope.(T) -> Unit),
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        if (isResultError(responseData)) {
+        FadeAnimation(visible = isResultError(responseData)) {
             CenterTipText(text = stringResource(id = R.string.respon_error))
-        } else if (responseData != null) {
-            content()
+        }
+        FadeAnimation(visible = responseData != null) {
+            content(responseData!!.data!!)
         }
         FadeAnimation(visible = responseData == null, modifier = Modifier.align(Alignment.Center)) {
             CircularProgressCompose()
         }
 
         if (responseData != null && fabContent != null) {
-            fabContent()
+            fabContent(responseData.data!!)
         }
     }
 }

@@ -2,8 +2,10 @@ package cn.wthee.pcrtool.ui.tool
 
 import android.annotation.SuppressLint
 import android.net.http.SslError
-import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,17 +13,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -41,6 +38,9 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewState
 
 /**
  * 公告列表
@@ -72,9 +72,10 @@ fun NewsList(
             //头部加载中提示
             item {
                 ExpandAnimation(newsItems.loadState.refresh == LoadState.Loading) {
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Dimen.largePadding)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimen.largePadding)
                     ) {
                         CircularProgressCompose(Modifier.align(Alignment.Center))
                     }
@@ -175,92 +176,112 @@ fun NewsItem(
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
-    val loading = remember {
-        mutableStateOf(true)
-    }
 
     LaunchedEffect(navSheetState.currentValue) {
         if (navSheetState.isVisible) {
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
-    newsViewModel.getNewsDetail(id)
-    val news = newsViewModel.newsDetail.observeAsState()
+    val flow = remember(id) {
+        newsViewModel.getNewsDetail(id)
+    }
+    val responseData = flow.collectAsState(initial = null).value
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (news.value != null && news.value!!.data != null) {
-            val originalUrl = news.value!!.data!!.url
-            val originalTitle = news.value!!.data!!.title
-            val date = news.value!!.data!!.date
-            val region = originalUrl.region
-
-            Column(
+    CommonResponseBox(
+        responseData = responseData,
+        fabContent = {data ->
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.mediumPadding)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
-                MainText(
-                    text = originalTitle,
-                    modifier = Modifier.padding(Dimen.mediumPadding),
-                    selectable = true
-                )
-                Subtitle2(text = date)
-                AndroidView(
-                    modifier = Modifier
-                        .padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        ),
-                    factory = {
-                        WebView(it).apply {
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                            )
-                            settings.apply {
-                                domStorageEnabled = true
-                                javaScriptEnabled = true
-                                cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-                                useWideViewPort = true //将图片调整到适合webView的大小
-                                loadWithOverviewMode = true // 缩放至屏幕的大小
-                                javaScriptCanOpenWindowsAutomatically = true
-                                loadsImagesAutomatically = false
-                                blockNetworkImage = true
-                            }
-                            webChromeClient = WebChromeClient()
-                            webViewClient = object : WebViewClient() {
+                //浏览器打开
+                FabCompose(
+                    iconType = MainIconType.BROWSER
+                ) {
+                    BrowserUtil.open(context, data.url)
+                }
+                //分享
+                FabCompose(
+                    iconType = MainIconType.SHARE
+                ) {
+                    ShareIntentUtil.text(data.title + "\n" + data.url)
+                }
+            }
+        }
+    ) {data ->
+        val originalUrl = data.url
+        val region = originalUrl.region
+        val state = rememberWebViewState(originalUrl)
 
-                                override fun shouldOverrideUrlLoading(
-                                    view: WebView?,
-                                    request: WebResourceRequest?
-                                ): Boolean {
-                                    view?.loadUrl(url!!)
-                                    return true
-                                }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimen.mediumPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            MainText(
+                text = data.title,
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                selectable = true
+            )
+            Subtitle2(text = data.date)
 
-                                @SuppressLint("WebViewClientOnReceivedSslError")
-                                override fun onReceivedSslError(
-                                    view: WebView?,
-                                    handler: SslErrorHandler?,
-                                    error: SslError?
-                                ) {
-                                    handler?.proceed()
-                                }
+            //网页内容
+            WebView(
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+                    .verticalScroll(rememberScrollState()),
+                state = state,
+                captureBackPresses = false,
+                onCreated = {
+                    it.settings.apply {
+                        domStorageEnabled = true
+                        javaScriptEnabled = true
+                        cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                        useWideViewPort = true //将图片调整到适合webView的大小
+                        loadWithOverviewMode = true // 缩放至屏幕的大小
+                        javaScriptCanOpenWindowsAutomatically = true
+                        loadsImagesAutomatically = false
+                        blockNetworkImage = true
+                    }
+                    //加载网页
+                    it.loadUrl(originalUrl)
+                },
+                client = object : AccompanistWebViewClient() {
 
-                                override fun onPageFinished(view: WebView?, url: String?) {
-                                    super.onPageFinished(view, url)
-                                    settings.apply {
-                                        loadsImagesAutomatically = true
-                                        blockNetworkImage = false
-                                    }
-                                    if (region == 2) {
-                                        //取消内部滑动
-                                        loadUrl(
-                                            """
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView?,
+                        request: WebResourceRequest?
+                    ): Boolean {
+                        view?.loadUrl(state.content.getCurrentUrl()!!)
+                        return true
+                    }
+
+                    @SuppressLint("WebViewClientOnReceivedSslError")
+                    override fun onReceivedSslError(
+                        view: WebView?,
+                        handler: SslErrorHandler?,
+                        error: SslError?
+                    ) {
+                        handler?.proceed()
+                    }
+
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        super.onPageFinished(view, url)
+                        view?.settings?.apply {
+                            loadsImagesAutomatically = true
+                            blockNetworkImage = false
+                        }
+                        if (region == 2) {
+                            //取消内部滑动
+                            view?.loadUrl(
+                                """
                                                 javascript:
                                                 $('#news-content').css('overflow','inherit');
                                                 $('#news-content').css('margin-top','0');
@@ -271,11 +292,11 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                                 $('.header').css('visibility','hidden');
                                                 $('#news-content').css('margin-bottom','1rem');
                                             """.trimIndent()
-                                        )
-                                    }
-                                    if (region == 3) {
-                                        loadUrl(
-                                            """
+                            )
+                        }
+                        if (region == 3) {
+                            view?.loadUrl(
+                                """
                                                 javascript:
                                                 $('.menu').css('display','none');
                                                 $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
@@ -293,11 +314,11 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                                 $('body').css('background-image','none');
                                                 $('.news_con').css('box-shadow','none');
                                             """.trimIndent()
-                                        )
-                                    }
-                                    if (region == 4) {
-                                        loadUrl(
-                                            """
+                            )
+                        }
+                        if (region == 4) {
+                            view?.loadUrl(
+                                """
                                                 javascript:
                                                 $('#main_area').css('display','none');
                                                 $('.bg-gray').css('display','none');
@@ -316,39 +337,12 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                                 $('.news_detail_container').css('width','100%');
                                                 $('.meta-info').css('margin','0');
                                             """.trimIndent()
-                                        )
-                                    }
-                                    loading.value = false
-                                }
-                            }
-                            //加载网页
-                            loadUrl(originalUrl)
+                            )
                         }
                     }
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                //浏览器打开
-                FabCompose(
-                    iconType = MainIconType.BROWSER
-                ) {
-                    BrowserUtil.open(context, originalUrl)
                 }
-                //分享
-                FabCompose(
-                    iconType = MainIconType.SHARE
-                ) {
-                    ShareIntentUtil.text(originalTitle + "\n" + originalUrl)
-                }
-            }
-
+            )
         }
-
-
     }
 }
 

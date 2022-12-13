@@ -63,7 +63,7 @@ fun WebsiteList(
                 }
             }
         }
-    ) {
+    ) {data ->
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = Dimen.mediumPadding)
@@ -71,7 +71,7 @@ fun WebsiteList(
             state = scrollState
         ) {
             items(
-                items = responseData!!.data!!,
+                items = data,
                 key = {
                     it.type
                 }

@@ -163,10 +163,8 @@ class OverviewViewModel @Inject constructor(
      */
     fun getNewsOverview() = flow {
         try {
-            val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType).data
-            data?.let {
-                emit(it)
-            }
+            val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType)
+            emit(data)
         } catch (_: Exception) {
 
         }
