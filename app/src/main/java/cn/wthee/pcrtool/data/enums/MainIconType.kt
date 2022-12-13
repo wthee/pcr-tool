@@ -391,4 +391,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 不排序
      */
     SORT_NULL(Icons.Rounded.UnfoldMore),
+
+    /**
+     * 角色评级
+     */
+    LEADER_TIER(Icons.Rounded.WorkspacePremium),
 }

@@ -396,7 +396,9 @@ private fun CalendarEventOperation(
                         //免费十连
                         var birthdayText = ""
                         birthdayList.forEach {
-                            val date = getCalendarEventDateText(it.getStartTime(), it.getEndTime())
+                            val date = it
+                                .getStartTime()
+                                .substring(0, 10)
                             birthdayText += "• $date\n${it.getDesc()}"
 
                         }

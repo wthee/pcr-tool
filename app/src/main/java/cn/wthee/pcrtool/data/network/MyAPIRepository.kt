@@ -302,6 +302,32 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
+    /**
+     * 获取排名评级信息
+     */
+    suspend fun getLeaderTier(type: Int): ResponseData<LeaderTierData> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("type", type)
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+            val response = service.getLeaderTier(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "leader")
+            }
+        }
+        return error()
+    }
+
     private
     fun <T> isError(response: ResponseData<T>): Boolean {
         return response.message == "failure" || response.data == null

@@ -850,6 +850,7 @@ fun CommonGroupTitle(
     modifier: Modifier = Modifier,
     iconData: Any? = null,
     titleStart: String,
+    titleCenter: String = "",
     titleEnd: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = colorWhite,
@@ -866,7 +867,7 @@ fun CommonGroupTitle(
                 size = iconSize
             )
         }
-        Row(
+        Box(
             modifier = Modifier
                 .padding(start = Dimen.smallPadding)
                 .weight(1f)
@@ -876,15 +877,23 @@ fun CommonGroupTitle(
                 )
                 .padding(horizontal = Dimen.mediumPadding)
         ) {
+            Row {
+                Subtitle2(
+                    text = titleStart,
+                    color = textColor
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Subtitle2(
+                    text = titleEnd,
+                    color = textColor
+                )
+            }
             Subtitle2(
-                text = titleStart,
-                color = textColor
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Subtitle2(
-                text = titleEnd,
-                color = textColor
+                text = titleCenter,
+                color = textColor,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
+
     }
 }

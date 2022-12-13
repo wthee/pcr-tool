@@ -197,6 +197,7 @@ fun getAction(
             ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
             ToolMenuType.EXTRA_EQUIP -> actions.toExtraEquipList()
             ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
+            ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
         }
     }
 
@@ -224,7 +225,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
-        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(R.string.tool_calendar_event, MainIconType.CALENDAR)
+        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(
+            R.string.tool_calendar_event,
+            MainIconType.CALENDAR
+        )
         ToolMenuType.EXTRA_EQUIP -> ToolMenuData(
             R.string.tool_extra_equip,
             MainIconType.EXTRA_EQUIP
@@ -232,6 +236,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.TRAVEL_AREA -> ToolMenuData(
             R.string.tool_travel,
             MainIconType.EXTRA_EQUIP_DROP
+        )
+        ToolMenuType.LEADER_TIER -> ToolMenuData(
+            R.string.tool_leader_tier,
+            MainIconType.LEADER_TIER
         )
 
     }

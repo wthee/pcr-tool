@@ -130,6 +130,7 @@
 
     <!--其它工具-->
     <string name="tool_leader">排行</string>
+    <string name="tool_leader_tier">角色评级</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
@@ -709,5 +710,11 @@
     <!--请求-->
     <string name="respon_error">未正常获取数据，请重试~</string>
     <string name="respon_cancel">查询取消~</string>
+
+    <!--排行查询-->
+    <string name="leader_tier_0">综合评分</string>
+    <string name="leader_tier_1">竞技场进攻</string>
+    <string name="leader_tier_2">竞技场防守</string>
+    <string name="leader_tier_d">Tier %d</string>
 
 </resources>

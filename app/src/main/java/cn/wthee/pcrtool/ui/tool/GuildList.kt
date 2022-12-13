@@ -105,9 +105,9 @@ private fun GuildItem(
     }
     //调整排序
     memberList.sortWith(compareUnit(masterName))
-    val iconIdLlist = arrayListOf<Int>()
+    val iconIdList = arrayListOf<Int>()
     memberList.forEach {
-        iconIdLlist.add(it.unitId)
+        iconIdList.add(it.unitId)
     }
 
     Column(
@@ -136,7 +136,7 @@ private fun GuildItem(
                 }
                 //角色图标列表
                 GridIconListCompose(
-                    icons = iconIdLlist,
+                    icons = iconIdList,
                     onClickItem = toCharacterDetail
                 )
             }

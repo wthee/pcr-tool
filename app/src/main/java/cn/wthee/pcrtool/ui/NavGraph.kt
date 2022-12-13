@@ -117,6 +117,7 @@ object Navigation {
     const val EVENT_ENEMY_DETAIL = "eventEnemyDetail"
     const val ENEMY_DETAIL = "enemyDetail"
     const val ENEMY_ID = "enemyId"
+    const val TOOL_LEADER_TIER = "leaderTier"
 }
 
 /**
@@ -455,6 +456,18 @@ fun NavGraph(
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
                 LeaderboardList(scrollState)
+            }
+
+            //角色排行评级
+            composable(route = Navigation.TOOL_LEADER_TIER,
+                enterTransition = { myFadeIn },
+                exitTransition = { myFadeOut },
+                popEnterTransition = { myFadeIn },
+                popExitTransition = { myFadeOut })
+            {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val scrollState = rememberLazyListState()
+                LeaderTier(scrollState)
             }
 
             //角色卡池
@@ -1131,5 +1144,12 @@ class NavActions(navController: NavHostController) {
      */
     val toEventEnemyDetail: (Int) -> Unit = { enemyId ->
         navController.navigate("${Navigation.EVENT_ENEMY_DETAIL}/${enemyId}")
+    }
+
+    /**
+     * 角色评级
+     */
+    val toLeaderTier = {
+        navController.navigate(Navigation.TOOL_LEADER_TIER)
     }
 }

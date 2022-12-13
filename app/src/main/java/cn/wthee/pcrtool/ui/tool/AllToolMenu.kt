@@ -64,6 +64,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     val searchList = arrayListOf<ToolMenuData>()
     searchList.addItem(ToolMenuType.PVP_SEARCH)
     searchList.addItem(ToolMenuType.LEADER)
+    searchList.addItem(ToolMenuType.LEADER_TIER)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
     //活动信息

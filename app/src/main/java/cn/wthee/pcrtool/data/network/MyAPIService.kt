@@ -74,11 +74,16 @@ interface MyAPIService {
     @POST("equip/area/v2")
     suspend fun getEquipArea(@Body body: RequestBody): ResponseData<List<RandomEquipDropArea>>
 
-
     /**
      * 剧情立绘
      */
     @POST("story/list")
     suspend fun getStoryList(@Body body: RequestBody): ResponseData<String>
+
+    /**
+     * 排行评级信息
+     */
+    @POST("leaders/tier")
+    suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
 
 }
