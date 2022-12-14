@@ -35,6 +35,10 @@ class FilterCharacter(
      */
     var guild: Int = 0,
     /**
+     * 种族下标
+     */
+    var race: Int = 0,
+    /**
      * 排序种类
      */
     var sortType: SortType = SortType.SORT_DATE,
@@ -100,5 +104,5 @@ class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
+    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
 }

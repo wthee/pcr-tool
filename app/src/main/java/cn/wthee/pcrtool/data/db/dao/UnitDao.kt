@@ -100,7 +100,12 @@ interface UnitDao {
         AND 1 = CASE
             WHEN 0 = :guildId THEN 1 
             WHEN -1 = :guildId THEN unit_profile.guild_id = ''
-            WHEN  unit_profile.guild_id = :guildId  THEN 1 
+            WHEN unit_profile.guild_id = :guildId  THEN 1 
+        END     
+         AND 1 = CASE
+            WHEN "" = :raceName THEN 1 
+            WHEN "-" = :raceName THEN unit_profile.race LIKE '%、%'
+            WHEN unit_profile.race = :raceName  THEN 1 
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
@@ -130,7 +135,7 @@ interface UnitDao {
     suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
-        type: Int, limit: Int, exUnitIdList: List<Int>
+        type: Int, limit: Int, exUnitIdList: List<Int>, raceName: String
     ): List<CharacterInfo>
 
     /**
@@ -364,6 +369,25 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT guild_id, guild_name FROM guild")
     suspend fun getGuilds(): List<GuildData>
+
+    /**
+     * 获取所有种族信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            race 
+        FROM
+            unit_profile 
+        WHERE
+            race NOT LIKE '%、%' 
+        GROUP BY
+            race
+    """
+    )
+    suspend fun getRaces(): List<String>
+
 
     /**
      * 获取所有公会成员信息

@@ -45,7 +45,15 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
             filter.starIds,
             filter.type,
             limit,
-            exUnitIdList
+            exUnitIdList,
+            when {
+                //种族
+                filter.race > 1 -> getRaces()[filter.race - 2]
+                //多人卡
+                filter.race == 1 -> "-"
+                //全部
+                else -> ""
+            },
         )
 
         //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
@@ -100,6 +108,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getMaxRarity(unitId: Int) = unitDao.getMaxRarity(unitId)
 
     suspend fun getGuilds() = unitDao.getGuilds()
+
+    suspend fun getRaces() = unitDao.getRaces()
 
     suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
 

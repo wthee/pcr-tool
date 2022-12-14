@@ -193,27 +193,7 @@ fun CharacterItem(
     if (pos != Constants.UNKNOWN) {
         positionText = "$pos ${character.position}"
     }
-    //获取方式
-    val limitColor: Color
-    val limitType: String
-    when (character.limitType) {
-        2 -> {
-            limitType = stringResource(id = R.string.type_limit)
-            limitColor = colorRed
-        }
-        3 -> {
-            limitType = stringResource(id = R.string.type_event_limit)
-            limitColor = colorGreen
-        }
-        4 -> {
-            limitType = stringResource(id = R.string.type_extra_character)
-            limitColor = colorOrange
-        }
-        else -> {
-            limitType = stringResource(id = R.string.type_normal)
-            limitColor = colorGold
-        }
-    }
+
     //主色
     val initColor = colorWhite
     var cardMaskColor by remember {
@@ -334,18 +314,14 @@ fun CharacterItem(
                             //获取方式
                             CharacterTag(
                                 modifier = Modifier.padding(end = Dimen.smallPadding),
-                                text = limitType,
-                                backgroundColor = limitColor,
+                                text = getLimitTypeText(limitType = character.limitType),
+                                backgroundColor = getLimitTypeColor(limitType = character.limitType),
                                 textColor = textColor
                             )
                             //攻击
                             CharacterTag(
                                 modifier = Modifier.padding(end = Dimen.mediumPadding),
-                                text = when (character.atkType) {
-                                    1 -> stringResource(id = R.string.physical)
-                                    2 -> stringResource(id = R.string.magic)
-                                    else -> stringResource(id = R.string.unknown)
-                                },
+                                text = getAtkText(atkType = character.atkType),
                                 backgroundColor = getAtkColor(atkType = character.atkType),
                                 textColor = textColor
                             )
@@ -361,8 +337,7 @@ fun CharacterItem(
                         ) {
                             //位置图标
                             PositionIcon(
-                                position = character.position,
-                                size = Dimen.smallIconSize
+                                position = character.position
                             )
                             //位置
                             CharacterTag(
@@ -401,10 +376,68 @@ fun CharacterItem(
 }
 
 /**
+ * 获取限定类型
+ */
+@Composable
+fun getLimitTypeText(limitType: Int) = when (limitType) {
+    2 -> {
+        stringResource(id = R.string.type_limit)
+    }
+    3 -> {
+        stringResource(id = R.string.type_event_limit)
+    }
+    4 -> {
+        stringResource(id = R.string.type_extra_character)
+
+    }
+    else -> {
+        stringResource(id = R.string.type_normal)
+    }
+}
+
+/**
+ * 获取限定类型颜色
+ */
+fun getLimitTypeColor(limitType: Int) = when (limitType) {
+    2 -> {
+        colorRed
+    }
+    3 -> {
+        colorGreen
+    }
+    4 -> {
+        colorOrange
+    }
+    else -> {
+        colorGold
+    }
+}
+
+
+/**
+ * 攻击类型
+ */
+@Composable
+fun getAtkText(atkType: Int) = when (atkType) {
+    1 -> stringResource(id = R.string.physical)
+    2 -> stringResource(id = R.string.magic)
+    else -> stringResource(id = R.string.unknown)
+}
+
+/**
+ * 攻击颜色
+ */
+fun getAtkColor(atkType: Int) = when (atkType) {
+    1 -> colorGold
+    2 -> colorPurple
+    else -> colorCopper
+}
+
+/**
  * 角色属性标签
  */
 @Composable
-private fun CharacterTag(
+fun CharacterTag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
@@ -530,6 +563,13 @@ private fun FilterCharacterSheet(
     }
     filter.guild = guildIndex.value
 
+    //种族
+    val raceList = characterViewModel.getRaces().collectAsState(initial = arrayListOf()).value
+    val raceIndex = remember {
+        mutableStateOf(filter.race)
+    }
+    filter.race = raceIndex.value
+
     //限定类型
     val typeIndex = remember {
         mutableStateOf(filter.type)
@@ -553,6 +593,7 @@ private fun FilterCharacterSheet(
             atkIndex.value = 0
             guildIndex.value = 0
             typeIndex.value = 0
+            raceIndex.value = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterCharacter.postValue(FilterCharacter())
         }
@@ -730,6 +771,25 @@ private fun FilterCharacterSheet(
             atkIndex,
             modifier = Modifier.padding(Dimen.smallPadding)
         )
+        //种族
+        if (raceList.isNotEmpty()) {
+            MainText(
+                text = stringResource(id = R.string.title_race),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val raceChipData = arrayListOf(
+                ChipData(0, stringResource(id = R.string.all)),
+                ChipData(1, stringResource(id = R.string.title_race_multiple)),
+            )
+            raceList.forEachIndexed { index, raceData ->
+                raceChipData.add(ChipData(index + 2, raceData))
+            }
+            ChipGroup(
+                raceChipData,
+                raceIndex,
+                modifier = Modifier.padding(Dimen.smallPadding),
+            )
+        }
         //公会名
         if (guildList.isNotEmpty()) {
             MainText(
