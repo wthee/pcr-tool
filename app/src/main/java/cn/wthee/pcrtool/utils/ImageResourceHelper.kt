@@ -68,8 +68,8 @@ class ImageResourceHelper() {
     }
 
     //获取资源地址前缀
-    fun getUrl(resUrl: String, id: Any) =
-        RESOURCE_PREFIX_URL + type + RESOURCE + resUrl + id.toString() + WEBP
+    fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = false) =
+        RESOURCE_PREFIX_URL + (if (forceJpType) "jp" else type) + RESOURCE + resUrl + id.toString() + WEBP
 
     //获取装备图标
     fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {
@@ -112,12 +112,13 @@ class ImageResourceHelper() {
      * 获取星级最高的角色图标
      *
      * @param unitId 角色编号
+     * @param forceJpType 强制使用日服资源
      */
-    fun getMaxIconUrl(unitId: Int): String {
+    fun getMaxIconUrl(unitId: Int, forceJpType: Boolean = false): String {
         if (r6Ids.contains(unitId)) {
-            return getUrl(ICON_UNIT, getStarId(unitId, 6))
+            return getUrl(ICON_UNIT, getStarId(unitId, 6), forceJpType)
         }
-        return getUrl(ICON_UNIT, getStarId(unitId, 3))
+        return getUrl(ICON_UNIT, getStarId(unitId, 3), forceJpType)
     }
 
     /**

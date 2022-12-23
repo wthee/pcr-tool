@@ -195,7 +195,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 获取排名信息
      */
-    suspend fun getLeader(sort: Int, asc: Boolean): ResponseData<LeaderData> {
+    suspend fun getLeader(sort: Int, asc: Boolean): ResponseData<List<LeaderboardData>> {
         //请求
         try {
             //接口参数

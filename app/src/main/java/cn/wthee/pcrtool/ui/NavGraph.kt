@@ -456,7 +456,7 @@ fun NavGraph(
             {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
-                LeaderboardList(scrollState)
+                LeaderboardList(scrollState, actions.toCharacterDetail)
             }
 
             //角色排行评级
@@ -468,7 +468,7 @@ fun NavGraph(
             {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
-                LeaderTier(scrollState)
+                LeaderTier(scrollState, actions.toCharacterDetail)
             }
 
             //角色卡池

@@ -608,7 +608,7 @@
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">，每秒造成 %s %s伤害</string>
-    <string name="skill_action_type_desc_field">展开领域 [%d] %s%s</string>
+    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">，每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
@@ -659,6 +659,7 @@
     <string name="skill_action_type_desc_95">%s进入隐匿状态%s</string>
     <string name="skill_action_type_desc_96_tp">，每秒回复 %s TP</string>
     <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
+    <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
@@ -716,17 +717,19 @@
 
     <!--网站类型-->
     <string name="website_type_1">第三方网站</string>
-    <string name="website_type_2">官方网站</string>
-    <string name="website_type_3">第三方社交账号</string>
-    <string name="website_type_4">官方社交账号</string>
+    <string name="website_type_2">wiki</string>
+    <string name="website_type_3">论坛</string>
+    <string name="website_type_4">官方网站</string>
+    <string name="website_type_5">第三方账号</string>
+    <string name="website_type_6">官方账号</string>
 
     <!--排行评级查询-->
+    <string name="only_jp">日服</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
     <string name="leader_tier_d">T%d</string>
     <string name="to_app_character_detail">详情</string>
-    <string name="to_web_character_detail">GameWith</string>
-    <string name="leader_tier_need_sync">未关联</string>
+    <string name="to_web_character_detail">wiki</string>
 </resources>

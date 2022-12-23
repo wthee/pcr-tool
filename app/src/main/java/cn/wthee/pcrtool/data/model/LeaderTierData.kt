@@ -14,7 +14,8 @@ data class LeaderTierItem(
     val name: String,
     val tier: Int,
     val type: Int,
-    val url: String
+    val unitId: Int? = 0,
+    val url: String,
 )
 
 data class TierSummary(

@@ -114,7 +114,8 @@ fun getRegionName(region: Int) = getString(
     when (region) {
         2 -> R.string.db_cn
         3 -> R.string.db_tw
-        else -> R.string.db_jp
+        4 -> R.string.db_jp
+        else -> R.string.all
     }
 )
 

@@ -1,15 +1,16 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,13 +20,17 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import kotlinx.coroutines.launch
 
 /**
  * 角色排行
@@ -33,69 +38,118 @@ import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 @Composable
 fun LeaderTier(
     scrollState: LazyListState,
+    toCharacterDetail: (Int) -> Unit,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val type = remember {
-        mutableStateOf(0)
+        mutableStateOf(navViewModel.leaderTierType.value ?: 0)
     }
-    val leaderData = leaderViewModel.getLeaderTier(type.value)
-        .collectAsState(initial = null).value
-
+    type.value = navViewModel.leaderTierType.observeAsState().value ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
         stringResource(id = R.string.leader_tier_2),
         stringResource(id = R.string.clan),
     )
-    val url = stringResource(id = R.string.leader_source_url)
-    val context = LocalContext.current
-    val spanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
-    //加载中
-    MainActivity.navViewModel.loading.postValue(leaderData == null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    val flow = remember(type.value) {
+        leaderViewModel.getLeaderTier(type.value)
+    }
+    val leaderData = flow.collectAsState(initial = null).value
+
+    val url = stringResource(id = R.string.leader_source_url)
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+
+    CommonResponseBox(
+        responseData = leaderData,
+        fabContent = { data ->
+            //切换类型
+            SelectTypeCompose(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                icon = MainIconType.CHANGE_FILTER_TYPE,
+                tabs = tabs,
+                type = type,
+                width = Dimen.dataChangeWidth + Dimen.fabSize,
+                paddingValues = PaddingValues(
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                )
+            ) {
+                navViewModel.leaderTierType.postValue(type.value)
+            }
+
+            //回到顶部
+            FabCompose(
+                iconType = MainIconType.LEADER_TIER,
+                text = data.leader.size.toString(),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                scope.launch {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+            }
+        }
+    ) { data ->
         Column(
-            modifier = Modifier
-                .padding(horizontal = Dimen.largePadding)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             //更新
             Row(
-                modifier = Modifier.padding(vertical = Dimen.mediumPadding),
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MainTitleText(
-                    text = "GameWith",
+                    text = stringResource(id = R.string.leader_source),
                     modifier = Modifier
                         .clickable {
                             VibrateUtil(context).single()
                             BrowserUtil.open(context, url)
                         }
                 )
-                FadeAnimation(visible = leaderData != null && leaderData.desc != "") {
-                    CaptionText(text = leaderData!!.desc, modifier = Modifier.fillMaxWidth())
-                }
-            }
-            FadeAnimation(visible = leaderData?.leader?.isNotEmpty() == true) {
-                //分组
-                val groupList = arrayListOf<LeaderTierGroup>()
-                leaderData?.leader?.forEach { leaderItem ->
-                    var group = groupList.find {
-                        it.tier == leaderItem.tier
-                    }
-                    if (group == null) {
-                        val descInfo = leaderData.tierSummary.find {
-                            it.tier == leaderItem.tier.toString()
-                        }
-                        group =
-                            LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
-                        groupList.add(group)
-                    }
-                    group.leaderList.add(leaderItem)
-                }
 
+                MainTitleText(
+                    text = stringResource(id = R.string.only_jp),
+                    backgroundColor = colorRed,
+                    modifier = Modifier
+                        .padding(start = Dimen.smallPadding)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(context, url)
+                        }
+                )
+                CaptionText(text = data.desc, modifier = Modifier.fillMaxWidth())
+            }
+
+            //分组
+            val groupList = arrayListOf<LeaderTierGroup>()
+            data.leader.forEach { leaderItem ->
+                var group = groupList.find {
+                    it.tier == leaderItem.tier
+                }
+                if (group == null) {
+                    val descInfo = data.tierSummary.find {
+                        it.tier == leaderItem.tier.toString()
+                    }
+                    group =
+                        LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
+                    groupList.add(group)
+                }
+                group.leaderList.add(leaderItem)
+            }
+
+            if (groupList.isNotEmpty()) {
                 LazyColumn(state = scrollState) {
                     items(
                         items = groupList,
@@ -105,26 +159,21 @@ fun LeaderTier(
                     ) { groupList ->
                         LeaderGroup(
                             groupList,
-                            spanCount
+                            spanCount,
+                            toCharacterDetail
                         )
                     }
                     item {
                         CommonSpacer()
                     }
+                    item {
+                        CommonSpacer()
+                    }
                 }
+            } else {
+                CenterTipText(text = stringResource(id = R.string.no_data))
             }
         }
-
-
-        SelectTypeCompose(
-            icon = MainIconType.LEADER_TIER,
-            tabs = tabs,
-            type = type,
-            width = Dimen.dataChangeWidth + Dimen.fabSize,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-        )
     }
 }
 
@@ -134,7 +183,8 @@ fun LeaderTier(
 @Composable
 private fun LeaderGroup(
     groupData: LeaderTierGroup,
-    spanCount: Int
+    spanCount: Int,
+    toCharacterDetail: (Int) -> Unit,
 ) {
 
     Column {
@@ -156,14 +206,16 @@ private fun LeaderGroup(
         //分组内容
         VerticalGrid(
             spanCount = spanCount,
-            modifier = Modifier.padding(
-                bottom = Dimen.largePadding,
-                start = Dimen.commonItemPadding,
-                end = Dimen.commonItemPadding
-            ),
+            modifier = Modifier
+                .padding(
+                    bottom = Dimen.mediumPadding,
+                    start = Dimen.commonItemPadding,
+                    end = Dimen.commonItemPadding
+                )
+                .animateContentSize(defaultSpring())
         ) {
             groupData.leaderList.forEach { leader ->
-                LeaderItem(leader)
+                LeaderItem(leader, toCharacterDetail)
             }
         }
     }
@@ -174,64 +226,118 @@ private fun LeaderGroup(
  */
 @Composable
 private fun LeaderItem(
-    leader: LeaderTierItem
+    leader: LeaderTierItem,
+    toCharacterDetail: (Int) -> Unit,
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-
-    var leaderState by remember { mutableStateOf(leader) }
-    if (leaderState != leader) {
-        leaderState = leader
+    //获取角色名
+    val flow = remember(leader.unitId) {
+        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
     }
+    val basicInfo = flow.collectAsState(initial = null).value
+    val hasUnitId = leader.unitId != null && leader.unitId != 0
+    //是否登场角色
+    val unknown = basicInfo == null || basicInfo.position == 0
 
-    val icon: @Composable () -> Unit by remember {
-        mutableStateOf(
-            {
-                IconCompose(
-                    data = leaderState.icon
-                )
-            }
-        )
-    }
-    val name: @Composable () -> Unit by remember {
-        mutableStateOf(
-            {
-                MainContentText(
-                    text = leaderState.name,
-                    textAlign = TextAlign.Start,
-                    maxLines = 2,
-                    selectable = true,
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                )
-            }
-        )
+    val textColor = if (!hasUnitId || unknown) {
+        colorGray
+    } else {
+        Color.Unspecified
     }
 
     Row(
         modifier = Modifier
             .padding(
-                start = Dimen.smallPadding,
-                end = Dimen.smallPadding,
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.smallPadding,
                 bottom = Dimen.mediumPadding
             )
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraSmall)
-            .clickable {
-                BrowserUtil.open(context, leaderState.url)
-            }
-            .padding(Dimen.smallPadding)
     ) {
-        icon()
-        name()
-    }
-}
+        Box {
+            IconCompose(
+                data = if (hasUnitId) {
+                    ImageResourceHelper.getInstance()
+                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                } else {
+                    leader.icon
+                }
+            ) {
+                if (!unknown) {
+                    toCharacterDetail(leader.unitId!!)
+                }
+            }
+            if (!unknown) {
+                PositionIcon(
+                    position = basicInfo!!.position,
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.divLineHeight,
+                            bottom = Dimen.divLineHeight
+                        )
+                        .align(Alignment.BottomEnd),
+                    size = Dimen.exSmallIconSize
+                )
+            }
+        }
 
-/**
- * 获取评级颜色
- */
-private fun getTierColor(tier: Int) = when (tier) {
-    0 -> colorRed
-    1 -> colorPurple
-    2 -> colorGold
-    3 -> colorGreen
-    else -> colorBlue
+        MainCard(
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .heightIn(min = Dimen.cardHeight),
+            onClick = {
+                BrowserUtil.open(context, leader.url)
+            }
+        ) {
+            Column {
+                Row(
+                    modifier = Modifier.padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.smallPadding
+                    )
+                ) {
+                    //名称
+                    MainContentText(
+                        text = if (hasUnitId && !unknown) {
+                            basicInfo!!.getNameF()
+                        } else {
+                            leader.name
+                        },
+                        textAlign = TextAlign.Start,
+                        color = textColor,
+                        maxLines = 1
+                    )
+
+                }
+                Row(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
+                    if (!unknown) {
+                        //获取方式
+                        CharacterTag(
+                            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                            text = getLimitTypeText(limitType = basicInfo!!.limitType),
+                            backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType),
+                        )
+                        //攻击
+                        CharacterTag(
+                            text = getAtkText(atkType = basicInfo.atkType),
+                            backgroundColor = getAtkColor(atkType = basicInfo.atkType),
+                        )
+                    } else {
+                        //获取方式
+                        CharacterTag(
+                            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                            text = stringResource(
+                                id = R.string.unknown_character_type,
+                                getRegionName(MainActivity.regionType)
+                            ),
+                            backgroundColor = colorGray
+                        )
+                    }
+                }
+            }
+        }
+
+    }
 }

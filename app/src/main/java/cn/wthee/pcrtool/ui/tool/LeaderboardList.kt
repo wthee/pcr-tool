@@ -11,20 +11,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
@@ -34,11 +35,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun LeaderboardList(
     scrollState: LazyListState,
+    toCharacterDetail: (Int) -> Unit,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-    val onlyLast = remember {
-        mutableStateOf(false)
-    }
     val sort = remember {
         mutableStateOf(0)
     }
@@ -49,14 +48,8 @@ fun LeaderboardList(
         leaderViewModel.getLeader(sort.value, asc.value)
     }
     val responseData = flow.collectAsState(initial = null).value
-    val filterLeaderData = if (onlyLast.value) {
-        responseData?.data?.leader?.filter {
-            it.isNew == 1
-        }
-    } else {
-        responseData?.data?.leader
-    }
-    val leaderList = if (onlyLast.value) filterLeaderData else responseData?.data?.leader
+    val leaderList = responseData?.data
+
     val coroutineScope = rememberCoroutineScope()
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
@@ -70,13 +63,6 @@ fun LeaderboardList(
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
-                //切换显示
-                FabCompose(
-                    iconType = MainIconType.FILTER,
-                    text = stringResource(id = if (onlyLast.value) R.string.last_update else R.string.all)
-                ) {
-                    onlyLast.value = !onlyLast.value
-                }
                 //回到顶部
                 FabCompose(
                     iconType = MainIconType.LEADER,
@@ -91,15 +77,16 @@ fun LeaderboardList(
                 }
             }
         }
-    ) { data ->
+    ) {
         Column(
-            modifier = Modifier
-                .padding(horizontal = Dimen.largePadding)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             //更新
             Row(
-                modifier = Modifier.padding(vertical = Dimen.mediumPadding),
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MainTitleText(
@@ -110,12 +97,17 @@ fun LeaderboardList(
                             BrowserUtil.open(context, url)
                         }
                 )
-                FadeAnimation(visible = data.desc != "") {
-                    CaptionText(
-                        text = data.desc,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+
+                MainTitleText(
+                    text = stringResource(id = R.string.only_jp),
+                    backgroundColor = colorRed,
+                    modifier = Modifier
+                        .padding(start = Dimen.smallPadding)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(context, url)
+                        }
+                )
             }
             //标题
             SortTitleGroup(sort, asc)
@@ -128,7 +120,7 @@ fun LeaderboardList(
                         it.name
                     }
                 ) { index, it ->
-                    LeaderboardItem(it, index)
+                    LeaderboardItem(it, index, toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -154,19 +146,20 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
     Row(
         horizontalArrangement = Arrangement.End,
         modifier = Modifier.padding(
-            top = Dimen.smallPadding
+            vertical = Dimen.smallPadding
         )
     ) {
-        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
+        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediumPadding * 2))
         titles.forEachIndexed { index, title ->
             SortTitleButton(
-                modifier = Modifier.weight(0.25f),
-                index = index + 1,
+                modifier = Modifier.weight(1f),
+                index = index + 2,
                 text = title,
                 sort = sort,
                 asc = asc
             )
         }
+        Spacer(modifier = Modifier.width(Dimen.mediumPadding))
     }
 }
 
@@ -229,44 +222,110 @@ private fun SortTitleButton(
  * 角色评价信息
  */
 @Composable
-private fun LeaderboardItem(info: LeaderboardData, index: Int) {
+private fun LeaderboardItem(
+    leader: LeaderboardData,
+    index: Int,
+    toCharacterDetail: (Int) -> Unit,
+    characterViewModel: CharacterViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier.padding(
-            vertical = Dimen.mediumPadding
-        )
+    //获取角色名
+    val flow = remember(leader.unitId) {
+        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
+    }
+    val basicInfo = flow.collectAsState(initial = null).value
+    val hasUnitId = leader.unitId != null && leader.unitId != 0
+    //是否登场角色
+    val unknown = basicInfo == null || basicInfo.position == 0
+
+    val textColor = if (!hasUnitId || unknown) {
+        colorGray
+    } else {
+        Color.Unspecified
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.smallPadding,
+                bottom = Dimen.mediumPadding
+            )
+            .fillMaxWidth()
     ) {
-        //标题
-        Row {
-            MainTitleText(
-                text = "${index + 1}",
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding)
-            )
-            MainTitleText(
-                text = info.name,
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding, start = Dimen.smallPadding)
-            )
+        Box {
+            IconCompose(
+                data = if (hasUnitId) {
+                    ImageResourceHelper.getInstance()
+                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                } else {
+                    leader.icon
+                }
+            ) {
+                if (!unknown) {
+                    toCharacterDetail(leader.unitId!!)
+                }
+            }
+            if (!unknown) {
+                PositionIcon(
+                    position = basicInfo!!.position,
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.divLineHeight,
+                            bottom = Dimen.divLineHeight
+                        )
+                        .align(Alignment.BottomEnd),
+                    size = Dimen.exSmallIconSize
+                )
+            }
+
         }
 
+
         MainCard(
+            modifier = Modifier.padding(start = Dimen.mediumPadding),
             onClick = {
-                //打开浏览器
-                BrowserUtil.open(context, info.url)
+                BrowserUtil.open(context, leader.url)
             }
         ) {
-            Row(
-                modifier = Modifier.padding(Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconCompose(data = info.icon, size = Dimen.iconSize)
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                Row(
+                    modifier = Modifier.padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.smallPadding
+                    )
+                ) {
+                    //名称
+                    MainContentText(
+                        text = "${index + 1}." + if (hasUnitId && !unknown) {
+                            basicInfo!!.getNameF()
+                        } else {
+                            leader.name
+                        },
+                        textAlign = TextAlign.Start,
+                        color = textColor
+                    )
+
+                    CaptionText(
+                        text = leader.getTime(),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = textColor
+                    )
+
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 //                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.tower, info.towerFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.pvp, info.pvpFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.clan, info.clanFlag, modifier = Modifier.weight(0.25f))
+                    GradeText(leader.tower, modifier = Modifier.weight(1f))
+                    GradeText(leader.pvp, modifier = Modifier.weight(1f))
+                    GradeText(leader.clan, modifier = Modifier.weight(1f))
+                }
             }
         }
+
     }
 
 }
@@ -277,7 +336,6 @@ private fun LeaderboardItem(info: LeaderboardData, index: Int) {
 @Composable
 fun GradeText(
     grade: String,
-    flag: Int,
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier
 ) {
@@ -299,20 +357,5 @@ fun GradeText(
             textAlign = textAlign,
             fontWeight = FontWeight.Bold,
         )
-        if (flag == 1) {
-            CaptionText(
-                text = stringResource(id = R.string.experimental),
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun LeaderboardItemPreview() {
-    PreviewBox {
-        Column {
-            LeaderboardItem(info = LeaderboardData(icon = "?"), 1)
-        }
     }
 }

@@ -461,15 +461,6 @@ fun getPositionColor(position: Int) = when (PositionType.getPositionType(positio
     PositionType.UNKNOWN -> colorPrimary
 }
 
-
-//攻击颜色
-@Composable
-fun getAtkColor(atkType: Int) = when (atkType) {
-    1 -> colorGold
-    2 -> colorPurple
-    else -> colorCopper
-}
-
 /**
  * 带指示器图标
  */
@@ -528,6 +519,7 @@ fun CircularProgressCompose(
 
 /**
  * 切换
+ * @param width 宽度
  */
 @Composable
 fun SelectTypeCompose(
@@ -537,6 +529,12 @@ fun SelectTypeCompose(
     type: MutableState<Int>,
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
+    paddingValues: PaddingValues = PaddingValues(
+        end = Dimen.fabMarginEnd,
+        start = Dimen.fabMargin,
+        top = Dimen.fabMargin,
+        bottom = Dimen.fabMargin,
+    ),
     changeListener: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -554,16 +552,12 @@ fun SelectTypeCompose(
         navViewModel.openChangeDataDialog.postValue(false)
     }
 
+
     //切换
     SmallFloatingActionButton(
         modifier = modifier
             .animateContentSize(defaultSpring())
-            .padding(
-                end = Dimen.fabMarginEnd,
-                start = Dimen.fabMargin,
-                top = Dimen.fabMargin,
-                bottom = Dimen.fabMargin,
-            )
+            .padding(paddingValues)
             .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
         shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
@@ -911,14 +905,14 @@ fun <T> CommonResponseBox(
         FadeAnimation(visible = isResultError(responseData)) {
             CenterTipText(text = stringResource(id = R.string.respon_error))
         }
-        FadeAnimation(visible = responseData != null) {
+        FadeAnimation(visible = responseData?.data != null) {
             content(responseData!!.data!!)
         }
-        FadeAnimation(visible = responseData == null, modifier = Modifier.align(Alignment.Center)) {
-            CircularProgressCompose()
+        if (responseData == null) {
+            CircularProgressCompose(modifier = Modifier.align(Alignment.Center))
         }
 
-        if (responseData != null && fabContent != null) {
+        if (responseData?.data != null && fabContent != null) {
             fabContent(responseData.data!!)
         }
     }

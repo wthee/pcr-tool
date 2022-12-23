@@ -65,8 +65,8 @@ interface MyAPIService {
     /**
      * 排行信息
      */
-    @POST("leaders/v2")
-    suspend fun getLeader(@Body body: RequestBody): ResponseData<LeaderData>
+    @POST("leaders/v4")
+    suspend fun getLeader(@Body body: RequestBody): ResponseData<List<LeaderboardData>>
 
     /**
      * 查询额外装备掉落信息

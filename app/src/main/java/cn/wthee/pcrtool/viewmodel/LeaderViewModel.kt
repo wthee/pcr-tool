@@ -28,9 +28,7 @@ class LeaderViewModel @Inject constructor(
      * 获取排行评级
      */
     fun getLeaderTier(type: Int) = flow {
-        val data = apiRepository.getLeaderTier(type).data
-        data?.let {
-            emit(data)
-        }
+        val data = apiRepository.getLeaderTier(type)
+        emit(data)
     }
 }

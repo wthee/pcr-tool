@@ -26,6 +26,8 @@ object Dimen {
 
     val commonItemPadding = 6.dp
 
+    val exSmallIconSize = 14.dp
+
     val smallIconSize = 18.dp
 
     val textIconSize = 20.dp

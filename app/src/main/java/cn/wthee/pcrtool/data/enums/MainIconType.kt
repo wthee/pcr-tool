@@ -138,9 +138,9 @@ enum class MainIconType(val icon: ImageVector) {
     MOCK_GACHA_PAY(Icons.Rounded.CreditCard),
 
     /**
-     * 卡池类型
+     * 类型切换
      */
-    MOCK_GACHA_TYPE(Icons.Rounded.SwapVert),
+    CHANGE_FILTER_TYPE(Icons.Rounded.SwapVert),
 
     /**
      * 免费十连
