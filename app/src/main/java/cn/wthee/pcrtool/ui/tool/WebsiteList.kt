@@ -1,18 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,11 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.WebsiteViewModel
 import kotlinx.coroutines.launch
 
@@ -34,8 +29,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun WebsiteList(
-    scrollState: LazyListState,
-    websiteViewModel: WebsiteViewModel = hiltViewModel()
+    scrollState: LazyListState, websiteViewModel: WebsiteViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val flow = remember {
@@ -43,40 +37,59 @@ fun WebsiteList(
     }
     val responseData = flow.collectAsState(initial = null).value
 
+    val type = remember {
+        mutableStateOf(0)
+    }
+    val tabs = arrayListOf(
+        stringResource(id = R.string.all),
+        stringResource(id = R.string.db_cn),
+        stringResource(id = R.string.db_tw),
+        stringResource(id = R.string.db_jp),
+    )
+
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+
     //列表
-    CommonResponseBox(
-        responseData = responseData,
-        fabContent = {
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.WEBSITE_BOOKMARK,
-                text = stringResource(id = R.string.tool_website),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
-                    }
+    CommonResponseBox(responseData = responseData, fabContent = {
+        //切换类型
+        SelectTypeCompose(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            icon = MainIconType.FILTER,
+            tabs = tabs,
+            type = type,
+            paddingValues = PaddingValues(
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+            )
+        )
+
+        //回到顶部
+        FabCompose(
+            iconType = MainIconType.WEBSITE_BOOKMARK,
+            text = stringResource(id = R.string.tool_website),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            coroutineScope.launch {
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (_: Exception) {
                 }
             }
         }
-    ) {data ->
+    }) { data ->
+
         LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = Dimen.mediumPadding)
-                .fillMaxSize(),
-            state = scrollState
+            modifier = Modifier.fillMaxSize(), state = scrollState
         ) {
-            items(
-                items = data,
-                key = {
-                    it.type
-                }
-            ) {
-                WebsiteGroup(it)
+            items(items = data, key = {
+                it.type
+            }) {
+                WebsiteGroup(it, type.value, spanCount = spanCount)
+            }
+            item {
+                CommonSpacer()
             }
             item {
                 CommonSpacer()
@@ -91,41 +104,89 @@ fun WebsiteList(
  */
 @Composable
 private fun WebsiteGroup(
-    groupData: WebsiteGroupData
+    groupData: WebsiteGroupData,
+    regionIndex: Int,
+    spanCount: Int
 ) {
-    val context = LocalContext.current
+
+    val websiteList = groupData.websiteList.filter {
+        it.region == regionIndex + 1 || it.region == 1 || regionIndex == 0
+    }
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainText(
             text = getTitle(groupData.type),
             modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
         )
-        if (groupData.websiteList.isEmpty()) {
+        if (websiteList.isEmpty()) {
             CenterTipText(text = stringResource(id = R.string.no_data))
         } else {
             VerticalGrid(
-                maxColumnWidth = getItemWidth(),
-                modifier = Modifier.animateContentSize(defaultSpring())
+                spanCount = spanCount,
+                modifier = Modifier
+                    .padding(
+                        start = Dimen.commonItemPadding,
+                        end = Dimen.commonItemPadding
+                    )
+                    .animateContentSize(defaultSpring())
             ) {
-                groupData.websiteList.forEach {
-                    SettingItem(
-                        iconType = it.icon,
-                        title = it.title,
-                        titleColor = MaterialTheme.colorScheme.primary,
-                        summary = it.summary,
-                        colorFilter = null,
-                        onClick = {
-                            BrowserUtil.open(context, it.url)
-                        }
-                    ) {
-                        IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
-                    }
+                websiteList.forEach {
+                    WebsiteItem(data = it)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WebsiteItem(data: WebsiteData) {
+    val context = LocalContext.current
+    val iconType = data.icon
+    val title = data.title
+    val summary = data.summary
+    val regionName = getRegionName(data.region)
+
+    Column(
+        modifier = Modifier.padding(Dimen.mediumPadding)
+    ) {
+        //标题
+        Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            IconCompose(
+                data = iconType, size = Dimen.smallIconSize
+            )
+
+            MainTitleText(
+                text = regionName,
+                modifier = Modifier.padding(start = Dimen.mediumPadding)
+            )
+        }
+        MainCard(
+            modifier = Modifier.heightIn(min = Dimen.cardHeight),
+            onClick = {
+                VibrateUtil(context).single()
+                BrowserUtil.open(context, data.url)
+            }
+        ) {
+            Column(
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Subtitle1(
+                    text = title,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+
+                if (summary != "") {
+                    Subtitle2(
+                        text = summary,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(top = Dimen.smallPadding)
+                    )
+                }
+
             }
         }
     }
@@ -141,6 +202,8 @@ private fun getTitle(type: Int) = stringResource(
         2 -> R.string.website_type_2
         3 -> R.string.website_type_3
         4 -> R.string.website_type_4
+        5 -> R.string.website_type_5
+        6 -> R.string.website_type_6
         else -> R.string.other
     }
 )
