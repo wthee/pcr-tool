@@ -23,11 +23,7 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "voice") val voice: String = "???",
     @ColumnInfo(name = "catch_copy") val catchCopy: String = "???",
     @ColumnInfo(name = "self_text") val selfText: String = "???",
-    @ColumnInfo(name = "search_area_width") val position: Int = 100,
     @ColumnInfo(name = "intro") val intro: String = "???",
-    @ColumnInfo(name = "atk_type") val atkType: Int = 1,
-    @ColumnInfo(name = "r6Id") val r6Id: Int = 0,
-    @ColumnInfo(name = "rarity") val rarity: Int = 3,
 ) {
 
     /**

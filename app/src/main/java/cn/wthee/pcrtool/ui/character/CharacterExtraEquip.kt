@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,39 +37,46 @@ fun CharacterExtraEquip(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if(equipList != null){
-            LazyColumn(state = scrollState) {
-                item {
-                    //标题
-                    MainText(
-                        text = stringResource(R.string.unit_extra_equip_slot),
-                        modifier = Modifier
-                            .padding(Dimen.largePadding)
-                            .fillMaxWidth()
+            if (equipList.isEmpty()) {
+                CenterTipText(
+                    stringResource(
+                        id = R.string.no_data,
+                        getRegionName(MainActivity.regionType)
                     )
-                }
-                items(equipList) {
-                    ExtraEquipSubGroup(
-                        it.category,
-                        it.categoryName,
-                        it.exEquipmentIds.intArrayList,
-                        0,
-                        toExtraEquipDetail
-                    )
-                }
-                item {
-                    CommonSpacer()
+                )
+            } else {
+                LazyColumn(state = scrollState) {
+                    item {
+                        //标题
+                        MainText(
+                            text = stringResource(R.string.unit_extra_equip_slot),
+                            modifier = Modifier
+                                .padding(Dimen.largePadding)
+                                .fillMaxWidth()
+                        )
+                    }
+                    items(equipList) {
+                        ExtraEquipSubGroup(
+                            it.category,
+                            it.categoryName,
+                            it.exEquipmentIds.intArrayList,
+                            0,
+                            toExtraEquipDetail
+                        )
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }else {
             //功能未实装
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CenterTipText(
-                    stringResource(
-                        id = R.string.not_installed,
-                        getRegionName(MainActivity.regionType)
-                    )
+            CenterTipText(
+                stringResource(
+                    id = R.string.not_installed,
+                    getRegionName(MainActivity.regionType)
                 )
-            }
+            )
         }
     }
 }

@@ -98,6 +98,9 @@ fun CharacterDetail(
             navController.currentBackStackEntry?.savedStateHandle?.get<Int>("currentRank")
 
         if (rankEquipSelectedValue != null) {
+            navController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.set("currentRank", null)
             currentValueState.value = currentValueState.value.update(rank = rankEquipSelectedValue)
         }
     }
@@ -202,7 +205,7 @@ fun CharacterDetail(
                     maxRank = maxValue.rank,
                     equips = characterAttrData.equips,
                     toEquipDetail = actions.toEquipDetail,
-                    toCharacteRankEquip = actions.toCharacterRankEquip
+                    toCharacterRankEquip = actions.toCharacterRankEquip
                 )
                 //显示专武
                 if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
@@ -298,61 +301,61 @@ private fun CharacterCard(
     //基本信息
     val basicInfo =
         characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
-    if (basicInfo != null) {
-        Column(
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .width(getItemWidth()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            //卡面信息
-            Box {
-                CharacterItem(
-                    character = basicInfo, loved = loved
-                ) {
-                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
-                }
-            }
 
-            //其它功能
-            Row(
-                modifier = Modifier
-                    .padding(top = Dimen.smallPadding)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier
+            .padding(Dimen.largePadding)
+            .width(getItemWidth()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        //卡面信息
+        Box {
+            CharacterItem(
+                unitId = unitId, character = basicInfo, loved = loved
             ) {
-                //战力计算
-                CharacterCoe(characterAttrData, currentValue, actions.toCoe)
-                Spacer(modifier = Modifier.weight(1f))
-                //资料
-                IconTextButton(
-                    icon = MainIconType.CHARACTER_INTRO,
-                    text = stringResource(id = R.string.character_basic_info),
-                ) {
-                    actions.toCharacterBasicInfo(unitId)
-                }
-                //立绘预览
-                IconTextButton(
-                    icon = MainIconType.PREVIEW_IMAGE,
-                    text = stringResource(id = R.string.character_pic),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                ) {
-                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
-                }
-                //模型预览
-                IconTextButton(
-                    icon = MainIconType.PREVIEW_UNIT_SPINE,
-                    text = stringResource(id = R.string.spine_preview),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                ) {
-                    BrowserUtil.open(
-                        context,
-                        Constants.PREVIEW_UNIT_URL + (if (cutinId != 0) cutinId else unitId)
-                    )
-                }
+                actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+            }
+        }
+
+        //其它功能
+        Row(
+            modifier = Modifier
+                .padding(top = Dimen.smallPadding)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //战力计算
+            CharacterCoe(characterAttrData, currentValue, actions.toCoe)
+            Spacer(modifier = Modifier.weight(1f))
+            //资料
+            IconTextButton(
+                icon = MainIconType.CHARACTER_INTRO,
+                text = stringResource(id = R.string.character_basic_info),
+            ) {
+                actions.toCharacterBasicInfo(unitId)
+            }
+            //立绘预览
+            IconTextButton(
+                icon = MainIconType.PREVIEW_IMAGE,
+                text = stringResource(id = R.string.character_pic),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            ) {
+                actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+            }
+            //模型预览
+            IconTextButton(
+                icon = MainIconType.PREVIEW_UNIT_SPINE,
+                text = stringResource(id = R.string.spine_preview),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            ) {
+                BrowserUtil.open(
+                    context,
+                    Constants.PREVIEW_UNIT_URL + (if (cutinId != 0) cutinId else unitId)
+                )
             }
         }
     }
+
 }
 
 /**
@@ -585,7 +588,7 @@ private fun CharacterEquip(
     maxRank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit,
-    toCharacteRankEquip: (Int, Int) -> Unit
+    toCharacterRankEquip: (Int, Int) -> Unit
 ) {
     val rank = currentValueState.value.rank
 
@@ -651,7 +654,7 @@ private fun CharacterEquip(
                         vertical = Dimen.largePadding * 2
                     )
                 ) {
-                    toCharacteRankEquip(unitId, rank)
+                    toCharacterRankEquip(unitId, rank)
                 }
                 IconCompose(data = MainIconType.MORE,
                     tint = if (rank > 1) {

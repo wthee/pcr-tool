@@ -113,39 +113,25 @@ private fun BasicInfo(info: CharacterInfoPro) {
             getFixed(info.age)
         )
         //血型、位置
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_blood),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.bloodType,
-                modifier = Modifier
-                    .weight(0.35f)
-                    .padding(end = Dimen.mediumPadding)
-            )
-            MainTitleText(
-                text = stringResource(id = R.string.title_position),
-                modifier = Modifier.weight(0.15f)
-            )
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(0.35f)
-            ) {
-                PositionIcon(position = info.position)
-                MainContentText(
-                    text = info.position.toString(),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
-        }
-        //种族、cv
         TwoColumnsInfo(
-            stringResource(id = R.string.title_race),
-            info.race,
+            stringResource(id = R.string.title_blood),
+            info.bloodType,
             stringResource(id = R.string.cv),
             info.voice
+        )
+        //种族
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+            MainTitleText(
+                text = stringResource(id = R.string.title_race),
+                modifier = Modifier.weight(0.15f)
+            )
+            Spacer(modifier = Modifier.weight(0.85f))
+        }
+        MainContentText(
+            text = info.race,
+            modifier = Modifier.padding(Dimen.mediumPadding),
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         //公会
         Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {

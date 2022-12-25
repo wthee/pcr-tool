@@ -7,8 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -358,10 +356,10 @@ fun SkillActionItem(
 ) {
 
     //详细描述
-    val mark0 = arrayListOf<SkillIndex>()
-    val mark1 = arrayListOf<SkillIndex>()
-    val mark2 = arrayListOf<SkillIndex>()
-    val mark3 = arrayListOf<SkillIndex>()
+    val mark0 = arrayListOf<ColorTextIndex>()
+    val mark1 = arrayListOf<ColorTextIndex>()
+    val mark2 = arrayListOf<ColorTextIndex>()
+    val mark3 = arrayListOf<ColorTextIndex>()
     val colors =
         arrayListOf(
             colorGreen,
@@ -371,40 +369,35 @@ fun SkillActionItem(
         )
     skillAction.action.forEachIndexed { index, c ->
         if (c == '[') {
-            mark0.add(SkillIndex(start = index))
+            mark0.add(ColorTextIndex(start = index))
         }
         if (c == ']') {
             mark0[mark0.size - 1].end = index
         }
         if (c == '(') {
-            mark1.add(SkillIndex(start = index))
+            mark1.add(ColorTextIndex(start = index))
         }
         if (c == ')') {
             mark1[mark1.size - 1].end = index
         }
         if (c == '{') {
-            mark2.add(SkillIndex(start = index))
+            mark2.add(ColorTextIndex(start = index))
         }
         if (c == '}') {
             mark2[mark2.size - 1].end = index
         }
         if (c == '<') {
-            mark3.add(SkillIndex(start = index))
+            mark3.add(ColorTextIndex(start = index))
         }
         if (c == '>') {
             mark3[mark3.size - 1].end = index
         }
     }
-    val map = hashMapOf<Int, ArrayList<SkillIndex>>()
+    val map = hashMapOf<Int, ArrayList<ColorTextIndex>>()
     map[0] = mark0
     map[1] = mark1
     map[2] = mark2
     map[3] = mark3
-
-    //等级提示
-    val expandTip = remember {
-        mutableStateOf(false)
-    }
 
     Row(
         modifier = Modifier
@@ -468,18 +461,9 @@ fun SkillActionItem(
                 //技能等级超过tp限制等级的，添加标识
                 if (skillAction.isTpLimitAction) {
                     IconTextButton(
-                        icon = if (!expandTip.value) MainIconType.HELP else MainIconType.CLOSE,
-                        text = stringResource(R.string.tp_limit_level_action)
-                    ) {
-                        expandTip.value = !expandTip.value
-                    }
-                }
-            }
-
-            if (skillAction.isTpLimitAction) {
-                val tip = stringResource(id = R.string.tip_tp_limit_level_action)
-                ExpandAnimation(visible = expandTip.value) {
-                    CaptionText(text = tip, textAlign = TextAlign.Start)
+                        icon = MainIconType.HELP,
+                        text = stringResource(R.string.tp_limit_level_action_desc)
+                    )
                 }
             }
 
@@ -519,7 +503,7 @@ fun getSkillColor(type: String): Color {
     }
 }
 
-private data class SkillIndex(
+data class ColorTextIndex(
     var start: Int = 0,
     var end: Int = 0
 )

@@ -210,7 +210,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_data.unit_name,
+            unit_profile.unit_name,
             COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
@@ -224,16 +224,11 @@ interface UnitDao {
             unit_profile.voice,
             unit_profile.catch_copy,
             unit_profile.self_text,
-            unit_data.search_area_width,
             COALESCE( unit_data.comment, '......' ) AS intro,
-            unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, '' ) AS actual_name
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
         WHERE 
             unit_profile.unit_id = :unitId 
@@ -255,7 +250,7 @@ interface UnitDao {
             COALESCE( GROUP_CONCAT( a.description, '-' ), '......') AS room_comments 
         FROM
             room_unit_comments AS a
-            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+            LEFT JOIN unit_profile AS b ON a.unit_id = b.unit_id 
         WHERE
             a.unit_id = :unitId 
         GROUP BY
