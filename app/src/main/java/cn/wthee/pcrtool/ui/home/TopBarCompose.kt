@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
@@ -20,6 +23,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.skill.ColorTextIndex
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.colorGreen
@@ -119,6 +123,17 @@ private fun AppUpdateContent(appNotice: AppNotice) {
     val context = LocalContext.current
     val releaseUrl = stringResource(id = R.string.github_release_url, appNotice.title)
 
+    val mark0 = arrayListOf<ColorTextIndex>()
+    appNotice.message.forEachIndexed { index, c ->
+        if (c == '[') {
+            mark0.add(ColorTextIndex(start = index))
+        }
+        if (c == ']') {
+            mark0[mark0.size - 1].end = index
+        }
+    }
+
+
     MainCard(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
@@ -139,7 +154,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 Text(
                     text = "v${appNotice.title}",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Black,
+                    fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier.weight(1f)
                 )
                 //反馈群
@@ -167,10 +182,30 @@ private fun AppUpdateContent(appNotice: AppNotice) {
             )
 
             //内容
-            MainContentText(
-                text = appNotice.message,
+            Text(
+                text = buildAnnotatedString {
+                    appNotice.message.forEachIndexed { index, char ->
+                        //替换括号及括号内字体颜色
+                        mark0.forEach {
+                            if (index >= it.start && index <= it.end) {
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append(char)
+                                }
+                                return@forEachIndexed
+                            }
+                        }
+                        //添加非括号标记的参数
+                        append(char)
+                    }
+                },
                 textAlign = TextAlign.Start,
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding)
+                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
+                style = MaterialTheme.typography.bodyLarge,
             )
 
             //前往更新
