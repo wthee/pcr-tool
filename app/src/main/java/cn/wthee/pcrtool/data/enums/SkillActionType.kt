@@ -436,7 +436,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     TP_HIT(97, R.string.none),
 
     /**
-     * 98：受击tp减少
+     * 98：改变 TP 减少时倍率
      */
     TP_HIT_REDUCE(98, R.string.none),
 }

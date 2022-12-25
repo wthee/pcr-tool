@@ -638,15 +638,17 @@ fun IconTextButton(
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    onClick: () -> Unit
+    onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
 
     Row(modifier = modifier
         .clip(MaterialTheme.shapes.small)
-        .clickable {
+        .clickable(enabled = onClick != null) {
             VibrateUtil(context).single()
-            onClick()
+            if (onClick != null) {
+                onClick()
+            }
         }
         .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically
     ) {
@@ -909,7 +911,11 @@ fun <T> CommonResponseBox(
             content(responseData!!.data!!)
         }
         if (responseData == null) {
-            CircularProgressCompose(modifier = Modifier.align(Alignment.Center))
+            CircularProgressCompose(
+                modifier = Modifier
+                    .padding(vertical = Dimen.largePadding)
+                    .align(Alignment.Center)
+            )
         }
 
         if (responseData?.data != null && fabContent != null) {

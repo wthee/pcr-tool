@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +51,9 @@ fun ClanBattleDetail(
 
     //页面
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         clanBattleInfo?.let { clanBattleList ->
             //该期公会战数据

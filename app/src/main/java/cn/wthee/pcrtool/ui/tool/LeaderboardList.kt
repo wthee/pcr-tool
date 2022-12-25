@@ -54,63 +54,62 @@ fun LeaderboardList(
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
 
-
-    CommonResponseBox(
-        responseData = responseData,
-        fabContent = {
-            Row(
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        //更新
+        Row(
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(
+                text = "GameWith",
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                //回到顶部
-                FabCompose(
-                    iconType = MainIconType.LEADER,
-                    text = (leaderList?.size ?: 0).toString()
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(context, url)
+                    }
+            )
+
+            MainTitleText(
+                text = stringResource(id = R.string.only_jp),
+                backgroundColor = colorRed,
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(context, url)
+                    }
+            )
+        }
+        //标题
+        SortTitleGroup(sort, asc)
+        CommonResponseBox(
+            responseData = responseData,
+            fabContent = {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
-                    coroutineScope.launch {
-                        try {
-                            scrollState.scrollToItem(0)
-                        } catch (_: Exception) {
+                    //回到顶部
+                    FabCompose(
+                        iconType = MainIconType.LEADER,
+                        text = (leaderList?.size ?: 0).toString()
+                    ) {
+                        coroutineScope.launch {
+                            try {
+                                scrollState.scrollToItem(0)
+                            } catch (_: Exception) {
+                            }
                         }
                     }
                 }
             }
-        }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
         ) {
-            //更新
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = "GameWith",
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(context, url)
-                        }
-                )
-
-                MainTitleText(
-                    text = stringResource(id = R.string.only_jp),
-                    backgroundColor = colorRed,
-                    modifier = Modifier
-                        .padding(start = Dimen.smallPadding)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(context, url)
-                        }
-                )
-            }
-            //标题
-            SortTitleGroup(sort, asc)
             LazyColumn(
                 state = scrollState
             ) {

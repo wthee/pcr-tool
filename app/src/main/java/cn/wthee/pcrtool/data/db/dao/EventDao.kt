@@ -99,7 +99,8 @@ interface EventDao {
         FROM
             campaign_schedule 
         WHERE
-            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45 ) 
+            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45 )
+            AND id < 5000
         GROUP BY
             start_time,
             end_time,

@@ -73,8 +73,8 @@ interface EquipmentDao {
             )
             AND a.equipment_id < 140000
             AND 1 = CASE
-                WHEN  0 = :type  THEN 1 
-                WHEN  a.promotion_level = :type  THEN 1 
+                WHEN  0 = :colorType  THEN 1 
+                WHEN  a.promotion_level = :colorType  THEN 1 
             END
             AND 1 = CASE
                 WHEN  a.craft_flg = :craft THEN 1 
@@ -86,7 +86,7 @@ interface EquipmentDao {
     )
     suspend fun getEquipments(
         craft: Int,
-        type: Int,
+        colorType: Int,
         name: String,
         showAll: Int,
         starIds: List<Int>,

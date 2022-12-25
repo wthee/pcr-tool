@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 
@@ -190,7 +191,7 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
 
     CommonResponseBox(
         responseData = responseData,
-        fabContent = {data ->
+        fabContent = { data ->
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -210,7 +211,7 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                 }
             }
         }
-    ) {data ->
+    ) { data ->
         val originalUrl = data.url
         val region = originalUrl.region
         val state = rememberWebViewState(originalUrl)
@@ -342,6 +343,16 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                     }
                 }
             )
+        }
+
+        //网页加载
+        if (state.loadingState !is LoadingState.Finished) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressCompose()
+            }
         }
     }
 }

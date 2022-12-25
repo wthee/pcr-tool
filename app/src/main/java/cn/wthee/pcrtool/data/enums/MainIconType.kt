@@ -401,4 +401,19 @@ enum class MainIconType(val icon: ImageVector) {
      * 角色评级
      */
     LEADER_TIER(Icons.Rounded.WorkspacePremium),
+
+    /**
+     * PC
+     */
+    BROWSER_PC(Icons.Rounded.DesktopWindows),
+
+    /**
+     * 手机
+     */
+    BROWSER_PHONE(Icons.Rounded.PhoneAndroid),
+
+    /**
+     * 手机
+     */
+    BROWSER_APP(Icons.Rounded.Android),
 }

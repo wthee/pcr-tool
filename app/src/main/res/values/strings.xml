@@ -45,8 +45,7 @@
     <string name="spine_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
-    <string name="tp_limit_level_action">技能等级 > 260</string>
-    <string name="tip_tp_limit_level_action">该技能等级大于 260 后，继续提高技能等级不会增加TP数值</string>
+    <string name="tp_limit_level_action_desc">技能等级 > 260，TP数值不会继续增加</string>
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
@@ -131,11 +130,11 @@
     <string name="equip_material">合成素材</string>
 
     <!--其它工具-->
-    <string name="tool_leader">排行</string>
+    <string name="tool_leader">角色排行</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
-    <string name="tool_website">常用网站</string>
+    <string name="tool_website">收藏夹</string>
     <string name="tool_clan">公会战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
@@ -220,6 +219,7 @@
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
     <string name="copy_text">复制</string>
+    <string name="copy_all">全部复制</string>
     <string name="open_browser">在浏览器中打开</string>
     <string name="copy_qq_group">已复制QQ群号：%s</string>
     <string name="share_to">分享到：</string>
@@ -724,6 +724,7 @@
     <string name="website_type_6">官方账号</string>
 
     <!--排行评级查询-->
+    <string name="leader_need_sync">未关联</string>
     <string name="only_jp">日服</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>

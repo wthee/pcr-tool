@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -145,29 +144,27 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        FadeAnimation(visible = equip.equipmentId != UNKNOWN_EQUIP_ID) {
-            VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                materialList.forEach { material ->
-                    val loved = starIds.value.contains(material.id)
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding,
-                                bottom = Dimen.largePadding
-                            ), horizontalAlignment = Alignment.CenterHorizontally
+        VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+            materialList.forEach { material ->
+                val loved = starIds.value.contains(material.id)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding,
+                            bottom = Dimen.largePadding
+                        ), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getEquipPic(material.id)
                     ) {
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getEquipPic(material.id)
-                        ) {
-                            toEquipMaterial(material.id)
-                        }
-                        SelectText(
-                            selected = loved,
-                            text = material.count.toString()
-                        )
+                        toEquipMaterial(material.id)
                     }
+                    SelectText(
+                        selected = loved,
+                        text = material.count.toString()
+                    )
                 }
             }
         }

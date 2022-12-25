@@ -52,10 +52,6 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
-    val lineWidth = 32.dp
-
-    val lineHeight = 3.dp
-
     val skillActionMinHeight = 16.dp
 
     val border = 3.dp

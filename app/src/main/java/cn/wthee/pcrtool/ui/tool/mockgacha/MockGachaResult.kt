@@ -164,7 +164,7 @@ private fun MockGachaResultRecordItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
                 MockGachaResultRecordIconLine(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     0,
@@ -202,7 +202,7 @@ private fun MockGachaResultRecordIconLine(
 ) {
     Row(
         modifier = modifier
-            .padding(Dimen.mediumPadding)
+            .padding(horizontal = Dimen.mediumPadding)
             .width(getItemWidth()),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

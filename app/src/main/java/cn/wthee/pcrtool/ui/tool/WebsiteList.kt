@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,10 @@ import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.viewmodel.WebsiteViewModel
 import kotlinx.coroutines.launch
 
@@ -47,7 +49,7 @@ fun WebsiteList(
         stringResource(id = R.string.db_jp),
     )
 
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
     //列表
     CommonResponseBox(responseData = responseData, fabContent = {
@@ -144,52 +146,86 @@ private fun WebsiteGroup(
 @Composable
 private fun WebsiteItem(data: WebsiteData) {
     val context = LocalContext.current
-    val iconType = data.icon
-    val title = data.title
-    val summary = data.summary
     val regionName = getRegionName(data.region)
 
     Column(
-        modifier = Modifier.padding(Dimen.mediumPadding)
+        modifier = Modifier
+            .padding(Dimen.mediumPadding)
+            .fillMaxWidth(),
     ) {
-        //标题
-        Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-            IconCompose(
-                data = iconType, size = Dimen.smallIconSize
-            )
-
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //区服
             MainTitleText(
-                text = regionName,
-                modifier = Modifier.padding(start = Dimen.mediumPadding)
+                text = regionName
             )
+            //摘要
+            if (data.summary != "") {
+                MainTitleText(
+                    text = data.summary,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+
         }
+
         MainCard(
-            modifier = Modifier.heightIn(min = Dimen.cardHeight),
+            modifier = Modifier
+                .padding(top = Dimen.mediumPadding)
+                .heightIn(min = Dimen.cardHeight),
             onClick = {
-                VibrateUtil(context).single()
                 BrowserUtil.open(context, data.url)
             }
         ) {
-            Column(
+            Row(
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                verticalArrangement = Arrangement.Center
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Subtitle1(
-                    text = title,
-                    color = MaterialTheme.colorScheme.primary,
+                //图标
+                IconCompose(
+                    data = data.icon, size = Dimen.smallIconSize
                 )
 
-                if (summary != "") {
-                    Subtitle2(
-                        text = summary,
-                        color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(top = Dimen.smallPadding)
+                //标题
+                Subtitle1(
+                    text = data.title,
+                    modifier = Modifier.padding(start = Dimen.mediumPadding)
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(bottom = Dimen.mediumPadding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                if (data.browserType == 0 || data.browserType == 1) {
+                    IconCompose(
+                        data = MainIconType.BROWSER_PC,
+                        size = Dimen.smallIconSize,
+                        modifier = Modifier.padding(end = Dimen.mediumPadding)
                     )
                 }
-
+                if (data.browserType == 0 || data.browserType == 2) {
+                    IconCompose(
+                        data = MainIconType.BROWSER_PHONE,
+                        size = Dimen.smallIconSize,
+                        modifier = Modifier.padding(end = Dimen.mediumPadding)
+                    )
+                }
+                if (data.browserType == 3) {
+                    IconCompose(
+                        data = MainIconType.BROWSER_APP,
+                        size = Dimen.smallIconSize,
+                        modifier = Modifier.padding(end = Dimen.mediumPadding)
+                    )
+                }
             }
         }
     }
+
+
 }
 
 /**

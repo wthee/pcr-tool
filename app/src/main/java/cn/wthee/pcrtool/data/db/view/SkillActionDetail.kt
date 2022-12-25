@@ -1399,11 +1399,11 @@ data class SkillActionDetail(
                 )
                 desc + tpDesc
             }
-            // 98：改变 TP 获取倍率
+            // 98：改变 TP 减少时倍率
             SkillActionType.TP_HIT_REDUCE -> {
                 val time = getTimeText(2, actionValue2, actionValue3)
                 getString(
-                    R.string.skill_action_type_desc_92,
+                    R.string.skill_action_type_desc_98,
                     getTarget(),
                     actionValue1.toString()
                 ) + time

@@ -17,4 +17,5 @@ data class WebsiteData(
     val summary: String,
     val url: String,
     val region: Int,
+    val browserType: Int = 0,
 )

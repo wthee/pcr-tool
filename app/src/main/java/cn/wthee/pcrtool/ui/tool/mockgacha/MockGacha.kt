@@ -221,7 +221,7 @@ fun MockGacha(
         //卡池类型选择
         if (!showResult) {
             SelectTypeCompose(
-                icon = MainIconType.MOCK_GACHA_TYPE,
+                icon = MainIconType.CHANGE_FILTER_TYPE,
                 tabs = tabs,
                 type = gachaType,
                 modifier = Modifier

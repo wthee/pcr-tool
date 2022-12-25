@@ -62,76 +62,76 @@ fun LeaderTier(
     val url = stringResource(id = R.string.leader_source_url)
     val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
 
-    CommonResponseBox(
-        responseData = leaderData,
-        fabContent = { data ->
-            //切换类型
-            SelectTypeCompose(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                icon = MainIconType.CHANGE_FILTER_TYPE,
-                tabs = tabs,
-                type = type,
-                width = Dimen.dataChangeWidth + Dimen.fabSize,
-                paddingValues = PaddingValues(
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                )
-            ) {
-                navViewModel.leaderTierType.postValue(type.value)
-            }
-
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.LEADER_TIER,
-                text = data.leader.size.toString(),
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        //更新
+        Row(
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(
+                text = stringResource(id = R.string.leader_source),
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                scope.launch {
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(context, url)
+                    }
+            )
+
+            MainTitleText(
+                text = stringResource(id = R.string.only_jp),
+                backgroundColor = colorRed,
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(context, url)
+                    }
+            )
+            CaptionText(text = leaderData?.data?.desc ?: "", modifier = Modifier.fillMaxWidth())
+        }
+
+        CommonResponseBox(
+            responseData = leaderData,
+            fabContent = { data ->
+                //切换类型
+                SelectTypeCompose(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    icon = MainIconType.CHANGE_FILTER_TYPE,
+                    tabs = tabs,
+                    type = type,
+                    width = Dimen.dataChangeWidth + Dimen.fabSize,
+                    paddingValues = PaddingValues(
+                        end = Dimen.fabMargin,
+                        bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                    )
+                ) {
+                    navViewModel.leaderTierType.postValue(type.value)
+                }
+
+                //回到顶部
+                FabCompose(
+                    iconType = MainIconType.LEADER_TIER,
+                    text = data.leader.size.toString(),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
                     scope.launch {
-                        try {
-                            scrollState.scrollToItem(0)
-                        } catch (_: Exception) {
+                        scope.launch {
+                            try {
+                                scrollState.scrollToItem(0)
+                            } catch (_: Exception) {
+                            }
                         }
                     }
                 }
             }
-        }
-    ) { data ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            //更新
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = stringResource(id = R.string.leader_source),
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(context, url)
-                        }
-                )
-
-                MainTitleText(
-                    text = stringResource(id = R.string.only_jp),
-                    backgroundColor = colorRed,
-                    modifier = Modifier
-                        .padding(start = Dimen.smallPadding)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(context, url)
-                        }
-                )
-                CaptionText(text = data.desc, modifier = Modifier.fillMaxWidth())
-            }
-
+        ) { data ->
             //分组
             val groupList = arrayListOf<LeaderTierGroup>()
             data.leader.forEach { leaderItem ->
@@ -328,10 +328,15 @@ private fun LeaderItem(
                         //获取方式
                         CharacterTag(
                             modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                            text = stringResource(
-                                id = R.string.unknown_character_type,
-                                getRegionName(MainActivity.regionType)
-                            ),
+                            text = if (!hasUnitId) {
+                                stringResource(id = R.string.leader_need_sync)
+
+                            } else {
+                                stringResource(
+                                    id = R.string.unknown_character_type,
+                                    getRegionName(MainActivity.regionType)
+                                )
+                            },
                             backgroundColor = colorGray
                         )
                     }
