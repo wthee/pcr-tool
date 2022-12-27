@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,8 +19,7 @@ import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -84,11 +82,6 @@ fun FreeGachaList(
  */
 @Composable
 fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
-    val today = getToday()
-    val sd = freeGachaInfo.startTime.fixJpTime
-    val ed = freeGachaInfo.endTime.fixJpTime
-    val inProgress = isInProgress(today, freeGachaInfo.startTime, freeGachaInfo.endTime)
-    val comingSoon = isComingSoon(today, freeGachaInfo.startTime)
 
     Column(
         modifier = Modifier.padding(
@@ -101,46 +94,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            MainTitleText(
-                text = sd.substring(0, 10),
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-            )
-            MainTitleText(
-                text = ed.days(sd),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-
-            //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.progressing, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN,
-                        size = Dimen.smallIconSize,
-                        tint = colorPurple
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = colorPurple
-                    )
-                }
-            }
+            EventTitle(startTime = freeGachaInfo.startTime, endTime = freeGachaInfo.endTime)
         }
 
         MainCard {
@@ -158,7 +112,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
 
                 //结束日期
                 CaptionText(
-                    text = ed,
+                    text = freeGachaInfo.endTime.fixJpTime,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = Dimen.mediumPadding)

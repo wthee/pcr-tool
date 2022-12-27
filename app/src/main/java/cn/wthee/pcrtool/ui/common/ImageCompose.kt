@@ -39,7 +39,7 @@ const val RATIO_TEASER = 1280 / 576f
 @Composable
 fun ImageCompose(
     modifier: Modifier = Modifier,
-    data: Any,
+    data: String,
     ratio: Float,
     contentScale: ContentScale = ContentScale.FillWidth,
     placeholder: Boolean = true,

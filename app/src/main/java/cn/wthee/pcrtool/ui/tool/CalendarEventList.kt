@@ -13,15 +13,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -78,23 +82,6 @@ fun CalendarEventList(
  */
 @Composable
 fun CalendarEventItem(calendar: CalendarEvent) {
-    val today = getToday()
-    val sd = calendar.startTime.formatTime.fixJpTime
-    val ed = calendar.endTime.formatTime.fixJpTime
-    val inProgress = isInProgress(today, calendar.startTime, calendar.endTime)
-    val comingSoon = isComingSoon(today, calendar.startTime)
-
-    val color = when {
-        inProgress -> {
-            MaterialTheme.colorScheme.primary
-        }
-        comingSoon -> {
-            colorPurple
-        }
-        else -> {
-            MaterialTheme.colorScheme.outline
-        }
-    }
 
     Column(
         modifier = Modifier.padding(
@@ -106,48 +93,7 @@ fun CalendarEventItem(calendar: CalendarEvent) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            //开始日期
-            MainTitleText(
-                text = sd.substring(0, 10),
-                backgroundColor = color
-            )
-            //天数
-            MainTitleText(
-                text = ed.days(sd),
-                modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
-            )
-            //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT,
-                        size = Dimen.smallIconSize,
-                        tint = color
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.progressing, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = color
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN,
-                        size = Dimen.smallIconSize,
-                        tint = color
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = color
-                    )
-                }
-            }
+            EventTitle(calendar.startTime, calendar.endTime, showOverdueColor = true)
         }
 
         MainCard {
@@ -166,7 +112,10 @@ fun CalendarEventItem(calendar: CalendarEvent) {
                     }
                 }
                 //结束日期
-                CaptionText(text = ed, modifier = Modifier.fillMaxWidth())
+                CaptionText(
+                    text = calendar.endTime.formatTime.fixJpTime,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

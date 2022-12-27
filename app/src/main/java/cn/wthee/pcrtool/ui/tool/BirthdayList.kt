@@ -118,13 +118,6 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (inProgress) {
-                        IconCompose(
-                            data = MainIconType.BIRTHDAY,
-                            size = Dimen.smallIconSize,
-                            tint = colorRed
-                        )
-                    }
                     if (comingSoon) {
                         IconCompose(
                             data = MainIconType.COUNTDOWN,

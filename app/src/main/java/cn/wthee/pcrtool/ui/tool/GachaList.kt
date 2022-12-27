@@ -22,7 +22,9 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -96,12 +98,6 @@ fun GachaItem(
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
-    val today = getToday()
-    val sd = gachaInfo.startTime.formatTime.fixJpTime
-    val ed = gachaInfo.endTime.formatTime.fixJpTime
-    val inProgress = isInProgress(today, gachaInfo.startTime, gachaInfo.endTime)
-    val comingSoon = isComingSoon(today, gachaInfo.startTime)
-
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when (type) {
@@ -138,48 +134,9 @@ fun GachaItem(
                     gachaInfo.fixTypeName()
                 },
                 backgroundColor = color,
+                modifier = Modifier.padding(end = Dimen.smallPadding)
             )
-            //日期
-            MainTitleText(
-                text = sd.substring(0, 10),
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-            )
-            //天数
-            MainTitleText(
-                text = ed.days(sd),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-            //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.progressing, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN,
-                        size = Dimen.smallIconSize,
-                        tint = colorPurple
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = colorPurple
-                    )
-                }
-            }
+            EventTitle(startTime = gachaInfo.startTime, endTime = gachaInfo.endTime)
         }
 
         MainCard {
@@ -219,7 +176,7 @@ fun GachaItem(
                     }
                     //结束日期
                     CaptionText(
-                        text = ed,
+                        text = gachaInfo.endTime.formatTime.fixJpTime,
                         modifier = Modifier.weight(1f)
                     )
                 }

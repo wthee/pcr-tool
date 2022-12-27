@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.storyevent
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -161,51 +161,23 @@ fun StoryEventItem(
         ) {
             MainTitleText(
                 text = type,
-                backgroundColor = typeColor
+                backgroundColor = typeColor,
+                modifier = Modifier.padding(end = Dimen.smallPadding),
             )
             if (!previewEvent) {
                 MainTitleText(
                     text = sd.substring(0, 10),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
                 )
             }
             if (showDays) {
                 MainTitleText(
                     text = days,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
                 )
             }
             //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.progressing, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN,
-                        size = Dimen.smallIconSize,
-                        tint = colorPurple
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = colorPurple
-                    )
-                }
-            }
+            EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
         }
 
         MainCard {
@@ -242,7 +214,7 @@ fun StoryEventItem(
                     selectable = true
                 )
 
-                //掉落角色图标
+                //boss、掉落角色图标
                 if (event.getUnitIdList().isNotEmpty()) {
                     Row {
                         //sp boss 图标，处理id 311403 -> 311400

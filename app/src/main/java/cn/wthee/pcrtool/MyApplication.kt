@@ -13,8 +13,6 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -55,10 +53,6 @@ class MyApplication : Application(), ImageLoaderFactory {
                     .build()
             )
             .allowHardware(false)
-            .diskCachePolicy(CachePolicy.ENABLED)
-            .memoryCachePolicy(CachePolicy.ENABLED)
-            .networkCachePolicy(CachePolicy.ENABLED)
-            .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.5).build())
             .okHttpClient {
                 ApiUtil.buildClient()
             }
