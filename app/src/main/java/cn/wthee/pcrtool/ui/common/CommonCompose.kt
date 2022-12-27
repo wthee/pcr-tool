@@ -46,9 +46,7 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -920,6 +918,101 @@ fun <T> CommonResponseBox(
 
         if (responseData?.data != null && fabContent != null) {
             fabContent(responseData.data!!)
+        }
+    }
+}
+
+/**
+ * 日程标题
+ * @param showDays 显示天数
+ * @param showOverdueColor 过期日程颜色变灰色
+ */
+@Composable
+fun EventTitle(
+    startTime: String,
+    endTime: String,
+    showDays:Boolean = true,
+    showOverdueColor:Boolean = false
+) {
+    val today = getToday()
+    val sd = startTime.fixJpTime
+    val ed = endTime.fixJpTime
+    val inProgress = isInProgress(today, startTime, endTime)
+    val comingSoon = isComingSoon(today, startTime)
+
+    val color = when {
+        inProgress -> {
+            MaterialTheme.colorScheme.primary
+        }
+        comingSoon -> {
+            colorPurple
+        }
+        else -> {
+            if(showOverdueColor){
+                MaterialTheme.colorScheme.outline
+            }else{
+                MaterialTheme.colorScheme.primary
+            }
+        }
+    }
+
+    //日期
+    MainTitleText(
+        text = sd.substring(0, 10),
+        backgroundColor = color
+    )
+    //天数
+    if (showDays) {
+        val days = ed.days(sd)
+        MainTitleText(
+            text = days,
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            backgroundColor = color
+        )
+    }
+    //计时
+    EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
+}
+
+/**
+ * 日程倒计时
+ */
+@Composable
+fun EventTitleCountdown(
+    today: String,
+    sd: String,
+    ed: String,
+    inProgress: Boolean,
+    comingSoon: Boolean
+) {
+    Row(
+        modifier = Modifier.padding(start = Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (inProgress) {
+            IconCompose(
+                data = MainIconType.TIME_LEFT,
+                size = Dimen.smallIconSize,
+            )
+            MainContentText(
+                text = stringResource(R.string.progressing, ed.dates(today)),
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                textAlign = TextAlign.Start,
+                color =  MaterialTheme.colorScheme.primary
+            )
+        }
+        if (comingSoon) {
+            IconCompose(
+                data = MainIconType.COUNTDOWN,
+                size = Dimen.smallIconSize,
+                tint = colorPurple
+            )
+            MainContentText(
+                text = stringResource(R.string.coming_soon, sd.dates(today)),
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                textAlign = TextAlign.Start,
+                color = colorPurple
+            )
         }
     }
 }

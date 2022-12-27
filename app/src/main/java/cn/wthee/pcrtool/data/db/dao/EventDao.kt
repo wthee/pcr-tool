@@ -182,6 +182,25 @@ interface EventDao {
     )
     suspend fun getFreeGachaEvent(limit: Int): List<FreeGachaInfo>
 
+    /**
+     * 获取最新公会战日程
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+       SELECT
+            60000 + a.clan_battle_id AS id,
+            a.release_month,
+            a.start_time 
+        FROM
+            clan_battle_schedule AS a 
+        ORDER BY
+            a.clan_battle_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getClanBattleEvent(limit: Int): List<ClanBattleEvent>
 
     /**
      * 获取生日信息

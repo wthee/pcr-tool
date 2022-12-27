@@ -132,7 +132,7 @@
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
-    <string name="tool_calendar_comming">活动预告</string>
+    <string name="tool_calendar_coming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
     <string name="tool_website">收藏夹</string>
     <string name="tool_clan">公会战</string>
@@ -247,6 +247,8 @@
     <string name="story_event_re">复刻</string>
     <string name="story_event_preview">预告</string>
     <string name="story_event_new">活动</string>
+    <string name="title_clan_battle_event">▶ 公会战%s</string>
+    <string name="clan_battle_month">%d月公会战</string>
 
     <!--战力系数-->
     <string name="title_ex_skill_add">EX+ 额外数值</string>

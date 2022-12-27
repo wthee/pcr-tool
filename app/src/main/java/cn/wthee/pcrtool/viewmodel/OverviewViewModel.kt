@@ -236,4 +236,26 @@ class OverviewViewModel @Inject constructor(
 
         }
     }
+
+    /**
+     * 获取最新公会战日程
+     */
+    fun getClanBattleEvent(type: EventType) = flow {
+        try {
+            val today = getToday()
+            val data = eventRepository.getClanBattleEvent(1)
+
+            if (type == EventType.IN_PROGRESS) {
+                emit(data.filter {
+                    isInProgress(today, it.startTime, it.getFixedEndTime())
+                })
+            } else {
+                emit(data.filter {
+                    isComingSoon(today, it.startTime)
+                })
+            }
+        } catch (_: Exception) {
+
+        }
+    }
 }
