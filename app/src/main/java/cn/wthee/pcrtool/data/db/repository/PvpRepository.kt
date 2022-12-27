@@ -19,13 +19,13 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
     suspend fun insert(data: PvpFavoriteData) = pvpDao.insert(data)
 
-    suspend fun getHistory(region: Int) = pvpDao.getHistory(region)
+    suspend fun getHistory(region: Int, limit: Int) = pvpDao.getHistory(region, limit)
 
     suspend fun insert(data: PvpHistoryData) = pvpDao.insert(data)
 
     suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(atks, defs, region)
 
-    suspend fun getHistory(region: Int, startDate: String, endDate: String) =
-        pvpDao.getHistory(region, startDate, endDate)
+    suspend fun deleteOldHistory(region: Int, endDate: String) =
+        pvpDao.deleteOldHistory(region, endDate)
 
 }
