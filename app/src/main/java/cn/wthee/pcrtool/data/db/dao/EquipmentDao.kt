@@ -166,7 +166,7 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-            c.unit_id,
+            r.unit_id,
             a.equipment_id,
             a.equipment_name,
             a.description,
@@ -188,12 +188,11 @@ interface EquipmentDao {
             ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
         FROM
-            unit_data AS c
-			LEFT OUTER JOIN unit_unique_equip AS r on c.unit_id = r.unit_id
+            unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND c.unit_id = :unitId
+            a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
     )
     suspend fun getUniqueEquipInfos(unitId: Int, lv: Int): UniqueEquipmentMaxData?
@@ -208,7 +207,7 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-            c.unit_id,
+            r.unit_id,
             a.equipment_id,
             a.equipment_name,
             a.description,
@@ -230,16 +229,48 @@ interface EquipmentDao {
             ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
         FROM
-            unit_data AS c
-			LEFT OUTER JOIN unit_unique_equip AS r on c.unit_id = r.unit_id
+            unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND c.unit_id = :unitId
-            AND((1 = :tpLimitLevelFlag AND b.min_lv > 260) OR (0 = :tpLimitLevelFlag AND b.min_lv = 2))
+            a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, tpLimitLevelFlag: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+
+    /**
+     * 获取专武奖励信息（等级大于260）
+     * @param unitId 角色编号
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.hp,
+            a.atk,
+            a.magic_str,
+            a.def,
+            a.magic_def,
+            a.physical_critical,
+            a.magic_critical,
+            a.wave_hp_recovery,
+            a.wave_energy_recovery,
+            a.dodge,
+            a.physical_penetrate,
+            a.magic_penetrate,
+            a.life_steal,
+            a.hp_recovery_rate,
+            a.energy_recovery_rate,
+            a.energy_reduce_rate,
+            a.accuracy 
+        FROM
+            unique_equipment_bonus AS a
+            LEFT JOIN unit_unique_equip AS r ON r.equip_id = a.equipment_id
+        WHERE r.unitId = :unitId
+    """
+    )
+    suspend fun getUniqueEquipBonus(unitId: Int): Attr?
 
     /**
      * 根获取专武最大强化等级
