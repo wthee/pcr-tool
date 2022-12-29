@@ -22,7 +22,9 @@ import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
@@ -45,7 +47,7 @@ fun ExtraEquipTravelList(
                 items(areaList) {
                     TravelItem(it, toExtraEquipTravelAreaDetail)
                 }
-                item{
+                item {
                     CommonSpacer()
                 }
             }
@@ -70,8 +72,10 @@ fun ExtraEquipTravelList(
 private fun TravelItem(
     travelData: ExtraEquipTravelData,
     toExtraEquipTravelAreaDetail: (Int) -> Unit,
+    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
-
+    val questList = extraEquipmentViewModel.getTravelQuestList(travelData.travelAreaId)
+        .collectAsState(initial = null).value
     Column(
         modifier = Modifier
             .padding(
@@ -89,11 +93,12 @@ private fun TravelItem(
             modifier = Modifier.padding(vertical = Dimen.smallPadding)
         )
 
-        //quest图标
-        travelData.questIds.intArrayList.forEachIndexed { _, questId ->
+        //quest列表
+        questList?.forEachIndexed { _, questData ->
             MainCard(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
                 TravelQuestHeader(
-                    questId = questId,
+                    clickable = true,
+                    questData = questData,
                     toExtraEquipTravelAreaDetail = toExtraEquipTravelAreaDetail
                 )
             }
@@ -103,66 +108,78 @@ private fun TravelItem(
 
 /**
  * ex冒险区域公用头部布局
- * questId 为0时，从装备详情-掉落区域调整，不重新查询
+ * @param clickable 列表项可点击；查看详情时不可点击
+ * @param showTitle 查看掉落列表时，不显示标题
  */
 @Composable
 fun TravelQuestHeader(
-    questId: Int,
-    questData: ExtraEquipQuestData? = null,
+    clickable: Boolean,
+    questData: ExtraEquipQuestData,
+    showTitle: Boolean = true,
     toExtraEquipTravelAreaDetail: ((Int) -> Unit)? = null,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
-    val mQuestData = if (questId == 0) {
-        questData
-    } else {
-        extraEquipmentViewModel.getTravelQuest(questId)
-            .collectAsState(initial = null).value
-    }
-
-    mQuestData?.let {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.medium)
-                .clickable(enabled = questId != 0) {
-                    if (toExtraEquipTravelAreaDetail != null) {
-                        VibrateUtil(context).single()
-                        toExtraEquipTravelAreaDetail(questId)
-                    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.medium)
+            .clickable(enabled = clickable) {
+                if (toExtraEquipTravelAreaDetail != null) {
+                    VibrateUtil(context).single()
+                    toExtraEquipTravelAreaDetail(questData.travelQuestId)
                 }
-                .padding(vertical = Dimen.mediumPadding)
-        ) {
-            //图标
-            IconCompose(
-                data = ImageResourceHelper.getInstance()
-                    .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, mQuestData.travelQuestId)
-            )
-            //标题
-            Subtitle1(text = mQuestData.travelQuestName.replace("\\n", "·"))
-            //其它参数
-            VerticalGrid(
-                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-                spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
-            ) {
-                CommonTitleContentText(
-                    stringResource(id = R.string.travel_limit_unit_num),
-                    mQuestData.limitUnitNum.toString()
-                )
-                CommonTitleContentText(
-                    stringResource(id = R.string.travel_need_power),
-                    mQuestData.needPower.toString()
-                )
-                CommonTitleContentText(
-                    stringResource(id = R.string.travel_time),
-                    toTimeText(mQuestData.travelTime * 1000)
-                )
-                CommonTitleContentText(
-                    stringResource(id = R.string.travel_time_decrease_limit),
-                    toTimeText(mQuestData.travelTimeDecreaseLimit * 1000)
-                )
             }
+            .padding(vertical = Dimen.largePadding)
+    ) {
+        //图标
+        IconCompose(
+            data = ImageResourceHelper.getInstance()
+                .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questData.travelQuestId),
+        )
+        //标题
+        if (showTitle) {
+            Subtitle1(text = questData.getQuestName())
+        }
+        //其它参数
+        VerticalGrid(
+            modifier = Modifier.padding(
+                horizontal = Dimen.mediumPadding,
+                vertical = Dimen.smallPadding
+            ),
+            spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+        ) {
+            CommonTitleContentText(
+                stringResource(id = R.string.travel_limit_unit_num),
+                questData.limitUnitNum.toString()
+            )
+            CommonTitleContentText(
+                stringResource(id = R.string.travel_need_power),
+                questData.needPower.toString()
+            )
+            CommonTitleContentText(
+                stringResource(id = R.string.travel_time),
+                toTimeText(questData.travelTime * 1000)
+            )
+            CommonTitleContentText(
+                stringResource(id = R.string.travel_time_decrease_limit),
+                toTimeText(questData.travelTimeDecreaseLimit * 1000)
+            )
         }
     }
 }
+
+@CombinedPreviews
+@Composable
+private fun TravelQuestHeaderPreview() {
+    PreviewLayout {
+        TravelQuestHeader(
+            clickable = false,
+            questData = ExtraEquipQuestData(
+                0, 0, "?", 10, 10000, 500, 1, 1000, 1
+            ),
+            toExtraEquipTravelAreaDetail = { }
+        )
+    }
+}
+

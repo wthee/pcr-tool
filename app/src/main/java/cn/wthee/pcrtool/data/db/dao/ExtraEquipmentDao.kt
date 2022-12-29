@@ -211,16 +211,12 @@ interface ExtraEquipmentDao {
             a.travel_decrease_flag,
             a.need_power,
             a.icon_id,
-            a.limit_unit_num,
-            (
-                a.main_reward_1 || '-' || a.main_reward_2 || '-' || a.main_reward_3 || '-' || a.main_reward_4 || '-' || a.main_reward_5 
-            ) AS main_reward_ids 
+            a.limit_unit_num
         FROM
             travel_quest_data AS a
             LEFT JOIN travel_quest_sub_reward AS b ON a.travel_quest_id = b.travel_quest_id 
         WHERE
-            :equipId IN ( a.main_reward_1, a.main_reward_2, a.main_reward_3, a.main_reward_4, a.main_reward_5 ) 
-            OR b.reward_id = :equipId 
+            b.reward_id = :equipId 
         GROUP BY
             a.travel_quest_id
         """
@@ -238,7 +234,8 @@ interface ExtraEquipmentDao {
             a.travel_quest_id,
             b.category,
             c.category_name,
-            GROUP_CONCAT( b.ex_equipment_id, '-' ) AS sub_reward_ids 
+            GROUP_CONCAT( b.ex_equipment_id, '-' ) AS sub_reward_ids,
+            GROUP_CONCAT( a.disp_order, '-' ) AS sub_reward_drops 
         FROM
             travel_quest_sub_reward AS a
             LEFT JOIN ex_equipment_data AS b ON a.reward_id = b.ex_equipment_id
@@ -291,20 +288,39 @@ interface ExtraEquipmentDao {
             a.travel_decrease_flag,
             a.need_power,
             a.icon_id,
-            a.limit_unit_num,
-            (
-                a.main_reward_1 || '-' || a.main_reward_2 || '-' || a.main_reward_3 || '-' || a.main_reward_4 || '-' || a.main_reward_5 
-            ) AS main_reward_ids 
+            a.limit_unit_num
         FROM
             travel_quest_data AS a
-            LEFT JOIN travel_quest_sub_reward AS b ON a.travel_quest_id = b.travel_quest_id 
         WHERE
             a.travel_quest_id = :questId
-        GROUP BY
-            a.travel_quest_id
         """
     )
     suspend fun getTravelQuest(questId: Int): ExtraEquipQuestData
+
+    /**
+     * 冒险区域详情列表
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.travel_quest_id,
+            a.travel_area_id,
+            a.travel_quest_name,
+            a.travel_time,
+            a.travel_time_decrease_limit,
+            a.travel_decrease_flag,
+            a.need_power,
+            a.icon_id,
+            a.limit_unit_num
+        FROM
+            travel_quest_data AS a
+        WHERE
+            a.travel_area_id = :areaId
+        """
+    )
+    suspend fun getTravelQuestList(areaId: Int): List<ExtraEquipQuestData>
 
     /**
      * 获取角色可使用的ex装备列表

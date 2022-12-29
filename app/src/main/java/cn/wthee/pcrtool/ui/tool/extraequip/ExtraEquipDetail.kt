@@ -228,15 +228,16 @@ fun ExtraEquipUnitList(
         .collectAsState(initial = arrayListOf()).value
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         state = rememberLazyListState()
     ) {
         //标题
         item {
-            MainTitleText(
+            MainText(
                 text = stringResource(R.string.extra_equip_unit),
                 modifier = Modifier
                     .padding(Dimen.largePadding)
+                    .fillMaxWidth()
             )
         }
 

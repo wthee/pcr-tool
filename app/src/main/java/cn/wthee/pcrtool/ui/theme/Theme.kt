@@ -1,11 +1,14 @@
 package cn.wthee.pcrtool.ui.theme
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.MainActivity
 
 /**
@@ -82,4 +85,46 @@ fun PCRToolComposeTheme(
         content = content,
         shapes = shapes
     )
+}
+
+/**
+ * 预览正常、深色模式
+ */
+@Preview(
+    name = "dark theme",
+    group = "themes",
+    uiMode = UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
+    name = "normal",
+    group = "normal",
+    showBackground = true
+)
+annotation class CombinedPreviews
+
+/**
+ * 预览
+ */
+@Composable
+fun PreviewLayout(content: @Composable () -> Unit) {
+    Column {
+        MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
+            Column {
+                content()
+            }
+        }
+        MaterialTheme(
+            if (isSystemInDarkTheme()) {
+                dynamicDarkColorScheme(LocalContext.current)
+            } else {
+                dynamicLightColorScheme(LocalContext.current)
+            }
+        ) {
+            Column {
+                content()
+            }
+        }
+    }
+
 }

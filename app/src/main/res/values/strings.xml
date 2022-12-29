@@ -311,8 +311,6 @@
     <string name="extra_equip_rarity_and_type">★%d  %s</string>
     <string name="extra_equip_rarity">稀有度</string>
     <string name="extra_equip_unit">适用角色</string>
-    <string name="extra_equip_main_reward">主要奖励</string>
-    <string name="extra_equip_sub_reward">次要奖励</string>
     <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
     <string name="tool_travel">EX冒险</string>
     <string name="unit_extra_equip_slot">适用装备</string>
@@ -320,6 +318,8 @@
     <string name="travel_need_power">最低战力</string>
     <string name="travel_time">冒险时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
+    <string name="ex_equip_drop_odd">%.2f%%</string>
+
 
     <!--技能相关-->
     <string name="union_burst">连结爆发</string>
@@ -735,4 +735,9 @@
     <string name="leader_tier_d">T%d</string>
     <string name="to_app_character_detail">详情</string>
     <string name="to_web_character_detail">wiki</string>
+
+    <!--测试用-->
+    <string name="debug_short_text">SHORT-TEXT</string>
+    <string name="debug_long_text">LONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXT</string>
+
 </resources>

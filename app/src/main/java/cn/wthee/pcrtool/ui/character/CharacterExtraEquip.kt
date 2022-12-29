@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.common.CenterTipText
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipSubGroup
+import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipGroup
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
@@ -56,12 +56,12 @@ fun CharacterExtraEquip(
                         )
                     }
                     items(equipList) {
-                        ExtraEquipSubGroup(
+                        ExtraEquipGroup(
                             it.category,
                             it.categoryName,
                             it.exEquipmentIds.intArrayList,
-                            0,
-                            toExtraEquipDetail
+                            selectedId = 0,
+                            toExtraEquipDetail = toExtraEquipDetail
                         )
                     }
                     item {
