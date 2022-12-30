@@ -131,7 +131,8 @@ fun getString(resId: Int, vararg formatArgs: Any) =
  * 格式化文本
  * 999 -> ?
  */
-fun getFixed(str: String) = if (str == "999") Constants.UNKNOWN else str
+val String.fixedStr: String
+    get() = if (this == "999") Constants.UNKNOWN else this
 
 /**
  * Rank 格式化

@@ -3,10 +3,15 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -18,14 +23,12 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.copyText
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getFixed
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息
@@ -47,7 +50,8 @@ fun CharacterBasicInfo(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BasicInfo(info = info)
                 HomePageCommentInfo(info.getSelf(), homePageCommentList)
@@ -81,97 +85,49 @@ private fun BasicInfo(info: CharacterInfoPro) {
             text = info.getIntroText(),
             selectable = true
         )
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.character),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.unitName,
-                modifier = Modifier.weight(0.85f),
-                selectable = true
-            )
-        }
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.name),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.actualName,
-                modifier = Modifier.weight(0.85f),
-                selectable = true
-            )
-        }
+        //角色
+        SingleRow(title = stringResource(id = R.string.character), content = info.unitName)
+        //现实名字
+        SingleRow(title = stringResource(id = R.string.name), content = info.actualName)
+        //cv
+        SingleRow(title = stringResource(id = R.string.cv), content = info.voice)
+
         //身高、体重
         TwoColumnsInfo(
             stringResource(id = R.string.title_height),
-            getFixed(info.height) + " CM",
+            "${info.height.fixedStr} CM",
             stringResource(id = R.string.title_weight),
-            getFixed(info.weight) + " KG"
+            "${info.weight.fixedStr} KG"
         )
         //生日、年龄
         TwoColumnsInfo(
             stringResource(id = R.string.title_birth),
-            stringResource(id = R.string.date_m_d, getFixed(info.birthMonth) , getFixed(info.birthDay)),
+            stringResource(
+                id = R.string.date_m_d,
+                info.birthMonth.fixedStr,
+                info.birthDay.fixedStr
+            ),
             stringResource(id = R.string.age),
-            getFixed(info.age)
+            info.age.fixedStr
         )
-        //血型、位置
+        //血型、种族
         TwoColumnsInfo(
             stringResource(id = R.string.title_blood),
             info.bloodType,
-            stringResource(id = R.string.cv),
-            info.voice
-        )
-        //种族
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_race),
-                modifier = Modifier.weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        MainContentText(
-            text = info.race,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
+            stringResource(id = R.string.title_race),
+            info.race,
         )
         //公会
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_guild),
-                modifier = Modifier.weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        MainContentText(
-            text = info.guild,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
-        )
+        TwoRow(title = stringResource(id = R.string.title_guild), content = info.guild)
         //兴趣
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_fav),
-                modifier = Modifier.weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        MainContentText(
-            text = info.favorite,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
-        )
+        TwoRow(title = stringResource(id = R.string.title_fav), content = info.favorite)
     }
 }
 
 /**
  * 主页交流信息
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun HomePageCommentInfo(
     selfText: String?,
@@ -190,63 +146,80 @@ private fun HomePageCommentInfo(
     }
 
     //主页交流
-    homePageCommentList.forEach { comment ->
-        Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_comments),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainTitleText(
-                text = "★" + if (comment.unitId % 100 / 10 == 0) {
-                    "1"
-                } else {
-                    "${comment.unitId % 100 / 10}"
-                },
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        comment.getCommentList().forEach {
-            CommentTextCard(it)
-        }
-    }
+    val pagerState = rememberPagerState()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-}
-
-/**
- * 两列信息
- */
-@Composable
-private fun TwoColumnsInfo(
-    title0: String,
-    text0: String,
-    title1: String,
-    text1: String
-) {
-    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+    Row(
+        modifier = Modifier.padding(
+            start = Dimen.largePadding,
+            top = Dimen.mediumPadding,
+            bottom = Dimen.mediumPadding
+        )
+    ) {
         MainTitleText(
-            text = title0,
+            text = stringResource(id = R.string.title_comments),
             modifier = Modifier.weight(0.15f)
         )
-        MainContentText(
-            text = text0,
+        MainTitleText(
+            text = stringResource(id = R.string.title_home_page_comments),
             modifier = Modifier
-                .weight(0.35f)
-                .padding(end = Dimen.mediumPadding),
-            selectable = true
+                .padding(start = Dimen.smallPadding)
+                .weight(0.15f)
         )
-        MainTitleText(
-            text = title1,
-            modifier = Modifier.weight(0.15f)
-        )
-        MainContentText(
-            text = text1,
-            modifier = Modifier.weight(0.35f),
-            selectable = true
-        )
+        Spacer(modifier = Modifier.weight(0.85f))
     }
+    //多星级时
+    if (homePageCommentList.isNotEmpty()) {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(horizontal = Dimen.mediumPadding)
+                .fillMaxWidth(homePageCommentList.size * 0.33f)
+        ) {
+            homePageCommentList.forEachIndexed { index, comment ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        scope.launch {
+                            VibrateUtil(context).single()
+                            pagerState.scrollToPage(index)
+                        }
+                    },
+                ) {
+                    Subtitle1(
+                        text = "★" + if (comment.unitId % 100 / 10 == 0) {
+                            "1"
+                        } else {
+                            "${comment.unitId % 100 / 10}"
+                        },
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        color = if (pagerState.currentPage == index) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        }
+                    )
+                }
+            }
+        }
+
+        HorizontalPager(
+            state = pagerState,
+            count = homePageCommentList.size,
+            verticalAlignment = Alignment.Top
+        ) { index ->
+            Column {
+                homePageCommentList[index].getCommentList().forEach {
+                    CommentTextCard(it)
+                }
+            }
+        }
+    }
+
+
 }
 
 /**
@@ -306,6 +279,77 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
 }
 
 /**
+ * 单行
+ */
+@Composable
+private fun SingleRow(title: String, content: String) {
+    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+        MainTitleText(
+            text = title,
+            modifier = Modifier.weight(0.15f)
+        )
+        MainContentText(
+            text = content,
+            modifier = Modifier.weight(0.85f),
+            selectable = true
+        )
+    }
+}
+
+/**
+ * 双行显示
+ */
+@Composable
+private fun TwoRow(title: String, content: String) {
+    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+        MainTitleText(
+            text = title,
+            modifier = Modifier.weight(0.15f)
+        )
+        Spacer(modifier = Modifier.weight(0.85f))
+    }
+    MainContentText(
+        text = content,
+        modifier = Modifier.padding(Dimen.mediumPadding),
+        textAlign = TextAlign.Start,
+        selectable = true
+    )
+}
+
+/**
+ * 两列信息
+ */
+@Composable
+private fun TwoColumnsInfo(
+    title0: String,
+    text0: String,
+    title1: String,
+    text1: String
+) {
+    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+        MainTitleText(
+            text = title0,
+            modifier = Modifier.weight(0.15f)
+        )
+        MainContentText(
+            text = text0,
+            modifier = Modifier
+                .weight(0.35f)
+                .padding(end = Dimen.mediumPadding),
+            selectable = true
+        )
+        MainTitleText(
+            text = title1,
+            modifier = Modifier.weight(0.15f)
+        )
+        MainContentText(
+            text = text1,
+            modifier = Modifier.weight(0.35f),
+            selectable = true
+        )
+    }
+}
+/**
  * 文本卡片
  */
 @Composable
@@ -314,7 +358,7 @@ private fun CommentTextCard(text: String) {
     MainCard(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
+            vertical = Dimen.smallPadding
         ),
         onClick = {
             copyText(context, text)
@@ -323,7 +367,7 @@ private fun CommentTextCard(text: String) {
         MainContentText(
             text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
         )
     }
 }
@@ -334,7 +378,7 @@ private fun CommentTextCard(text: String) {
 @CombinedPreviews
 @Composable
 private fun BasicInfoPreview() {
-    PreviewLayout{
+    PreviewLayout {
         BasicInfo(info = CharacterInfoPro())
     }
 }
