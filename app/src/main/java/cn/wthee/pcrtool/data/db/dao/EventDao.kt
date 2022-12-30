@@ -20,54 +20,42 @@ interface EventDao {
     @Transaction
     @Query(
         """
+        SELECT
+            event.event_id,
+            ( event.original_event_id % 10000 + 5000 ) AS story_id,
+            event.original_event_id,
+            event.start_time,
+            event.end_time,
+            c.title,
+            COALESCE( e.unit_ids, '' ) AS unit_ids,
+            enemy_parameter.enemy_id AS boss_enemy_id,
+            enemy_parameter.unit_id AS boss_unit_id 
+        FROM
+            (
             SELECT
-                event.event_id,
-                event.story_id,
-                (event.story_id % 1000 + 10000) AS original_event_id,
-                event.start_time,
-                event.end_time,
-                c.title,
-                COALESCE(e.unit_ids, '') as unit_ids,
-                enemy_parameter.enemy_id AS boss_enemy_id,
-                enemy_parameter.unit_id AS boss_unit_id
+                a.event_id,
+                ( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) AS original_event_id,
+                a.start_time AS start_time,
+                a.end_time AS end_time 
             FROM
-                (
-                    SELECT
-                        a.event_id,
-                        (( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) % 10000 + 5000 ) AS story_id,
-                        a.start_time AS start_time,
-                        a.end_time AS end_time 
-                    FROM
-                        hatsune_schedule AS a UNION
-                    SELECT
-                        b.event_id,
-                        b.story_id / 1000 AS story_id,
-                        b.start_time AS start_time,
-                        b.end_time AS end_time 
-                    FROM
-                        event_top_adv AS b 
-                    WHERE
-                        b.event_id > 20000 
-                    GROUP BY
-                        b.event_id 
-                        
-                ) AS event
-                LEFT JOIN event_story_data AS c ON c.story_group_id = event.story_id
-                LEFT JOIN 
-                (
-                    SELECT
-                        d.story_group_id,
-                        GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids
-                    FROM
-                        event_story_detail AS d 
-                    GROUP BY
-                        d.story_group_id
-                ) AS e ON c.story_group_id = e.story_group_id
-                LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id
-                LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
-                LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id
-            GROUP BY event.start_time
-            ORDER BY event.start_time DESC       
+                hatsune_schedule AS a UNION
+            SELECT
+                b.event_id,
+                b.original_event_id,
+                b.start_time,
+                b.end_time 
+            FROM
+                shiori_event_list AS b 
+            ) AS event
+            LEFT JOIN event_story_data AS c ON c.story_group_id = story_id
+            LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
+            LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id
+            LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
+            LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id 
+        GROUP BY
+            event.start_time 
+        ORDER BY
+            event.start_time DESC  
             LIMIT 0,:limit
         """
     )

@@ -101,8 +101,8 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
             MainTitleText(
                 text = stringResource(
                     id = R.string.date_m_d,
-                    getFixed(data.month.toString()),
-                    getFixed(data.day.toString())
+                    data.month.toString().fixedStr,
+                    data.day.toString().fixedStr
                 ),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 backgroundColor = colorRed
@@ -143,11 +143,13 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
 
 @CombinedPreviews
 @Composable
-private fun BirthdayItemPreview(){
+private fun BirthdayItemPreview() {
     PreviewLayout {
-        BirthdayItem(BirthdayData(
-            unitIds = "1-2",
-            unitNames = "x-x"
-        )){}
+        BirthdayItem(
+            BirthdayData(
+                unitIds = "1-2",
+                unitNames = "x-x"
+            )
+        ) {}
     }
 }
