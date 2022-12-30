@@ -19,10 +19,7 @@ import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
@@ -192,4 +189,13 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
     }
 
     return events
+}
+
+
+@CombinedPreviews
+@Composable
+private fun CalendarEventItemPreview(){
+    PreviewLayout {
+        CalendarEventItem(CalendarEvent())
+    }
 }

@@ -18,9 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -83,8 +81,6 @@ fun BirthdayList(
 fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()
     val sd = data.getStartTime().formatTime
-    val ed = data.getEndTime().formatTime
-    val inProgress = isInProgress(today, sd, ed, false)
     val comingSoon = isComingSoon(today, sd, false)
     val icons = data.getOrderUnitIdList()
 
@@ -141,5 +137,17 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                 GridIconListCompose(icons = icons, onClickItem = toCharacterDetail)
             }
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun BirthdayItemPreview(){
+    PreviewLayout {
+        BirthdayItem(BirthdayData(
+            unitIds = "1-2",
+            unitNames = "x-x"
+        )){}
     }
 }

@@ -51,39 +51,48 @@ data class AttrInt(
     /**
      * 全部属性
      */
-    fun all(): ArrayList<AttrValue> {
-        val attrs = arrayListOf<AttrValue>()
-        for (i in 0..16) {
-            val value = when (i) {
-                0 -> this.hp
-                1 -> this.lifeSteal
-                2 -> this.atk
-                3 -> this.magicStr
-                4 -> this.def
-                5 -> this.magicDef
-                6 -> this.physicalCritical
-                7 -> this.magicCritical
-                8 -> this.physicalPenetrate
-                9 -> this.magicPenetrate
-                10 -> this.accuracy
-                11 -> this.dodge
-                12 -> this.waveHpRecovery
-                13 -> this.hpRecoveryRate
-                14 -> this.waveEnergyRecovery
-                15 -> this.energyRecoveryRate
-                16 -> this.energyReduceRate
-                else -> 0.0
+    fun all(isPreview: Boolean = false): ArrayList<AttrValue> {
+        return if (isPreview) {
+            arrayListOf(
+                AttrValue(value = 100.0),
+                AttrValue(value = 1000.0),
+                AttrValue(value = 10000.0)
+            )
+        } else {
+            val attrs = arrayListOf<AttrValue>()
+            for (i in 0..16) {
+                val value = when (i) {
+                    0 -> this.hp
+                    1 -> this.lifeSteal
+                    2 -> this.atk
+                    3 -> this.magicStr
+                    4 -> this.def
+                    5 -> this.magicDef
+                    6 -> this.physicalCritical
+                    7 -> this.magicCritical
+                    8 -> this.physicalPenetrate
+                    9 -> this.magicPenetrate
+                    10 -> this.accuracy
+                    11 -> this.dodge
+                    12 -> this.waveHpRecovery
+                    13 -> this.hpRecoveryRate
+                    14 -> this.waveEnergyRecovery
+                    15 -> this.energyRecoveryRate
+                    16 -> this.energyReduceRate
+                    else -> 0.0
+                }
+                attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
             }
-            attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
+            attrs
         }
-        return attrs
+
     }
 
     /**
      * 非零属性
      */
-    fun allNotZero(): List<AttrValue> {
-        val attrs = all()
+    fun allNotZero(isPreview: Boolean = false): List<AttrValue> {
+        val attrs = all(isPreview)
         attrs.removeAll { it.value == 0.0 }
         return attrs
     }
@@ -91,18 +100,22 @@ data class AttrInt(
     /**
      * boss 相关属性
      */
-    fun enemy(): List<AttrValue> {
-        val attrs = all()
-        val newList = arrayListOf<AttrValue>()
-        val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)
-        toShowIndex.forEach { showIndex ->
-            newList.add(attrs[showIndex])
+    fun enemy(isPreview: Boolean = false): List<AttrValue> {
+        val attrs = all(isPreview)
+        return if(isPreview){
+            attrs
+        }else{
+            val newList = arrayListOf<AttrValue>()
+            val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)
+            toShowIndex.forEach { showIndex ->
+                newList.add(attrs[showIndex])
+            }
+             newList
         }
-        return newList
     }
 
-    fun multiplePartEnemy(): List<AttrValue> {
-        val attrs = all()
+    fun multiplePartEnemy(isPreview: Boolean = false): List<AttrValue> {
+        val attrs = all(isPreview)
         val newList = arrayListOf<AttrValue>()
         val toShowIndex = arrayListOf(0, 10)
         toShowIndex.forEach { showIndex ->
@@ -114,7 +127,7 @@ data class AttrInt(
 
 
 /**
- * 面板属性
+ * ex装备默认属性
  */
 data class AttrDefaultInt(
     @ColumnInfo(name = "default_hp") var hpDefault: Int,
@@ -160,39 +173,47 @@ data class AttrDefaultInt(
     /**
      * 全部属性
      */
-    fun all(): ArrayList<AttrValue> {
-        val attrs = arrayListOf<AttrValue>()
-        for (i in 0..16) {
-            val value = when (i) {
-                0 -> this.hpDefault
-                1 -> this.lifeStealDefault
-                2 -> this.atkDefault
-                3 -> this.magicStrDefault
-                4 -> this.defDefault
-                5 -> this.magicDefDefault
-                6 -> this.physicalCriticalDefault
-                7 -> this.magicCriticalDefault
-                8 -> this.physicalPenetrateDefault
-                9 -> this.magicPenetrateDefault
-                10 -> this.accuracyDefault
-                11 -> this.dodgeDefault
-                12 -> this.waveHpRecoveryDefault
-                13 -> this.hpRecoveryRateDefault
-                14 -> this.waveEnergyRecoveryDefault
-                15 -> this.energyRecoveryRateDefault
-                16 -> this.energyReduceRateDefault
-                else -> 0.0
+    fun all(isPreview: Boolean = false): ArrayList<AttrValue> {
+        return if (isPreview) {
+            arrayListOf(
+                AttrValue(value = 100.0),
+                AttrValue(value = 1000.0),
+                AttrValue(value = 10000.0)
+            )
+        } else {
+            val attrs = arrayListOf<AttrValue>()
+            for (i in 0..16) {
+                val value = when (i) {
+                    0 -> this.hpDefault
+                    1 -> this.lifeStealDefault
+                    2 -> this.atkDefault
+                    3 -> this.magicStrDefault
+                    4 -> this.defDefault
+                    5 -> this.magicDefDefault
+                    6 -> this.physicalCriticalDefault
+                    7 -> this.magicCriticalDefault
+                    8 -> this.physicalPenetrateDefault
+                    9 -> this.magicPenetrateDefault
+                    10 -> this.accuracyDefault
+                    11 -> this.dodgeDefault
+                    12 -> this.waveHpRecoveryDefault
+                    13 -> this.hpRecoveryRateDefault
+                    14 -> this.waveEnergyRecoveryDefault
+                    15 -> this.energyRecoveryRateDefault
+                    16 -> this.energyReduceRateDefault
+                    else -> 0.0
+                }
+                attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
             }
-            attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
+            attrs
         }
-        return attrs
     }
 
     /**
      * 非零属性
      */
-    fun allNotZero(): List<AttrValue> {
-        val attrs = all()
+    fun allNotZero(isPreview: Boolean = false): List<AttrValue> {
+        val attrs = all(isPreview)
         attrs.removeAll { it.value == 0.0 }
         return attrs
     }

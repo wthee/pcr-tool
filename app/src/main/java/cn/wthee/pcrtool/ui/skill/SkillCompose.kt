@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillType
@@ -507,3 +508,24 @@ data class ColorTextIndex(
     var start: Int = 0,
     var end: Int = 0
 )
+
+
+@CombinedPreviews
+@Composable
+private fun SkillItemPreview() {
+    val skill = SkillDetail(
+        name = stringResource(id = R.string.debug_short_text),
+        desc = stringResource(id = R.string.debug_long_text),
+        castTime = 10.0,
+    )
+    skill.actions = arrayListOf(SkillActionDetail(), SkillActionDetail())
+
+    PreviewLayout {
+        SkillItem(
+            skillDetail = skill,
+            unitType = UnitType.CHARACTER,
+            property = CharacterProperty(),
+            toSummonDetail = { _, _, _, _, _ -> }
+        )
+    }
+}

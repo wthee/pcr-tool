@@ -12,14 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
@@ -186,17 +184,15 @@ fun GachaItem(
 
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun GachaItemPreview() {
-    PreviewBox {
-        Column {
-            GachaItem(
-                gachaInfo = GachaInfo(),
-                toCharacterDetail = {},
-                toMockGacha = {},
-                fesUnitIds = arrayListOf()
-            )
-        }
+    PreviewLayout {
+        GachaItem(
+            gachaInfo = GachaInfo(),
+            toCharacterDetail = {},
+            toMockGacha = {},
+            fesUnitIds = arrayListOf()
+        )
     }
 }

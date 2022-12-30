@@ -22,9 +22,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
@@ -202,7 +200,7 @@ private fun PvpResultItem(
     i: Int,
     item: PvpResultData,
     floatWindow: Boolean,
-    viewModel: PvpViewModel
+    viewModel: PvpViewModel?
 ) {
     val placeholder = item.id == ""
     val scope = rememberCoroutineScope()
@@ -237,10 +235,10 @@ private fun PvpResultItem(
                     scope.launch {
                         if (favorites.value) {
                             //已收藏，取消收藏
-                            viewModel.delete(item.atk, item.def)
+                            viewModel?.delete(item.atk, item.def)
                         } else {
                             //未收藏，添加收藏
-                            viewModel.insert(
+                            viewModel?.insert(
                                 PvpFavoriteData(
                                     item.id,
                                     item.atk,
@@ -300,3 +298,32 @@ private fun PvpResultItem(
     }
 }
 
+
+@CombinedPreviews
+@Composable
+private fun PvpResultItemPreview(){
+    val data = PvpResultData(
+        "id",
+        "1-2-3-4-5",
+        "1-2-3-4-5",
+        2,
+        1000,
+        200
+    )
+    PreviewLayout {
+        PvpResultItem(
+            arrayListOf(),
+            0,
+            data,
+            false,
+            null
+        )
+        PvpResultItem(
+            arrayListOf(),
+            0,
+            data,
+            true,
+            null
+        )
+    }
+}

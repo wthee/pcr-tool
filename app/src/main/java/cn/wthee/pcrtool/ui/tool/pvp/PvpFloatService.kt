@@ -132,13 +132,13 @@ class PvpFloatService : LifecycleService() {
         flags =
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         //位置大小设置
-        val minSize = (Dimen.fabSize + Dimen.mediumPadding * 3).value.dp2px
+        val minSize = (Dimen.fabSize + Dimen.mediumPadding * 3).value.dp2pxNotComposable
 
         width =
             if (min) {
                 minSize
             } else {
-                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2px) + minSize
+                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2pxNotComposable) + minSize
             }
         height =
             if (min) {
@@ -173,5 +173,5 @@ class PvpFloatService : LifecycleService() {
 fun getFloatWindowHeight(): Int {
     val width = ScreenUtil.getWidth()
     val height = ScreenUtil.getHeight()
-    return (if (width > height) height else width) - Dimen.smallIconSize.value.dp2px
+    return (if (width > height) height else width) - Dimen.smallIconSize.value.dp2pxNotComposable
 }

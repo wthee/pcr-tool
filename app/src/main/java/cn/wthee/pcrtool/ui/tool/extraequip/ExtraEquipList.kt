@@ -507,3 +507,26 @@ private fun getEquipColor(colorType: Int): Color {
         else -> colorGray
     }
 }
+
+
+@CombinedPreviews
+@Composable
+private fun ExtraEquipGroupPreview() {
+    val text = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        ExtraEquipGroup(
+            ExtraEquipGroupData(
+                rarity = 3,
+                category = 1,
+                categoryName = text,
+                equipIdList = arrayListOf(
+                    ExtraEquipmentBasicInfo(equipmentName = text),
+                    ExtraEquipmentBasicInfo(equipmentName = text),
+                    ExtraEquipmentBasicInfo(equipmentName = text)
+                )
+            ),
+            2,
+            FilterExtraEquipment()
+        ) { }
+    }
+}

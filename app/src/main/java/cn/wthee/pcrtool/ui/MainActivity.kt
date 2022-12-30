@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -51,7 +52,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.ui.tool.SettingItem
+import cn.wthee.pcrtool.ui.tool.SettingLinkItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
@@ -72,8 +73,8 @@ fun mainSP(): SharedPreferences =
 /**
  * 本地存储：版本、设置信息
  */
-fun settingSP(): SharedPreferences =
-    context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+fun settingSP(mContext: Context = MyApplication.context): SharedPreferences =
+    mContext.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
 @AndroidEntryPoint
@@ -346,7 +347,7 @@ private fun SettingDropMenu(actions: NavActions) {
             //应用信息
             DropdownMenuItem(
                 text = {
-                    SettingItem(
+                    SettingLinkItem(
                         iconType = R.drawable.ic_logo_large,
                         iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
@@ -363,34 +364,6 @@ private fun SettingDropMenu(actions: NavActions) {
                 },
                 onClick = {}
             )
-        }
-    }
-}
-
-/**
- * 预览
- */
-@Composable
-fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
-    Column {
-        if (themeType == 0 || themeType == 1) {
-            PCRToolComposeTheme(darkTheme = false) {
-                Surface(
-                    content = content
-                )
-            }
-        }
-        if (themeType == 0) {
-            Spacer(
-                modifier = Modifier.height(Dimen.largePadding)
-            )
-        }
-        if (themeType == 0 || themeType == 2) {
-            PCRToolComposeTheme(darkTheme = true) {
-                Surface(
-                    content = content
-                )
-            }
         }
     }
 }

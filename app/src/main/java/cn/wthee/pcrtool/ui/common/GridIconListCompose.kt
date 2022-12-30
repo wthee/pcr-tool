@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 
 /**
@@ -69,14 +69,14 @@ private fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun IconListComposePreview() {
     val mockData = arrayListOf<Int>()
     for (i in 0..10) {
         mockData.add(i)
     }
-    PreviewBox {
+    PreviewLayout {
         GridIconListCompose(icons = mockData, onClickItem = {})
     }
 }

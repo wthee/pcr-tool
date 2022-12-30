@@ -225,14 +225,14 @@ private fun LeaderboardItem(
     leader: LeaderboardData,
     index: Int,
     toCharacterDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
     val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
-        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
+        characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
     }
-    val basicInfo = flow.collectAsState(initial = null).value
+    val basicInfo = flow?.collectAsState(initial = null)?.value
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -355,6 +355,21 @@ fun GradeText(
             },
             textAlign = textAlign,
             fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun LeaderboardItemPreview() {
+    PreviewLayout {
+        LeaderboardItem(LeaderboardData(
+            wikiTime = "2020/01/01",
+            quest = "SS+",
+            pvp = "S",
+            clan = "A"
+        ), 1, {}, null
         )
     }
 }

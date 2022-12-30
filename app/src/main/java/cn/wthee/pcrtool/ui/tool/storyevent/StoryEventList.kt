@@ -16,14 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
@@ -111,8 +109,8 @@ fun StoryEventItem(
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
     val previewEvent = sd.substring(0, 10) == "2030/12/30"
-    val days = ed.days(sd)
-    if (days == stringResource(id = R.string.day, 0)) {
+    val days = ed.days(sd, showDay = false)
+    if (days == "0") {
         showDays = false
     }
 
@@ -172,7 +170,7 @@ fun StoryEventItem(
             }
             if (showDays) {
                 MainTitleText(
-                    text = days,
+                    text = stringResource(R.string.day, days.toInt()),
                     modifier = Modifier.padding(end = Dimen.smallPadding)
                 )
             }
@@ -284,16 +282,14 @@ private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
     else -> false
 } && eventId / 10000 == 1
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun StoryEventItemPreview() {
-    PreviewBox {
-        Column {
-            StoryEventItem(
-                event = EventData(),
-                toCharacterDetail = {},
-                toEventEnemyDetail = {},
-                toAllPics = { _, _ -> })
-        }
+    PreviewLayout {
+        StoryEventItem(
+            event = EventData(unitIds = "100101-100101-100102"),
+            toCharacterDetail = {},
+            toEventEnemyDetail = {},
+            toAllPics = { _, _ -> })
     }
 }

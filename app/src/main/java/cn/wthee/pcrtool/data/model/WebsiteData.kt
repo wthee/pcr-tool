@@ -10,12 +10,12 @@ data class WebsiteGroupData(
 )
 
 data class WebsiteData(
-    val id: Int,
-    val author: String?,
-    val icon: String,
-    val title: String,
-    val summary: String,
-    val url: String,
-    val region: Int,
+    val id: Int = 0,
+    val author: String? = "",
+    val icon: String = "",
+    val title: String = "",
+    val summary: String = "",
+    val url: String = "",
+    val region: Int = 0,
     val browserType: Int = 0,
 )

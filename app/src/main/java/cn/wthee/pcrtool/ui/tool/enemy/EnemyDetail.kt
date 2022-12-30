@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,7 +25,9 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -67,13 +70,13 @@ fun EnemyAllInfo(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    val expanded = remember {
+    val openDialog = remember {
         mutableStateOf(false)
     }
     val attr = if (isMultiEnemy) {
-        enemyData.attr.multiplePartEnemy()
+        enemyData.attr.multiplePartEnemy(isPreview = LocalInspectionMode.current)
     } else {
-        enemyData.attr.enemy()
+        enemyData.attr.enemy(isPreview = LocalInspectionMode.current)
     }
 
     Column(
@@ -135,7 +138,7 @@ fun EnemyAllInfo(
                 .padding(Dimen.mediumPadding)
                 .clickable {
                     VibrateUtil(context).single()
-                    expanded.value = !expanded.value
+                    openDialog.value = !openDialog.value
                 }
         )
         //属性
@@ -153,12 +156,14 @@ fun EnemyAllInfo(
             //属性
             AttrList(attrs = it.attr.enemy())
         }
-        //技能
-        EnemySkillList(enemyData, UnitType.ENEMY, toSummonDetail)
+        //技能，预览时隐藏
+        if(!LocalInspectionMode.current){
+            EnemySkillList(enemyData, UnitType.ENEMY, toSummonDetail)
+        }
         CommonSpacer()
     }
 
-    if (expanded.value) {
+    if (openDialog.value) {
         AlertDialog(
             title = {
                 Column(
@@ -175,15 +180,15 @@ fun EnemyAllInfo(
             },
             modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
             onDismissRequest = {
-                expanded.value = false
+                openDialog.value = false
             },
             containerColor = MaterialTheme.colorScheme.background,
             shape = MaterialTheme.shapes.medium,
             confirmButton = {
-                //确认下载
+                //复制
                 MainButton(text = stringResource(R.string.copy_all)) {
                     copyText(context, enemyData.getDesc())
-                    expanded.value = false
+                    openDialog.value = false
                 }
             },
             dismissButton = {
@@ -191,7 +196,7 @@ fun EnemyAllInfo(
                 SubButton(
                     text = stringResource(id = R.string.cancel)
                 ) {
-                    expanded.value = false
+                    openDialog.value = false
                 }
             })
     }
@@ -243,5 +248,23 @@ fun EnemySkillList(
                 )
             }
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun EnemyAllInfoPreview(){
+    PreviewLayout {
+        EnemyAllInfo(
+            EnemyParameterPro(
+                name = stringResource(id = R.string.debug_short_text),
+                comment = stringResource(id = R.string.debug_long_text),
+                level = 100
+            ),
+            false,
+            null,
+            null
+        )
     }
 }

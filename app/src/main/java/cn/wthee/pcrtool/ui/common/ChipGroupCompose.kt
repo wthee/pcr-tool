@@ -10,10 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.model.ChipData
-import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.flowlayout.FlowRow
@@ -81,7 +81,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     )
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun ChipGroupPreview() {
     val mockData = arrayListOf<ChipData>()
@@ -91,7 +91,7 @@ private fun ChipGroupPreview() {
     for (i in 0..10) {
         mockData.add(ChipData(i, "chip $i"))
     }
-    PreviewBox {
+    PreviewLayout {
         ChipGroup(items = mockData, selectIndex = selectIndex)
     }
 }

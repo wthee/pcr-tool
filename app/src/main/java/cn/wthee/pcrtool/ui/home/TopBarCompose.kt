@@ -16,17 +16,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
@@ -233,15 +229,15 @@ private fun AppUpdateContent(appNotice: AppNotice) {
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun AppUpdateContentPreview() {
-    PreviewBox {
+    PreviewLayout {
         AppUpdateContent(
             AppNotice(
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- BUGBUGBUG",
+                message = "- [BUG] BUGBUG\n- [测试] 测试",
                 file_url = "123"
             )
         )

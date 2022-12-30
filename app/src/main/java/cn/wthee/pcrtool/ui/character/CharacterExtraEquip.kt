@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.common.CenterTipText
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.travel.ExtraEquipGroup
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipGroup
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel

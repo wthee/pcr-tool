@@ -185,7 +185,10 @@ private fun EquipGroup(
             equipGroupData.requireLevel
         ),
         titleEnd = equipGroupData.equipIdList.size.toString(),
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding),
+        modifier = Modifier.padding(
+            horizontal = Dimen.mediumPadding,
+            vertical = Dimen.largePadding
+        ),
         backgroundColor = getEquipColor(equipGroupData.promotionLevel)
     )
 
@@ -446,7 +449,7 @@ private fun getEquipColorText(colorType: Int): String {
         6 -> stringResource(id = R.string.color_red)
         7 -> stringResource(id = R.string.color_green)
         8 -> stringResource(id = R.string.color_orange)
-        else ->  stringResource(id = R.string.unknown)
+        else -> stringResource(id = R.string.unknown)
     }
 }
 
@@ -464,5 +467,28 @@ private fun getEquipColor(colorType: Int): Color {
         7 -> colorGreen
         8 -> colorOrange
         else -> colorGray
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun EquipGroupPreview() {
+    val name = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        EquipGroup(
+            EquipGroupData(
+                promotionLevel = 8,
+                equipIdList = arrayListOf(
+                    EquipmentBasicInfo(equipmentName = name),
+                    EquipmentBasicInfo(equipmentName = name),
+                    EquipmentBasicInfo(equipmentName = name),
+                )
+            ),
+            2,
+            FilterEquipment(),
+            { },
+            { }
+        )
     }
 }

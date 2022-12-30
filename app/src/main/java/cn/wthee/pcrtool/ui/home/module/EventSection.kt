@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.ui.tool.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleItem
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
@@ -212,7 +212,10 @@ private fun CalendarEventLayout(
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
                 clanBattleList.forEach {
-                    ClanBattleItem(clanBattleEvent = it, toClanBossInfo = actions.toClanBossInfo)
+                    ClanBattleOverview(
+                        clanBattleEvent = it,
+                        toClanBossInfo = actions.toClanBossInfo
+                    )
                 }
                 gachaList.forEach {
                     GachaItem(
