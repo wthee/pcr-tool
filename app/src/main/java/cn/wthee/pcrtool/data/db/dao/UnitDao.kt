@@ -245,8 +245,7 @@ interface UnitDao {
     @Query(
         """
         SELECT
-            b.unit_id,
-            b.unit_name,
+            :unitId AS unit_id,
             COALESCE( GROUP_CONCAT( a.description, '-' ), '......') AS room_comments 
         FROM
             room_unit_comments AS a
