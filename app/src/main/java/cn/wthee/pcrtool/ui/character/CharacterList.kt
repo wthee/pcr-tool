@@ -309,7 +309,7 @@ fun CharacterItem(
                         ) {
                             //年龄
                             Subtitle2(
-                                text = getFixed(character.age),
+                                text = character.age.fixedStr,
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
@@ -317,21 +317,21 @@ fun CharacterItem(
                             Subtitle2(
                                 text = stringResource(
                                     id = R.string.date_m_d,
-                                    getFixed(character.birthMonth),
-                                    getFixed(character.birthDay)
+                                    character.birthMonth.fixedStr,
+                                    character.birthDay.fixedStr
                                 ),
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
                             //体重
                             Subtitle2(
-                                text = getFixed(character.weight) + " KG",
+                                text = "${character.weight.fixedStr} KG",
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
                             //身高
                             Subtitle2(
-                                text = getFixed(character.height) + " CM",
+                                text = "${character.height.fixedStr} CM",
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
@@ -851,7 +851,7 @@ private fun FilterCharacterSheet(
 
 @CombinedPreviews
 @Composable
-private fun CharacterItemPreview(){
+private fun CharacterItemPreview() {
     PreviewLayout {
         CharacterItem(
             unitId = 100101,
@@ -863,7 +863,7 @@ private fun CharacterItemPreview(){
 
 @CombinedPreviews
 @Composable
-private fun CharacterTagPreview(){
+private fun CharacterTagPreview() {
     PreviewLayout {
         CharacterTag(
             text = getLimitTypeText(limitType = 1),

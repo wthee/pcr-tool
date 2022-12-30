@@ -515,7 +515,7 @@
     <string name="skill_push">击退</string>
     <string name="skill_pull">拉近</string>
     <string name="skill_action_type_desc_3_move">%s%s，距离[%d]</string>
-    <string name="skill_action_type_desc_3_pull">将$%s%s身前 [%d]</string>
+    <string name="skill_action_type_desc_3_pull">将%s%s身前 [%d]</string>
     <string name="skill_action_type_desc_4">使%sHP回复 %s</string>
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
     <string name="skill_action_type_desc_7">锁定%s</string>
@@ -643,7 +643,7 @@
     <string name="skill_action_type_desc_62_1">%s的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
     <string name="skill_action_type_desc_63_success">持续时间结束后，使用动作(%d)；</string>
     <string name="skill_action_type_desc_63_failure">效果被中断后，使用动作(%d)；</string>
-    <string name="skill_action_type_desc_63">每${%s}秒使用 1 次动作(%d)，最长持续 [%s] 秒；受到的伤害量超过 [%s] 时中断此效果；</string>
+    <string name="skill_action_type_desc_63">每 %s 秒使用 1 次动作(%d)，最长持续 [%s] 秒；受到的伤害量超过 [%s] 时中断此效果；</string>
     <string name="skill_action_type_desc_69">使%s变身%s</string>
     <string name="skill_action_type_desc_71">对%s赋予「受到致死伤害时，回复 %s HP」的效果%s</string>
     <string name="skill_action_type_desc_72">对%s赋予承受%s伤害减少%s的效果%s</string>
