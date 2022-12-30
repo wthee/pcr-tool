@@ -8,12 +8,12 @@ import androidx.room.PrimaryKey
  */
 data class MockGachaProData(
     @PrimaryKey
-    val gachaId: String,
-    val region: Int,
-    val gachaType: Int,
-    val pickUpIds: String,
-    val createTime: String,
-    var lastUpdateTime: String,
-    var resultUnitIds: String,
-    var resultUnitRaritys: String,
+    val gachaId: String = "",
+    val region: Int = 0,
+    val gachaType: Int = 0,
+    val pickUpIds: String = "",
+    val createTime: String = "",
+    var lastUpdateTime: String = "",
+    var resultUnitIds: String = "",
+    var resultUnitRaritys: String = "",
 )

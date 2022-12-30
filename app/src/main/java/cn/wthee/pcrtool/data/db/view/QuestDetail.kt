@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.equipCompare
 
 
@@ -11,12 +11,11 @@ import cn.wthee.pcrtool.data.model.equipCompare
  * questType 1：普通、2：困难、3：非常困难
  */
 data class QuestDetail(
-    @ColumnInfo(name = "equip_id") val equipId: Int,
-    @ColumnInfo(name = "quest_id") val questId: Int,
-    @ColumnInfo(name = "quest_type") val questType: Int,
-    @ColumnInfo(name = "quest_name") val questName: String,
-    @ColumnInfo(name = "rewards") val rewards: String,
-    @ColumnInfo(name = "odds") val odds: String
+    @ColumnInfo(name = "quest_id") val questId: Int = 0,
+    @ColumnInfo(name = "quest_type") val questType: Int = 0,
+    @ColumnInfo(name = "quest_name") val questName: String = "",
+    @ColumnInfo(name = "rewards") val rewards: String = "",
+    @ColumnInfo(name = "odds") val odds: String = ""
 ) {
 
     /**
@@ -28,14 +27,14 @@ data class QuestDetail(
         return list2[list1.indexOf(equipId)]
     }
 
-    fun getAllOdd(): List<EquipmentIdWithOdd> {
+    fun getAllOdd(): List<EquipmentIdWithOdds> {
         val list1 = rewards.split('-') as MutableList
         val list2 = odds.split('-') as MutableList
-        val result = arrayListOf<EquipmentIdWithOdd>()
+        val result = arrayListOf<EquipmentIdWithOdds>()
         list1.forEachIndexed { index, s ->
             if (s != "0") {
                 result.add(
-                    EquipmentIdWithOdd(
+                    EquipmentIdWithOdds(
                         s.toInt(),
                         list2[index].toInt()
                     )

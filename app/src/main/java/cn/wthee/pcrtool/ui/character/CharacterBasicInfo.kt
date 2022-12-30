@@ -12,9 +12,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -34,8 +37,10 @@ fun CharacterBasicInfo(
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
-    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
     val scrollState = rememberScrollState()
+    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
+    val homePageCommentList =
+        viewModel.getHomePageComments(unitId).collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->
@@ -45,7 +50,7 @@ fun CharacterBasicInfo(
                     .verticalScroll(scrollState)
             ) {
                 BasicInfo(info = info)
-                HomePageCommentInfo(info.getSelf(), unitId, viewModel)
+                HomePageCommentInfo(info.getSelf(), homePageCommentList)
                 RoomComment(unitId = unitId, viewModel = viewModel)
             }
         }
@@ -108,7 +113,7 @@ private fun BasicInfo(info: CharacterInfoPro) {
         //生日、年龄
         TwoColumnsInfo(
             stringResource(id = R.string.title_birth),
-            stringResource(id = R.string.date_m_d, info.birthMonth, info.birthDay),
+            stringResource(id = R.string.date_m_d, getFixed(info.birthMonth) , getFixed(info.birthDay)),
             stringResource(id = R.string.age),
             getFixed(info.age)
         )
@@ -170,13 +175,8 @@ private fun BasicInfo(info: CharacterInfoPro) {
 @Composable
 private fun HomePageCommentInfo(
     selfText: String?,
-    unitId: Int,
-    characterViewModel: CharacterViewModel
+    homePageCommentList: List<CharacterHomePageComment>
 ) {
-    val homePageCommentList =
-        characterViewModel.getHomePageComments(unitId).collectAsState(initial = arrayListOf()).value
-
-
     //介绍信息
     selfText?.let {
         Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
@@ -325,5 +325,16 @@ private fun CommentTextCard(text: String) {
             modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start
         )
+    }
+}
+
+/**
+ * 角色基本信息预览
+ */
+@CombinedPreviews
+@Composable
+private fun BasicInfoPreview() {
+    PreviewLayout{
+        BasicInfo(info = CharacterInfoPro())
     }
 }

@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.*
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
-import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
 
 /**
@@ -30,7 +30,7 @@ interface MockGachaDao {
      * @param data 抽取结果
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertResult(data: MockGachaResultRecord)
+    suspend fun insertResult(data: MockGachaResultRecordData)
 
     /**
      * 获取历史记录
@@ -74,7 +74,7 @@ interface MockGachaDao {
      * @param gachaId 卡池编号
      */
     @Query("SELECT * FROM gacha_result_record WHERE gachaId = :gachaId ORDER BY createTime DESC")
-    suspend fun getResultByGachaId(gachaId: String): List<MockGachaResultRecord>
+    suspend fun getResultByGachaId(gachaId: String): List<MockGachaResultRecordData>
 
     /**
      * 删除指定卡池的所有记录

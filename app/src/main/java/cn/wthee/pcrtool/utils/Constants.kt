@@ -106,7 +106,7 @@ object Constants {
         getString(R.string.attr_energy_reduce_rate),
     )
 
-    val UNKNOWN = getString(R.string.unknown)
+    const val UNKNOWN = "?"
 
 
     // 异常

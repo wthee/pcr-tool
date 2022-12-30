@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.travel
+package cn.wthee.pcrtool.ui.tool.extratravel
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

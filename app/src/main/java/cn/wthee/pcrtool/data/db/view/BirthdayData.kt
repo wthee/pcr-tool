@@ -13,7 +13,7 @@ import java.util.*
 data class BirthdayData(
     @ColumnInfo(name = "birth_month_int") val month: Int = 0,
     @ColumnInfo(name = "birth_day_int") val day: Int = 0,
-    @ColumnInfo(name = "unit_ids") val unitIds: String = "100101",
+    @ColumnInfo(name = "unit_ids") val unitIds: String = "",
     @ColumnInfo(name = "unit_names") val unitNames: String = "",
 ) {
 

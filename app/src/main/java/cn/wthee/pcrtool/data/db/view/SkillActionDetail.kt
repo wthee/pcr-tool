@@ -41,7 +41,7 @@ data class SkillActionDetail(
     @ColumnInfo(name = "target_number") var targetNumber: Int = 0,
     @ColumnInfo(name = "target_count") var targetCount: Int = 0,
     @ColumnInfo(name = "description") var description: String = "",
-    @ColumnInfo(name = "ailment_name") var tag: String,
+    @ColumnInfo(name = "ailment_name") var tag: String = "",
     @ColumnInfo(name = "isRfSkill") var isRfSkill: Boolean = false,
     @Ignore
     var dependId: Int = 0,
@@ -1430,7 +1430,7 @@ data class SkillActionDetail(
     }
 
     /**
-     * 伤害类型
+     * 伤害类型，根据actionDetail1判断
      */
     private fun getAtkType() = getString(
         when (actionDetail1) {
@@ -1626,7 +1626,7 @@ data class SkillActionDetail(
     private fun getTargetNumber() = if (targetAssignment == 1) {
         when (targetNumber) {
             in 1..10 -> {
-                getString(R.string.skill_target_order_num, getZhNumberText(targetNumber + 1))
+                getString(R.string.skill_target_order_num, targetNumber + 1)
             }
             else -> ""
         }
@@ -1634,7 +1634,7 @@ data class SkillActionDetail(
         when (targetNumber) {
             1 -> getString(R.string.skill_target_order_1)
             in 2..10 -> {
-                getString(R.string.skill_target_order_num, getZhNumberText(targetNumber))
+                getString(R.string.skill_target_order_num, targetNumber)
             }
             else -> ""
         }

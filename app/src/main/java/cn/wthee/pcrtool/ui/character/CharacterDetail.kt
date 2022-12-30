@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -31,8 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -44,7 +47,9 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
@@ -530,42 +535,47 @@ private fun CharacterLevel(
  */
 @Composable
 private fun AttrLists(
-    unitId: Int, allData: AllAttrData, toCharacterStoryDetail: (Int) -> Unit
+    unitId: Int,
+    allData: AllAttrData,
+    toCharacterStoryDetail: (Int) -> Unit
 ) {
-    val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     val context = LocalContext.current
 
     //属性
-    AttrList(attrs = allData.sumAttr.all())
+    AttrList(attrs = allData.sumAttr.all(isPreview = LocalInspectionMode.current))
     //剧情属性
-    if (allData.storyAttr.allNotZero().isNotEmpty()) {
-        Row(modifier = Modifier
-            .padding(
-                top = Dimen.largePadding, bottom = Dimen.smallPadding
-            )
-            .clip(MaterialTheme.shapes.extraSmall)
-            .clickable {
-                VibrateUtil(context).single()
-                toCharacterStoryDetail(unitId)
-            }
-            .padding(horizontal = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
+    val storyAttrList = allData.storyAttr.allNotZero(isPreview = LocalInspectionMode.current)
+    if (storyAttrList.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding, bottom = Dimen.smallPadding
+                )
+                .clip(MaterialTheme.shapes.extraSmall)
+                .clickable {
+                    VibrateUtil(context).single()
+                    toCharacterStoryDetail(unitId)
+                }
+                .padding(horizontal = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             MainText(text = stringResource(id = R.string.title_story_attr))
             IconCompose(
                 data = MainIconType.HELP, size = Dimen.smallIconSize
             )
         }
-        AttrList(attrs = allData.storyAttr.allNotZero())
+        AttrList(attrs = storyAttrList)
     }
     //Rank 奖励
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (hasBonus) {
+    val rankBonusList = allData.rankBonus.attr.allNotZero(isPreview = LocalInspectionMode.current)
+    if (rankBonusList.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             MainText(
                 text = stringResource(id = R.string.title_rank_bonus),
                 modifier = Modifier.Companion.padding(
@@ -573,7 +583,7 @@ private fun AttrLists(
                 ),
                 textAlign = TextAlign.Center
             )
-            AttrList(attrs = allData.bonus.attr.allNotZero())
+            AttrList(attrs = rankBonusList)
         }
     }
 }
@@ -835,7 +845,7 @@ private fun UniqueEquip(
                 )
             }
             //属性
-            AttrList(attrs = it.attr.allNotZero())
+            AttrList(attrs = it.attr.allNotZero(isPreview = LocalInspectionMode.current))
         }
     }
 
@@ -870,5 +880,65 @@ private fun StarSelect(
             }
 
         }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun AttrListsPreview() {
+    PreviewLayout {
+        AttrLists(
+            unitId = 100101,
+            allData = AllAttrData(
+                sumAttr = Attr().random(),
+                storyAttr = Attr().random(),
+                rankBonus = UnitPromotionBonus(attr = Attr().random()),
+            ),
+            toCharacterStoryDetail = { },
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterEquipPreview() {
+    val currentValueState = remember {
+        mutableStateOf(CharacterProperty())
+    }
+    PreviewLayout {
+        CharacterEquip(
+            unitId = 100101,
+            currentValueState = currentValueState,
+            maxRank = 20,
+            equips = arrayListOf(
+                EquipmentMaxData(),
+                EquipmentMaxData(),
+                EquipmentMaxData(),
+                EquipmentMaxData(),
+                EquipmentMaxData(),
+                EquipmentMaxData()
+            ),
+            toEquipDetail = { },
+            toCharacterRankEquip = { _, _ -> }
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun UniqueEquipPreview() {
+    val currentValueState = remember {
+        mutableStateOf(CharacterProperty())
+    }
+    PreviewLayout {
+        UniqueEquip(
+            currentValueState = currentValueState,
+            uniqueEquipLevelMax = 100,
+            uniqueEquipmentMaxData = UniqueEquipmentMaxData(
+                equipmentName = stringResource(id = R.string.debug_short_text),
+                description = stringResource(id = R.string.debug_long_text),
+                attr = Attr().random()
+            )
+        )
     }
 }

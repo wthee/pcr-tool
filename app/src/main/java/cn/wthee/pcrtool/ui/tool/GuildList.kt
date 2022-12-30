@@ -14,15 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildMemberInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
@@ -175,12 +175,10 @@ private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1,
     }
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun GuildItemPreview() {
-    PreviewBox {
-        Column {
-            GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
-        }
+    PreviewLayout {
+        GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
     }
 }

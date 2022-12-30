@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -20,7 +19,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 
@@ -31,7 +32,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  * @param rank1 目标rank
  * @param maxRank rank最大值
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankSelectCompose(
     rank0: MutableState<Int>,
@@ -165,5 +165,22 @@ private fun rankFillBlank(rank: Int): String {
     return when (rank) {
         in 0..9 -> "0$rank"
         else -> "$rank"
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun RankSelectItemPreview() {
+    val selectIndex = remember {
+        mutableStateOf(0)
+    }
+    PreviewLayout {
+        RankSelectItem(
+            selectIndex = selectIndex,
+            rankList = arrayListOf(24, 23, 22, 21,20,19),
+            targetType = RankSelectType.DEFAULT,
+            currentRank = 24
+        )
     }
 }

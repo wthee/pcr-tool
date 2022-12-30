@@ -74,16 +74,15 @@ data class ExtraEquipmentData(
     /**
      * 属性整合
      */
-    fun fixAttrList(): List<AttrCompareData> {
+    fun fixAttrList(isPreview: Boolean = false): List<AttrCompareData> {
         val dataList = arrayListOf<AttrCompareData>()
-        val compared = compareList()
-        this.attrDefault.allNotZero().forEachIndexed { index, attrValue ->
+        this.attrDefault.allNotZero(isPreview).forEachIndexed { index, attrValue ->
             dataList.add(
                 AttrCompareData(
                     attrValue.title,
                     attrValue.value,
-                    this.attr.allNotZero()[index].value,
-                    compared[index].value
+                    this.attr.allNotZero(isPreview)[index].value,
+                    0.0
                 )
             )
         }

@@ -8,13 +8,13 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
@@ -118,17 +118,17 @@ fun RankEquipListItem(
     }
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun RankEquipListItemPreview() {
-
     val allRankEquip = arrayListOf(
-        UnitPromotion(),
-        UnitPromotion(),
-        UnitPromotion(),
-        UnitPromotion()
+        UnitPromotion(promotionLevel = 24),
+        UnitPromotion(promotionLevel = 21),
+        UnitPromotion(promotionLevel = 18),
+        UnitPromotion(promotionLevel = 11)
     )
-    PreviewBox {
+
+    PreviewLayout {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(Dimen.mediumPadding)

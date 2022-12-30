@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -262,7 +263,7 @@ fun CharacterItem(
 
             //其它信息
             SlideRTLAnimation(
-                visible = loadSuccess || loadError,
+                visible = loadSuccess || loadError || LocalInspectionMode.current,
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 //年龄等
@@ -845,5 +846,28 @@ private fun FilterCharacterSheet(
             )
             CommonSpacer()
         }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterItemPreview(){
+    PreviewLayout {
+        CharacterItem(
+            unitId = 100101,
+            character = CharacterInfo(),
+            loved = true,
+        ) {}
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterTagPreview(){
+    PreviewLayout {
+        CharacterTag(
+            text = getLimitTypeText(limitType = 1),
+            backgroundColor = getLimitTypeColor(limitType = 1)
+        )
     }
 }

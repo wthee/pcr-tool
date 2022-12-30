@@ -27,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 公会战 BOSS 详情
+ * @see 预览参考EnemyDetail
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -73,7 +74,7 @@ fun ClanBattleDetail(
             ) {
                 //日期
                 MainTitleText(
-                    text = clanBattleValue.getDate(),
+                    text = getClanBattleDate(clanBattleValue),
                     modifier = Modifier.padding(vertical = Dimen.mediumPadding)
                 )
                 //图标

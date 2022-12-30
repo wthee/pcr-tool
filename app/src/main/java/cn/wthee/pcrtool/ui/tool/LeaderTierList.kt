@@ -23,10 +23,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
@@ -185,6 +182,7 @@ private fun LeaderGroup(
     groupData: LeaderTierGroup,
     spanCount: Int,
     toCharacterDetail: (Int) -> Unit,
+    characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
 
     Column {
@@ -215,7 +213,7 @@ private fun LeaderGroup(
                 .animateContentSize(defaultSpring())
         ) {
             groupData.leaderList.forEach { leader ->
-                LeaderItem(leader, toCharacterDetail)
+                LeaderItem(leader, toCharacterDetail, characterViewModel)
             }
         }
     }
@@ -228,14 +226,14 @@ private fun LeaderGroup(
 private fun LeaderItem(
     leader: LeaderTierItem,
     toCharacterDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    characterViewModel: CharacterViewModel?
 ) {
     val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
-        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
+        characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
     }
-    val basicInfo = flow.collectAsState(initial = null).value
+    val basicInfo = flow?.collectAsState(initial = null)?.value
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -344,5 +342,26 @@ private fun LeaderItem(
             }
         }
 
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun LeaderGroupPreview() {
+    val text = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        LeaderGroup(
+            LeaderTierGroup(
+                0,
+                arrayListOf(
+                    LeaderTierItem(name = text)
+                ),
+                text
+            ),
+            2,
+            {},
+            null
+        )
     }
 }

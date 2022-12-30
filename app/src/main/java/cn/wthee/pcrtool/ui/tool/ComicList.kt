@@ -29,10 +29,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -219,4 +216,25 @@ private fun TocItem(
         margin = 0.dp,
         textAlign = TextAlign.Start
     )
+}
+
+
+@CombinedPreviews
+@Composable
+private fun ComicItemPreview() {
+    PreviewLayout {
+        ComicItem(data = ComicData(title = stringResource(id = R.string.debug_short_text)))
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun TocItemPreview() {
+    val selectIndex = remember {
+        mutableStateOf(0)
+    }
+    PreviewLayout {
+        TocItem(selectIndex, 0, ComicData(title = stringResource(id = R.string.debug_short_text)))
+        TocItem(selectIndex, 1, ComicData(title = stringResource(id = R.string.debug_short_text)))
+    }
 }

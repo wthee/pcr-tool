@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -16,7 +17,9 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ScreenUtil
@@ -146,7 +149,12 @@ private fun WebsiteGroup(
 @Composable
 private fun WebsiteItem(data: WebsiteData) {
     val context = LocalContext.current
-    val regionName = getRegionName(data.region)
+    val regionName = if(LocalInspectionMode.current){
+        //预览模式
+        stringResource(id = R.string.unknown)
+    }else{
+        getRegionName(data.region)
+    }
 
     Column(
         modifier = Modifier
@@ -243,3 +251,17 @@ private fun getTitle(type: Int) = stringResource(
         else -> R.string.other
     }
 )
+
+
+@CombinedPreviews
+@Composable
+private fun WebsiteItemPreview() {
+    PreviewLayout {
+        WebsiteItem(
+            WebsiteData(
+                title = stringResource(id = R.string.debug_long_text),
+                summary = stringResource(id = R.string.debug_short_text)
+            )
+        )
+    }
+}

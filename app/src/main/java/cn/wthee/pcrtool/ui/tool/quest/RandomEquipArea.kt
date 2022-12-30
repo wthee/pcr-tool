@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.common.CommonResponseBox
 import cn.wthee.pcrtool.ui.common.CommonSpacer
@@ -83,6 +83,7 @@ fun RandomEquipArea(
 
 /**
  * 随机掉落区域列表
+ * @see 预览参考QuestList.AreaItem()
  */
 @Composable
 fun RandomDropAreaList(
@@ -100,9 +101,9 @@ fun RandomDropAreaList(
                 "${it.area}-${it.type}"
             }
         ) {
-            val odds = arrayListOf<EquipmentIdWithOdd>()
+            val odds = arrayListOf<EquipmentIdWithOdds>()
             it.equipIds.intArrayList.forEach { id ->
-                odds.add(EquipmentIdWithOdd(id, 0))
+                odds.add(EquipmentIdWithOdds(id, 0))
             }
 
             AreaItem(

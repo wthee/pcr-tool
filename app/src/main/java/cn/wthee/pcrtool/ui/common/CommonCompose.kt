@@ -14,11 +14,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,6 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -667,7 +665,7 @@ fun IconTextButton(
 }
 
 /**
- * 标题
+ * 头部标题
  */
 @Composable
 fun HeaderText(modifier: Modifier = Modifier, text: String) {
@@ -961,8 +959,8 @@ fun EventTitle(
         text = sd.substring(0, 10),
         backgroundColor = color
     )
-    //天数
-    if (showDays) {
+    //天数，预览时不显示
+    if (showDays && !LocalInspectionMode.current) {
         val days = ed.days(sd)
         MainTitleText(
             text = days,
@@ -1014,5 +1012,21 @@ fun EventTitleCountdown(
                 color = colorPurple
             )
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun AllPreview() {
+    val text = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        MainTitleText(text = text)
+        MainButton(text = text){}
+        SubButton(text = text){}
+        RankText(rank = 21)
+        SelectText(text = text, selected = true)
+        IconTextButton(icon = MainIconType.MORE, text = text)
+        CommonTitleContentText(title = text, content = text)
     }
 }

@@ -10,19 +10,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
-import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.int
 
 
@@ -33,7 +30,11 @@ import cn.wthee.pcrtool.utils.int
 fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueType.INT) {
     VerticalGrid(
         modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-        spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+        spanCount = if (LocalInspectionMode.current) {
+            2
+        } else {
+            ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+        }
     ) {
         attrs.forEach { attr ->
             val valueText = fixedAttrValueText(attr.value, attrValueType)
@@ -104,13 +105,14 @@ fun AttrCompare(
 /**
  * 处理属性数值格式
  */
+@Composable
 fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType) =
     when (attrValue.int) {
         in 100000000..Int.MAX_VALUE -> {
-            getString(R.string.hp_100_m, (attrValue.toInt() / 100000000f).toString())
+            stringResource(R.string.hp_100_m, (attrValue.toInt() / 100000000f).toString())
         }
         in 100000 until 100000000 -> {
-            getString(R.string.hp_10_k, attrValue.toInt() / 10000)
+            stringResource(R.string.hp_10_k, attrValue.toInt() / 10000)
         }
         else -> {
             when (attrValueType) {
@@ -125,11 +127,11 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType) =
 /**
  * 属性列表
  */
-@Preview
+@CombinedPreviews
 @Composable
 private fun AttrListPreview() {
     val mockData = arrayListOf(AttrValue(), AttrValue(), AttrValue())
-    PreviewBox {
+    PreviewLayout {
         AttrList(attrs = mockData)
     }
 }

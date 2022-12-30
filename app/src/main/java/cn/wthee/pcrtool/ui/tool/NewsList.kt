@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -31,7 +30,6 @@ import cn.wthee.pcrtool.data.enums.NewsType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -358,12 +356,10 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun NewsItemPreview() {
-    PreviewBox {
-        Column {
-            NewsItem(news = NewsTable(title = "?"), toNewsDetail = {})
-        }
+    PreviewLayout {
+        NewsItem(news = NewsTable(title = "?"), toNewsDetail = {})
     }
 }

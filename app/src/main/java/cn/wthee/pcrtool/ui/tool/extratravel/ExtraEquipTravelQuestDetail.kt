@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.travel
+package cn.wthee.pcrtool.ui.tool.extratravel
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

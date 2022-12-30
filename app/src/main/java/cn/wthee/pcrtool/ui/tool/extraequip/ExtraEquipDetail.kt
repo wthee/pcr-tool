@@ -6,12 +6,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,7 +24,9 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_CATEGORY
@@ -65,78 +65,13 @@ fun ExtraEquipDetail(
             .fillMaxSize()
     ) {
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //基本信息
             if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
-                if (BuildConfig.DEBUG) {
-                    Subtitle1(
-                        text = extraEquipmentData.equipmentId.toString(),
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                    )
-                }
-                MainText(
-                    text = extraEquipmentData.equipmentName,
-                    color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    selectable = true
-                )
-                Row(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance()
-                            .getUrl(ICON_EXTRA_EQUIPMENT_CATEGORY, extraEquipmentData.category),
-                        size = Dimen.smallIconSize,
-                    )
-                    Subtitle2(
-                        text = extraEquipmentData.categoryName,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Dimen.largePadding)
-                ) {
-                    //图标
-                    IconCompose(
-                        data = ImageResourceHelper.getInstance()
-                            .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equipId)
-                    )
-                    //描述
-                    Subtitle2(
-                        text = extraEquipmentData.getDesc(),
-                        modifier = Modifier.padding(start = Dimen.mediumPadding),
-                        selectable = true
-                    )
-                }
-
-                //属性变化
-                Row(
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.mediumPadding + Dimen.smallPadding
-                    )
-                ) {
-                    Spacer(modifier = Modifier.weight(0.3f))
-                    Subtitle1(
-                        text = stringResource(id = R.string.extra_equip_default_value),
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .weight(0.2f)
-                            .padding(0.dp)
-                    )
-                    Subtitle1(
-                        text = stringResource(id = R.string.extra_equip_max_value),
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.weight(0.2f)
-                    )
-                }
-                AttrCompare(
-                    compareData = extraEquipmentData.fixAttrList(),
-                    isExtraEquip = true,
-                    attrValueType = AttrValueType.PERCENT
-                )
+                ExtraEquipBasicInfo(extraEquipmentData, loved)
             }
             //被动技能
             SlideAnimation(visible = extraEquipmentData.getPassiveSkillIds().isNotEmpty()) {
@@ -175,6 +110,83 @@ fun ExtraEquipDetail(
         }
 
     }
+}
+
+/**
+ * ex装备基本信息
+ */
+@Composable
+private fun ExtraEquipBasicInfo(
+    extraEquipmentData: ExtraEquipmentData,
+    loved: MutableState<Boolean>
+) {
+    if (BuildConfig.DEBUG) {
+        Subtitle1(
+            text = extraEquipmentData.equipmentId.toString()
+        )
+    }
+    MainText(
+        text = extraEquipmentData.equipmentName,
+        color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+        selectable = true
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconCompose(
+            data = ImageResourceHelper.getInstance()
+                .getUrl(ICON_EXTRA_EQUIPMENT_CATEGORY, extraEquipmentData.category),
+            size = Dimen.smallIconSize,
+        )
+        Subtitle2(
+            text = extraEquipmentData.categoryName,
+            modifier = Modifier.padding(start = Dimen.smallPadding)
+        )
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Dimen.largePadding)
+    ) {
+        //图标
+        IconCompose(
+            data = ImageResourceHelper.getInstance()
+                .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, extraEquipmentData.equipmentId)
+        )
+        //描述
+        Subtitle2(
+            text = extraEquipmentData.getDesc(),
+            modifier = Modifier.padding(start = Dimen.mediumPadding),
+            selectable = true
+        )
+    }
+
+    //属性变化
+    Row(
+        modifier = Modifier.padding(
+            horizontal = Dimen.mediumPadding + Dimen.smallPadding
+        )
+    ) {
+        Spacer(modifier = Modifier.weight(0.3f))
+        Subtitle1(
+            text = stringResource(id = R.string.extra_equip_default_value),
+            textAlign = TextAlign.End,
+            modifier = Modifier
+                .weight(0.2f)
+                .padding(0.dp)
+        )
+        Subtitle1(
+            text = stringResource(id = R.string.extra_equip_max_value),
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(0.2f)
+        )
+    }
+    AttrCompare(
+        compareData = extraEquipmentData.fixAttrList(isPreview = LocalInspectionMode.current),
+        isExtraEquip = true,
+        attrValueType = AttrValueType.PERCENT
+    )
 }
 
 /**
@@ -251,4 +263,26 @@ fun ExtraEquipUnitList(
         }
     }
 
+}
+
+
+@CombinedPreviews
+@Composable
+private fun ExtraEquipBasicInfoPreview() {
+    val loved = remember {
+        mutableStateOf(true)
+    }
+
+    PreviewLayout {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            ExtraEquipBasicInfo(
+                ExtraEquipmentData(
+                    equipmentId = 1,
+                    equipmentName = stringResource(id = R.string.debug_short_text),
+                    description = stringResource(id = R.string.debug_long_text),
+                ),
+                loved
+            )
+        }
+    }
 }

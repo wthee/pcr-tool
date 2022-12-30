@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.tool.quest
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -16,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
@@ -209,7 +210,7 @@ fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
 @Composable
 fun AreaItem(
     selectedId: Int,
-    odds: List<EquipmentIdWithOdd>,
+    odds: List<EquipmentIdWithOdds>,
     num: String,
     color: Color
 ) {
@@ -263,7 +264,7 @@ fun AreaItem(
 @Composable
 private fun EquipWithOddCompose(
     selectedId: Int,
-    oddData: EquipmentIdWithOdd
+    oddData: EquipmentIdWithOdds
 ) {
     var dataState by remember { mutableStateOf(oddData) }
     if (dataState != oddData) {
@@ -303,5 +304,27 @@ private fun EquipWithOddCompose(
                 text = "${dataState.odd}%"
             )
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun AreaItemPreview() {
+    PreviewLayout {
+        AreaItem(
+            1,
+            arrayListOf(
+                EquipmentIdWithOdds(1, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+            ),
+            "1-1",
+            MaterialTheme.colorScheme.primary
+        )
     }
 }

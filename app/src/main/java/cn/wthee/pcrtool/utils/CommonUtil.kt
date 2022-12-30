@@ -6,6 +6,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cn.wthee.pcrtool.MyApplication
@@ -146,15 +148,16 @@ fun getFormatText(rank: Int, preStr: String = Constants.RANK_UPPER): String {
 /**
  * 阶段格式化
  */
+@Composable
 fun getZhNumberText(section: Int): String {
     return when (section) {
-        1 -> getString(R.string.no1)
-        2 -> getString(R.string.no2)
-        3 -> getString(R.string.no3)
-        4 -> getString(R.string.no4)
-        5 -> getString(R.string.no5)
-        6 -> getString(R.string.no6)
-        7 -> getString(R.string.no7)
+        1 -> stringResource(R.string.no1)
+        2 -> stringResource(R.string.no2)
+        3 -> stringResource(R.string.no3)
+        4 -> stringResource(R.string.no4)
+        5 -> stringResource(R.string.no5)
+        6 -> stringResource(R.string.no6)
+        7 -> stringResource(R.string.no7)
         else -> section.toString()
     }
 }

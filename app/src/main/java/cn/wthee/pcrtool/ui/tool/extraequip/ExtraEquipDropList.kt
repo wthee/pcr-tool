@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.common.CenterTipText
 import cn.wthee.pcrtool.ui.common.Subtitle1
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.travel.TravelQuestItem
+import cn.wthee.pcrtool.ui.tool.extratravel.TravelQuestItem
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi

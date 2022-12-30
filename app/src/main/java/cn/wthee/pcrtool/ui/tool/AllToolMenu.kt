@@ -10,7 +10,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -19,10 +21,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.module.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 
@@ -193,7 +192,12 @@ private fun MenuItem(
     toolMenuData: ToolMenuData,
     isEditMode: Boolean
 ) {
-    val orderStr = navViewModel.toolOrderData.observeAsState().value ?: ""
+    val orderStr = if(LocalInspectionMode.current){
+        ""
+    }else{
+        navViewModel.toolOrderData.observeAsState().value ?: ""
+
+    }
     val hasAdded = orderStr.intArrayList.contains(toolMenuData.type.id)
 
 
@@ -234,4 +238,24 @@ private fun MenuItem(
  */
 private fun ArrayList<ToolMenuData>.addItem(toolMenuType: ToolMenuType) {
     this.add(getToolMenuData(toolMenuType = toolMenuType))
+}
+
+
+@CombinedPreviews
+@Composable
+private fun MenuGroupPreview() {
+    val menu =  ToolMenuData(
+        R.string.tool_mock_gacha,
+        MainIconType.MOCK_GACHA,
+        ToolMenuType.MOCK_GACHA
+    )
+
+    PreviewLayout {
+        MenuGroup(
+            actions = NavActions(rememberNavController()),
+            title = stringResource(id = R.string.debug_short_text),
+            items = arrayListOf(menu,menu, menu),
+            isEditMode = true
+        )
+    }
 }

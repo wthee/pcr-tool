@@ -13,20 +13,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
-import cn.wthee.pcrtool.utils.fixJpTime
-import cn.wthee.pcrtool.utils.getZhNumberText
-import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -98,21 +93,31 @@ fun ClanBattleList(
 }
 
 /**
+ * 首页预览用
+ */
+@Composable
+fun ClanBattleOverview(
+    clanBattleEvent: ClanBattleEvent,
+    toClanBossInfo: (Int, Int, Int) -> Unit,
+    clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
+) {
+    val info = clanBattleViewModel.getAllClanBattleData(clanBattleEvent.getClanBattleId())
+        .collectAsState(initial = arrayListOf(ClanBattleInfo())).value[0]
+    ClanBattleItem(clanBattleEvent, info, toClanBossInfo)
+}
+
+/**
  * 图标列表
  * @param clanBattleEvent 不为空时，首页日程展示用
  */
 @Composable
-fun ClanBattleItem(
+private fun ClanBattleItem(
     clanBattleEvent: ClanBattleEvent? = null,
-    clanBattleInfo: ClanBattleInfo? = null,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
-    clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
+    clanBattleInfo: ClanBattleInfo,
+    toClanBossInfo: (Int, Int, Int) -> Unit
 ) {
-    val mClanBattleInfo = clanBattleInfo
-        ?: clanBattleViewModel.getAllClanBattleData(clanBattleEvent?.getClanBattleId() ?: -1)
-            .collectAsState(initial = arrayListOf(ClanBattleInfo())).value[0]
-    val placeholder = mClanBattleInfo.clanBattleId == -1
-    val bossUnitIdList = mClanBattleInfo.unitIds.intArrayList.subList(0, 5)
+    val placeholder = clanBattleInfo.clanBattleId == -1
+    val bossUnitIdList = clanBattleInfo.unitIds.intArrayList.subList(0, 5)
 
 
     Column(
@@ -129,16 +134,16 @@ fun ClanBattleItem(
             if (clanBattleEvent == null) {
                 //日期
                 MainTitleText(
-                    text = mClanBattleInfo.getDate(),
+                    text = getClanBattleDate(clanBattleInfo),
                     modifier = Modifier.commonPlaceholder(visible = placeholder)
                 )
                 //阶段数
                 MainTitleText(
                     text = stringResource(
                         id = R.string.phase,
-                        getZhNumberText(mClanBattleInfo.phase)
+                        getZhNumberText(clanBattleInfo.phase)
                     ),
-                    backgroundColor = getSectionTextColor(mClanBattleInfo.phase),
+                    backgroundColor = getSectionTextColor(clanBattleInfo.phase),
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding)
                         .commonPlaceholder(visible = placeholder)
@@ -182,14 +187,14 @@ fun ClanBattleItem(
                             ) {
                                 if (!placeholder) {
                                     toClanBossInfo(
-                                        mClanBattleInfo.clanBattleId,
+                                        clanBattleInfo.clanBattleId,
                                         index,
-                                        mClanBattleInfo.phase
+                                        clanBattleInfo.phase
                                     )
                                 }
                             }
                             //多目标提示
-                            val targetCount = mClanBattleInfo.getMultiCount(index)
+                            val targetCount = clanBattleInfo.getMultiCount(index)
                             if (targetCount > 0) {
                                 //阴影
                                 MainText(
@@ -239,15 +244,24 @@ fun getSectionTextColor(section: Int) = when (section) {
     else -> colorRed
 }
 
+/**
+ * 获取公会战年月
+ */
+@Composable
+fun getClanBattleDate(clanBattleInfo: ClanBattleInfo): String {
+    return stringResource(
+        R.string.clan_battle_y_m,
+        clanBattleInfo.startTime.substring(0, 4),
+        clanBattleInfo.releaseMonth.toString().fillZero()
+    )
+}
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun ClanBattleItemPreview() {
-    PreviewBox {
-        Column {
-            ClanBattleItem(
-                clanBattleInfo = ClanBattleInfo(1001),
-                toClanBossInfo = { _, _, _ -> })
-        }
+    PreviewLayout {
+        ClanBattleItem(
+            clanBattleInfo = ClanBattleInfo(1001),
+            toClanBossInfo = { _, _, _ -> })
     }
 }
