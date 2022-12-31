@@ -171,15 +171,13 @@ private fun ClanBattleItem(
             Column(Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //图标
                 Row(
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    )
+                    modifier = Modifier
+                        .padding(Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     bossUnitIdList.forEachIndexed { index, it ->
                         Box(
-                            modifier = Modifier.weight(1f),
                             contentAlignment = Alignment.Center
                         ) {
                             IconCompose(
@@ -220,7 +218,7 @@ private fun ClanBattleItem(
                     CaptionText(
                         text = clanBattleEvent.getFixedEndTime().fixJpTime,
                         modifier = Modifier
-                            .padding(top = Dimen.mediumPadding, end = Dimen.mediumPadding)
+                            .padding(end = Dimen.mediumPadding)
                             .fillMaxWidth()
                     )
                 }

@@ -210,9 +210,8 @@ private fun CardGridList(
 ) {
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
-    VerticalGrid(spanCount = spanCount) {
+    VerticalGrid(spanCount = getItemWidth().spanCount) {
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier

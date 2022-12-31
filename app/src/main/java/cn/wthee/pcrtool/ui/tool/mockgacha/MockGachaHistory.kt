@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -100,8 +99,8 @@ private fun MockGachaHistoryItem(
     ) {
         //标题
         Row(
-            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            verticalAlignment = Alignment.Bottom
+            modifier = Modifier.padding(bottom = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)
@@ -109,7 +108,7 @@ private fun MockGachaHistoryItem(
             //抽取次数
             if (resultCount > 0) {
                 MainTitleText(
-                    text = "$resultCount",
+                    text = stringResource(id = R.string.mock_count, resultCount),
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
@@ -131,9 +130,10 @@ private fun MockGachaHistoryItem(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            IconCompose(
-                data = MainIconType.MOCK_GACHA_PAY,
-                size = Dimen.fabIconSize
+            //去抽卡
+            IconTextButton(
+                icon = MainIconType.MOCK_GACHA_PAY,
+                text = stringResource(id = R.string.go_to_mock)
             ) {
                 scope.launch {
                     MainActivity.navViewModel.gachaId.postValue(gachaData.gachaId)
@@ -158,8 +158,7 @@ private fun MockGachaHistoryItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //up 角色
                 Row {
                     gachaData.pickUpIds.intArrayList.forEach { unitId ->
@@ -174,27 +173,24 @@ private fun MockGachaHistoryItem(
                 }
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
+                        .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     //删除操作
-                    Subtitle2(
-                        text = stringResource(R.string.delete_gacha),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable {
-                            openDialog.value = true
-                        })
+                    IconTextButton(
+                        icon = MainIconType.DELETE,
+                        text = stringResource(R.string.delete_gacha)
+                    ) {
+                        openDialog.value = true
+                    }
                     //日期
                     CaptionText(
                         text = stringResource(
                             id = R.string.last_gacha_date,
                             gachaData.lastUpdateTime
                         ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = Dimen.mediumPadding)
-
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 

@@ -22,9 +22,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.getRegionName
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.WebsiteViewModel
 import kotlinx.coroutines.launch
 
@@ -52,7 +51,7 @@ fun WebsiteList(
         stringResource(id = R.string.db_jp),
     )
 
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val spanCount = getItemWidth().spanCount
 
     //列表
     CommonResponseBox(responseData = responseData, fabContent = {

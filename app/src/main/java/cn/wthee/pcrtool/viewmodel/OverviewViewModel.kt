@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
@@ -243,7 +244,15 @@ class OverviewViewModel @Inject constructor(
     fun getClanBattleEvent(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getClanBattleEvent(1)
+            var data = eventRepository.getClanBattleEvent(1)
+            //测试用
+            if (BuildConfig.DEBUG) {
+                data = eventRepository.getClanBattleEvent(2)
+                data[0].startTime = calcDate(today, 5, false)
+                data[0].endTime = calcDate(today, 10, false)
+                data[1].startTime = calcDate(today, 2, true)
+                data[1].endTime = calcDate(today, 3, false)
+            }
 
             if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {

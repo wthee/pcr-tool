@@ -74,8 +74,7 @@ fun ExtraEquipList(
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
-    val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
+    val equipSpanCount = (Dimen.iconSize * 3 + Dimen.largePadding * 2).spanCount
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -216,7 +215,6 @@ private fun ExtraEquipGroup(
     VerticalGrid(
         spanCount = equipSpanCount,
         modifier = Modifier.padding(
-            bottom = Dimen.largePadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
         ),

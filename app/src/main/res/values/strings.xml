@@ -10,7 +10,7 @@
     <string name="title_birth">生日</string>
     <string name="title_blood">血型</string>
     <string name="title_race">种族</string>
-    <string name="title_race_multiple">多种族</string>
+    <string name="title_race_multiple">多人</string>
     <string name="title_guild">公会</string>
     <string name="title_fav">兴趣</string>
     <string name="cv">CV</string>
@@ -79,7 +79,7 @@
     <string name="leader_tip">角色排行数据来源</string>
     <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="title_spine">模型预览</string>
-    <string name="spine_tip">可预览游戏内战斗小人模型</string>
+    <string name="spine_tip">可预览游戏内角色、BOSS模型</string>
 
 
     <string name="db_cn">国服</string>
@@ -295,6 +295,7 @@
     <string name="delete_gacha">删除卡池</string>
     <string name="tip_delete_gacha">是否要删除卡池记录？</string>
     <string name="go_to_mock">去抽卡</string>
+    <string name="mock_count">已抽%d次</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
     <string name="last_gacha_date">上次抽卡 %s</string>
     <string name="gacha_used_gem">消耗宝石：1500 * %d = %d</string>
@@ -577,6 +578,7 @@
     <string name="skill_action_type_desc_divide">除以</string>
     <string name="skill_action_change_coe">动作(%d)的数值{%d}%s %s</string>
     <string name="skill_action_limit">；叠加上限 %s</string>
+    <string name="skill_action_limit_int">；叠加上限 [%d]</string>
     <string name="skill_action_change_coe_0">%s * [剩余的HP]</string>
     <string name="skill_action_change_coe_1">%s * [损失的HP]</string>
     <string name="skill_action_change_coe_2">%s * [击杀数量]</string>
@@ -650,8 +652,7 @@
     <string name="skill_action_type_desc_73">为%s展开护盾，在单个动作中受到的伤害超过 [%d] 时，伤害值将衰减%s</string>
     <string name="skill_action_type_desc_75">每造成 [%d] 次伤害时，触发动作(%d) %s</string>
     <string name="skill_action_type_desc_76">%s治疗量变为原来的 %s%s</string>
-    <string name="skill_action_type_desc_77">被动效果：每当%s受到%s时，为自身追加 [%d] 层标记%s%s%s</string>
-    <string name="skill_action_type_desc_77_lifetime">。被动效果%s</string>
+    <string name="skill_action_type_desc_77">被动效果：每当%s受到%s时，为自身追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_79">%s行动时，受到 %s伤害%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
     <string name="skill_action_type_desc_90">自身的%s提升 %s</string>
@@ -728,7 +729,7 @@
 
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>
-    <string name="only_jp">日服</string>
+    <string name="only_jp">日服评价，仅供参考</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>
     <string name="leader_tier_1">竞技场进攻</string>

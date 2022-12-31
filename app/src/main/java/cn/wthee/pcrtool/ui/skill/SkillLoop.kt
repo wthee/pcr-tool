@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.skill
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +25,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -113,7 +116,7 @@ private fun SkillLoopIconList(
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
-        maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         loopList.forEach {
             val type: String

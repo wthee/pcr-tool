@@ -28,13 +28,12 @@ import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -116,7 +115,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     VerticalGrid(
-        maxColumnWidth = Dimen.toolMenuWidth,
+        spanCount = (Dimen.menuItemSize + Dimen.mediumPadding * 2).spanCount,
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
         toolList.forEach {

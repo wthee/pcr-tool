@@ -179,7 +179,7 @@ fun StoryEventItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
                 if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     Box(
@@ -234,7 +234,7 @@ fun StoryEventItem(
                             val unitId = itemId % 10000 * 100 + 1
                             IconCompose(
                                 data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
-                                modifier = Modifier.padding(end = Dimen.mediumPadding)
+                                modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                             ) {
                                 toCharacterDetail(unitId)
                             }
@@ -244,7 +244,11 @@ fun StoryEventItem(
 
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
+                        .padding(
+                            start = Dimen.smallPadding,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.smallPadding
+                        )
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

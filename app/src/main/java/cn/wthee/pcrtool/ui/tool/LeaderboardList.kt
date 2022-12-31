@@ -73,15 +73,9 @@ fun LeaderboardList(
                     }
             )
 
-            MainTitleText(
+            CaptionText(
                 text = stringResource(id = R.string.only_jp),
-                backgroundColor = colorRed,
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
-                    }
+                modifier = Modifier.padding(start = Dimen.smallPadding)
             )
         }
         //标题

@@ -138,7 +138,7 @@ fun GachaItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //图标/描述
                 if (icons.isEmpty()) {
                     MainContentText(
@@ -156,7 +156,7 @@ fun GachaItem(
 
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
+                        .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

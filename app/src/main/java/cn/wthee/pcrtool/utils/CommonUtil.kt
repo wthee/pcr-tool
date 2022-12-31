@@ -132,7 +132,10 @@ fun getString(resId: Int, vararg formatArgs: Any) =
  * 999 -> ?
  */
 val String.fixedStr: String
-    get() = if (this == "999") Constants.UNKNOWN else this
+    get() = when (this) {
+        "999", "0", "-", "" -> Constants.UNKNOWN
+        else -> this
+    }
 
 /**
  * Rank 格式化

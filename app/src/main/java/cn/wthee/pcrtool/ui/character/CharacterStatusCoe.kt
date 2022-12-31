@@ -135,6 +135,7 @@ private fun StatusDesc(coeList: ArrayList<AttrValue>, coe: UnitStatusCoefficient
             title = stringResource(R.string.title_ub_add),
             value = coe.ub_evolution_coefficient.toDouble()
         )
+        CommonSpacer()
     }
 }
 

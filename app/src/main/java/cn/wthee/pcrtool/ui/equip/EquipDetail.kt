@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +24,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -151,7 +151,7 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+        VerticalGrid(spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount) {
             materialList.forEach { material ->
                 val loved = starIds.value.contains(material.id)
                 Column(
@@ -182,7 +182,7 @@ private fun EquipMaterialList(
 @CombinedPreviews
 @Composable
 private fun EquipDetailPreview() {
-    val loved  = remember {
+    val loved = remember {
         mutableStateOf(true)
     }
     PreviewLayout {

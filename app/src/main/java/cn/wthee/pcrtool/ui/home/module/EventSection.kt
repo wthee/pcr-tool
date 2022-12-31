@@ -164,7 +164,7 @@ private fun CalendarEventLayout(
     } else {
         OverviewType.COMING_SOON_EVENT.id
     }
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val spanCount = getItemWidth().spanCount
     val isNotEmpty =
         eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty()
                 || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()

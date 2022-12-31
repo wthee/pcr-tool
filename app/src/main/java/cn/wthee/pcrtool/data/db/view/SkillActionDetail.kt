@@ -961,7 +961,7 @@ data class SkillActionDetail(
             SkillActionType.ACCUMULATIVE_DAMAGE -> {
                 val value = getValueText(2, actionValue2, actionValue3)
                 val limit =
-                    getString(R.string.skill_action_limit, actionValue4.toInt().toString())
+                    getString(R.string.skill_action_limit_int, actionValue4.toInt())
                 getString(R.string.skill_action_type_desc_34, value, limit)
             }
             // 35：特殊标记
@@ -970,7 +970,7 @@ data class SkillActionDetail(
                 if (actionValue4.toInt() > 0) {
                     val time = getTimeText(3, actionValue3, hideIndex = true)
                     val limit =
-                        getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                        getString(R.string.skill_action_limit_int, actionValue1.toInt())
                     getString(R.string.skill_action_type_desc_35, getTarget(), count, time, limit)
                 } else {
                     getString(
@@ -1059,7 +1059,7 @@ data class SkillActionDetail(
             // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
                 val limit =
-                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                    getString(R.string.skill_action_limit_int, actionValue1.toInt())
                 getString(R.string.skill_action_type_desc_45, limit)
             }
             // 46：比例伤害
@@ -1190,7 +1190,7 @@ data class SkillActionDetail(
             // 60：标记赋予
             SkillActionType.ATTACK_SEAL -> {
                 val limit =
-                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                    getString(R.string.skill_action_limit_int, actionValue1.toInt())
                 val time = getTimeText(3, actionValue3, actionValue4)
                 val target = getTarget()
                 val desc = getString(R.string.skill_action_type_desc_60_0, time, limit)
@@ -1305,14 +1305,13 @@ data class SkillActionDetail(
             // 77：被动叠加标记
             SkillActionType.IF_BUFF_SEAL -> {
                 val time = getTimeText(3, actionValue3, actionValue4)
-                val lifeTime = getTimeText(5, actionValue5, actionValue6)
                 val effect = when (actionDetail1) {
                     1 -> getString(R.string.skill_buff)
                     2 -> getString(R.string.skill_damage)
                     else -> UNKNOWN
                 }
                 val limit =
-                    getString(R.string.skill_action_limit, actionValue1.toInt().toString())
+                    getString(R.string.skill_action_limit_int, actionValue1.toInt())
 
                 getString(
                     R.string.skill_action_type_desc_77,
@@ -1320,8 +1319,7 @@ data class SkillActionDetail(
                     effect,
                     actionDetail2,
                     time,
-                    limit,
-                    lifeTime
+                    limit
                 )
             }
             // 79：行动时，造成伤害
@@ -1384,7 +1382,7 @@ data class SkillActionDetail(
             // 97：受击tp回复
             SkillActionType.TP_HIT -> {
                 val limit =
-                    getString(R.string.skill_action_limit, actionValue4.toInt().toString())
+                    getString(R.string.skill_action_limit_int, actionValue4.toInt())
                 val time = getTimeText(5, actionValue5)
                 val desc = getString(
                     R.string.skill_action_type_desc_35,

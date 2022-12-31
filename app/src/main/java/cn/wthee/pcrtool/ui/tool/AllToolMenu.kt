@@ -23,6 +23,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.module.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 import kotlinx.coroutines.launch
 
 /**
@@ -176,7 +177,7 @@ private fun MenuGroup(
             modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
         )
         VerticalGrid(
-            maxColumnWidth = (getItemWidth() + Dimen.mediumPadding * 2) / 2,
+            spanCount = (Dimen.iconSize * 3).spanCount,
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
             items.forEach {
@@ -192,9 +193,9 @@ private fun MenuItem(
     toolMenuData: ToolMenuData,
     isEditMode: Boolean
 ) {
-    val orderStr = if(LocalInspectionMode.current){
+    val orderStr = if (LocalInspectionMode.current) {
         ""
-    }else{
+    } else {
         navViewModel.toolOrderData.observeAsState().value ?: ""
 
     }
@@ -244,7 +245,7 @@ private fun ArrayList<ToolMenuData>.addItem(toolMenuType: ToolMenuType) {
 @CombinedPreviews
 @Composable
 private fun MenuGroupPreview() {
-    val menu =  ToolMenuData(
+    val menu = ToolMenuData(
         R.string.tool_mock_gacha,
         MainIconType.MOCK_GACHA,
         ToolMenuType.MOCK_GACHA
@@ -254,7 +255,7 @@ private fun MenuGroupPreview() {
         MenuGroup(
             actions = NavActions(rememberNavController()),
             title = stringResource(id = R.string.debug_short_text),
-            items = arrayListOf(menu,menu, menu),
+            items = arrayListOf(menu, menu, menu),
             isEditMode = true
         )
     }

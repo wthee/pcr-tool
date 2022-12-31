@@ -147,7 +147,7 @@ fun TravelQuestHeader(
                 horizontal = Dimen.mediumPadding,
                 vertical = Dimen.smallPadding
             ),
-            spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+            spanCount = getItemWidth().spanCount * 2
         ) {
             CommonTitleContentText(
                 stringResource(id = R.string.travel_limit_unit_num),

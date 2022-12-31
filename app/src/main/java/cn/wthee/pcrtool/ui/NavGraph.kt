@@ -36,13 +36,13 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelList
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelQuestDetail
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelQuestDetail
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -497,6 +497,7 @@ fun NavGraph(
                 }),
             ) {
                 val arguments = requireNotNull(it.arguments)
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ClanBattleDetail(
                     arguments.getInt(Navigation.TOOL_CLAN_Battle_ID),
                     arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),

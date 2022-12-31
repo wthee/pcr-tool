@@ -4,10 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +18,12 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 /**
  * 主线地图信息
@@ -64,7 +60,6 @@ fun QuestPager(
     }
     val randomDropResponseData = flow.collectAsState(initial = null).value
 
-    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     var pagerCount = 0
     //tab文本
@@ -112,40 +107,18 @@ fun QuestPager(
     ) {
 
         //Tab
-        TabRow(
+        MainTabRow(
+            pagerState = pagerState,
+            tabs = tabs,
+            colorList = colorList,
             modifier = Modifier
                 .padding(
                     top = Dimen.mediumPadding,
                     start = Dimen.largePadding,
                     end = Dimen.largePadding
                 )
-                .fillMaxWidth(tabs.size * 0.25f),
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = Color.Transparent,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = colorList[pagerState.currentPage]
-                )
-            }
-        ) {
-            tabs.forEachIndexed { index, tab ->
-                Tab(
-                    selected = index == pagerState.currentPage,
-                    onClick = {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
-                        }
-                    }
-                ) {
-                    Subtitle1(
-                        text = tab,
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        color = colorList[index],
-                    )
-                }
-            }
-        }
+                .fillMaxWidth(tabs.size * 0.25f)
+        )
 
         HorizontalPager(
             count = pagerCount,
@@ -244,12 +217,11 @@ fun AreaItem(
     VerticalGrid(
         modifier = Modifier
             .padding(
-                bottom = Dimen.largePadding,
                 start = Dimen.commonItemPadding,
                 end = Dimen.commonItemPadding
             )
             .commonPlaceholder(placeholder),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         odds.forEach {
             EquipWithOddCompose(selectedId, it)

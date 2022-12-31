@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EnemyRepository
 import cn.wthee.pcrtool.data.db.view.ClanBattleTargetCountData
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -28,8 +29,8 @@ class EnemyViewModel @Inject constructor(
         try {
             val data = enemyRepository.getEnemyAttr(enemyId)
             emit(data)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEnemyAttr#enemyId:$enemyId")
         }
     }
 
@@ -94,8 +95,8 @@ class EnemyViewModel @Inject constructor(
             val data = enemyRepository.getMultiTargetEnemyInfo(enemyId)
             val list = getMultiPartEnemyList(data.enemyPartIds.intArrayList)
             emit(list)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getMutiTargetEnemyInfo#enemyId:$enemyId")
         }
     }
 

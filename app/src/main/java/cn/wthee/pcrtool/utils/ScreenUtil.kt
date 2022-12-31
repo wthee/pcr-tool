@@ -5,6 +5,7 @@ import android.util.DisplayMetrics
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.MyApplication
 
 
@@ -68,6 +69,13 @@ object ScreenUtil {
     }
 
 }
+
+/**
+ * 计算 spanCount
+ */
+val Dp.spanCount: Int
+    get() = ScreenUtil.getWidth() / this.value.dp2pxNotComposable
+
 
 /**
  *  获取 像素 的dp

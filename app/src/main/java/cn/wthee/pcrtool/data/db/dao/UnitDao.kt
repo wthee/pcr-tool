@@ -128,7 +128,7 @@ interface UnitDao {
         CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_day_int END DESC,
         CASE WHEN :sortType = 6 AND :asc = 'asc'  THEN r6Id END ASC,
         CASE WHEN :sortType = 6 AND :asc = 'desc'  THEN r6Id END DESC,
-        gacha.exchange_id DESC, gacha.id
+        gacha.exchange_id, gacha.id
         LIMIT :limit
         """
     )
@@ -193,7 +193,6 @@ interface UnitDao {
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_id = :unitId
         """
@@ -210,7 +209,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_profile.unit_name,
+            COALESCE( unit_profile.unit_name, '' ) AS unit_name,
             COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,

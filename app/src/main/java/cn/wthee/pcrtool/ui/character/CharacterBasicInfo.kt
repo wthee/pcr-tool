@@ -3,15 +3,10 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +23,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息
@@ -88,7 +82,7 @@ private fun BasicInfo(info: CharacterInfoPro) {
         //角色
         SingleRow(title = stringResource(id = R.string.character), content = info.unitName)
         //现实名字
-        SingleRow(title = stringResource(id = R.string.name), content = info.actualName)
+        SingleRow(title = stringResource(id = R.string.name), content = info.actualName.fixedStr)
         //cv
         SingleRow(title = stringResource(id = R.string.cv), content = info.voice)
 
@@ -113,7 +107,7 @@ private fun BasicInfo(info: CharacterInfoPro) {
         //血型、种族
         TwoColumnsInfo(
             stringResource(id = R.string.title_blood),
-            info.bloodType,
+            info.bloodType.fixedStr,
             stringResource(id = R.string.title_race),
             info.race,
         )
@@ -147,8 +141,6 @@ private fun HomePageCommentInfo(
 
     //主页交流
     val pagerState = rememberPagerState()
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Row(
         modifier = Modifier.padding(
@@ -167,44 +159,27 @@ private fun HomePageCommentInfo(
                 .padding(start = Dimen.smallPadding)
                 .weight(0.15f)
         )
-        Spacer(modifier = Modifier.weight(0.85f))
+        Spacer(modifier = Modifier.weight(0.7f))
     }
     //多星级时
     if (homePageCommentList.isNotEmpty()) {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.primary,
+        val tabs = arrayListOf<String>()
+        homePageCommentList.forEach {
+            tabs.add(
+                "★" + if (it.unitId % 100 / 10 == 0) {
+                    "1"
+                } else {
+                    "${it.unitId % 100 / 10}"
+                }
+            )
+        }
+        MainTabRow(
+            pagerState = pagerState,
+            tabs = tabs,
             modifier = Modifier
                 .padding(horizontal = Dimen.mediumPadding)
                 .fillMaxWidth(homePageCommentList.size * 0.33f)
-        ) {
-            homePageCommentList.forEachIndexed { index, comment ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        scope.launch {
-                            VibrateUtil(context).single()
-                            pagerState.scrollToPage(index)
-                        }
-                    },
-                ) {
-                    Subtitle1(
-                        text = "★" + if (comment.unitId % 100 / 10 == 0) {
-                            "1"
-                        } else {
-                            "${comment.unitId % 100 / 10}"
-                        },
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        color = if (pagerState.currentPage == index) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        }
-                    )
-                }
-            }
-        }
+        )
 
         HorizontalPager(
             state = pagerState,
@@ -250,7 +225,7 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
                 .padding(start = Dimen.smallPadding)
                 .weight(0.15f)
         )
-        Spacer(modifier = Modifier.weight(0.85f))
+        Spacer(modifier = Modifier.weight(0.7f))
     }
     roomComments?.let {
         //多角色时，显示角色图标
@@ -349,6 +324,7 @@ private fun TwoColumnsInfo(
         )
     }
 }
+
 /**
  * 文本卡片
  */

@@ -205,14 +205,13 @@ private fun MockGachaResultRecordIconLine(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         icons.forEachIndexed { index, gachaUnitInfo ->
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(contentAlignment = Alignment.Center) {
                 val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)
                 Column(
                     modifier = Modifier
                         .padding(
                             bottom = Dimen.mediumPadding
-                        )
-                        .fillMaxWidth(),
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(

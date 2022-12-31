@@ -18,9 +18,8 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.int
+import cn.wthee.pcrtool.utils.spanCount
 
 
 /**
@@ -33,7 +32,7 @@ fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueTyp
         spanCount = if (LocalInspectionMode.current) {
             2
         } else {
-            ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+            getItemWidth().spanCount * 2
         }
     ) {
         attrs.forEach { attr ->

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
+import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
@@ -18,6 +19,7 @@ class LeaderViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
     private var leaderData: ResponseData<List<LeaderboardData>>? = null
+    private var leaderTierMap: HashMap<Int, ResponseData<LeaderTierData>> = hashMapOf()
 
     /**
      * 获取排行
@@ -27,7 +29,7 @@ class LeaderViewModel @Inject constructor(
             leaderData = apiRepository.getLeader()
         }
         //排序
-        leaderData?.data = leaderData?.data?.sortedWith() { o1, o2 ->
+        leaderData?.data = leaderData?.data?.sortedWith { o1, o2 ->
             (if (asc) 1 else -1) * when (sort) {
                 1 -> {
                     //露娜塔
@@ -77,7 +79,9 @@ class LeaderViewModel @Inject constructor(
      * 获取排行评级
      */
     fun getLeaderTier(type: Int) = flow {
-        val data = apiRepository.getLeaderTier(type)
-        emit(data)
+        if (leaderTierMap[type] == null) {
+            leaderTierMap[type] = apiRepository.getLeaderTier(type)
+        }
+        emit(leaderTierMap[type])
     }
 }

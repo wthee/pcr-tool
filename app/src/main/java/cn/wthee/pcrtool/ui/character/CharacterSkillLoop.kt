@@ -10,8 +10,7 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import kotlin.math.ceil
 
@@ -30,8 +29,7 @@ fun CharacterSkillLoop(
         skillViewModel.getCharacterSkillLoops(unitId).collectAsState(initial = arrayListOf()).value
 
     SlideAnimation(loopData.isNotEmpty()) {
-        val spanCount =
-            ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
+        val spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount
         var rowNum = 0
         loopData.forEach {
             rowNum += ceil(it.getBefore().size * 1.0 / spanCount).toInt()

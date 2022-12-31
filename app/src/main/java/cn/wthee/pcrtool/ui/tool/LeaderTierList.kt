@@ -57,7 +57,7 @@ fun LeaderTier(
     val leaderData = flow.collectAsState(initial = null).value
 
     val url = stringResource(id = R.string.leader_source_url)
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+    val spanCount = (Dimen.iconSize * 3).spanCount
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -79,17 +79,14 @@ fun LeaderTier(
                     }
             )
 
-            MainTitleText(
+            CaptionText(
                 text = stringResource(id = R.string.only_jp),
-                backgroundColor = colorRed,
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
-                    }
+                modifier = Modifier.padding(start = Dimen.smallPadding)
             )
-            CaptionText(text = leaderData?.data?.desc ?: "", modifier = Modifier.fillMaxWidth())
+            CaptionText(
+                text = leaderData?.data?.desc?.substring(0, 11) ?: "",
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         CommonResponseBox(
@@ -206,7 +203,6 @@ private fun LeaderGroup(
             spanCount = spanCount,
             modifier = Modifier
                 .padding(
-                    bottom = Dimen.mediumPadding,
                     start = Dimen.commonItemPadding,
                     end = Dimen.commonItemPadding
                 )

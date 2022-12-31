@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -47,6 +48,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -459,13 +461,14 @@ fun getPositionColor(position: Int) = when (PositionType.getPositionType(positio
 
 /**
  * 带指示器图标
+ * @param urls 最大5个
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     val scope = rememberCoroutineScope()
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(urls.size * 0.2f),
         contentAlignment = Alignment.Center
     ) {
         //显示指示器
@@ -473,22 +476,24 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
             urls.forEachIndexed { index, url ->
                 val modifier = if (pagerState.currentPage == index) {
                     Modifier
-                        .padding(horizontal = Dimen.largePadding)
+                        .padding(horizontal = Dimen.mediumPadding)
                         .border(
                             width = Dimen.border,
                             color = MaterialTheme.colorScheme.primary,
                             shape = MaterialTheme.shapes.extraSmall
                         )
                 } else {
-                    Modifier.padding(horizontal = Dimen.largePadding)
+                    Modifier.padding(horizontal = Dimen.mediumPadding)
                 }
 
-                IconCompose(
-                    modifier = modifier,
-                    data = url,
-                ) {
-                    scope.launch {
-                        pagerState.scrollToPage(index)
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    IconCompose(
+                        modifier = modifier,
+                        data = url,
+                    ) {
+                        scope.launch {
+                            pagerState.scrollToPage(index)
+                        }
                     }
                 }
             }
@@ -646,7 +651,8 @@ fun IconTextButton(
                 onClick()
             }
         }
-        .padding(Dimen.smallPadding), verticalAlignment = Alignment.CenterVertically
+        .padding(Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconCompose(
             data = icon,
@@ -929,8 +935,8 @@ fun <T> CommonResponseBox(
 fun EventTitle(
     startTime: String,
     endTime: String,
-    showDays:Boolean = true,
-    showOverdueColor:Boolean = false
+    showDays: Boolean = true,
+    showOverdueColor: Boolean = false
 ) {
     val today = getToday()
     val sd = startTime.fixJpTime
@@ -946,9 +952,9 @@ fun EventTitle(
             colorPurple
         }
         else -> {
-            if(showOverdueColor){
+            if (showOverdueColor) {
                 MaterialTheme.colorScheme.outline
-            }else{
+            } else {
                 MaterialTheme.colorScheme.primary
             }
         }
@@ -996,7 +1002,7 @@ fun EventTitleCountdown(
                 text = stringResource(R.string.progressing, ed.dates(today)),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
-                color =  MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary
             )
         }
         if (comingSoon) {
@@ -1015,18 +1021,114 @@ fun EventTitleCountdown(
     }
 }
 
+/**
+ * 通用 TabRow
+ */
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun MainTabRow(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    tabs: List<String>,
+    scrollable: Boolean = false,
+    colorList: ArrayList<Color> = arrayListOf()
+) {
+    val contentColor = if (colorList.isNotEmpty()) {
+        colorList[pagerState.currentPage]
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
 
+    if (scrollable) {
+        ScrollableTabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = Color.Transparent,
+            contentColor = contentColor,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = contentColor
+                )
+            },
+            modifier = modifier
+        ) {
+            MainTabList(pagerState, tabs, colorList)
+        }
+    } else {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = Color.Transparent,
+            contentColor = contentColor,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = contentColor
+                )
+            },
+            modifier = modifier
+        ) {
+            MainTabList(pagerState, tabs, colorList)
+        }
+    }
+
+}
+
+/**
+ * 通用 Tab
+ */
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MainTabList(
+    pagerState: PagerState,
+    tabs: List<String>,
+    colorList: ArrayList<Color>
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    tabs.forEachIndexed { index, s ->
+        Tab(
+            selected = pagerState.currentPage == index,
+            onClick = {
+                scope.launch {
+                    VibrateUtil(context).single()
+                    pagerState.scrollToPage(index)
+                }
+            }) {
+            Subtitle1(
+                text = s,
+                modifier = Modifier.padding(Dimen.smallPadding),
+                color = if (colorList.isNotEmpty()) {
+                    colorList[index]
+                } else {
+                    if (pagerState.currentPage == index) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
+                }
+            )
+        }
+    }
+}
+
+
+@OptIn(ExperimentalPagerApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
     val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         MainTitleText(text = text)
-        MainButton(text = text){}
-        SubButton(text = text){}
+        MainButton(text = text) {}
+        SubButton(text = text) {}
         RankText(rank = 21)
         SelectText(text = text, selected = true)
         IconTextButton(icon = MainIconType.MORE, text = text)
         CommonTitleContentText(title = text, content = text)
+        MainTabRow(
+            pagerState = rememberPagerState(),
+            tabs = arrayListOf(text, text)
+        )
     }
 }

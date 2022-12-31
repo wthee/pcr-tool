@@ -38,7 +38,10 @@ import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -59,7 +62,8 @@ fun EquipList(
     val filter = navViewModel.filterEquip.observeAsState()
     // dialog 状态
     val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
     )
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -72,8 +76,7 @@ fun EquipList(
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
-    val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
+    val equipSpanCount = (Dimen.iconSize * 3 + Dimen.largePadding * 2).spanCount
 
     filter.value?.let { filterValue ->
         filterValue.starIds = FilterEquipment.getStarIdList()
@@ -196,7 +199,6 @@ private fun EquipGroup(
     VerticalGrid(
         spanCount = equipSpanCount,
         modifier = Modifier.padding(
-            bottom = Dimen.largePadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
         ),

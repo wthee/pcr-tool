@@ -59,9 +59,9 @@ fun CharacterSection(
         }
     ) {
         if (characterList.isNotEmpty()) {
-            //正常
+            //不同宽度适配
             if (ScreenUtil.getWidth() < getItemWidth().value.dp2px * 1.3) {
-                //宽屏幕时
+                //正常
                 HorizontalPager(
                     count = characterList.size,
                     state = rememberPagerState(),
