@@ -8,9 +8,9 @@ import androidx.room.ColumnInfo
  */
 data class CharacterInfoPro(
     @ColumnInfo(name = "unit_id") val unitId: Int = 100101,
-    @ColumnInfo(name = "unit_name") val unitName: String = "???",
-    @ColumnInfo(name = "kana") val kana: String = "???",
-    @ColumnInfo(name = "actual_name") val actualName: String = "???",
+    @ColumnInfo(name = "unit_name") val unitName: String = "",
+    @ColumnInfo(name = "kana") val kana: String = "",
+    @ColumnInfo(name = "actual_name") val actualName: String = "",
     @ColumnInfo(name = "age_int") val age: String = "999",
     @ColumnInfo(name = "guild") val guild: String = "???",
     @ColumnInfo(name = "race") val race: String = "???",
@@ -23,11 +23,7 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "voice") val voice: String = "???",
     @ColumnInfo(name = "catch_copy") val catchCopy: String = "???",
     @ColumnInfo(name = "self_text") val selfText: String = "???",
-    @ColumnInfo(name = "search_area_width") val position: Int = 100,
     @ColumnInfo(name = "intro") val intro: String = "???",
-    @ColumnInfo(name = "atk_type") val atkType: Int = 1,
-    @ColumnInfo(name = "r6Id") val r6Id: Int = 0,
-    @ColumnInfo(name = "rarity") val rarity: Int = 3,
 ) {
 
     /**

@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
  * 模拟卡池抽取结果记录信息
  */
 @Entity(tableName = "gacha_result_record")
-data class MockGachaResultRecord(
+data class MockGachaResultRecordData(
     @PrimaryKey
-    val resultId: String,
-    val gachaId: String,
-    val unitIds: String,
-    val unitRaritys: String,
-    val createTime: String
+    val resultId: String = "",
+    val gachaId: String = "",
+    val unitIds: String = "",
+    val unitRaritys: String = "",
+    val createTime: String = ""
 )

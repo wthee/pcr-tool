@@ -7,22 +7,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -39,20 +41,24 @@ fun EquipMainInfo(
 ) {
     val equipMaxData =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
-    EquipDetail(equipId, equipMaxData, toEquipMaterial)
+    val materialList =
+        equipmentViewModel.getEquipInfos(equipMaxData).collectAsState(initial = arrayListOf()).value
+    val starIds = FilterEquipment.getStarIdList()
+    val loved = remember {
+        mutableStateOf(starIds.contains(equipId))
+    }
+
+    EquipDetail(equipId, equipMaxData, materialList, loved, toEquipMaterial)
 }
 
 @Composable
 private fun EquipDetail(
     equipId: Int,
     equipMaxData: EquipmentMaxData,
+    materialList: ArrayList<EquipmentMaterial>,
+    loved: MutableState<Boolean>,
     toEquipMaterial: (Int) -> Unit
 ) {
-    val starIds = FilterEquipment.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(equipId))
-    }
-
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip)
 
     Box(
@@ -90,11 +96,11 @@ private fun EquipDetail(
                     )
                 }
                 //属性
-                AttrList(attrs = equipMaxData.attr.allNotZero())
+                AttrList(attrs = equipMaxData.attr.allNotZero(isPreview = LocalInspectionMode.current))
 
             }
             //合成素材
-            EquipMaterialList(equipMaxData, toEquipMaterial)
+            EquipMaterialList(materialList, toEquipMaterial)
         }
         //装备收藏
         FabCompose(
@@ -118,24 +124,24 @@ private fun EquipDetail(
 /**
  * 装备合成素材
  *
- * @param equip 装备信息
+ * @param materialList 装备素材信息
  */
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun EquipMaterialList(
-    equip: EquipmentMaxData,
-    toEquipMaterial: (Int) -> Unit,
-    equipmentViewModel: EquipmentViewModel = hiltViewModel()
+    materialList: ArrayList<EquipmentMaterial>,
+    toEquipMaterial: (Int) -> Unit
 ) {
-    val materialList =
-        equipmentViewModel.getEquipInfos(equip).collectAsState(initial = arrayListOf()).value
     val starIds = remember {
         mutableStateOf(arrayListOf<Int>())
     }
-    LaunchedEffect(MainActivity.navSheetState.currentValue) {
-        starIds.value = FilterEquipment.getStarIdList()
+    if (!LocalInspectionMode.current) {
+        LaunchedEffect(MainActivity.navSheetState.currentValue) {
+            starIds.value = FilterEquipment.getStarIdList()
+        }
     }
+
 
     Column {
         MainText(
@@ -145,29 +151,27 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        FadeAnimation(visible = equip.equipmentId != UNKNOWN_EQUIP_ID) {
-            VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                materialList.forEach { material ->
-                    val loved = starIds.value.contains(material.id)
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding,
-                                bottom = Dimen.largePadding
-                            ), horizontalAlignment = Alignment.CenterHorizontally
+        VerticalGrid(spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount) {
+            materialList.forEach { material ->
+                val loved = starIds.value.contains(material.id)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding,
+                            bottom = Dimen.largePadding
+                        ), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getEquipPic(material.id)
                     ) {
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getEquipPic(material.id)
-                        ) {
-                            toEquipMaterial(material.id)
-                        }
-                        SelectText(
-                            selected = loved,
-                            text = material.count.toString()
-                        )
+                        toEquipMaterial(material.id)
                     }
+                    SelectText(
+                        selected = loved,
+                        text = material.count.toString()
+                    )
                 }
             }
         }
@@ -175,13 +179,18 @@ private fun EquipMaterialList(
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun EquipDetailPreview() {
-    PreviewBox {
+    val loved = remember {
+        mutableStateOf(true)
+    }
+    PreviewLayout {
         EquipDetail(
             equipId = 0,
-            equipMaxData = EquipmentMaxData(1, "?", "", "?", 1, attr = Attr().random()),
+            equipMaxData = EquipmentMaxData(1001, "?", "", "?", 1, attr = Attr().random()),
+            materialList = arrayListOf(EquipmentMaterial()),
+            loved = loved,
             toEquipMaterial = {})
     }
 }

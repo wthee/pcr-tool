@@ -100,7 +100,12 @@ interface UnitDao {
         AND 1 = CASE
             WHEN 0 = :guildId THEN 1 
             WHEN -1 = :guildId THEN unit_profile.guild_id = ''
-            WHEN  unit_profile.guild_id = :guildId  THEN 1 
+            WHEN unit_profile.guild_id = :guildId  THEN 1 
+        END     
+         AND 1 = CASE
+            WHEN "" = :raceName THEN 1 
+            WHEN "-" = :raceName THEN unit_profile.race LIKE '%、%'
+            WHEN unit_profile.race = :raceName  THEN 1 
         END     
         AND 1 = CASE
             WHEN  0 = :type  THEN 1
@@ -123,14 +128,14 @@ interface UnitDao {
         CASE WHEN :sortType = 5 AND :asc = 'desc'  THEN birth_day_int END DESC,
         CASE WHEN :sortType = 6 AND :asc = 'asc'  THEN r6Id END ASC,
         CASE WHEN :sortType = 6 AND :asc = 'desc'  THEN r6Id END DESC,
-        gacha.exchange_id DESC, gacha.id
+        gacha.exchange_id, gacha.id
         LIMIT :limit
         """
     )
     suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
-        type: Int, limit: Int, exUnitIdList: List<Int>
+        type: Int, limit: Int, exUnitIdList: List<Int>, raceName: String
     ): List<CharacterInfo>
 
     /**
@@ -188,7 +193,6 @@ interface UnitDao {
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_id = :unitId
         """
@@ -205,7 +209,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_data.unit_name,
+            COALESCE( unit_profile.unit_name, '' ) AS unit_name,
             COALESCE( unit_data.kana, '' ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
@@ -219,16 +223,11 @@ interface UnitDao {
             unit_profile.voice,
             unit_profile.catch_copy,
             unit_profile.self_text,
-            unit_data.search_area_width,
             COALESCE( unit_data.comment, '......' ) AS intro,
-            unit_data.atk_type,
-            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS r6Id,
-            unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, '' ) AS actual_name
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
         WHERE 
             unit_profile.unit_id = :unitId 
@@ -245,12 +244,11 @@ interface UnitDao {
     @Query(
         """
         SELECT
-            b.unit_id,
-            b.unit_name,
+            :unitId AS unit_id,
             COALESCE( GROUP_CONCAT( a.description, '-' ), '......') AS room_comments 
         FROM
             room_unit_comments AS a
-            LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
+            LEFT JOIN unit_profile AS b ON a.unit_id = b.unit_id 
         WHERE
             a.unit_id = :unitId 
         GROUP BY
@@ -364,6 +362,25 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT guild_id, guild_name FROM guild")
     suspend fun getGuilds(): List<GuildData>
+
+    /**
+     * 获取所有种族信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            race 
+        FROM
+            unit_profile 
+        WHERE
+            race NOT LIKE '%、%' 
+        GROUP BY
+            race
+    """
+    )
+    suspend fun getRaces(): List<String>
+
 
     /**
      * 获取所有公会成员信息

@@ -18,8 +18,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
@@ -51,8 +54,10 @@ fun AllCardList(
         arrayListOf()
     }
     //剧情活动
-    val storyUrls =
-        picsViewModel.getStoryList(id, allPicsType.type).collectAsState(initial = null).value
+    val flow = remember(id, allPicsType.type) {
+        picsViewModel.getStoryList(id, allPicsType.type)
+    }
+    val responseData = flow.collectAsState(initial = null).value
 
     val checkedPicUrl = remember {
         mutableStateOf("")
@@ -64,6 +69,8 @@ fun AllCardList(
         }
     }
 
+    val hasStory = responseData?.data?.isNotEmpty() == true
+
 
     Box(
         modifier = Modifier
@@ -74,62 +81,12 @@ fun AllCardList(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
+            //角色
             if (allPicsType == AllPicsType.CHARACTER) {
-                Row(
-                    modifier = Modifier
-                        .padding(
-                            top = Dimen.largePadding,
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        )
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.basic))
-                    Spacer(modifier = Modifier.weight(1f))
-                    MainText(text = basicUrls.size.toString())
-                }
-                CardGridList(
-                    checkedPicUrl = checkedPicUrl,
-                    urls = basicUrls
-                )
+                CharacterPicList(basicUrls, checkedPicUrl)
             }
-            Row(
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-                    .fillMaxWidth(),
-            ) {
-                MainTitleText(
-                    text = stringResource(id = R.string.story)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                if (storyUrls == null) {
-                    CircularProgressCompose()
-                } else {
-                    MainText(text = storyUrls.size.toString())
-                }
-            }
-            if (storyUrls != null) {
-                if (storyUrls.isEmpty()) {
-                    MainText(
-                        text = stringResource(id = R.string.no_story_info),
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(
-                                Dimen.largePadding
-                            )
-                    )
-                } else {
-                    CardGridList(
-                        checkedPicUrl = checkedPicUrl,
-                        urls = storyUrls
-                    )
-                }
-            }
+            //剧情
+            StoryPicList(hasStory, responseData, checkedPicUrl)
             CommonSpacer()
         }
     }
@@ -169,7 +126,83 @@ fun AllCardList(
     }
 }
 
+/**
+ * 剧情图片
+ */
+@Composable
+private fun StoryPicList(
+    hasStory: Boolean,
+    responseData: ResponseData<ArrayList<String>>?,
+    checkedPicUrl: MutableState<String>
+) {
+    Row(
+        modifier = Modifier
+            .padding(
+                top = Dimen.largePadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding
+            )
+            .fillMaxWidth(),
+    ) {
+        MainTitleText(
+            text = stringResource(id = R.string.story)
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        if (hasStory) {
+            MainText(text = responseData!!.data!!.size.toString())
+        }
+    }
+    CommonResponseBox(responseData) { data ->
+        if (data.isNotEmpty()) {
+            CardGridList(
+                checkedPicUrl = checkedPicUrl,
+                urls = data
+            )
+        } else {
+            MainText(
+                text = stringResource(id = R.string.no_story_info),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(
+                        Dimen.largePadding
+                    )
+            )
+        }
+    }
 
+}
+
+/**
+ * 角色图片
+ */
+@Composable
+private fun CharacterPicList(
+    basicUrls: java.util.ArrayList<String>,
+    checkedPicUrl: MutableState<String>
+) {
+    Row(
+        modifier = Modifier
+            .padding(
+                top = Dimen.largePadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding
+            )
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MainTitleText(text = stringResource(id = R.string.basic))
+        Spacer(modifier = Modifier.weight(1f))
+        MainText(text = basicUrls.size.toString())
+    }
+    CardGridList(
+        checkedPicUrl = checkedPicUrl,
+        urls = basicUrls
+    )
+}
+
+/**
+ * 图片网格列表
+ */
 @Composable
 private fun CardGridList(
     checkedPicUrl: MutableState<String>,
@@ -177,9 +210,8 @@ private fun CardGridList(
 ) {
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
-    VerticalGrid(spanCount = spanCount) {
+    VerticalGrid(spanCount = getItemWidth().spanCount) {
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier
@@ -221,5 +253,17 @@ private fun getFileName(url: String): String {
         type + url.split('/').last().split('.')[0]
     } catch (e: Exception) {
         System.currentTimeMillis().toString()
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun CharacterPicListPreview() {
+    val checkedPicUrl = remember {
+        mutableStateOf("")
+    }
+    PreviewLayout {
+        CharacterPicList(arrayListOf("1"), checkedPicUrl)
     }
 }

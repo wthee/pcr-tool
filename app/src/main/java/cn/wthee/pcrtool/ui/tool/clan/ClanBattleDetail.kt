@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 公会战 BOSS 详情
+ * @see 预览参考EnemyDetail
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -49,7 +52,9 @@ fun ClanBattleDetail(
 
     //页面
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         clanBattleInfo?.let { clanBattleList ->
             //该期公会战数据
@@ -69,7 +74,7 @@ fun ClanBattleDetail(
             ) {
                 //日期
                 MainTitleText(
-                    text = clanBattleValue.getDate(),
+                    text = getClanBattleDate(clanBattleValue),
                     modifier = Modifier.padding(vertical = Dimen.mediumPadding)
                 )
                 //图标

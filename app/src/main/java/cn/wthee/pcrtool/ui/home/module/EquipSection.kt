@@ -18,8 +18,7 @@ import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 
@@ -33,8 +32,7 @@ fun EquipSection(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.EQUIP.id
-    val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
+    val equipSpanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount
     //装备总数
     val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
     //装备列表

@@ -75,7 +75,7 @@ class CharacterAttrViewModel @Inject constructor(
                 val bonus = unitRepository.getRankBonus(rank, unitId)
                 bonus?.let {
                     info.add(it.attr)
-                    allData.bonus = it
+                    allData.rankBonus = it
                 }
             } catch (_: Exception) {
 

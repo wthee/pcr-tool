@@ -28,7 +28,7 @@ class CharacterViewModel @Inject constructor(
     fun getCharacterInfoList(params: FilterCharacter?) = flow {
         try {
             if (params != null) {
-                var filterList = unitRepository.getCharacterInfoList(params, Int.MAX_VALUE)
+                val filterList = unitRepository.getCharacterInfoList(params, Int.MAX_VALUE)
                 emit(filterList)
             }
         } catch (_: Exception) {
@@ -119,6 +119,17 @@ class CharacterViewModel @Inject constructor(
     fun getGuilds() = flow {
         try {
             emit(unitRepository.getGuilds())
+        } catch (_: Exception) {
+
+        }
+    }
+
+    /**
+     * 种族信息
+     */
+    fun getRaces() = flow {
+        try {
+            emit(unitRepository.getRaces())
         } catch (_: Exception) {
 
         }

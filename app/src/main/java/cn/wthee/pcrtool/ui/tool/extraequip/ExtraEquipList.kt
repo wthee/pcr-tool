@@ -74,8 +74,7 @@ fun ExtraEquipList(
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
-    val equipSpanCount =
-        ScreenUtil.getWidth() / (Dimen.iconSize * 3 + Dimen.largePadding * 2).value.dp2px
+    val equipSpanCount = (Dimen.iconSize * 3 + Dimen.largePadding * 2).spanCount
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -216,7 +215,6 @@ private fun ExtraEquipGroup(
     VerticalGrid(
         spanCount = equipSpanCount,
         modifier = Modifier.padding(
-            bottom = Dimen.largePadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
         ),
@@ -505,5 +503,28 @@ private fun getEquipColor(colorType: Int): Color {
         3 -> colorGold
         4 -> colorPink
         else -> colorGray
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun ExtraEquipGroupPreview() {
+    val text = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        ExtraEquipGroup(
+            ExtraEquipGroupData(
+                rarity = 3,
+                category = 1,
+                categoryName = text,
+                equipIdList = arrayListOf(
+                    ExtraEquipmentBasicInfo(equipmentName = text),
+                    ExtraEquipmentBasicInfo(equipmentName = text),
+                    ExtraEquipmentBasicInfo(equipmentName = text)
+                )
+            ),
+            2,
+            FilterExtraEquipment()
+        ) { }
     }
 }

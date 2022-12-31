@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.storyevent
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -16,14 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
@@ -111,8 +109,8 @@ fun StoryEventItem(
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
     val previewEvent = sd.substring(0, 10) == "2030/12/30"
-    val days = ed.days(sd)
-    if (days == stringResource(id = R.string.day, 0)) {
+    val days = ed.days(sd, showDay = false)
+    if (days == "0") {
         showDays = false
     }
 
@@ -161,55 +159,27 @@ fun StoryEventItem(
         ) {
             MainTitleText(
                 text = type,
-                backgroundColor = typeColor
+                backgroundColor = typeColor,
+                modifier = Modifier.padding(end = Dimen.smallPadding),
             )
             if (!previewEvent) {
                 MainTitleText(
                     text = sd.substring(0, 10),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
                 )
             }
             if (showDays) {
                 MainTitleText(
-                    text = days,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                    text = stringResource(R.string.day, days.toInt()),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
                 )
             }
             //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.progressing, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN,
-                        size = Dimen.smallIconSize,
-                        tint = colorPurple
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = colorPurple
-                    )
-                }
-            }
+            EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
                 if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     Box(
@@ -242,7 +212,7 @@ fun StoryEventItem(
                     selectable = true
                 )
 
-                //掉落角色图标
+                //boss、掉落角色图标
                 if (event.getUnitIdList().isNotEmpty()) {
                     Row {
                         //sp boss 图标，处理id 311403 -> 311400
@@ -264,7 +234,7 @@ fun StoryEventItem(
                             val unitId = itemId % 10000 * 100 + 1
                             IconCompose(
                                 data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
-                                modifier = Modifier.padding(end = Dimen.mediumPadding)
+                                modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                             ) {
                                 toCharacterDetail(unitId)
                             }
@@ -274,7 +244,11 @@ fun StoryEventItem(
 
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
+                        .padding(
+                            start = Dimen.smallPadding,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.smallPadding
+                        )
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -312,16 +286,14 @@ private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
     else -> false
 } && eventId / 10000 == 1
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun StoryEventItemPreview() {
-    PreviewBox {
-        Column {
-            StoryEventItem(
-                event = EventData(),
-                toCharacterDetail = {},
-                toEventEnemyDetail = {},
-                toAllPics = { _, _ -> })
-        }
+    PreviewLayout {
+        StoryEventItem(
+            event = EventData(unitIds = "100101-100101-100102"),
+            toCharacterDetail = {},
+            toEventEnemyDetail = {},
+            toAllPics = { _, _ -> })
     }
 }

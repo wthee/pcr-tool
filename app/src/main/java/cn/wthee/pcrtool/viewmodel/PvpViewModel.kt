@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,22 +34,28 @@ class PvpViewModel @Inject constructor(
 ) : ViewModel() {
 
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
+    val favoritesList = MutableLiveData<List<PvpFavoriteData>>()
+    val allFavoritesList = MutableLiveData<List<PvpFavoriteData>>()
     var requesting = false
 
     /**
      * 获取收藏信息
      */
-    fun getAllFavorites() = flow {
-        val data = pvpRepository.getLiked(MainActivity.regionType)
-        emit(data)
+    fun getAllFavorites() {
+        viewModelScope.launch {
+            val data = pvpRepository.getLiked(MainActivity.regionType)
+            allFavoritesList.postValue(data)
+        }
     }
 
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String) = flow {
-        val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
-        emit(data)
+    fun getFavoritesList(defs: String) {
+        viewModelScope.launch {
+            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
+            favoritesList.postValue(data)
+        }
     }
 
     /**
@@ -77,7 +84,7 @@ class PvpViewModel @Inject constructor(
      * 获取搜索历史信息
      */
     fun getHistory() = flow {
-        val data = pvpRepository.getHistory(MainActivity.regionType)
+        val data = pvpRepository.getHistory(MainActivity.regionType, 10)
         emit(data)
     }
 
@@ -89,7 +96,12 @@ class PvpViewModel @Inject constructor(
             val today = getToday()
             //获取前60天
             val beforeDate = calcDate(today, 60, true)
-            val data = pvpRepository.getHistory(MainActivity.regionType, beforeDate, today)
+            //仅保存60天数据，删除超过60天的历史数据
+            pvpRepository.deleteOldHistory(MainActivity.regionType, beforeDate)
+
+            //删除旧数据后，查询全部数据
+            val data = pvpRepository.getHistory(MainActivity.regionType, Int.MAX_VALUE)
+
             val unitList = arrayListOf<PvpCharacterData>()
             val map = hashMapOf<Int, Int>()
             //统计数量
@@ -110,7 +122,7 @@ class PvpViewModel @Inject constructor(
                     )
                 )
             }
-            //数量限制
+            //角色数量限制
             val limit = 50
             var list = unitList.sortedByDescending { it.count }
             if (list.size > limit) {
@@ -121,8 +133,8 @@ class PvpViewModel @Inject constructor(
                 it.position = characterDataList.find { d -> d.unitId == it.unitId }?.position ?: 0
             }
             emit(list)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            Log.e("DEBUG", e.toString())
         }
     }
 
@@ -132,7 +144,7 @@ class PvpViewModel @Inject constructor(
      */
     fun insert(data: PvpHistoryData) {
         viewModelScope.launch {
-            val preData = pvpRepository.getHistory(MainActivity.regionType)
+            val preData = pvpRepository.getHistory(MainActivity.regionType, 1)
             //避免重复插入
             if (preData.isNotEmpty()) {
                 //与上一记录不相同或间隔大于10分钟，插入新记录

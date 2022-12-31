@@ -8,7 +8,7 @@ import java.io.Serializable
 data class AppNotice(
     val date: String = "",
     val file_url: String = "",
-    val id: Int = -1,
+    var id: Int = -1,
     val img_url: String = "",
     val message: String = "",
     val title: String = "1.1.0",

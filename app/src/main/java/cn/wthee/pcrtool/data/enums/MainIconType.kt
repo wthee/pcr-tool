@@ -138,9 +138,9 @@ enum class MainIconType(val icon: ImageVector) {
     MOCK_GACHA_PAY(Icons.Rounded.CreditCard),
 
     /**
-     * 卡池类型
+     * 类型切换
      */
-    MOCK_GACHA_TYPE(Icons.Rounded.SwapVert),
+    CHANGE_FILTER_TYPE(Icons.Rounded.SwapVert),
 
     /**
      * 免费十连
@@ -391,4 +391,29 @@ enum class MainIconType(val icon: ImageVector) {
      * 不排序
      */
     SORT_NULL(Icons.Rounded.UnfoldMore),
+
+    /**
+     * 网站收藏
+     */
+    WEBSITE_BOOKMARK(Icons.Rounded.Bookmarks),
+
+    /**
+     * 角色评级
+     */
+    LEADER_TIER(Icons.Rounded.WorkspacePremium),
+
+    /**
+     * PC
+     */
+    BROWSER_PC(Icons.Rounded.DesktopWindows),
+
+    /**
+     * 手机
+     */
+    BROWSER_PHONE(Icons.Rounded.PhoneAndroid),
+
+    /**
+     * 手机
+     */
+    BROWSER_APP(Icons.Rounded.Android),
 }

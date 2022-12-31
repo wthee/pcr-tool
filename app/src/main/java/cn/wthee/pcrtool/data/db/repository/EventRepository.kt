@@ -28,4 +28,5 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
 
     suspend fun getBirthdayList() = eventDao.getBirthdayList()
 
+    suspend fun getClanBattleEvent(limit: Int) = eventDao.getClanBattleEvent(limit)
 }

@@ -6,19 +6,19 @@ import androidx.room.ColumnInfo
  * 角色剧情属性视图
  */
 data class CharacterStoryAttr(
-    @ColumnInfo(name = "story_id") val storyId: Int,
-    @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "sub_title") val subTitle: String,
-    @ColumnInfo(name = "status_type_1") val status_type_1: Int,
-    @ColumnInfo(name = "status_rate_1") val status_rate_1: Int,
-    @ColumnInfo(name = "status_type_2") val status_type_2: Int,
-    @ColumnInfo(name = "status_rate_2") val status_rate_2: Int,
-    @ColumnInfo(name = "status_type_3") val status_type_3: Int,
-    @ColumnInfo(name = "status_rate_3") val status_rate_3: Int,
-    @ColumnInfo(name = "status_type_4") val status_type_4: Int,
-    @ColumnInfo(name = "status_rate_4") val status_rate_4: Int,
-    @ColumnInfo(name = "status_type_5") val status_type_5: Int,
-    @ColumnInfo(name = "status_rate_5") val status_rate_5: Int,
+    @ColumnInfo(name = "story_id") val storyId: Int = 0,
+    @ColumnInfo(name = "title") val title: String = "",
+    @ColumnInfo(name = "sub_title") val subTitle: String = "",
+    @ColumnInfo(name = "status_type_1") val status_type_1: Int = 0,
+    @ColumnInfo(name = "status_rate_1") val status_rate_1: Int = 0,
+    @ColumnInfo(name = "status_type_2") val status_type_2: Int = 0,
+    @ColumnInfo(name = "status_rate_2") val status_rate_2: Int = 0,
+    @ColumnInfo(name = "status_type_3") val status_type_3: Int = 0,
+    @ColumnInfo(name = "status_rate_3") val status_rate_3: Int = 0,
+    @ColumnInfo(name = "status_type_4") val status_type_4: Int = 0,
+    @ColumnInfo(name = "status_rate_4") val status_rate_4: Int = 0,
+    @ColumnInfo(name = "status_type_5") val status_type_5: Int = 0,
+    @ColumnInfo(name = "status_rate_5") val status_rate_5: Int = 0,
 ) {
     fun getFixedTitle(): String {
         return try {

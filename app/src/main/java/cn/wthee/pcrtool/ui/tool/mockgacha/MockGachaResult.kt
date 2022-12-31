@@ -13,12 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.simpleDateFormat
@@ -116,7 +114,7 @@ fun MockGachaResult(
 private fun MockGachaResultRecordItem(
     order: Int,
     pickUpUnitIds: List<Int>,
-    recordData: MockGachaResultRecord
+    recordData: MockGachaResultRecordData
 ) {
     val formatResult = arrayListOf<GachaUnitInfo>()
     //pickUp 标记
@@ -164,7 +162,7 @@ private fun MockGachaResultRecordItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
                 MockGachaResultRecordIconLine(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     0,
@@ -202,19 +200,18 @@ private fun MockGachaResultRecordIconLine(
 ) {
     Row(
         modifier = modifier
-            .padding(Dimen.mediumPadding)
+            .padding(horizontal = Dimen.mediumPadding)
             .width(getItemWidth()),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         icons.forEachIndexed { index, gachaUnitInfo ->
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(contentAlignment = Alignment.Center) {
                 val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)
                 Column(
                     modifier = Modifier
                         .padding(
                             bottom = Dimen.mediumPadding
-                        )
-                        .fillMaxWidth(),
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(
@@ -236,5 +233,22 @@ private fun MockGachaResultRecordIconLine(
                 }
             }
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun MockGachaResultRecordPreview(){
+    PreviewLayout {
+        MockGachaResultRecordItem(
+            1,
+            arrayListOf(1,2),
+            MockGachaResultRecordData(
+                unitIds = "1-2-3-4-5-5-4-3-2-1",
+                unitRaritys = "1-2-3-1-2-3-1-2-3-1",
+                createTime = "2020/01/01 00:00:00"
+            )
+        )
     }
 }

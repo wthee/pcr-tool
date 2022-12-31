@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -20,14 +19,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 
 /**
@@ -59,9 +56,10 @@ fun TweetList(
             //头部加载中提示
             item {
                 ExpandAnimation(tweetItems.loadState.refresh == LoadState.Loading) {
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Dimen.largePadding)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimen.largePadding)
                     ) {
                         CircularProgressCompose(Modifier.align(Alignment.Center))
                     }
@@ -162,7 +160,7 @@ private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
         }
         //图片
         if (photos.isNotEmpty()) {
-            VerticalGrid(maxColumnWidth = getItemWidth()) {
+            VerticalGrid(spanCount = getItemWidth().spanCount) {
                 photos.forEach {
                     val isComic = url != ""
                     if (!isComic) {
@@ -242,11 +240,11 @@ private fun getComicId(title: String): String {
     }
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun TweetItemPreview() {
-    PreviewBox {
-        TweetItem(data = TweetData(id = 1), toComic = {})
+    PreviewLayout {
+        TweetItem(data = TweetData(id = 1, tweet = "???"), toComic = {})
     }
 }
 

@@ -26,6 +26,8 @@ object Dimen {
 
     val commonItemPadding = 6.dp
 
+    val exSmallIconSize = 14.dp
+
     val smallIconSize = 18.dp
 
     val textIconSize = 20.dp
@@ -42,17 +44,11 @@ object Dimen {
 
     val settingIconSize = 30.dp
 
-    val toolMenuWidth = 100.dp
-
     val menuIconSize = 30.dp
 
     val menuItemSize = 64.dp
 
     val dataChangeWidth = 120.dp
-
-    val lineWidth = 32.dp
-
-    val lineHeight = 3.dp
 
     val skillActionMinHeight = 16.dp
 

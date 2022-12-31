@@ -24,9 +24,10 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ErrorResult
 import coil.request.SuccessResult
 
-const val RATIO = 1.78f
+const val RATIO = 16 / 9f
 
 // 741 * 1200
 const val RATIO_COMIC = 0.6175f
@@ -38,11 +39,12 @@ const val RATIO_TEASER = 1280 / 576f
 @Composable
 fun ImageCompose(
     modifier: Modifier = Modifier,
-    data: Any,
+    data: String,
     ratio: Float,
     contentScale: ContentScale = ContentScale.FillWidth,
-    placeholder:Boolean = true,
-    onSuccess: (SuccessResult) -> Unit = {}
+    placeholder: Boolean = true,
+    onError: (ErrorResult) -> Unit = {},
+    onSuccess: (SuccessResult) -> Unit = {},
 ) {
 
     var mModifier = modifier
@@ -65,6 +67,7 @@ fun ImageCompose(
         },
         onError = {
             loading.value = false
+            onError(it.result)
         },
         modifier = if(placeholder){
             mModifier.commonPlaceholder(visible = loading.value)
@@ -190,7 +193,7 @@ fun StoryImageCompose(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,
                     modifier = Modifier
-                        .aspectRatio(RATIO_COMMON)
+                        .aspectRatio(RATIO)
                         .commonPlaceholder(true)
                 )
             }
@@ -200,7 +203,7 @@ fun StoryImageCompose(
                 AsyncImage(
                     model = R.drawable.error,
                     contentDescription = null,
-                    modifier = Modifier.aspectRatio(RATIO_COMMON)
+                    modifier = Modifier.aspectRatio(RATIO)
                 )
             }
         },

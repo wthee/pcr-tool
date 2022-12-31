@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
-import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.MockGachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
@@ -37,7 +37,7 @@ class MockGachaViewModel @Inject constructor(
 ) : ViewModel() {
 
     val historyList = MutableLiveData<List<MockGachaProData>>()
-    val resultRecordList = MutableLiveData<List<MockGachaResultRecord>>()
+    val resultRecordList = MutableLiveData<List<MockGachaResultRecordData>>()
 
     /**
      * 获取卡池角色
@@ -99,7 +99,7 @@ class MockGachaViewModel @Inject constructor(
         viewModelScope.launch {
             val updateTime = getToday(true)
             mockGachaRepository.insertResult(
-                MockGachaResultRecord(
+                MockGachaResultRecordData(
                     UUID.randomUUID().toString(),
                     gachaId,
                     resultList.getIdsStr(),

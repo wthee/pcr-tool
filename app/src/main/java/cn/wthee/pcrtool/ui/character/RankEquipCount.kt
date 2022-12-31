@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -18,9 +17,10 @@ import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
@@ -189,22 +189,11 @@ private fun EquipCountItem(
     }
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun EquipCountItemPreview() {
-    val spanCount = 5
-    val rankEquipMaterials = arrayListOf<EquipmentMaterial>()
-    for (i in 0..11) {
-        rankEquipMaterials.add(EquipmentMaterial())
-    }
-    PreviewBox {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(spanCount),
-            contentPadding = PaddingValues(Dimen.mediumPadding)
-        ) {
-            items(items = rankEquipMaterials) { item ->
-                EquipCountItem(item, false) { }
-            }
-        }
+    PreviewLayout {
+        EquipCountItem(EquipmentMaterial(), false) { }
+        EquipCountItem(EquipmentMaterial(), true) { }
     }
 }

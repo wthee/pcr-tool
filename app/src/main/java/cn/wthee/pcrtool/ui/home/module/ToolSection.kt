@@ -33,6 +33,7 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -114,7 +115,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     VerticalGrid(
-        maxColumnWidth = Dimen.toolMenuWidth,
+        spanCount = (Dimen.menuItemSize + Dimen.mediumPadding * 2).spanCount,
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
         toolList.forEach {
@@ -197,6 +198,8 @@ fun getAction(
             ToolMenuType.CALENDAR_EVENT -> actions.toCalendarEventList()
             ToolMenuType.EXTRA_EQUIP -> actions.toExtraEquipList()
             ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
+            ToolMenuType.WEBSITE -> actions.toWebsiteList()
+            ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
         }
     }
 
@@ -224,7 +227,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
-        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(R.string.tool_calendar_event, MainIconType.CALENDAR)
+        ToolMenuType.CALENDAR_EVENT -> ToolMenuData(
+            R.string.tool_calendar_event,
+            MainIconType.CALENDAR
+        )
         ToolMenuType.EXTRA_EQUIP -> ToolMenuData(
             R.string.tool_extra_equip,
             MainIconType.EXTRA_EQUIP
@@ -232,6 +238,11 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.TRAVEL_AREA -> ToolMenuData(
             R.string.tool_travel,
             MainIconType.EXTRA_EQUIP_DROP
+        )
+        ToolMenuType.WEBSITE -> ToolMenuData(R.string.tool_website, MainIconType.WEBSITE_BOOKMARK)
+        ToolMenuType.LEADER_TIER -> ToolMenuData(
+            R.string.tool_leader_tier,
+            MainIconType.LEADER_TIER
         )
 
     }

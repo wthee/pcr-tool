@@ -27,11 +27,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
@@ -112,6 +114,7 @@ fun CharacterList(
                         }
                     ) {
                         CharacterItem(
+                            unitId = it.id,
                             character = it,
                             loved = filter.value!!.starIds.contains(it.id),
                             modifier = Modifier.padding(Dimen.mediumPadding),
@@ -173,7 +176,8 @@ fun CharacterList(
  */
 @Composable
 fun CharacterItem(
-    character: CharacterInfo,
+    unitId: Int,
+    character: CharacterInfo?,
     loved: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -182,38 +186,11 @@ fun CharacterItem(
     var loadSuccess by remember {
         mutableStateOf(false)
     }
-    //位置信息
-    var positionText = ""
-    val pos = when (PositionType.getPositionType(character.position)) {
-        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-        PositionType.UNKNOWN -> Constants.UNKNOWN
+    var loadError by remember {
+        mutableStateOf(false)
     }
-    if (pos != Constants.UNKNOWN) {
-        positionText = "$pos ${character.position}"
-    }
-    //获取方式
-    val limitColor: Color
-    val limitType: String
-    when (character.limitType) {
-        2 -> {
-            limitType = stringResource(id = R.string.type_limit)
-            limitColor = colorRed
-        }
-        3 -> {
-            limitType = stringResource(id = R.string.type_event_limit)
-            limitColor = colorGreen
-        }
-        4 -> {
-            limitType = stringResource(id = R.string.type_extra_character)
-            limitColor = colorOrange
-        }
-        else -> {
-            limitType = stringResource(id = R.string.type_normal)
-            limitColor = colorGold
-        }
-    }
+
+
     //主色
     val initColor = colorWhite
     var cardMaskColor by remember {
@@ -230,10 +207,11 @@ fun CharacterItem(
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
             //图片
             ImageCompose(
-                data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
+                data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
                 ratio = RATIO,
                 contentScale = ContentScale.FillHeight,
-                modifier = Modifier.heightIn(max = getItemWidth())
+                modifier = Modifier.heightIn(max = getItemWidth()),
+                onError = { loadError = true }
             ) { result ->
                 loadSuccess = true
                 //取色
@@ -243,147 +221,178 @@ fun CharacterItem(
                     }
                 }
             }
-            //名称阴影效果
-            if (loadSuccess) {
+            if (character != null) {
+                //名称阴影效果
+                if (loadSuccess) {
+                    CharacterName(
+                        color = MaterialTheme.colorScheme.primary,
+                        name = character.getNameF(),
+                        nameExtra = character.getNameL(),
+                        isBorder = true,
+                        modifier = Modifier.align(Alignment.BottomStart)
+                    )
+                }
+                //名称
                 CharacterName(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = textColor,
                     name = character.getNameF(),
                     nameExtra = character.getNameL(),
-                    isBorder = true,
+                    isBorder = false,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                )
+            } else {
+                //暂未登场
+                if (loadSuccess) {
+                    CharacterName(
+                        color = MaterialTheme.colorScheme.primary,
+                        name = stringResource(id = R.string.unknown_character),
+                        nameExtra = "",
+                        isBorder = true,
+                        modifier = Modifier.align(Alignment.BottomStart)
+                    )
+                }
+                //名称
+                CharacterName(
+                    color = textColor,
+                    name = stringResource(id = R.string.unknown_character),
+                    nameExtra = "",
+                    isBorder = false,
                     modifier = Modifier.align(Alignment.BottomStart)
                 )
             }
-            //名称
-            CharacterName(
-                color = textColor,
-                name = character.getNameF(),
-                nameExtra = character.getNameL(),
-                isBorder = false,
-                modifier = Modifier.align(Alignment.BottomStart)
-            )
 
             //其它信息
             SlideRTLAnimation(
-                visible = loadSuccess,
+                visible = loadSuccess || loadError || LocalInspectionMode.current,
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 //年龄等
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(RATIO_SHAPE)
-                        .fillMaxHeight()
-                        .clip(TrapezoidShape)
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    cardMaskColor,
-                                    cardMaskColor,
-                                    MaterialTheme.colorScheme.primary,
-                                ),
-                            ),
-                            alpha = 0.6f
-                        ),
-                    horizontalAlignment = Alignment.End,
-                ) {
+                if (character != null) {
+
+                    //位置信息
+                    var positionText = ""
+                    val pos = when (PositionType.getPositionType(character.position)) {
+                        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+                        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+                        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+                        PositionType.UNKNOWN -> Constants.UNKNOWN
+                    }
+                    if (pos != Constants.UNKNOWN) {
+                        positionText = "$pos ${character.position}"
+                    }
+
                     Column(
                         modifier = Modifier
-                            .padding(
-                                horizontal = Dimen.mediumPadding,
-                                vertical = Dimen.smallPadding
+                            .fillMaxWidth(RATIO_SHAPE)
+                            .fillMaxHeight()
+                            .clip(TrapezoidShape)
+                            .background(
+                                brush = Brush.horizontalGradient(
+                                    colors = listOf(
+                                        cardMaskColor,
+                                        cardMaskColor,
+                                        MaterialTheme.colorScheme.primary,
+                                    ),
+                                ),
+                                alpha = 0.6f
                             ),
                         horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.SpaceAround
                     ) {
-                        //年龄
-                        Subtitle2(
-                            text = getFixed(character.age),
-                            fontWeight = FontWeight.Bold,
-                            color = textColor
-                        )
-                        //生日
-                        Subtitle2(
-                            text = stringResource(
-                                id = R.string.date_m_d,
-                                getFixed(character.birthMonth),
-                                getFixed(character.birthDay)
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            color = textColor
-                        )
-                        //体重
-                        Subtitle2(
-                            text = getFixed(character.weight) + " KG",
-                            fontWeight = FontWeight.Bold,
-                            color = textColor
-                        )
-                        //身高
-                        Subtitle2(
-                            text = getFixed(character.height) + " CM",
-                            fontWeight = FontWeight.Bold,
-                            color = textColor
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f),
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.End
-                    ) {
-                        Row {
-                            //获取方式
-                            CharacterTag(
-                                modifier = Modifier.padding(end = Dimen.smallPadding),
-                                text = limitType,
-                                backgroundColor = limitColor,
-                                textColor = textColor
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = Dimen.mediumPadding,
+                                    vertical = Dimen.smallPadding
+                                ),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.SpaceAround
+                        ) {
+                            //年龄
+                            Subtitle2(
+                                text = character.age.fixedStr,
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
                             )
-                            //攻击
-                            CharacterTag(
-                                modifier = Modifier.padding(end = Dimen.mediumPadding),
-                                text = when (character.atkType) {
-                                    1 -> stringResource(id = R.string.physical)
-                                    2 -> stringResource(id = R.string.magic)
-                                    else -> stringResource(id = R.string.unknown)
-                                },
-                                backgroundColor = getAtkColor(atkType = character.atkType),
-                                textColor = textColor
+                            //生日
+                            Subtitle2(
+                                text = stringResource(
+                                    id = R.string.date_m_d,
+                                    character.birthMonth.fixedStr,
+                                    character.birthDay.fixedStr
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
+                            )
+                            //体重
+                            Subtitle2(
+                                text = "${character.weight.fixedStr} KG",
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
+                            )
+                            //身高
+                            Subtitle2(
+                                text = "${character.height.fixedStr} CM",
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
                             )
                         }
 
-                        //位置
-                        Row(
+                        Column(
+                            modifier = Modifier
+                                .weight(1f),
+                            verticalArrangement = Arrangement.Bottom,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Row {
+                                //获取方式
+                                CharacterTag(
+                                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                                    text = getLimitTypeText(limitType = character.limitType),
+                                    backgroundColor = getLimitTypeColor(limitType = character.limitType),
+                                    textColor = textColor
+                                )
+                                //攻击
+                                CharacterTag(
+                                    modifier = Modifier.padding(end = Dimen.mediumPadding),
+                                    text = getAtkText(atkType = character.atkType),
+                                    backgroundColor = getAtkColor(atkType = character.atkType),
+                                    textColor = textColor
+                                )
+                            }
+
+                            //位置
+                            Row(
+                                modifier = Modifier.padding(
+                                    top = Dimen.mediumPadding,
+                                    end = Dimen.mediumPadding
+                                ),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                //位置图标
+                                PositionIcon(
+                                    position = character.position
+                                )
+                                //位置
+                                CharacterTag(
+                                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                                    text = positionText,
+                                    backgroundColor = getPositionColor(character.position),
+                                    textColor = textColor
+                                )
+                            }
+                        }
+
+                        //最近登场日期
+                        CaptionText(
+                            text = character.startTime.formatTime.substring(0, 10),
+                            color = textColor,
                             modifier = Modifier.padding(
                                 top = Dimen.mediumPadding,
-                                end = Dimen.mediumPadding
-                            ),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            //位置图标
-                            PositionIcon(
-                                position = character.position,
-                                size = Dimen.smallIconSize
+                                end = Dimen.mediumPadding,
+                                bottom = Dimen.smallPadding
                             )
-                            //位置
-                            CharacterTag(
-                                modifier = Modifier.padding(start = Dimen.smallPadding),
-                                text = positionText,
-                                backgroundColor = getPositionColor(character.position),
-                                textColor = textColor
-                            )
-                        }
-                    }
-
-                    //最近登场日期
-                    CaptionText(
-                        text = character.startTime.formatTime.substring(0, 10),
-                        color = textColor,
-                        modifier = Modifier.padding(
-                            top = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding,
-                            bottom = Dimen.smallPadding
                         )
-                    )
+                    }
                 }
             }
 
@@ -401,10 +410,68 @@ fun CharacterItem(
 }
 
 /**
+ * 获取限定类型
+ */
+@Composable
+fun getLimitTypeText(limitType: Int) = when (limitType) {
+    2 -> {
+        stringResource(id = R.string.type_limit)
+    }
+    3 -> {
+        stringResource(id = R.string.type_event_limit)
+    }
+    4 -> {
+        stringResource(id = R.string.type_extra_character)
+
+    }
+    else -> {
+        stringResource(id = R.string.type_normal)
+    }
+}
+
+/**
+ * 获取限定类型颜色
+ */
+fun getLimitTypeColor(limitType: Int) = when (limitType) {
+    2 -> {
+        colorRed
+    }
+    3 -> {
+        colorGreen
+    }
+    4 -> {
+        colorOrange
+    }
+    else -> {
+        colorGold
+    }
+}
+
+
+/**
+ * 攻击类型
+ */
+@Composable
+fun getAtkText(atkType: Int) = when (atkType) {
+    1 -> stringResource(id = R.string.physical)
+    2 -> stringResource(id = R.string.magic)
+    else -> stringResource(id = R.string.unknown)
+}
+
+/**
+ * 攻击颜色
+ */
+fun getAtkColor(atkType: Int) = when (atkType) {
+    1 -> colorGold
+    2 -> colorPurple
+    else -> colorCopper
+}
+
+/**
  * 角色属性标签
  */
 @Composable
-private fun CharacterTag(
+fun CharacterTag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
@@ -421,7 +488,9 @@ private fun CharacterTag(
             text = text,
             color = textColor,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.ExtraBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -530,6 +599,13 @@ private fun FilterCharacterSheet(
     }
     filter.guild = guildIndex.value
 
+    //种族
+    val raceList = characterViewModel.getRaces().collectAsState(initial = arrayListOf()).value
+    val raceIndex = remember {
+        mutableStateOf(filter.race)
+    }
+    filter.race = raceIndex.value
+
     //限定类型
     val typeIndex = remember {
         mutableStateOf(filter.type)
@@ -553,6 +629,7 @@ private fun FilterCharacterSheet(
             atkIndex.value = 0
             guildIndex.value = 0
             typeIndex.value = 0
+            raceIndex.value = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterCharacter.postValue(FilterCharacter())
         }
@@ -730,6 +807,25 @@ private fun FilterCharacterSheet(
             atkIndex,
             modifier = Modifier.padding(Dimen.smallPadding)
         )
+        //种族
+        if (raceList.isNotEmpty()) {
+            MainText(
+                text = stringResource(id = R.string.title_race),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val raceChipData = arrayListOf(
+                ChipData(0, stringResource(id = R.string.all)),
+                ChipData(1, stringResource(id = R.string.title_race_multiple)),
+            )
+            raceList.forEachIndexed { index, raceData ->
+                raceChipData.add(ChipData(index + 2, raceData))
+            }
+            ChipGroup(
+                raceChipData,
+                raceIndex,
+                modifier = Modifier.padding(Dimen.smallPadding),
+            )
+        }
         //公会名
         if (guildList.isNotEmpty()) {
             MainText(
@@ -750,5 +846,28 @@ private fun FilterCharacterSheet(
             )
             CommonSpacer()
         }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterItemPreview() {
+    PreviewLayout {
+        CharacterItem(
+            unitId = 100101,
+            character = CharacterInfo(),
+            loved = true,
+        ) {}
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterTagPreview() {
+    PreviewLayout {
+        CharacterTag(
+            text = getLimitTypeText(limitType = 1),
+            backgroundColor = getLimitTypeColor(limitType = 1)
+        )
     }
 }

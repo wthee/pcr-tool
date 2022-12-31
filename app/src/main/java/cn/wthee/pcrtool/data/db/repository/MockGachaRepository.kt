@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.MockGachaDao
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
-import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import javax.inject.Inject
 
 /**
@@ -21,7 +21,7 @@ class MockGachaRepository @Inject constructor(private val mockGachaDao: MockGach
         mockGachaDao.updateGacha(data)
     }
 
-    suspend fun insertResult(data: MockGachaResultRecord) = mockGachaDao.insertResult(data)
+    suspend fun insertResult(data: MockGachaResultRecordData) = mockGachaDao.insertResult(data)
 
     suspend fun getHistory(region: Int) = mockGachaDao.getHistory(region)
 

@@ -7,18 +7,21 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * 漫画 ViewModel
+ * 网站 ViewModel
+ *
+ * @param apiRepository
  */
 @HiltViewModel
-class ComicViewModel @Inject constructor(
+class WebsiteViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
     /**
-     * 漫画数据
+     * 获取排行
      */
-    fun getComic() = flow {
-        val data = apiRepository.getComic()
+    fun getWebsiteList() = flow {
+        val data = apiRepository.getWebsiteList()
         emit(data)
     }
+
 }

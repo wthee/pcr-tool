@@ -7,14 +7,14 @@ import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.MockGachaDao
 import cn.wthee.pcrtool.data.db.entity.MockGachaData
-import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecord
+import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.utils.Constants.DATABASE_MOCK_GACHA
 
 
 @Database(
     entities = [
         MockGachaData::class,
-        MockGachaResultRecord::class
+        MockGachaResultRecordData::class
     ],
     version = 1,
     exportSchema = false

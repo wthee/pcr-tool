@@ -21,8 +21,11 @@ import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.MainTitleText
 import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -72,7 +75,11 @@ fun SkillLoopList(
 
 
     Column(
-        modifier = if (unitType == UnitType.CHARACTER) modifier.verticalScroll(rememberScrollState()) else modifier
+        modifier = if (unitType == UnitType.CHARACTER){
+            modifier.verticalScroll(rememberScrollState())
+        } else {
+            modifier
+        }
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
@@ -109,7 +116,7 @@ private fun SkillLoopIconList(
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
-        maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         loopList.forEach {
             val type: String
@@ -153,5 +160,22 @@ private fun SkillLoopIconList(
                 )
             }
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun SkillLoopItemPreview() {
+    PreviewLayout {
+        SkillLoopItem(
+            loop = SkillLoop(
+                0,
+                1,
+                stringResource(R.string.before_loop),
+                arrayListOf(1001, 1002)
+            ),
+            hashMapOf()
+        )
     }
 }

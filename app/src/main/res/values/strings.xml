@@ -3,12 +3,14 @@
     <!-- 角色相关 -->
     <string name="date_m_d">%s 月 %s 日</string>
     <string name="unknown_character">角色暂未登场</string>
+    <string name="unknown_character_type">未实装（%s）</string>
     <string name="age">年龄</string>
     <string name="title_height">身高</string>
     <string name="title_weight">体重</string>
     <string name="title_birth">生日</string>
     <string name="title_blood">血型</string>
     <string name="title_race">种族</string>
+    <string name="title_race_multiple">多人</string>
     <string name="title_guild">公会</string>
     <string name="title_fav">兴趣</string>
     <string name="cv">CV</string>
@@ -43,8 +45,7 @@
     <string name="spine_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
-    <string name="tp_limit_level_action">技能等级 > 260</string>
-    <string name="tip_tp_limit_level_action">该技能等级大于 260 后，继续提高技能等级不会增加TP数值</string>
+    <string name="tp_limit_level_action_desc">技能等级 > 260，TP数值不会继续增加</string>
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
@@ -78,7 +79,7 @@
     <string name="leader_tip">角色排行数据来源</string>
     <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="title_spine">模型预览</string>
-    <string name="spine_tip">可预览游戏内战斗小人模型</string>
+    <string name="spine_tip">可预览游戏内角色、BOSS模型</string>
 
 
     <string name="db_cn">国服</string>
@@ -129,10 +130,11 @@
     <string name="equip_material">合成素材</string>
 
     <!--其它工具-->
-    <string name="tool_leader">排行</string>
+    <string name="tool_leader">角色排行</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
-    <string name="tool_calendar_comming">活动预告</string>
+    <string name="tool_calendar_coming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
+    <string name="tool_website">收藏夹</string>
     <string name="tool_clan">公会战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
@@ -159,7 +161,7 @@
     <string name="comic_order">第%s话</string>
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
-    <string name="other">其它</string>
+    <string name="other">其他</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
@@ -217,9 +219,11 @@
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
     <string name="copy_text">复制</string>
+    <string name="copy_all">全部复制</string>
     <string name="open_browser">在浏览器中打开</string>
-    <string name="copy_success">文本已复制~</string>
-
+    <string name="copy_qq_group">已复制QQ群号：%s</string>
+    <string name="share_to">分享到：</string>
+    <string name="release">%s 发布</string>
     <!--活动相关-->
     <string name="normal">普通关卡</string>
     <string name="hard">困难关卡</string>
@@ -243,6 +247,8 @@
     <string name="story_event_re">复刻</string>
     <string name="story_event_preview">预告</string>
     <string name="story_event_new">活动</string>
+    <string name="title_clan_battle_event">▶ 公会战%s</string>
+    <string name="clan_battle_month">%d月公会战</string>
 
     <!--战力系数-->
     <string name="title_ex_skill_add">EX+ 额外数值</string>
@@ -272,9 +278,9 @@
     <string name="pic_exist">图片已存在</string>
     <string name="save_success">保存成功%s</string>
     <string name="save_failure">保存失败</string>
-    <string name="copy_qq_group">已复制QQ群号：%s</string>
-    <string name="share_to">分享到：</string>
-    <string name="release">%s 发布</string>
+    <string name="copy_success">文本已复制~</string>
+    <string name="web_load_error">内容加载失败</string>
+
 
     <!--模拟抽卡-->
     <string name="gacha_fes">Fes限定★3</string>
@@ -287,7 +293,9 @@
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="delete_gacha">删除卡池</string>
+    <string name="tip_delete_gacha">是否要删除卡池记录？</string>
     <string name="go_to_mock">去抽卡</string>
+    <string name="mock_count">已抽%d次</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
     <string name="last_gacha_date">上次抽卡 %s</string>
     <string name="gacha_used_gem">消耗宝石：1500 * %d = %d</string>
@@ -305,8 +313,6 @@
     <string name="extra_equip_rarity_and_type">★%d  %s</string>
     <string name="extra_equip_rarity">稀有度</string>
     <string name="extra_equip_unit">适用角色</string>
-    <string name="extra_equip_main_reward">主要奖励</string>
-    <string name="extra_equip_sub_reward">次要奖励</string>
     <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
     <string name="tool_travel">EX冒险</string>
     <string name="unit_extra_equip_slot">适用装备</string>
@@ -314,6 +320,8 @@
     <string name="travel_need_power">最低战力</string>
     <string name="travel_time">冒险时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
+    <string name="ex_equip_drop_odd">%.2f%%</string>
+
 
     <!--技能相关-->
     <string name="union_burst">连结爆发</string>
@@ -508,7 +516,7 @@
     <string name="skill_push">击退</string>
     <string name="skill_pull">拉近</string>
     <string name="skill_action_type_desc_3_move">%s%s，距离[%d]</string>
-    <string name="skill_action_type_desc_3_pull">将$%s%s身前 [%d]</string>
+    <string name="skill_action_type_desc_3_pull">将%s%s身前 [%d]</string>
     <string name="skill_action_type_desc_4">使%sHP回复 %s</string>
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
     <string name="skill_action_type_desc_7">锁定%s</string>
@@ -570,6 +578,7 @@
     <string name="skill_action_type_desc_divide">除以</string>
     <string name="skill_action_change_coe">动作(%d)的数值{%d}%s %s</string>
     <string name="skill_action_limit">；叠加上限 %s</string>
+    <string name="skill_action_limit_int">；叠加上限 [%d]</string>
     <string name="skill_action_change_coe_0">%s * [剩余的HP]</string>
     <string name="skill_action_change_coe_1">%s * [损失的HP]</string>
     <string name="skill_action_change_coe_2">%s * [击杀数量]</string>
@@ -604,7 +613,7 @@
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">，每秒造成 %s %s伤害</string>
-    <string name="skill_action_type_desc_field">展开领域 [%d] %s%s</string>
+    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">，每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
@@ -636,15 +645,14 @@
     <string name="skill_action_type_desc_62_1">%s的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
     <string name="skill_action_type_desc_63_success">持续时间结束后，使用动作(%d)；</string>
     <string name="skill_action_type_desc_63_failure">效果被中断后，使用动作(%d)；</string>
-    <string name="skill_action_type_desc_63">每${%s}秒使用 1 次动作(%d)，最长持续 [%s] 秒；受到的伤害量超过 [%s] 时中断此效果；</string>
+    <string name="skill_action_type_desc_63">每 %s 秒使用 1 次动作(%d)，最长持续 [%s] 秒；受到的伤害量超过 [%s] 时中断此效果；</string>
     <string name="skill_action_type_desc_69">使%s变身%s</string>
     <string name="skill_action_type_desc_71">对%s赋予「受到致死伤害时，回复 %s HP」的效果%s</string>
     <string name="skill_action_type_desc_72">对%s赋予承受%s伤害减少%s的效果%s</string>
     <string name="skill_action_type_desc_73">为%s展开护盾，在单个动作中受到的伤害超过 [%d] 时，伤害值将衰减%s</string>
     <string name="skill_action_type_desc_75">每造成 [%d] 次伤害时，触发动作(%d) %s</string>
     <string name="skill_action_type_desc_76">%s治疗量变为原来的 %s%s</string>
-    <string name="skill_action_type_desc_77">被动效果：每当%s受到%s时，为自身追加 [%d] 层标记%s%s%s</string>
-    <string name="skill_action_type_desc_77_lifetime">。被动效果%s</string>
+    <string name="skill_action_type_desc_77">被动效果：每当%s受到%s时，为自身追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_79">%s行动时，受到 %s伤害%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
     <string name="skill_action_type_desc_90">自身的%s提升 %s</string>
@@ -655,6 +663,7 @@
     <string name="skill_action_type_desc_95">%s进入隐匿状态%s</string>
     <string name="skill_action_type_desc_96_tp">，每秒回复 %s TP</string>
     <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
+    <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
@@ -709,5 +718,28 @@
     <!--请求-->
     <string name="respon_error">未正常获取数据，请重试~</string>
     <string name="respon_cancel">查询取消~</string>
+
+    <!--网站类型-->
+    <string name="website_type_1">第三方网站</string>
+    <string name="website_type_2">wiki</string>
+    <string name="website_type_3">论坛</string>
+    <string name="website_type_4">官方网站</string>
+    <string name="website_type_5">第三方账号</string>
+    <string name="website_type_6">官方账号</string>
+
+    <!--排行评级查询-->
+    <string name="leader_need_sync">未关联</string>
+    <string name="only_jp">日服评价，仅供参考</string>
+    <string name="tool_leader_tier">角色评级</string>
+    <string name="leader_tier_0">综合评级</string>
+    <string name="leader_tier_1">竞技场进攻</string>
+    <string name="leader_tier_2">竞技场防守</string>
+    <string name="leader_tier_d">T%d</string>
+    <string name="to_app_character_detail">详情</string>
+    <string name="to_web_character_detail">wiki</string>
+
+    <!--测试用-->
+    <string name="debug_short_text">SHORT-TEXT</string>
+    <string name="debug_long_text">LONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXT</string>
 
 </resources>

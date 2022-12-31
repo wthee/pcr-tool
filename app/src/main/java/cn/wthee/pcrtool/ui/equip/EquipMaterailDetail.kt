@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.FabCompose
@@ -76,9 +76,9 @@ fun EquipMaterialDetail(
                 }
             } else {
                 //加载中
-                val odds = arrayListOf<EquipmentIdWithOdd>()
+                val odds = arrayListOf<EquipmentIdWithOdds>()
                 for (i in 0..9) {
-                    odds.add(EquipmentIdWithOdd())
+                    odds.add(EquipmentIdWithOdds())
                 }
                 LazyColumn {
                     items(odds.size) {

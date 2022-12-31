@@ -16,9 +16,13 @@ data class ExtraEquipQuestData(
     @ColumnInfo(name = "travel_time_decrease_limit") val travelTimeDecreaseLimit: Long,
     @ColumnInfo(name = "travel_decrease_flag") val travelDecreaseFlag: Int,
     @ColumnInfo(name = "need_power") val needPower: Int,
-    @ColumnInfo(name = "icon_id") val iconId: Int,
-    @ColumnInfo(name = "main_reward_ids") val mainRewardIds: String
-)
+    @ColumnInfo(name = "icon_id") val iconId: Int
+){
+    /**
+     * 获取名称
+     */
+    fun getQuestName() = travelQuestName.replace("\\n", "·")
+}
 
 /**
  * 次要掉落
@@ -29,4 +33,5 @@ data class ExtraEquipSubRewardData(
     @ColumnInfo(name = "category") val category: Int,
     @ColumnInfo(name = "category_name") val categoryName: String,
     @ColumnInfo(name = "sub_reward_ids") val subRewardIds: String,
+    @ColumnInfo(name = "sub_reward_drops") val subRewardDrops: String,
 )

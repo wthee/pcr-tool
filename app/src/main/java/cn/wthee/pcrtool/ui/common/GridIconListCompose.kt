@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.spanCount
 
 /**
  * 角色图标列表
@@ -23,10 +23,8 @@ fun GridIconListCompose(
     VerticalGrid(
         modifier = Modifier.padding(
             top = Dimen.mediumPadding,
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding
         ),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         icons.forEach {
             UnitIcon(
@@ -61,22 +59,19 @@ private fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
         ) {
             onClickItem(unitId)
         }
-        if (BuildConfig.DEBUG) {
-            CaptionText(text = unitId.toString())
-        }
     }
 
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun IconListComposePreview() {
     val mockData = arrayListOf<Int>()
     for (i in 0..10) {
         mockData.add(i)
     }
-    PreviewBox {
+    PreviewLayout {
         GridIconListCompose(icons = mockData, onClickItem = {})
     }
 }

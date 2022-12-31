@@ -10,11 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
@@ -47,14 +52,12 @@ fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hi
 @Composable
 private fun StoryDetailItem(key: Int, attrList: List<CharacterStoryAttr>) {
 
-    val id = key * 100 + 1
-
     Column(
         modifier = Modifier.padding(vertical = Dimen.largePadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(
-            data = ImageResourceHelper.getInstance().getMaxIconUrl(id)
+            data = ImageResourceHelper.getInstance().getMaxIconUrl(key * 100 + 1)
         )
         Column {
             attrList.forEach {
@@ -66,14 +69,15 @@ private fun StoryDetailItem(key: Int, attrList: List<CharacterStoryAttr>) {
                     CaptionText(text = it.getFixedTitle())
                     //剧情名
                     Subtitle1(text = it.subTitle, selectable = true)
-                    AttrList(attrs = it.getAttr().allNotZero())
+                    AttrList(
+                        attrs = it.getAttr().allNotZero(isPreview = LocalInspectionMode.current)
+                    )
                 }
             }
         }
     }
 
 }
-
 
 /**
  * 分组
@@ -89,4 +93,24 @@ private fun groupStory(list: List<CharacterStoryAttr>): HashMap<Int, List<Charac
         }
     }
     return map
+}
+
+@CombinedPreviews
+@Composable
+private fun StoryDetailItemPreview() {
+    val title = stringResource(id = R.string.debug_short_text)
+    val subTitle = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        StoryDetailItem(
+            1,
+            arrayListOf(
+                CharacterStoryAttr(
+                    title = title,
+                    subTitle = subTitle,
+                    status_rate_1 = 1,
+                    status_rate_2 = 2,
+                )
+            )
+        )
+    }
 }

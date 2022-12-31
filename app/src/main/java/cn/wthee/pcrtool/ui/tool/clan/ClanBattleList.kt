@@ -13,19 +13,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
-import cn.wthee.pcrtool.utils.getZhNumberText
-import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -43,7 +42,8 @@ fun ClanBattleList(
     val coroutineScope = rememberCoroutineScope()
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
         val visible = clanList.isNotEmpty()
@@ -51,18 +51,21 @@ fun ClanBattleList(
             state = scrollState,
             columns = GridCells.Adaptive(getItemWidth())
         ) {
-            if(visible){
+            if (visible) {
                 items(
                     items = clanList,
                     key = {
                         it.clanBattleId
                     }
                 ) {
-                    ClanBattleItem(it, toClanBossInfo)
+                    ClanBattleItem(clanBattleInfo = it, toClanBossInfo = toClanBossInfo)
                 }
-            }else{
+            } else {
                 items(20) {
-                    ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
+                    ClanBattleItem(
+                        clanBattleInfo = ClanBattleInfo(),
+                        toClanBossInfo = toClanBossInfo
+                    )
                 }
             }
 
@@ -90,12 +93,28 @@ fun ClanBattleList(
 }
 
 /**
+ * 首页预览用
+ */
+@Composable
+fun ClanBattleOverview(
+    clanBattleEvent: ClanBattleEvent,
+    toClanBossInfo: (Int, Int, Int) -> Unit,
+    clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
+) {
+    val info = clanBattleViewModel.getAllClanBattleData(clanBattleEvent.getClanBattleId())
+        .collectAsState(initial = arrayListOf(ClanBattleInfo())).value[0]
+    ClanBattleItem(clanBattleEvent, info, toClanBossInfo)
+}
+
+/**
  * 图标列表
+ * @param clanBattleEvent 不为空时，首页日程展示用
  */
 @Composable
 private fun ClanBattleItem(
+    clanBattleEvent: ClanBattleEvent? = null,
     clanBattleInfo: ClanBattleInfo,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int) -> Unit
 ) {
     val placeholder = clanBattleInfo.clanBattleId == -1
     val bossUnitIdList = clanBattleInfo.unitIds.intArrayList.subList(0, 5)
@@ -108,69 +127,103 @@ private fun ClanBattleItem(
         )
     ) {
         //标题
-        Row(
+        FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            verticalAlignment = Alignment.CenterVertically
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            //日期
-            MainTitleText(
-                text = clanBattleInfo.getDate(),
-                modifier = Modifier.commonPlaceholder(visible = placeholder)
-            )
-            //阶段数
-            MainTitleText(
-                text = stringResource(
-                    id = R.string.phase,
-                    getZhNumberText(clanBattleInfo.phase)
-                ),
-                backgroundColor = getSectionTextColor(clanBattleInfo.phase),
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .commonPlaceholder(visible = placeholder)
-            )
+            if (clanBattleEvent == null) {
+                //日期
+                MainTitleText(
+                    text = getClanBattleDate(clanBattleInfo),
+                    modifier = Modifier.commonPlaceholder(visible = placeholder)
+                )
+                //阶段数
+                MainTitleText(
+                    text = stringResource(
+                        id = R.string.phase,
+                        getZhNumberText(clanBattleInfo.phase)
+                    ),
+                    backgroundColor = getSectionTextColor(clanBattleInfo.phase),
+                    modifier = Modifier
+                        .padding(start = Dimen.smallPadding)
+                        .commonPlaceholder(visible = placeholder)
+                )
+            } else {
+                //标题
+                MainTitleText(
+                    text = stringResource(id = R.string.tool_clan),
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                    backgroundColor = colorOrange
+                )
+                //首页显示倒计时
+                EventTitle(
+                    clanBattleEvent.startTime,
+                    clanBattleEvent.getFixedEndTime(),
+                    showDays = false
+                )
+            }
+
         }
 
         MainCard(
             modifier = Modifier.commonPlaceholder(visible = placeholder)
         ) {
-            //图标
-            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
-                bossUnitIdList.forEachIndexed { index, it ->
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it)
+            Column(Modifier.padding(bottom = Dimen.mediumPadding)) {
+                //图标
+                Row(
+                    modifier = Modifier
+                        .padding(Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    bossUnitIdList.forEachIndexed { index, it ->
+                        Box(
+                            contentAlignment = Alignment.Center
                         ) {
-                            if (!placeholder) {
-                                toClanBossInfo(
-                                    clanBattleInfo.clanBattleId,
-                                    index,
-                                    clanBattleInfo.phase
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it)
+                            ) {
+                                if (!placeholder) {
+                                    toClanBossInfo(
+                                        clanBattleInfo.clanBattleId,
+                                        index,
+                                        clanBattleInfo.phase
+                                    )
+                                }
+                            }
+                            //多目标提示
+                            val targetCount = clanBattleInfo.getMultiCount(index)
+                            if (targetCount > 0) {
+                                //阴影
+                                MainText(
+                                    text = targetCount.toString(),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(
+                                        start = Dimen.textElevation,
+                                        top = Dimen.textElevation
+                                    )
+                                )
+                                MainText(
+                                    text = targetCount.toString(),
+                                    color = colorWhite,
                                 )
                             }
                         }
-                        //多目标提示
-                        val targetCount = clanBattleInfo.getMultiCount(index)
-                        if (targetCount > 0) {
-                            //阴影
-                            MainText(
-                                text = targetCount.toString(),
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(
-                                    start = Dimen.textElevation,
-                                    top = Dimen.textElevation
-                                )
-                            )
-                            MainText(
-                                text = targetCount.toString(),
-                                color = colorWhite,
-                            )
-                        }
                     }
                 }
+
+                //结束时间
+                if (clanBattleEvent != null) {
+                    //结束日期
+                    CaptionText(
+                        text = clanBattleEvent.getFixedEndTime().fixJpTime,
+                        modifier = Modifier
+                            .padding(end = Dimen.mediumPadding)
+                            .fillMaxWidth()
+                    )
+                }
             }
+
         }
     }
 
@@ -189,15 +242,24 @@ fun getSectionTextColor(section: Int) = when (section) {
     else -> colorRed
 }
 
+/**
+ * 获取公会战年月
+ */
+@Composable
+fun getClanBattleDate(clanBattleInfo: ClanBattleInfo): String {
+    return stringResource(
+        R.string.clan_battle_y_m,
+        clanBattleInfo.startTime.substring(0, 4),
+        clanBattleInfo.releaseMonth.toString().fillZero()
+    )
+}
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun ClanBattleItemPreview() {
-    PreviewBox {
-        Column {
-            ClanBattleItem(
-                clanBattleInfo = ClanBattleInfo(1001),
-                toClanBossInfo = { _, _, _ -> })
-        }
+    PreviewLayout {
+        ClanBattleItem(
+            clanBattleInfo = ClanBattleInfo(1001),
+            toClanBossInfo = { _, _, _ -> })
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +32,9 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 
 /**
@@ -40,7 +43,7 @@ import cn.wthee.pcrtool.utils.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainSettings(
-    sp: SharedPreferences = settingSP()
+    sp: SharedPreferences = settingSP(LocalContext.current)
 ) {
     val context = LocalContext.current
     val region = MainActivity.regionType
@@ -70,6 +73,7 @@ fun MainSettings(
 
     Column(
         modifier = Modifier
+            .padding(horizontal = Dimen.mediumPadding)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
@@ -117,7 +121,7 @@ fun MainSettings(
             modifier = Modifier.padding(Dimen.largePadding)
         )
         //- 加入反馈群
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),
@@ -132,7 +136,7 @@ fun MainSettings(
             IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
         }
         //- 模型预览
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.PREVIEW_UNIT_SPINE,
             title = stringResource(id = R.string.title_spine),
             summary = stringResource(id = R.string.spine_tip),
@@ -149,7 +153,7 @@ fun MainSettings(
         )
         //- 干炸里脊资源
         val dataFromUrl = stringResource(id = R.string.data_from_url)
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.DATA_SOURCE,
             title = stringResource(id = R.string.data_from),
             summary = stringResource(id = R.string.data_from_hint),
@@ -159,7 +163,7 @@ fun MainSettings(
         )
         //- 静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.NOTE,
             title = stringResource(id = R.string.shizuru_note),
             summary = stringResource(id = R.string.shizuru_note_tip),
@@ -169,7 +173,7 @@ fun MainSettings(
         )
         //- 竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.PVP_SEARCH,
             title = stringResource(id = R.string.pcrdfans),
             summary = stringResource(id = R.string.pcrdfans_tip),
@@ -179,7 +183,7 @@ fun MainSettings(
         )
         //- 排行
         val leaderUrl = stringResource(id = R.string.leader_source_url)
-        SettingItem(
+        SettingLinkItem(
             iconType = MainIconType.LEADER,
             title = stringResource(id = R.string.leader_source),
             summary = stringResource(id = R.string.leader_tip),
@@ -203,8 +207,8 @@ fun SettingSwitchCompose(
     type: SettingSwitchType,
     showSummary: Boolean
 ) {
-    val sp = settingSP()
     val context = LocalContext.current
+    val sp =  settingSP(context)
 
     val title: String
     val iconType: MainIconType
@@ -264,7 +268,7 @@ fun SettingSwitchCompose(
     val summary = if (checkedState.value) summaryOn else summaryOff
 
 
-    SettingItem(
+    SettingLinkItem(
         iconType = iconType,
         title = title,
         summary = summary,
@@ -306,7 +310,7 @@ fun SettingSwitchCompose(
  * @param extraContent  右侧额外内容
  */
 @Composable
-fun SettingItem(
+fun SettingLinkItem(
     iconType: Any,
     iconSize: Dp = Dimen.settingIconSize,
     title: String,
@@ -314,6 +318,7 @@ fun SettingItem(
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     summaryColor: Color = MaterialTheme.colorScheme.outline,
     padding: Dp = Dimen.largePadding,
+    colorFilter: ColorFilter? = ColorFilter.tint(MaterialTheme.colorScheme.primary),
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -322,6 +327,7 @@ fun SettingItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick()
@@ -331,7 +337,7 @@ fun SettingItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            colorFilter = colorFilter,
         )
         Column(
             modifier = Modifier
@@ -365,4 +371,19 @@ private fun SwitchThumbIcon(checked: Boolean) {
         contentDescription = "",
         modifier = Modifier.size(SwitchDefaults.IconSize)
     )
+}
+
+
+@CombinedPreviews
+@Composable
+private fun SettingPreview(){
+    PreviewLayout {
+        SettingSwitchCompose(SettingSwitchType.VIBRATE,true)
+        SettingLinkItem(
+            iconType = MainIconType.SUPPORT,
+            title = stringResource(id = R.string.qq_group),
+            summary = stringResource(id = R.string.qq_group_summary),
+            onClick = {}
+        )
+    }
 }

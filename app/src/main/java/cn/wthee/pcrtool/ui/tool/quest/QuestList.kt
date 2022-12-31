@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui.tool.quest
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,17 +13,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 
 /**
  * 主线地图信息
@@ -58,10 +55,11 @@ fun QuestPager(
     equipId: Int,
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
-    val randomDropList =
-        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
+    val flow = remember(equipId) {
+        randomEquipAreaViewModel.getEquipArea(equipId)
+    }
+    val randomDropResponseData = flow.collectAsState(initial = null).value
 
-    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     var pagerCount = 0
     //tab文本
@@ -95,7 +93,7 @@ fun QuestPager(
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
-    if (randomDropList?.isNotEmpty() == true) {
+    if (randomDropResponseData?.data?.isNotEmpty() == true) {
         pagerCount++
         tabs.add(randomDrop)
         colorList.add(colorGreen)
@@ -109,40 +107,18 @@ fun QuestPager(
     ) {
 
         //Tab
-        TabRow(
+        MainTabRow(
+            pagerState = pagerState,
+            tabs = tabs,
+            colorList = colorList,
             modifier = Modifier
                 .padding(
                     top = Dimen.mediumPadding,
                     start = Dimen.largePadding,
                     end = Dimen.largePadding
                 )
-                .fillMaxWidth(tabs.size * 0.25f),
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = Color.Transparent,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = colorList[pagerState.currentPage]
-                )
-            }
-        ) {
-            tabs.forEachIndexed { index, tab ->
-                Tab(
-                    selected = index == pagerState.currentPage,
-                    onClick = {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
-                        }
-                    }
-                ) {
-                    Subtitle1(
-                        text = tab,
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        color = colorList[index],
-                    )
-                }
-            }
-        }
+                .fillMaxWidth(tabs.size * 0.25f)
+        )
 
         HorizontalPager(
             count = pagerCount,
@@ -151,7 +127,9 @@ fun QuestPager(
         ) { pagerIndex ->
             if (tabs[pagerIndex] == randomDrop) {
                 //随机掉落
-                RandomDropAreaList(selectId = equipId, areaList = randomDropList!!)
+                CommonResponseBox(responseData = randomDropResponseData) { data ->
+                    RandomDropAreaList(selectId = equipId, areaList = data)
+                }
             } else {
                 //主线掉落
                 val list = when (tabs[pagerIndex]) {
@@ -205,7 +183,7 @@ fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
 @Composable
 fun AreaItem(
     selectedId: Int,
-    odds: List<EquipmentIdWithOdd>,
+    odds: List<EquipmentIdWithOdds>,
     num: String,
     color: Color
 ) {
@@ -239,12 +217,11 @@ fun AreaItem(
     VerticalGrid(
         modifier = Modifier
             .padding(
-                bottom = Dimen.largePadding,
                 start = Dimen.commonItemPadding,
                 end = Dimen.commonItemPadding
             )
             .commonPlaceholder(placeholder),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         odds.forEach {
             EquipWithOddCompose(selectedId, it)
@@ -259,7 +236,7 @@ fun AreaItem(
 @Composable
 private fun EquipWithOddCompose(
     selectedId: Int,
-    oddData: EquipmentIdWithOdd
+    oddData: EquipmentIdWithOdds
 ) {
     var dataState by remember { mutableStateOf(oddData) }
     if (dataState != oddData) {
@@ -299,5 +276,27 @@ private fun EquipWithOddCompose(
                 text = "${dataState.odd}%"
             )
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun AreaItemPreview() {
+    PreviewLayout {
+        AreaItem(
+            1,
+            arrayListOf(
+                EquipmentIdWithOdds(1, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+                EquipmentIdWithOdds(0, 20),
+            ),
+            "1-1",
+            MaterialTheme.colorScheme.primary
+        )
     }
 }

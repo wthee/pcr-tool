@@ -11,20 +11,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
@@ -34,107 +36,86 @@ import kotlinx.coroutines.launch
 @Composable
 fun LeaderboardList(
     scrollState: LazyListState,
+    toCharacterDetail: (Int) -> Unit,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-    val onlyLast = remember {
-        mutableStateOf(false)
-    }
     val sort = remember {
         mutableStateOf(0)
     }
     val asc = remember {
         mutableStateOf(false)
     }
-    val leaderData = leaderViewModel.getLeader(sort.value, asc.value)
-        .collectAsState(initial = null).value
-    val filterLeaderData = if (onlyLast.value) {
-        leaderData?.leader?.filter {
-            it.isNew == 1
-        }
-    } else {
-        leaderData?.leader
-    }
-    val leaderList = if (onlyLast.value) filterLeaderData else leaderData?.leader
+    val responseData =
+        leaderViewModel.getLeader(sort.value, asc.value).collectAsState(initial = null).value
+    val leaderList = responseData?.data
+
     val coroutineScope = rememberCoroutineScope()
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
 
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = Dimen.largePadding)
-                .fillMaxSize()
-        ) {
-            //更新
-            Row(
-                modifier = Modifier.padding(vertical = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = "GameWith",
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(context, url)
-                        }
-                )
-                FadeAnimation(visible = leaderData != null && leaderData.desc != "") {
-                    CaptionText(text = leaderData!!.desc, modifier = Modifier.fillMaxWidth())
-                }
-            }
-            //标题
-            SortTitleGroup(sort, asc)
-            if (leaderData == null) {
-                //显示占位图
-                LazyColumn {
-                    items(20) {
-                        LeaderboardItem(LeaderboardData(), 0)
-                    }
-                }
-            } else if (leaderList != null) {
-                LazyColumn(
-                    state = scrollState
-                ) {
-                    itemsIndexed(
-                        items = leaderList,
-                        key = { _, it ->
-                            it.name
-                        }
-                    ) { index, it ->
-                        LeaderboardItem(it, index)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
-                }
-            } else {
-                CenterTipText(text = stringResource(id = R.string.no_data))
-            }
-        }
-
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        //更新
         Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            ),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            //切换显示
-            FabCompose(
-                iconType = MainIconType.FILTER,
-                text = stringResource(id = if (onlyLast.value) R.string.last_update else R.string.all)
-            ) {
-                onlyLast.value = !onlyLast.value
-            }
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.LEADER,
-                text = (leaderList?.size ?: 0).toString()
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+            MainTitleText(
+                text = "GameWith",
+                modifier = Modifier
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(context, url)
                     }
+            )
+
+            CaptionText(
+                text = stringResource(id = R.string.only_jp),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            )
+        }
+        //标题
+        SortTitleGroup(sort, asc)
+        CommonResponseBox(
+            responseData = responseData,
+            fabContent = {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    //回到顶部
+                    FabCompose(
+                        iconType = MainIconType.LEADER,
+                        text = (leaderList?.size ?: 0).toString()
+                    ) {
+                        coroutineScope.launch {
+                            try {
+                                scrollState.scrollToItem(0)
+                            } catch (_: Exception) {
+                            }
+                        }
+                    }
+                }
+            }
+        ) {
+            LazyColumn(
+                state = scrollState
+            ) {
+                itemsIndexed(
+                    items = leaderList!!,
+                    key = { _, it ->
+                        it.name
+                    }
+                ) { index, it ->
+                    LeaderboardItem(it, index, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -157,19 +138,20 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
     Row(
         horizontalArrangement = Arrangement.End,
         modifier = Modifier.padding(
-            top = Dimen.smallPadding
+            vertical = Dimen.smallPadding
         )
     ) {
-        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
+        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediumPadding * 2))
         titles.forEachIndexed { index, title ->
             SortTitleButton(
-                modifier = Modifier.weight(0.25f),
+                modifier = Modifier.weight(1f),
                 index = index + 1,
                 text = title,
                 sort = sort,
                 asc = asc
             )
         }
+        Spacer(modifier = Modifier.width(Dimen.mediumPadding))
     }
 }
 
@@ -232,50 +214,132 @@ private fun SortTitleButton(
  * 角色评价信息
  */
 @Composable
-private fun LeaderboardItem(info: LeaderboardData, index: Int) {
-    val placeholder = info.icon == ""
+private fun LeaderboardItem(
+    leader: LeaderboardData,
+    index: Int,
+    toCharacterDetail: (Int) -> Unit,
+    characterViewModel: CharacterViewModel? = hiltViewModel()
+) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier.padding(
-            vertical = Dimen.mediumPadding
-        )
-    ) {
-        //标题
-        Row {
-            MainTitleText(
-                text = "${index + 1}",
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding)
-                    .commonPlaceholder(visible = placeholder)
-            )
-            MainTitleText(
-                text = info.name,
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding, start = Dimen.smallPadding)
-                    .commonPlaceholder(visible = placeholder)
-            )
-        }
+    //获取角色名
+    val flow = remember(leader.unitId) {
+        characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
+    }
+    val basicInfo = flow?.collectAsState(initial = null)?.value
+    val hasUnitId = leader.unitId != null && leader.unitId != 0
+    //是否登场角色
+    val unknown = basicInfo == null || basicInfo.position == 0
 
-        MainCard(modifier = Modifier
-            .commonPlaceholder(visible = placeholder),
-            onClick = {
-                //打开浏览器
-                if (!placeholder) {
-                    BrowserUtil.open(context, info.url)
+    val textColor = if (!hasUnitId || unknown) {
+        colorGray
+    } else {
+        Color.Unspecified
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.smallPadding,
+                bottom = Dimen.mediumPadding
+            )
+            .fillMaxWidth()
+    ) {
+        Box {
+            IconCompose(
+                data = if (hasUnitId) {
+                    ImageResourceHelper.getInstance()
+                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                } else {
+                    leader.icon
+                }
+            ) {
+                if (!unknown) {
+                    toCharacterDetail(leader.unitId!!)
                 }
             }
+            if (!unknown) {
+                PositionIcon(
+                    position = basicInfo!!.position,
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.divLineHeight,
+                            bottom = Dimen.divLineHeight
+                        )
+                        .align(Alignment.BottomEnd),
+                    size = Dimen.exSmallIconSize
+                )
+            }
+
+        }
+
+
+        MainCard(
+            modifier = Modifier.padding(start = Dimen.mediumPadding),
+            onClick = {
+                BrowserUtil.open(context, leader.url)
+            }
         ) {
-            Row(
-                modifier = Modifier.padding(Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconCompose(data = info.icon, size = Dimen.iconSize)
+            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                Row(
+                    modifier = Modifier.padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.smallPadding
+                    )
+                ) {
+                    //名称
+                    MainContentText(
+                        text = "${index + 1}." + if (hasUnitId && !unknown) {
+                            basicInfo!!.getNameF()
+                        } else {
+                            leader.name
+                        },
+                        textAlign = TextAlign.Start,
+                        color = textColor
+                    )
+
+                    CaptionText(
+                        text = leader.getTime(),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = textColor
+                    )
+
+                }
+                //评价
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 //                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.tower, info.towerFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.pvp, info.pvpFlag, modifier = Modifier.weight(0.25f))
-                GradeText(info.clan, info.clanFlag, modifier = Modifier.weight(0.25f))
+                    GradeText(leader.tower, modifier = Modifier.weight(1f))
+                    GradeText(leader.pvp, modifier = Modifier.weight(1f))
+                    GradeText(leader.clan, modifier = Modifier.weight(1f))
+                }
+                //评分
+                if (BuildConfig.DEBUG) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CaptionText(
+                            text = leader.towerScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        CaptionText(
+                            text = leader.pvpScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        CaptionText(
+                            text = leader.clanScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
         }
+
     }
 
 }
@@ -286,7 +350,6 @@ private fun LeaderboardItem(info: LeaderboardData, index: Int) {
 @Composable
 fun GradeText(
     grade: String,
-    flag: Int,
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier
 ) {
@@ -308,20 +371,21 @@ fun GradeText(
             textAlign = textAlign,
             fontWeight = FontWeight.Bold,
         )
-        if (flag == 1) {
-            CaptionText(
-                text = stringResource(id = R.string.experimental),
-            )
-        }
     }
 }
 
-@Preview
+
+@CombinedPreviews
 @Composable
 private fun LeaderboardItemPreview() {
-    PreviewBox {
-        Column {
-            LeaderboardItem(info = LeaderboardData(icon = "?"), 1)
-        }
+    PreviewLayout {
+        LeaderboardItem(
+            LeaderboardData(
+                wikiTime = "2020/01/01",
+                quest = "SS+",
+                pvp = "S",
+                clan = "A"
+            ), 1, {}, null
+        )
     }
 }

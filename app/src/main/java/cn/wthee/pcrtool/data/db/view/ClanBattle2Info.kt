@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import cn.wthee.pcrtool.R
@@ -36,17 +38,6 @@ data class ClanBattleInfo(
         } else {
             0
         }
-    }
-
-    /**
-     * 获取年月
-     */
-    fun getDate(): String {
-        return getString(
-            R.string.clan_battle_y_m,
-            startTime.substring(0, 4),
-            releaseMonth.toString().fillZero()
-        )
     }
 }
 

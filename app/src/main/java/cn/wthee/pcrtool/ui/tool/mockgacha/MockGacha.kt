@@ -3,15 +3,10 @@ package cn.wthee.pcrtool.ui.tool.mockgacha
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -42,7 +37,6 @@ fun MockGacha(
     mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     //类型
     val tabs = arrayListOf(
@@ -119,35 +113,13 @@ fun MockGacha(
                 //抽卡结果
                 MockGachaResult(gachaId, pickUpList.getIds())
             } else {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
+                MainTabRow(
+                    pagerState = pagerState,
+                    tabs = pageTabs,
                     modifier = Modifier
                         .fillMaxWidth(0.618f)
                         .align(Alignment.CenterHorizontally)
-                ) {
-                    pageTabs.forEachIndexed { index, s ->
-                        Tab(
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                scope.launch {
-                                    VibrateUtil(context).single()
-                                    pagerState.scrollToPage(index)
-                                }
-                            }) {
-                            Subtitle1(
-                                text = s,
-                                modifier = Modifier.padding(Dimen.smallPadding),
-                                color = if (pagerState.currentPage == index) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurface
-                                }
-                            )
-                        }
-                    }
-                }
+                )
 
                 HorizontalPager(
                     count = 2,
@@ -189,7 +161,7 @@ fun MockGacha(
             )
 
             FabCompose(
-                iconType = if (showResult) MainIconType.MOCK_GACHA_PAY else MainIconType.MOCK_GACHA,
+                iconType = MainIconType.MOCK_GACHA_PAY,
                 text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
                 if (pickUpList.isNotEmpty()) {
@@ -221,7 +193,7 @@ fun MockGacha(
         //卡池类型选择
         if (!showResult) {
             SelectTypeCompose(
-                icon = MainIconType.MOCK_GACHA_TYPE,
+                icon = MainIconType.CHANGE_FILTER_TYPE,
                 tabs = tabs,
                 type = gachaType,
                 modifier = Modifier
@@ -309,11 +281,9 @@ private fun MockGachaUnitIconListCompose(
 ) {
     VerticalGrid(
         modifier = Modifier.padding(
-            top = Dimen.mediumPadding,
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding
+            top = Dimen.mediumPadding
         ),
-        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2,
+        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
     ) {
         icons.forEach { gachaUnitInfo ->
             val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)

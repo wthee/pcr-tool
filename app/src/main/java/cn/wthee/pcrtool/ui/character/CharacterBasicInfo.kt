@@ -12,13 +12,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.copyText
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getFixed
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -34,18 +34,21 @@ fun CharacterBasicInfo(
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
-    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
     val scrollState = rememberScrollState()
+    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
+    val homePageCommentList =
+        viewModel.getHomePageComments(unitId).collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BasicInfo(info = info)
-                HomePageCommentInfo(info.getSelf(), unitId, viewModel)
+                HomePageCommentInfo(info.getSelf(), homePageCommentList)
                 RoomComment(unitId = unitId, viewModel = viewModel)
             }
         }
@@ -76,121 +79,54 @@ private fun BasicInfo(info: CharacterInfoPro) {
             text = info.getIntroText(),
             selectable = true
         )
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.character),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.unitName,
-                modifier = Modifier.weight(0.85f),
-                selectable = true
-            )
-        }
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.name),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.actualName,
-                modifier = Modifier.weight(0.85f),
-                selectable = true
-            )
-        }
+        //角色
+        SingleRow(title = stringResource(id = R.string.character), content = info.unitName)
+        //现实名字
+        SingleRow(title = stringResource(id = R.string.name), content = info.actualName.fixedStr)
+        //cv
+        SingleRow(title = stringResource(id = R.string.cv), content = info.voice)
+
         //身高、体重
         TwoColumnsInfo(
             stringResource(id = R.string.title_height),
-            getFixed(info.height) + " CM",
+            "${info.height.fixedStr} CM",
             stringResource(id = R.string.title_weight),
-            getFixed(info.weight) + " KG"
+            "${info.weight.fixedStr} KG"
         )
         //生日、年龄
         TwoColumnsInfo(
             stringResource(id = R.string.title_birth),
-            stringResource(id = R.string.date_m_d, info.birthMonth, info.birthDay),
+            stringResource(
+                id = R.string.date_m_d,
+                info.birthMonth.fixedStr,
+                info.birthDay.fixedStr
+            ),
             stringResource(id = R.string.age),
-            getFixed(info.age)
+            info.age.fixedStr
         )
-        //血型、位置
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_blood),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainContentText(
-                text = info.bloodType,
-                modifier = Modifier
-                    .weight(0.35f)
-                    .padding(end = Dimen.mediumPadding)
-            )
-            MainTitleText(
-                text = stringResource(id = R.string.title_position),
-                modifier = Modifier.weight(0.15f)
-            )
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(0.35f)
-            ) {
-                PositionIcon(position = info.position)
-                MainContentText(
-                    text = info.position.toString(),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
-        }
-        //种族、cv
+        //血型、种族
         TwoColumnsInfo(
+            stringResource(id = R.string.title_blood),
+            info.bloodType.fixedStr,
             stringResource(id = R.string.title_race),
             info.race,
-            stringResource(id = R.string.cv),
-            info.voice
         )
         //公会
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_guild),
-                modifier = Modifier.weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        MainContentText(
-            text = info.guild,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
-        )
+        TwoRow(title = stringResource(id = R.string.title_guild), content = info.guild)
         //兴趣
-        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_fav),
-                modifier = Modifier.weight(0.15f)
-            )
-            Spacer(modifier = Modifier.weight(0.85f))
-        }
-        MainContentText(
-            text = info.favorite,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start,
-            selectable = true
-        )
+        TwoRow(title = stringResource(id = R.string.title_fav), content = info.favorite)
     }
 }
 
 /**
  * 主页交流信息
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun HomePageCommentInfo(
     selfText: String?,
-    unitId: Int,
-    characterViewModel: CharacterViewModel
+    homePageCommentList: List<CharacterHomePageComment>
 ) {
-    val homePageCommentList =
-        characterViewModel.getHomePageComments(unitId).collectAsState(initial = arrayListOf()).value
-
-
     //介绍信息
     selfText?.let {
         Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
@@ -204,29 +140,155 @@ private fun HomePageCommentInfo(
     }
 
     //主页交流
-    homePageCommentList.forEach { comment ->
-        Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
-            MainTitleText(
-                text = stringResource(id = R.string.title_comments),
-                modifier = Modifier.weight(0.15f)
-            )
-            MainTitleText(
-                text = "★" + if (comment.unitId % 100 / 10 == 0) {
+    val pagerState = rememberPagerState()
+
+    Row(
+        modifier = Modifier.padding(
+            start = Dimen.largePadding,
+            top = Dimen.mediumPadding,
+            bottom = Dimen.mediumPadding
+        )
+    ) {
+        MainTitleText(
+            text = stringResource(id = R.string.title_comments),
+            modifier = Modifier.weight(0.15f)
+        )
+        MainTitleText(
+            text = stringResource(id = R.string.title_home_page_comments),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .weight(0.15f)
+        )
+        Spacer(modifier = Modifier.weight(0.7f))
+    }
+    //多星级时
+    if (homePageCommentList.isNotEmpty()) {
+        val tabs = arrayListOf<String>()
+        homePageCommentList.forEach {
+            tabs.add(
+                "★" + if (it.unitId % 100 / 10 == 0) {
                     "1"
                 } else {
-                    "${comment.unitId % 100 / 10}"
-                },
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .weight(0.15f)
+                    "${it.unitId % 100 / 10}"
+                }
             )
-            Spacer(modifier = Modifier.weight(0.85f))
         }
-        comment.getCommentList().forEach {
-            CommentTextCard(it)
+        MainTabRow(
+            pagerState = pagerState,
+            tabs = tabs,
+            modifier = Modifier
+                .padding(horizontal = Dimen.mediumPadding)
+                .fillMaxWidth(homePageCommentList.size * 0.33f)
+        )
+
+        HorizontalPager(
+            state = pagerState,
+            count = homePageCommentList.size,
+            verticalAlignment = Alignment.Top
+        ) { index ->
+            Column {
+                homePageCommentList[index].getCommentList().forEach {
+                    CommentTextCard(it)
+                }
+            }
         }
     }
 
+
+}
+
+/**
+ * 小屋交流文本
+ */
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
+    val roomComments =
+        viewModel.getRoomComments(unitId).collectAsState(initial = null).value
+    val pagerState = rememberPagerState()
+
+
+    Row(
+        modifier = Modifier.padding(
+            start = Dimen.largePadding,
+            top = Dimen.mediumPadding,
+            bottom = Dimen.mediumPadding
+        )
+    ) {
+        MainTitleText(
+            text = stringResource(id = R.string.title_comments),
+            modifier = Modifier.weight(0.15f)
+        )
+        MainTitleText(
+            text = stringResource(id = R.string.title_room_comments),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .weight(0.15f)
+        )
+        Spacer(modifier = Modifier.weight(0.7f))
+    }
+    roomComments?.let {
+        //多角色时，显示角色图标
+        if (roomComments.size > 1) {
+            val urls = arrayListOf<String>()
+            roomComments.forEach { roomComment ->
+                urls.add(
+                    ImageResourceHelper.getInstance().getMaxIconUrl(roomComment.unitId)
+                )
+            }
+            IconHorizontalPagerIndicator(pagerState, urls)
+        }
+        HorizontalPager(
+            state = pagerState,
+            count = roomComments.size,
+            verticalAlignment = Alignment.Top
+        ) { index ->
+            Column {
+                roomComments[index].getCommentList().forEach {
+                    CommentTextCard(it)
+                }
+                CommonSpacer()
+            }
+        }
+    }
+}
+
+/**
+ * 单行
+ */
+@Composable
+private fun SingleRow(title: String, content: String) {
+    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+        MainTitleText(
+            text = title,
+            modifier = Modifier.weight(0.15f)
+        )
+        MainContentText(
+            text = content,
+            modifier = Modifier.weight(0.85f),
+            selectable = true
+        )
+    }
+}
+
+/**
+ * 双行显示
+ */
+@Composable
+private fun TwoRow(title: String, content: String) {
+    Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
+        MainTitleText(
+            text = title,
+            modifier = Modifier.weight(0.15f)
+        )
+        Spacer(modifier = Modifier.weight(0.85f))
+    }
+    MainContentText(
+        text = content,
+        modifier = Modifier.padding(Dimen.mediumPadding),
+        textAlign = TextAlign.Start,
+        selectable = true
+    )
 }
 
 /**
@@ -264,62 +326,6 @@ private fun TwoColumnsInfo(
 }
 
 /**
- * 小屋交流文本
- */
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
-    val roomComments =
-        viewModel.getRoomComments(unitId).collectAsState(initial = null).value
-    val pagerState = rememberPagerState()
-
-
-    Row(
-        modifier = Modifier.padding(
-            start = Dimen.largePadding,
-            top = Dimen.mediumPadding,
-            bottom = Dimen.mediumPadding
-        )
-    ) {
-        MainTitleText(
-            text = stringResource(id = R.string.title_comments),
-            modifier = Modifier.weight(0.15f)
-        )
-        MainTitleText(
-            text = stringResource(id = R.string.title_room_comments),
-            modifier = Modifier
-                .padding(start = Dimen.smallPadding)
-                .weight(0.15f)
-        )
-        Spacer(modifier = Modifier.weight(0.85f))
-    }
-    roomComments?.let {
-        //多角色时，显示角色图标
-        if (roomComments.size > 1) {
-            val urls = arrayListOf<String>()
-            roomComments.forEach { roomComment ->
-                urls.add(
-                    ImageResourceHelper.getInstance().getMaxIconUrl(roomComment.unitId)
-                )
-            }
-            IconHorizontalPagerIndicator(pagerState, urls)
-        }
-        HorizontalPager(
-            state = pagerState,
-            count = roomComments.size,
-            verticalAlignment = Alignment.Top
-        ) { index ->
-            Column {
-                roomComments[index].getCommentList().forEach {
-                    CommentTextCard(it)
-                }
-                CommonSpacer()
-            }
-        }
-    }
-}
-
-/**
  * 文本卡片
  */
 @Composable
@@ -328,7 +334,7 @@ private fun CommentTextCard(text: String) {
     MainCard(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
+            vertical = Dimen.smallPadding
         ),
         onClick = {
             copyText(context, text)
@@ -337,7 +343,18 @@ private fun CommentTextCard(text: String) {
         MainContentText(
             text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
         )
+    }
+}
+
+/**
+ * 角色基本信息预览
+ */
+@CombinedPreviews
+@Composable
+private fun BasicInfoPreview() {
+    PreviewLayout {
+        BasicInfo(info = CharacterInfoPro())
     }
 }

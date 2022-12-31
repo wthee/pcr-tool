@@ -1,5 +1,8 @@
 package cn.wthee.pcrtool.data.db.view
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.days
@@ -17,16 +20,24 @@ data class FreeGachaInfo(
 ) {
 
     /**
-     * 获取数量
+     * 获取描述
      */
-    fun getDesc(): String {
-        val count =  if (maxCount != 0) {
-            maxCount
-        } else {
-            val st = startTime.formatTime
-            val ed = endTime.formatTime
-            ed.days(st, false).toInt()
-        }
-        return getString(R.string.free_gacha_content, count)
+    fun getDesc() = getString(R.string.free_gacha_content, getCount())
+
+    /**
+     * 获取描述
+     */
+    @Composable
+    fun getDescComposable() = stringResource(R.string.free_gacha_content, getCount())
+
+    /**
+     * 获取次数
+     */
+    private fun getCount() = if (maxCount != 0) {
+        maxCount
+    } else {
+        val st = startTime.formatTime
+        val ed = endTime.formatTime
+        ed.days(st, false).toInt()
     }
 }

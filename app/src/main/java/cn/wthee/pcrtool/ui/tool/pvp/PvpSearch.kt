@@ -10,16 +10,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -94,8 +90,8 @@ fun PvpSearchCompose(
     val pageCount = tabs.size
 
     //动态调整 spanCount
-    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
-    val spanCount = if (initSpanCount == 0) ScreenUtil.getWidth() / normalSize else initSpanCount
+    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2)
+    val spanCount = if (initSpanCount == 0) normalSize.spanCount else initSpanCount
 
 
     Box {
@@ -163,36 +159,14 @@ fun PvpSearchCompose(
                 }
             } else {
                 //查询、收藏、历史
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
+                MainTabRow(
+                    pagerState = pagerState,
+                    tabs = tabs,
                     modifier = Modifier
                         .padding(horizontal = mediumPadding)
                         .fillMaxWidth(1f)
                         .align(Alignment.CenterHorizontally)
-                ) {
-                    tabs.forEachIndexed { index, s ->
-                        Tab(
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                scope.launch {
-                                    VibrateUtil(context).single()
-                                    pagerState.scrollToPage(index)
-                                }
-                            }) {
-                            Subtitle1(
-                                text = s,
-                                modifier = Modifier.padding(Dimen.smallPadding),
-                                color = if (pagerState.currentPage == index) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurface
-                                }
-                            )
-                        }
-                    }
-                }
+                )
 
                 HorizontalPager(
                     count = pageCount,

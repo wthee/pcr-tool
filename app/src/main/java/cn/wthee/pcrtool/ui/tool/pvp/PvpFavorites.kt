@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +19,9 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -38,8 +40,8 @@ fun PvpFavorites(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val favoriteDataList =
-        pvpViewModel.getAllFavorites().collectAsState(initial = arrayListOf()).value
+    val favoriteDataList = pvpViewModel.allFavoritesList.observeAsState().value ?: arrayListOf()
+    pvpViewModel.getAllFavorites()
     val itemWidth = getItemWidth(floatWindow)
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -55,9 +57,9 @@ fun PvpFavorites(
                     }
                 ) { data ->
                     PvpFavoriteItem(
-                        toCharacter,
                         data,
                         floatWindow,
+                        toCharacter,
                         pvpViewModel
                     )
                 }
@@ -76,11 +78,11 @@ fun PvpFavorites(
 
 @Composable
 private fun PvpFavoriteItem(
-    toCharacter: (Int) -> Unit,
     itemData: PvpFavoriteData,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel,
-    characterViewModel: CharacterViewModel = hiltViewModel(),
+    toCharacter: (Int) -> Unit,
+    pvpViewModel: PvpViewModel?,
+    characterViewModel: CharacterViewModel? = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
@@ -108,7 +110,7 @@ private fun PvpFavoriteItem(
             ) {
                 //点击取消收藏
                 scope.launch {
-                    pvpViewModel.delete(itemData.atks, itemData.defs)
+                    pvpViewModel?.delete(itemData.atks, itemData.defs)
                 }
             }
             Spacer(modifier = Modifier.width(largePadding))
@@ -119,9 +121,9 @@ private fun PvpFavoriteItem(
             ) {
                 //重置页面
                 scope.launch {
-                    pvpViewModel.pvpResult.postValue(null)
+                    pvpViewModel?.pvpResult?.postValue(null)
                     val selectedData =
-                        characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
+                        characterViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                     selectedIds?.sortByDescending { it.position }
                     navViewModel.selectedPvpData.postValue(selectedIds)
@@ -162,4 +164,33 @@ private fun PvpFavoriteItem(
         }
     }
 
+}
+
+
+@CombinedPreviews
+@Composable
+private fun PvpFavoriteItemPreview() {
+    val data = PvpFavoriteData(
+        "id",
+        "1-2-3-4-5",
+        "1-2-3-4-5",
+        "2020/01/01 00:00:00",
+        2
+    )
+    PreviewLayout {
+        PvpFavoriteItem(
+            data,
+            false,
+            { },
+            null,
+            null
+        )
+        PvpFavoriteItem(
+            data,
+            true,
+            { },
+            null,
+            null
+        )
+    }
 }

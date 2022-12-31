@@ -16,10 +16,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
 
@@ -88,10 +88,10 @@ fun FabCompose(
 
 }
 
-@Preview
+@CombinedPreviews
 @Composable
 private fun FabComposePreview() {
-    PreviewBox {
+    PreviewLayout {
         Row {
             FabCompose(iconType = MainIconType.ANIMATION) {
 

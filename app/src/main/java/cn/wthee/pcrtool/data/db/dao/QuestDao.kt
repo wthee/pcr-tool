@@ -24,7 +24,6 @@ interface QuestDao {
         SELECT 
             quest_id, 
             quest_name, 
-            COALESCE(:equipId, 0) AS equip_id, 
             quest_id / 1000000 % 10 AS quest_type, 
             reward_1 || '-' || reward_2 || '-' || reward_3 || '-' || reward_4 || '-' || reward_5 AS rewards, 
             odd_1 || '-' || odd_2 || '-' || odd_3 || '-' || odd_4 || '-' || odd_5 AS odds  

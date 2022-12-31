@@ -11,19 +11,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AttrCompareData
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.AttrCompare
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.RankText
 import cn.wthee.pcrtool.ui.common.Subtitle1
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
 
@@ -124,11 +124,11 @@ fun RankCompare(
 }
 
 
-@Preview
+@CombinedPreviews
 @Composable
-private fun Preview() {
+private fun AttrComparePreview() {
     val data = listOf(AttrCompareData(), AttrCompareData(), AttrCompareData())
-    PreviewBox {
+    PreviewLayout {
         AttrCompare(compareData = data, isExtraEquip = false, attrValueType = AttrValueType.INT)
     }
 }

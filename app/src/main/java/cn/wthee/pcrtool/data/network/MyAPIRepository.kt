@@ -195,16 +195,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 获取排名信息
      */
-    suspend fun getLeader(sort: Int, asc: Boolean): ResponseData<LeaderData> {
+    suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
         //请求
         try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("type", sort)
-            json.addProperty("order", if (asc) "ASC" else "DESC")
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-            val response = service.getLeader(body)
+            val response = service.getLeader()
             if (isError(response)) {
                 return error()
             }
@@ -302,9 +296,64 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
-    private
-    fun <T> isError(response: ResponseData<T>): Boolean {
-        return response.message == "failure" || response.data == null
+    /**
+     * 查询网站信息
+     */
+    suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>> {
+        //请求
+        try {
+            val response = service.getWebsiteList()
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "website")
+            }
+        }
+        return error()
     }
 
+    /**
+     * 获取排名评级信息
+     */
+    suspend fun getLeaderTier(type: Int): ResponseData<LeaderTierData> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("type", type)
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+            val response = service.getLeaderTier(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "leader")
+            }
+        }
+        return error()
+    }
+
+    private fun <T> isError(response: ResponseData<T>): Boolean {
+        return response.message == "failure" || response.data == null
+    }
 }
+
+/**
+ * 已返回结果，校验结果是否正常
+ * response 为 null 时，为加载中
+ */
+fun <T> isResultError(response: ResponseData<T>?): Boolean {
+    return response != null && response.status != 0
+}
+
+

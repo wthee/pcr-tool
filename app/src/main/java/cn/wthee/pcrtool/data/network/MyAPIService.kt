@@ -65,8 +65,8 @@ interface MyAPIService {
     /**
      * 排行信息
      */
-    @POST("leaders/v2")
-    suspend fun getLeader(@Body body: RequestBody): ResponseData<LeaderData>
+    @POST("leaders/v4")
+    suspend fun getLeader(): ResponseData<List<LeaderboardData>>
 
     /**
      * 查询额外装备掉落信息
@@ -74,11 +74,22 @@ interface MyAPIService {
     @POST("equip/area/v2")
     suspend fun getEquipArea(@Body body: RequestBody): ResponseData<List<RandomEquipDropArea>>
 
-
     /**
      * 剧情立绘
      */
     @POST("story/list")
     suspend fun getStoryList(@Body body: RequestBody): ResponseData<String>
+
+    /**
+     * 获取网站列表
+     */
+    @POST("website/list")
+    suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>>
+
+    /**
+     * 排行评级信息
+     */
+    @POST("leaders/tier")
+    suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
 
 }

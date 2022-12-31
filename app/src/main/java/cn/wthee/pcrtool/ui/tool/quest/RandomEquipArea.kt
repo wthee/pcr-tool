@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,8 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.ui.common.CommonResponseBox
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainText
@@ -38,69 +39,51 @@ fun RandomEquipArea(
     scrollState: LazyListState,
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
-    val areaList =
-        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
+    val flow = remember(equipId) {
+        randomEquipAreaViewModel.getEquipArea(equipId)
+    }
+    val areaList = flow.collectAsState(initial = null).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        if (areaList != null) {
-            if (areaList.isNotEmpty()) {
-                RandomDropAreaList(
-                    selectId = equipId,
-                    scrollState = scrollState,
-                    areaList = areaList
-                )
-            } else {
-                MainText(
-                    text = stringResource(R.string.tip_random_drop),
-                    textAlign = TextAlign.Center
-                )
-            }
-        } else {
-            val odds = arrayListOf<EquipmentIdWithOdd>()
-            for (i in 0..9) {
-                odds.add(EquipmentIdWithOdd())
-            }
-
-            LazyColumn(
-                state = scrollState
+    CommonResponseBox(
+        responseData = areaList,
+        fabContent = {
+            //回到顶部
+            FabCompose(
+                iconType = MainIconType.RANDOM_AREA,
+                text = stringResource(id = R.string.random_area),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
-                items(10) {
-                    AreaItem(
-                        -1,
-                        odds,
-                        "????",
-                        colorGreen
-                    )
-                }
-                item {
-                    CommonSpacer()
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
                 }
             }
         }
-
-        //回到顶部
-        FabCompose(
-            iconType = MainIconType.RANDOM_AREA,
-            text = stringResource(id = R.string.random_area),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
-            }
+    ) { data ->
+        if (data.isNotEmpty()) {
+            RandomDropAreaList(
+                selectId = equipId,
+                scrollState = scrollState,
+                areaList = data
+            )
+        } else {
+            MainText(
+                text = stringResource(R.string.tip_random_drop),
+                textAlign = TextAlign.Center
+            )
         }
     }
-
 
 }
 
 /**
  * 随机掉落区域列表
+ * @see 预览参考QuestList.AreaItem()
  */
 @Composable
 fun RandomDropAreaList(
@@ -118,9 +101,9 @@ fun RandomDropAreaList(
                 "${it.area}-${it.type}"
             }
         ) {
-            val odds = arrayListOf<EquipmentIdWithOdd>()
+            val odds = arrayListOf<EquipmentIdWithOdds>()
             it.equipIds.intArrayList.forEach { id ->
-                odds.add(EquipmentIdWithOdd(id, 0))
+                odds.add(EquipmentIdWithOdds(id, 0))
             }
 
             AreaItem(

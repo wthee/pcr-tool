@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,12 +34,19 @@ class AllPicsViewModel @Inject constructor(
      * 剧情立绘数据
      */
     fun getStoryList(id: Int, type: Int) = flow {
-        val data = apiRepository.getStoryList(id).data
-        data?.let {
-            val pathName =
-                if (type == 0) ImageResourceHelper.CARD_STORY else ImageResourceHelper.EVENT_STORY
-            emit(getStoryUrls(it, pathName))
+        val newResponse = ResponseData<ArrayList<String>>()
+        val responseData = apiRepository.getStoryList(id)
+        responseData.data?.let {
+            val pathName = if (type == 0) {
+                ImageResourceHelper.CARD_STORY
+            } else {
+                ImageResourceHelper.EVENT_STORY
+            }
+            newResponse.data = getStoryUrls(it, pathName)
         }
+        newResponse.status = responseData.status
+        newResponse.message = responseData.message
+        emit(newResponse)
     }
 
     /**

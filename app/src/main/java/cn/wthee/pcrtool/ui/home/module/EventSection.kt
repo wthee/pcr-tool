@@ -25,7 +25,12 @@ import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.ui.tool.BirthdayItem
+import cn.wthee.pcrtool.ui.tool.CalendarEventItem
+import cn.wthee.pcrtool.ui.tool.FreeGachaItem
+import cn.wthee.pcrtool.ui.tool.GachaItem
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
+import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -63,6 +68,10 @@ fun InProgressEventSection(
     val inProgressBirthdayList =
         overviewViewModel.getBirthdayList(EventType.IN_PROGRESS)
             .collectAsState(initial = arrayListOf()).value
+    //进行中公会战
+    val inProgressClanBattleList =
+        overviewViewModel.getClanBattleEvent(EventType.IN_PROGRESS)
+            .collectAsState(initial = arrayListOf()).value
 
     CalendarEventLayout(
         isEditMode,
@@ -73,7 +82,8 @@ fun InProgressEventSection(
         inProgressStoryEventList,
         inProgressGachaList,
         inProgressFreeGachaList,
-        inProgressBirthdayList
+        inProgressBirthdayList,
+        inProgressClanBattleList
     )
 }
 
@@ -108,6 +118,10 @@ fun ComingSoonEventSection(
     val comingSoonBirthdayList =
         overviewViewModel.getBirthdayList(EventType.COMING_SOON)
             .collectAsState(initial = arrayListOf()).value
+    //公会战
+    val comingSoonClanBattleList =
+        overviewViewModel.getClanBattleEvent(EventType.COMING_SOON)
+            .collectAsState(initial = arrayListOf()).value
 
     CalendarEventLayout(
         isEditMode,
@@ -118,7 +132,8 @@ fun ComingSoonEventSection(
         comingSoonStoryEventList,
         comingSoonGachaList,
         comingSoonFreeGachaList,
-        comingSoonBirthdayList
+        comingSoonBirthdayList,
+        comingSoonClanBattleList
     )
 }
 
@@ -137,6 +152,7 @@ private fun CalendarEventLayout(
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
+    clanBattleList: List<ClanBattleEvent>,
     gachaViewModel: GachaViewModel = hiltViewModel(),
 ) {
     //fes 角色id
@@ -148,13 +164,15 @@ private fun CalendarEventLayout(
     } else {
         OverviewType.COMING_SOON_EVENT.id
     }
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+    val spanCount = getItemWidth().spanCount
     val isNotEmpty =
-        eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty() || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
+        eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty()
+                || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
+                || clanBattleList.isNotEmpty()
     val titleId = if (calendarType == EventType.IN_PROGRESS) {
         R.string.tool_calendar_inprogress
     } else {
-        R.string.tool_calendar_comming
+        R.string.tool_calendar_coming
     }
 
 
@@ -185,13 +203,20 @@ private fun CalendarEventLayout(
                     storyEventList,
                     gachaList,
                     freeGachaList,
-                    birthdayList
+                    birthdayList,
+                    clanBattleList
                 )
             }
             VerticalGrid(
                 spanCount = spanCount,
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
+                clanBattleList.forEach {
+                    ClanBattleOverview(
+                        clanBattleEvent = it,
+                        toClanBossInfo = actions.toClanBossInfo
+                    )
+                }
                 gachaList.forEach {
                     GachaItem(
                         gachaInfo = it,
@@ -234,6 +259,7 @@ private fun CalendarEventOperation(
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
+    clanBattleList: List<ClanBattleEvent>,
 ) {
     val context = LocalContext.current
     val regionName = getRegionName(MainActivity.regionType)
@@ -295,22 +321,22 @@ private fun CalendarEventOperation(
                                     )
                                 )
                             }
-                            //免费十连
-                            freeGachaList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
                             //生日日程
                             birthdayList.forEach {
                                 allEvents.add(
                                     SystemCalendarEventData(
                                         it.getStartTime(),
                                         it.getEndTime(),
+                                        it.getDesc()
+                                    )
+                                )
+                            }
+                            //公会战
+                            clanBattleList.forEach {
+                                allEvents.add(
+                                    SystemCalendarEventData(
+                                        it.startTime,
+                                        it.getFixedEndTime(),
                                         it.getDesc()
                                     )
                                 )
@@ -393,10 +419,12 @@ private fun CalendarEventOperation(
                             )
                         }
 
-                        //免费十连
+                        //生日
                         var birthdayText = ""
                         birthdayList.forEach {
-                            val date = getCalendarEventDateText(it.getStartTime(), it.getEndTime())
+                            val date = it
+                                .getStartTime()
+                                .substring(0, 10)
                             birthdayText += "• $date\n${it.getDesc()}"
 
                         }
@@ -404,6 +432,20 @@ private fun CalendarEventOperation(
                             allText += getString(
                                 R.string.title_character_birthday_event,
                                 "\n$birthdayText\n"
+                            )
+                        }
+
+                        //公会战
+                        var clanBattleText = ""
+                        clanBattleList.forEach {
+                            val date = getCalendarEventDateText(it.startTime, it.getFixedEndTime())
+                            clanBattleText += "• $date\n${it.getDesc()}"
+
+                        }
+                        if (clanBattleText != "") {
+                            allText += getString(
+                                R.string.title_clan_battle_event,
+                                "\n$clanBattleText\n"
                             )
                         }
                         //复制
