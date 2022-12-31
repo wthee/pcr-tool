@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -44,10 +45,8 @@ fun LeaderboardList(
     val asc = remember {
         mutableStateOf(false)
     }
-    val flow = remember(sort.value, asc.value) {
-        leaderViewModel.getLeader(sort.value, asc.value)
-    }
-    val responseData = flow.collectAsState(initial = null).value
+    val responseData =
+        leaderViewModel.getLeader(sort.value, asc.value).collectAsState(initial = null).value
     val leaderList = responseData?.data
 
     val coroutineScope = rememberCoroutineScope()
@@ -152,7 +151,7 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
         titles.forEachIndexed { index, title ->
             SortTitleButton(
                 modifier = Modifier.weight(1f),
-                index = index + 2,
+                index = index + 1,
                 text = title,
                 sort = sort,
                 asc = asc
@@ -313,7 +312,7 @@ private fun LeaderboardItem(
                     )
 
                 }
-
+                //评价
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -321,6 +320,28 @@ private fun LeaderboardItem(
                     GradeText(leader.tower, modifier = Modifier.weight(1f))
                     GradeText(leader.pvp, modifier = Modifier.weight(1f))
                     GradeText(leader.clan, modifier = Modifier.weight(1f))
+                }
+                //评分
+                if (BuildConfig.DEBUG) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CaptionText(
+                            text = leader.towerScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        CaptionText(
+                            text = leader.pvpScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        CaptionText(
+                            text = leader.clanScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
@@ -364,12 +385,13 @@ fun GradeText(
 @Composable
 private fun LeaderboardItemPreview() {
     PreviewLayout {
-        LeaderboardItem(LeaderboardData(
-            wikiTime = "2020/01/01",
-            quest = "SS+",
-            pvp = "S",
-            clan = "A"
-        ), 1, {}, null
+        LeaderboardItem(
+            LeaderboardData(
+                wikiTime = "2020/01/01",
+                quest = "SS+",
+                pvp = "S",
+                clan = "A"
+            ), 1, {}, null
         )
     }
 }

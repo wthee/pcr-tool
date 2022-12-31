@@ -195,16 +195,10 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     /**
      * 获取排名信息
      */
-    suspend fun getLeader(sort: Int, asc: Boolean): ResponseData<List<LeaderboardData>> {
+    suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
         //请求
         try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("type", sort)
-            json.addProperty("order", if (asc) "ASC" else "DESC")
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-            val response = service.getLeader(body)
+            val response = service.getLeader()
             if (isError(response)) {
                 return error()
             }
