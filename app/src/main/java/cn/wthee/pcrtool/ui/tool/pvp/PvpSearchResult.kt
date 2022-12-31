@@ -54,9 +54,13 @@ fun PvpSearchResult(
     val placeholder = result == null
     pvpViewModel.getPVPData(idArray)
     //收藏信息
-    val favorites =
-        pvpViewModel.getFavoritesList(defIds).collectAsState(initial = arrayListOf()).value
+    val favorites = pvpViewModel.favoritesList.observeAsState().value
+    pvpViewModel.getFavoritesList(defIds)
     val favoritesList = arrayListOf<String>()
+    favorites?.forEach { data ->
+        favoritesList.add(data.atks)
+    }
+
     //获取数据
     LaunchedEffect(selectedIds) {
         //添加搜索记录
@@ -86,15 +90,10 @@ fun PvpSearchResult(
     //宽度
     val itemWidth = getItemWidth(floatWindow)
 
-    SideEffect {
-        favorites.forEach { data ->
-            favoritesList.add(data.atks)
-        }
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (!placeholder) {
-            if (result!!.message == "success") {
+            if (result!!.status == 0) {
                 //振动提醒
                 if (!vibrated.value) {
                     vibrated.value = true
@@ -121,7 +120,7 @@ fun PvpSearchResult(
                                 }
                             ) { index, item ->
                                 PvpResultItem(
-                                    favoritesList,
+                                    favoritesList.contains(item.atk),
                                     index + 1,
                                     item,
                                     floatWindow,
@@ -173,7 +172,7 @@ fun PvpSearchResult(
                 ) {
                     items(10) {
                         PvpResultItem(
-                            favoritesList,
+                            false,
                             0,
                             PvpResultData(),
                             floatWindow,
@@ -196,7 +195,7 @@ fun PvpSearchResult(
  */
 @Composable
 private fun PvpResultItem(
-    favoritesList: List<String>,
+    liked: Boolean,
     i: Int,
     item: PvpResultData,
     floatWindow: Boolean,
@@ -204,9 +203,6 @@ private fun PvpResultItem(
 ) {
     val placeholder = item.id == ""
     val scope = rememberCoroutineScope()
-    val favorites = remember {
-        mutableStateOf(favoritesList.contains(item.atk))
-    }
 
     val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
@@ -229,11 +225,11 @@ private fun PvpResultItem(
             //收藏
             if (!placeholder) {
                 IconCompose(
-                    data = if (favorites.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                    data = if (liked) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     size = Dimen.fabIconSize
                 ) {
                     scope.launch {
-                        if (favorites.value) {
+                        if (liked) {
                             //已收藏，取消收藏
                             viewModel?.delete(item.atk, item.def)
                         } else {
@@ -248,7 +244,7 @@ private fun PvpResultItem(
                                 )
                             )
                         }
-                        favorites.value = !favorites.value
+//                        favorites.value = !favorites.value
                     }
                 }
             }
@@ -312,14 +308,14 @@ private fun PvpResultItemPreview(){
     )
     PreviewLayout {
         PvpResultItem(
-            arrayListOf(),
+            false,
             0,
             data,
             false,
             null
         )
         PvpResultItem(
-            arrayListOf(),
+            true,
             0,
             data,
             true,

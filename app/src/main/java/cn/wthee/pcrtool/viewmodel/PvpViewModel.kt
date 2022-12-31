@@ -34,22 +34,28 @@ class PvpViewModel @Inject constructor(
 ) : ViewModel() {
 
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
+    val favoritesList = MutableLiveData<List<PvpFavoriteData>>()
+    val allFavoritesList = MutableLiveData<List<PvpFavoriteData>>()
     var requesting = false
 
     /**
      * 获取收藏信息
      */
-    fun getAllFavorites() = flow {
-        val data = pvpRepository.getLiked(MainActivity.regionType)
-        emit(data)
+    fun getAllFavorites() {
+        viewModelScope.launch {
+            val data = pvpRepository.getLiked(MainActivity.regionType)
+            allFavoritesList.postValue(data)
+        }
     }
 
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String) = flow {
-        val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
-        emit(data)
+    fun getFavoritesList(defs: String) {
+        viewModelScope.launch {
+            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
+            favoritesList.postValue(data)
+        }
     }
 
     /**
