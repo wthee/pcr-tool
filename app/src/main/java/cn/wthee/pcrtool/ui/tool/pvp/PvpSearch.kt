@@ -420,7 +420,7 @@ fun PvpIconItem(
             if (selected) {
                 var cancelSelectIndex = 0
                 newList.forEachIndexed { index, sel ->
-                    if (pvpCharacterData.position == sel.position) {
+                    if (pvpCharacterData.unitId == sel.unitId) {
                         cancelSelectIndex = index
                     }
                 }
@@ -432,7 +432,7 @@ fun PvpIconItem(
                     newList[0] = pvpCharacterData
                 }
             }
-            newList.sortByDescending { it.position }
+            newList.sortWith(comparePvpCharacterData())
             navViewModel.selectedPvpData.postValue(newList)
         }
 
@@ -479,5 +479,17 @@ fun PvpUnitIconLine(
                 }
             }
         }
+    }
+}
+
+/**
+ * 竞技场角色排序
+ */
+fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
+    val p = o2.position.compareTo(o1.position)
+    if (p == 0) {
+        o2.unitId.compareTo(o1.unitId)
+    } else {
+        p
     }
 }

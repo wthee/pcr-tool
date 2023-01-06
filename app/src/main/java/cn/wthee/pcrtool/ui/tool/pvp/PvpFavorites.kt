@@ -125,7 +125,7 @@ private fun PvpFavoriteItem(
                     val selectedData =
                         characterViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortByDescending { it.position }
+                    selectedIds?.sortWith(comparePvpCharacterData())
                     navViewModel.selectedPvpData.postValue(selectedIds)
                     navViewModel.showResult.postValue(true)
                 }

@@ -284,7 +284,8 @@ interface UnitDao {
             AND a.unit_id < $maxUnitId  
             AND b.search_area_width > 0
         ORDER BY
-            b.search_area_width
+            b.search_area_width,
+            a.unit_id
     """
     )
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
