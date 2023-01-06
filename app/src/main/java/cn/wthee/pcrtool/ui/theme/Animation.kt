@@ -21,7 +21,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 300, easing = FastOutSlowInEasing)
+    return tween(durationMillis = 400, easing = FastOutSlowInEasing)
 }
 
 /**

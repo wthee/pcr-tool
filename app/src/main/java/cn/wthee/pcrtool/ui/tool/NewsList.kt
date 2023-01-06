@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -185,7 +184,6 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
         newsViewModel.getNewsDetail(id)
     }
     val responseData = flow.collectAsState(initial = null).value
-    val context = LocalContext.current
 
     CommonResponseBox(
         responseData = responseData,
@@ -199,7 +197,7 @@ fun NewsDetail(id: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                 FabCompose(
                     iconType = MainIconType.BROWSER
                 ) {
-                    BrowserUtil.open(context, data.url)
+                    BrowserUtil.open(data.url)
                 }
                 //分享
                 FabCompose(

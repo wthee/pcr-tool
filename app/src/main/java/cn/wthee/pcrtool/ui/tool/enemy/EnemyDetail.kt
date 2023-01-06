@@ -124,10 +124,7 @@ fun EnemyAllInfo(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         ) {
-            BrowserUtil.open(
-                context,
-                Constants.PREVIEW_ENEMY_URL + enemyData.prefabId
-            )
+            BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
         }
         //描述
         MainContentText(

@@ -69,7 +69,7 @@ fun LeaderboardList(
                 modifier = Modifier
                     .clickable {
                         VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
+                        BrowserUtil.open(url)
                     }
             )
 
@@ -220,7 +220,6 @@ private fun LeaderboardItem(
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
-    val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
         characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
@@ -278,7 +277,7 @@ private fun LeaderboardItem(
         MainCard(
             modifier = Modifier.padding(start = Dimen.mediumPadding),
             onClick = {
-                BrowserUtil.open(context, leader.url)
+                BrowserUtil.open(leader.url)
             }
         ) {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {

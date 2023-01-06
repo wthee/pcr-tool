@@ -141,7 +141,7 @@ fun MainSettings(
             title = stringResource(id = R.string.title_spine),
             summary = stringResource(id = R.string.spine_tip),
             onClick = {
-                BrowserUtil.open(context, Constants.PREVIEW_URL)
+                BrowserUtil.open(Constants.PREVIEW_URL)
             }
         )
 
@@ -158,7 +158,7 @@ fun MainSettings(
             title = stringResource(id = R.string.data_from),
             summary = stringResource(id = R.string.data_from_hint),
             onClick = {
-                BrowserUtil.open(context, dataFromUrl)
+                BrowserUtil.open(dataFromUrl)
             }
         )
         //- 静流笔记
@@ -168,7 +168,7 @@ fun MainSettings(
             title = stringResource(id = R.string.shizuru_note),
             summary = stringResource(id = R.string.shizuru_note_tip),
             onClick = {
-                BrowserUtil.open(context, shizuruUrl)
+                BrowserUtil.open(shizuruUrl)
             }
         )
         //- 竞技场
@@ -178,7 +178,7 @@ fun MainSettings(
             title = stringResource(id = R.string.pcrdfans),
             summary = stringResource(id = R.string.pcrdfans_tip),
             onClick = {
-                BrowserUtil.open(context, pcrdfansUrl)
+                BrowserUtil.open(pcrdfansUrl)
             }
         )
         //- 排行
@@ -188,7 +188,7 @@ fun MainSettings(
             title = stringResource(id = R.string.leader_source),
             summary = stringResource(id = R.string.leader_tip),
             onClick = {
-                BrowserUtil.open(context, leaderUrl)
+                BrowserUtil.open(leaderUrl)
             }
         )
         CommonSpacer()

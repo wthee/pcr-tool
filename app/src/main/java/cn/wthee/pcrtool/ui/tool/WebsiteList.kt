@@ -182,7 +182,7 @@ private fun WebsiteItem(data: WebsiteData) {
                 .padding(top = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
-                BrowserUtil.open(context, data.url)
+                BrowserUtil.open(data.url)
             }
         ) {
             Row(

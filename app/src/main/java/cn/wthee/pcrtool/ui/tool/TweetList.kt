@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -186,29 +185,28 @@ private fun TweetButton(
     comicId: String = "",
     toComic: (Int) -> Unit
 ) {
-    val context = LocalContext.current
     //根据链接获取相符的图标
     val btn = when {
         url.contains("youtu.be") || url.contains("www.youtube.com") -> TweetButtonData(
             stringResource(id = R.string.youtube), MainIconType.YOUTUBE,
         ) {
-            BrowserUtil.open(context, url)
+            BrowserUtil.open(url)
         }
         url.contains("priconne-redive.jp/news/") -> TweetButtonData(
             stringResource(id = R.string.read_news), MainIconType.NEWS
         ) {
             //公告详情
-            BrowserUtil.open(context, url)
+            BrowserUtil.open(url)
         }
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET
         ) {
-            BrowserUtil.open(context, url)
+            BrowserUtil.open(url)
         }
         url.contains("hibiki-radio.jp") -> TweetButtonData(
             stringResource(id = R.string.hibiki), MainIconType.HIBIKI
         ) {
-            BrowserUtil.open(context, url)
+            BrowserUtil.open(url)
         }
         url.contains("comic") -> TweetButtonData(
             stringResource(id = R.string.read_comic), MainIconType.COMIC
@@ -219,7 +217,7 @@ private fun TweetButton(
             }
         }
         else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
-            BrowserUtil.open(context, url)
+            BrowserUtil.open(url)
         }
     }
 

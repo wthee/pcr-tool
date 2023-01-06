@@ -75,7 +75,7 @@ fun LeaderTier(
                 modifier = Modifier
                     .clickable {
                         VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
+                        BrowserUtil.open(url)
                     }
             )
 
@@ -224,7 +224,6 @@ private fun LeaderItem(
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel?
 ) {
-    val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
         characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
@@ -282,7 +281,7 @@ private fun LeaderItem(
                 .padding(start = Dimen.smallPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
-                BrowserUtil.open(context, leader.url)
+                BrowserUtil.open(leader.url)
             }
         ) {
             Column {

@@ -113,7 +113,7 @@ fun PvpSearchCompose(
                         modifier = Modifier
                             .clickable {
                                 VibrateUtil(context).single()
-                                BrowserUtil.open(context, url)
+                                BrowserUtil.open(url)
                             }
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -123,7 +123,7 @@ fun PvpSearchCompose(
                         text = stringResource(id = R.string.pvp_upload)
                     ) {
                         //打开网页
-                        BrowserUtil.open(context, addUrl)
+                        BrowserUtil.open(addUrl)
                     }
                 }
 

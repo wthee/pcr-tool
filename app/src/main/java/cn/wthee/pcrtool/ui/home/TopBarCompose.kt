@@ -165,7 +165,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     icon = MainIconType.GITHUB_RELEASE,
                     text = stringResource(id = R.string.github),
                 ) {
-                    BrowserUtil.open(context, releaseUrl)
+                    BrowserUtil.open(releaseUrl)
                 }
             }
 
@@ -210,10 +210,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         VibrateUtil(context).single()
-                        BrowserUtil.open(
-                            context,
-                            appNotice.url
-                        )
+                        BrowserUtil.open(appNotice.url)
                     }
                 ) {
                     MainContentText(

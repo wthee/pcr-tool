@@ -353,10 +353,8 @@ private fun CharacterCard(
                 text = stringResource(id = R.string.spine_preview),
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             ) {
-                BrowserUtil.open(
-                    context,
-                    Constants.PREVIEW_UNIT_URL + (if (cutinId != 0) cutinId else unitId)
-                )
+                val id = if (cutinId != 0) cutinId else unitId
+                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
             }
         }
     }
