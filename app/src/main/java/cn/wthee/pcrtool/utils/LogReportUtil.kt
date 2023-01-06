@@ -9,12 +9,12 @@ import kotlinx.coroutines.launch
 //上传日志 fixme Crash 上报
 object LogReportUtil {
 
-    fun upload(e: Exception, type: String) {
+    fun upload(e: Exception, msg: String) {
         MainScope().launch {
             if (BuildConfig.DEBUG) {
-                Log.e("DEBUG", type + e.message)
+                Log.e("LogReportUtil", msg + e.message)
             }
-            CrashReport.postCatchedException(e.cause)
+            CrashReport.postCatchedException(e)
         }
     }
 }
