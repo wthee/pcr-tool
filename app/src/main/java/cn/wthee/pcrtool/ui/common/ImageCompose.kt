@@ -167,6 +167,9 @@ fun IconCompose(
                 onSuccess = {
                     loading.value = false
                 },
+                onLoading = {
+                    loading.value = true
+                },
                 modifier = mModifier
                     .aspectRatio(1f)
                     .commonPlaceholder(visible = loading.value)

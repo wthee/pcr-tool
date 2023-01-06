@@ -13,6 +13,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.request.CachePolicy
 import dagger.hilt.android.HiltAndroidApp
 
 
@@ -53,6 +54,8 @@ class MyApplication : Application(), ImageLoaderFactory {
                     .build()
             )
             .allowHardware(false)
+            .memoryCachePolicy(CachePolicy.DISABLED)
+            .respectCacheHeaders(false) //禁用后，优先从本地缓存STANDARD_MEMORY_MULTIPLIER
             .okHttpClient {
                 ApiUtil.buildClient()
             }
