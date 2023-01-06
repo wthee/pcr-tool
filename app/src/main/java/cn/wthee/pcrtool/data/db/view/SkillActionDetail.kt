@@ -8,8 +8,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.getString
+import cn.wthee.pcrtool.utils.int
 import kotlin.math.abs
 
 
@@ -256,8 +259,8 @@ data class SkillActionDetail(
             SkillActionType.CHOOSE_ENEMY -> {
                 getString(R.string.skill_action_type_desc_7, getTarget())
             }
-            // 8：行动速度变更、83：可叠加行动速度变更
-            SkillActionType.CHANGE_ACTION_SPEED, SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED -> {
+            // 8：行动速度变更、83：可叠加行动速度变更、99：范围速度变更
+            SkillActionType.CHANGE_ACTION_SPEED, SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED, SkillActionType.SPEED_FIELD -> {
                 //判断异常状态
                 tag = getString(
                     when (actionDetail1) {
@@ -278,24 +281,44 @@ data class SkillActionDetail(
                 )
                 val value = getValueText(1, actionValue1, actionValue2)
                 val time = getTimeText(3, actionValue3, actionValue4)
+
+                //额外、范围速度变更
+                when (actionType) {
+                    SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type -> {
+                        tag += getString(R.string.skill_ailment_extra)
+                    }
+                    SkillActionType.SPEED_FIELD.type -> {
+                        tag += getString(R.string.skill_ailment_field)
+                    }
+                }
+
                 when (actionDetail1) {
                     1, 2 -> {
                         val descText =
                             if (actionType == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
-                                tag += getString(R.string.skill_ailment_extra)
                                 getString(R.string.skill_action_speed_add, value)
                             } else {
                                 getString(R.string.skill_action_speed_multipl, value)
                             }
-                        "${tag}${getTarget()}，$descText$time"
+                        if (actionType == SkillActionType.SPEED_FIELD.type) {
+                            getString(
+                                R.string.skill_action_type_desc_field,
+                                actionValue5.toInt(),
+                                descText,
+                                time
+                            )
+                        } else {
+                            "${tag}${getTarget()}，$descText$time"
+                        }
                     }
                     else -> {
-                        getString(R.string.skill_action_type_desc_8, getTarget(), tag, time)
+                        val count = if (actionDetail2 == 1) {
+                            getString(R.string.skill_action_hit_remove)
+                        } else {
+                            ""
+                        }
+                        getString(R.string.skill_action_type_desc_8, getTarget(), tag, time, count)
                     }
-                } + if (actionDetail2 == 1) {
-                    getString(R.string.skill_action_hit_remove)
-                } else {
-                    ""
                 }
             }
             // 9：持续伤害

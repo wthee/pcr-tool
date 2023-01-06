@@ -407,6 +407,7 @@
     <string name="skill_type_90">被动</string>
     <string name="skill_type_901_902">装备</string>
     <string name="skill_type_95">隐匿</string>
+    <string name="skill_type_99">范围加速</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -522,7 +523,7 @@
     <string name="skill_action_type_desc_7">锁定%s</string>
     <string name="skill_action_speed_add">速度额外增加初始值的 %s 倍</string>
     <string name="skill_action_speed_multipl">速度变更为初始值的 %s 倍</string>
-    <string name="skill_action_type_desc_8">使%s进入%s状态%s</string>
+    <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>
     <string name="skill_action_type_desc_9">使%s进入%s状态，每秒造成伤害 %s%s%s</string>
@@ -680,6 +681,7 @@
     <string name="skill_ailment_11">时间停止</string>
     <string name="skill_ailment_13">结晶</string>
     <string name="skill_ailment_extra">(额外)</string>
+    <string name="skill_ailment_field">(范围)</string>
 
     <!--持续伤害-->
     <string name="skill_dot_0">拘留（造成伤害）</string>
