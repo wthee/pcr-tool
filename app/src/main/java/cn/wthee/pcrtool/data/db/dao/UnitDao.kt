@@ -78,7 +78,7 @@ interface UnitDao {
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_name like '%' || :unitName || '%'
-        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
         AND (
             (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
@@ -151,7 +151,7 @@ interface UnitDao {
             unit_profile
             LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id 
         WHERE
-            unit_profile.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
+            unit_data.search_area_width > 0
             AND unit_profile.unit_id < $maxUnitId 
             AND unit_data.unit_id IS NOT NULL
         """
@@ -407,10 +407,8 @@ interface UnitDao {
                 unit_data.kana AS unit_name 
             FROM
                 guild
-                LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id 
-                AND unit_profile.unit_id < $maxUnitId
-                AND unit_profile.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
-                LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+                LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id AND unit_profile.unit_id < $maxUnitId
+                LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id AND unit_data.search_area_width > 0
             )
         GROUP BY
             guild_id
@@ -436,9 +434,8 @@ interface UnitDao {
             GROUP_CONCAT(unit_data.kana,'-') as unit_names
         FROM
             unit_profile
-						LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
-        WHERE unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-        AND unit_profile.guild_id = ''
+			LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+        WHERE unit_data.search_area_width > 0 AND unit_profile.guild_id = ''
         GROUP BY unit_profile.guild_id
     """
     )
@@ -571,8 +568,8 @@ interface UnitDao {
             LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
         WHERE
             ( b.is_limited = 0 OR ( b.is_limited = 1 AND b.rarity <> 1 ) ) 
-            AND a.unit_id < 200000 
-            AND a.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = a.unit_id )
+            AND a.unit_id < $maxUnitId 
+            AND b.search_area_width > 0
             AND 1 = CASE
             WHEN  1 = :type AND b.is_limited = 0 AND b.rarity = 1 THEN 1 
             WHEN  2 = :type AND b.is_limited = 0 AND b.rarity = 2 THEN 1 

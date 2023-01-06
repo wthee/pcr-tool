@@ -199,12 +199,13 @@ interface EventDao {
         SELECT
             CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
-            GROUP_CONCAT(unit_id,'-') as unit_ids,
-            GROUP_CONCAT(unit_name,'-') as unit_names
+            GROUP_CONCAT(unit_data.unit_id,'-') as unit_ids,
+            GROUP_CONCAT(unit_data.unit_name,'-') as unit_names
         FROM
             unit_profile
-        WHERE unit_id < 200000 
-        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+        WHERE unit_data.unit_id < $maxUnitId 
+        AND unit_data.search_area_width > 0
         GROUP BY birth_month_int, birth_day_int
         ORDER BY birth_month_int, birth_day_int
     """

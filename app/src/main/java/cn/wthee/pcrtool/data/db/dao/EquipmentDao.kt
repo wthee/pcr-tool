@@ -299,7 +299,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_1 != 0 UNION
             SELECT
                 unit_id,
@@ -309,7 +309,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_2 != 0 UNION
             SELECT
                 unit_id,
@@ -319,7 +319,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_3 != 0 UNION
             SELECT
                 unit_id,
@@ -329,7 +329,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_4 != 0 UNION
             SELECT
                 unit_id,
@@ -339,7 +339,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_5 != 0 UNION
             SELECT
                 unit_id,
@@ -350,7 +350,7 @@ interface EquipmentDao {
             WHERE
                 promotion_level >= 1 
                 AND equip_slot_6 != 0 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
             ) 
         WHERE 
             1 = CASE
