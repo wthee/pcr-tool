@@ -67,5 +67,5 @@ interface EnemyDao {
             enemy_id = :enemyId
     """
     )
-    suspend fun getMultiTargetEnemyInfo(enemyId: Int): MultiTargetEnemyInfo
+    suspend fun getMultiTargetEnemyInfo(enemyId: Int): MultiTargetEnemyInfo?
 }
