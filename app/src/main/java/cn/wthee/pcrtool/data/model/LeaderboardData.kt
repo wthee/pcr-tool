@@ -16,13 +16,7 @@ data class LeaderboardData(
     val pvpScore: Int = 0,
     val clan: String = "?",
     val clanScore: Int = 0,
-    val updateTime: String = "",
+    val updateTime: String? = "",
     val wikiTime: String = "",
     val unitId: Int? = 0,
-) {
-    fun getTime() = try {
-        wikiTime.substring(0, 11)
-    } catch (_: Exception) {
-        wikiTime
-    }
-}
+)

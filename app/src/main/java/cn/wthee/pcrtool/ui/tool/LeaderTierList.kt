@@ -84,7 +84,7 @@ fun LeaderTier(
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             )
             CaptionText(
-                text = leaderData?.data?.desc?.substring(0, 11) ?: "",
+                text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -157,10 +157,7 @@ fun LeaderTier(
                             toCharacterDetail
                         )
                     }
-                    item {
-                        CommonSpacer()
-                    }
-                    item {
+                    items(count = 2) {
                         CommonSpacer()
                     }
                 }
@@ -238,6 +235,10 @@ private fun LeaderItem(
     } else {
         Color.Unspecified
     }
+    val tipText = stringResource(
+        id = R.string.unknown_character_type,
+        getRegionName(MainActivity.regionType)
+    )
 
     Row(
         modifier = Modifier
@@ -260,6 +261,8 @@ private fun LeaderItem(
             ) {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId!!)
+                } else {
+                    ToastUtil.short(tipText)
                 }
             }
             if (!unknown) {
@@ -323,12 +326,8 @@ private fun LeaderItem(
                             modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                             text = if (!hasUnitId) {
                                 stringResource(id = R.string.leader_need_sync)
-
                             } else {
-                                stringResource(
-                                    id = R.string.unknown_character_type,
-                                    getRegionName(MainActivity.regionType)
-                                )
+                                tipText
                             },
                             backgroundColor = colorGray
                         )

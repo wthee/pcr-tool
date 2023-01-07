@@ -21,14 +21,23 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
+
+/**
+ * 角色排行筛选
+ */
+data class FilterLeaderboard(
+    var sort: Int = 0,
+    var asc: Boolean = false,
+    var onlyLast: Boolean = false
+)
+
 
 /**
  * 角色排行
@@ -39,14 +48,23 @@ fun LeaderboardList(
     toCharacterDetail: (Int) -> Unit,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
+    val filter = leaderViewModel.filterLeader.value ?: FilterLeaderboard()
+
     val sort = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.sort)
     }
+    filter.sort = sort.value
     val asc = remember {
-        mutableStateOf(false)
+        mutableStateOf(filter.asc)
     }
+    filter.asc = asc.value
+    val onlyLast = remember {
+        mutableStateOf(filter.onlyLast)
+    }
+    filter.onlyLast = onlyLast.value
+
     val responseData =
-        leaderViewModel.getLeader(sort.value, asc.value).collectAsState(initial = null).value
+        leaderViewModel.getLeader(filter).collectAsState(initial = null).value
     val leaderList = responseData?.data
 
     val coroutineScope = rememberCoroutineScope()
@@ -83,11 +101,40 @@ fun LeaderboardList(
         CommonResponseBox(
             responseData = responseData,
             fabContent = {
+                //切换显示
+                FabCompose(
+                    iconType = MainIconType.FILTER,
+                    text = if (onlyLast.value) {
+                        stringResource(id = R.string.last_update)
+                    } else {
+                        stringResource(id = R.string.all)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                        )
+                ) {
+                    onlyLast.value = !onlyLast.value
+                }
+
                 Row(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
+                    //重置
+                    if (sort.value != 0 || asc.value || onlyLast.value) {
+                        FabCompose(
+                            iconType = MainIconType.RESET
+                        ) {
+                            sort.value = 0
+                            asc.value = false
+                            onlyLast.value = false
+                        }
+                    }
+
                     //回到顶部
                     FabCompose(
                         iconType = MainIconType.LEADER,
@@ -114,7 +161,7 @@ fun LeaderboardList(
                 ) { index, it ->
                     LeaderboardItem(it, index, toCharacterDetail)
                 }
-                item {
+                items(count = 2) {
                     CommonSpacer()
                 }
             }
@@ -129,7 +176,7 @@ fun LeaderboardList(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-//        stringResource(id = R.string.quest),
+        stringResource(id = R.string.quest),
         stringResource(id = R.string.tower),
         stringResource(id = R.string.jjc),
         stringResource(id = R.string.clan),
@@ -191,7 +238,8 @@ private fun SortTitleButton(
     ) {
         MainText(
             text = text,
-            color = color
+            color = color,
+            style = MaterialTheme.typography.titleSmall
         )
         IconCompose(
             data = when (sort.value) {
@@ -235,6 +283,11 @@ private fun LeaderboardItem(
         Color.Unspecified
     }
 
+    val tipText = stringResource(
+        id = R.string.unknown_character_type,
+        getRegionName(MainActivity.regionType)
+    )
+
     Row(
         modifier = Modifier
             .padding(
@@ -256,6 +309,8 @@ private fun LeaderboardItem(
             ) {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId!!)
+                } else {
+                    ToastUtil.short(tipText)
                 }
             }
             if (!unknown) {
@@ -290,7 +345,7 @@ private fun LeaderboardItem(
                     //名称
                     MainContentText(
                         text = "${index + 1}." + if (hasUnitId && !unknown) {
-                            basicInfo!!.getNameF()
+                            basicInfo!!.name
                         } else {
                             leader.name
                         },
@@ -299,7 +354,8 @@ private fun LeaderboardItem(
                     )
 
                     CaptionText(
-                        text = leader.getTime(),
+                        text = leader.updateTime?.substring(0, 11)
+                            ?: leader.wikiTime.fixedLeaderDate,
                         modifier = Modifier.fillMaxWidth(),
                         color = textColor
                     )
@@ -309,7 +365,7 @@ private fun LeaderboardItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-//                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
+                    GradeText(leader.quest, modifier = Modifier.weight(1f))
                     GradeText(leader.tower, modifier = Modifier.weight(1f))
                     GradeText(leader.pvp, modifier = Modifier.weight(1f))
                     GradeText(leader.clan, modifier = Modifier.weight(1f))
@@ -319,6 +375,11 @@ private fun LeaderboardItem(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        CaptionText(
+                            text = leader.questScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
                         CaptionText(
                             text = leader.towerScore.toString(),
                             modifier = Modifier.weight(1f),
