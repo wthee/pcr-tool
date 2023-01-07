@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -56,6 +57,7 @@ import cn.wthee.pcrtool.ui.tool.SettingLinkItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -282,11 +284,15 @@ fun FabMain(modifier: Modifier = Modifier) {
  * 设置页面
  */
 @Composable
-private fun SettingDropMenu(actions: NavActions) {
+private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hiltViewModel()) {
     val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val context = LocalContext.current
     val sp = settingSP()
     val region = MainActivity.regionType
+    val updateDb = viewModel.updateDb.observeAsState().value ?: ""
+    LaunchedEffect(MainActivity.regionType) {
+        viewModel.getDbDiff()
+    }
 
     //数据库版本
     val typeName = getRegionName(region)
@@ -351,7 +357,12 @@ private fun SettingDropMenu(actions: NavActions) {
                         iconType = R.drawable.ic_logo_large,
                         iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
-                        summary = "${typeName}：${dbVersionCode}",
+                        summary = stringResource(
+                            id = R.string.db_diff,
+                            typeName,
+                            dbVersionCode,
+                            updateDb
+                        ),
                         titleColor = MaterialTheme.colorScheme.primary,
                         summaryColor = MaterialTheme.colorScheme.onSurface,
                         padding = Dimen.smallPadding,

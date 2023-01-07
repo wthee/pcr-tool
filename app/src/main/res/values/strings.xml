@@ -16,8 +16,8 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="skill_cooltime">冷却时间：%.3f秒</string>
-    <string name="skill_cast_time">准备时间：%.3f秒</string>
+    <string name="skill_cooltime">冷却时间：%s秒</string>
+    <string name="skill_cast_time">准备时间：%s秒</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -169,7 +169,7 @@
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
     <string name="title_recently_used">常用</string>
     <string name="phase">%s阶段</string>
-    <string name="last_update">最近</string>
+    <string name="last_update">最近评分调整</string>
     <string name="random_area">额外掉落</string>
     <string name="random_drop_area_title">区域 %d</string>
     <string name="random_drop_area_1">（前半：1 ~ 7）</string>
@@ -280,6 +280,7 @@
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
     <string name="web_load_error">内容加载失败</string>
+    <string name="db_diff">%s：%s\n更新内容：%s</string>
 
 
     <!--模拟抽卡-->
@@ -297,7 +298,7 @@
     <string name="go_to_mock">去抽卡</string>
     <string name="mock_count">已抽%d次</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
-    <string name="last_gacha_date">上次抽卡 %s</string>
+    <string name="last_gacha_date">已抽%d次，%s</string>
     <string name="gacha_used_gem">消耗宝石：1500 * %d = %d</string>
     <string name="gacha_order">第 %d 次</string>
 

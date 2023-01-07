@@ -48,7 +48,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 MainScope().launch {
-                    LogReportUtil.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
+                    LogReportUtil.upload(e, Constants.EXCEPTION_API + "getPVPData" + ids)
                 }
             }
         }
@@ -82,7 +82,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$after")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getNews" + "$region/$after")
             }
         }
         return error()
@@ -110,7 +110,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getNewsDetail" + id)
             }
         }
         return error()
@@ -135,7 +135,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getNewsOverviewByRegion")
             }
         }
         return error()
@@ -165,7 +165,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$after")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getTweet" + "$after")
             }
         }
         return error()
@@ -186,7 +186,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "tweet")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComic")
             }
         }
         return error()
@@ -207,7 +207,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "leader")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getLeader")
             }
         }
         return error()
@@ -235,7 +235,42 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getUpdateContent")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 获取数据更新摘要
+     */
+    suspend fun getDbDiff(): ResponseData<String> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            //测试版本显示更新布局
+            json.addProperty(
+                "regionCode", when (MainActivity.regionType) {
+                    2 -> "cn"
+                    3 -> "tw"
+                    4 -> "jp"
+                    else -> ""
+                }
+            )
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+
+            val response = service.getDbDiff(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getDbDiff")
             }
         }
         return error()
@@ -262,7 +297,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getEquipArea")
             }
         }
         return error()
@@ -290,7 +325,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "update")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getStoryList")
             }
         }
         return error()
@@ -311,7 +346,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "website")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getWebsiteList")
             }
         }
         return error()
@@ -337,7 +372,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "leader")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getLeaderTier")
             }
         }
         return error()

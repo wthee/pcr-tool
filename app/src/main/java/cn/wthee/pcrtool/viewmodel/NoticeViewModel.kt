@@ -24,6 +24,11 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
     val updateApp = MutableLiveData<AppNotice>()
 
     /**
+     * 数据更新
+     */
+    val updateDb = MutableLiveData<String>()
+
+    /**
      * 更新校验
      */
     fun check() {
@@ -34,6 +39,23 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
                 updateApp.postValue(data)
             } catch (e: Exception) {
                 updateApp.postValue(AppNotice(id = -2))
+            }
+        }
+    }
+
+    /**
+     * 更新校验
+     */
+    fun getDbDiff() {
+        viewModelScope.launch {
+            try {
+                var data = apiRepository.getDbDiff().data ?: ""
+                if (data == "") {
+                    data = "-"
+                }
+                updateDb.postValue(data)
+            } catch (e: Exception) {
+                updateDb.postValue("")
             }
         }
     }
