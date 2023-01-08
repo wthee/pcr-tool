@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
-class ImageResourceHelper() {
+class ImageResourceHelper {
 
     var type = "cn"
 

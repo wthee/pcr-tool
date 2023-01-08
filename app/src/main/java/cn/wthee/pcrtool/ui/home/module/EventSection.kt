@@ -225,6 +225,9 @@ private fun CalendarEventLayout(
                         toMockGacha = actions.toMockGacha
                     )
                 }
+                freeGachaList.forEach {
+                    FreeGachaItem(it)
+                }
                 storyEventList.forEach {
                     StoryEventItem(
                         event = it,
@@ -235,9 +238,6 @@ private fun CalendarEventLayout(
                 }
                 eventList.forEach {
                     CalendarEventItem(it)
-                }
-                freeGachaList.forEach {
-                    FreeGachaItem(it)
                 }
                 birthdayList.forEach {
                     BirthdayItem(it, actions.toCharacterDetail)

@@ -104,7 +104,7 @@ fun EquipList(
             }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                FadeAnimation(visible = equips.isNotEmpty()) {
+                if (equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
                         items(items = equipGroupList,
                             key = {
@@ -122,6 +122,10 @@ fun EquipList(
                             CommonSpacer()
                         }
                     }
+                } else {
+                    CenterTipText(
+                        stringResource(id = R.string.no_data)
+                    )
                 }
 
                 Row(

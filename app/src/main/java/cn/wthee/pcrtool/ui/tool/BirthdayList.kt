@@ -96,7 +96,9 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             MainTitleText(
-                text = stringResource(id = R.string.title_birth), backgroundColor = colorRed
+                text = stringResource(id = R.string.title_birth),
+                backgroundColor = colorRed,
+                modifier = Modifier.padding(end = Dimen.smallPadding)
             )
             MainTitleText(
                 text = stringResource(
@@ -104,14 +106,13 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                     data.month.toString().fixedStr,
                     data.day.toString().fixedStr
                 ),
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                backgroundColor = colorRed
+                backgroundColor = colorRed,
+                modifier = Modifier.padding(end = Dimen.smallPadding),
             )
 
             //计时
             if (data.month != 999) {
                 Row(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (comingSoon) {

@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -75,7 +74,7 @@ fun mainSP(): SharedPreferences =
 /**
  * 本地存储：版本、设置信息
  */
-fun settingSP(mContext: Context = MyApplication.context): SharedPreferences =
+fun settingSP(mContext: Context = context): SharedPreferences =
     mContext.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
@@ -170,7 +169,10 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //刷新页面
+    /**
+     * 刷新页面
+     * what：0切换数据，1动态色彩，2、3、4数据更新
+     */
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
@@ -184,9 +186,11 @@ class MainActivity : ComponentActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 finish()
                 startActivity(intent)
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                //振动提示
-                VibrateUtil(this).done()
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                //数据下载完成，振动提示
+                if (it.what > 1) {
+                    VibrateUtil(this).done()
+                }
             } catch (e: Exception) {
                 LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 ToastUtil.short(getString(R.string.change_failed))

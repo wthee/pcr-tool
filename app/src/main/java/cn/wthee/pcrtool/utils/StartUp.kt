@@ -12,7 +12,7 @@ import java.util.*
 class BuglyInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        CrashReport.initCrashReport(context, PrivateConfig.BUGLY_KEY, BuildConfig.DEBUG);
+        CrashReport.initCrashReport(context, PrivateConfig.BUGLY_KEY, BuildConfig.DEBUG)
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {

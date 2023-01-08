@@ -35,7 +35,7 @@ interface UnitDao {
      * @param pos1 站位范围开始
      * @param pos2 站位范围结束
      * @param atkType 0:全部，1：物理，2：魔法
-     * @param guild 角色所属公会名
+     * @param guildId 角色所属公会id
      * @param showAll 0：仅收藏，1：全部
      * @param r6 0：全部，1：仅六星解放
      * @param starIds 收藏的角色编号
@@ -64,9 +64,9 @@ interface UnitDao {
             COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time,
             (
                 CASE
-                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN $limitedIds THEN 1 
                     WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
-                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN $limitedIds) THEN 2
                     WHEN is_limited = 1 AND rarity = 1 THEN 3
                 END
             ) AS limit_type
@@ -183,9 +183,9 @@ interface UnitDao {
             COALESCE(unit_data.start_time, '2015/04/01') AS unit_start_time,
             (
                 CASE
-                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN $limitedIds THEN 1 
                     WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
-                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN $limitedIds) THEN 2
                     WHEN is_limited = 1 AND rarity = 1 THEN 3
                     
                 END
@@ -197,7 +197,7 @@ interface UnitDao {
             unit_data.unit_id = :unitId
         """
     )
-    suspend fun getCharacterBasicInfo(unitId: Int, exUnitIdList: List<Int>): CharacterInfo
+    suspend fun getCharacterBasicInfo(unitId: Int, exUnitIdList: List<Int>): CharacterInfo?
 
     /**
      * 获取角色详情基本资料
@@ -417,13 +417,6 @@ interface UnitDao {
     suspend fun getAllGuildMembers(): List<GuildAllMember>
 
     /**
-     * 获取新增公会成员信息
-     */
-    @SkipQueryVerification
-    @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
-    suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
-
-    /**
      * 获取无公会成员信息
      */
     @SkipQueryVerification
@@ -573,8 +566,8 @@ interface UnitDao {
             AND 1 = CASE
             WHEN  1 = :type AND b.is_limited = 0 AND b.rarity = 1 THEN 1 
             WHEN  2 = :type AND b.is_limited = 0 AND b.rarity = 2 THEN 1 
-            WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id NOT IN (:exUnitIdList)) OR a.unit_id IN ${limitedIds}) THEN 1
+            WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN $limitedIds THEN 1 
+            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id NOT IN (:exUnitIdList)) OR a.unit_id IN $limitedIds) THEN 1
             END
         ORDER BY b.start_time DESC
     """

@@ -79,7 +79,7 @@ fun ClanBattleDetail(
                 )
                 //图标
                 val urls = arrayListOf<String>()
-                clanBattleValue.unitIdList.forEach {
+                clanBattleValue.unitIds.split("-").subList(0, 5).forEach {
                     urls.add(
                         ImageResourceHelper.getInstance()
                             .getUrl(ImageResourceHelper.ICON_UNIT, it)

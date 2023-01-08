@@ -17,9 +17,4 @@ data class PvpHistoryData(
 ) {
     fun getDefIds() = defs.split("@")[1].intArrayList
 
-    fun getTime() = try {
-        date.substring(11, 19)
-    } catch (e: Exception) {
-        ""
-    }
 }

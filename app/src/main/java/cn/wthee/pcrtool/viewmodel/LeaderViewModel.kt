@@ -22,7 +22,7 @@ import javax.inject.Inject
 class LeaderViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
-    val day = 14
+    private val day = 14
     val filterLeader = MutableLiveData(FilterLeaderboard())
 
     private var leaderData: ResponseData<List<LeaderboardData>>? = null
@@ -51,7 +51,7 @@ class LeaderViewModel @Inject constructor(
                     //主线
                     val quest = (o1.questScore).compareTo(o2.questScore)
                     if (quest == 0) {
-                        (o1.towerScore + o1.pvpScore + o2.clanScore).compareTo(o2.towerScore + o2.pvpScore + o2.clanScore)
+                        (o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(o2.towerScore + o2.pvpScore + o2.clanScore)
                     } else {
                         quest
                     }

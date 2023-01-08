@@ -16,8 +16,8 @@ hilt {
 
 val composeVersion = "1.3.0"
 val composeCompilerVersion = "1.3.0"
-val appVersionCode = 352
-val appVersionName = "3.5.2"
+val appVersionCode = 353
+val appVersionName = "3.5.3"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -133,7 +133,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.4.0")
+    implementation("androidx.browser:browser:1.5.0-alpha02")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")

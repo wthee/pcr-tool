@@ -45,15 +45,3 @@ val String.region: Int
             else -> 4
         }
     }
-
-/**
- * 获取推文链接中公告source_id
- */
-fun String.getNewsSourceId(): String {
-    val url = if (this.last() == '/') {
-        this.substring(0, this.length - 1)
-    } else {
-        this
-    }
-    return url.substringAfterLast("/")
-}

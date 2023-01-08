@@ -48,7 +48,7 @@ interface EquipmentDao {
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
      * @param craft -1：全部，0：素材：1：装备
-     * @param type 装备类型
+     * @param colorType 装备品级
      * @param name 装备名称
      * @param showAll 0: 仅收藏，1：全部
      * @param starIds 收藏的装备编号

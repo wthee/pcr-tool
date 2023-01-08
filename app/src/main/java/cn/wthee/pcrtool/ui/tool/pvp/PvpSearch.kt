@@ -454,21 +454,21 @@ fun PvpIconItem(
  */
 @Composable
 fun PvpUnitIconLine(
-    modifier: Modifier = Modifier,
     ids: List<Int>,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit
 ) {
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
-
     Row(
-        modifier = modifier
+        modifier = Modifier
             .padding(mediumPadding)
-            .width(getItemWidth()),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ids.forEach {
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
                 IconCompose(
                     data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
                     size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize

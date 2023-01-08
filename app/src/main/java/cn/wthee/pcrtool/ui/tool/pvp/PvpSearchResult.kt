@@ -284,7 +284,6 @@ private fun PvpResultItem(
                 //队伍角色图标
                 //进攻
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     item.getIdList(0),
                     floatWindow
                 ) { }

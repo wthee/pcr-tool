@@ -144,6 +144,16 @@ fun MainSettings(
                 BrowserUtil.open(Constants.PREVIEW_URL)
             }
         )
+        //- 项目代码
+        val gitUrl = stringResource(id = R.string.github_project_url)
+        SettingLinkItem(
+            iconType = MainIconType.GITHUB_PROJECT,
+            title = stringResource(id = R.string.github),
+            summary = stringResource(id = R.string.tip_github),
+            onClick = {
+                BrowserUtil.open(gitUrl)
+            }
+        )
 
         //感谢友链
         Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
@@ -208,7 +218,7 @@ fun SettingSwitchCompose(
     showSummary: Boolean
 ) {
     val context = LocalContext.current
-    val sp =  settingSP(context)
+    val sp = settingSP(context)
 
     val title: String
     val iconType: MainIconType
@@ -246,19 +256,16 @@ fun SettingSwitchCompose(
     }
 
     //更新flag
-    when (type) {
-        SettingSwitchType.VIBRATE -> {
-            SideEffect {
+    SideEffect {
+        when (type) {
+            SettingSwitchType.VIBRATE -> {
                 vibrateOnFlag = checkedState.value
             }
-        }
-        SettingSwitchType.ANIMATION -> {
-            SideEffect {
+            SettingSwitchType.ANIMATION -> {
                 animOnFlag = checkedState.value
+
             }
-        }
-        SettingSwitchType.DYNAMIC_COLOR -> {
-            SideEffect {
+            SettingSwitchType.DYNAMIC_COLOR -> {
                 dynamicColorOnFlag = checkedState.value
             }
         }
@@ -376,9 +383,9 @@ private fun SwitchThumbIcon(checked: Boolean) {
 
 @CombinedPreviews
 @Composable
-private fun SettingPreview(){
+private fun SettingPreview() {
     PreviewLayout {
-        SettingSwitchCompose(SettingSwitchType.VIBRATE,true)
+        SettingSwitchCompose(SettingSwitchType.VIBRATE, true)
         SettingLinkItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),

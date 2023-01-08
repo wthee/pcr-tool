@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -282,11 +283,7 @@ private fun LeaderboardItem(
     } else {
         Color.Unspecified
     }
-
-    val tipText = stringResource(
-        id = R.string.unknown_character_type,
-        getRegionName(MainActivity.regionType)
-    )
+    val tipText = getLeaderUnknownTip()
 
     Row(
         modifier = Modifier
@@ -434,6 +431,22 @@ fun GradeText(
     }
 }
 
+/**
+ * 未实装提示
+ */
+@Composable
+fun getLeaderUnknownTip(): String {
+    val regionName = if (LocalInspectionMode.current) {
+        ""
+    } else {
+        getRegionName(MainActivity.regionType)
+
+    }
+    return stringResource(
+        id = R.string.unknown_character_type,
+        regionName
+    )
+}
 
 @CombinedPreviews
 @Composable

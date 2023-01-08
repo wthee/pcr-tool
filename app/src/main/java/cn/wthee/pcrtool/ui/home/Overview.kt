@@ -62,8 +62,9 @@ fun Overview(
     overviewViewModel: OverviewViewModel = hiltViewModel(),
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    SideEffect {
+    LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
+        noticeViewModel.check()
     }
 
     val coroutineScope = rememberCoroutineScope()

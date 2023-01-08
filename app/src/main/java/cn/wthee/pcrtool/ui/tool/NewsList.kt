@@ -152,7 +152,8 @@ fun NewsItem(
             .heightIn(min = Dimen.cardHeight),
             onClick = {
                 if (!placeholder) {
-                    toNewsDetail(news.id)
+//                    toNewsDetail(news.id)
+                    BrowserUtil.open(news.url)
                 }
             }
         ) {

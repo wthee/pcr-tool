@@ -308,11 +308,6 @@ enum class MainIconType(val icon: ImageVector) {
     HELP(Icons.Rounded.Help),
 
     /**
-     * 导入
-     */
-    IMPORT(Icons.Rounded.Download),
-
-    /**
      * 随机掉落地区
      */
     RANDOM_AREA(Icons.Rounded.TrackChanges),
@@ -328,9 +323,14 @@ enum class MainIconType(val icon: ImageVector) {
     ADD_CALENDAR(Icons.Rounded.EditCalendar),
 
     /**
+     * 项目详情
+     */
+    GITHUB_PROJECT(Icons.Rounded.DataObject),
+
+    /**
      * 发布详情
      */
-    GITHUB_RELEASE(Icons.Rounded.NewReleases),
+    COOLAPK_APP_STORE(Icons.Rounded.Verified),
 
     /**
      * 编辑

@@ -127,11 +127,6 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取卡池
      */
-    suspend fun getGacha(gachaId: String) = mockGachaRepository.getGachaByGachaId(gachaId)
-
-    /**
-     * 获取卡池
-     */
     suspend fun getGachaByPickUp(pickUpList: List<GachaUnitInfo>) =
         mockGachaRepository.getGachaByPickUpIds(MainActivity.regionType, pickUpList.getIdsStr())
 

@@ -20,17 +20,15 @@ fun <T> defaultSpring(): SpringSpec<T> {
 /**
  * 持续时间
  */
-fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 400, easing = FastOutSlowInEasing)
+fun <T> defaultTween(durationMillis: Int = 400): TweenSpec<T> {
+    return tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
 }
 
 /**
- * 持续时间：短
+ * 导航返回跳转动画
  */
-fun <T> fastTween(): TweenSpec<T> {
-    return tween(durationMillis = 100, easing = LinearEasing)
-}
-
+val myExit = fadeOut(animationSpec = defaultTween(180))
+val myPopExit = fadeOut(animationSpec = defaultTween(180))
 
 /**
  * 页面退出动画
@@ -65,15 +63,6 @@ val myShrinkIn = shrinkVertically(
     shrinkTowards = Alignment.Top,
     animationSpec = defaultSpring()
 ) + fadeOut(animationSpec = defaultSpring())
-
-/**
- * 页面进入动画：从右向左
- */
-val mySlideInRTL = slideInHorizontally(
-    initialOffsetX = { 30 },
-    animationSpec = defaultTween()
-)
-
 
 /**
  * 页面进入动画
@@ -130,29 +119,11 @@ fun ExpandAnimation(
 }
 
 /**
- * 从右向左滑动
- */
-@Composable
-fun SlideRTLAnimation(
-    visible: Boolean,
-    modifier: Modifier = Modifier,
-    content: @Composable AnimatedVisibilityScope.() -> Unit
-) {
-    AnimatedVisibility(
-        visible = visible,
-        modifier = modifier,
-        enter = if (animOnFlag) mySlideInRTL else noAnimIn(),
-        exit = if (animOnFlag) myFadeOut else noAnimOut(),
-        content = content,
-    )
-}
-
-/**
  * 减弱进入动画效果
  */
-private fun noAnimIn() = fadeIn(animationSpec = fastTween())
+private fun noAnimIn() = fadeIn(animationSpec = defaultTween(80))
 
 /**
  * 减弱退出动画效果
  */
-private fun noAnimOut() = fadeOut(animationSpec = fastTween())
+private fun noAnimOut() = fadeOut(animationSpec = defaultTween(80))

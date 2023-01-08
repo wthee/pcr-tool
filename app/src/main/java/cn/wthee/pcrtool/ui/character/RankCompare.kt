@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +35,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
  */
-@OptIn(ExperimentalMaterialApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun RankCompare(
     unitId: Int,

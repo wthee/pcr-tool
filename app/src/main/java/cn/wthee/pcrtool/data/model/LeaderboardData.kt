@@ -16,7 +16,7 @@ data class LeaderboardData(
     val pvpScore: Int = 0,
     val clan: String = "?",
     val clanScore: Int = 0,
-    val updateTime: String? = "",
+    val updateTime: String? = null,
     val wikiTime: String = "",
     val unitId: Int? = 0,
 )

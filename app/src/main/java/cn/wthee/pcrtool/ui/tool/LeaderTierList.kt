@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.*
@@ -235,10 +234,8 @@ private fun LeaderItem(
     } else {
         Color.Unspecified
     }
-    val tipText = stringResource(
-        id = R.string.unknown_character_type,
-        getRegionName(MainActivity.regionType)
-    )
+    val tipText = getLeaderUnknownTip()
+
 
     Row(
         modifier = Modifier

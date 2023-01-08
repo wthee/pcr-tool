@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -40,7 +39,7 @@ fun ChipGroup(
 /**
  * ChipItem
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     val context = LocalContext.current

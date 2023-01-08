@@ -177,11 +177,12 @@
     <string name="qq_group">反馈交流群</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
-    <string name="github">Github</string>
-    <string name="github_release_url">https://github.com/wthee/pcr-tool/releases/tag/v%s</string>
+    <string name="github">GitHub</string>
+    <string name="coolapk">酷安</string>
+    <string name="github_project_url">https://github.com/wthee/pcr-tool</string>
+    <string name="tip_github">项目源码地址</string>
     <string name="mode">MODE%d</string>
     <string name="clan_battle_y_m">%s 年 %s 月</string>
-    <string name="experimental">暂定</string>
     <string name="update">更新</string>
     <string name="system">系统</string>
     <string name="event">活动</string>
@@ -218,7 +219,6 @@
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
-    <string name="copy_text">复制</string>
     <string name="copy_all">全部复制</string>
     <string name="open_browser">在浏览器中打开</string>
     <string name="copy_qq_group">已复制QQ群号：%s</string>
@@ -279,7 +279,6 @@
     <string name="save_success">保存成功%s</string>
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
-    <string name="web_load_error">内容加载失败</string>
     <string name="db_diff">%s：%s\n更新内容：%s</string>
 
 
@@ -296,7 +295,6 @@
     <string name="delete_gacha">删除卡池</string>
     <string name="tip_delete_gacha">是否要删除卡池记录？</string>
     <string name="go_to_mock">去抽卡</string>
-    <string name="mock_count">已抽%d次</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
     <string name="last_gacha_date">已抽%d次，%s</string>
     <string name="gacha_used_gem">消耗宝石：1500 * %d = %d</string>
@@ -390,7 +388,6 @@
     <string name="skill_type_57">延时</string>
     <string name="skill_type_58">解除领域</string>
     <string name="skill_type_59">回复妨碍</string>
-    <string name="skill_type_60">标记赋予</string>
     <string name="skill_type_61">恐慌</string>
     <string name="skill_type_62">畏惧</string>
     <string name="skill_type_63">持续效果</string>
@@ -401,14 +398,12 @@
     <string name="skill_type_73">伤害护盾</string>
     <string name="skill_type_75">次数触发</string>
     <string name="skill_type_76">HP回复量减少</string>
-    <string name="skill_type_77">被动标记</string>
     <string name="skill_type_78">被击伤害上升</string>
     <string name="skill_type_79">行动伤害</string>
     <string name="skill_type_81">无效目标</string>
     <string name="skill_type_90">被动</string>
     <string name="skill_type_901_902">装备</string>
     <string name="skill_type_95">隐匿</string>
-    <string name="skill_type_99">范围加速</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -738,8 +733,6 @@
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
     <string name="leader_tier_d">T%d</string>
-    <string name="to_app_character_detail">详情</string>
-    <string name="to_web_character_detail">wiki</string>
 
     <!--测试用-->
     <string name="debug_short_text">SHORT-TEXT</string>

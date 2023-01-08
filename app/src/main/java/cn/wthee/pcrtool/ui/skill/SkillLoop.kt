@@ -116,7 +116,7 @@ private fun SkillLoopIconList(
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
-        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
+        spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount
     ) {
         loopList.forEach {
             val type: String
@@ -141,11 +141,7 @@ private fun SkillLoopIconList(
 
             Column(
                 modifier = Modifier
-                    .padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        bottom = Dimen.mediumPadding
-                    )
+                    .padding(bottom = Dimen.mediumPadding)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

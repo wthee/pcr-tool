@@ -151,9 +151,9 @@ fun NavGraph(
             navController = navController,
             startDestination = Navigation.HOME,
             enterTransition = { myFadeIn },
-            exitTransition = { myFadeOut },
+            exitTransition = { myExit },
             popEnterTransition = { myFadeIn },
-            popExitTransition = { myFadeOut }
+            popExitTransition = { myPopExit }
         ) {
 
             //首页

@@ -21,21 +21,4 @@ data class GuildAdditionalMember(
     @ColumnInfo(name = "member8") val member8: Int,
     @ColumnInfo(name = "member9") val member9: Int,
     @ColumnInfo(name = "member10") val member10: Int,
-) {
-    fun getMemberIds() = mutableListOf(
-        member1,
-        member2,
-        member3,
-        member4,
-        member5,
-        member6,
-        member7,
-        member8,
-        member9,
-        member10,
-    ).filter {
-        it != 0
-    }.map {
-        it * 100 + 1
-    }
-}
+)

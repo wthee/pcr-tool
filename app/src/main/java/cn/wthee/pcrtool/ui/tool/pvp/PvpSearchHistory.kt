@@ -121,7 +121,6 @@ private fun PvpHistoryItem(
             ) {
                 //防守
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getDefIds(),
                     floatWindow,
                     toCharacter

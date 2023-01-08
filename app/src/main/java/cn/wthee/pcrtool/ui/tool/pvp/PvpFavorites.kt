@@ -143,7 +143,6 @@ private fun PvpFavoriteItem(
                     modifier = Modifier.padding(start = mediumPadding)
                 )
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getAtkIds(),
                     floatWindow,
                     toCharacter
@@ -155,7 +154,6 @@ private fun PvpFavoriteItem(
                     modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
                 )
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getDefIds(),
                     floatWindow,
                     toCharacter

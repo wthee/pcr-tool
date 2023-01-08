@@ -214,7 +214,7 @@ data class Attr(
     /**
      * 属性对比差值
      */
-    fun compare(attr1: Attr): List<AttrValue> {
+    private fun compare(attr1: Attr): List<AttrValue> {
         val attrs = all()
         val attrs1 = attr1.all()
         val compareValue = arrayListOf<AttrValue>()

@@ -44,11 +44,6 @@ fun TopBarCompose(
         mutableStateOf(false)
     }
 
-    //检查应用更新
-    LaunchedEffect(null) {
-        noticeViewModel.check()
-    }
-
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -117,7 +112,6 @@ fun TopBarCompose(
 @Composable
 private fun AppUpdateContent(appNotice: AppNotice) {
     val context = LocalContext.current
-    val releaseUrl = stringResource(id = R.string.github_release_url, appNotice.title)
 
     val mark0 = arrayListOf<ColorTextIndex>()
     appNotice.message.forEachIndexed { index, c ->
@@ -160,12 +154,12 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 ) {
                     joinQQGroup(context)
                 }
-                //查看 github release 详情
+                //酷安
                 IconTextButton(
-                    icon = MainIconType.GITHUB_RELEASE,
-                    text = stringResource(id = R.string.github),
+                    icon = MainIconType.COOLAPK_APP_STORE,
+                    text = stringResource(id = R.string.coolapk),
                 ) {
-                    BrowserUtil.open(releaseUrl)
+                    BrowserUtil.open(appNotice.url)
                 }
             }
 

@@ -882,7 +882,7 @@ data class SkillActionDetail(
                             }
                             720 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_unit_exist,
+                                    R.string.skill_action_sp_if_unit_exist_not,
                                     getTarget(),
                                     actionDetail3 % 10
                                 )
@@ -896,7 +896,7 @@ data class SkillActionDetail(
                                 )
                             }
                             1000 -> {
-                                getString(R.string.skill_action_sp_if_kill, actionDetail3 % 10)
+                                getString(R.string.skill_action_sp_if_kill_not, actionDetail3 % 10)
                             }
                             1001 -> {
                                 getString(
@@ -1513,11 +1513,11 @@ data class SkillActionDetail(
             if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 * level).int}$percent] <{${index + 1}}$v2 * $skillLevelText>"
             } else if (v1 != 0.0 && v2 == 0.0) {
-                "{${index}}[${v1}$percent]"
+                "{${index}}[${v1.toBigDecimal().stripTrailingZeros().toPlainString()}$percent]"
             } else if (v1 != 0.0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText>"
             } else {
-                "{$index}0$percent"
+                "{$index}[0]$percent"
             }
         } else {
             if (v1 == 0.0 && v2 != 0.0) {
@@ -1527,7 +1527,7 @@ data class SkillActionDetail(
             } else if (v2 != 0.0) {
                 "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + {${index + 2}}$v3 * $skillAtkStrText>"
             } else {
-                "{$index}0$percent"
+                "{$index}[0]$percent"
             }
         }
         return if (hideIndex) {

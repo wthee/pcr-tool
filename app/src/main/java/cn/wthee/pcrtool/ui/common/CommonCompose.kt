@@ -733,6 +733,14 @@ fun BottomSearchBar(
                     scrollState.scrollToItem(0)
                 }
             }
+            //重置
+            if (keywordState.value != "") {
+                FabCompose(
+                    iconType = MainIconType.RESET
+                ) {
+                    keywordState.value = ""
+                }
+            }
             //搜索
             FabCompose(
                 iconType = MainIconType.SEARCH,
@@ -744,59 +752,56 @@ fun BottomSearchBar(
         }
     }
 
-
     //focusRequester
-    Box(
+    OutlinedTextField(
         modifier = modifier
+            .imePadding()
             .background(
                 color = MaterialTheme.colorScheme.background
             )
-            .imePadding()
-    ) {
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(if (isImeVisible) 1f else 0f)
-                .padding(Dimen.smallPadding)
-                .focusRequester(focusRequester)
-                .alpha(if (isImeVisible) 1f else 0f),
-            value = keywordInputState.value,
-            shape = MaterialTheme.shapes.medium,
-            onValueChange = { keywordInputState.value = it.deleteSpace },
-            textStyle = MaterialTheme.typography.labelLarge,
-            leadingIcon = {
-                IconCompose(
-                    data = leadingIcon,
-                    size = Dimen.fabIconSize
-                )
-            },
-            trailingIcon = {
-                IconCompose(
-                    data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
-                ) {
-                    keyboardController?.hide()
-                    keywordState.value = keywordInputState.value
-                    focusRequester.freeFocus()
-                }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                    keywordState.value = keywordInputState.value
-                    focusRequester.freeFocus()
-                }
-            ),
-            label = {
-                Text(
-                    text = stringResource(id = labelStringId),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            maxLines = 1,
-            singleLine = true,
-        )
-    }
+            .fillMaxWidth()
+            .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
+            .padding(Dimen.smallPadding)
+            .focusRequester(focusRequester)
+            .alpha(if (isImeVisible) 1f else 0f),
+        value = keywordInputState.value,
+        shape = MaterialTheme.shapes.medium,
+        onValueChange = { keywordInputState.value = it.deleteSpace },
+        textStyle = MaterialTheme.typography.labelLarge,
+        leadingIcon = {
+            IconCompose(
+                data = leadingIcon,
+                size = Dimen.fabIconSize
+            )
+        },
+        trailingIcon = {
+            IconCompose(
+                data = MainIconType.SEARCH,
+                size = Dimen.fabIconSize
+            ) {
+                keyboardController?.hide()
+                keywordState.value = keywordInputState.value
+                focusRequester.freeFocus()
+            }
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                keywordState.value = keywordInputState.value
+                focusRequester.freeFocus()
+            }
+        ),
+        label = {
+            Text(
+                text = stringResource(id = labelStringId),
+                style = MaterialTheme.typography.labelLarge
+            )
+        },
+        maxLines = 1,
+        singleLine = true,
+    )
+
 }
 
 /**
@@ -963,6 +968,7 @@ fun EventTitle(
     //日期
     MainTitleText(
         text = sd.substring(0, 10),
+        modifier = Modifier.padding(end = Dimen.smallPadding),
         backgroundColor = color
     )
     //天数，预览时不显示
@@ -970,7 +976,7 @@ fun EventTitle(
         val days = ed.days(sd)
         MainTitleText(
             text = days,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier.padding(end = Dimen.smallPadding),
             backgroundColor = color
         )
     }
@@ -990,7 +996,6 @@ fun EventTitleCountdown(
     comingSoon: Boolean
 ) {
     Row(
-        modifier = Modifier.padding(start = Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (inProgress) {

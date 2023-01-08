@@ -105,14 +105,6 @@ private fun MockGachaHistoryItem(
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)
             )
-            //抽取次数
-            if (resultCount > 0) {
-                MainTitleText(
-                    text = stringResource(id = R.string.mock_count, resultCount),
-                    backgroundColor = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
             //up个数
             if (upCount > 0) {
                 MainTitleText(
@@ -180,7 +172,8 @@ private fun MockGachaHistoryItem(
                     //删除操作
                     IconTextButton(
                         icon = MainIconType.DELETE,
-                        text = stringResource(R.string.delete_gacha)
+                        text = stringResource(R.string.delete_gacha),
+                        contentColor = colorRed
                     ) {
                         openDialog.value = true
                     }
@@ -188,6 +181,7 @@ private fun MockGachaHistoryItem(
                     CaptionText(
                         text = stringResource(
                             id = R.string.last_gacha_date,
+                            resultCount,
                             gachaData.lastUpdateTime
                         ),
                         modifier = Modifier.fillMaxWidth()

@@ -16,13 +16,14 @@ object BrowserUtil {
     fun open(url: String) {
         val mContext = MyApplication.context
         try {
-            val builder = CustomTabsIntent.Builder().apply {
-                setStartAnimations(mContext, R.anim.fade_in, R.anim.fade_out)
-                setExitAnimations(mContext, R.anim.fade_out, R.anim.fade_in)
-                setShowTitle(true)
-            }
+            val builder = CustomTabsIntent.Builder()
+                .setStartAnimations(mContext, R.anim.slide_in, android.R.anim.fade_out)
+                .setExitAnimations(mContext, android.R.anim.fade_in, R.anim.slide_out)
+                .setInitialActivityHeightPx(500, CustomTabsIntent.ACTIVITY_HEIGHT_ADJUSTABLE)
+                .setShowTitle(true)
+
             val customTabsIntent = builder.build()
-            customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             customTabsIntent.launchUrl(mContext, Uri.parse(url))
         } catch (e: Exception) {
             val intent = Intent()
