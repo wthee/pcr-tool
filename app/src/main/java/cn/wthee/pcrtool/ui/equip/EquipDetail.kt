@@ -68,10 +68,10 @@ private fun EquipDetail(
     ) {
 
         Column {
-            if (equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
+            if (equipId != UNKNOWN_EQUIP_ID) {
                 if (BuildConfig.DEBUG) {
                     Subtitle1(
-                        text = equipMaxData.equipmentId.toString(),
+                        text = equipId.toString(),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
                 }

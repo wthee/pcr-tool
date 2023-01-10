@@ -240,7 +240,7 @@ private fun CalendarEventLayout(
                     CalendarEventItem(it)
                 }
                 birthdayList.forEach {
-                    BirthdayItem(it, actions.toCharacterDetail)
+                    BirthdayItem(it, spanCount, actions.toCharacterDetail)
                 }
             }
         }

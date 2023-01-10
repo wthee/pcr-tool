@@ -17,9 +17,9 @@ object BrowserUtil {
         val mContext = MyApplication.context
         try {
             val builder = CustomTabsIntent.Builder()
-                .setStartAnimations(mContext, R.anim.slide_in, android.R.anim.fade_out)
-                .setExitAnimations(mContext, android.R.anim.fade_in, R.anim.slide_out)
-                .setInitialActivityHeightPx(500, CustomTabsIntent.ACTIVITY_HEIGHT_ADJUSTABLE)
+//                .setStartAnimations(mContext, R.anim.slide_in, android.R.anim.fade_out)
+//                .setExitAnimations(mContext, android.R.anim.fade_in, R.anim.slide_out)
+//                .setInitialActivityHeightPx(500, CustomTabsIntent.ACTIVITY_HEIGHT_ADJUSTABLE)
                 .setShowTitle(true)
 
             val customTabsIntent = builder.build()

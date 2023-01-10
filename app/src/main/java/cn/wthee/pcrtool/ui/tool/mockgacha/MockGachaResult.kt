@@ -198,10 +198,11 @@ private fun MockGachaResultRecordIconLine(
     icons: List<GachaUnitInfo>,
     pickUpIndex: ArrayList<Int> = arrayListOf()
 ) {
+
     Row(
-        modifier = modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .width(getItemWidth()),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimen.mediumPadding),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         icons.forEachIndexed { index, gachaUnitInfo ->
@@ -239,11 +240,11 @@ private fun MockGachaResultRecordIconLine(
 
 @CombinedPreviews
 @Composable
-private fun MockGachaResultRecordPreview(){
+private fun MockGachaResultRecordPreview() {
     PreviewLayout {
         MockGachaResultRecordItem(
             1,
-            arrayListOf(1,2),
+            arrayListOf(1, 2),
             MockGachaResultRecordData(
                 unitIds = "1-2-3-4-5-5-4-3-2-1",
                 unitRaritys = "1-2-3-1-2-3-1-2-3-1",

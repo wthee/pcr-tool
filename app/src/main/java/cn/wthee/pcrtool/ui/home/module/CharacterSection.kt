@@ -1,4 +1,5 @@
 package cn.wthee.pcrtool.ui.home.module
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -72,14 +73,22 @@ fun CharacterSection(
                     itemSpacing = Dimen.mediumPadding
                 ) { index ->
                     val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
-                    CharacterImageItem(unitId, actions.toCharacterDetail)
+                    CharacterImageItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        unitId = unitId,
+                        actions.toCharacterDetail
+                    )
                 }
             } else {
                 //屏幕较宽时
                 LazyRow {
                     items(characterList) {
                         Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
-                            CharacterImageItem(it.id, actions.toCharacterDetail)
+                            CharacterImageItem(
+                                modifier = Modifier.width(getItemWidth()),
+                                unitId = it.id,
+                                actions.toCharacterDetail
+                            )
                         }
                     }
                     item {
@@ -97,11 +106,12 @@ fun CharacterSection(
  */
 @Composable
 private fun CharacterImageItem(
+    modifier: Modifier = Modifier,
     unitId: Int,
     toCharacterDetail: (Int) -> Unit
 ) {
     MainCard(
-        modifier = Modifier.width(getItemWidth()),
+        modifier = modifier,
         onClick = {
             toCharacterDetail(unitId)
         }
