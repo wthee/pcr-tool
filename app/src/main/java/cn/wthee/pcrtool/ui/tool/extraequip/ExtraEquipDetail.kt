@@ -240,7 +240,7 @@ fun ExtraEquipUnitList(
         .collectAsState(initial = arrayListOf()).value
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         state = rememberLazyListState()
     ) {
         //标题
