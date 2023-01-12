@@ -66,7 +66,7 @@
     <string name="color_off">使用默认主题</string>
     <string name="thanks">感谢</string>
     <string name="data_from">Unity Texture Toolkit</string>
-    <string name="data_from_hint">资源获取工具 by esterTion</string>
+    <string name="data_from_hint">资源获取工具</string>
     <string name="data_from_url">https://github.com/esterTion/unity-texture-toolkit</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="shizuru_note_tip">感谢大佬的开源项目</string>
@@ -162,6 +162,7 @@
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其他</string>
+    <string name="about">关于</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
@@ -179,8 +180,10 @@
     <string name="to_join_qq_group">加入QQ群</string>
     <string name="github">GitHub</string>
     <string name="coolapk">酷安</string>
+    <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
+    <string name="tip_coolapk">应用唯一上架地址</string>
     <string name="github_project_url">https://github.com/wthee/pcr-tool</string>
-    <string name="tip_github">项目源码地址</string>
+    <string name="tip_github">项目开源代码</string>
     <string name="mode">MODE%d</string>
     <string name="clan_battle_y_m">%s 年 %s 月</string>
     <string name="update">更新</string>

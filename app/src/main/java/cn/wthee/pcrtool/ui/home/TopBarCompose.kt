@@ -154,13 +154,6 @@ private fun AppUpdateContent(appNotice: AppNotice) {
                 ) {
                     joinQQGroup(context)
                 }
-                //酷安
-                IconTextButton(
-                    icon = MainIconType.COOLAPK_APP_STORE,
-                    text = stringResource(id = R.string.coolapk),
-                ) {
-                    BrowserUtil.open(appNotice.url)
-                }
             }
 
             //日期

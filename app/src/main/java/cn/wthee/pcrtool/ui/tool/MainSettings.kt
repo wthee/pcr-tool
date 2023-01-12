@@ -121,7 +121,7 @@ fun MainSettings(
             modifier = Modifier.padding(Dimen.largePadding)
         )
         //- 加入反馈群
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),
@@ -136,7 +136,7 @@ fun MainSettings(
             IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
         }
         //- 模型预览
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.PREVIEW_UNIT_SPINE,
             title = stringResource(id = R.string.title_spine),
             summary = stringResource(id = R.string.spine_tip),
@@ -144,9 +144,26 @@ fun MainSettings(
                 BrowserUtil.open(Constants.PREVIEW_URL)
             }
         )
+
+        //关于
+        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
+        MainText(
+            text = stringResource(id = R.string.about),
+            modifier = Modifier.padding(Dimen.largePadding)
+        )
+        //- 酷安
+        val appUrl = stringResource(id = R.string.coolapk_url)
+        SettingCommonItem(
+            iconType = MainIconType.COOLAPK_APP_STORE,
+            title = stringResource(id = R.string.coolapk),
+            summary = stringResource(id = R.string.tip_coolapk),
+            onClick = {
+                BrowserUtil.open(appUrl)
+            }
+        )
         //- 项目代码
         val gitUrl = stringResource(id = R.string.github_project_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.GITHUB_PROJECT,
             title = stringResource(id = R.string.github),
             summary = stringResource(id = R.string.tip_github),
@@ -163,7 +180,7 @@ fun MainSettings(
         )
         //- 干炸里脊资源
         val dataFromUrl = stringResource(id = R.string.data_from_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.DATA_SOURCE,
             title = stringResource(id = R.string.data_from),
             summary = stringResource(id = R.string.data_from_hint),
@@ -173,7 +190,7 @@ fun MainSettings(
         )
         //- 静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.NOTE,
             title = stringResource(id = R.string.shizuru_note),
             summary = stringResource(id = R.string.shizuru_note_tip),
@@ -183,7 +200,7 @@ fun MainSettings(
         )
         //- 竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.PVP_SEARCH,
             title = stringResource(id = R.string.pcrdfans),
             summary = stringResource(id = R.string.pcrdfans_tip),
@@ -193,7 +210,7 @@ fun MainSettings(
         )
         //- 排行
         val leaderUrl = stringResource(id = R.string.leader_source_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.LEADER,
             title = stringResource(id = R.string.leader_source),
             summary = stringResource(id = R.string.leader_tip),
@@ -275,7 +292,7 @@ fun SettingSwitchCompose(
     val summary = if (checkedState.value) summaryOn else summaryOff
 
 
-    SettingLinkItem(
+    SettingCommonItem(
         iconType = iconType,
         title = title,
         summary = summary,
@@ -317,7 +334,7 @@ fun SettingSwitchCompose(
  * @param extraContent  右侧额外内容
  */
 @Composable
-fun SettingLinkItem(
+fun SettingCommonItem(
     iconType: Any,
     iconSize: Dp = Dimen.settingIconSize,
     title: String,
@@ -386,7 +403,7 @@ private fun SwitchThumbIcon(checked: Boolean) {
 private fun SettingPreview() {
     PreviewLayout {
         SettingSwitchCompose(SettingSwitchType.VIBRATE, true)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),
