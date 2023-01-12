@@ -20,7 +20,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -49,10 +51,12 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CircularProgressCompose
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.ui.tool.SettingLinkItem
+import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
@@ -357,7 +361,7 @@ private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hi
             //应用信息
             DropdownMenuItem(
                 text = {
-                    SettingLinkItem(
+                    SettingCommonItem(
                         iconType = R.drawable.ic_logo_large,
                         iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
