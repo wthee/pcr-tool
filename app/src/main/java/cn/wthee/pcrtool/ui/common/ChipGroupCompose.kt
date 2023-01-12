@@ -36,8 +36,41 @@ fun ChipGroup(
     }
 }
 
+
 /**
- * ChipItem
+ * SuggestionChipGroup 展示用
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SuggestionChipGroup(
+    items: List<String>,
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit
+) {
+    val context = LocalContext.current
+
+    FlowRow(modifier = modifier) {
+        items.forEach {
+            SuggestionChip(
+                onClick = {
+                    VibrateUtil(context).single()
+                    onClick(it)
+                },
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                label = {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            )
+        }
+    }
+}
+
+/**
+ * 可选中的 ChipItem
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +112,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         }
     )
 }
+
 
 @CombinedPreviews
 @Composable
