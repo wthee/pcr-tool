@@ -6,7 +6,7 @@ import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-//上传日志 fixme Crash 上报
+//上传日志
 object LogReportUtil {
 
     fun upload(e: Exception, msg: String) {
@@ -14,7 +14,9 @@ object LogReportUtil {
             if (BuildConfig.DEBUG) {
                 Log.e("LogReportUtil", msg + e.message)
             }
-            CrashReport.postCatchedException(e)
+            val exception = Exception(msg + e.message)
+            exception.stackTrace = e.stackTrace
+            CrashReport.postCatchedException(exception)
         }
     }
 }

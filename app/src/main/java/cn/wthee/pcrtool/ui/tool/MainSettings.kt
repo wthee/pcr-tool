@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -48,6 +46,7 @@ fun MainSettings(
     val context = LocalContext.current
     val region = MainActivity.regionType
 
+    //调整主按钮图表
     LaunchedEffect(navSheetState.currentValue) {
         if (navSheetState.isVisible) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -68,6 +67,18 @@ fun MainSettings(
         localVersion.split("/")[0]
     } else {
         ""
+    }
+
+    //缓存删除确认弹窗
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
+    //图片缓存大小
+    val imageCacheSize = remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(openDialog.value) {
+        imageCacheSize.value = FileUtil.getCoilDirSize(context)
     }
 
 
@@ -112,6 +123,21 @@ fun MainSettings(
         //- 动态色彩，仅 Android 12 及以上可用
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
             SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
+        }
+        //- 清楚图片缓存
+        SettingCommonItem(
+            iconType = MainIconType.DELETE,
+            title = stringResource(id = R.string.clean_image_cache),
+            summary = stringResource(id = R.string.tip_clean_image_cache),
+            onClick = {
+                //清楚缓存弹窗
+                openDialog.value = true
+            }
+        ) {
+            Subtitle2(
+                text = imageCacheSize.value,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
 
         //其它相关
@@ -219,6 +245,38 @@ fun MainSettings(
             }
         )
         CommonSpacer()
+    }
+
+    if (openDialog.value) {
+        AlertDialog(
+            title = {
+                MainContentText(
+                    text = stringResource(id = R.string.confirm_clean_image_cache),
+                    textAlign = TextAlign.Start,
+                    selectable = true
+                )
+            },
+            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            shape = MaterialTheme.shapes.medium,
+            confirmButton = {
+                //删除缓存
+                MainButton(text = stringResource(R.string.confirm)) {
+                    FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
+                    openDialog.value = false
+                }
+            },
+            dismissButton = {
+                //取消
+                SubButton(
+                    text = stringResource(id = R.string.cancel)
+                ) {
+                    openDialog.value = false
+                }
+            })
     }
 
 }

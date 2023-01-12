@@ -15,6 +15,7 @@ object Constants {
     const val SQLITE_VERSION = 351
 
     //本地储存
+    const val COIL_DIR = "coil_image_cache"
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION_CN = "database_version_cn"
     const val SP_DATABASE_VERSION_TW = "database_version_tw"

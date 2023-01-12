@@ -74,7 +74,7 @@ enum class ToolMenuType(val id: Int) {
     PVP_SEARCH(209),
     LEADER(210),
     TWEET(211),
-    COMIC(212),
+//    COMIC(212),
     ALL_SKILL(213),
     ALL_EQUIP(214),
     MOCK_GACHA(215),

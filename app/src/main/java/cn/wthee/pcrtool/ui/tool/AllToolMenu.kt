@@ -81,7 +81,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     //其它
     val otherList = arrayListOf<ToolMenuData>()
     otherList.addItem(ToolMenuType.TWEET)
-    otherList.addItem(ToolMenuType.COMIC)
+//    otherList.addItem(ToolMenuType.COMIC)
     otherList.addItem(ToolMenuType.MOCK_GACHA)
     if (BuildConfig.DEBUG) {
         otherList.addItem(ToolMenuType.ALL_SKILL)

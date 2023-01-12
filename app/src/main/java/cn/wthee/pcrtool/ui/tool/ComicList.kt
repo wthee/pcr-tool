@@ -57,7 +57,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
     val sheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    if (!sheetState.isVisible && !sheetState.isAnimationRunning) {
+    if (!sheetState.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }

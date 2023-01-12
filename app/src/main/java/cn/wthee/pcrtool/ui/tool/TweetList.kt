@@ -85,7 +85,7 @@ fun TweetList(
             }
         }
 
-        //搜索栏
+        //搜索栏 fixme 关键词从服务器查询获取
         BottomSearchBar(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
@@ -93,7 +93,12 @@ fun TweetList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.TWEET,
-            scrollState = scrollState
+            scrollState = scrollState,
+            defaultKeywordList = arrayListOf(
+                "【4コマ更新】",
+                "【★6登場情報】",
+                "「キャラ専用装備」を追加しました",
+            )
         )
     }
 }
@@ -107,7 +112,7 @@ private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
     val placeholder = data.id == 0
     val photos = data.getImageList()
     var comicId = ""
-    var url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
+    var url = if (data.tweet.contains("【4コマ更新】")) {
         // 四格漫画
         comicId = getComicId(data.tweet)
         COMIC4 + comicId + PNG
@@ -208,14 +213,14 @@ private fun TweetButton(
         ) {
             BrowserUtil.open(url)
         }
-        url.contains("comic") -> TweetButtonData(
-            stringResource(id = R.string.read_comic), MainIconType.COMIC
-        ) {
-            //跳转漫画
-            if (comicId != "") {
-                toComic(comicId.toInt())
-            }
-        }
+//        url.contains("comic") -> TweetButtonData(
+//            stringResource(id = R.string.read_comic), MainIconType.COMIC
+//        ) {
+//            //跳转漫画
+//            if (comicId != "") {
+//                toComic(comicId.toInt())
+//            }
+//        }
         else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
             BrowserUtil.open(url)
         }

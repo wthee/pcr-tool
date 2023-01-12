@@ -67,7 +67,7 @@ fun ExtraEquipList(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()

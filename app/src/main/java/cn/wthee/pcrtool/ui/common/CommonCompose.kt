@@ -15,8 +15,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -696,6 +699,10 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
 
 /**
  * 底部搜索栏
+ *
+ * @param keywordState 关键词，用于查询
+ * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
+ * @param defaultKeywordList 默认关键词列表
  */
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
@@ -708,7 +715,8 @@ fun BottomSearchBar(
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState
+    scrollState: LazyListState,
+    defaultKeywordList: List<String>? = null
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -739,6 +747,7 @@ fun BottomSearchBar(
                     iconType = MainIconType.RESET
                 ) {
                     keywordState.value = ""
+                    keywordInputState.value = ""
                 }
             }
             //搜索
@@ -752,55 +761,86 @@ fun BottomSearchBar(
         }
     }
 
-    //focusRequester
-    OutlinedTextField(
+    Column(
         modifier = modifier
+            .padding(Dimen.mediumPadding)
             .imePadding()
-            .background(
-                color = MaterialTheme.colorScheme.background
-            )
-            .fillMaxWidth()
-            .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
-            .padding(Dimen.smallPadding)
-            .focusRequester(focusRequester)
-            .alpha(if (isImeVisible) 1f else 0f),
-        value = keywordInputState.value,
-        shape = MaterialTheme.shapes.medium,
-        onValueChange = { keywordInputState.value = it.deleteSpace },
-        textStyle = MaterialTheme.typography.labelLarge,
-        leadingIcon = {
-            IconCompose(
-                data = leadingIcon,
-                size = Dimen.fabIconSize
-            )
-        },
-        trailingIcon = {
-            IconCompose(
-                data = MainIconType.SEARCH,
-                size = Dimen.fabIconSize
+    ) {
+        //关键词列表，搜索时显示
+        ExpandAnimation(
+            visible = isImeVisible && defaultKeywordList?.isNotEmpty() == true,
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+        ) {
+            MainCard(
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding)
             ) {
-                keyboardController?.hide()
-                keywordState.value = keywordInputState.value
-                focusRequester.freeFocus()
+                Column(
+                    modifier = Modifier.padding(Dimen.mediumPadding)
+                ) {
+                    MainText(text = stringResource(id = R.string.search_suggestion))
+
+                    SuggestionChipGroup(
+                        defaultKeywordList ?: arrayListOf(),
+                        modifier = Modifier.padding(top = Dimen.largePadding)
+                    ) { keyword ->
+                        keywordInputState.value = keyword
+                        keywordState.value = keyword
+                        keyboardController?.hide()
+                        focusRequester.freeFocus()
+                    }
+                }
+
             }
-        },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
-                keywordState.value = keywordInputState.value
-                focusRequester.freeFocus()
-            }
-        ),
-        label = {
-            Text(
-                text = stringResource(id = labelStringId),
-                style = MaterialTheme.typography.labelLarge
+        }
+
+        //focusRequester
+        MainCard {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
+                    .padding(Dimen.smallPadding)
+                    .focusRequester(focusRequester)
+                    .alpha(if (isImeVisible) 1f else 0f),
+                value = keywordInputState.value,
+                shape = MaterialTheme.shapes.medium,
+                onValueChange = { keywordInputState.value = it.deleteSpace },
+                textStyle = MaterialTheme.typography.labelLarge,
+                leadingIcon = {
+                    IconCompose(
+                        data = leadingIcon,
+                        size = Dimen.fabIconSize
+                    )
+                },
+                trailingIcon = {
+                    IconCompose(
+                        data = MainIconType.SEARCH,
+                        size = Dimen.fabIconSize
+                    ) {
+                        keyboardController?.hide()
+                        keywordState.value = keywordInputState.value
+                        focusRequester.freeFocus()
+                    }
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        keywordState.value = keywordInputState.value
+                        focusRequester.freeFocus()
+                    }
+                ),
+                label = {
+                    Text(
+                        text = stringResource(id = labelStringId),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                },
+                maxLines = 1,
+                singleLine = true,
             )
-        },
-        maxLines = 1,
-        singleLine = true,
-    )
+        }
+    }
 
 }
 

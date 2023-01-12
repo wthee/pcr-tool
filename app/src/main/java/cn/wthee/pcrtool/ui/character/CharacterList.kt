@@ -75,7 +75,7 @@ fun CharacterList(
     )
 
     //关闭时监听
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)

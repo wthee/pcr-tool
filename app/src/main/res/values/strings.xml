@@ -178,6 +178,9 @@
     <string name="qq_group">反馈交流群</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
+    <string name="clean_image_cache">清除图片缓存</string>
+    <string name="tip_clean_image_cache">加载缓存图片，可减少网络数据使用</string>
+    <string name="confirm_clean_image_cache">是否要清除图片缓存？</string>
     <string name="github">GitHub</string>
     <string name="coolapk">酷安</string>
     <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
@@ -195,6 +198,7 @@
     <string name="normal_re">复刻常驻</string>
     <string name="fes">公主庆典</string>
     <string name="anv">周年</string>
+    <string name="search_suggestion">快捷输入</string>
 
 
     <!--竞技场查询-->

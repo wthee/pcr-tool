@@ -55,7 +55,7 @@ object Dimen {
 
     val border = 3.dp
 
-    val fabTextMaxWidth = 120.dp
+    val fabTextMaxWidth = 100.dp
 
     val minSheetHeight = 300.dp
 
