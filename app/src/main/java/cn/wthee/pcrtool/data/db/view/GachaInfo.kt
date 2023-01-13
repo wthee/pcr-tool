@@ -62,7 +62,7 @@ data class GachaInfo(
     /**
      * 是否包含限定  国服环奈
      * 调整时需注意同步调整
-     * @see cn.wthee.pcrtool.data.db.dao.UnitDao
+     * @see [cn.wthee.pcrtool.data.db.dao.UnitDao]
      */
     private fun isLimited(): Boolean {
         val limitIdsCn = arrayListOf(

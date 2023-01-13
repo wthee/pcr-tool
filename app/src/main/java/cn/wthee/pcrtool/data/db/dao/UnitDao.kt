@@ -12,7 +12,7 @@ const val maxUnitId = 200000
 /**
  * 国服环奈
  * 调整时需注意同步调整
- * @see cn.wthee.pcrtool.data.db.view.GachaInfo
+ * @see [cn.wthee.pcrtool.data.db.view.GachaInfo]
  */
 const val limitedIds = """
     (
