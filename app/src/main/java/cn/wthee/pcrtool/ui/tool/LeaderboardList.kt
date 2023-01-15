@@ -301,7 +301,7 @@ private fun LeaderboardItem(
                     ImageResourceHelper.getInstance()
                         .getMaxIconUrl(leader.unitId!!)
                 } else {
-                    leader.icon
+                    R.drawable.unknown_item
                 }
             ) {
                 if (!unknown) {
@@ -351,8 +351,7 @@ private fun LeaderboardItem(
                     )
 
                     CaptionText(
-                        text = leader.updateTime?.substring(0, 11)
-                            ?: leader.wikiTime.fixedLeaderDate,
+                        text = leader.updateTime?.substring(0, 11) ?: "",
                         modifier = Modifier.fillMaxWidth(),
                         color = textColor
                     )
@@ -454,7 +453,6 @@ private fun LeaderboardItemPreview() {
     PreviewLayout {
         LeaderboardItem(
             LeaderboardData(
-                wikiTime = "2020/01/01",
                 quest = "SS+",
                 pvp = "S",
                 clan = "A"

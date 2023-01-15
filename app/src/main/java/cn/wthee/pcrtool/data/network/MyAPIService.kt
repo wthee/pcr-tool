@@ -65,7 +65,7 @@ interface MyAPIService {
     /**
      * 排行信息
      */
-    @POST("leaders/v4")
+    @POST("leaders/score")
     suspend fun getLeader(): ResponseData<List<LeaderboardData>>
 
     /**

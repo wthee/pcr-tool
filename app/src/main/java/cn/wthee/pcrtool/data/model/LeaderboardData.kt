@@ -5,7 +5,7 @@ package cn.wthee.pcrtool.data.model
  * 排行详情
  */
 data class LeaderboardData(
-    val icon: String = "",
+    val unitId: Int? = 0,
     val name: String = "???",
     val url: String = "",
     val quest: String = "?",
@@ -17,6 +17,4 @@ data class LeaderboardData(
     val clan: String = "?",
     val clanScore: Int = 0,
     val updateTime: String? = null,
-    val wikiTime: String = "",
-    val unitId: Int? = 0,
 )
