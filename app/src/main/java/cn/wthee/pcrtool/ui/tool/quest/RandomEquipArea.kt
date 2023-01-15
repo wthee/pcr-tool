@@ -83,7 +83,7 @@ fun RandomEquipArea(
 
 /**
  * 随机掉落区域列表
- * @see 预览参考QuestList.AreaItem()
+ * @see [cn.wthee.pcrtool.ui.tool.quest.AreaItem]
  */
 @Composable
 fun RandomDropAreaList(
