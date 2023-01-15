@@ -208,6 +208,11 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
+     * 接口请求一场
+     */
+    REQUEST_ERROR(Icons.Rounded.ErrorOutline),
+
+    /**
      * 反馈交流群
      */
     SUPPORT(Icons.Rounded.ContactSupport),
