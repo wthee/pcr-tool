@@ -55,7 +55,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     dataList.addItem(ToolMenuType.EQUIP)
     dataList.addItem(ToolMenuType.GUILD)
     dataList.addItem(ToolMenuType.CLAN)
-    dataList.addItem(ToolMenuType.RANDOM_AREA)
     dataList.addItem(ToolMenuType.EXTRA_EQUIP)
     dataList.addItem(ToolMenuType.TRAVEL_AREA)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
@@ -63,8 +62,10 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     //查询
     val searchList = arrayListOf<ToolMenuData>()
     searchList.addItem(ToolMenuType.PVP_SEARCH)
+    searchList.addItem(ToolMenuType.NEWS)
     searchList.addItem(ToolMenuType.LEADER)
     searchList.addItem(ToolMenuType.LEADER_TIER)
+    searchList.addItem(ToolMenuType.RANDOM_AREA)
     searchList.addItem(ToolMenuType.WEBSITE)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
 
@@ -72,7 +73,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     val infoList = arrayListOf<ToolMenuData>()
     infoList.addItem(ToolMenuType.GACHA)
     infoList.addItem(ToolMenuType.EVENT)
-    infoList.addItem(ToolMenuType.NEWS)
     infoList.addItem(ToolMenuType.FREE_GACHA)
     infoList.addItem(ToolMenuType.BIRTHDAY)
     infoList.addItem(ToolMenuType.CALENDAR_EVENT)

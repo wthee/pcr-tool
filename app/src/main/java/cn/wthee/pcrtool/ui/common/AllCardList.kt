@@ -159,14 +159,7 @@ private fun StoryPicList(
                 urls = data
             )
         } else {
-            MainText(
-                text = stringResource(id = R.string.no_story_info),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(
-                        Dimen.largePadding
-                    )
-            )
+            CenterTipText(text = stringResource(id = R.string.no_story_info))
         }
     }
 
@@ -230,7 +223,7 @@ private fun CardGridList(
                 }
             ) {
                 //图片
-                StoryImageCompose(
+                SubImageCompose(
                     data = picUrl
                 ) {
                     loadedPicMap[picUrl] = it.drawable

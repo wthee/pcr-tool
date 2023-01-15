@@ -299,7 +299,7 @@ private fun LeaderboardItem(
             IconCompose(
                 data = if (hasUnitId) {
                     ImageResourceHelper.getInstance()
-                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                        .getMaxIconUrl(leader.unitId!!)
                 } else {
                     leader.icon
                 }

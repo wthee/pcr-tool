@@ -6,10 +6,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -144,6 +141,9 @@ fun StoryEventItem(
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!previewEvent)
+    val bannerWidth = remember {
+        mutableStateOf(1f)
+    }
 
 
     Column(
@@ -184,21 +184,20 @@ fun StoryEventItem(
                 if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(0.75f)
+                            .fillMaxSize(bannerWidth.value)
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        ImageCompose(
+                        SubImageCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(EVENT_BANNER, event.originalEventId),
-                            ratio = RATIO_BANNER,
-                            modifier = Modifier.clip(MaterialTheme.shapes.medium),
-                            placeholder = false
-                        )
+                                .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false)
+                        ) {
+                            bannerWidth.value = 0.75f
+                        }
                     }
                 } else {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance()
-                            .getUrl(EVENT_TEASER, event.eventId),
+                            .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
                         ratio = RATIO_TEASER,
                         modifier = Modifier.clip(shapeTop())
                     )

@@ -124,13 +124,13 @@ fun MainSettings(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
             SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
         }
-        //- 清楚图片缓存
+        //- 清除图片缓存
         SettingCommonItem(
             iconType = MainIconType.DELETE,
             title = stringResource(id = R.string.clean_image_cache),
             summary = stringResource(id = R.string.tip_clean_image_cache),
             onClick = {
-                //清楚缓存弹窗
+                //清除缓存弹窗
                 openDialog.value = true
             }
         ) {
