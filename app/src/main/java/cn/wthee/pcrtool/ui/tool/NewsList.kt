@@ -24,6 +24,7 @@ import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
+import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.NewsType
 import cn.wthee.pcrtool.ui.MainActivity
@@ -34,6 +35,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
@@ -47,6 +49,7 @@ import com.google.accompanist.web.rememberWebViewState
 fun NewsList(
     toNewsDetail: (Int) -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
+    commonAPIViewModel: CommonApiViewModel = hiltViewModel(),
 ) {
     val scrollState = rememberLazyListState()
     //关键词输入
@@ -64,6 +67,11 @@ fun NewsList(
     }
     val newsItems = newsPager.flow.collectAsLazyPagingItems()
 
+    //获取关键词
+    val keywordFlow = remember {
+        commonAPIViewModel.getKeywords(KeywordType.NEWS)
+    }
+    val keywordList = keywordFlow.collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {
@@ -110,7 +118,8 @@ fun NewsList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.NEWS,
-            scrollState = scrollState
+            scrollState = scrollState,
+            defaultKeywordList = keywordList
         )
     }
 }

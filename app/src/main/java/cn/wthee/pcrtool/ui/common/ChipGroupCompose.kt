@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.model.ChipData
+import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -43,7 +44,7 @@ fun ChipGroup(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuggestionChipGroup(
-    items: List<String>,
+    items: List<KeywordData>,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit
 ) {
@@ -54,12 +55,12 @@ fun SuggestionChipGroup(
             SuggestionChip(
                 onClick = {
                     VibrateUtil(context).single()
-                    onClick(it)
+                    onClick(it.keyword)
                 },
                 modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                 label = {
                     Text(
-                        text = it,
+                        text = "${it.desc}：${it.keyword}",
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium
                     )

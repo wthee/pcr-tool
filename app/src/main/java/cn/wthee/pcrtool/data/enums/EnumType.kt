@@ -176,3 +176,11 @@ enum class NewsType(val stringId: Int) {
     SHOP(R.string.shop),
     LOCAL(R.string.local_note);
 }
+
+/**
+ * 查询关键词
+ */
+enum class KeywordType(val type: Int) {
+    NEWS(1),
+    TWEET(2);
+}

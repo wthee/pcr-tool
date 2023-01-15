@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -716,7 +717,7 @@ fun BottomSearchBar(
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     scrollState: LazyListState,
-    defaultKeywordList: List<String>? = null
+    defaultKeywordList: List<KeywordData>? = null
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -781,7 +782,7 @@ fun BottomSearchBar(
 
                     SuggestionChipGroup(
                         defaultKeywordList ?: arrayListOf(),
-                        modifier = Modifier.padding(top = Dimen.largePadding)
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) { keyword ->
                         keywordInputState.value = keyword
                         keywordState.value = keyword

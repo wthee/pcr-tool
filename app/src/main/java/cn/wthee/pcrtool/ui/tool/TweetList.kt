@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,6 +17,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
+import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.common.*
@@ -24,6 +26,7 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.utils.spanCount
+import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 
 /**
@@ -32,7 +35,8 @@ import cn.wthee.pcrtool.viewmodel.TweetViewModel
 @Composable
 fun TweetList(
     toComic: (Int) -> Unit,
-    tweetViewModel: TweetViewModel = hiltViewModel()
+    tweetViewModel: TweetViewModel = hiltViewModel(),
+    commonAPIViewModel: CommonApiViewModel = hiltViewModel(),
 ) {
     val scrollState = rememberLazyListState()
     //关键词输入
@@ -49,6 +53,12 @@ fun TweetList(
         tweetViewModel.getTweet(keywordState.value)
     }
     val tweetItems = tweetPager.flow.collectAsLazyPagingItems()
+
+    //获取关键词
+    val keywordFlow = remember {
+        commonAPIViewModel.getKeywords(KeywordType.TWEET)
+    }
+    val keywordList = keywordFlow.collectAsState(initial = arrayListOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {
@@ -94,11 +104,7 @@ fun TweetList(
             keywordState = keywordState,
             leadingIcon = MainIconType.TWEET,
             scrollState = scrollState,
-            defaultKeywordList = arrayListOf(
-                "【4コマ更新】",
-                "【★6登場情報】",
-                "「キャラ専用装備」を追加しました",
-            )
+            defaultKeywordList = keywordList
         )
     }
 }

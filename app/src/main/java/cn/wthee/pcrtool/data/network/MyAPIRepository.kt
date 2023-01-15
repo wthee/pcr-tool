@@ -378,6 +378,33 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
+    /**
+     * 查询关键词
+     */
+    suspend fun getKeywords(type: Int): ResponseData<List<KeywordData>> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("type", type)
+            json.addProperty("region", MainActivity.regionType)
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+            val response = service.getKeywords(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getKeywords")
+            }
+        }
+        return error()
+    }
+
     private fun <T> isError(response: ResponseData<T>): Boolean {
         return response.message == "failure" || response.data == null
     }

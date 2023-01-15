@@ -98,4 +98,9 @@ interface MyAPIService {
     @POST("diff")
     suspend fun getDbDiff(@Body body: RequestBody): ResponseData<String>
 
+    /**
+     * 关键词
+     */
+    @POST("keyword")
+    suspend fun getKeywords(@Body body: RequestBody): ResponseData<List<KeywordData>>
 }
