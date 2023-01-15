@@ -234,8 +234,8 @@ fun Home(
         r6Ids = r6IdList.value!!
     }
 
-
-    LaunchedEffect(navSheetState.currentValue) {
+    //首页使用bottomsheet时，关闭时主按钮初始
+    LaunchedEffect(navSheetState.isVisible) {
         if (navController.currentDestination?.route == Navigation.HOME) {
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }

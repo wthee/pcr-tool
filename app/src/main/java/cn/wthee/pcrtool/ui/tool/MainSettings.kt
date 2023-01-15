@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,11 +39,8 @@ import cn.wthee.pcrtool.utils.*
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainSettings(
-    sp: SharedPreferences = settingSP(LocalContext.current)
-) {
+fun MainSettings() {
     val context = LocalContext.current
-    val region = MainActivity.regionType
 
     //调整主按钮图表
     LaunchedEffect(navSheetState.currentValue) {
@@ -52,23 +48,6 @@ fun MainSettings(
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
-
-    //数据库版本
-    val typeName = getRegionName(region)
-    val localVersion = sp.getString(
-        when (region) {
-            2 -> Constants.SP_DATABASE_VERSION_CN
-            3 -> Constants.SP_DATABASE_VERSION_TW
-            else -> Constants.SP_DATABASE_VERSION_JP
-        },
-        ""
-    )
-    val dbVersionGroup = if (localVersion != null) {
-        localVersion.split("/")[0]
-    } else {
-        ""
-    }
-
     //缓存删除确认弹窗
     val openDialog = remember {
         mutableStateOf(false)
@@ -103,9 +82,6 @@ fun MainSettings(
                 size = Dimen.largeIconSize,
                 modifier = Modifier.padding(Dimen.mediumPadding),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-            )
-            Subtitle1(
-                text = "${typeName}：${dbVersionGroup}"
             )
         }
 
@@ -170,13 +146,6 @@ fun MainSettings(
                 BrowserUtil.open(Constants.PREVIEW_URL)
             }
         )
-
-        //关于
-        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
-        MainText(
-            text = stringResource(id = R.string.about),
-            modifier = Modifier.padding(Dimen.largePadding)
-        )
         //- 酷安
         val appUrl = stringResource(id = R.string.coolapk_url)
         SettingCommonItem(
@@ -186,7 +155,12 @@ fun MainSettings(
             onClick = {
                 BrowserUtil.open(appUrl)
             }
-        )
+        ) {
+            Subtitle2(
+                text = stringResource(id = R.string.please),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
         //- 项目代码
         val gitUrl = stringResource(id = R.string.github_project_url)
         SettingCommonItem(
@@ -250,7 +224,7 @@ fun MainSettings(
     if (openDialog.value) {
         AlertDialog(
             title = {
-                MainContentText(
+                MainText(
                     text = stringResource(id = R.string.confirm_clean_image_cache),
                     textAlign = TextAlign.Start,
                     selectable = true
@@ -400,7 +374,7 @@ fun SettingCommonItem(
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     summaryColor: Color = MaterialTheme.colorScheme.outline,
     padding: Dp = Dimen.largePadding,
-    colorFilter: ColorFilter? = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+    tintColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -419,7 +393,7 @@ fun SettingCommonItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            colorFilter = colorFilter,
+            tint = tintColor,
         )
         Column(
             modifier = Modifier

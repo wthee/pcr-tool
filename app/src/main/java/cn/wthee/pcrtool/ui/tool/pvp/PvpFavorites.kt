@@ -68,9 +68,8 @@ fun PvpFavorites(
                 }
             }
         } else {
-            MainText(
-                text = stringResource(id = R.string.pvp_no_favorites),
-                modifier = Modifier.align(Alignment.Center)
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_favorites)
             )
         }
     }

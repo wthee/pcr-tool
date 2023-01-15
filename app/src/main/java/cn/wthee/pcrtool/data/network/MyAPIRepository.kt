@@ -172,27 +172,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 查询漫画信息
-     */
-    suspend fun getComic(): ResponseData<List<ComicData>> {
-        //请求
-        try {
-            val response = service.getComicData()
-            if (isError(response)) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComic")
-            }
-        }
-        return error()
-    }
-
-    /**
      * 获取排名信息
      */
     suspend fun getLeader(): ResponseData<List<LeaderboardData>> {

@@ -34,7 +34,6 @@ import cn.wthee.pcrtool.viewmodel.TweetViewModel
  */
 @Composable
 fun TweetList(
-    toComic: (Int) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel(),
     commonAPIViewModel: CommonApiViewModel = hiltViewModel(),
 ) {
@@ -80,7 +79,7 @@ fun TweetList(
                     it.id
                 }
             ) {
-                TweetItem(it ?: TweetData(), toComic)
+                TweetItem(it ?: TweetData())
             }
             //暂无更多提示
             if (tweetItems.loadState.refresh != LoadState.Loading) {
@@ -95,7 +94,7 @@ fun TweetList(
             }
         }
 
-        //搜索栏 fixme 关键词从服务器查询获取
+        //搜索栏
         BottomSearchBar(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
@@ -114,10 +113,10 @@ fun TweetList(
  * 推特内容
  */
 @Composable
-private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
+private fun TweetItem(data: TweetData) {
     val placeholder = data.id == 0
     val photos = data.getImageList()
-    var comicId = ""
+    val comicId: String
     var url = if (data.tweet.contains("【4コマ更新】")) {
         // 四格漫画
         comicId = getComicId(data.tweet)
@@ -162,9 +161,9 @@ private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
                     .padding(vertical = Dimen.smallPadding)
                     .fillMaxWidth()
             ) {
-                TweetButton(data.link, toComic = toComic)
+                TweetButton(data.link)
                 data.getUrlList().forEach {
-                    TweetButton(it, comicId, toComic = toComic)
+                    TweetButton(it)
                 }
             }
         }
@@ -192,9 +191,7 @@ private fun TweetItem(data: TweetData, toComic: (Int) -> Unit) {
  */
 @Composable
 private fun TweetButton(
-    url: String,
-    comicId: String = "",
-    toComic: (Int) -> Unit
+    url: String
 ) {
     //根据链接获取相符的图标
     val btn = when {
@@ -219,14 +216,6 @@ private fun TweetButton(
         ) {
             BrowserUtil.open(url)
         }
-//        url.contains("comic") -> TweetButtonData(
-//            stringResource(id = R.string.read_comic), MainIconType.COMIC
-//        ) {
-//            //跳转漫画
-//            if (comicId != "") {
-//                toComic(comicId.toInt())
-//            }
-//        }
         else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
             BrowserUtil.open(url)
         }
@@ -253,7 +242,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewLayout {
-        TweetItem(data = TweetData(id = 1, tweet = "???"), toComic = {})
+        TweetItem(data = TweetData(id = 1, tweet = "???"))
     }
 }
 

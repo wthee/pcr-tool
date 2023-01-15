@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.storyevent
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
@@ -147,10 +148,12 @@ fun StoryEventItem(
 
 
     Column(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
-        )
+        modifier = Modifier
+            .animateContentSize(defaultTween())
+            .padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            )
     ) {
         //标题
         FlowRow(

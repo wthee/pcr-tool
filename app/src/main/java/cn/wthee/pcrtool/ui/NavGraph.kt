@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -79,11 +76,9 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
-    const val TOOL_NEWS_DETAIL = "toolNewsDetail"
     const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
-    const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
     const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
@@ -94,11 +89,9 @@ object Navigation {
     const val RARITY = "rarity"
     const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
-    const val COMIC_ID = "comicId"
     const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CLAN_BOSS_PHASE = "toolClanBattlePhase"
-    const val TOOL_NEWS_ID = "toolNewsId"
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
@@ -148,6 +141,7 @@ fun NavGraph(
         bottomSheetNavigator = bottomSheetNavigator
     ) {
         AnimatedNavHost(
+            modifier = Modifier.fillMaxSize(),
             navController = navController,
             startDestination = Navigation.HOME,
             enterTransition = { myFadeIn },
@@ -160,9 +154,11 @@ fun NavGraph(
             composable(
                 route = Navigation.HOME
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                val scrollState = rememberLazyListState()
-                Overview(actions = actions, scrollState)
+                //从其它页面返回时，主按钮初始
+                if (navController.currentDestination?.route == Navigation.HOME) {
+                    viewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                }
+                Overview(actions = actions)
             }
 
             //角色列表
@@ -440,7 +436,7 @@ fun NavGraph(
                 route = Navigation.TOOL_GACHA
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
+                val scrollState = rememberLazyStaggeredGridState()
                 GachaList(scrollState, actions.toCharacterDetail, actions.toMockGacha)
             }
 
@@ -472,7 +468,7 @@ fun NavGraph(
                 route = Navigation.TOOL_GUILD
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
+                val scrollState = rememberLazyStaggeredGridState()
                 GuildList(scrollState, actions.toCharacterDetail)
             }
 
@@ -542,21 +538,7 @@ fun NavGraph(
                 route = Navigation.TOOL_NEWS
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                NewsList(actions.toNewsDetail)
-            }
-
-            //公告详情
-            bottomSheet(
-                route = "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_ID}}",
-                arguments = listOf(
-                    navArgument(Navigation.TOOL_NEWS_ID) {
-                        type = NavType.StringType
-                    },
-                )
-            ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val arguments = requireNotNull(it.arguments)
-                NewsDetail(arguments.getString(Navigation.TOOL_NEWS_ID) ?: "")
+                NewsList()
             }
 
             //推特信息
@@ -564,26 +546,7 @@ fun NavGraph(
                 route = Navigation.TWEET
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                TweetList(actions.toComicListIndex)
-            }
-
-            //漫画信息
-            composable(
-                route = Navigation.COMIC
-            ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ComicList()
-            }
-
-            //漫画跳转
-            bottomSheet(
-                route = "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
-                arguments = listOf(navArgument(Navigation.COMIC_ID) {
-                    type = NavType.IntType
-                })
-            ) {
-                val arguments = requireNotNull(it.arguments)
-                ComicList(arguments.getInt(Navigation.COMIC_ID))
+                TweetList()
             }
 
             //技能列表
@@ -860,13 +823,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 官方公告详情
-     */
-    val toNewsDetail: (Int) -> Unit = { id: Int ->
-        navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${id}")
-    }
-
-    /**
      * 卡池
      */
     val toGacha = {
@@ -963,20 +919,6 @@ class NavActions(navController: NavHostController) {
      */
     val toTweetList = {
         navController.navigate(Navigation.TWEET)
-    }
-
-    /**
-     * 漫画
-     */
-    val toComicList = {
-        navController.navigate(Navigation.COMIC)
-    }
-
-    /**
-     * 漫画
-     */
-    val toComicListIndex: (Int) -> Unit = { comicId ->
-        navController.navigate("${Navigation.COMIC}/${comicId}")
     }
 
     /**

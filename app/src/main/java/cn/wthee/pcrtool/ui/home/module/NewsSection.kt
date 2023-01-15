@@ -50,15 +50,13 @@ fun NewsSection(
             if (newsList == null) {
                 for (i in 0 until 3) {
                     NewsItem(
-                        news = NewsTable(),
-                        toNewsDetail = actions.toNewsDetail
+                        news = NewsTable()
                     )
                 }
             } else if (newsList.data?.isNotEmpty() == true) {
                 newsList.data?.forEach {
                     NewsItem(
-                        news = it,
-                        toNewsDetail = actions.toNewsDetail
+                        news = it
                     )
                 }
             } else {

@@ -61,7 +61,7 @@ fun ClanBattleList(
                     ClanBattleItem(clanBattleInfo = it, toClanBossInfo = toClanBossInfo)
                 }
             } else {
-                items(20) {
+                items(10) {
                     ClanBattleItem(
                         clanBattleInfo = ClanBattleInfo(),
                         toClanBossInfo = toClanBossInfo
@@ -117,7 +117,11 @@ private fun ClanBattleItem(
     toClanBossInfo: (Int, Int, Int) -> Unit
 ) {
     val placeholder = clanBattleInfo.clanBattleId == -1
-    val bossUnitIdList = clanBattleInfo.unitIds.intArrayList.subList(0, 5)
+    val bossUnitIdList = try {
+        clanBattleInfo.unitIds.intArrayList.subList(0, 5)
+    } catch (_: Exception) {
+        arrayListOf()
+    }
 
 
     Column(
@@ -209,6 +213,11 @@ private fun ClanBattleItem(
                                 )
                             }
                         }
+                    }
+                    if (placeholder) {
+                        IconCompose(
+                            data = R.drawable.unknown_gray
+                        )
                     }
                 }
 

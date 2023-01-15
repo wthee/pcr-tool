@@ -190,8 +190,8 @@ private fun HomePageCommentInfo(
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
-                homePageCommentList[index].getCommentList().forEach {
-                    CommentText(it)
+                homePageCommentList[index].getCommentList().forEachIndexed { cIndex, s ->
+                    CommentText(cIndex, s)
                 }
             }
         }
@@ -247,8 +247,8 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
-                roomComments[index].getCommentList().forEach {
-                    CommentText(it)
+                roomComments[index].getCommentList().forEachIndexed { cIndex, s ->
+                    CommentText(cIndex, s)
                 }
                 CommonSpacer()
             }
@@ -332,10 +332,10 @@ private fun TwoColumnsInfo(
  * 文本
  */
 @Composable
-private fun CommentText(text: String) {
+private fun CommentText(index: Int? = null, text: String) {
+    val indexStr = if (index != null) "${index + 1}、" else ""
     val context = LocalContext.current
-    MainContentText(
-        text = text,
+    Row(
         modifier = Modifier
             .padding(
                 horizontal = Dimen.largePadding,
@@ -348,8 +348,14 @@ private fun CommentText(text: String) {
                 copyText(context, text)
             }
             .padding(Dimen.smallPadding),
-        textAlign = TextAlign.Start,
-    )
+    ) {
+        MainContentText(text = indexStr)
+        MainContentText(
+            text = text,
+            textAlign = TextAlign.Start,
+            selectable = true
+        )
+    }
 }
 
 /**

@@ -221,6 +221,7 @@ private fun CalendarEventLayout(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
+                        parentSpanCount = spanCount,
                         toCharacterDetail = actions.toCharacterDetail,
                         toMockGacha = actions.toMockGacha
                     )

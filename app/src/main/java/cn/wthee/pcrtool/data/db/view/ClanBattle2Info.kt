@@ -1,12 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.utils.fillZero
-import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.intArrayList
 
 /**
@@ -17,8 +12,8 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "release_month") var releaseMonth: Int = 12,
     @ColumnInfo(name = "start_time") var startTime: String = "2021-01-01",
     @ColumnInfo(name = "max_phase") var phase: Int = 1,
-    @ColumnInfo(name = "enemy_ids") var enemyIds: String = "1-1-1-1-1",
-    @ColumnInfo(name = "unit_ids") var unitIds: String = "1-1-1-1-1",
+    @ColumnInfo(name = "enemy_ids") var enemyIds: String = "",
+    @ColumnInfo(name = "unit_ids") var unitIds: String = "",
     @Ignore
     var enemyIdList: List<Int> = arrayListOf(0, 0, 0, 0, 0),
     @Ignore

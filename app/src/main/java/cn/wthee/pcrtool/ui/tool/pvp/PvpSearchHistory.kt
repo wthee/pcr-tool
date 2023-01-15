@@ -59,9 +59,8 @@ fun PvpSearchHistory(
                 }
             }
         } else {
-            MainText(
-                text = stringResource(id = R.string.pvp_no_history),
-                modifier = Modifier.align(Alignment.Center)
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_history)
             )
         }
     }

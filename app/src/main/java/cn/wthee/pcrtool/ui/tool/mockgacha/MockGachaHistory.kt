@@ -201,7 +201,7 @@ private fun MockGachaHistoryItem(
                         .heightIn(max = Dimen.minSheetHeight)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    MainContentText(
+                    MainText(
                         text = stringResource(id = R.string.tip_delete_gacha),
                         textAlign = TextAlign.Start,
                         selectable = true

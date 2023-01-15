@@ -307,7 +307,8 @@ private fun CharacterCard(
     Column(
         modifier = Modifier
             .padding(Dimen.largePadding)
-            .width(getItemWidth()),
+            .widthIn(max = getItemWidth() * 1.3f)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //卡面信息

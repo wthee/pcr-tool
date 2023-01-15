@@ -290,11 +290,6 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 漫画目录
      */
-    COMIC_NAV(Icons.Rounded.Toc),
-
-    /**
-     * 漫画目录
-     */
     YOUTUBE(Icons.Rounded.SmartDisplay),
 
     /**

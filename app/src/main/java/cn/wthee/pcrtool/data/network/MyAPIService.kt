@@ -57,12 +57,6 @@ interface MyAPIService {
     suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
 
     /**
-     * 获取漫画信息
-     */
-    @POST("comic")
-    suspend fun getComicData(): ResponseData<List<ComicData>>
-
-    /**
      * 排行信息
      */
     @POST("leaders/score")
