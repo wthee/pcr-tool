@@ -113,7 +113,7 @@ fun PvpSearchCompose(
                         modifier = Modifier
                             .clickable {
                                 VibrateUtil(context).single()
-                                BrowserUtil.open(context, url)
+                                BrowserUtil.open(url)
                             }
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -123,7 +123,7 @@ fun PvpSearchCompose(
                         text = stringResource(id = R.string.pvp_upload)
                     ) {
                         //打开网页
-                        BrowserUtil.open(context, addUrl)
+                        BrowserUtil.open(addUrl)
                     }
                 }
 
@@ -133,7 +133,8 @@ fun PvpSearchCompose(
                 Row(
                     modifier = Modifier
                         .padding(mediumPadding)
-                        .width(getItemWidth())
+                        .widthIn(max = getItemWidth() * 1.3f)
+                        .fillMaxWidth()
                         .align(Alignment.Center),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
@@ -420,7 +421,7 @@ fun PvpIconItem(
             if (selected) {
                 var cancelSelectIndex = 0
                 newList.forEachIndexed { index, sel ->
-                    if (pvpCharacterData.position == sel.position) {
+                    if (pvpCharacterData.unitId == sel.unitId) {
                         cancelSelectIndex = index
                     }
                 }
@@ -432,7 +433,7 @@ fun PvpIconItem(
                     newList[0] = pvpCharacterData
                 }
             }
-            newList.sortByDescending { it.position }
+            newList.sortWith(comparePvpCharacterData())
             navViewModel.selectedPvpData.postValue(newList)
         }
 
@@ -454,21 +455,21 @@ fun PvpIconItem(
  */
 @Composable
 fun PvpUnitIconLine(
-    modifier: Modifier = Modifier,
     ids: List<Int>,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit
 ) {
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
-
     Row(
-        modifier = modifier
+        modifier = Modifier
             .padding(mediumPadding)
-            .width(getItemWidth()),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ids.forEach {
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
                 IconCompose(
                     data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
                     size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
@@ -479,5 +480,17 @@ fun PvpUnitIconLine(
                 }
             }
         }
+    }
+}
+
+/**
+ * 竞技场角色排序
+ */
+fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
+    val p = o2.position.compareTo(o1.position)
+    if (p == 0) {
+        o2.unitId.compareTo(o1.unitId)
+    } else {
+        p
     }
 }

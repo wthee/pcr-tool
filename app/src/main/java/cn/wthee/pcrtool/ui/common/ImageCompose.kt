@@ -69,9 +69,12 @@ fun ImageCompose(
             loading.value = false
             onError(it.result)
         },
-        modifier = if(placeholder){
+        onLoading = {
+            loading.value = true
+        },
+        modifier = if (placeholder) {
             mModifier.commonPlaceholder(visible = loading.value)
-        }else{
+        } else {
             mModifier
         }
     )
@@ -167,6 +170,9 @@ fun IconCompose(
                 onSuccess = {
                     loading.value = false
                 },
+                onLoading = {
+                    loading.value = true
+                },
                 modifier = mModifier
                     .aspectRatio(1f)
                     .commonPlaceholder(visible = loading.value)
@@ -177,7 +183,7 @@ fun IconCompose(
 
 
 @Composable
-fun StoryImageCompose(
+fun SubImageCompose(
     data: Any,
     contentScale: ContentScale = ContentScale.FillWidth,
     onSuccess: (SuccessResult) -> Unit = {}

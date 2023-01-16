@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.*
@@ -75,7 +74,7 @@ fun LeaderTier(
                 modifier = Modifier
                     .clickable {
                         VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
+                        BrowserUtil.open(url)
                     }
             )
 
@@ -84,7 +83,7 @@ fun LeaderTier(
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             )
             CaptionText(
-                text = leaderData?.data?.desc?.substring(0, 11) ?: "",
+                text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -157,10 +156,7 @@ fun LeaderTier(
                             toCharacterDetail
                         )
                     }
-                    item {
-                        CommonSpacer()
-                    }
-                    item {
+                    items(count = 2) {
                         CommonSpacer()
                     }
                 }
@@ -224,7 +220,6 @@ private fun LeaderItem(
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel?
 ) {
-    val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
         characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
@@ -239,6 +234,8 @@ private fun LeaderItem(
     } else {
         Color.Unspecified
     }
+    val tipText = getLeaderUnknownTip()
+
 
     Row(
         modifier = Modifier
@@ -254,13 +251,15 @@ private fun LeaderItem(
             IconCompose(
                 data = if (hasUnitId) {
                     ImageResourceHelper.getInstance()
-                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                        .getMaxIconUrl(leader.unitId!!)
                 } else {
                     leader.icon
                 }
             ) {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId!!)
+                } else {
+                    ToastUtil.short(tipText)
                 }
             }
             if (!unknown) {
@@ -282,7 +281,7 @@ private fun LeaderItem(
                 .padding(start = Dimen.smallPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
-                BrowserUtil.open(context, leader.url)
+                BrowserUtil.open(leader.url)
             }
         ) {
             Column {
@@ -324,12 +323,8 @@ private fun LeaderItem(
                             modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                             text = if (!hasUnitId) {
                                 stringResource(id = R.string.leader_need_sync)
-
                             } else {
-                                stringResource(
-                                    id = R.string.unknown_character_type,
-                                    getRegionName(MainActivity.regionType)
-                                )
+                                tipText
                             },
                             backgroundColor = colorGray
                         )

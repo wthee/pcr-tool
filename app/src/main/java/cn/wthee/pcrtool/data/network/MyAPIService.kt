@@ -57,15 +57,9 @@ interface MyAPIService {
     suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
 
     /**
-     * 获取漫画信息
-     */
-    @POST("comic")
-    suspend fun getComicData(): ResponseData<List<ComicData>>
-
-    /**
      * 排行信息
      */
-    @POST("leaders/v4")
+    @POST("leaders/score")
     suspend fun getLeader(): ResponseData<List<LeaderboardData>>
 
     /**
@@ -92,4 +86,15 @@ interface MyAPIService {
     @POST("leaders/tier")
     suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
 
+    /**
+     * 数据更新摘要
+     */
+    @POST("diff")
+    suspend fun getDbDiff(@Body body: RequestBody): ResponseData<String>
+
+    /**
+     * 关键词
+     */
+    @POST("keyword")
+    suspend fun getKeywords(@Body body: RequestBody): ResponseData<List<KeywordData>>
 }

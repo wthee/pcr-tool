@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -114,7 +115,7 @@ fun EnemyAllInfo(
         )
         //等级
         CaptionText(
-            text = enemyData.level.toString(),
+            text = stringResource(id = R.string.unit_level, enemyData.level),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         //模型预览
@@ -124,10 +125,7 @@ fun EnemyAllInfo(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         ) {
-            BrowserUtil.open(
-                context,
-                Constants.PREVIEW_ENEMY_URL + enemyData.prefabId
-            )
+            BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
         }
         //描述
         MainContentText(
@@ -157,7 +155,7 @@ fun EnemyAllInfo(
             AttrList(attrs = it.attr.enemy())
         }
         //技能，预览时隐藏
-        if(!LocalInspectionMode.current){
+        if (!LocalInspectionMode.current) {
             EnemySkillList(enemyData, UnitType.ENEMY, toSummonDetail)
         }
         CommonSpacer()
@@ -168,7 +166,7 @@ fun EnemyAllInfo(
             title = {
                 Column(
                     modifier = Modifier
-                        .heightIn(max = Dimen.minSheetHeight)
+                        .heightIn(max = ScreenUtil.getHeight().px2dp.dp * 0.618f)
                         .verticalScroll(rememberScrollState())
                 ) {
                     MainContentText(
@@ -254,7 +252,7 @@ fun EnemySkillList(
 
 @CombinedPreviews
 @Composable
-private fun EnemyAllInfoPreview(){
+private fun EnemyAllInfoPreview() {
     PreviewLayout {
         EnemyAllInfo(
             EnemyParameterPro(

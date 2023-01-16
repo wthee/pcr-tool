@@ -38,6 +38,7 @@ fun BirthdayList(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val dataList = birthdayViewModel.getBirthDayList().collectAsState(initial = arrayListOf()).value
+    val spanCount = getItemWidth().spanCount
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
@@ -48,7 +49,7 @@ fun BirthdayList(
                 items(items = dataList, key = {
                     "${it.month}/${it.day}"
                 }) {
-                    BirthdayItem(it, toCharacterDetail)
+                    BirthdayItem(it, spanCount, toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -78,7 +79,11 @@ fun BirthdayList(
  * 具体角色
  */
 @Composable
-fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
+fun BirthdayItem(
+    data: BirthdayData,
+    parentSpanCount: Int,
+    toCharacterDetail: (Int) -> Unit
+) {
     val today = getToday()
     val sd = data.getStartTime().formatTime
     val comingSoon = isComingSoon(today, sd, false)
@@ -96,7 +101,9 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             MainTitleText(
-                text = stringResource(id = R.string.title_birth), backgroundColor = colorRed
+                text = stringResource(id = R.string.title_birth),
+                backgroundColor = colorRed,
+                modifier = Modifier.padding(end = Dimen.smallPadding)
             )
             MainTitleText(
                 text = stringResource(
@@ -104,14 +111,13 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
                     data.month.toString().fixedStr,
                     data.day.toString().fixedStr
                 ),
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                backgroundColor = colorRed
+                backgroundColor = colorRed,
+                modifier = Modifier.padding(end = Dimen.smallPadding),
             )
 
             //计时
             if (data.month != 999) {
                 Row(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (comingSoon) {
@@ -133,8 +139,12 @@ fun BirthdayItem(data: BirthdayData, toCharacterDetail: (Int) -> Unit) {
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //图标/描述
-                GridIconListCompose(icons = icons, onClickItem = toCharacterDetail)
+                //图标
+                GridIconListCompose(
+                    icons = icons,
+                    parentSpanCount = parentSpanCount,
+                    onClickItem = toCharacterDetail
+                )
             }
         }
     }
@@ -149,7 +159,8 @@ private fun BirthdayItemPreview() {
             BirthdayData(
                 unitIds = "1-2",
                 unitNames = "x-x"
-            )
+            ),
+            1
         ) {}
     }
 }

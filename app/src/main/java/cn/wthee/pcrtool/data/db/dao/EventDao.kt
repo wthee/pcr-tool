@@ -49,7 +49,7 @@ interface EventDao {
             ) AS event
             LEFT JOIN event_story_data AS c ON c.story_group_id = story_id
             LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
-            LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id
+            LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id AND battle.mode = 1
             LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
             LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id 
         GROUP BY
@@ -199,12 +199,13 @@ interface EventDao {
         SELECT
             CAST((CASE WHEN unit_profile.birth_month LIKE '%-%' OR unit_profile.birth_month LIKE '%?%' OR unit_profile.birth_month LIKE '%？%' OR unit_profile.birth_month = 0 THEN 999 ELSE unit_profile.birth_month END) AS INTEGER) AS birth_month_int,
             CAST((CASE WHEN unit_profile.birth_day LIKE '%-%' OR unit_profile.birth_day LIKE '%?%' OR unit_profile.birth_day LIKE '%？%' OR unit_profile.birth_day = 0 THEN 999 ELSE unit_profile.birth_day END) AS INTEGER) AS birth_day_int,
-            GROUP_CONCAT(unit_id,'-') as unit_ids,
-            GROUP_CONCAT(unit_name,'-') as unit_names
+            GROUP_CONCAT(unit_data.unit_id,'-') as unit_ids,
+            GROUP_CONCAT(unit_data.unit_name,'-') as unit_names
         FROM
             unit_profile
-        WHERE unit_id < 200000 
-        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+        WHERE unit_data.unit_id < $maxUnitId 
+        AND unit_data.search_area_width > 0
         GROUP BY birth_month_int, birth_day_int
         ORDER BY birth_month_int, birth_day_int
     """

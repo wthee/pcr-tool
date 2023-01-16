@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -31,7 +30,8 @@ import kotlinx.coroutines.launch
  */
 private data class ToolMenuGroup(
     val groupTitle: String,
-    val toolList: List<ToolMenuData>
+    val toolList: List<ToolMenuData>,
+    val groupDesc: String = ""
 )
 
 /**
@@ -55,7 +55,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     dataList.addItem(ToolMenuType.EQUIP)
     dataList.addItem(ToolMenuType.GUILD)
     dataList.addItem(ToolMenuType.CLAN)
-    dataList.addItem(ToolMenuType.RANDOM_AREA)
     dataList.addItem(ToolMenuType.EXTRA_EQUIP)
     dataList.addItem(ToolMenuType.TRAVEL_AREA)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
@@ -63,16 +62,24 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     //查询
     val searchList = arrayListOf<ToolMenuData>()
     searchList.addItem(ToolMenuType.PVP_SEARCH)
+    searchList.addItem(ToolMenuType.NEWS)
     searchList.addItem(ToolMenuType.LEADER)
     searchList.addItem(ToolMenuType.LEADER_TIER)
+    searchList.addItem(ToolMenuType.RANDOM_AREA)
     searchList.addItem(ToolMenuType.WEBSITE)
-    itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.pvp_search), searchList))
+    searchList.addItem(ToolMenuType.TWEET)
+    itemGroupList.add(
+        ToolMenuGroup(
+            stringResource(id = R.string.search_api),
+            searchList,
+            stringResource(id = R.string.search_api_desc)
+        )
+    )
 
     //活动信息
     val infoList = arrayListOf<ToolMenuData>()
     infoList.addItem(ToolMenuType.GACHA)
     infoList.addItem(ToolMenuType.EVENT)
-    infoList.addItem(ToolMenuType.NEWS)
     infoList.addItem(ToolMenuType.FREE_GACHA)
     infoList.addItem(ToolMenuType.BIRTHDAY)
     infoList.addItem(ToolMenuType.CALENDAR_EVENT)
@@ -80,8 +87,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
 
     //其它
     val otherList = arrayListOf<ToolMenuData>()
-    otherList.addItem(ToolMenuType.TWEET)
-    otherList.addItem(ToolMenuType.COMIC)
     otherList.addItem(ToolMenuType.MOCK_GACHA)
     if (BuildConfig.DEBUG) {
         otherList.addItem(ToolMenuType.ALL_SKILL)
@@ -127,8 +132,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
                 ) {
                     MenuGroup(
                         actions = actions,
-                        title = it.groupTitle,
-                        items = it.toolList,
+                        group = it,
                         isEditMode = isEditMode
                     )
                 }
@@ -161,8 +165,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
 @Composable
 private fun MenuGroup(
     actions: NavActions,
-    title: String,
-    items: List<ToolMenuData>,
+    group: ToolMenuGroup,
     isEditMode: Boolean
 ) {
 
@@ -173,14 +176,17 @@ private fun MenuGroup(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainText(
-            text = title,
-            modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
+            text = group.groupTitle,
+            modifier = Modifier.padding(top = Dimen.largePadding)
         )
+        if (group.groupDesc != "") {
+            CaptionText(text = group.groupDesc)
+        }
         VerticalGrid(
             spanCount = (Dimen.iconSize * 3).spanCount,
-            modifier = Modifier.animateContentSize(defaultSpring())
+            modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
         ) {
-            items.forEach {
+            group.toolList.forEach {
                 MenuItem(actions, it, isEditMode)
             }
         }
@@ -254,8 +260,11 @@ private fun MenuGroupPreview() {
     PreviewLayout {
         MenuGroup(
             actions = NavActions(rememberNavController()),
-            title = stringResource(id = R.string.debug_short_text),
-            items = arrayListOf(menu, menu, menu),
+            group = ToolMenuGroup(
+                stringResource(id = R.string.debug_short_text),
+                arrayListOf(menu, menu, menu),
+                stringResource(id = R.string.debug_short_text),
+            ),
             isEditMode = true
         )
     }

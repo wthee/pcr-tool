@@ -32,20 +32,32 @@ object DatabaseUpdater {
     /**
      * 切换版本
      */
-    suspend fun changeDatabase(region: Int) {
+    fun changeDatabase(region: Int) {
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, region)
         }
         MainActivity.regionType = region
-        checkDBVersion(1)
+        when (region) {
+            2 -> {
+                AppDatabaseTW.close()
+                AppDatabaseJP.close()
+            }
+            3 -> {
+                AppDatabaseCN.close()
+                AppDatabaseJP.close()
+            }
+            4 -> {
+                AppDatabaseCN.close()
+                AppDatabaseTW.close()
+            }
+        }
+        handler.sendEmptyMessage(0)
     }
 
     /**
      * 检查是否需要更新
-     *
-     * @param from  -1:正常调用 1：切换版本调用
      */
-    suspend fun checkDBVersion(from: Int = -1) {
+    suspend fun checkDBVersion() {
         //获取数据库最新版本
         try {
             navViewModel.downloadProgress.postValue(-1)
@@ -56,7 +68,7 @@ object DatabaseUpdater {
             val service = ApiUtil.create(MyAPIService::class.java, API_URL)
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
-            downloadDB(version.data!!, from)
+            downloadDB(version.data!!)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 ToastUtil.short(getString(R.string.check_db_error))
@@ -68,10 +80,9 @@ object DatabaseUpdater {
     /**
      * 下载数据库文件
      * @param versionData 版本信息
-     * @param from 调用来源
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private fun downloadDB(versionData: DatabaseVersion, from: Int) {
+    private fun downloadDB(versionData: DatabaseVersion) {
         val region = MainActivity.regionType
         val localVersionKey = when (region) {
             2 -> Constants.SP_DATABASE_VERSION_CN
@@ -83,8 +94,8 @@ object DatabaseUpdater {
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
-                || (from == -1 && (FileUtil.needUpdate(region) || localVersion == "0"))  //打开应用，数据库wal被清空
-                || (from == 1 && !File(FileUtil.getDatabasePath(region)).exists()) //切换数据库时，数据库文件不存在时更新
+                || (FileUtil.needUpdate(region) || localVersion == "0")  //数据库wal被清空
+
         //下载远程备份
         val toDownloadRemoteBackup =
             remoteBackupMode && File(FileUtil.getDatabaseBackupPath(region)).length() < 1024 * 1024
@@ -140,10 +151,6 @@ object DatabaseUpdater {
             } catch (_: Exception) {
             }
             navViewModel.downloadProgress.postValue(-2)
-            //切换成功
-            if (from == 1) {
-                handler.sendEmptyMessage(region)
-            }
         }
     }
 

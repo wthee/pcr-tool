@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,14 +22,23 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
+
+/**
+ * 角色排行筛选
+ */
+data class FilterLeaderboard(
+    var sort: Int = 0,
+    var asc: Boolean = false,
+    var onlyLast: Boolean = false
+)
+
 
 /**
  * 角色排行
@@ -39,14 +49,23 @@ fun LeaderboardList(
     toCharacterDetail: (Int) -> Unit,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
+    val filter = leaderViewModel.filterLeader.value ?: FilterLeaderboard()
+
     val sort = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.sort)
     }
+    filter.sort = sort.value
     val asc = remember {
-        mutableStateOf(false)
+        mutableStateOf(filter.asc)
     }
+    filter.asc = asc.value
+    val onlyLast = remember {
+        mutableStateOf(filter.onlyLast)
+    }
+    filter.onlyLast = onlyLast.value
+
     val responseData =
-        leaderViewModel.getLeader(sort.value, asc.value).collectAsState(initial = null).value
+        leaderViewModel.getLeader(filter).collectAsState(initial = null).value
     val leaderList = responseData?.data
 
     val coroutineScope = rememberCoroutineScope()
@@ -69,7 +88,7 @@ fun LeaderboardList(
                 modifier = Modifier
                     .clickable {
                         VibrateUtil(context).single()
-                        BrowserUtil.open(context, url)
+                        BrowserUtil.open(url)
                     }
             )
 
@@ -83,11 +102,40 @@ fun LeaderboardList(
         CommonResponseBox(
             responseData = responseData,
             fabContent = {
+                //切换显示
+                FabCompose(
+                    iconType = MainIconType.FILTER,
+                    text = if (onlyLast.value) {
+                        stringResource(id = R.string.last_update)
+                    } else {
+                        stringResource(id = R.string.all)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                        )
+                ) {
+                    onlyLast.value = !onlyLast.value
+                }
+
                 Row(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
+                    //重置
+                    if (sort.value != 0 || asc.value || onlyLast.value) {
+                        FabCompose(
+                            iconType = MainIconType.RESET
+                        ) {
+                            sort.value = 0
+                            asc.value = false
+                            onlyLast.value = false
+                        }
+                    }
+
                     //回到顶部
                     FabCompose(
                         iconType = MainIconType.LEADER,
@@ -114,7 +162,7 @@ fun LeaderboardList(
                 ) { index, it ->
                     LeaderboardItem(it, index, toCharacterDetail)
                 }
-                item {
+                items(count = 2) {
                     CommonSpacer()
                 }
             }
@@ -129,7 +177,7 @@ fun LeaderboardList(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-//        stringResource(id = R.string.quest),
+        stringResource(id = R.string.quest),
         stringResource(id = R.string.tower),
         stringResource(id = R.string.jjc),
         stringResource(id = R.string.clan),
@@ -191,7 +239,8 @@ private fun SortTitleButton(
     ) {
         MainText(
             text = text,
-            color = color
+            color = color,
+            style = MaterialTheme.typography.titleSmall
         )
         IconCompose(
             data = when (sort.value) {
@@ -220,7 +269,6 @@ private fun LeaderboardItem(
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
-    val context = LocalContext.current
     //获取角色名
     val flow = remember(leader.unitId) {
         characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
@@ -235,6 +283,7 @@ private fun LeaderboardItem(
     } else {
         Color.Unspecified
     }
+    val tipText = getLeaderUnknownTip()
 
     Row(
         modifier = Modifier
@@ -250,13 +299,15 @@ private fun LeaderboardItem(
             IconCompose(
                 data = if (hasUnitId) {
                     ImageResourceHelper.getInstance()
-                        .getMaxIconUrl(leader.unitId!!, forceJpType = true)
+                        .getMaxIconUrl(leader.unitId!!)
                 } else {
-                    leader.icon
+                    R.drawable.unknown_item
                 }
             ) {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId!!)
+                } else {
+                    ToastUtil.short(tipText)
                 }
             }
             if (!unknown) {
@@ -278,7 +329,7 @@ private fun LeaderboardItem(
         MainCard(
             modifier = Modifier.padding(start = Dimen.mediumPadding),
             onClick = {
-                BrowserUtil.open(context, leader.url)
+                BrowserUtil.open(leader.url)
             }
         ) {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
@@ -291,7 +342,7 @@ private fun LeaderboardItem(
                     //名称
                     MainContentText(
                         text = "${index + 1}." + if (hasUnitId && !unknown) {
-                            basicInfo!!.getNameF()
+                            basicInfo!!.name
                         } else {
                             leader.name
                         },
@@ -300,7 +351,7 @@ private fun LeaderboardItem(
                     )
 
                     CaptionText(
-                        text = leader.getTime(),
+                        text = leader.updateTime?.substring(0, 11) ?: "",
                         modifier = Modifier.fillMaxWidth(),
                         color = textColor
                     )
@@ -310,7 +361,7 @@ private fun LeaderboardItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-//                GradeText(info.quest, info.questFlag, modifier = Modifier.weight(0.25f))
+                    GradeText(leader.quest, modifier = Modifier.weight(1f))
                     GradeText(leader.tower, modifier = Modifier.weight(1f))
                     GradeText(leader.pvp, modifier = Modifier.weight(1f))
                     GradeText(leader.clan, modifier = Modifier.weight(1f))
@@ -320,6 +371,11 @@ private fun LeaderboardItem(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        CaptionText(
+                            text = leader.questScore.toString(),
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
                         CaptionText(
                             text = leader.towerScore.toString(),
                             modifier = Modifier.weight(1f),
@@ -374,6 +430,22 @@ fun GradeText(
     }
 }
 
+/**
+ * 未实装提示
+ */
+@Composable
+fun getLeaderUnknownTip(): String {
+    val regionName = if (LocalInspectionMode.current) {
+        ""
+    } else {
+        getRegionName(MainActivity.regionType)
+
+    }
+    return stringResource(
+        id = R.string.unknown_character_type,
+        regionName
+    )
+}
 
 @CombinedPreviews
 @Composable
@@ -381,7 +453,6 @@ private fun LeaderboardItemPreview() {
     PreviewLayout {
         LeaderboardItem(
             LeaderboardData(
-                wikiTime = "2020/01/01",
                 quest = "SS+",
                 pvp = "S",
                 clan = "A"

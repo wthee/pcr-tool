@@ -72,11 +72,11 @@ fun AttrCompare(
                     modifier = Modifier.weight(0.3f)
                 )
                 MainContentText(
-                    text = fixedAttrValueText(it.attr0, attrValueType),
+                    text = fixedAttrValueText(it.attr0, attrValueType, it.title),
                     modifier = Modifier.weight(0.2f)
                 )
                 MainContentText(
-                    text = fixedAttrValueText(it.attr1, attrValueType),
+                    text = fixedAttrValueText(it.attr1, attrValueType, it.title),
                     modifier = Modifier.weight(0.2f)
                 )
                 if (!isExtraEquip) {
@@ -103,9 +103,10 @@ fun AttrCompare(
 
 /**
  * 处理属性数值格式
+ * @param title 属性名称，用于判断ex装备非百分比提升属性判断
  */
 @Composable
-fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType) =
+fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: String = "") =
     when (attrValue.int) {
         in 100000000..Int.MAX_VALUE -> {
             stringResource(R.string.hp_100_m, (attrValue.toInt() / 100000000f).toString())
@@ -117,7 +118,23 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType) =
             when (attrValueType) {
                 AttrValueType.INT -> attrValue.int.toString()
                 AttrValueType.DOUBLE -> attrValue.toString()
-                AttrValueType.PERCENT -> (attrValue / 100).toString() + "%"
+                //ex装备用
+                AttrValueType.PERCENT -> {
+                    val extraEquipAttrPercent = arrayListOf(
+                        stringResource(id = R.string.attr_hp),
+                        stringResource(id = R.string.attr_atk),
+                        stringResource(id = R.string.attr_magic_str),
+                        stringResource(id = R.string.attr_def),
+                        stringResource(id = R.string.attr_magic_def),
+                        stringResource(id = R.string.attr_physical_critical),
+                        stringResource(id = R.string.attr_magic_critical),
+                    )
+                    if (extraEquipAttrPercent.contains(title)) {
+                        (attrValue / 100).toString() + "%"
+                    } else {
+                        attrValue.toInt().toString()
+                    }
+                }
             }
         }
     }

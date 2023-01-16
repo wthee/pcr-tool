@@ -77,11 +77,11 @@ class DatabaseDownloadWorker(
 
                         }
                         //更新下载进度
-                        notification.setProgress(100, progress, false)
-                            .setContentTitle(
-                                "$downloadNotice ${currSize / 1024}  / ${totalSize / 1024}"
-                            )
-                        notificationManager.notify(noticeId, notification.build())
+//                        notification.setProgress(100, progress, false)
+//                            .setContentTitle(
+//                                "$downloadNotice ${currSize / 1024}  / ${totalSize / 1024}"
+//                            )
+//                        notificationManager.notify(noticeId, notification.build())
                     }
 
                     override fun onFinish() {

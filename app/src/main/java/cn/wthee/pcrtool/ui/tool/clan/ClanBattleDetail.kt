@@ -13,7 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.IconHorizontalPagerIndicator
+import cn.wthee.pcrtool.ui.common.MainTitleText
+import cn.wthee.pcrtool.ui.common.SelectTypeCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyAllInfo
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -27,7 +29,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 公会战 BOSS 详情
- * @see 预览参考EnemyDetail
+ * @see [cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail]
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -79,7 +81,7 @@ fun ClanBattleDetail(
                 )
                 //图标
                 val urls = arrayListOf<String>()
-                clanBattleValue.unitIdList.forEach {
+                clanBattleValue.unitIds.split("-").subList(0, 5).forEach {
                     urls.add(
                         ImageResourceHelper.getInstance()
                             .getUrl(ImageResourceHelper.ICON_UNIT, it)

@@ -7,7 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -58,12 +58,12 @@ val permissions = arrayOf(
 @Composable
 fun Overview(
     actions: NavActions,
-    scrollState: LazyListState,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    SideEffect {
+    LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
+        noticeViewModel.check()
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -71,15 +71,11 @@ fun Overview(
 
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
     //切换数据关闭监听
     if (close) {
         navViewModel.openChangeDataDialog.postValue(false)
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.MAIN) {
-        navViewModel.openChangeDataDialog.postValue(false)
     }
 
     //添加日历确认弹窗
@@ -104,7 +100,7 @@ fun Overview(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = scrollState) {
+        LazyColumn(state = rememberLazyListState()) {
             item {
                 TopBarCompose(isEditMode, noticeViewModel)
             }

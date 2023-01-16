@@ -1,12 +1,14 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,25 +28,28 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 角色公会
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GuildList(
-    scrollState: LazyListState,
+    scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
     guildViewModel: GuildViewModel = hiltViewModel()
 ) {
     val guilds = guildViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
+    val spanCount = getItemWidth().spanCount
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (guilds.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState
+            LazyVerticalStaggeredGrid(
+                state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
                 items(
                     items = guilds,
@@ -52,7 +57,11 @@ fun GuildList(
                         it.guildId
                     }
                 ) {
-                    GuildItem(it, toCharacterDetail = toCharacterDetail)
+                    GuildItem(
+                        it,
+                        parentSpanCount = spanCount,
+                        toCharacterDetail = toCharacterDetail
+                    )
                 }
                 item {
                     CommonSpacer()
@@ -83,6 +92,7 @@ fun GuildList(
 @Composable
 private fun GuildItem(
     guild: GuildAllMember,
+    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit
 ) {
     val memberList = arrayListOf<GuildMemberInfo>()
@@ -137,6 +147,7 @@ private fun GuildItem(
                 //角色图标列表
                 GridIconListCompose(
                     icons = iconIdList,
+                    parentSpanCount = parentSpanCount,
                     onClickItem = toCharacterDetail
                 )
             }
@@ -179,6 +190,6 @@ private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1,
 @Composable
 private fun GuildItemPreview() {
     PreviewLayout {
-        GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
+        GuildItem(guild = GuildAllMember(), 2, toCharacterDetail = {})
     }
 }

@@ -44,11 +44,6 @@ fun TopBarCompose(
         mutableStateOf(false)
     }
 
-    //检查应用更新
-    LaunchedEffect(null) {
-        noticeViewModel.check()
-    }
-
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -69,21 +64,43 @@ fun TopBarCompose(
             verticalAlignment = Alignment.CenterVertically
         ) {
             //应用更新
-            if (updateApp.id == -1) {
-                //校验更新中
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(Dimen.fabIconSize)
-                        .padding(Dimen.smallPadding),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    strokeWidth = 3.dp
-                )
-            } else {
-                if (updateApp.id != -2) {
+            when (updateApp.id) {
+                -1 -> {
+                    //校验更新中
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(Dimen.fabIconSize)
+                            .padding(Dimen.smallPadding),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        strokeWidth = 3.dp
+                    )
+                }
+                -2 -> {
+                    //异常
+                    IconCompose(
+                        data = MainIconType.REQUEST_ERROR,
+                        tint = colorRed,
+                        size = Dimen.fabIconSize,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
+                    ) {
+                        isExpanded = !isExpanded
+                    }
+                }
+                else -> {
+                    //提示
                     val updateColor =
-                        if (updateApp.id == 0) colorGreen else MaterialTheme.colorScheme.onSurface
+                        when (updateApp.id) {
+                            0 -> colorGreen
+                            -2 -> colorRed
+                            else -> MaterialTheme.colorScheme.onSurface
+                        }
                     val icon =
-                        if (updateApp.id == 0) MainIconType.APP_UPDATE else MainIconType.NOTICE
+                        when (updateApp.id) {
+                            0 -> MainIconType.APP_UPDATE
+                            -2 -> MainIconType.REQUEST_ERROR
+                            else -> MainIconType.NOTICE
+                        }
+
                     IconCompose(
                         data = if (isExpanded) MainIconType.CLOSE else icon,
                         tint = if (isExpanded) MaterialTheme.colorScheme.onSurface else updateColor,
@@ -108,17 +125,39 @@ fun TopBarCompose(
 
     }
 
-    ExpandAnimation(visible = isExpanded) {
+    ExpandAnimation(visible = isExpanded || updateApp.id == -2) {
         AppUpdateContent(appNotice = updateApp)
     }
 }
 
-//应用更新内容
+/**
+ * 应用更新内容或异常提示
+ */
 @Composable
 private fun AppUpdateContent(appNotice: AppNotice) {
-    val context = LocalContext.current
-    val releaseUrl = stringResource(id = R.string.github_release_url, appNotice.title)
 
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        if (appNotice.id != -2) {
+            UpdateContent(appNotice)
+        } else {
+            ErrorContent()
+        }
+    }
+}
+
+/**
+ * 更新内容
+ */
+@Composable
+private fun UpdateContent(
+    appNotice: AppNotice
+) {
+    val context = LocalContext.current
     val mark0 = arrayListOf<ColorTextIndex>()
     appNotice.message.forEachIndexed { index, c ->
         if (c == '[') {
@@ -129,105 +168,121 @@ private fun AppUpdateContent(appNotice: AppNotice) {
         }
     }
 
-
-    MainCard(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
-        )
+    Column(
+        modifier = Modifier
+            .padding(horizontal = Dimen.largePadding)
+            .fillMaxWidth()
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .padding(horizontal = Dimen.largePadding)
-                .fillMaxWidth()
+                .padding(top = Dimen.mediumPadding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(top = Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //版本
-                Text(
-                    text = "v${appNotice.title}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.weight(1f)
-                )
-                //反馈群
-                IconTextButton(
-                    icon = MainIconType.SUPPORT,
-                    text = stringResource(id = R.string.qq_group),
-                ) {
-                    joinQQGroup(context)
-                }
-                //查看 github release 详情
-                IconTextButton(
-                    icon = MainIconType.GITHUB_RELEASE,
-                    text = stringResource(id = R.string.github),
-                ) {
-                    BrowserUtil.open(context, releaseUrl)
-                }
-            }
-
-            //日期
-            CaptionText(
-                text = stringResource(
-                    id = R.string.release,
-                    appNotice.date.formatTime.substring(0, 10)
-                )
-            )
-
-            //内容
+            //版本
             Text(
-                text = buildAnnotatedString {
-                    appNotice.message.forEachIndexed { index, char ->
-                        //替换括号及括号内字体颜色
-                        mark0.forEach {
-                            if (index >= it.start && index <= it.end) {
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append(char)
-                                }
-                                return@forEachIndexed
-                            }
-                        }
-                        //添加非括号标记的参数
-                        append(char)
-                    }
-                },
-                textAlign = TextAlign.Start,
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
-                style = MaterialTheme.typography.bodyLarge,
+                text = "v${appNotice.title}",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.weight(1f)
             )
-
-            //前往更新
-            if (appNotice.id == 0) {
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        VibrateUtil(context).single()
-                        BrowserUtil.open(
-                            context,
-                            appNotice.url
-                        )
-                    }
-                ) {
-                    MainContentText(
-                        text = stringResource(id = R.string.to_update),
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center
-                    )
-                }
+            //反馈群
+            IconTextButton(
+                icon = MainIconType.SUPPORT,
+                text = stringResource(id = R.string.qq_group),
+            ) {
+                joinQQGroup(context)
             }
-
         }
+
+        //日期
+        CaptionText(
+            text = stringResource(
+                id = R.string.release,
+                appNotice.date.formatTime
+            )
+        )
+
+        //内容
+        Text(
+            text = buildAnnotatedString {
+                appNotice.message.forEachIndexed { index, char ->
+                    //替换括号及括号内字体颜色
+                    mark0.forEach {
+                        if (index >= it.start && index <= it.end) {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append(char)
+                            }
+                            return@forEachIndexed
+                        }
+                    }
+                    //添加非括号标记的参数
+                    append(char)
+                }
+            },
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+
+        //前往更新
+        if (appNotice.id == 0) {
+            TextButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {
+                    VibrateUtil(context).single()
+                    BrowserUtil.open(appNotice.url)
+                }
+            ) {
+                MainContentText(
+                    text = stringResource(id = R.string.to_update),
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
     }
 }
 
+/**
+ * 异常内容
+ */
+@Composable
+private fun ErrorContent() {
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .padding(Dimen.mediumPadding)
+            .fillMaxWidth()
+    ) {
+        MainText(
+            text = stringResource(id = R.string.title_api_request_error),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        //内容
+        MainContentText(
+            text = stringResource(id = R.string.content_api_request_error),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(vertical = Dimen.mediumPadding)
+        )
+
+        //加群反馈
+        IconTextButton(
+            modifier = Modifier
+                .align(Alignment.End),
+            icon = MainIconType.SUPPORT,
+            text = stringResource(id = R.string.qq_group)
+        ) {
+            joinQQGroup(context)
+        }
+    }
+}
 
 @CombinedPreviews
 @Composable

@@ -208,6 +208,11 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
+     * 接口请求一场
+     */
+    REQUEST_ERROR(Icons.Rounded.ErrorOutline),
+
+    /**
      * 反馈交流群
      */
     SUPPORT(Icons.Rounded.ContactSupport),
@@ -290,11 +295,6 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 漫画目录
      */
-    COMIC_NAV(Icons.Rounded.Toc),
-
-    /**
-     * 漫画目录
-     */
     YOUTUBE(Icons.Rounded.SmartDisplay),
 
     /**
@@ -306,11 +306,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 帮助
      */
     HELP(Icons.Rounded.Help),
-
-    /**
-     * 导入
-     */
-    IMPORT(Icons.Rounded.Download),
 
     /**
      * 随机掉落地区
@@ -328,9 +323,14 @@ enum class MainIconType(val icon: ImageVector) {
     ADD_CALENDAR(Icons.Rounded.EditCalendar),
 
     /**
+     * 项目详情
+     */
+    GITHUB_PROJECT(Icons.Rounded.DataObject),
+
+    /**
      * 发布详情
      */
-    GITHUB_RELEASE(Icons.Rounded.NewReleases),
+    COOLAPK_APP_STORE(Icons.Rounded.Verified),
 
     /**
      * 编辑

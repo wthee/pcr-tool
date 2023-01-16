@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.3.0"
-val composeCompilerVersion = "1.3.0"
-val appVersionCode = 352
-val appVersionName = "3.5.2"
+val composeVersion = "1.4.0-alpha04"
+val composeCompilerVersion = "1.4.0-alpha02"
+val appVersionCode = 353
+val appVersionName = "3.5.3"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -106,8 +106,8 @@ android {
 dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.3")
+    implementation("androidx.appcompat:appcompat:1.6.0")
+    implementation("androidx.fragment:fragment-ktx:1.5.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.preference:preference-ktx:1.2.0")
@@ -119,10 +119,10 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.0.0")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha04")
 
     //Accompanist
-    val accompanistVersion = "0.27.0"
+    val accompanistVersion = "0.29.0-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -130,17 +130,15 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-webview:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.4.0")
+    implementation("androidx.browser:browser:1.5.0-beta01")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")
 
     //Coil(compose verion 1.2.1)
     val coilVersion = "2.2.2"
-    implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt

@@ -20,7 +20,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -36,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -49,13 +51,16 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CircularProgressCompose
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.ui.tool.SettingLinkItem
+import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -73,7 +78,7 @@ fun mainSP(): SharedPreferences =
 /**
  * 本地存储：版本、设置信息
  */
-fun settingSP(mContext: Context = MyApplication.context): SharedPreferences =
+fun settingSP(mContext: Context = context): SharedPreferences =
     mContext.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
@@ -168,7 +173,10 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //刷新页面
+    /**
+     * 刷新页面
+     * what：0切换数据，1动态色彩，2、3、4数据更新
+     */
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
@@ -182,9 +190,11 @@ class MainActivity : ComponentActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 finish()
                 startActivity(intent)
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                //振动提示
-                VibrateUtil(this).done()
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                //数据下载完成，振动提示
+                if (it.what > 1) {
+                    VibrateUtil(this).done()
+                }
             } catch (e: Exception) {
                 LogReportUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
                 ToastUtil.short(getString(R.string.change_failed))
@@ -224,8 +234,8 @@ fun Home(
         r6Ids = r6IdList.value!!
     }
 
-
-    LaunchedEffect(navSheetState.currentValue) {
+    //首页使用bottomsheet时，关闭时主按钮初始
+    LaunchedEffect(navSheetState.isVisible) {
         if (navController.currentDestination?.route == Navigation.HOME) {
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
@@ -282,11 +292,15 @@ fun FabMain(modifier: Modifier = Modifier) {
  * 设置页面
  */
 @Composable
-private fun SettingDropMenu(actions: NavActions) {
+private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hiltViewModel()) {
     val fabMainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val context = LocalContext.current
     val sp = settingSP()
     val region = MainActivity.regionType
+    val updateDb = viewModel.updateDb.observeAsState().value ?: ""
+    LaunchedEffect(MainActivity.regionType) {
+        viewModel.getDbDiff()
+    }
 
     //数据库版本
     val typeName = getRegionName(region)
@@ -347,11 +361,16 @@ private fun SettingDropMenu(actions: NavActions) {
             //应用信息
             DropdownMenuItem(
                 text = {
-                    SettingLinkItem(
+                    SettingCommonItem(
                         iconType = R.drawable.ic_logo_large,
                         iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
-                        summary = "${typeName}：${dbVersionCode}",
+                        summary = stringResource(
+                            id = R.string.db_diff,
+                            typeName,
+                            dbVersionCode,
+                            updateDb
+                        ),
                         titleColor = MaterialTheme.colorScheme.primary,
                         summaryColor = MaterialTheme.colorScheme.onSurface,
                         padding = Dimen.smallPadding,

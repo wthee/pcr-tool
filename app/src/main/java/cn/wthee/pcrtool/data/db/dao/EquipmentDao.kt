@@ -48,7 +48,7 @@ interface EquipmentDao {
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
      * @param craft -1：全部，0：素材：1：装备
-     * @param type 装备类型
+     * @param colorType 装备品级
      * @param name 装备名称
      * @param showAll 0: 仅收藏，1：全部
      * @param starIds 收藏的装备编号
@@ -299,7 +299,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_1 != 0 UNION
             SELECT
                 unit_id,
@@ -309,7 +309,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_2 != 0 UNION
             SELECT
                 unit_id,
@@ -319,7 +319,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_3 != 0 UNION
             SELECT
                 unit_id,
@@ -329,7 +329,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_4 != 0 UNION
             SELECT
                 unit_id,
@@ -339,7 +339,7 @@ interface EquipmentDao {
                 unit_promotion 
             WHERE
                 promotion_level >= 1 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
                 AND equip_slot_5 != 0 UNION
             SELECT
                 unit_id,
@@ -350,7 +350,7 @@ interface EquipmentDao {
             WHERE
                 promotion_level >= 1 
                 AND equip_slot_6 != 0 
-                AND unit_id < 200000
+                AND unit_id < $maxUnitId
             ) 
         WHERE 
             1 = CASE

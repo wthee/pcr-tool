@@ -68,10 +68,10 @@ private fun EquipDetail(
     ) {
 
         Column {
-            if (equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
+            if (equipId != UNKNOWN_EQUIP_ID) {
                 if (BuildConfig.DEBUG) {
                     Subtitle1(
-                        text = equipMaxData.equipmentId.toString(),
+                        text = equipId.toString(),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
                 }
@@ -147,7 +147,7 @@ private fun EquipMaterialList(
         MainText(
             text = stringResource(R.string.equip_material),
             modifier = Modifier
-                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                .padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding)
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材

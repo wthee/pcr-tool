@@ -20,16 +20,16 @@ data class BirthdayData(
     private fun getDate(): String {
         val c = Calendar.getInstance()
         c.time = Date(System.currentTimeMillis())
-        c.timeZone = TimeZone.getTimeZone("GMT+8:00");
+        c.timeZone = TimeZone.getTimeZone("GMT+8:00")
         val mYear = c.get(Calendar.YEAR)
         val mMonth = c.get(Calendar.MONTH) + 1
         val mDay = c.get(Calendar.DAY_OF_MONTH)
 
-        if (month < mMonth || (month == mMonth && day < mDay) || month == 999) {
+        return if (month < mMonth || (month == mMonth && day < mDay) || month == 999) {
             //过去的日期
-            return "${mYear + 1}/$month/$day"
+            "${mYear + 1}/$month/$day"
         } else {
-            return "${mYear}/$month/$day"
+            "${mYear}/$month/$day"
 
         }
     }
@@ -48,7 +48,7 @@ data class BirthdayData(
         icons.forEachIndexed { index, id ->
             list.add(UnitInfo(id, names[index]))
         }
-        list.sortWith() { o1, o2 ->
+        list.sortWith { o1, o2 ->
             o1.unitName.compareTo(o2.unitName)
         }
         val idList = arrayListOf<Int>()

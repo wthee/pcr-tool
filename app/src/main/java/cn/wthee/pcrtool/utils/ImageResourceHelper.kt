@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
-class ImageResourceHelper() {
+class ImageResourceHelper {
 
     var type = "cn"
 
@@ -67,8 +67,11 @@ class ImageResourceHelper() {
 
     }
 
-    //获取资源地址前缀
-    fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = false) =
+    /**
+     * 获取资源地址前缀
+     * @param forceJpType 使用日服图片资源
+     */
+    fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = true) =
         RESOURCE_PREFIX_URL + (if (forceJpType) "jp" else type) + RESOURCE + resUrl + id.toString() + WEBP
 
     //获取装备图标
@@ -112,13 +115,12 @@ class ImageResourceHelper() {
      * 获取星级最高的角色图标
      *
      * @param unitId 角色编号
-     * @param forceJpType 强制使用日服资源
      */
-    fun getMaxIconUrl(unitId: Int, forceJpType: Boolean = false): String {
+    fun getMaxIconUrl(unitId: Int): String {
         if (r6Ids.contains(unitId)) {
-            return getUrl(ICON_UNIT, getStarId(unitId, 6), forceJpType)
+            return getUrl(ICON_UNIT, getStarId(unitId, 6))
         }
-        return getUrl(ICON_UNIT, getStarId(unitId, 3), forceJpType)
+        return getUrl(ICON_UNIT, getStarId(unitId, 3))
     }
 
     /**

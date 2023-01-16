@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 import android.content.Context
 import android.os.Build
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.utils.Constants.COIL_DIR
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -124,4 +125,62 @@ object FileUtil {
         }
     }
 
+    /**
+     * 删除文件及文件夹
+     * @param saveDir
+     */
+    fun delete(file: File, saveDir: Boolean = true) {
+        if (file.isDirectory) {
+            val files = file.listFiles()
+            files?.forEach {
+                delete(it)
+            }
+            if (!saveDir) {
+                //删除文件夹
+                file.delete()
+            }
+        } else if (file.exists()) {
+            file.delete()
+        }
+    }
+
+    /**
+     * 获取文件夹内文件大小
+     *
+     * @return 大小、文件数 / 2 为图片数
+     */
+    fun getCoilDirSize(context: Context): Pair<String, Int> {
+        val dir = context.filesDir.resolve(COIL_DIR)
+        var size = 0L
+        var count = 0
+        dir.listFiles()?.forEach {
+            size += it.length()
+            count++
+        }
+        return Pair(size.convertFileSize(), count / 2)
+
+    }
+
+    /**
+     * 格式化文件大小格式
+     */
+    private fun Long.convertFileSize(): String {
+        val kb: Long = 1024
+        val mb = kb * 1024
+        val gb = mb * 1024
+        return when {
+            this >= gb -> {
+                String.format("%.1f GB", this.toFloat() / gb)
+            }
+            this >= mb -> {
+                val f = this.toFloat() / mb
+                String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
+            }
+            this >= kb -> {
+                val f = this.toFloat() / kb
+                String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
+            }
+            else -> String.format("%d B", this)
+        }
+    }
 }

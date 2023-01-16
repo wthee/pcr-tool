@@ -116,5 +116,5 @@ private fun shortestColumn(colHeights: IntArray): Int {
 fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
     Dimen.mediumIconSize + Dimen.mediumPadding * 2
 } else {
-    Dimen.iconSize + Dimen.largePadding * 2
+    Dimen.iconSize + Dimen.mediumPadding * 2
 } * 5

@@ -15,6 +15,7 @@ object Constants {
     const val SQLITE_VERSION = 351
 
     //本地储存
+    const val COIL_DIR = "coil_image_cache"
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION_CN = "database_version_cn"
     const val SP_DATABASE_VERSION_TW = "database_version_tw"
@@ -110,13 +111,13 @@ object Constants {
 
 
     // 异常
-    const val EXCEPTION_API = "api exception"
-    const val EXCEPTION_DOWNLOAD_DB = "db download exception"
-    const val EXCEPTION_SAVE_DB = "db file save exception"
-    const val EXCEPTION_LOAD_ATTR = "character attr exception"
-    const val EXCEPTION_UNIT_NULL = "character info exception"
-    const val EXCEPTION_SKILL = "skill exception"
-    const val EXCEPTION_PVP_SERVICE = "pvp search exception"
-    const val EXCEPTION_DATA_CHANGE = "db change exception"
+    const val EXCEPTION_API = "api exception:"
+    const val EXCEPTION_DOWNLOAD_DB = "db download exception:"
+    const val EXCEPTION_SAVE_DB = "db file save exception:"
+    const val EXCEPTION_LOAD_ATTR = "character attr exception:"
+    const val EXCEPTION_UNIT_NULL = "character info exception:"
+    const val EXCEPTION_SKILL = "skill exception:"
+    const val EXCEPTION_PVP_SERVICE = "pvp search exception:"
+    const val EXCEPTION_DATA_CHANGE = "db change exception:"
 
 }

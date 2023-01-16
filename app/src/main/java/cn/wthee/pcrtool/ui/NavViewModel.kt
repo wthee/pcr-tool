@@ -138,5 +138,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 角色评级类型
      */
-    val leaderTierType = MutableLiveData<Int>(0)
+    val leaderTierType = MutableLiveData(0)
+
 }

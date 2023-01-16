@@ -1,16 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -42,32 +39,25 @@ import cn.wthee.pcrtool.utils.*
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainSettings(
-    sp: SharedPreferences = settingSP(LocalContext.current)
-) {
+fun MainSettings() {
     val context = LocalContext.current
-    val region = MainActivity.regionType
 
+    //调整主按钮图表
     LaunchedEffect(navSheetState.currentValue) {
         if (navSheetState.isVisible) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
-
-    //数据库版本
-    val typeName = getRegionName(region)
-    val localVersion = sp.getString(
-        when (region) {
-            2 -> Constants.SP_DATABASE_VERSION_CN
-            3 -> Constants.SP_DATABASE_VERSION_TW
-            else -> Constants.SP_DATABASE_VERSION_JP
-        },
-        ""
-    )
-    val dbVersionGroup = if (localVersion != null) {
-        localVersion.split("/")[0]
-    } else {
-        ""
+    //缓存删除确认弹窗
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
+    //图片缓存大小
+    val imageCacheSize = remember {
+        mutableStateOf(Pair("", 0))
+    }
+    LaunchedEffect(openDialog.value) {
+        imageCacheSize.value = FileUtil.getCoilDirSize(context)
     }
 
 
@@ -93,9 +83,6 @@ fun MainSettings(
                 modifier = Modifier.padding(Dimen.mediumPadding),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
-            Subtitle1(
-                text = "${typeName}：${dbVersionGroup}"
-            )
         }
 
 
@@ -113,6 +100,25 @@ fun MainSettings(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
             SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
         }
+        //- 清除图片缓存
+        SettingCommonItem(
+            iconType = MainIconType.DELETE,
+            title = stringResource(id = R.string.clean_image_cache),
+            summary = stringResource(id = R.string.tip_clean_image_cache),
+            onClick = {
+                //清除缓存弹窗
+                openDialog.value = true
+            }
+        ) {
+            Subtitle2(
+                text = stringResource(
+                    id = R.string.image_cache,
+                    imageCacheSize.value.first,
+                    imageCacheSize.value.second
+                ),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
 
         //其它相关
         Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
@@ -121,7 +127,7 @@ fun MainSettings(
             modifier = Modifier.padding(Dimen.largePadding)
         )
         //- 加入反馈群
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),
@@ -133,15 +139,39 @@ fun MainSettings(
                 text = stringResource(id = R.string.to_join_qq_group),
                 color = MaterialTheme.colorScheme.primary
             )
-            IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
         }
         //- 模型预览
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.PREVIEW_UNIT_SPINE,
             title = stringResource(id = R.string.title_spine),
             summary = stringResource(id = R.string.spine_tip),
             onClick = {
-                BrowserUtil.open(context, Constants.PREVIEW_URL)
+                BrowserUtil.open(Constants.PREVIEW_URL)
+            }
+        )
+        //- 酷安
+        val appUrl = stringResource(id = R.string.coolapk_url)
+        SettingCommonItem(
+            iconType = MainIconType.COOLAPK_APP_STORE,
+            title = stringResource(id = R.string.coolapk),
+            summary = stringResource(id = R.string.tip_coolapk),
+            onClick = {
+                BrowserUtil.open(appUrl)
+            }
+        ) {
+            Subtitle2(
+                text = stringResource(id = R.string.please),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        //- 项目代码
+        val gitUrl = stringResource(id = R.string.github_project_url)
+        SettingCommonItem(
+            iconType = MainIconType.GITHUB_PROJECT,
+            title = stringResource(id = R.string.github),
+            summary = stringResource(id = R.string.tip_github),
+            onClick = {
+                BrowserUtil.open(gitUrl)
             }
         )
 
@@ -153,45 +183,77 @@ fun MainSettings(
         )
         //- 干炸里脊资源
         val dataFromUrl = stringResource(id = R.string.data_from_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.DATA_SOURCE,
             title = stringResource(id = R.string.data_from),
             summary = stringResource(id = R.string.data_from_hint),
             onClick = {
-                BrowserUtil.open(context, dataFromUrl)
+                BrowserUtil.open(dataFromUrl)
             }
         )
         //- 静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.NOTE,
             title = stringResource(id = R.string.shizuru_note),
             summary = stringResource(id = R.string.shizuru_note_tip),
             onClick = {
-                BrowserUtil.open(context, shizuruUrl)
+                BrowserUtil.open(shizuruUrl)
             }
         )
         //- 竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.PVP_SEARCH,
             title = stringResource(id = R.string.pcrdfans),
             summary = stringResource(id = R.string.pcrdfans_tip),
             onClick = {
-                BrowserUtil.open(context, pcrdfansUrl)
+                BrowserUtil.open(pcrdfansUrl)
             }
         )
         //- 排行
         val leaderUrl = stringResource(id = R.string.leader_source_url)
-        SettingLinkItem(
+        SettingCommonItem(
             iconType = MainIconType.LEADER,
             title = stringResource(id = R.string.leader_source),
             summary = stringResource(id = R.string.leader_tip),
             onClick = {
-                BrowserUtil.open(context, leaderUrl)
+                BrowserUtil.open(leaderUrl)
             }
         )
         CommonSpacer()
+    }
+
+    if (openDialog.value) {
+        AlertDialog(
+            title = {
+                MainText(
+                    text = stringResource(id = R.string.confirm_clean_image_cache),
+                    textAlign = TextAlign.Start,
+                    selectable = true
+                )
+            },
+            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            shape = MaterialTheme.shapes.medium,
+            confirmButton = {
+                //删除缓存
+                MainButton(text = stringResource(R.string.confirm)) {
+                    FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
+                    openDialog.value = false
+                }
+            },
+            dismissButton = {
+                //取消
+                SubButton(
+                    text = stringResource(id = R.string.cancel)
+                ) {
+                    openDialog.value = false
+                }
+            })
     }
 
 }
@@ -208,7 +270,7 @@ fun SettingSwitchCompose(
     showSummary: Boolean
 ) {
     val context = LocalContext.current
-    val sp =  settingSP(context)
+    val sp = settingSP(context)
 
     val title: String
     val iconType: MainIconType
@@ -246,19 +308,16 @@ fun SettingSwitchCompose(
     }
 
     //更新flag
-    when (type) {
-        SettingSwitchType.VIBRATE -> {
-            SideEffect {
+    SideEffect {
+        when (type) {
+            SettingSwitchType.VIBRATE -> {
                 vibrateOnFlag = checkedState.value
             }
-        }
-        SettingSwitchType.ANIMATION -> {
-            SideEffect {
+            SettingSwitchType.ANIMATION -> {
                 animOnFlag = checkedState.value
+
             }
-        }
-        SettingSwitchType.DYNAMIC_COLOR -> {
-            SideEffect {
+            SettingSwitchType.DYNAMIC_COLOR -> {
                 dynamicColorOnFlag = checkedState.value
             }
         }
@@ -268,7 +327,7 @@ fun SettingSwitchCompose(
     val summary = if (checkedState.value) summaryOn else summaryOff
 
 
-    SettingLinkItem(
+    SettingCommonItem(
         iconType = iconType,
         title = title,
         summary = summary,
@@ -310,7 +369,7 @@ fun SettingSwitchCompose(
  * @param extraContent  右侧额外内容
  */
 @Composable
-fun SettingLinkItem(
+fun SettingCommonItem(
     iconType: Any,
     iconSize: Dp = Dimen.settingIconSize,
     title: String,
@@ -318,7 +377,7 @@ fun SettingLinkItem(
     titleColor: Color = MaterialTheme.colorScheme.onSurface,
     summaryColor: Color = MaterialTheme.colorScheme.outline,
     padding: Dp = Dimen.largePadding,
-    colorFilter: ColorFilter? = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+    tintColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -337,7 +396,7 @@ fun SettingLinkItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            colorFilter = colorFilter,
+            tint = tintColor,
         )
         Column(
             modifier = Modifier
@@ -376,10 +435,10 @@ private fun SwitchThumbIcon(checked: Boolean) {
 
 @CombinedPreviews
 @Composable
-private fun SettingPreview(){
+private fun SettingPreview() {
     PreviewLayout {
-        SettingSwitchCompose(SettingSwitchType.VIBRATE,true)
-        SettingLinkItem(
+        SettingSwitchCompose(SettingSwitchType.VIBRATE, true)
+        SettingCommonItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),

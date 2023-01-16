@@ -11,20 +11,22 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.spanCount
+import kotlin.math.max
 
 /**
  * 角色图标列表
+ * @param icons unitId
+ * @param parentSpanCount 父级布局列数
  */
 @Composable
 fun GridIconListCompose(
     icons: List<Int>,
+    parentSpanCount: Int = 1,
     onClickItem: (Int) -> Unit
 ) {
     VerticalGrid(
-        modifier = Modifier.padding(
-            top = Dimen.mediumPadding,
-        ),
-        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
+        modifier = Modifier.padding(top = Dimen.mediumPadding),
+        spanCount = ((Dimen.iconSize + Dimen.mediumPadding * 2) * max(1, parentSpanCount)).spanCount
     ) {
         icons.forEach {
             UnitIcon(

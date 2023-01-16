@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -17,13 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.FileSaveHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.checkPermissions
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
 //权限
@@ -39,7 +39,6 @@ val loadedPicMap = hashMapOf<String, Drawable?>()
 /**
  * 角色所有卡面/剧情故事图片
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AllCardList(
     id: Int,
@@ -62,19 +61,11 @@ fun AllCardList(
     val checkedPicUrl = remember {
         mutableStateOf("")
     }
-
-    LaunchedEffect(MainActivity.navSheetState.currentValue) {
-        if (allPicsType == AllPicsType.STORY && MainActivity.navSheetState.isVisible) {
-            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        }
-    }
-
     val hasStory = responseData?.data?.isNotEmpty() == true
 
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -159,14 +150,7 @@ private fun StoryPicList(
                 urls = data
             )
         } else {
-            MainText(
-                text = stringResource(id = R.string.no_story_info),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(
-                        Dimen.largePadding
-                    )
-            )
+            CenterTipText(text = stringResource(id = R.string.no_story_info))
         }
     }
 
@@ -230,7 +214,7 @@ private fun CardGridList(
                 }
             ) {
                 //图片
-                StoryImageCompose(
+                SubImageCompose(
                     data = picUrl
                 ) {
                     loadedPicMap[picUrl] = it.drawable

@@ -75,7 +75,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getCount() = unitDao.getCount()
 
-    suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo {
+    suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo? {
         //额外角色编号
         val exUnitIdList = try {
             unitDao.getExUnitIdList()
@@ -110,8 +110,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getGuilds() = unitDao.getGuilds()
 
     suspend fun getRaces() = unitDao.getRaces()
-
-    suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
 
     suspend fun getAllGuildMembers() = unitDao.getAllGuildMembers()
 

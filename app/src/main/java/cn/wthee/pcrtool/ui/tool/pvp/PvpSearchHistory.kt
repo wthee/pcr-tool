@@ -59,9 +59,8 @@ fun PvpSearchHistory(
                 }
             }
         } else {
-            MainText(
-                text = stringResource(id = R.string.pvp_no_history),
-                modifier = Modifier.align(Alignment.Center)
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_history)
             )
         }
     }
@@ -107,7 +106,7 @@ private fun PvpHistoryItem(
                     val selectedData =
                         characterViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortByDescending { it.position }
+                    selectedIds?.sortWith(comparePvpCharacterData())
                     navViewModel.selectedPvpData.postValue(selectedIds)
                     navViewModel.showResult.postValue(true)
                 }
@@ -121,7 +120,6 @@ private fun PvpHistoryItem(
             ) {
                 //防守
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getDefIds(),
                     floatWindow,
                     toCharacter

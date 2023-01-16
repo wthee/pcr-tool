@@ -32,10 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.Attr
-import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
+import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -301,16 +298,17 @@ private fun CharacterCard(
     actions: NavActions,
     characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
 
     //基本信息
     val basicInfo =
-        characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
+        characterViewModel.getCharacterBasicInfo(unitId)
+            .collectAsState(initial = CharacterInfo()).value
 
     Column(
         modifier = Modifier
             .padding(Dimen.largePadding)
-            .width(getItemWidth()),
+            .widthIn(max = getItemWidth() * 1.3f)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //卡面信息
@@ -353,10 +351,8 @@ private fun CharacterCard(
                 text = stringResource(id = R.string.spine_preview),
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             ) {
-                BrowserUtil.open(
-                    context,
-                    Constants.PREVIEW_UNIT_URL + (if (cutinId != 0) cutinId else unitId)
-                )
+                val id = if (cutinId != 0) cutinId else unitId
+                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
             }
         }
     }
@@ -377,14 +373,16 @@ private fun CharacterCoe(
     val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
     val context = LocalContext.current
 
-    Row(modifier = Modifier
-        .clip(MaterialTheme.shapes.extraSmall)
-        .clickable {
-            VibrateUtil(context).single()
-            toCoe()
-        }
-        .padding(horizontal = Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.extraSmall)
+            .clickable {
+                VibrateUtil(context).single()
+                toCoe()
+            }
+            .padding(horizontal = Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         val value = if (coe == null) {
             ""
         } else {
@@ -419,6 +417,7 @@ private fun CharacterCoe(
             }
             (basic + skill).int.toString()
         }
+        //战力数值
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
         )
@@ -488,6 +487,7 @@ private fun CharacterLevel(
                 else -> maxLevel.toString()
             }
         },
+        shape = MaterialTheme.shapes.medium,
         textStyle = MaterialTheme.typography.bodyMedium,
         trailingIcon = {
             IconCompose(

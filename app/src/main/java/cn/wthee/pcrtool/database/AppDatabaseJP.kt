@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
@@ -66,11 +68,16 @@ abstract class AppDatabaseJP : RoomDatabase() {
 
         @SuppressLint("UnsafeOptInUsageError")
         fun buildDatabase(name: String): AppDatabaseJP {
-            return Room.databaseBuilder(
-                MyApplication.context,
-                AppDatabaseJP::class.java,
-                name
-            ).fallbackToDestructiveMigration()
+            return Room.databaseBuilder(MyApplication.context, AppDatabaseJP::class.java, name)
+                .fallbackToDestructiveMigration()
+                .addCallback(object : Callback() {
+                    override fun onOpen(db: SupportSQLiteDatabase) {
+                        super.onOpen(db)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            db.disableWriteAheadLogging()
+                        }
+                    }
+                })
                 .build()
         }
     }

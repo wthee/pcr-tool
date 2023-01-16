@@ -59,16 +59,21 @@ private fun StoryDetailItem(key: Int, attrList: List<CharacterStoryAttr>) {
         IconCompose(
             data = ImageResourceHelper.getInstance().getMaxIconUrl(key * 100 + 1)
         )
+        if (attrList.firstOrNull()?.subTitle == "") {
+            Subtitle1(text = stringResource(id = R.string.unknown_character))
+        }
         Column {
             attrList.forEach {
                 Column(
                     modifier = Modifier.padding(vertical = Dimen.mediumPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    //标题
-                    CaptionText(text = it.getFixedTitle())
-                    //剧情名
-                    Subtitle1(text = it.subTitle, selectable = true)
+                    if (it.subTitle != "") {
+                        //标题
+                        CaptionText(text = it.getFixedTitle())
+                        //剧情名
+                        Subtitle1(text = it.subTitle, selectable = true)
+                    }
                     AttrList(
                         attrs = it.getAttr().allNotZero(isPreview = LocalInspectionMode.current)
                     )

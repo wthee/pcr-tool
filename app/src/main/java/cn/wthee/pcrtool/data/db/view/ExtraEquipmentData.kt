@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import cn.wthee.pcrtool.data.model.AttrCompareData
-import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 
 /**
@@ -56,19 +55,6 @@ data class ExtraEquipmentData(
                 AttrInt()
             )
 
-    }
-
-    /**
-     * 属性对比差值
-     */
-    private fun compareList(): List<AttrValue> {
-        val attrs = this.attr.allNotZero()
-        val attrs1 = this.attrDefault.allNotZero()
-        val compareValue = arrayListOf<AttrValue>()
-        attrs.forEachIndexed { index, attrValue ->
-            compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
-        }
-        return compareValue
     }
 
     /**

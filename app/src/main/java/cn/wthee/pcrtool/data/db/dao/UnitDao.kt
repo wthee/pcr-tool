@@ -12,7 +12,7 @@ const val maxUnitId = 200000
 /**
  * 国服环奈
  * 调整时需注意同步调整
- * @see cn.wthee.pcrtool.data.db.view.GachaInfo
+ * @see [cn.wthee.pcrtool.data.db.view.GachaInfo]
  */
 const val limitedIds = """
     (
@@ -35,7 +35,7 @@ interface UnitDao {
      * @param pos1 站位范围开始
      * @param pos2 站位范围结束
      * @param atkType 0:全部，1：物理，2：魔法
-     * @param guild 角色所属公会名
+     * @param guildId 角色所属公会id
      * @param showAll 0：仅收藏，1：全部
      * @param r6 0：全部，1：仅六星解放
      * @param starIds 收藏的角色编号
@@ -64,9 +64,9 @@ interface UnitDao {
             COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time,
             (
                 CASE
-                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN $limitedIds THEN 1 
                     WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
-                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN $limitedIds) THEN 2
                     WHEN is_limited = 1 AND rarity = 1 THEN 3
                 END
             ) AS limit_type
@@ -78,7 +78,7 @@ interface UnitDao {
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
             unit_data.unit_name like '%' || :unitName || '%'
-        AND unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+        AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
         AND (
             (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
@@ -151,7 +151,7 @@ interface UnitDao {
             unit_profile
             LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id 
         WHERE
-            unit_profile.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
+            unit_data.search_area_width > 0
             AND unit_profile.unit_id < $maxUnitId 
             AND unit_data.unit_id IS NOT NULL
         """
@@ -183,9 +183,9 @@ interface UnitDao {
             COALESCE(unit_data.start_time, '2015/04/01') AS unit_start_time,
             (
                 CASE
-                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN ${limitedIds} THEN 1 
+                    WHEN is_limited = 0 AND unit_profile.unit_id NOT IN $limitedIds THEN 1 
                     WHEN is_limited = 1 AND unit_profile.unit_id IN (:exUnitIdList) THEN 4
-                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN ${limitedIds}) THEN 2
+                    WHEN ((is_limited = 1 AND rarity = 3) OR unit_profile.unit_id IN $limitedIds) THEN 2
                     WHEN is_limited = 1 AND rarity = 1 THEN 3
                     
                 END
@@ -197,7 +197,7 @@ interface UnitDao {
             unit_data.unit_id = :unitId
         """
     )
-    suspend fun getCharacterBasicInfo(unitId: Int, exUnitIdList: List<Int>): CharacterInfo
+    suspend fun getCharacterBasicInfo(unitId: Int, exUnitIdList: List<Int>): CharacterInfo?
 
     /**
      * 获取角色详情基本资料
@@ -284,7 +284,8 @@ interface UnitDao {
             AND a.unit_id < $maxUnitId  
             AND b.search_area_width > 0
         ORDER BY
-            b.search_area_width
+            b.search_area_width,
+            a.unit_id
     """
     )
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
@@ -406,23 +407,14 @@ interface UnitDao {
                 unit_data.kana AS unit_name 
             FROM
                 guild
-                LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id 
-                AND unit_profile.unit_id < $maxUnitId
-                AND unit_profile.unit_id = ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = unit_profile.unit_id ) 
-                LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+                LEFT JOIN unit_profile ON guild.guild_id = unit_profile.guild_id AND unit_profile.unit_id < $maxUnitId
+                LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id AND unit_data.search_area_width > 0
             )
         GROUP BY
             guild_id
     """
     )
     suspend fun getAllGuildMembers(): List<GuildAllMember>
-
-    /**
-     * 获取新增公会成员信息
-     */
-    @SkipQueryVerification
-    @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
-    suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
 
     /**
      * 获取无公会成员信息
@@ -435,9 +427,8 @@ interface UnitDao {
             GROUP_CONCAT(unit_data.kana,'-') as unit_names
         FROM
             unit_profile
-						LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
-        WHERE unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
-        AND unit_profile.guild_id = ''
+			LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
+        WHERE unit_data.search_area_width > 0 AND unit_profile.guild_id = ''
         GROUP BY unit_profile.guild_id
     """
     )
@@ -470,8 +461,8 @@ interface UnitDao {
         """
         SELECT
             a.story_id,
-            c.title,
-            c.sub_title,
+            COALESCE(c.title, '') AS title,
+            COALESCE(c.sub_title, '') AS sub_title,
             a.status_type_1,
             a.status_rate_1,
             a.status_type_2,
@@ -570,13 +561,13 @@ interface UnitDao {
             LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
         WHERE
             ( b.is_limited = 0 OR ( b.is_limited = 1 AND b.rarity <> 1 ) ) 
-            AND a.unit_id < 200000 
-            AND a.unit_id IN ( SELECT MAX( unit_promotion.unit_id ) FROM unit_promotion WHERE unit_id = a.unit_id )
+            AND a.unit_id < $maxUnitId 
+            AND b.search_area_width > 0
             AND 1 = CASE
             WHEN  1 = :type AND b.is_limited = 0 AND b.rarity = 1 THEN 1 
             WHEN  2 = :type AND b.is_limited = 0 AND b.rarity = 2 THEN 1 
-            WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN ${limitedIds} THEN 1 
-            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id NOT IN (:exUnitIdList)) OR a.unit_id IN ${limitedIds}) THEN 1
+            WHEN  3 = :type AND b.is_limited = 0 AND b.rarity = 3 AND a.unit_id NOT IN $limitedIds THEN 1 
+            WHEN  4 = :type AND ((is_limited = 1 AND rarity = 3 AND a.unit_id NOT IN (:exUnitIdList)) OR a.unit_id IN $limitedIds) THEN 1
             END
         ORDER BY b.start_time DESC
     """

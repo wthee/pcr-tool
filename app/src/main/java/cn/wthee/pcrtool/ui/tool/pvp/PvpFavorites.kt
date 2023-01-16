@@ -68,9 +68,8 @@ fun PvpFavorites(
                 }
             }
         } else {
-            MainText(
-                text = stringResource(id = R.string.pvp_no_favorites),
-                modifier = Modifier.align(Alignment.Center)
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_favorites)
             )
         }
     }
@@ -125,7 +124,7 @@ private fun PvpFavoriteItem(
                     val selectedData =
                         characterViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortByDescending { it.position }
+                    selectedIds?.sortWith(comparePvpCharacterData())
                     navViewModel.selectedPvpData.postValue(selectedIds)
                     navViewModel.showResult.postValue(true)
                 }
@@ -143,7 +142,6 @@ private fun PvpFavoriteItem(
                     modifier = Modifier.padding(start = mediumPadding)
                 )
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getAtkIds(),
                     floatWindow,
                     toCharacter
@@ -155,7 +153,6 @@ private fun PvpFavoriteItem(
                     modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
                 )
                 PvpUnitIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     itemData.getDefIds(),
                     floatWindow,
                     toCharacter

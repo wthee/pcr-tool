@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,6 +25,7 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -31,9 +34,10 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GachaList(
-    scrollState: LazyListState,
+    scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
@@ -42,11 +46,13 @@ fun GachaList(
     val fesUnitIds =
         gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
+    val spanCount = getItemWidth().spanCount
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (gachaList.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState
+            LazyVerticalStaggeredGrid(
+                state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
                 items(
                     items = gachaList,
@@ -57,6 +63,7 @@ fun GachaList(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
+                        parentSpanCount = spanCount,
                         toCharacterDetail = toCharacterDetail,
                         toMockGacha = toMockGacha
                     )
@@ -93,6 +100,7 @@ fun GachaList(
 fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIds: List<Int>,
+    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
@@ -151,7 +159,11 @@ fun GachaItem(
                         textAlign = TextAlign.Start
                     )
                 } else {
-                    GridIconListCompose(icons = icons, onClickItem = toCharacterDetail)
+                    GridIconListCompose(
+                        icons = icons,
+                        parentSpanCount = parentSpanCount,
+                        onClickItem = toCharacterDetail
+                    )
                 }
 
                 Row(
@@ -191,6 +203,7 @@ private fun GachaItemPreview() {
         GachaItem(
             gachaInfo = GachaInfo(),
             toCharacterDetail = {},
+            parentSpanCount = 1,
             toMockGacha = {},
             fesUnitIds = arrayListOf()
         )

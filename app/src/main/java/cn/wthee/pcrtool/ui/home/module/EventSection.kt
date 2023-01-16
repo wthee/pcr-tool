@@ -221,9 +221,13 @@ private fun CalendarEventLayout(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
+                        parentSpanCount = spanCount,
                         toCharacterDetail = actions.toCharacterDetail,
                         toMockGacha = actions.toMockGacha
                     )
+                }
+                freeGachaList.forEach {
+                    FreeGachaItem(it)
                 }
                 storyEventList.forEach {
                     StoryEventItem(
@@ -236,11 +240,8 @@ private fun CalendarEventLayout(
                 eventList.forEach {
                     CalendarEventItem(it)
                 }
-                freeGachaList.forEach {
-                    FreeGachaItem(it)
-                }
                 birthdayList.forEach {
-                    BirthdayItem(it, actions.toCharacterDetail)
+                    BirthdayItem(it, spanCount, actions.toCharacterDetail)
                 }
             }
         }

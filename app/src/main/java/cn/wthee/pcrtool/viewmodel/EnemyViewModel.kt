@@ -93,8 +93,10 @@ class EnemyViewModel @Inject constructor(
     fun getMutiTargetEnemyInfo(enemyId: Int) = flow {
         try {
             val data = enemyRepository.getMultiTargetEnemyInfo(enemyId)
-            val list = getMultiPartEnemyList(data.enemyPartIds.intArrayList)
-            emit(list)
+            data?.let {
+                val list = getMultiPartEnemyList(data.enemyPartIds.intArrayList)
+                emit(list)
+            }
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getMutiTargetEnemyInfo#enemyId:$enemyId")
         }

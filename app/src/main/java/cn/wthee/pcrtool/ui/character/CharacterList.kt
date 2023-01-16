@@ -75,7 +75,7 @@ fun CharacterList(
     )
 
     //关闭时监听
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
@@ -126,6 +126,10 @@ fun CharacterList(
                         CommonSpacer()
                     }
                 }
+            } else {
+                CenterTipText(
+                    stringResource(id = R.string.no_data)
+                )
             }
 
             Row(
@@ -189,8 +193,6 @@ fun CharacterItem(
     var loadError by remember {
         mutableStateOf(false)
     }
-
-
     //主色
     val initColor = colorWhite
     var cardMaskColor by remember {
@@ -201,7 +203,7 @@ fun CharacterItem(
 
 
     MainCard(
-        modifier = modifier,
+        modifier = modifier.commonPlaceholder(character?.id == -1),
         onClick = onClick
     ) {
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -262,7 +264,7 @@ fun CharacterItem(
             }
 
             //其它信息
-            SlideRTLAnimation(
+            FadeAnimation(
                 visible = loadSuccess || loadError || LocalInspectionMode.current,
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {

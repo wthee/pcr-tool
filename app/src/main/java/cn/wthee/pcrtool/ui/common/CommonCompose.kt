@@ -15,8 +15,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -696,6 +700,10 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
 
 /**
  * 底部搜索栏
+ *
+ * @param keywordState 关键词，用于查询
+ * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
+ * @param defaultKeywordList 默认关键词列表
  */
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
@@ -708,7 +716,8 @@ fun BottomSearchBar(
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState
+    scrollState: LazyListState,
+    defaultKeywordList: List<KeywordData>? = null
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -733,6 +742,15 @@ fun BottomSearchBar(
                     scrollState.scrollToItem(0)
                 }
             }
+            //重置
+            if (keywordState.value != "") {
+                FabCompose(
+                    iconType = MainIconType.RESET
+                ) {
+                    keywordState.value = ""
+                    keywordInputState.value = ""
+                }
+            }
             //搜索
             FabCompose(
                 iconType = MainIconType.SEARCH,
@@ -744,59 +762,87 @@ fun BottomSearchBar(
         }
     }
 
-
-    //focusRequester
-    Box(
+    Column(
         modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.background
-            )
+            .padding(Dimen.mediumPadding)
             .imePadding()
     ) {
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(if (isImeVisible) 1f else 0f)
-                .padding(Dimen.smallPadding)
-                .focusRequester(focusRequester)
-                .alpha(if (isImeVisible) 1f else 0f),
-            value = keywordInputState.value,
-            shape = MaterialTheme.shapes.medium,
-            onValueChange = { keywordInputState.value = it.deleteSpace },
-            textStyle = MaterialTheme.typography.labelLarge,
-            leadingIcon = {
-                IconCompose(
-                    data = leadingIcon,
-                    size = Dimen.fabIconSize
-                )
-            },
-            trailingIcon = {
-                IconCompose(
-                    data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
+        //关键词列表，搜索时显示
+        ExpandAnimation(
+            visible = isImeVisible && defaultKeywordList?.isNotEmpty() == true,
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+        ) {
+            MainCard(
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+            ) {
+                Column(
+                    modifier = Modifier.padding(Dimen.mediumPadding)
                 ) {
-                    keyboardController?.hide()
-                    keywordState.value = keywordInputState.value
-                    focusRequester.freeFocus()
+                    MainText(text = stringResource(id = R.string.search_suggestion))
+
+                    SuggestionChipGroup(
+                        defaultKeywordList ?: arrayListOf(),
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    ) { keyword ->
+                        keywordInputState.value = keyword
+                        keywordState.value = keyword
+                        keyboardController?.hide()
+                        focusRequester.freeFocus()
+                    }
                 }
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                    keywordState.value = keywordInputState.value
-                    focusRequester.freeFocus()
-                }
-            ),
-            label = {
-                Text(
-                    text = stringResource(id = labelStringId),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            maxLines = 1,
-            singleLine = true,
-        )
+
+            }
+        }
+
+        //focusRequester
+        MainCard {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
+                    .padding(Dimen.smallPadding)
+                    .focusRequester(focusRequester)
+                    .alpha(if (isImeVisible) 1f else 0f),
+                value = keywordInputState.value,
+                shape = MaterialTheme.shapes.medium,
+                onValueChange = { keywordInputState.value = it.deleteSpace },
+                textStyle = MaterialTheme.typography.labelLarge,
+                leadingIcon = {
+                    IconCompose(
+                        data = leadingIcon,
+                        size = Dimen.fabIconSize
+                    )
+                },
+                trailingIcon = {
+                    IconCompose(
+                        data = MainIconType.SEARCH,
+                        size = Dimen.fabIconSize
+                    ) {
+                        keyboardController?.hide()
+                        keywordState.value = keywordInputState.value
+                        focusRequester.freeFocus()
+                    }
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        keywordState.value = keywordInputState.value
+                        focusRequester.freeFocus()
+                    }
+                ),
+                label = {
+                    Text(
+                        text = stringResource(id = labelStringId),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                },
+                maxLines = 1,
+                singleLine = true,
+            )
+        }
     }
+
 }
 
 /**
@@ -963,6 +1009,7 @@ fun EventTitle(
     //日期
     MainTitleText(
         text = sd.substring(0, 10),
+        modifier = Modifier.padding(end = Dimen.smallPadding),
         backgroundColor = color
     )
     //天数，预览时不显示
@@ -970,7 +1017,7 @@ fun EventTitle(
         val days = ed.days(sd)
         MainTitleText(
             text = days,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier.padding(end = Dimen.smallPadding),
             backgroundColor = color
         )
     }
@@ -990,7 +1037,6 @@ fun EventTitleCountdown(
     comingSoon: Boolean
 ) {
     Row(
-        modifier = Modifier.padding(start = Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (inProgress) {

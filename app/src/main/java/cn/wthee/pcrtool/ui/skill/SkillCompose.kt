@@ -252,29 +252,20 @@ fun SkillItem(
                         MaterialTheme.typography.titleSmall
                     }
                 )
-                //调试用，技能编号
-                if (BuildConfig.DEBUG) {
-                    CaptionText(
-                        text = skillDetail.skillId.toString()
-                    )
-                }
 
                 //非装备技能时显示
                 if (!isExtraEquipSKill) {
                     FlowRow {
                         //技能类型
                         CaptionText(
-                            text = type + if (skillDetail.isCutin) {
-                                stringResource(id = R.string.six_star)
-                            } else {
-                                ""
-                            },
+                            text = type,
+                            modifier = Modifier.padding(end = Dimen.largePadding)
                         )
                         //技能等级
                         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
                             CaptionText(
                                 text = stringResource(id = R.string.skill_level, skillDetail.level),
-                                modifier = Modifier.padding(start = Dimen.largePadding)
+                                modifier = Modifier.padding(end = Dimen.largePadding)
                             )
                         }
                         //冷却时间
@@ -282,10 +273,10 @@ fun SkillItem(
                             CaptionText(
                                 text = stringResource(
                                     id = R.string.skill_cooltime,
-                                    skillDetail.bossUbCooltime
+                                    skillDetail.bossUbCooltime.toBigDecimal().stripTrailingZeros()
+                                        .toPlainString()
                                 ),
-                                modifier = Modifier
-                                    .padding(start = Dimen.largePadding)
+                                modifier = Modifier.padding(end = Dimen.largePadding)
                             )
                         }
                         //准备时间，显示：时间大于 0 或 角色1、2技能
@@ -293,10 +284,9 @@ fun SkillItem(
                             CaptionText(
                                 text = stringResource(
                                     id = R.string.skill_cast_time,
-                                    skillDetail.castTime
-                                ),
-                                modifier = Modifier
-                                    .padding(start = Dimen.largePadding)
+                                    skillDetail.castTime.toBigDecimal().stripTrailingZeros()
+                                        .toPlainString()
+                                )
                             )
                         }
                     }

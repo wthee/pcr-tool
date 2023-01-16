@@ -69,7 +69,7 @@ fun EquipList(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
-    if (!state.isVisible && !state.isAnimationRunning) {
+    if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()
@@ -104,7 +104,7 @@ fun EquipList(
             }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                FadeAnimation(visible = equips.isNotEmpty()) {
+                if (equips.isNotEmpty()) {
                     LazyColumn(state = scrollState) {
                         items(items = equipGroupList,
                             key = {
@@ -122,6 +122,10 @@ fun EquipList(
                             CommonSpacer()
                         }
                     }
+                } else {
+                    CenterTipText(
+                        stringResource(id = R.string.no_data)
+                    )
                 }
 
                 Row(

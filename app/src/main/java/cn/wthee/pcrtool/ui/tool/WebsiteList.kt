@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -147,7 +146,6 @@ private fun WebsiteGroup(
 
 @Composable
 private fun WebsiteItem(data: WebsiteData) {
-    val context = LocalContext.current
     val regionName = if(LocalInspectionMode.current){
         //预览模式
         stringResource(id = R.string.unknown)
@@ -182,7 +180,7 @@ private fun WebsiteItem(data: WebsiteData) {
                 .padding(top = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
-                BrowserUtil.open(context, data.url)
+                BrowserUtil.open(data.url)
             }
         ) {
             Row(

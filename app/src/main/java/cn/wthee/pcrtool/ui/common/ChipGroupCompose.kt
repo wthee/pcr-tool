@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -11,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.model.ChipData
+import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -37,10 +37,43 @@ fun ChipGroup(
     }
 }
 
+
 /**
- * ChipItem
+ * SuggestionChipGroup 展示用
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SuggestionChipGroup(
+    items: List<KeywordData>,
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit
+) {
+    val context = LocalContext.current
+
+    FlowRow(modifier = modifier) {
+        items.forEach {
+            SuggestionChip(
+                onClick = {
+                    VibrateUtil(context).single()
+                    onClick(it.keyword)
+                },
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                label = {
+                    Text(
+                        text = "${it.desc}：${it.keyword}",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            )
+        }
+    }
+}
+
+/**
+ * 可选中的 ChipItem
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     val context = LocalContext.current
@@ -80,6 +113,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         }
     )
 }
+
 
 @CombinedPreviews
 @Composable

@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -136,7 +139,7 @@ private fun HomePageCommentInfo(
             )
             Spacer(modifier = Modifier.weight(0.85f))
         }
-        CommentTextCard(text = it)
+        CommentText(text = it)
     }
 
     //主页交流
@@ -187,8 +190,8 @@ private fun HomePageCommentInfo(
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
-                homePageCommentList[index].getCommentList().forEach {
-                    CommentTextCard(it)
+                homePageCommentList[index].getCommentList().forEachIndexed { cIndex, s ->
+                    CommentText(cIndex, s)
                 }
             }
         }
@@ -244,8 +247,8 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
-                roomComments[index].getCommentList().forEach {
-                    CommentTextCard(it)
+                roomComments[index].getCommentList().forEachIndexed { cIndex, s ->
+                    CommentText(cIndex, s)
                 }
                 CommonSpacer()
             }
@@ -326,24 +329,31 @@ private fun TwoColumnsInfo(
 }
 
 /**
- * 文本卡片
+ * 文本
  */
 @Composable
-private fun CommentTextCard(text: String) {
+private fun CommentText(index: Int? = null, text: String) {
+    val indexStr = if (index != null) "${index + 1}、" else ""
     val context = LocalContext.current
-    MainCard(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.smallPadding
-        ),
-        onClick = {
-            copyText(context, text)
-        }
+    Row(
+        modifier = Modifier
+            .padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.smallPadding
+            )
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .clickable {
+                VibrateUtil(context).single()
+                copyText(context, text)
+            }
+            .padding(Dimen.smallPadding),
     ) {
+        MainContentText(text = indexStr)
         MainContentText(
             text = text,
-            modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start,
+            selectable = true
         )
     }
 }

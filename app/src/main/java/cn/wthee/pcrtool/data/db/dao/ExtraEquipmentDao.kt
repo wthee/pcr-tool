@@ -75,7 +75,7 @@ interface ExtraEquipmentDao {
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
      * @param flag 0：全部，1：普通：2：会战
-     * @param type 装备类型
+     * @param rarity 装备品级
      * @param name 装备名称
      * @param showAll 0: 仅收藏，1：全部
      * @param starIds 收藏的装备编号
