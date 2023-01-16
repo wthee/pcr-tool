@@ -181,8 +181,8 @@ class CharacterAttrViewModel @Inject constructor(
             storyInfo.forEach {
                 storyAttr.add(it.getAttr())
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getStoryAttrs:$unitId")
         }
         return storyAttr
     }

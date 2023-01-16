@@ -461,8 +461,8 @@ interface UnitDao {
         """
         SELECT
             a.story_id,
-            c.title,
-            c.sub_title,
+            COALESCE(c.title, '') AS title,
+            COALESCE(c.sub_title, '') AS sub_title,
             a.status_type_1,
             a.status_rate_1,
             a.status_type_2,
