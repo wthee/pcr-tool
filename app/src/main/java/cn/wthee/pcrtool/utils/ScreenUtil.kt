@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.utils
 
 import android.os.Build
 import android.util.DisplayMetrics
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -40,41 +39,14 @@ object ScreenUtil {
      */
     fun getHeight() = getDm().heightPixels
 
-    /**
-     * 全屏
-     */
-    fun setFullScreen() {
-        val window = ActivityHelper.instance.currentActivity?.window
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window?.setDecorFitsSystemWindows(false)
-        } else {
-            @Suppress("DEPRECATION")
-            window?.decorView?.systemUiVisibility =
-                (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        }
-    }
-
-    /**
-     * 初始化全屏
-     */
-    @Suppress("DEPRECATION")
-    fun initScreen() {
-        val window = ActivityHelper.instance.currentActivity?.window
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window?.setDecorFitsSystemWindows(true)
-        } else {
-            window?.clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-            window?.clearFlags(View.SYSTEM_UI_FLAG_FULLSCREEN)
-        }
-    }
-
 }
 
 /**
  * 计算 spanCount
  */
 val Dp.spanCount: Int
-    get() = ScreenUtil.getWidth() / this.value.dp2pxNotComposable
+    @Composable
+    get() = ScreenUtil.getWidth() / this.value.dp2px
 
 
 /**
@@ -105,3 +77,4 @@ val Float.dp2pxNotComposable: Int
         val scale: Float = MyApplication.context.resources.displayMetrics.density
         return (this * scale + 0.5f).toInt()
     }
+

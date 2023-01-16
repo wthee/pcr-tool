@@ -54,7 +54,7 @@ fun MainSettings() {
     }
     //图片缓存大小
     val imageCacheSize = remember {
-        mutableStateOf("")
+        mutableStateOf(Pair("", 0))
     }
     LaunchedEffect(openDialog.value) {
         imageCacheSize.value = FileUtil.getCoilDirSize(context)
@@ -111,7 +111,11 @@ fun MainSettings() {
             }
         ) {
             Subtitle2(
-                text = imageCacheSize.value,
+                text = stringResource(
+                    id = R.string.image_cache,
+                    imageCacheSize.value.first,
+                    imageCacheSize.value.second
+                ),
                 color = MaterialTheme.colorScheme.primary
             )
         }
@@ -135,7 +139,6 @@ fun MainSettings() {
                 text = stringResource(id = R.string.to_join_qq_group),
                 color = MaterialTheme.colorScheme.primary
             )
-            IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
         }
         //- 模型预览
         SettingCommonItem(

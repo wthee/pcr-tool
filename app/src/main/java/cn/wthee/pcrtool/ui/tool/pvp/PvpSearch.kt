@@ -133,7 +133,8 @@ fun PvpSearchCompose(
                 Row(
                     modifier = Modifier
                         .padding(mediumPadding)
-                        .width(getItemWidth())
+                        .widthIn(max = getItemWidth() * 1.3f)
+                        .fillMaxWidth()
                         .align(Alignment.Center),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {

@@ -164,13 +164,11 @@ private fun MockGachaResultRecordItem(
         MainCard {
             Column(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
                 MockGachaResultRecordIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     0,
                     formatResult.subList(0, 5),
                     pickUpIndexList
                 )
                 MockGachaResultRecordIconLine(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     1,
                     formatResult.subList(5, 10),
                     pickUpIndexList
@@ -193,7 +191,6 @@ private fun MockGachaResultRecordItem(
  */
 @Composable
 private fun MockGachaResultRecordIconLine(
-    modifier: Modifier = Modifier,
     line: Int,
     icons: List<GachaUnitInfo>,
     pickUpIndex: ArrayList<Int> = arrayListOf()

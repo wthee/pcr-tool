@@ -417,8 +417,12 @@ private fun CharacterCoe(
             }
             (basic + skill).int.toString()
         }
+        //战力数值
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
+        )
+        IconCompose(
+            data = MainIconType.HELP, size = Dimen.smallIconSize
         )
     }
 }

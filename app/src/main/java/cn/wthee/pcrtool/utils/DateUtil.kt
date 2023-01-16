@@ -20,11 +20,15 @@ val String.formatTime: String
         if (list.size == 1) {
             list = this.split(" ")[0].split("-")
         }
-        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-            var hms = this.substring(this.length - 8, this.length)
-            hms = hms.replace(' ', '0')
-            " $hms"
-        } else {
+        return try {
+            "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
+                var hms = this.substring(this.length - 8, this.length)
+                hms = hms.replace(' ', '0')
+                " $hms"
+            } else {
+                ""
+            }
+        } catch (_: Exception) {
             ""
         }
     }

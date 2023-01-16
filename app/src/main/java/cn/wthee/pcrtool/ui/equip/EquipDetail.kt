@@ -147,7 +147,7 @@ private fun EquipMaterialList(
         MainText(
             text = stringResource(R.string.equip_material),
             modifier = Modifier
-                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                .padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding)
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材

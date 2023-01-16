@@ -115,7 +115,7 @@ fun EnemyAllInfo(
         )
         //等级
         CaptionText(
-            text = enemyData.level.toString(),
+            text = stringResource(id = R.string.unit_level, enemyData.level),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         //模型预览

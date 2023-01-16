@@ -129,13 +129,13 @@ object FileUtil {
      * 删除文件及文件夹
      * @param saveDir
      */
-    fun delete(file: File, saveDir :Boolean = true) {
+    fun delete(file: File, saveDir: Boolean = true) {
         if (file.isDirectory) {
             val files = file.listFiles()
             files?.forEach {
                 delete(it)
             }
-            if(!saveDir){
+            if (!saveDir) {
                 //删除文件夹
                 file.delete()
             }
@@ -146,14 +146,18 @@ object FileUtil {
 
     /**
      * 获取文件夹内文件大小
+     *
+     * @return 大小、文件数 / 2 为图片数
      */
-    fun getCoilDirSize(context: Context): String {
+    fun getCoilDirSize(context: Context): Pair<String, Int> {
         val dir = context.filesDir.resolve(COIL_DIR)
         var size = 0L
+        var count = 0
         dir.listFiles()?.forEach {
             size += it.length()
+            count++
         }
-        return size.convertFileSize()
+        return Pair(size.convertFileSize(), count / 2)
 
     }
 
