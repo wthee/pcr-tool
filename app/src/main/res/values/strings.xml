@@ -233,6 +233,9 @@
     <string name="share_to">分享到：</string>
     <string name="release">%s 发布</string>
     <!--活动相关-->
+    <string name="daily_mission">每日任务体力</string>
+    <string name="daily_login">每日登录宝石奖励，共计</string>
+    <string name="fortune_event">兰德索尔杯</string>
     <string name="normal">普通关卡</string>
     <string name="hard">困难关卡</string>
     <string name="very_hard">高难关卡</string>

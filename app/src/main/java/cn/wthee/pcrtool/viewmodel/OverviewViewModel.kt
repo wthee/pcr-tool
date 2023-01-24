@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
@@ -113,10 +112,12 @@ class OverviewViewModel @Inject constructor(
     fun getCalendarEventList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data =
-                eventRepository.getDropEvent() + eventRepository.getTowerEvent(1) + eventRepository.getSpDungeonEvent(
-                    1
-                )
+            val data = eventRepository.getDropEvent().toMutableList()
+            data += eventRepository.getMissionEvent(1)
+            data += eventRepository.getLoginEvent(1)
+            data += eventRepository.getFortuneEvent(1)
+            data += eventRepository.getTowerEvent(1)
+            data += eventRepository.getSpDungeonEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
@@ -250,15 +251,7 @@ class OverviewViewModel @Inject constructor(
     fun getClanBattleEvent(type: EventType) = flow {
         try {
             val today = getToday()
-            var data = eventRepository.getClanBattleEvent(1)
-            //测试用
-            if (BuildConfig.DEBUG) {
-                data = eventRepository.getClanBattleEvent(2)
-                data[0].startTime = calcDate(today, 5, false)
-                data[0].endTime = calcDate(today, 10, false)
-                data[1].startTime = calcDate(today, 2, true)
-                data[1].endTime = calcDate(today, 3, false)
-            }
+            val data = eventRepository.getClanBattleEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {
