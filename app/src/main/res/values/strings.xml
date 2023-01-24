@@ -304,11 +304,13 @@
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
     <string name="tool_mock_gacha">抽卡模拟</string>
-    <string name="gacha_pick_up_normal">自选 UP</string>
+    <string name="gacha_pick_up_normal">全角色 UP</string>
     <string name="gacha_pick_up_fes">Fes UP</string>
-    <string name="gacha_pick_up_single">自选单 UP</string>
-    <string name="tip_to_pick_up">请选择 UP 角色</string>
-    <string name="tip_to_pick_up_single">自选单 UP：最后所选角色为 UP 角色</string>
+    <string name="gacha_pick_up_single">单角色 UP</string>
+    <string name="tip_to_pick_up">请选择角色</string>
+    <string name="tip_to_pick_up_normal">所选角色概率相同</string>
+    <string name="tip_to_pick_up_single">仅最后选择的角色概率提升</string>
+    <string name="tip_to_mock_single">单角色 UP：至少选择2名角色</string>
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="delete_gacha">删除卡池</string>
@@ -316,8 +318,9 @@
     <string name="go_to_mock">去抽卡</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
     <string name="last_gacha_date">已抽%d次，%s</string>
-    <string name="gacha_used_gem">消耗宝石：1500 * %d = %d</string>
+    <string name="gacha_used_gem">宝石 %d</string>
     <string name="gacha_order">第 %d 次</string>
+    <string name="selected_mark">✓</string>
 
     <!--ex装备相关-->
     <string name="extra_equip_normal">普通</string>

@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
-import kotlin.math.min
+import kotlin.math.max
 import kotlin.random.Random
 
 /**
@@ -50,8 +50,9 @@ class MockGachaHelper(
                 //基本
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal1, 79 * totalWeight))
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal2, 18 * totalWeight))
+                //其他三星 + 非up
                 val notUpList = if (pickUpList.size > 1) {
-                    pickUpList.subList(0, min(1, pickUpList.size - 2))
+                    pickUpList.subList(0, max(1, pickUpList.size - 1))
                 } else {
                     arrayListOf()
                 }
@@ -60,7 +61,7 @@ class MockGachaHelper(
                         unitListData.normal3 + notUpList, star3Weight - pickUpWeight
                     )
                 )
-                //仅up一个角色
+                //仅up最后一个角色
                 gachaBoxList.add(
                     GachaWeightInfo(
                         if (pickUpList.isEmpty()) {

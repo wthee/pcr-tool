@@ -62,18 +62,18 @@ fun MockGachaResult(
     } else {
         //显示相关信息
         val payCount = resultRecordList.size
-        val sumText = stringResource(id = R.string.gacha_used_gem, payCount, payCount * 1500)
+        val sumText = stringResource(id = R.string.gacha_used_gem, payCount * 1500)
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CaptionText(
-                text = sumText,
-                modifier = Modifier
-                    .padding(vertical = Dimen.mediumPadding)
-            )
-            Row(modifier = Modifier.padding(vertical = Dimen.smallPadding)) {
+            Row(
+                modifier = Modifier.padding(
+                    top = Dimen.mediumPadding,
+                    bottom = Dimen.smallPadding
+                )
+            ) {
                 MainTitleText(
                     text = "UP：$upCount",
                     backgroundColor = colorRed,
@@ -82,6 +82,11 @@ fun MockGachaResult(
                 MainTitleText(
                     text = "★3：$start3Count",
                     backgroundColor = colorGold,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                MainTitleText(
+                    text = sumText,
+                    backgroundColor = colorSilver,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
