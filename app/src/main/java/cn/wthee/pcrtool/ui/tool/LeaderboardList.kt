@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -333,30 +332,21 @@ private fun LeaderboardItem(
             }
         ) {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                Row(
+                //名称
+                MainContentText(
                     modifier = Modifier.padding(
                         horizontal = Dimen.mediumPadding,
                         vertical = Dimen.smallPadding
-                    )
-                ) {
-                    //名称
-                    MainContentText(
-                        text = "${index + 1}." + if (hasUnitId && !unknown) {
-                            basicInfo!!.name
-                        } else {
-                            leader.name
-                        },
-                        textAlign = TextAlign.Start,
-                        color = textColor
-                    )
-
-                    CaptionText(
-                        text = leader.updateTime?.substring(0, 11) ?: "",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = textColor
-                    )
-
-                }
+                    ),
+                    text = "${index + 1}、" + if (hasUnitId && !unknown) {
+                        basicInfo!!.name
+                    } else {
+                        leader.name
+                    },
+                    textAlign = TextAlign.Start,
+                    color = textColor,
+                    maxLines = 1
+                )
                 //评价
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -366,33 +356,14 @@ private fun LeaderboardItem(
                     GradeText(leader.pvp, modifier = Modifier.weight(1f))
                     GradeText(leader.clan, modifier = Modifier.weight(1f))
                 }
-                //评分
-                if (BuildConfig.DEBUG) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CaptionText(
-                            text = leader.questScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.towerScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.pvpScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.clanScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+                //日期
+                CaptionText(
+                    text = leader.updateTime?.substring(0, 11) ?: "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = Dimen.smallPadding),
+                    color = textColor
+                )
             }
         }
 

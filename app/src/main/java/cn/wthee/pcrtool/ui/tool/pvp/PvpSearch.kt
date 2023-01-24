@@ -10,14 +10,20 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -33,6 +39,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 /**
@@ -88,14 +95,14 @@ fun PvpSearchCompose(
         stringResource(id = R.string.title_history),
     )
     val pageCount = tabs.size
-
     //动态调整 spanCount
     val normalSize = (Dimen.iconSize + Dimen.largePadding * 2)
     val spanCount = if (initSpanCount == 0) normalSize.spanCount else initSpanCount
 
 
+
     Box {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             //标题
             if (!floatWindow) {
                 val url = stringResource(id = R.string.pcrdfans_url)
@@ -129,23 +136,20 @@ fun PvpSearchCompose(
 
             }
             //已选择列表
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .padding(mediumPadding)
-                        .widthIn(max = getItemWidth() * 1.3f)
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    selectedIds.forEach {
-                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            PvpIconItem(
-                                selectedIds = selectedIds,
-                                pvpCharacterData = it,
-                                floatWindow = floatWindow
-                            )
-                        }
+            Row(
+                modifier = Modifier
+                    .padding(mediumPadding)
+                    .widthIn(max = getItemWidth() * 1.3f)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                selectedIds.forEach {
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        PvpIconItem(
+                            selectedIds = selectedIds,
+                            pvpCharacterData = it,
+                            floatWindow = floatWindow
+                        )
                     }
                 }
             }
@@ -230,7 +234,6 @@ fun PvpSearchCompose(
                         //启动悬浮服务
                         val serviceIntent = Intent(context, PvpFloatService::class.java)
                         navViewModel.floatServiceRun.postValue(true)
-                        serviceIntent.putExtra("spanCount", spanCount)
                         context.stopService(serviceIntent)
                         context.startActivity(homeIntent)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -256,6 +259,7 @@ fun PvpSearchCompose(
                         scope.launch {
                             resultListState.scrollToItem(0)
                         }
+
                     } catch (_: Exception) {
 
                     }
@@ -306,7 +310,7 @@ private fun PvpToSelectList(
     ) {
         //角色图标列表
         LazyVerticalGrid(
-            columns = GridCells.Fixed(spanCount),
+            columns = GridCells.Fixed(max(5, spanCount)),
             state = selectListState,
             verticalArrangement = Arrangement.Center
         ) {
@@ -344,7 +348,7 @@ private fun PvpToSelectList(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(spanCount * 2) {
+            items(5) {
                 CommonSpacer()
             }
         }
@@ -460,19 +464,23 @@ fun PvpUnitIconLine(
     toCharacter: (Int) -> Unit
 ) {
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
+
     Row(
         modifier = Modifier
             .padding(mediumPadding)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ids.forEach {
             Box(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.smallPadding)
+                    .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
                 IconCompose(
                     data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-                    size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
+                    wrapSize = true
                 ) {
                     if (!floatWindow) {
                         toCharacter(it)
@@ -481,6 +489,54 @@ fun PvpUnitIconLine(
             }
         }
     }
+//    VerticalGrid(spanCount = 5) {
+//        ids.forEach {
+//            Box(
+//                contentAlignment = Alignment.Center,
+//                modifier = Modifier.weight(1f)
+//            ) {
+//                IconCompose(
+//                    data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
+//                    wrapSize = true
+//                ) {
+//                    if (!floatWindow) {
+//                        toCharacter(it)
+//                    }
+//                }
+//            }
+//
+//        }
+
+//    }
+}
+
+
+/**
+ * 角色站位文本样式
+ */
+@Composable
+private fun CharacterPositionText(
+    modifier: Modifier = Modifier,
+    showColor: Boolean = true,
+    position: Int,
+    textAlign: TextAlign = TextAlign.Center,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
+) {
+    val color = if (showColor) {
+        getPositionColor(position)
+    } else {
+        Color.Unspecified
+    }
+
+    Text(
+        text = position.toString(),
+        color = color,
+        style = textStyle,
+        maxLines = 1,
+        textAlign = textAlign,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+    )
 }
 
 /**

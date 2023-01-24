@@ -21,8 +21,11 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.MOCK_GACHA_MAX_UP_COUNT
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.MockGachaHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -336,7 +339,8 @@ private fun MockGachaUnitIconListCompose(
         modifier = Modifier.padding(
             top = Dimen.mediumPadding
         ),
-        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding
     ) {
         icons.forEach { gachaUnitInfo ->
             val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)

@@ -18,7 +18,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -221,7 +220,8 @@ fun AreaItem(
                 end = Dimen.commonItemPadding
             )
             .commonPlaceholder(placeholder),
-        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding
     ) {
         odds.forEach {
             EquipWithOddCompose(selectedId, it)
@@ -265,7 +265,7 @@ private fun EquipWithOddCompose(
             if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {
                 SelectText(
                     selected = selected,
-                    text = if (selected) "✓" else "",
+                    text = if (selected) stringResource(id = R.string.selected_mark) else "",
                     margin = 0.dp
                 )
             }

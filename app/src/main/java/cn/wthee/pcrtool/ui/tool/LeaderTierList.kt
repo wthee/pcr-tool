@@ -56,7 +56,7 @@ fun LeaderTier(
     val leaderData = flow.collectAsState(initial = null).value
 
     val url = stringResource(id = R.string.leader_source_url)
-    val spanCount = (Dimen.iconSize * 3).spanCount
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -152,7 +152,6 @@ fun LeaderTier(
                     ) { groupList ->
                         LeaderGroup(
                             groupList,
-                            spanCount,
                             toCharacterDetail
                         )
                     }
@@ -173,7 +172,6 @@ fun LeaderTier(
 @Composable
 private fun LeaderGroup(
     groupData: LeaderTierGroup,
-    spanCount: Int,
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
@@ -196,7 +194,8 @@ private fun LeaderGroup(
 
         //分组内容
         VerticalGrid(
-            spanCount = spanCount,
+            itemWidth = Dimen.iconSize * 3,
+            contentPadding = Dimen.largePadding * 2,
             modifier = Modifier
                 .padding(
                     start = Dimen.commonItemPadding,
@@ -278,7 +277,7 @@ private fun LeaderItem(
 
         MainCard(
             modifier = Modifier
-                .padding(start = Dimen.smallPadding)
+                .padding(start = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
                 BrowserUtil.open(leader.url)
@@ -350,7 +349,6 @@ private fun LeaderGroupPreview() {
                 ),
                 text
             ),
-            2,
             {},
             null
         )

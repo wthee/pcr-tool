@@ -396,7 +396,7 @@ fun SettingCommonItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            tint = tintColor,
+            colorFilter = ColorFilter.tint(tintColor)
         )
         Column(
             modifier = Modifier

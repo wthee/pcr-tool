@@ -234,12 +234,15 @@ private fun ChangeDbCompose(
             ),
         shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
         onClick = {
+            //非加载中可点击，加载中禁止点击
             VibrateUtil(context).single()
-            if (!openDialog) {
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            } else {
-                navViewModel.fabCloseClick.postValue(true)
+            if (downloadState == -2) {
+                if (!openDialog) {
+                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                    navViewModel.openChangeDataDialog.postValue(true)
+                } else {
+                    navViewModel.fabCloseClick.postValue(true)
+                }
             }
         },
     ) {

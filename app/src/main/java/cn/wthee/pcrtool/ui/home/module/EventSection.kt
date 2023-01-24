@@ -164,7 +164,6 @@ private fun CalendarEventLayout(
     } else {
         OverviewType.COMING_SOON_EVENT.id
     }
-    val spanCount = getItemWidth().spanCount
     val isNotEmpty =
         eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty()
                 || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
@@ -208,7 +207,7 @@ private fun CalendarEventLayout(
                 )
             }
             VerticalGrid(
-                spanCount = spanCount,
+                itemWidth = getItemWidth(),
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
                 clanBattleList.forEach {
@@ -221,7 +220,6 @@ private fun CalendarEventLayout(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
-                        parentSpanCount = spanCount,
                         toCharacterDetail = actions.toCharacterDetail,
                         toMockGacha = actions.toMockGacha
                     )
@@ -241,7 +239,7 @@ private fun CalendarEventLayout(
                     CalendarEventItem(it)
                 }
                 birthdayList.forEach {
-                    BirthdayItem(it, spanCount, actions.toCharacterDetail)
+                    BirthdayItem(it, actions.toCharacterDetail)
                 }
             }
         }

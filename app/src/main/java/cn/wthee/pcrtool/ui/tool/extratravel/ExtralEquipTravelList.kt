@@ -25,8 +25,11 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getRegionName
+import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 
 /**
@@ -144,10 +147,9 @@ fun TravelQuestHeader(
         //其它参数
         VerticalGrid(
             modifier = Modifier.padding(
-                horizontal = Dimen.mediumPadding,
-                vertical = Dimen.smallPadding
+                Dimen.smallPadding
             ),
-            spanCount = getItemWidth().spanCount * 2
+            itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(
                 stringResource(id = R.string.travel_limit_unit_num),
@@ -155,7 +157,7 @@ fun TravelQuestHeader(
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_need_power),
-                questData.needPower.toString()
+                stringResource(id = R.string.value_10_k, questData.needPower / 10000)
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_time),

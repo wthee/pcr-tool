@@ -26,13 +26,10 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 /**
  * 历史卡池
@@ -42,7 +39,6 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
     //历史记录
     mockGachaViewModel.getHistory()
     val historyData = mockGachaViewModel.historyList.observeAsState().value ?: arrayListOf()
-    val spanCount = getItemWidth().spanCount
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +51,7 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
                 it.gachaId
             }
         ) {
-            MockGachaHistoryItem(it, spanCount)
+            MockGachaHistoryItem(it)
         }
         item {
             CommonSpacer()
@@ -73,7 +69,6 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
-    spanCount: Int,
     mockGachaViewModel: MockGachaViewModel? = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -161,23 +156,13 @@ private fun MockGachaHistoryItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //up 角色
-                VerticalGrid(
-                    modifier = Modifier.padding(top = Dimen.mediumPadding),
-                    spanCount = ((Dimen.iconSize + Dimen.mediumPadding * 2) * max(
-                        1,
-                        spanCount
-                    )).spanCount
-                ) {
-                    gachaData.pickUpIds.intArrayList.forEach { unitId ->
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getUrl(
-                                ImageResourceHelper.ICON_UNIT,
-                                unitId + 30
-                            ),
-                            modifier = Modifier.padding(Dimen.mediumPadding)
-                        )
-                    }
+                val idList = arrayListOf<Int>()
+                gachaData.pickUpIds.intArrayList.forEach { unitId ->
+                    idList.add(unitId + 30)
                 }
+                GridIconListCompose(
+                    icons = idList
+                )
                 Row(
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
@@ -260,7 +245,6 @@ private fun MockGachaHistoryItemPreview() {
                 resultUnitRaritys = "1-2-3-1-2-3-1-2-3-1",
                 createTime = "2020/01/01 00:00:00"
             ),
-            2,
             mockGachaViewModel = null
         )
     }

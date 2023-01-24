@@ -119,40 +119,38 @@ private fun RankSelectItem(
 ) {
     val context = LocalContext.current
 
-    Box {
-        VerticalGrid(spanCount = 5) {
-            rankList.forEachIndexed { index, rank ->
-                val rankColor = getRankColor(rank = rank)
-                val selected = selectIndex.value == index
-                val enabled = targetType == RankSelectType.DEFAULT ||
-                        (targetType == RankSelectType.LIMIT && rank >= currentRank)
+    VerticalGrid(itemWidth = Dimen.rankTextWidth) {
+        rankList.forEachIndexed { index, rank ->
+            val rankColor = getRankColor(rank = rank)
+            val selected = selectIndex.value == index
+            val enabled = targetType == RankSelectType.DEFAULT ||
+                    (targetType == RankSelectType.LIMIT && rank >= currentRank)
 
-                FilterChip(
-                    selected = selected,
-                    enabled = enabled,
-                    onClick = {
-                        VibrateUtil(context).single()
-                        selectIndex.value = index
-                    },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = if (enabled) {
-                            rankColor
+            FilterChip(
+                selected = selected,
+                enabled = enabled,
+                onClick = {
+                    VibrateUtil(context).single()
+                    selectIndex.value = index
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = if (enabled) {
+                        rankColor
+                    } else {
+                        MaterialTheme.colorScheme.outline
+                    }
+                ),
+                label = {
+                    CaptionText(
+                        text = rankFillBlank(rank),
+                        color = if (enabled) {
+                            if (selected) colorWhite else rankColor
                         } else {
                             MaterialTheme.colorScheme.outline
                         }
-                    ),
-                    label = {
-                        CaptionText(
-                            text = rankFillBlank(rank),
-                            color = if (enabled) {
-                                if (selected) colorWhite else rankColor
-                            } else {
-                                MaterialTheme.colorScheme.outline
-                            }
-                        )
-                    }
-                )
-            }
+                    )
+                }
+            )
         }
     }
 

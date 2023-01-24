@@ -10,16 +10,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.int
-import cn.wthee.pcrtool.utils.spanCount
 
 
 /**
@@ -28,12 +30,9 @@ import cn.wthee.pcrtool.utils.spanCount
 @Composable
 fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueType.INT) {
     VerticalGrid(
-        modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-        spanCount = if (LocalInspectionMode.current) {
-            2
-        } else {
-            getItemWidth().spanCount * 2
-        }
+        modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
+        contentPadding = Dimen.largePadding,
+        itemWidth = Dimen.attrWidth
     ) {
         attrs.forEach { attr ->
             val valueText = fixedAttrValueText(attr.value, attrValueType)
@@ -109,10 +108,10 @@ fun AttrCompare(
 fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: String = "") =
     when (attrValue.int) {
         in 100000000..Int.MAX_VALUE -> {
-            stringResource(R.string.hp_100_m, (attrValue.toInt() / 100000000f).toString())
+            stringResource(R.string.value_100_m, (attrValue.toInt() / 100000000f).toString())
         }
         in 100000 until 100000000 -> {
-            stringResource(R.string.hp_10_k, attrValue.toInt() / 10000)
+            stringResource(R.string.value_10_k, attrValue.toInt() / 10000)
         }
         else -> {
             when (attrValueType) {

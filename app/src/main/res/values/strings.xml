@@ -50,8 +50,8 @@
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
     <string name="character_birthday">角色生日：%s</string>
-    <string name="hp_100_m">%s亿</string>
-    <string name="hp_10_k">%d万</string>
+    <string name="value_100_m">%s亿</string>
+    <string name="value_10_k">%d万</string>
     <string name="unit_level">等级：%d</string>
 
     <!--设置页面-->

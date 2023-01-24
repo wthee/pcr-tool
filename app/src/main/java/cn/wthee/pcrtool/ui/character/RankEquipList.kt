@@ -78,12 +78,17 @@ fun RankEquipListItem(
         mutableStateOf(
             {
                 val allIds = dataState.getAllOrderIds()
-                VerticalGrid(spanCount = 2) {
+                VerticalGrid(fixCount = 2) {
                     allIds.forEach {
-                        IconCompose(
-                            modifier = Modifier.padding(Dimen.smallPadding),
-                            data = ImageResourceHelper.getInstance().getEquipPic(it)
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconCompose(
+                                modifier = Modifier.padding(Dimen.smallPadding),
+                                data = ImageResourceHelper.getInstance().getEquipPic(it)
+                            )
+                        }
                     }
                 }
             }

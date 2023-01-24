@@ -43,7 +43,6 @@ fun ExtraEquipDropList(
                 modifier = Modifier
                     .padding(top = Dimen.mediumPadding)
                     .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(0.33f * (dropList.size % 4))
             )
 
             HorizontalPager(

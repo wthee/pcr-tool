@@ -33,7 +33,6 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -115,19 +114,18 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     VerticalGrid(
-        spanCount = (Dimen.menuItemSize + Dimen.mediumPadding * 2).spanCount,
+        itemWidth = Dimen.menuItemSize,
+        contentPadding = Dimen.largePadding + Dimen.mediumPadding,
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
         toolList.forEach {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(
                         top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
                         bottom = Dimen.largePadding
-                    ),
+                    )
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 MenuItem(context, actions, it, isEditMode)

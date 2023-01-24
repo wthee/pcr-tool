@@ -397,7 +397,7 @@ fun SkillActionItem(
             .padding(vertical = Dimen.smallPadding)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = MaterialTheme.shapes.extraSmall
+                shape = MaterialTheme.shapes.small
             )
     ) {
         Column(

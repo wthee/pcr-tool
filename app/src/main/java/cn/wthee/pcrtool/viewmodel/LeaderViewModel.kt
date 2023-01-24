@@ -22,7 +22,7 @@ import javax.inject.Inject
 class LeaderViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
-    private val day = 14
+    private val day = 30
     val filterLeader = MutableLiveData(FilterLeaderboard())
 
     private var leaderData: ResponseData<List<LeaderboardData>>? = null

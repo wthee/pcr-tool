@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.FileSaveHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
 //权限
@@ -195,7 +194,7 @@ private fun CardGridList(
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
-    VerticalGrid(spanCount = getItemWidth().spanCount) {
+    VerticalGrid(itemWidth = getItemWidth()) {
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier

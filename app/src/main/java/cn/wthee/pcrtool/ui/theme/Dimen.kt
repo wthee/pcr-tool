@@ -61,4 +61,8 @@ object Dimen {
 
     val minSheetHeight = 300.dp
 
+    val attrWidth = 165.dp
+
+    val rankTextWidth = 48.dp
+
 }

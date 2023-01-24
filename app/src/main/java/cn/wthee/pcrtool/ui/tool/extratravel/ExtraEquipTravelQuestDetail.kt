@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 
 /**
@@ -146,7 +145,8 @@ private fun ExtraEquipRewardIconGrid(
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
         ),
-        spanCount = (Dimen.iconSize + Dimen.mediumPadding * 2).spanCount
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding
     ) {
         equipIdList.forEachIndexed { index, equipId ->
             val selected = selectedId == equipId

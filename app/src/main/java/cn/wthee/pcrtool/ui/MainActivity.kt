@@ -374,6 +374,7 @@ private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hi
                         titleColor = MaterialTheme.colorScheme.primary,
                         summaryColor = MaterialTheme.colorScheme.onSurface,
                         padding = Dimen.smallPadding,
+                        tintColor = MaterialTheme.colorScheme.primary,
                         onClick = {
                             actions.toSetting()
                         }

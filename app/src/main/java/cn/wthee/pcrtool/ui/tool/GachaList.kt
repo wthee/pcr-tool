@@ -26,7 +26,6 @@ import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -47,7 +46,6 @@ fun GachaList(
     val fesUnitIds =
         gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
-    val spanCount = getItemWidth().spanCount
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +62,6 @@ fun GachaList(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
-                        parentSpanCount = spanCount,
                         toCharacterDetail = toCharacterDetail,
                         toMockGacha = toMockGacha
                     )
@@ -101,7 +98,6 @@ fun GachaList(
 fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIds: List<Int>,
-    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
@@ -163,7 +159,6 @@ fun GachaItem(
                 } else {
                     GridIconListCompose(
                         icons = icons,
-                        parentSpanCount = parentSpanCount,
                         onClickItem = toCharacterDetail
                     )
                 }
@@ -205,7 +200,6 @@ private fun GachaItemPreview() {
         GachaItem(
             gachaInfo = GachaInfo(),
             toCharacterDetail = {},
-            parentSpanCount = 1,
             toMockGacha = {},
             fesUnitIds = arrayListOf()
         )

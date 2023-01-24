@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.storyevent
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
@@ -10,8 +9,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -142,14 +141,10 @@ fun StoryEventItem(
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!previewEvent)
-    val bannerWidth = remember {
-        mutableStateOf(1f)
-    }
 
 
     Column(
         modifier = Modifier
-            .animateContentSize(defaultTween())
             .padding(
                 horizontal = Dimen.largePadding,
                 vertical = Dimen.mediumPadding
@@ -187,22 +182,21 @@ fun StoryEventItem(
                 if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize(bannerWidth.value)
-                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth()
+                            .aspectRatio(RATIO_BANNER),
+                        contentAlignment = Alignment.TopCenter
                     ) {
                         SubImageCompose(
                             data = ImageResourceHelper.getInstance()
-                                .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false)
-                        ) {
-                            bannerWidth.value = 0.75f
-                        }
+                                .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
+                            contentScale = ContentScale.Crop
+                        )
                     }
                 } else {
                     ImageCompose(
                         data = ImageResourceHelper.getInstance()
                             .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
                         ratio = RATIO_TEASER,
-                        modifier = Modifier.clip(shapeTop())
                     )
                 }
 

@@ -849,7 +849,8 @@ fun CommonTitleContentText(title: String, content: String) {
             top = Dimen.smallPadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
-        )
+        ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
             text = title,

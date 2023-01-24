@@ -60,9 +60,8 @@ fun CharacterSection(
         }
     ) {
         if (characterList.isNotEmpty()) {
-            //不同宽度适配
-            if (ScreenUtil.getWidth() < getItemWidth().value.dp2px * 1.3) {
-                //正常
+            //避免角色图片高度过高
+            if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
                     count = characterList.size,
                     state = rememberPagerState(),
@@ -80,12 +79,17 @@ fun CharacterSection(
                     )
                 }
             } else {
-                //屏幕较宽时
-                LazyRow {
+                LazyRow(
+                    modifier = Modifier
+                        .padding(vertical = Dimen.mediumPadding)
+                        .fillMaxWidth()
+                ) {
                     items(characterList) {
                         Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
                             CharacterImageItem(
-                                modifier = Modifier.width(getItemWidth()),
+                                modifier = Modifier
+                                    .widthIn(max = getItemWidth() * 1.3f)
+                                    .fillMaxWidth(),
                                 unitId = it.id,
                                 actions.toCharacterDetail
                             )

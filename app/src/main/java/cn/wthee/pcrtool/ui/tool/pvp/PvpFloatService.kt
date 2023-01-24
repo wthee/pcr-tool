@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
+import kotlin.math.max
 
 const val ACTION_FINISH = "pvp_service_finish"
 
@@ -34,7 +35,7 @@ class PvpFloatService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         //数据
-        spanCount = intent?.getIntExtra("spanCount", 5) ?: 5
+//        spanCount = intent?.getIntExtra("spanCount", 5) ?: 5
         return START_STICKY
     }
 
@@ -134,17 +135,21 @@ class PvpFloatService : LifecycleService() {
         //位置大小设置
         val minSize = (Dimen.fabSize + Dimen.mediumPadding * 3).value.dp2pxNotComposable
 
-        width =
-            if (min) {
-                minSize
-            } else {
-                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2pxNotComposable) + minSize
-            }
+
         height =
             if (min) {
                 minSize
             } else {
                 getFloatWindowHeight()
+            }
+        width =
+            if (min) {
+                minSize
+            } else {
+                max(
+                    (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2pxNotComposable),
+                    (height * 9 * 1.0f / 16).toInt()
+                ) + minSize
             }
         gravity = Gravity.START or Gravity.TOP
         x = 0
