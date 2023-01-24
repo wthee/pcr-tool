@@ -197,10 +197,6 @@
     <string name="event">活动</string>
     <string name="shop">周边</string>
     <string name="local_note">本地化笔记</string>
-    <string name="limit_re">复刻限定</string>
-    <string name="normal_re">复刻常驻</string>
-    <string name="fes">公主庆典</string>
-    <string name="anv">周年</string>
     <string name="search_suggestion">快捷输入</string>
     <string name="search_api">查询</string>
     <string name="search_api_desc">需要网络</string>
@@ -296,13 +292,20 @@
     <string name="content_api_request_error">部分功能无法正常使用，请切换网络后重试~</string>
 
     <!--模拟抽卡-->
+    <string name="limit_re">复刻限定</string>
+    <string name="limit_re_pick">复刻自选</string>
+    <string name="normal_re">复刻常驻</string>
+    <string name="fes">公主庆典</string>
+    <string name="anv">周年</string>
     <string name="gacha_fes">Fes限定★3</string>
     <string name="gacha_limit">限定★3</string>
     <string name="gacha_normal">常驻★3</string>
     <string name="tool_mock_gacha">抽卡模拟</string>
     <string name="gacha_pick_up_normal">自选 UP</string>
     <string name="gacha_pick_up_fes">Fes UP</string>
+    <string name="gacha_pick_up_single">自选单 UP</string>
     <string name="tip_to_pick_up">请选择 UP 角色</string>
+    <string name="tip_to_pick_up_single">自选单 UP：最后所选角色为 UP 角色</string>
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="delete_gacha">删除卡池</string>
@@ -564,7 +567,8 @@
     <string name="skill_action_type_desc_17_10">受到持续伤害时 [%d%%] 概率</string>
     <string name="skill_action_type_desc_17_11">所有部位 BREAK</string>
     <string name="skill_action_type_desc_17_13">HP减少 [%d] 时</string>
-    <string name="skill_action_type_desc_18_19">蓄力 [%s] 秒，动作(%d)效果增加 %s * 蓄力中受到的伤害</string>
+    <string name="skill_action_type_desc_18_19">蓄力 [%s] 秒</string>
+    <string name="skill_action_type_desc_18_19_detail">，动作(%d)效果增加 %s * 蓄力中受到的伤害</string>
     <string name="skill_action_type_desc_20">使%s进入%s状态%s</string>
     <string name="skill_action_type_desc_21_1">无敌</string>
     <string name="skill_action_type_desc_21_2">回避物理攻击</string>

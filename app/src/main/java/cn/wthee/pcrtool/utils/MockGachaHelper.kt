@@ -3,13 +3,15 @@ package cn.wthee.pcrtool.utils
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
  * 模拟抽卡
  */
 class MockGachaHelper(
-    pickUpType: Int,
+    pickUpType: MockGachaType,
     pickUpList: List<GachaUnitInfo>,
     unitListData: UnitsInGacha
 ) {
@@ -27,12 +29,48 @@ class MockGachaHelper(
         //初始权重
         when (pickUpType) {
             //自选
-            0 -> {
+            MockGachaType.PICK_UP -> {
                 //基本
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal1, 79 * totalWeight))
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal2, 18 * totalWeight))
                 gachaBoxList.add(GachaWeightInfo(unitListData.normal3, star3Weight - pickUpWeight))
                 gachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
+                //第十发
+                tenthGachaBoxList.add(GachaWeightInfo(unitListData.normal2, 97 * totalWeight))
+                tenthGachaBoxList.add(
+                    GachaWeightInfo(
+                        unitListData.normal3,
+                        star3Weight - pickUpWeight
+                    )
+                )
+                tenthGachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
+            }
+            //自选单UP
+            MockGachaType.PICK_UP_SINGLE -> {
+                //基本
+                gachaBoxList.add(GachaWeightInfo(unitListData.normal1, 79 * totalWeight))
+                gachaBoxList.add(GachaWeightInfo(unitListData.normal2, 18 * totalWeight))
+                val notUpList = if (pickUpList.size > 1) {
+                    pickUpList.subList(0, min(1, pickUpList.size - 2))
+                } else {
+                    arrayListOf()
+                }
+                gachaBoxList.add(
+                    GachaWeightInfo(
+                        unitListData.normal3 + notUpList, star3Weight - pickUpWeight
+                    )
+                )
+                //仅up一个角色
+                gachaBoxList.add(
+                    GachaWeightInfo(
+                        if (pickUpList.isEmpty()) {
+                            arrayListOf()
+                        } else {
+                            arrayListOf(pickUpList.last())
+                        },
+                        pickUpWeight
+                    )
+                )
                 //第十发
                 tenthGachaBoxList.add(GachaWeightInfo(unitListData.normal2, 97 * totalWeight))
                 tenthGachaBoxList.add(

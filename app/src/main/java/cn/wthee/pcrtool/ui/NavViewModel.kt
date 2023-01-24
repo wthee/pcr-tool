@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -116,9 +117,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
 
     /**
      * 模拟卡池类型
-     * 0：自选角色 1：fes角色
      */
-    val gachaType = MutableLiveData<Int>()
+    val mockGachaType = MutableLiveData<MockGachaType>()
 
     /**
      * 模拟卡池 pickUp 角色

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.enums.GachaType
+import cn.wthee.pcrtool.utils.Constants.MOCK_GACHA_MAX_UP_COUNT
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.stringArrayList
@@ -43,6 +44,9 @@ data class GachaInfo(
             } else {
                 GachaType.RE_NORMAL
             }
+        }
+        "選べるプライズガチャ" -> {
+            GachaType.RE_LIMIT_PICK
         }
         "プリンセスフェス", "公主祭典", "公主庆典" -> GachaType.FES
         else -> {
@@ -87,7 +91,7 @@ data class GachaInfo(
         val upIds = isUps.intArrayList
         val list = arrayListOf<GachaUnitInfo>()
         ids.forEachIndexed { index, id ->
-            if (ids.size <= 4 || upIds[index] > 0) {
+            if (ids.size <= MOCK_GACHA_MAX_UP_COUNT || upIds[index] > 0) {
                 //正常卡池、或fes卡池up的角色
                 list.add(
                     GachaUnitInfo(id, names[index], isLimits[index], 3)

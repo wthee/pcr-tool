@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 fun MockGachaResult(
     gachaId: String,
     pickUpUnitIds: List<Int>,
+    mockGachaType: MockGachaType,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     mockGachaViewModel.getResult(gachaId = gachaId)
@@ -41,7 +42,10 @@ fun MockGachaResult(
     var start3Count = 0
     resultRecordList.forEach { record ->
         record.unitIds.intArrayList.forEachIndexed { index, unitId ->
-            if (pickUpUnitIds.contains(unitId)) {
+            //单up时仅计算最后一个角色
+            if ((mockGachaType == MockGachaType.PICK_UP_SINGLE && pickUpUnitIds.last() == unitId)
+                || (mockGachaType != MockGachaType.PICK_UP_SINGLE && pickUpUnitIds.contains(unitId))
+            ) {
                 upCount++
             }
             if (record.unitRaritys.intArrayList[index] == 3) {
@@ -92,7 +96,8 @@ fun MockGachaResult(
                     MockGachaResultRecordItem(
                         resultRecordList.size - index,
                         pickUpUnitIds,
-                        resultRecord
+                        resultRecord,
+                        mockGachaType
                     )
                 }
                 item {
@@ -114,8 +119,10 @@ fun MockGachaResult(
 private fun MockGachaResultRecordItem(
     order: Int,
     pickUpUnitIds: List<Int>,
-    recordData: MockGachaResultRecordData
-) {
+    recordData: MockGachaResultRecordData,
+    mockGachaType: MockGachaType,
+
+    ) {
     val formatResult = arrayListOf<GachaUnitInfo>()
     //pickUp 标记
     val pickUpIndexList = arrayListOf<Int>()
@@ -123,7 +130,9 @@ private fun MockGachaResultRecordItem(
 
     recordData.unitIds.intArrayList.forEachIndexed { index, unitId ->
         val rarity = recordData.unitRaritys.intArrayList[index]
-        if (pickUpUnitIds.contains(unitId)) {
+        if ((mockGachaType == MockGachaType.PICK_UP_SINGLE && pickUpUnitIds.last() == unitId)
+            || (mockGachaType != MockGachaType.PICK_UP_SINGLE && pickUpUnitIds.contains(unitId))
+        ) {
             pickUpIndexList.add(index)
         }
         if (rarity == 3) {
@@ -245,8 +254,9 @@ private fun MockGachaResultRecordPreview() {
             MockGachaResultRecordData(
                 unitIds = "1-2-3-4-5-5-4-3-2-1",
                 unitRaritys = "1-2-3-1-2-3-1-2-3-1",
-                createTime = "2020/01/01 00:00:00"
-            )
+                createTime = "2020/01/01 00:00:00",
+            ),
+            MockGachaType.PICK_UP
         )
     }
 }

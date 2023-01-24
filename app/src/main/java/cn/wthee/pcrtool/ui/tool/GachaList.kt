@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
@@ -108,7 +109,7 @@ fun GachaItem(
     val type = gachaInfo.getType()
     val color = when (type) {
         GachaType.LIMIT, GachaType.NORMAL -> colorRed
-        GachaType.RE_LIMIT, GachaType.RE_NORMAL -> colorGold
+        GachaType.RE_LIMIT, GachaType.RE_NORMAL, GachaType.RE_LIMIT_PICK -> colorGold
         GachaType.FES -> colorGreen
         GachaType.ANNIV -> colorOrange
         GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
@@ -116,9 +117,10 @@ fun GachaItem(
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
         icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
-    val gachaType = when {
-        icons.find { !fesUnitIds.contains(it) } == null -> 1
-        else -> 0
+    val mockGachaType = when {
+        icons.find { !fesUnitIds.contains(it) } == null -> MockGachaType.FES
+        icons.size >= 6 -> MockGachaType.PICK_UP_SINGLE
+        else -> MockGachaType.PICK_UP
     }
 
     Column(
@@ -178,7 +180,7 @@ fun GachaItem(
                             icon = MainIconType.MOCK_GACHA,
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
-                            navViewModel.gachaType.postValue(gachaType)
+                            navViewModel.mockGachaType.postValue(mockGachaType)
                             navViewModel.pickUpList.postValue(gachaInfo.getMockGachaUnitList())
                             //跳转
                             toMockGacha()

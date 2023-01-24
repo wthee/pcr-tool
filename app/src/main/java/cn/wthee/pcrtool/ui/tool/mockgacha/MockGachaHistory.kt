@@ -29,8 +29,10 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 /**
  * 历史卡池
@@ -40,6 +42,7 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
     //历史记录
     mockGachaViewModel.getHistory()
     val historyData = mockGachaViewModel.historyList.observeAsState().value ?: arrayListOf()
+    val spanCount = getItemWidth().spanCount
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -52,7 +55,7 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
                 it.gachaId
             }
         ) {
-            MockGachaHistoryItem(it)
+            MockGachaHistoryItem(it, spanCount)
         }
         item {
             CommonSpacer()
@@ -66,9 +69,11 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
 /**
  * 卡池历史记录 item
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
+    spanCount: Int,
     mockGachaViewModel: MockGachaViewModel? = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -98,7 +103,7 @@ private fun MockGachaHistoryItem(
         )
     ) {
         //标题
-        Row(
+        FlowRow(
             modifier = Modifier.padding(bottom = Dimen.smallPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -142,7 +147,11 @@ private fun MockGachaHistoryItem(
                         )
                     }
                     MainActivity.navViewModel.pickUpList.postValue(newPickUpList)
-                    MainActivity.navViewModel.gachaType.postValue(gachaData.gachaType)
+                    MainActivity.navViewModel.mockGachaType.postValue(
+                        MockGachaType.getByValue(
+                            gachaData.gachaType
+                        )
+                    )
                     //显示卡池结果
                     MainActivity.navViewModel.showMockGachaResult.postValue(true)
                 }
@@ -152,7 +161,13 @@ private fun MockGachaHistoryItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //up 角色
-                Row {
+                VerticalGrid(
+                    modifier = Modifier.padding(top = Dimen.mediumPadding),
+                    spanCount = ((Dimen.iconSize + Dimen.mediumPadding * 2) * max(
+                        1,
+                        spanCount
+                    )).spanCount
+                ) {
                     gachaData.pickUpIds.intArrayList.forEach { unitId ->
                         IconCompose(
                             data = ImageResourceHelper.getInstance().getUrl(
@@ -245,6 +260,7 @@ private fun MockGachaHistoryItemPreview() {
                 resultUnitRaritys = "1-2-3-1-2-3-1-2-3-1",
                 createTime = "2020/01/01 00:00:00"
             ),
+            2,
             mockGachaViewModel = null
         )
     }
