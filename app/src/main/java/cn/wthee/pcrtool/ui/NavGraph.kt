@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelList
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelQuestDetail
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
+import cn.wthee.pcrtool.ui.tool.quest.AllQuestList
 import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
@@ -113,6 +114,7 @@ object Navigation {
     const val ENEMY_ID = "enemyId"
     const val PCR_WEBSITE = "pcrWebsite"
     const val TOOL_LEADER_TIER = "leaderTier"
+    const val TOOL_ALL_QUEST = "allQuest"
 }
 
 /**
@@ -704,6 +706,15 @@ fun NavGraph(
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 WebsiteList(scrollState)
             }
+
+            //主线地图
+            composable(
+                route = Navigation.TOOL_ALL_QUEST
+            ) {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val scrollState = rememberLazyListState()
+                AllQuestList()
+            }
         }
     }
 }
@@ -1018,5 +1029,12 @@ class NavActions(navController: NavHostController) {
      */
     val toLeaderTier = {
         navController.navigate(Navigation.TOOL_LEADER_TIER)
+    }
+
+    /**
+     * 主线地图
+     */
+    val toAllQuest = {
+        navController.navigate(Navigation.TOOL_ALL_QUEST)
     }
 }

@@ -416,4 +416,10 @@ enum class MainIconType(val icon: ImageVector) {
      * 手机
      */
     BROWSER_APP(Icons.Rounded.Android),
+
+    /**
+     * 主线地图
+     */
+    ALL_QUEST(Icons.Rounded.Map),
+
 }

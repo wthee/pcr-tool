@@ -200,6 +200,7 @@
     <string name="search_suggestion">快捷输入</string>
     <string name="search_api">查询</string>
     <string name="search_api_desc">需要网络</string>
+    <string name="tool_all_quest">主线地图</string>
 
 
     <!--竞技场查询-->

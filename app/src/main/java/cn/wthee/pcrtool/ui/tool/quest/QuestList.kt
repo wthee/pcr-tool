@@ -26,19 +26,20 @@ import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 主线地图信息
- * fixme 暂不展示
  */
 @Composable
 fun AllQuestList(
     questViewModel: QuestViewModel = hiltViewModel(),
 ) {
-    val questList = questViewModel.getQuestList().collectAsState(initial = arrayListOf()).value
+    val questList = questViewModel.getQuestList().collectAsState(initial = null).value
 
     Box(modifier = Modifier.fillMaxSize()) {
-        QuestPager(
-            questList,
-            0
-        )
+        if (questList != null) {
+            QuestPager(
+                questList,
+                0
+            )
+        }
     }
 
 }

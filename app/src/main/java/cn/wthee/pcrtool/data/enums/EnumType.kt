@@ -83,7 +83,8 @@ enum class ToolMenuType(val id: Int) {
     EXTRA_EQUIP(218),
     TRAVEL_AREA(219),
     WEBSITE(220),
-    LEADER_TIER(221);
+    LEADER_TIER(221),
+    ALL_QUEST(222);
 
 
     companion object {
@@ -183,4 +184,19 @@ enum class NewsType(val stringId: Int) {
 enum class KeywordType(val type: Int) {
     NEWS(1),
     TWEET(2);
+}
+
+/**
+ * 角色评级
+ */
+enum class LeaderTierType(val type:Int){
+    ALL(0),
+    PVP_ATK(1),
+    PVP_DEF(2),
+    CLAN(3);
+
+    companion object {
+        fun getByValue(value: Int) = values()
+            .find { it.type == value } ?: LeaderTierType.ALL
+    }
 }

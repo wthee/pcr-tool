@@ -198,6 +198,7 @@ fun getAction(
             ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
             ToolMenuType.WEBSITE -> actions.toWebsiteList()
             ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
+            ToolMenuType.ALL_QUEST -> actions.toAllQuest()
         }
     }
 
@@ -242,7 +243,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_leader_tier,
             MainIconType.LEADER_TIER
         )
-
+        ToolMenuType.ALL_QUEST -> ToolMenuData(
+            R.string.tool_all_quest,
+            MainIconType.ALL_QUEST
+        )
     }
     //设置模块类别
     tool.type = toolMenuType

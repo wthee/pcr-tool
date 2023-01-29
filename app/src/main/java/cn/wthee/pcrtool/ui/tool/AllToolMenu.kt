@@ -95,6 +95,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     if (BuildConfig.DEBUG) {
         otherList.addItem(ToolMenuType.ALL_SKILL)
         otherList.addItem(ToolMenuType.ALL_EQUIP)
+        otherList.addItem(ToolMenuType.ALL_QUEST)
     }
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
