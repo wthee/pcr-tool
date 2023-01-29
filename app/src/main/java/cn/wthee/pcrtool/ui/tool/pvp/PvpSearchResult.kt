@@ -133,9 +133,8 @@ fun PvpSearchResult(
                         }
                     }
                 } else {
-                    MainText(
-                        text = stringResource(id = R.string.pvp_no_data),
-                        modifier = Modifier.align(Alignment.Center)
+                    CenterTipText(
+                        text = stringResource(id = R.string.pvp_no_data)
                     )
                 }
             } else {
@@ -145,15 +144,16 @@ fun PvpSearchResult(
                         .align(Alignment.Center)
                         .padding(bottom = Dimen.largePadding)
                 ) {
-                    MainText(
+                    CenterTipText(
                         text = stringResource(id = R.string.data_get_error)
-                    )
-                    SubButton(
-                        text = stringResource(id = R.string.pvp_research),
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
-                    ) {
-                        pvpViewModel.pvpResult.postValue(null)
-                        pvpViewModel.getPVPData(idArray)
+                    ){
+                        SubButton(
+                            text = stringResource(id = R.string.pvp_research),
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        ) {
+                            pvpViewModel.pvpResult.postValue(null)
+                            pvpViewModel.getPVPData(idArray)
+                        }
                     }
                 }
 

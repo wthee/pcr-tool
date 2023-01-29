@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
@@ -138,6 +139,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 角色评级类型
      */
-    val leaderTierType = MutableLiveData(0)
+    val leaderTierType = MutableLiveData(LeaderTierType.ALL)
 
 }

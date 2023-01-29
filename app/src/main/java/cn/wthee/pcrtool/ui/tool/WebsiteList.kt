@@ -126,7 +126,7 @@ private fun WebsiteGroup(
         } else {
             VerticalGrid(
                 itemWidth = getItemWidth(),
-                contentPadding = Dimen.mediumPadding,
+                contentPadding = Dimen.mediumPadding ,
                 modifier = Modifier.animateContentSize(defaultSpring())
             ) {
                 websiteList.forEach {
@@ -148,7 +148,7 @@ private fun WebsiteItem(data: WebsiteData) {
 
     Column(
         modifier = Modifier
-            .padding(Dimen.mediumPadding)
+            .padding(vertical = Dimen.mediumPadding, horizontal = Dimen.largePadding)
             .fillMaxWidth(),
     ) {
         Row(

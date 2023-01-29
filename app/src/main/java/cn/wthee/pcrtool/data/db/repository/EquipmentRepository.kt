@@ -34,7 +34,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         //TODO 校验逻辑是否正确
         if (lv > Constants.TP_LIMIT_LEVEL) {
             // 获取专武奖励属性
-            val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId)
+            val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
             val level = if (bonusAttr != null) {
                 //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
                 Constants.TP_LIMIT_LEVEL

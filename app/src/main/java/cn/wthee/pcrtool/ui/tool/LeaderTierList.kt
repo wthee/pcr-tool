@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
@@ -40,9 +41,9 @@ fun LeaderTier(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val type = remember {
-        mutableStateOf(navViewModel.leaderTierType.value ?: 0)
+        mutableStateOf(navViewModel.leaderTierType.value?.type ?: 0)
     }
-    type.value = navViewModel.leaderTierType.observeAsState().value ?: 0
+    type.value = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -103,7 +104,7 @@ fun LeaderTier(
                         bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                     )
                 ) {
-                    navViewModel.leaderTierType.postValue(type.value)
+                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.value))
                 }
 
                 //回到顶部

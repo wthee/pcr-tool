@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ClanBattleRepository
-import cn.wthee.pcrtool.data.db.view.ClanBattleTargetCountData
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow

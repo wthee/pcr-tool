@@ -823,19 +823,24 @@ fun BottomSearchBar(
  * 居中文本
  */
 @Composable
-fun CenterTipText(text: String) {
-    Box(
+fun CenterTipText(text: String, content: (@Composable () -> Unit)? = null) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .heightIn(min = Dimen.cardHeight),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         //内容
-        Subtitle1(
+        MainText(
             text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )
+        //额外内容
+        if (content != null) {
+            content()
+        }
     }
 }
 
