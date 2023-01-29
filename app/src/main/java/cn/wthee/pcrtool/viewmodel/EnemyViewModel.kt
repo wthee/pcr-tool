@@ -72,12 +72,14 @@ class EnemyViewModel @Inject constructor(
     /**
      * 获取多目标部位属性
      */
-    fun getMultiEnemyAttr(targetCountData: ClanBattleTargetCountData) = flow {
+    fun getMultiEnemyAttr(targetCountDataList: List<ClanBattleTargetCountData>) = flow {
         try {
             val map = hashMapOf<Int, List<EnemyParameterPro>>()
-            map[targetCountData.multiEnemyId] = getMultiPartEnemyList(
-                targetCountData.enemyPartIds.intArrayList
-            )
+            targetCountDataList.forEach { targetCountData ->
+                map[targetCountData.multiEnemyId] = getMultiPartEnemyList(
+                    targetCountData.enemyPartIds.intArrayList
+                )
+            }
             emit(map)
         } catch (_: Exception) {
 

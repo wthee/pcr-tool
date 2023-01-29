@@ -2,10 +2,7 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,11 +44,11 @@ fun ClanBattleList(
             .background(MaterialTheme.colorScheme.surface)
     ) {
         val visible = clanList.isNotEmpty()
-        LazyVerticalGrid(
-            state = scrollState,
-            columns = GridCells.Adaptive(getItemWidth())
-        ) {
-            if (visible) {
+        if (visible) {
+            LazyVerticalGrid(
+                state = scrollState,
+                columns = GridCells.Adaptive(getItemWidth())
+            ) {
                 items(
                     items = clanList,
                     key = {
@@ -60,18 +57,26 @@ fun ClanBattleList(
                 ) {
                     ClanBattleItem(clanBattleInfo = it, toClanBossInfo = toClanBossInfo)
                 }
-            } else {
+                item {
+                    CommonSpacer()
+                }
+            }
+        } else {
+            LazyVerticalGrid(
+                state = rememberLazyGridState(),
+                columns = GridCells.Adaptive(getItemWidth())
+            ) {
                 items(10) {
                     ClanBattleItem(
                         clanBattleInfo = ClanBattleInfo(),
                         toClanBossInfo = toClanBossInfo
                     )
                 }
+                item {
+                    CommonSpacer()
+                }
             }
 
-            item {
-                CommonSpacer()
-            }
         }
         //回到顶部
         FabCompose(
