@@ -33,7 +33,7 @@ object Constants {
     const val DATABASE_URL = "https://wthee.xyz/db/"
 
     //接口正式地址
-    const val API_URL = "https://wthee.xyz:8848/api/"
+    const val API_URL = "https://wthee.xyz/pcr/api/v1/"
 
     //Spine 预览地址
     const val PREVIEW_URL = "https://wthee.xyz/spine/index.html"
