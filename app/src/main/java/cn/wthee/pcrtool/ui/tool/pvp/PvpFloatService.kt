@@ -13,8 +13,8 @@ import android.view.WindowManager
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -112,7 +112,7 @@ class PvpFloatService : LifecycleService() {
             floatRootView = ComposeView(this).apply {
                 setViewTreeLifecycleOwner(this@PvpFloatService)
                 setViewTreeSavedStateRegistryOwner(activity)
-                ViewTreeViewModelStoreOwner.set(this, activity)
+                setViewTreeViewModelStoreOwner(activity)
                 setContent {
                     PvpFloatSearch(spanCount = spanCount)
                 }
