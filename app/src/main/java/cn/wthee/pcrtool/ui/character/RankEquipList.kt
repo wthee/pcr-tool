@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -99,10 +99,7 @@ fun RankEquipListItem(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
             currentRank.value = dataState.promotionLevel
-            navController.previousBackStackEntry
-                ?.savedStateHandle
-                ?.set("currentRank", currentRank.value)
-
+            navViewModel.rankEquipSelected.value = dataState.promotionLevel
         }
     ) {
         //图标列表

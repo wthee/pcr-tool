@@ -244,7 +244,6 @@ private fun PvpResultItem(
                                 )
                             )
                         }
-//                        favorites.value = !favorites.value
                     }
                 }
             }

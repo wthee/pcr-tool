@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,8 +40,7 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
@@ -93,17 +93,11 @@ fun CharacterDetail(
     val currentValueState = remember {
         mutableStateOf(CharacterProperty())
     }
-
     //rank 装备选择监听
-    LaunchedEffect(navSheetState.currentValue) {
-        val rankEquipSelectedValue =
-            navController.currentBackStackEntry?.savedStateHandle?.get<Int>("currentRank")
-
-        if (rankEquipSelectedValue != null) {
-            navController.currentBackStackEntry
-                ?.savedStateHandle
-                ?.set("currentRank", null)
-            currentValueState.value = currentValueState.value.update(rank = rankEquipSelectedValue)
+    val rankEquipSelected = navViewModel.rankEquipSelected.observeAsState().value ?: 0
+    LaunchedEffect(rankEquipSelected) {
+        if (rankEquipSelected != 0 && currentValueState.value.rank != rankEquipSelected) {
+            currentValueState.value = currentValueState.value.update(rank = rankEquipSelected)
         }
     }
 

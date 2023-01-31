@@ -141,4 +141,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val leaderTierType = MutableLiveData(LeaderTierType.ALL)
 
+    /**
+     * 选中的rank
+     */
+    val rankEquipSelected = MutableLiveData(0)
+
 }
