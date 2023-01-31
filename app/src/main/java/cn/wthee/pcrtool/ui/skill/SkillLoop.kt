@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -75,7 +74,7 @@ fun SkillLoopList(
 
 
     Column(
-        modifier = if (unitType == UnitType.CHARACTER){
+        modifier = if (unitType == UnitType.CHARACTER) {
             modifier.verticalScroll(rememberScrollState())
         } else {
             modifier
@@ -100,10 +99,8 @@ private fun SkillLoopItem(
     loop: SkillLoop,
     iconTypes: HashMap<Int, Int>,
 ) {
-    Column {
-        MainTitleText(text = loop.loopTitle)
-        SkillLoopIconList(loop.loopList, iconTypes)
-    }
+    MainTitleText(text = loop.loopTitle)
+    SkillLoopIconList(loop.loopList.filter { it != 0 }, iconTypes)
 }
 
 /**
@@ -114,9 +111,11 @@ private fun SkillLoopIconList(
     loopList: List<Int>,
     iconTypes: HashMap<Int, Int>
 ) {
+
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
-        spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding
     ) {
         loopList.forEach {
             val type: String

@@ -17,9 +17,13 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.mediaType
+import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 /**
@@ -42,10 +46,12 @@ object DatabaseUpdater {
                 AppDatabaseTW.close()
                 AppDatabaseJP.close()
             }
+
             3 -> {
                 AppDatabaseCN.close()
                 AppDatabaseJP.close()
             }
+
             4 -> {
                 AppDatabaseCN.close()
                 AppDatabaseTW.close()
@@ -66,7 +72,20 @@ object DatabaseUpdater {
         try {
             //创建服务
             val service = ApiUtil.create(MyAPIService::class.java, API_URL)
-            val version = service.getDbVersion(getVersionFileName())
+            //接口参数
+            val json = JsonObject()
+            json.addProperty(
+                "regionCode", when (MainActivity.regionType) {
+                    2 -> "cn"
+                    3 -> "tw"
+                    4 -> "jp"
+                    else -> ""
+                }
+            )
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+
+            val version = service.getDbVersion(body)
             //更新判断
             downloadDB(version.data!!)
         } catch (e: Exception) {
@@ -109,6 +128,7 @@ object DatabaseUpdater {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
                     }
                 }
+
                 3 -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW
@@ -116,6 +136,7 @@ object DatabaseUpdater {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
                     }
                 }
+
                 else -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
@@ -154,16 +175,6 @@ object DatabaseUpdater {
         }
     }
 
-
-    /**
-     * 获取数据库文件名
-     */
-    private fun getVersionFileName() = when (MainActivity.regionType) {
-        2 -> Constants.DATABASE_VERSION_URL_CN
-        3 -> Constants.DATABASE_VERSION_URL_TW
-        else -> Constants.DATABASE_VERSION_URL_JP
-    }
-
 }
 
 /**
@@ -196,12 +207,14 @@ fun tryOpenDatabase(): Int {
                 openDatabase(AppDatabaseCN.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
             }
         }
+
         3 -> {
             msg = "db error: tw"
             open = {
                 openDatabase(AppDatabaseTW.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
             }
         }
+
         else -> {
             msg = "db error: jp"
             open = {

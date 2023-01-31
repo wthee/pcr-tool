@@ -1,16 +1,21 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -22,7 +27,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.module.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import kotlinx.coroutines.launch
 
 /**
@@ -91,6 +95,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     if (BuildConfig.DEBUG) {
         otherList.addItem(ToolMenuType.ALL_SKILL)
         otherList.addItem(ToolMenuType.ALL_EQUIP)
+        otherList.addItem(ToolMenuType.ALL_QUEST)
     }
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
@@ -98,21 +103,19 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         Column(modifier = Modifier.fillMaxSize()) {
             //预览
             ExpandAnimation(visible = isEditMode) {
-                Column {
-                    MainCard(
-                        modifier = Modifier.padding(
-                            horizontal = Dimen.largePadding,
-                            vertical = Dimen.mediumPadding
-                        )
-                    ) {
-                        ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
-                    }
+                Column(
+                    modifier = Modifier.padding(
+                        vertical = Dimen.mediumPadding
+                    )
+                ) {
+                    ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
                     //编辑提示
                     Subtitle2(
                         text = stringResource(R.string.tip_click_to_add),
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(vertical = Dimen.mediumPadding)
+
                     )
                 }
             }
@@ -120,8 +123,15 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
             //全部功能
             LazyColumn(
                 modifier = Modifier
-                    .padding(horizontal = Dimen.mediumPadding)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .shadow(
+                        elevation = if (isEditMode) Dimen.cardElevation else 0.dp,
+                        shape = shapeTop()
+                    )
+                    .background(
+                        shape = if (isEditMode) shapeTop() else RoundedCornerShape(0.dp),
+                        color = if (isEditMode) MaterialTheme.colorScheme.background else Color.Transparent
+                    ),
                 state = scrollState
             ) {
                 items(
@@ -183,7 +193,7 @@ private fun MenuGroup(
             CaptionText(text = group.groupDesc)
         }
         VerticalGrid(
-            spanCount = (Dimen.iconSize * 3).spanCount,
+            itemWidth = (Dimen.iconSize * 3),
             modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
         ) {
             group.toolList.forEach {

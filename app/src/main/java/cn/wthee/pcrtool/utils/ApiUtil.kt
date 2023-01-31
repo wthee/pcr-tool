@@ -8,6 +8,7 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -23,35 +24,35 @@ object ApiUtil {
 
     private const val TIMEOUT_NORMAL_SECOND = 15L
     private const val TIMEOUT_DOWNLOAD_SECOND = 120L
+    private const val MAX_RETRY = 3
 
     @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
     private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
         val client = this
         //初始 SSL
-        val trustManagers: Array<TrustManager> = arrayOf(
-            object : X509TrustManager {
-                @Throws(CertificateException::class)
-                override fun checkClientTrusted(
-                    chain: Array<X509Certificate>,
-                    authType: String
-                ) {
-                }
-
-                @Throws(CertificateException::class)
-                override fun checkServerTrusted(
-                    chain: Array<X509Certificate>,
-                    authType: String
-                ) {
-                }
-
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
+        val trustManager = object : X509TrustManager {
+            @Throws(CertificateException::class)
+            override fun checkClientTrusted(
+                chain: Array<X509Certificate>,
+                authType: String
+            ) {
             }
-        )
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustManagers, null)
-        client.sslSocketFactory(sslContext.socketFactory, trustManagers[0] as X509TrustManager)
+
+            @Throws(CertificateException::class)
+            override fun checkServerTrusted(
+                chain: Array<X509Certificate>,
+                authType: String
+            ) {
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return arrayOf()
+            }
+        }
+
+        val sslContext = SSLContext.getInstance("TLSv1.2")
+        sslContext.init(null, arrayOf<TrustManager>(trustManager), SecureRandom())
+        client.sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
         return client
     }
@@ -84,7 +85,7 @@ object ApiUtil {
             .connectTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
-            .addInterceptor(RetryInterceptor(3))
+            .addInterceptor(RetryInterceptor(MAX_RETRY))
 
         return builder.setSSL().build()
     }

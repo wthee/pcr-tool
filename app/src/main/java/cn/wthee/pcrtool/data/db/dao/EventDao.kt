@@ -26,7 +26,7 @@ interface EventDao {
             event.original_event_id,
             event.start_time,
             event.end_time,
-            c.title,
+            COALESCE(c.title, '') AS title,
             COALESCE( e.unit_ids, '' ) AS unit_ids,
             enemy_parameter.enemy_id AS boss_enemy_id,
             enemy_parameter.unit_id AS boss_unit_id 
@@ -61,7 +61,6 @@ interface EventDao {
     )
     suspend fun getAllEvents(limit: Int): List<EventData>
 
-
     /**
      * 获取活动剧情列表
      * @param storyId 剧情活动编号
@@ -69,7 +68,6 @@ interface EventDao {
     @SkipQueryVerification
     @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
     suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>
-
 
     /**
      * 获取加倍活动信息
@@ -99,6 +97,77 @@ interface EventDao {
     """
     )
     suspend fun getDropEvent(): List<CalendarEvent>
+
+    /**
+     * 获取每日体力加倍活动信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            a.daily_mission_id AS id,
+            18 AS type,
+            2000 AS value,
+            start_time,
+            end_time 
+        FROM
+            daily_mission_data AS a 
+        WHERE
+            a.mission_reward_id = 18001003
+        ORDER BY id DESC 
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getMissionEvent(limit: Int): List<CalendarEvent>
+
+    /**
+     * 获取登录奖励
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+       SELECT
+            a.login_bonus_id AS id,
+            19 AS type,
+            a.count_num * b.reward_num AS value,
+            a.start_time,
+            a.end_time
+        FROM
+            login_bonus_data AS a
+            LEFT JOIN login_bonus_detail AS b ON a.login_bonus_id = b.login_bonus_id 
+        WHERE
+            b.reward_id = 91002
+        GROUP BY
+            a.start_time
+        ORDER BY a.start_time DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getLoginEvent(limit: Int): List<CalendarEvent>
+
+    /**
+     * 获取兰德索尔杯信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+       SELECT
+            a.fortune_id AS id,
+            20 AS type,
+            0 AS value,
+            a.start_time,
+            a.end_time 
+        FROM
+            chara_fortune_schedule AS a 
+        ORDER BY
+            a.fortune_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getFortuneEvent(limit: Int): List<CalendarEvent>
 
     /**
      * 获取露娜塔信息

@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.getRegionName
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.WebsiteViewModel
 import kotlinx.coroutines.launch
 
@@ -50,7 +49,6 @@ fun WebsiteList(
         stringResource(id = R.string.db_jp),
     )
 
-    val spanCount = getItemWidth().spanCount
 
     //列表
     CommonResponseBox(responseData = responseData, fabContent = {
@@ -89,7 +87,7 @@ fun WebsiteList(
             items(items = data, key = {
                 it.type
             }) {
-                WebsiteGroup(it, type.value, spanCount = spanCount)
+                WebsiteGroup(it, type.value)
             }
             item {
                 CommonSpacer()
@@ -108,8 +106,7 @@ fun WebsiteList(
 @Composable
 private fun WebsiteGroup(
     groupData: WebsiteGroupData,
-    regionIndex: Int,
-    spanCount: Int
+    regionIndex: Int
 ) {
 
     val websiteList = groupData.websiteList.filter {
@@ -128,13 +125,9 @@ private fun WebsiteGroup(
             CenterTipText(text = stringResource(id = R.string.no_data))
         } else {
             VerticalGrid(
-                spanCount = spanCount,
-                modifier = Modifier
-                    .padding(
-                        start = Dimen.commonItemPadding,
-                        end = Dimen.commonItemPadding
-                    )
-                    .animateContentSize(defaultSpring())
+                itemWidth = getItemWidth(),
+                contentPadding = Dimen.mediumPadding ,
+                modifier = Modifier.animateContentSize(defaultSpring())
             ) {
                 websiteList.forEach {
                     WebsiteItem(data = it)
@@ -155,7 +148,7 @@ private fun WebsiteItem(data: WebsiteData) {
 
     Column(
         modifier = Modifier
-            .padding(Dimen.mediumPadding)
+            .padding(vertical = Dimen.mediumPadding, horizontal = Dimen.largePadding)
             .fillMaxWidth(),
     ) {
         Row(

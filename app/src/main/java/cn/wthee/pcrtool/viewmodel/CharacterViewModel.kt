@@ -31,8 +31,8 @@ class CharacterViewModel @Inject constructor(
                 val filterList = unitRepository.getCharacterInfoList(params, Int.MAX_VALUE)
                 emit(filterList)
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList")
         }
 
     }

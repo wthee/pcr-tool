@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.MyApplication
+import kotlin.math.max
 
 
 /**
@@ -45,9 +46,7 @@ object ScreenUtil {
  * 计算 spanCount
  */
 val Dp.spanCount: Int
-    @Composable
-    get() = ScreenUtil.getWidth() / this.value.dp2px
-
+    get() = max(1, ScreenUtil.getWidth() / this.value.dp2pxNotComposable)
 
 /**
  *  获取 像素 的dp

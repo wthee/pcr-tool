@@ -182,7 +182,9 @@ class CharacterAttrViewModel @Inject constructor(
                 storyAttr.add(it.getAttr())
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, "getStoryAttrs:$unitId")
+            if (e !is CancellationException) {
+                LogReportUtil.upload(e, "getStoryAttrs:$unitId")
+            }
         }
         return storyAttr
     }

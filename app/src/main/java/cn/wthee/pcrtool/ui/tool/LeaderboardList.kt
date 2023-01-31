@@ -1,13 +1,26 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,14 +31,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.CommonResponseBox
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.MainTitleText
+import cn.wthee.pcrtool.ui.common.PositionIcon
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -333,30 +366,21 @@ private fun LeaderboardItem(
             }
         ) {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                Row(
+                //名称
+                MainContentText(
                     modifier = Modifier.padding(
                         horizontal = Dimen.mediumPadding,
                         vertical = Dimen.smallPadding
-                    )
-                ) {
-                    //名称
-                    MainContentText(
-                        text = "${index + 1}." + if (hasUnitId && !unknown) {
-                            basicInfo!!.name
-                        } else {
-                            leader.name
-                        },
-                        textAlign = TextAlign.Start,
-                        color = textColor
-                    )
-
-                    CaptionText(
-                        text = leader.updateTime?.substring(0, 11) ?: "",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = textColor
-                    )
-
-                }
+                    ),
+                    text = "${index + 1}、" + if (hasUnitId && !unknown) {
+                        basicInfo!!.name
+                    } else {
+                        leader.name
+                    },
+                    textAlign = TextAlign.Start,
+                    color = textColor,
+                    maxLines = 1
+                )
                 //评价
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -366,32 +390,29 @@ private fun LeaderboardItem(
                     GradeText(leader.pvp, modifier = Modifier.weight(1f))
                     GradeText(leader.clan, modifier = Modifier.weight(1f))
                 }
-                //评分
-                if (BuildConfig.DEBUG) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+
+                Row {
+                    if (unknown) {
+                        //提示
                         CaptionText(
-                            text = leader.questScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.towerScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.pvpScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                        CaptionText(
-                            text = leader.clanScore.toString(),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
+                            modifier = Modifier.padding(start = Dimen.mediumPadding),
+                            text = if (!hasUnitId) {
+                                stringResource(id = R.string.leader_need_sync)
+                            } else {
+                                tipText
+                            },
+                            color = colorGray
                         )
                     }
+
+                    //日期
+                    CaptionText(
+                        text = leader.updateTime?.substring(0, 11) ?: "",
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = Dimen.smallPadding),
+                        color = textColor
+                    )
                 }
             }
         }

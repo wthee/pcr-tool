@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -137,7 +136,7 @@ private fun EquipMaterialList(
         mutableStateOf(arrayListOf<Int>())
     }
     if (!LocalInspectionMode.current) {
-        LaunchedEffect(MainActivity.navSheetState.currentValue) {
+        LaunchedEffect(MainActivity.navSheetState.isVisible) {
             starIds.value = FilterEquipment.getStarIdList()
         }
     }
@@ -151,15 +150,13 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        VerticalGrid(spanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount) {
+        VerticalGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.largePadding) {
             materialList.forEach { material ->
                 val loved = starIds.value.contains(material.id)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding,
                             bottom = Dimen.largePadding
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {

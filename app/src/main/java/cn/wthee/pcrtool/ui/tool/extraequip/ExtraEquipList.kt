@@ -74,7 +74,6 @@ fun ExtraEquipList(
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
-    val equipSpanCount = (Dimen.iconSize * 3 + Dimen.largePadding * 2).spanCount
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -115,7 +114,6 @@ fun ExtraEquipList(
                             ) { equipGroupData ->
                                 ExtraEquipGroup(
                                     equipGroupData,
-                                    equipSpanCount,
                                     filterValue,
                                     toExtraEquipDetail
                                 )
@@ -191,7 +189,6 @@ fun ExtraEquipList(
 @Composable
 private fun ExtraEquipGroup(
     equipGroupData: ExtraEquipGroupData,
-    equipSpanCount: Int,
     filterValue: FilterExtraEquipment,
     toExtraEquipDetail: (Int) -> Unit
 ) {
@@ -215,7 +212,8 @@ private fun ExtraEquipGroup(
 
     //分组内容
     VerticalGrid(
-        spanCount = equipSpanCount,
+        itemWidth = Dimen.iconSize * 3,
+        contentPadding = Dimen.largePadding,
         modifier = Modifier.padding(
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
@@ -525,7 +523,6 @@ private fun ExtraEquipGroupPreview() {
                     ExtraEquipmentBasicInfo(equipmentName = text)
                 )
             ),
-            2,
             FilterExtraEquipment()
         ) { }
     }

@@ -3,9 +3,20 @@ package cn.wthee.pcrtool.data.network
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.model.*
+import cn.wthee.pcrtool.data.model.AppNotice
+import cn.wthee.pcrtool.data.model.DatabaseVersion
+import cn.wthee.pcrtool.data.model.KeywordData
+import cn.wthee.pcrtool.data.model.LeaderTierData
+import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.data.model.WebsiteGroupData
+import cn.wthee.pcrtool.data.model.cancel
+import cn.wthee.pcrtool.data.model.error
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.mediaType
 import cn.wthee.pcrtool.utils.LogReportUtil
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -16,6 +27,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
+
 /**
  * 接口 Repository
  *
@@ -23,7 +35,6 @@ import javax.inject.Inject
  */
 class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
-    private val mediaType = "application/json; charset=utf-8"
 
     /**
      * 查询竞技场对战信息
@@ -221,6 +232,40 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 获取数据更新版本
+     */
+    suspend fun getDbVersion(): ResponseData<DatabaseVersion> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty(
+                "regionCode", when (MainActivity.regionType) {
+                    2 -> "cn"
+                    3 -> "tw"
+                    4 -> "jp"
+                    else -> ""
+                }
+            )
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+
+            val response = service.getDbVersion(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getDbVersion")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 获取数据更新摘要
      */
     suspend fun getDbDiff(): ResponseData<String> {
@@ -228,7 +273,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         try {
             //接口参数
             val json = JsonObject()
-            //测试版本显示更新布局
             json.addProperty(
                 "regionCode", when (MainActivity.regionType) {
                     2 -> "cn"

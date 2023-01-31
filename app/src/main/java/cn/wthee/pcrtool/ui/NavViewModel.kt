@@ -4,10 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -116,9 +118,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
 
     /**
      * 模拟卡池类型
-     * 0：自选角色 1：fes角色
      */
-    val gachaType = MutableLiveData<Int>()
+    val mockGachaType = MutableLiveData<MockGachaType>()
 
     /**
      * 模拟卡池 pickUp 角色
@@ -138,6 +139,11 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 角色评级类型
      */
-    val leaderTierType = MutableLiveData(0)
+    val leaderTierType = MutableLiveData(LeaderTierType.ALL)
+
+    /**
+     * 选中的rank
+     */
+    val rankEquipSelected = MutableLiveData(0)
 
 }

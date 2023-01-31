@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlin.math.max
 
 
 /**
@@ -32,11 +33,14 @@ fun EquipSection(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.EQUIP.id
-    val equipSpanCount = (Dimen.iconSize + Dimen.largePadding * 2).spanCount
+    val equipSpanCount = max(
+        1,
+        (Dimen.iconSize + Dimen.largePadding * 2).spanCount
+    )
     //装备总数
     val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
     //装备列表
-    val equipList = overviewViewModel.getEquipList(maxOf(1, equipSpanCount) * 2)
+    val equipList = overviewViewModel.getEquipList(equipSpanCount * 2)
         .collectAsState(initial = arrayListOf()).value
 
     Section(
@@ -54,8 +58,7 @@ fun EquipSection(
         }
     ) {
         VerticalGrid(
-            spanCount = maxOf(1, equipSpanCount),
-            modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
+            itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
             if (equipList.isNotEmpty()) {
                 equipList.forEach {

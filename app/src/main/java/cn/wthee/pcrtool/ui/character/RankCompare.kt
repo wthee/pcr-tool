@@ -61,7 +61,7 @@ fun RankCompare(
         rank1.value
     ).collectAsState(initial = arrayListOf()).value
 
-    val dialogState = remember {
+    val openDialog = remember {
         mutableStateOf(false)
     }
 
@@ -107,16 +107,16 @@ fun RankCompare(
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
-            dialogState.value = true
+            openDialog.value = true
         }
 
         //RANK 选择
-        if (dialogState.value) {
+        if (openDialog.value) {
             RankSelectCompose(
                 rank0,
                 rank1,
                 maxRank,
-                dialogState,
+                openDialog,
             )
         }
     }

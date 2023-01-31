@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.simpleDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,14 +76,20 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 创建卡池
      */
-    fun createMockGacha(gachaId: String, gachaType: Int, pickUpList: List<GachaUnitInfo>) {
+    fun createMockGacha(
+        gachaId: String,
+        mockGachaType: MockGachaType,
+        pickUpList: List<GachaUnitInfo>
+    ) {
         viewModelScope.launch {
             val nowTime = getToday()
+            //处理不同顺序相同角色
+            val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
             val data = MockGachaData(
                 gachaId,
                 MainActivity.regionType,
-                gachaType,
-                pickUpList.getIdsStr(),
+                mockGachaType.type,
+                sorted.getIdsStr(),
                 nowTime,
                 nowTime
             )
@@ -90,6 +97,30 @@ class MockGachaViewModel @Inject constructor(
             //加载历史数据
             getHistory()
         }
+    }
+
+    /**
+     * 处理不同顺序相同角色
+     */
+    private fun sortGachaUnitInfos(
+        mockGachaType: MockGachaType,
+        pickUpList: List<GachaUnitInfo>
+    ): List<GachaUnitInfo> {
+        val sorted = if (mockGachaType == MockGachaType.PICK_UP_SINGLE) {
+            //复刻自选但角色，去除最后一个
+            if (pickUpList.size > 1) {
+                pickUpList.subList(0, pickUpList.size - 1).sortedBy {
+                    it.unitId
+                } + pickUpList.last()
+            } else {
+                pickUpList
+            }
+        } else {
+            pickUpList.sortedBy {
+                it.unitId
+            }
+        }
+        return sorted
     }
 
     /**
@@ -127,8 +158,19 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取卡池
      */
-    suspend fun getGachaByPickUp(pickUpList: List<GachaUnitInfo>) =
-        mockGachaRepository.getGachaByPickUpIds(MainActivity.regionType, pickUpList.getIdsStr())
+    suspend fun getGachaByPickUp(
+        mockGachaType: MockGachaType,
+        pickUpList: List<GachaUnitInfo>
+    ): MockGachaData? {
+        //处理不同顺序相同角色
+        val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
+        return mockGachaRepository.getGachaByPickUpIds(
+            MainActivity.regionType,
+            mockGachaType.type,
+            sorted.getIdsStr()
+        )
+    }
+
 
     /**
      * 获取抽取结果

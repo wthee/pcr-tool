@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 
@@ -169,7 +168,7 @@ private fun TweetItem(data: TweetData) {
         }
         //图片
         if (photos.isNotEmpty()) {
-            VerticalGrid(spanCount = getItemWidth().spanCount) {
+            VerticalGrid(itemWidth = getItemWidth()) {
                 photos.forEach {
                     val isComic = url != ""
                     if (!isComic) {

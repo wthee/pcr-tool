@@ -19,7 +19,7 @@ data class ClanBattleInfo(
     @Ignore
     var unitIdList: List<Int> = arrayListOf(0, 0, 0, 0, 0),
     @Ignore
-    var targetCountData: ClanBattleTargetCountData = ClanBattleTargetCountData()
+    var targetCountDataList: List<ClanBattleTargetCountData> = arrayListOf()
 ) {
 
     /**
@@ -28,11 +28,10 @@ data class ClanBattleInfo(
      * @param bossIndex boss 下标
      */
     fun getMultiCount(bossIndex: Int): Int {
-        return if (bossIndex + 1 == targetCountData.multiEnemyId % 10) {
-            targetCountData.enemyPartIds.intArrayList.filter { it > 0 }.size
-        } else {
-            0
+        val targetCountData = targetCountDataList.firstOrNull() {
+            it.multiEnemyId % 10 == bossIndex + 1 + it.offset
         }
+        return targetCountData?.enemyPartIds?.intArrayList?.filter { it > 0 }?.size ?: 0
     }
 }
 
@@ -40,7 +39,9 @@ data class ClanBattleInfo(
  * 多目标数量
  */
 data class ClanBattleTargetCountData(
-    @ColumnInfo(name = "clan_battle_id") val clanBattleId: Int = -1,
-    @ColumnInfo(name = "multi_enemy_id") val multiEnemyId: Int = 0,
-    @ColumnInfo(name = "enemy_part_ids") val enemyPartIds: String = ""
+    @ColumnInfo(name = "clan_battle_id") var clanBattleId: Int = -1,
+    @ColumnInfo(name = "multi_enemy_id") var multiEnemyId: Int = 0,
+    @ColumnInfo(name = "enemy_part_ids") var enemyPartIds: String = "",
+    @Ignore
+    var offset:Int = 0
 )

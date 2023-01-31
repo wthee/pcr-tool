@@ -6,10 +6,9 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,10 +21,10 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GachaList(
     scrollState: LazyStaggeredGridState,
@@ -42,11 +41,14 @@ fun GachaList(
     toMockGacha: () -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
-    val gachaList = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
+    val gachaList = gachaViewModel.getGachaHistory(dateRange.value)
+        .collectAsState(initial = arrayListOf()).value
     val fesUnitIds =
         gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
-    val spanCount = getItemWidth().spanCount
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -63,7 +65,6 @@ fun GachaList(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
-                        parentSpanCount = spanCount,
                         toCharacterDetail = toCharacterDetail,
                         toMockGacha = toMockGacha
                     )
@@ -73,18 +74,28 @@ fun GachaList(
                 }
             }
         }
-        //回到顶部
-        FabCompose(
-            iconType = MainIconType.GACHA,
-            text = stringResource(id = R.string.tool_gacha),
+
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                )
         ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
+            //日期选择
+            DateRangePickerCompose(dateRange = dateRange)
+
+            //回到顶部
+            FabCompose(
+                iconType = MainIconType.GACHA,
+                text = stringResource(id = R.string.tool_gacha)
+            ) {
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
                 }
             }
         }
@@ -100,7 +111,6 @@ fun GachaList(
 fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIds: List<Int>,
-    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
@@ -108,7 +118,7 @@ fun GachaItem(
     val type = gachaInfo.getType()
     val color = when (type) {
         GachaType.LIMIT, GachaType.NORMAL -> colorRed
-        GachaType.RE_LIMIT, GachaType.RE_NORMAL -> colorGold
+        GachaType.RE_LIMIT, GachaType.RE_NORMAL, GachaType.RE_LIMIT_PICK -> colorGold
         GachaType.FES -> colorGreen
         GachaType.ANNIV -> colorOrange
         GachaType.UNKNOWN -> MaterialTheme.colorScheme.primary
@@ -116,9 +126,10 @@ fun GachaItem(
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
         icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
-    val gachaType = when {
-        icons.find { !fesUnitIds.contains(it) } == null -> 1
-        else -> 0
+    val mockGachaType = when {
+        icons.find { !fesUnitIds.contains(it) } == null -> MockGachaType.FES
+        icons.size >= 6 -> MockGachaType.PICK_UP_SINGLE
+        else -> MockGachaType.PICK_UP
     }
 
     Column(
@@ -161,7 +172,6 @@ fun GachaItem(
                 } else {
                     GridIconListCompose(
                         icons = icons,
-                        parentSpanCount = parentSpanCount,
                         onClickItem = toCharacterDetail
                     )
                 }
@@ -178,7 +188,7 @@ fun GachaItem(
                             icon = MainIconType.MOCK_GACHA,
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
-                            navViewModel.gachaType.postValue(gachaType)
+                            navViewModel.mockGachaType.postValue(mockGachaType)
                             navViewModel.pickUpList.postValue(gachaInfo.getMockGachaUnitList())
                             //跳转
                             toMockGacha()
@@ -203,7 +213,6 @@ private fun GachaItemPreview() {
         GachaItem(
             gachaInfo = GachaInfo(),
             toCharacterDetail = {},
-            parentSpanCount = 1,
             toMockGacha = {},
             fesUnitIds = arrayListOf()
         )

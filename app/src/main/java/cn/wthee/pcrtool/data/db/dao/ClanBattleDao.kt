@@ -71,7 +71,7 @@ interface ClanBattleDao {
             AND enemy_part_ids IS NOT NULL 
             AND phase = :phase
         GROUP BY
-            a.clan_battle_id 
+            a.clan_battle_id, c.enemy_id_1
         ORDER BY
             a.clan_battle_id DESC
     """

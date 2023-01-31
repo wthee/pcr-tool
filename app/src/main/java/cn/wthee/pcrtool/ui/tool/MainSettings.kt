@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
@@ -43,7 +45,7 @@ fun MainSettings() {
     val context = LocalContext.current
 
     //调整主按钮图表
-    LaunchedEffect(navSheetState.currentValue) {
+    LaunchedEffect(navSheetState.isVisible) {
         if (navSheetState.isVisible) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
@@ -224,36 +226,14 @@ fun MainSettings() {
         CommonSpacer()
     }
 
-    if (openDialog.value) {
-        AlertDialog(
-            title = {
-                MainText(
-                    text = stringResource(id = R.string.confirm_clean_image_cache),
-                    textAlign = TextAlign.Start,
-                    selectable = true
-                )
-            },
-            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-            shape = MaterialTheme.shapes.medium,
-            confirmButton = {
-                //删除缓存
-                MainButton(text = stringResource(R.string.confirm)) {
-                    FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
-                    openDialog.value = false
-                }
-            },
-            dismissButton = {
-                //取消
-                SubButton(
-                    text = stringResource(id = R.string.cancel)
-                ) {
-                    openDialog.value = false
-                }
-            })
+    //弹窗确认
+    MainAlertDialog(
+        openDialog = openDialog,
+        icon = MainIconType.DELETE,
+        title = stringResource(id = R.string.title_dialog_clean_cache),
+        text = stringResource(id = R.string.confirm_clean_image_cache)
+    ) {
+        FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
     }
 
 }
@@ -396,7 +376,7 @@ fun SettingCommonItem(
         IconCompose(
             data = iconType,
             size = iconSize,
-            tint = tintColor,
+            colorFilter = ColorFilter.tint(tintColor)
         )
         Column(
             modifier = Modifier

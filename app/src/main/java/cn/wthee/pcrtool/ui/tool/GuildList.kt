@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -44,7 +43,6 @@ fun GuildList(
 ) {
     val guilds = guildViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
-    val spanCount = getItemWidth().spanCount
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (guilds.isNotEmpty()) {
@@ -59,7 +57,6 @@ fun GuildList(
                 ) {
                     GuildItem(
                         it,
-                        parentSpanCount = spanCount,
                         toCharacterDetail = toCharacterDetail
                     )
                 }
@@ -92,7 +89,6 @@ fun GuildList(
 @Composable
 private fun GuildItem(
     guild: GuildAllMember,
-    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit
 ) {
     val memberList = arrayListOf<GuildMemberInfo>()
@@ -147,7 +143,6 @@ private fun GuildItem(
                 //角色图标列表
                 GridIconListCompose(
                     icons = iconIdList,
-                    parentSpanCount = parentSpanCount,
                     onClickItem = toCharacterDetail
                 )
             }
@@ -190,6 +185,6 @@ private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1,
 @Composable
 private fun GuildItemPreview() {
     PreviewLayout {
-        GuildItem(guild = GuildAllMember(), 2, toCharacterDetail = {})
+        GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
     }
 }

@@ -33,7 +33,6 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.utils.spanCount
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -115,19 +114,18 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     VerticalGrid(
-        spanCount = (Dimen.menuItemSize + Dimen.mediumPadding * 2).spanCount,
+        itemWidth = Dimen.menuItemSize,
+        contentPadding = Dimen.largePadding + Dimen.mediumPadding,
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
         toolList.forEach {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(
                         top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
                         bottom = Dimen.largePadding
-                    ),
+                    )
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 MenuItem(context, actions, it, isEditMode)
@@ -200,6 +198,7 @@ fun getAction(
             ToolMenuType.TRAVEL_AREA -> actions.toExtraEquipTravelAreaList()
             ToolMenuType.WEBSITE -> actions.toWebsiteList()
             ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
+            ToolMenuType.ALL_QUEST -> actions.toAllQuest()
         }
     }
 
@@ -244,7 +243,10 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_leader_tier,
             MainIconType.LEADER_TIER
         )
-
+        ToolMenuType.ALL_QUEST -> ToolMenuData(
+            R.string.tool_all_quest,
+            MainIconType.ALL_QUEST
+        )
     }
     //设置模块类别
     tool.type = toolMenuType

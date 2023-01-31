@@ -103,9 +103,8 @@ fun CharacterList(
         ) {
             if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(getItemWidth()),
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.commonItemPadding)
+                    columns = GridCells.Adaptive(getItemWidth() * 1.3f),
+                    state = scrollState
                 ) {
                     items(
                         items = characterList,
@@ -212,7 +211,6 @@ fun CharacterItem(
                 data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
                 ratio = RATIO,
                 contentScale = ContentScale.FillHeight,
-                modifier = Modifier.heightIn(max = getItemWidth()),
                 onError = { loadError = true }
             ) { result ->
                 loadSuccess = true
@@ -262,6 +260,7 @@ fun CharacterItem(
                     modifier = Modifier.align(Alignment.BottomStart)
                 )
             }
+
 
             //其它信息
             FadeAnimation(
@@ -337,15 +336,20 @@ fun CharacterItem(
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
+
                         }
 
                         Column(
                             modifier = Modifier
+                                .padding(end = Dimen.mediumPadding)
                                 .weight(1f),
                             verticalArrangement = Arrangement.Bottom,
                             horizontalAlignment = Alignment.End
                         ) {
-                            Row {
+                            //位置
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 //获取方式
                                 CharacterTag(
                                     modifier = Modifier.padding(end = Dimen.smallPadding),
@@ -355,18 +359,15 @@ fun CharacterItem(
                                 )
                                 //攻击
                                 CharacterTag(
-                                    modifier = Modifier.padding(end = Dimen.mediumPadding),
                                     text = getAtkText(atkType = character.atkType),
                                     backgroundColor = getAtkColor(atkType = character.atkType),
                                     textColor = textColor
                                 )
                             }
 
-                            //位置
                             Row(
                                 modifier = Modifier.padding(
-                                    top = Dimen.mediumPadding,
-                                    end = Dimen.mediumPadding
+                                    top = Dimen.mediumPadding
                                 ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -399,7 +400,7 @@ fun CharacterItem(
             }
 
             //收藏标识
-            FadeAnimation(visible = loved) {
+            FadeAnimation(visible = loved && (loadSuccess || loadError)) {
                 IconCompose(
                     data = MainIconType.LOVE_FILL,
                     size = Dimen.textIconSize,
@@ -407,7 +408,6 @@ fun CharacterItem(
                 )
             }
         }
-
     }
 }
 
@@ -442,7 +442,7 @@ fun getLimitTypeColor(limitType: Int) = when (limitType) {
         colorGreen
     }
     4 -> {
-        colorOrange
+        colorSilver
     }
     else -> {
         colorGold

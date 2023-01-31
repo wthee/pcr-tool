@@ -68,7 +68,7 @@ fun ClanBattleDetail(
                     initial = arrayListOf()
                 ).value
             //所有部位信息
-            val partEnemyMap = enemyViewModel.getMultiEnemyAttr(clanBattleValue.targetCountData)
+            val partEnemyMap = enemyViewModel.getMultiEnemyAttr(clanBattleValue.targetCountDataList)
                 .collectAsState(initial = hashMapOf()).value
             //图标列表
             Column(

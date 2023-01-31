@@ -66,8 +66,8 @@ interface MockGachaDao {
      * @param region 区服
      * @param pickUpIds up 角色
      */
-    @Query("SELECT * FROM gacha_data WHERE region = :region AND pickUpIds = :pickUpIds ")
-    suspend fun getGachaByPickUpIds(region: Int, pickUpIds: String): MockGachaData?
+    @Query("SELECT * FROM gacha_data WHERE region = :region AND pickUpIds = :pickUpIds AND gachaType = :gachaType")
+    suspend fun getGachaByPickUpIds(region: Int, gachaType: Int, pickUpIds: String): MockGachaData?
 
     /**
      * 获取抽卡记录

@@ -247,30 +247,30 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-            a.hp,
-            a.atk,
-            a.magic_str,
-            a.def,
-            a.magic_def,
-            a.physical_critical,
-            a.magic_critical,
-            a.wave_hp_recovery,
-            a.wave_energy_recovery,
-            a.dodge,
-            a.physical_penetrate,
-            a.magic_penetrate,
-            a.life_steal,
-            a.hp_recovery_rate,
-            a.energy_recovery_rate,
-            a.energy_reduce_rate,
-            a.accuracy 
+            ( a.hp * COALESCE( :lv, 0 ) ) AS hp,
+            ( a.atk * COALESCE( :lv, 0 ) ) AS atk,
+            ( a.magic_str * COALESCE( :lv, 0 ) ) AS magic_str,
+            ( a.def * COALESCE( :lv, 0 ) ) AS def,
+            ( a.magic_def * COALESCE( :lv, 0 ) ) AS magic_def,
+            ( a.physical_critical * COALESCE( :lv, 0 ) ) AS physical_critical,
+            ( a.magic_critical * COALESCE( :lv, 0 ) ) AS magic_critical,
+            ( a.wave_hp_recovery * COALESCE( :lv, 0 ) ) AS wave_hp_recovery,
+            ( a.wave_energy_recovery * COALESCE( :lv, 0 ) ) AS wave_energy_recovery,
+            ( a.dodge * COALESCE( :lv, 0 ) ) AS dodge,
+            ( a.physical_penetrate * COALESCE( :lv, 0 ) ) AS physical_penetrate,
+            ( a.magic_penetrate * COALESCE( :lv, 0 ) ) AS magic_penetrate,
+            ( a.life_steal * COALESCE( :lv, 0 ) ) AS life_steal,
+            ( a.hp_recovery_rate * COALESCE( :lv, 0 ) ) AS hp_recovery_rate,
+            ( a.energy_recovery_rate * COALESCE( :lv, 0 ) ) AS energy_recovery_rate,
+            ( a.energy_reduce_rate * COALESCE( :lv, 0 ) ) AS energy_reduce_rate,
+            ( a.accuracy * COALESCE( :lv, 0 ) ) AS accuracy
         FROM
             unique_equipment_bonus AS a
             LEFT JOIN unit_unique_equip AS r ON r.equip_id = a.equipment_id
         WHERE r.unitId = :unitId
     """
     )
-    suspend fun getUniqueEquipBonus(unitId: Int): Attr?
+    suspend fun getUniqueEquipBonus(unitId: Int, lv: Int): Attr?
 
     /**
      * 根获取专武最大强化等级

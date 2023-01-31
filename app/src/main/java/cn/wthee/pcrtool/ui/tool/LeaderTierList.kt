@@ -2,12 +2,23 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,14 +27,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.character.CharacterTag
+import cn.wthee.pcrtool.ui.character.getAtkColor
+import cn.wthee.pcrtool.ui.character.getAtkText
+import cn.wthee.pcrtool.ui.character.getLimitTypeColor
+import cn.wthee.pcrtool.ui.character.getLimitTypeText
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonResponseBox
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainTitleText
+import cn.wthee.pcrtool.ui.common.PositionIcon
+import cn.wthee.pcrtool.ui.common.SelectTypeCompose
+import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.fixedLeaderDate
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -40,9 +76,9 @@ fun LeaderTier(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val type = remember {
-        mutableStateOf(navViewModel.leaderTierType.value ?: 0)
+        mutableStateOf(navViewModel.leaderTierType.value?.type ?: 0)
     }
-    type.value = navViewModel.leaderTierType.observeAsState().value ?: 0
+    type.value = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -56,7 +92,7 @@ fun LeaderTier(
     val leaderData = flow.collectAsState(initial = null).value
 
     val url = stringResource(id = R.string.leader_source_url)
-    val spanCount = (Dimen.iconSize * 3).spanCount
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -103,7 +139,7 @@ fun LeaderTier(
                         bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                     )
                 ) {
-                    navViewModel.leaderTierType.postValue(type.value)
+                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.value))
                 }
 
                 //回到顶部
@@ -152,7 +188,6 @@ fun LeaderTier(
                     ) { groupList ->
                         LeaderGroup(
                             groupList,
-                            spanCount,
                             toCharacterDetail
                         )
                     }
@@ -173,7 +208,6 @@ fun LeaderTier(
 @Composable
 private fun LeaderGroup(
     groupData: LeaderTierGroup,
-    spanCount: Int,
     toCharacterDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel? = hiltViewModel()
 ) {
@@ -196,7 +230,8 @@ private fun LeaderGroup(
 
         //分组内容
         VerticalGrid(
-            spanCount = spanCount,
+            itemWidth = Dimen.iconSize * 3,
+            contentPadding = Dimen.largePadding * 2,
             modifier = Modifier
                 .padding(
                     start = Dimen.commonItemPadding,
@@ -278,7 +313,7 @@ private fun LeaderItem(
 
         MainCard(
             modifier = Modifier
-                .padding(start = Dimen.smallPadding)
+                .padding(start = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
                 BrowserUtil.open(leader.url)
@@ -318,21 +353,20 @@ private fun LeaderItem(
                             backgroundColor = getAtkColor(atkType = basicInfo.atkType),
                         )
                     } else {
-                        //获取方式
-                        CharacterTag(
-                            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                        //提示
+                        CaptionText(
+                            modifier = Modifier.padding(start = Dimen.mediumPadding),
                             text = if (!hasUnitId) {
                                 stringResource(id = R.string.leader_need_sync)
                             } else {
                                 tipText
                             },
-                            backgroundColor = colorGray
+                            color = colorGray
                         )
                     }
                 }
             }
         }
-
     }
 }
 
@@ -350,7 +384,6 @@ private fun LeaderGroupPreview() {
                 ),
                 text
             ),
-            2,
             {},
             null
         )

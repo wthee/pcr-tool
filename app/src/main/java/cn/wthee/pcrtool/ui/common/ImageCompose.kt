@@ -33,7 +33,7 @@ const val RATIO = 16 / 9f
 const val RATIO_COMIC = 0.6175f
 const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 682f
-const val RATIO_TEASER = 1280 / 576f
+const val RATIO_TEASER = 1024 / 430f
 
 
 @Composable
@@ -128,7 +128,8 @@ fun IconCompose(
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)
-
+    } else {
+        mModifier = mModifier.sizeIn(maxWidth = size, maxHeight = size)
     }
 
 
@@ -194,7 +195,7 @@ fun SubImageCompose(
         contentDescription = null,
         contentScale = contentScale,
         loading = {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,

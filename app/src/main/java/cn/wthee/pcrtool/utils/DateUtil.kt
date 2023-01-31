@@ -4,7 +4,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
@@ -22,8 +25,11 @@ val String.formatTime: String
         }
         return try {
             "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-                var hms = this.substring(this.length - 8, this.length)
+                var hms = this.split(" ")[1]
                 hms = hms.replace(' ', '0')
+                if (hms.length < 6) {
+                    hms = "$hms:00"
+                }
                 " $hms"
             } else {
                 ""
@@ -39,9 +45,22 @@ val String.simpleDateFormat: String
         return df1.format(Date(d))
     }
 
+/**
+ * 毫秒转日期字符串 UTC +8
+ */
 val Long.simpleDateFormat: String
     get() {
         return df1.format(Date(this))
+    }
+
+/**
+ * 毫秒转日期字符串 UTC
+ */
+val Long.simpleDateFormatUTC: String
+    get() {
+        val dfUTC = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
+        dfUTC.timeZone = TimeZone.getTimeZone("UTC")
+        return dfUTC.format(Date(this))
     }
 
 /**
@@ -75,6 +94,17 @@ fun getToday(ms: Boolean = false): String {
     } else {
         df1.format(date)
     }
+}
+
+/**
+ * 获取当前年份
+ */
+fun getYear(): Int {
+    val time = System.currentTimeMillis()
+    val date = Date(time)
+    val now = Calendar.getInstance()
+    now.time = date
+    return now[Calendar.YEAR]
 }
 
 /**

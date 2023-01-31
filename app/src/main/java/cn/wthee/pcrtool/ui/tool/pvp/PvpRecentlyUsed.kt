@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
+import kotlin.math.max
 
 /**
  * 最近最多使用过的角色
@@ -38,7 +39,7 @@ fun PvpRecentlyUsedList(
     ) {
         //角色图标列表
         LazyVerticalGrid(
-            columns = GridCells.Fixed(spanCount),
+            columns = GridCells.Fixed(max(5, spanCount)),
             state = usedListState,
             verticalArrangement = Arrangement.Center
         ) {
@@ -50,7 +51,7 @@ fun PvpRecentlyUsedList(
             ) {
                 PvpIconItem(selectedIds, it, floatWindow)
             }
-            items(spanCount) {
+            items(5) {
                 CommonSpacer()
             }
         }

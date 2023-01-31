@@ -31,7 +31,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  * @param maxRank 角色最大rank
  */
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
@@ -51,46 +51,58 @@ fun RankEquipCount(
             initial = arrayListOf()
         ).value
 
-    val dialogState = remember {
+    val openDialog = remember {
         mutableStateOf(false)
     }
 
     val starIds = remember {
         mutableStateOf(arrayListOf<Int>())
     }
-    LaunchedEffect(MainActivity.navSheetState.currentValue) {
+    LaunchedEffect(MainActivity.navSheetState.isVisible) {
         starIds.value = FilterEquipment.getStarIdList()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(top = Dimen.largePadding)
+                .padding(top = Dimen.mediumPadding)
                 .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            //标题
+            FlowRow(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Dimen.mediumPadding)
             ) {
-                //标题
                 Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .padding(top = Dimen.mediumPadding, end = Dimen.mediumPadding)
                 ) {
                     MainTitleText(text = stringResource(id = R.string.cur_rank))
                     RankText(
                         rank = rank0.value,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
                     )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .padding(top = Dimen.mediumPadding)
+                ) {
                     MainTitleText(text = stringResource(id = R.string.target_rank))
                     RankText(
                         rank = rank1.value,
+                        modifier = Modifier.padding(start = Dimen.smallPadding)
                     )
                 }
+
             }
 
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
-                contentPadding = PaddingValues(Dimen.mediumPadding)
+                columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding),
+                contentPadding = PaddingValues(horizontal = Dimen.mediumPadding)
             ) {
                 if (rankEquipMaterials.isNotEmpty()) {
                     items(
@@ -124,16 +136,16 @@ fun RankEquipCount(
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
-            dialogState.value = true
+            openDialog.value = true
         }
 
         //RANK 选择
-        if (dialogState.value) {
+        if (openDialog.value) {
             RankSelectCompose(
                 rank0,
                 rank1,
                 maxRank,
-                dialogState,
+                openDialog,
                 type = RankSelectType.LIMIT
             )
         }

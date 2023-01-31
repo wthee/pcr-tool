@@ -10,23 +10,20 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.spanCount
-import kotlin.math.max
 
 /**
  * 角色图标列表
  * @param icons unitId
- * @param parentSpanCount 父级布局列数
  */
 @Composable
 fun GridIconListCompose(
     icons: List<Int>,
-    parentSpanCount: Int = 1,
-    onClickItem: (Int) -> Unit
+    onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
-        spanCount = ((Dimen.iconSize + Dimen.mediumPadding * 2) * max(1, parentSpanCount)).spanCount
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding
     ) {
         icons.forEach {
             UnitIcon(
@@ -41,7 +38,7 @@ fun GridIconListCompose(
  * 角色图标
  */
 @Composable
-private fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
+private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
     val unitId: Int = if (id / 10000 == 3) {
         //item 转 unit
         id % 10000 * 100 + 1
@@ -57,10 +54,15 @@ private fun UnitIcon(id: Int, onClickItem: (Int) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(
-            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId)
-        ) {
-            onClickItem(unitId)
-        }
+            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+            onClick = if (onClickItem != null) {
+                {
+                    onClickItem(unitId)
+                }
+            } else {
+                null
+            }
+        )
     }
 
 }

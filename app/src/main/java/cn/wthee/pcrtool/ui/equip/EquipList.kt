@@ -41,7 +41,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -76,7 +75,6 @@ fun EquipList(
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
-    val equipSpanCount = (Dimen.iconSize * 3 + Dimen.largePadding * 2).spanCount
 
     filter.value?.let { filterValue ->
         filterValue.starIds = FilterEquipment.getStarIdList()
@@ -112,7 +110,6 @@ fun EquipList(
                             }) { equipGroupData ->
                             EquipGroup(
                                 equipGroupData,
-                                equipSpanCount,
                                 filterValue,
                                 toEquipDetail,
                                 toEquipMaterial
@@ -180,7 +177,6 @@ fun EquipList(
 @Composable
 private fun EquipGroup(
     equipGroupData: EquipGroupData,
-    equipSpanCount: Int,
     filterValue: FilterEquipment,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit
@@ -201,7 +197,8 @@ private fun EquipGroup(
 
     //分组内容
     VerticalGrid(
-        spanCount = equipSpanCount,
+        itemWidth = Dimen.iconSize * 3,
+        contentPadding = Dimen.largePadding,
         modifier = Modifier.padding(
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
@@ -491,7 +488,6 @@ private fun EquipGroupPreview() {
                     EquipmentBasicInfo(equipmentName = name),
                 )
             ),
-            2,
             FilterEquipment(),
             { },
             { }

@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -23,7 +22,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.FileSaveHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
-import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
 //权限
@@ -62,6 +60,8 @@ fun AllCardList(
         mutableStateOf("")
     }
     val hasStory = responseData?.data?.isNotEmpty() == true
+    val openDialog = remember { mutableStateOf(checkedPicUrl.value != "") }
+    openDialog.value = checkedPicUrl.value != ""
 
 
     Box(
@@ -83,37 +83,22 @@ fun AllCardList(
     }
 
     //下载确认
-    if (checkedPicUrl.value != "") {
-        AlertDialog(
-            title = {
-                MainText(text = stringResource(R.string.ask_save_image))
-            },
-            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
-            onDismissRequest = {
-                checkedPicUrl.value = ""
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-            shape = MaterialTheme.shapes.medium,
-            confirmButton = {
-                //确认下载
-                MainButton(text = stringResource(R.string.save_image)) {
-                    loadedPicMap[checkedPicUrl.value]?.let {
-                        FileSaveHelper(context).saveBitmap(
-                            bitmap = (it as BitmapDrawable).bitmap,
-                            displayName = "${getFileName(checkedPicUrl.value)}.jpg"
-                        )
-                        checkedPicUrl.value = ""
-                    }
-                }
-            },
-            dismissButton = {
-                //取消
-                SubButton(
-                    text = stringResource(id = R.string.cancel)
-                ) {
-                    checkedPicUrl.value = ""
-                }
-            })
+    MainAlertDialog(
+        openDialog = openDialog,
+        icon = MainIconType.PREVIEW_IMAGE,
+        title = stringResource(R.string.title_dialog_save_img),
+        text = stringResource(R.string.tip_save_image),
+        onDismissRequest = {
+            checkedPicUrl.value = ""
+        }
+    ) {
+        loadedPicMap[checkedPicUrl.value]?.let {
+            FileSaveHelper(context).saveBitmap(
+                bitmap = (it as BitmapDrawable).bitmap,
+                displayName = "${getFileName(checkedPicUrl.value)}.jpg"
+            )
+            checkedPicUrl.value = ""
+        }
     }
 }
 
@@ -195,7 +180,7 @@ private fun CardGridList(
     val context = LocalContext.current
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
-    VerticalGrid(spanCount = getItemWidth().spanCount) {
+    VerticalGrid(itemWidth = getItemWidth()) {
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier

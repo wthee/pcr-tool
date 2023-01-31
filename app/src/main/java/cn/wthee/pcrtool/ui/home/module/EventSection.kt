@@ -164,7 +164,6 @@ private fun CalendarEventLayout(
     } else {
         OverviewType.COMING_SOON_EVENT.id
     }
-    val spanCount = getItemWidth().spanCount
     val isNotEmpty =
         eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty()
                 || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
@@ -208,7 +207,7 @@ private fun CalendarEventLayout(
                 )
             }
             VerticalGrid(
-                spanCount = spanCount,
+                itemWidth = getItemWidth(),
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
                 clanBattleList.forEach {
@@ -221,7 +220,6 @@ private fun CalendarEventLayout(
                     GachaItem(
                         gachaInfo = it,
                         fesUnitIds = fesUnitIds,
-                        parentSpanCount = spanCount,
                         toCharacterDetail = actions.toCharacterDetail,
                         toMockGacha = actions.toMockGacha
                     )
@@ -241,7 +239,7 @@ private fun CalendarEventLayout(
                     CalendarEventItem(it)
                 }
                 birthdayList.forEach {
-                    BirthdayItem(it, spanCount, actions.toCharacterDetail)
+                    BirthdayItem(it, actions.toCharacterDetail)
                 }
             }
         }
@@ -288,7 +286,7 @@ private fun CalendarEventOperation(
                                     SystemCalendarEventData(
                                         it.startTime,
                                         it.endTime,
-                                        getTypeDataToString(it)
+                                        it.toString()
                                     )
                                 )
                             }
@@ -370,7 +368,7 @@ private fun CalendarEventOperation(
                         var eventText = ""
                         eventList.forEach {
                             val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            eventText += "• $date\n${getTypeDataToString(it)}\n"
+                            eventText += "• $date\n${it}\n"
                         }
                         if (eventText != "") {
                             allText += getString(
@@ -432,7 +430,7 @@ private fun CalendarEventOperation(
                         if (birthdayText != "") {
                             allText += getString(
                                 R.string.title_character_birthday_event,
-                                "\n$birthdayText\n"
+                                "\n$birthdayText\n\n"
                             )
                         }
 
@@ -467,64 +465,10 @@ private fun CalendarEventOperation(
     }
 }
 
-
-/**
- * 获取事项信息
- */
-private fun getTypeDataToString(data: CalendarEvent): String {
-    var eventTitle = ""
-    when (data.type) {
-        "1" -> {
-            //露娜塔
-            eventTitle = getString(R.string.tower)
-        }
-        "-1" -> {
-            //特殊地下城
-            eventTitle = getString(R.string.sp_dungeon)
-        }
-        else -> {
-            //正常活动
-            val list = data.type.intArrayList
-            list.forEachIndexed { index, type ->
-                val title = when (type) {
-                    31, 41 -> getString(R.string.normal)
-                    32, 42 -> getString(R.string.hard)
-                    39, 49 -> getString(R.string.very_hard)
-                    34 -> getString(R.string.explore)
-                    37 -> getString(R.string.shrine)
-                    38 -> getString(R.string.temple)
-                    45 -> getString(R.string.dungeon)
-                    else -> ""
-                }
-                val multiple = data.getFixedValue()
-                val typeName = getString(if (type > 40) R.string.mana else R.string.drop)
-                val multipleText = getString(
-                    R.string.multiple,
-                    if ((multiple * 10).toInt() % 10 == 0) {
-                        multiple.toInt().toString()
-                    } else {
-                        multiple.toString()
-                    }
-                )
-                eventTitle += title + typeName + multipleText
-                if (index != list.size - 1) {
-                    eventTitle += "\n"
-                }
-            }
-        }
-    }
-
-    return eventTitle
-}
-
-
 /**
  * 日历日程时间范围文本
  */
 private fun getCalendarEventDateText(
     startTime: String,
     endTime: String
-) = startTime.formatTime.fixJpTime.substring(
-    0,
-    10
-) + " ~ " + endTime.formatTime.fixJpTime.substring(0, 10)
+) = startTime.formatTime.fixJpTime + " ~ " + endTime.formatTime.fixJpTime

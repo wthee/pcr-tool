@@ -482,13 +482,21 @@ data class SkillActionDetail(
             }
             // 18：蓄力、19：伤害充能
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
-                val value = getValueText(1, actionValue1, actionValue2)
-                getString(
-                    R.string.skill_action_type_desc_18_19,
-                    actionValue3.toString(),
-                    actionDetail2 % 10,
-                    value
-                )
+                if (actionValue1 == 0.0 && actionValue2 == 0.0) {
+                    getString(
+                        R.string.skill_action_type_desc_18_19,
+                        actionValue3.toString(),
+                        actionDetail2 % 10,
+                    )
+                } else {
+                    val value = getValueText(1, actionValue1, actionValue2)
+                    getString(
+                        R.string.skill_action_type_desc_18_19_detail,
+                        actionValue3.toString(),
+                        actionDetail2 % 10,
+                        value
+                    )
+                }
             }
             // 20：挑衅
             SkillActionType.TAUNT -> {
@@ -824,7 +832,7 @@ data class SkillActionDetail(
                             }
                             in 1200..1299 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_mark_count,
+                                    R.string.skill_action_sp_if_skill_count,
                                     getTarget(),
                                     actionDetail1 % 10,
                                     actionDetail2 % 10
@@ -906,7 +914,7 @@ data class SkillActionDetail(
                             }
                             in 1200..1299 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_mark_count_not,
+                                    R.string.skill_action_sp_if_skill_count_not,
                                     getTarget(),
                                     actionDetail1 % 10,
                                     actionDetail3 % 10

@@ -66,12 +66,14 @@ fun MainTitleText(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     Text(
         text = text,
         color = colorWhite,
         style = textStyle,
+        maxLines = maxLines,
         modifier = modifier
             .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
@@ -425,42 +427,13 @@ fun SelectText(
     )
 }
 
-/**
- * 角色站位文本样式
- */
-@Composable
-fun CharacterPositionText(
-    modifier: Modifier = Modifier,
-    showColor: Boolean = true,
-    position: Int,
-    textAlign: TextAlign = TextAlign.Center,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
-) {
-    val color = if (showColor) {
-        getPositionColor(position)
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
-
-    Text(
-        text = position.toString(),
-        color = color,
-        style = textStyle,
-        maxLines = 1,
-        textAlign = textAlign,
-        overflow = TextOverflow.Ellipsis,
-        modifier = modifier
-    )
-}
-
 //位置颜色
 @Composable
 fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
     PositionType.POSITION_0_299 -> colorRed
     PositionType.POSITION_300_599 -> colorGold
     PositionType.POSITION_600_999 -> colorBlue
-    PositionType.UNKNOWN -> colorPrimary
+    PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
 /**
@@ -577,7 +550,8 @@ fun SelectTypeCompose(
     ) {
         if (openDialog) {
             Column(
-                modifier = Modifier.width(width), horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.widthIn(max = width),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 //选择
                 tabs.forEachIndexed { index, tab ->
@@ -849,19 +823,24 @@ fun BottomSearchBar(
  * 居中文本
  */
 @Composable
-fun CenterTipText(text: String) {
-    Box(
+fun CenterTipText(text: String, content: (@Composable () -> Unit)? = null) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .heightIn(min = Dimen.cardHeight),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         //内容
-        Subtitle1(
+        MainText(
             text = text,
             modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )
+        //额外内容
+        if (content != null) {
+            content()
+        }
     }
 }
 
@@ -875,16 +854,18 @@ fun CommonTitleContentText(title: String, content: String) {
             top = Dimen.smallPadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding
-        )
+        ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
-            text = title, modifier = Modifier
-                .weight(0.3f)
+            text = title,
+            modifier = Modifier
+                .weight(0.3f),
+            maxLines = 1
         )
         MainContentText(
             text = content,
-            modifier = Modifier
-                .weight(0.2f)
+            modifier = Modifier.weight(0.2f)
         )
     }
 }

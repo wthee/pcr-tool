@@ -2,6 +2,8 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
+import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareGacha
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,13 +23,21 @@ class GachaViewModel @Inject constructor(
     /**
      * 获取卡池记录
      */
-    fun getGachaHistory() = flow {
+    fun getGachaHistory(dateRange: DateRange) = flow {
         try {
-            emit(gachaRepository.getGachaHistory(Int.MAX_VALUE).sortedWith(compareGacha()))
-        } catch (_: Exception) {
+            var list = gachaRepository.getGachaHistory(Int.MAX_VALUE)
+            if (dateRange.needFilter()) {
+                list = list.filter {
+                    dateRange.predicate(it.startTime)
+                }
+            }
 
+            emit(list.sortedWith(compareGacha()))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getGachaHistory:${dateRange}")
         }
     }
+
     /**
      * 获取卡池fes角色
      */

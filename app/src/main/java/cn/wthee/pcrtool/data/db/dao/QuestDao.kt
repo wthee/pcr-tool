@@ -54,7 +54,7 @@ interface QuestDao {
             )  
         WHERE 
             rewards LIKE '%' || :equipId || '%'
-        ORDER BY quest_id
+        ORDER BY quest_id DESC
         """
     )
     suspend fun getEquipDropQuestList(equipId: String): List<QuestDetail>

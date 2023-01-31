@@ -5,10 +5,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
@@ -26,7 +21,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
@@ -66,6 +60,7 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
 /**
  * 卡池历史记录 item
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
@@ -98,7 +93,7 @@ private fun MockGachaHistoryItem(
         )
     ) {
         //标题
-        Row(
+        FlowRow(
             modifier = Modifier.padding(bottom = Dimen.smallPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -142,7 +137,11 @@ private fun MockGachaHistoryItem(
                         )
                     }
                     MainActivity.navViewModel.pickUpList.postValue(newPickUpList)
-                    MainActivity.navViewModel.gachaType.postValue(gachaData.gachaType)
+                    MainActivity.navViewModel.mockGachaType.postValue(
+                        MockGachaType.getByValue(
+                            gachaData.gachaType
+                        )
+                    )
                     //显示卡池结果
                     MainActivity.navViewModel.showMockGachaResult.postValue(true)
                 }
@@ -152,17 +151,13 @@ private fun MockGachaHistoryItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //up 角色
-                Row {
-                    gachaData.pickUpIds.intArrayList.forEach { unitId ->
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance().getUrl(
-                                ImageResourceHelper.ICON_UNIT,
-                                unitId + 30
-                            ),
-                            modifier = Modifier.padding(Dimen.mediumPadding)
-                        )
-                    }
+                val idList = arrayListOf<Int>()
+                gachaData.pickUpIds.intArrayList.forEach { unitId ->
+                    idList.add(unitId + 30)
                 }
+                GridIconListCompose(
+                    icons = idList
+                )
                 Row(
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
@@ -193,43 +188,15 @@ private fun MockGachaHistoryItem(
     }
 
     //删除卡池提示
-    if (openDialog.value) {
-        AlertDialog(
-            title = {
-                Column(
-                    modifier = Modifier
-                        .heightIn(max = Dimen.minSheetHeight)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    MainText(
-                        text = stringResource(id = R.string.tip_delete_gacha),
-                        textAlign = TextAlign.Start,
-                        selectable = true
-                    )
-                }
-            },
-            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-            shape = MaterialTheme.shapes.medium,
-            confirmButton = {
-                //确认
-                MainButton(text = stringResource(R.string.delete_gacha)) {
-                    mockGachaViewModel?.deleteGachaByGachaId(gachaData.gachaId)
-                    openDialog.value = false
-                }
-            },
-            dismissButton = {
-                //取消
-                SubButton(
-                    text = stringResource(id = R.string.cancel)
-                ) {
-                    openDialog.value = false
-                }
-            })
+    MainAlertDialog(
+        openDialog = openDialog,
+        icon = MainIconType.DELETE,
+        title = stringResource(id = R.string.title_dialog_delete),
+        text = stringResource(id = R.string.tip_delete_gacha),
+    ) {
+        mockGachaViewModel?.deleteGachaByGachaId(gachaData.gachaId)
     }
+
 }
 
 

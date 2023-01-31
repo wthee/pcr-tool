@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.4.0-alpha04"
-val composeCompilerVersion = "1.4.0-alpha02"
-val appVersionCode = 353
-val appVersionName = "3.5.3"
+val composeVersion = "1.4.0-alpha05"
+val composeCompilerVersion = "1.4.0"
+val appVersionCode = 354
+val appVersionName = "3.5.4"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -77,7 +77,7 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            resValue("string", "app_name", "B: PCR Tool")
+            resValue("string", "app_name", "Beta: PCR Tool")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -116,13 +116,14 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.0-alpha04")
+//    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.1.0-alpha04")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha05")
 
     //Accompanist
-    val accompanistVersion = "0.29.0-alpha"
+    val accompanistVersion = "0.29.1-alpha"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -132,7 +133,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.5.0-beta01")
+    implementation("androidx.browser:browser:1.5.0-rc01")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")

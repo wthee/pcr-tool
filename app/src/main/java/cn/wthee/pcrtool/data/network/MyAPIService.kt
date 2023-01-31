@@ -5,9 +5,7 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Url
 
 /**
  * 接口
@@ -23,8 +21,8 @@ interface MyAPIService {
     /**
      * 获取数据库版本
      */
-    @GET
-    suspend fun getDbVersion(@Url url: String): ResponseData<DatabaseVersion>
+    @POST("version")
+    suspend fun getDbVersion(@Body body: RequestBody): ResponseData<DatabaseVersion>
 
     /**
      * 版本更新内容

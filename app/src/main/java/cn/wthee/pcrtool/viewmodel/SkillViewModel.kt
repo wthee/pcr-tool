@@ -82,7 +82,7 @@ class SkillViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             if (e !is CancellationException) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
+                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId type:${skillType.name}")
             }
         }
         return arrayListOf()

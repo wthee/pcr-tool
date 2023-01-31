@@ -38,7 +38,7 @@ fun BirthdayList(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val dataList = birthdayViewModel.getBirthDayList().collectAsState(initial = arrayListOf()).value
-    val spanCount = getItemWidth().spanCount
+
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
@@ -49,7 +49,7 @@ fun BirthdayList(
                 items(items = dataList, key = {
                     "${it.month}/${it.day}"
                 }) {
-                    BirthdayItem(it, spanCount, toCharacterDetail)
+                    BirthdayItem(it, toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -81,7 +81,6 @@ fun BirthdayList(
 @Composable
 fun BirthdayItem(
     data: BirthdayData,
-    parentSpanCount: Int,
     toCharacterDetail: (Int) -> Unit
 ) {
     val today = getToday()
@@ -142,7 +141,6 @@ fun BirthdayItem(
                 //图标
                 GridIconListCompose(
                     icons = icons,
-                    parentSpanCount = parentSpanCount,
                     onClickItem = toCharacterDetail
                 )
             }
@@ -160,7 +158,6 @@ private fun BirthdayItemPreview() {
                 unitIds = "1-2",
                 unitNames = "x-x"
             ),
-            1
         ) {}
     }
 }
