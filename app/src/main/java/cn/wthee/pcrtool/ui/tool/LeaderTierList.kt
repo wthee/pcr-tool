@@ -2,12 +2,23 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,10 +32,34 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.character.CharacterTag
+import cn.wthee.pcrtool.ui.character.getAtkColor
+import cn.wthee.pcrtool.ui.character.getAtkText
+import cn.wthee.pcrtool.ui.character.getLimitTypeColor
+import cn.wthee.pcrtool.ui.character.getLimitTypeText
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonResponseBox
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainTitleText
+import cn.wthee.pcrtool.ui.common.PositionIcon
+import cn.wthee.pcrtool.ui.common.SelectTypeCompose
+import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.fixedLeaderDate
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -318,17 +353,15 @@ private fun LeaderItem(
                             backgroundColor = getAtkColor(atkType = basicInfo.atkType),
                         )
                     } else {
-                        //获取方式
+                        //提示
                         CaptionText(
-                            modifier = Modifier
-                                .padding(horizontal = Dimen.smallPadding)
-                                .fillMaxWidth(),
+                            modifier = Modifier.padding(start = Dimen.mediumPadding),
                             text = if (!hasUnitId) {
                                 stringResource(id = R.string.leader_need_sync)
                             } else {
                                 tipText
                             },
-                            color =  colorGray
+                            color = colorGray
                         )
                     }
                 }
