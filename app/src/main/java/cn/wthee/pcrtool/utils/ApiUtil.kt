@@ -50,7 +50,7 @@ object ApiUtil {
             }
         }
 
-        val sslContext = SSLContext.getInstance("SSL")
+        val sslContext = SSLContext.getInstance("TLSv1.2")
         sslContext.init(null, arrayOf<TrustManager>(trustManager), SecureRandom())
         client.sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
