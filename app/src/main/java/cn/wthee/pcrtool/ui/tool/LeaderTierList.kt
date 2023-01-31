@@ -319,20 +319,21 @@ private fun LeaderItem(
                         )
                     } else {
                         //获取方式
-                        CharacterTag(
-                            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                        CaptionText(
+                            modifier = Modifier
+                                .padding(horizontal = Dimen.smallPadding)
+                                .fillMaxWidth(),
                             text = if (!hasUnitId) {
                                 stringResource(id = R.string.leader_need_sync)
                             } else {
                                 tipText
                             },
-                            backgroundColor = colorGray
+                            color =  colorGray
                         )
                     }
                 }
             }
         }
-
     }
 }
 

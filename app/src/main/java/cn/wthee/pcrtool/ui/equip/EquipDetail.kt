@@ -136,7 +136,7 @@ private fun EquipMaterialList(
         mutableStateOf(arrayListOf<Int>())
     }
     if (!LocalInspectionMode.current) {
-        LaunchedEffect(MainActivity.navSheetState.currentValue) {
+        LaunchedEffect(MainActivity.navSheetState.isVisible) {
             starIds.value = FilterEquipment.getStarIdList()
         }
     }

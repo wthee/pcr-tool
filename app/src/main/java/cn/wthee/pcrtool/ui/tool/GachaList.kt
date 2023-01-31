@@ -6,10 +6,9 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GachaList(
     scrollState: LazyStaggeredGridState,
@@ -42,7 +41,11 @@ fun GachaList(
     toMockGacha: () -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
-    val gachaList = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
+    val gachaList = gachaViewModel.getGachaHistory(dateRange.value)
+        .collectAsState(initial = arrayListOf()).value
     val fesUnitIds =
         gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
@@ -71,18 +74,28 @@ fun GachaList(
                 }
             }
         }
-        //回到顶部
-        FabCompose(
-            iconType = MainIconType.GACHA,
-            text = stringResource(id = R.string.tool_gacha),
+
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                )
         ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
+            //日期选择
+            DateRangePickerCompose(dateRange = dateRange)
+
+            //回到顶部
+            FabCompose(
+                iconType = MainIconType.GACHA,
+                text = stringResource(id = R.string.tool_gacha)
+            ) {
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
                 }
             }
         }

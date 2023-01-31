@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -176,12 +175,9 @@ fun EnemyAllInfo(
                     )
                 }
             },
-            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
             onDismissRequest = {
                 openDialog.value = false
             },
-            containerColor = MaterialTheme.colorScheme.background,
-            shape = MaterialTheme.shapes.medium,
             confirmButton = {
                 //复制
                 MainButton(text = stringResource(R.string.copy_all)) {

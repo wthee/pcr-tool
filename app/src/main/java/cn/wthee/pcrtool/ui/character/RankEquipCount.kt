@@ -51,14 +51,14 @@ fun RankEquipCount(
             initial = arrayListOf()
         ).value
 
-    val dialogState = remember {
+    val openDialog = remember {
         mutableStateOf(false)
     }
 
     val starIds = remember {
         mutableStateOf(arrayListOf<Int>())
     }
-    LaunchedEffect(MainActivity.navSheetState.currentValue) {
+    LaunchedEffect(MainActivity.navSheetState.isVisible) {
         starIds.value = FilterEquipment.getStarIdList()
     }
 
@@ -136,16 +136,16 @@ fun RankEquipCount(
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
-            dialogState.value = true
+            openDialog.value = true
         }
 
         //RANK 选择
-        if (dialogState.value) {
+        if (openDialog.value) {
             RankSelectCompose(
                 rank0,
                 rank1,
                 maxRank,
-                dialogState,
+                openDialog,
                 type = RankSelectType.LIMIT
             )
         }

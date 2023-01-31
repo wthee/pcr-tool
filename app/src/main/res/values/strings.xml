@@ -182,7 +182,7 @@
     <string name="clean_image_cache">清除图片缓存</string>
     <string name="tip_clean_image_cache">加载缓存图片，可减少网络数据使用。正常使用中请勿清除</string>
     <string name="image_cache">占用：%s\n数量：%d</string>
-    <string name="confirm_clean_image_cache">是否要清除图片缓存？</string>
+    <string name="confirm_clean_image_cache">清除图片缓存，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
     <string name="coolapk">酷安</string>
     <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
@@ -201,6 +201,10 @@
     <string name="search_api">查询</string>
     <string name="search_api_desc">需要网络</string>
     <string name="tool_all_quest">主线地图</string>
+    <string name="range_date">日期范围</string>
+    <string name="start_date">开始</string>
+    <string name="end_date">结束</string>
+    <string name="pick_date">选择日期</string>
 
 
     <!--竞技场查询-->
@@ -282,7 +286,7 @@
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
-    <string name="ask_save_image">是否要保存图片？</string>
+    <string name="tip_save_image">将图片保存到本地</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
@@ -294,6 +298,9 @@
     <string name="db_diff">%s：%s\n最近更新：%s</string>
     <string name="title_api_request_error">网络请求异常</string>
     <string name="content_api_request_error">部分功能无法正常使用，请切换网络后重试~</string>
+    <string name="title_dialog_delete">删除</string>
+    <string name="title_dialog_save_img">保存图片</string>
+    <string name="title_dialog_clean_cache">清除缓存</string>
 
     <!--模拟抽卡-->
     <string name="limit_re">复刻限定</string>
@@ -315,7 +322,7 @@
     <string name="tip_no_gacha_record">暂无抽卡记录</string>
     <string name="reset_record">重置卡池</string>
     <string name="delete_gacha">删除卡池</string>
-    <string name="tip_delete_gacha">是否要删除卡池记录？</string>
+    <string name="tip_delete_gacha">删除卡池记录和模拟抽卡记录</string>
     <string name="go_to_mock">去抽卡</string>
     <string name="gacha_max_select_count">最多可选 %d 名角色</string>
     <string name="last_gacha_date">已抽%d次，%s</string>
@@ -615,8 +622,10 @@
     <string name="skill_action_sp_if_rate">以 [%d%%] 的概率使用动作(%d)</string>
     <string name="skill_action_sp_if_dot">%s身上有持续伤害时，使用动作(%d)</string>
     <string name="skill_action_sp_if_dot_not">%s身上没有持续伤害时，使用动作(%d)</string>
-    <string name="skill_action_sp_if_mark_count">%s的标记层数在 [%d] 及以上时，使用动作(%d)</string>
-    <string name="skill_action_sp_if_mark_count_not">%s的标记层数在 [%d] 以下时，使用动作(%d)</string>
+    <string name="skill_action_sp_if_skill_count">%s的技能计数 ≥ [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_sp_if_skill_count_not">%s的技能计数 ﹤ [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_sp_if_mark_count">%s的标记层数 ≥ [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_sp_if_mark_count_not">%s的标记层数 ﹤ [%d] 时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_count">隐身状态的单位除外，%s的数量是 [%d] 时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_count_not">隐身状态的单位除外，%s的数量不是 [%d] 时，使用动作(%d)</string>
     <string name="skill_action_sp_if_unit_exist">隐身状态的单位除外，%s中存在单位时，使用动作(%d)</string>
