@@ -832,7 +832,7 @@ data class SkillActionDetail(
                             }
                             in 1200..1299 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_mark_count,
+                                    R.string.skill_action_sp_if_skill_count,
                                     getTarget(),
                                     actionDetail1 % 10,
                                     actionDetail2 % 10
@@ -914,7 +914,7 @@ data class SkillActionDetail(
                             }
                             in 1200..1299 -> {
                                 getString(
-                                    R.string.skill_action_sp_if_mark_count_not,
+                                    R.string.skill_action_sp_if_skill_count_not,
                                     getTarget(),
                                     actionDetail1 % 10,
                                     actionDetail3 % 10
