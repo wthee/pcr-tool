@@ -4,7 +4,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
@@ -22,8 +24,11 @@ val String.formatTime: String
         }
         return try {
             "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-                var hms = this.substring(this.length - 8, this.length)
+                var hms = this.split(" ")[1]
                 hms = hms.replace(' ', '0')
+                if (hms.length < 6) {
+                    hms = "$hms:00"
+                }
                 " $hms"
             } else {
                 ""

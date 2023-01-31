@@ -63,6 +63,10 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
                 val sd2 = o2.startTime.formatTime
                 when {
                     sd1.second(sd2) > 0 -> 1
+                    sd1.second(sd2) == 0L -> {
+                        o1.id.compareTo(o2.id)
+                    }
+
                     else -> -1
                 } * (if (filter.asc) 1 else -1)
             }
