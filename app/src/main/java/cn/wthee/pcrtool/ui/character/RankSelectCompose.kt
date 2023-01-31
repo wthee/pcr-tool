@@ -37,7 +37,7 @@ fun RankSelectCompose(
     rank0: MutableState<Int>,
     rank1: MutableState<Int>,
     maxRank: Int,
-    dialogState: MutableState<Boolean>,
+    openDialog: MutableState<Boolean>,
     type: RankSelectType = RankSelectType.DEFAULT
 ) {
     val rankList = arrayListOf<Int>()
@@ -58,7 +58,7 @@ fun RankSelectCompose(
 
 
     AlertDialog(
-        onDismissRequest = { dialogState.value = false },
+        onDismissRequest = { openDialog.value = false },
         text = {
             Column(
                 modifier = Modifier
@@ -86,7 +86,6 @@ fun RankSelectCompose(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.background,
         confirmButton = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -98,7 +97,7 @@ fun RankSelectCompose(
                     iconSize = Dimen.fabIconSize,
                     textStyle = MaterialTheme.typography.titleMedium
                 ) {
-                    dialogState.value = false
+                    openDialog.value = false
                 }
             }
         }

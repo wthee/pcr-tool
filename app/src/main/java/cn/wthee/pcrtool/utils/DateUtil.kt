@@ -39,9 +39,22 @@ val String.simpleDateFormat: String
         return df1.format(Date(d))
     }
 
+/**
+ * 毫秒转日期字符串 UTC +8
+ */
 val Long.simpleDateFormat: String
     get() {
         return df1.format(Date(this))
+    }
+
+/**
+ * 毫秒转日期字符串 UTC
+ */
+val Long.simpleDateFormatUTC: String
+    get() {
+        val dfUTC = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
+        dfUTC.timeZone = TimeZone.getTimeZone("UTC")
+        return dfUTC.format(Date(this))
     }
 
 /**
@@ -75,6 +88,17 @@ fun getToday(ms: Boolean = false): String {
     } else {
         df1.format(date)
     }
+}
+
+/**
+ * 获取当前年份
+ */
+fun getYear(): Int {
+    val time = System.currentTimeMillis()
+    val date = Date(time)
+    val now = Calendar.getInstance()
+    now.time = date
+    return now[Calendar.YEAR]
 }
 
 /**

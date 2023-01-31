@@ -201,6 +201,10 @@
     <string name="search_api">查询</string>
     <string name="search_api_desc">需要网络</string>
     <string name="tool_all_quest">主线地图</string>
+    <string name="range_date">日期范围</string>
+    <string name="start_date">开始</string>
+    <string name="end_date">结束</string>
+    <string name="pick_date">选择日期</string>
 
 
     <!--竞技场查询-->
