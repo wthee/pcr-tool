@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareBirthDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -22,8 +23,8 @@ class BirthdayViewModel @Inject constructor(
         try {
             val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
             emit(data)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getBirthDayList")
         }
     }
 

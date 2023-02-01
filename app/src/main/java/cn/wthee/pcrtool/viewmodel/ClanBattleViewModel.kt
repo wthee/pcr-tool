@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ClanBattleRepository
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -41,8 +42,11 @@ class ClanBattleViewModel @Inject constructor(
                 info.targetCountDataList = findDataList
             }
             emit(clanList)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(
+                e,
+                "getAllClanBattleData#clanBattleId:$clanBattleId,pharse:$pharse"
+            )
         }
     }
 

@@ -68,6 +68,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getMaxArea() = equipmentDao.getMaxArea()
 
-    suspend fun getEquipColorNum() = equipmentDao.getEquipColorNum()
+    suspend fun getEquipColorNum() = try {
+        equipmentDao.getEquipColorNum()
+    } catch (_: Exception) {
+        0
+    }
 
 }

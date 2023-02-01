@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -34,8 +35,8 @@ class EquipmentViewModel @Inject constructor(
         try {
             val data = equipmentRepository.getEquipments(params, Int.MAX_VALUE)
             emit(data)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getMultiEnemyAttr#params:$params")
         }
     }
 
@@ -47,8 +48,8 @@ class EquipmentViewModel @Inject constructor(
     fun getEquip(equipId: Int) = flow {
         try {
             emit(equipmentRepository.getEquipmentData(equipId))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquip#equipId:$equipId")
         }
     }
 
@@ -91,8 +92,8 @@ class EquipmentViewModel @Inject constructor(
             emit(map.values.sortedByDescending {
                 it.count
             })
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipByRank#unitId:$unitId,startRank:$startRank,endRank:$endRank")
         }
     }
 
@@ -112,8 +113,8 @@ class EquipmentViewModel @Inject constructor(
                     )
                 )
             )
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipInfos#equip:${equip.equipmentId}")
         }
     }
 
@@ -125,8 +126,8 @@ class EquipmentViewModel @Inject constructor(
     fun getAllRankEquipList(unitId: Int) = flow {
         try {
             emit(equipmentRepository.getAllRankEquip(unitId))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getAllRankEquipList#unitId:$unitId")
         }
     }
 
@@ -222,8 +223,8 @@ class EquipmentViewModel @Inject constructor(
                     questRepository.getEquipDropQuestList(fixedId).sortedWith(getSort(equipId))
                 emit(infos)
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getDropInfos#equipId:$equipId")
         }
     }
 

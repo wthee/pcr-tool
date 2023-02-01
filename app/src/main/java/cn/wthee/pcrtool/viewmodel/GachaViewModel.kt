@@ -44,8 +44,8 @@ class GachaViewModel @Inject constructor(
     fun getGachaFesUnitList() = flow {
         try {
             emit(gachaRepository.getFesUnitIds().unitIds.intArrayList)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getGachaFesUnitList")
         }
     }
 }

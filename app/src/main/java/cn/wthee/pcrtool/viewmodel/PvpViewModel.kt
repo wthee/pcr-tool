@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +11,7 @@ import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.calcDate
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
@@ -134,7 +134,7 @@ class PvpViewModel @Inject constructor(
             }
             emit(list)
         } catch (e: Exception) {
-            Log.e("DEBUG", e.toString())
+            LogReportUtil.upload(e, "getRecentlyUsedUnitList#characterDataList:$characterDataList")
         }
     }
 

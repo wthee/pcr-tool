@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
@@ -11,7 +10,6 @@ import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 
 /**
@@ -40,9 +38,7 @@ class SkillViewModel @Inject constructor(
             )
             emit(skillList)
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
-            }
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getCharacterSkills#unit_id:$unitId")
         }
     }
 
@@ -61,9 +57,7 @@ class SkillViewModel @Inject constructor(
             )
             emit(skillList)
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "skillId:$skillIds")
-            }
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getExtraEquipPassiveSkills#skillId:$skillIds")
         }
     }
 
@@ -81,9 +75,7 @@ class SkillViewModel @Inject constructor(
                 SkillType.SP -> spList
             }
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId type:${skillType.name}")
-            }
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillIds#unit_id:$unitId type:${skillType.name}")
         }
         return arrayListOf()
     }
@@ -110,7 +102,7 @@ class SkillViewModel @Inject constructor(
                 )
             )
         } catch (e: Exception) {
-            Log.e("DEBUG", e.message ?: "")
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getCharacterSkills#lv:$lv,atk:$atk,unitIds:$unitIds")
         }
     }
 
@@ -210,8 +202,8 @@ class SkillViewModel @Inject constructor(
             }
 
             emit(map)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillIconTypes#loopIdList:$loopIdList,unitId:$unitId")
         }
     }
 
@@ -242,12 +234,10 @@ class SkillViewModel @Inject constructor(
                 emit(infoList)
             }
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(
-                    e,
-                    Constants.EXCEPTION_SKILL + "enemy:${enemyParameterPro.enemyId}"
-                )
-            }
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_SKILL + "getAllEnemySkill#enemy:${enemyParameterPro.enemyId}"
+            )
         }
     }
 
@@ -271,7 +261,8 @@ class SkillViewModel @Inject constructor(
         try {
             val data = skillRepository.getSpSkillLabel(unitId)
             emit(data)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSpSkillLabel#unitId:$unitId")
         }
     }
 }

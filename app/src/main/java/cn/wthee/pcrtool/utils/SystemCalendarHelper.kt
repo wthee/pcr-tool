@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.utils
 import android.content.ContentValues
 import android.net.Uri
 import android.provider.CalendarContract
-import android.util.Log
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
@@ -96,7 +95,7 @@ class SystemCalendarHelper {
                                 )
 
                             } catch (e: Exception) {
-                                Log.e("DEBUG", e.toString())
+                                LogReportUtil.upload(e, "insertEvents#keywordType#")
                             }
                         } while (eventCur.moveToNext())
                     }

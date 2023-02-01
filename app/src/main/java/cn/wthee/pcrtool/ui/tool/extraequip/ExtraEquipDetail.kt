@@ -48,10 +48,10 @@ fun ExtraEquipDetail(
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
     val extraEquipmentData =
-        extraEquipmentViewModel.getEquip(equipId)
+        extraEquipmentViewModel.getExtraEquip(equipId)
             .collectAsState(initial = ExtraEquipmentData()).value
 
-    val unitIds = extraEquipmentViewModel.getEquipUnitList(extraEquipmentData.category)
+    val unitIds = extraEquipmentViewModel.getExtraEquipUnitList(extraEquipmentData.category)
         .collectAsState(initial = arrayListOf()).value
     //收藏状态
     val starIds = FilterExtraEquipment.getStarIdList()
@@ -236,7 +236,7 @@ fun ExtraEquipUnitList(
     category: Int,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val unitIds = extraEquipmentViewModel.getEquipUnitList(category)
+    val unitIds = extraEquipmentViewModel.getExtraEquipUnitList(category)
         .collectAsState(initial = arrayListOf()).value
 
     LazyColumn(

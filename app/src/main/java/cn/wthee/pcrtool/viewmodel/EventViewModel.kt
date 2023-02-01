@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareEvent
 import cn.wthee.pcrtool.utils.compareStoryEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +25,8 @@ class EventViewModel @Inject constructor(
     fun getStoryEventHistory() = flow {
         try {
             emit(eventRepository.getAllEvents(Int.MAX_VALUE).sortedWith(compareStoryEvent()))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getStoryEventHistory")
         }
     }
 
@@ -35,8 +36,8 @@ class EventViewModel @Inject constructor(
     fun getFreeGachaHistory() = flow {
         try {
             emit(eventRepository.getFreeGachaEvent(Int.MAX_VALUE))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getFreeGachaHistory")
         }
     }
 
@@ -54,9 +55,8 @@ class EventViewModel @Inject constructor(
             emit(
                 data.sortedWith(compareEvent())
             )
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getCalendarEventList")
         }
-
     }
 }

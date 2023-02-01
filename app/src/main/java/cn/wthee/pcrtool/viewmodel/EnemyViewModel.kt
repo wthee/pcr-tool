@@ -47,8 +47,8 @@ class EnemyViewModel @Inject constructor(
                 list.add(data)
             }
             emit(list)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getStoryAttrs#enemyIds:$enemyIds")
         }
     }
 
@@ -81,8 +81,8 @@ class EnemyViewModel @Inject constructor(
                 )
             }
             emit(map)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getMultiEnemyAttr#targetCountDataList:$targetCountDataList")
         }
     }
 
