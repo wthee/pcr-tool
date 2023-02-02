@@ -482,21 +482,22 @@ data class SkillActionDetail(
             }
             // 18：蓄力、19：伤害充能
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
-                if (actionValue1 == 0.0 && actionValue2 == 0.0) {
-                    getString(
-                        R.string.skill_action_type_desc_18_19,
-                        actionValue3.toString(),
-                        actionDetail2 % 10,
-                    )
-                } else {
+                val desc = getString(
+                    R.string.skill_action_type_desc_18_19,
+                    actionValue3.toString()
+                )
+
+                val extraDesc = if (actionValue1 != 0.0 || actionValue2 != 0.0) {
                     val value = getValueText(1, actionValue1, actionValue2)
                     getString(
                         R.string.skill_action_type_desc_18_19_detail,
-                        actionValue3.toString(),
                         actionDetail2 % 10,
                         value
                     )
+                } else {
+                    ""
                 }
+                desc + extraDesc
             }
             // 20：挑衅
             SkillActionType.TAUNT -> {
@@ -676,7 +677,11 @@ data class SkillActionDetail(
             }
             // 24：复活
             SkillActionType.REVIVAL -> {
-                getString(R.string.skill_action_type_desc_24, getTarget(), actionValue2 * 100)
+                getString(
+                    R.string.skill_action_type_desc_24,
+                    getTarget(),
+                    (actionValue2 * 100).toInt()
+                )
             }
             // 25：连续攻击
             SkillActionType.CONTINUOUS_ATTACK -> UNKNOWN

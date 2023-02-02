@@ -51,9 +51,7 @@ interface EventDao {
             LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
             LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id AND battle.mode = 1
             LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
-            LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id 
-        GROUP BY
-            event.start_time 
+            LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id
         ORDER BY
             event.start_time DESC  
             LIMIT 0,:limit
