@@ -22,7 +22,7 @@ import javax.net.ssl.X509TrustManager
  */
 object ApiUtil {
 
-    private const val TIMEOUT_NORMAL_SECOND = 15L
+    private const val TIMEOUT_NORMAL_SECOND = 10L
     private const val TIMEOUT_DOWNLOAD_SECOND = 120L
     private const val MAX_RETRY = 3
 

@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Process
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -131,6 +132,11 @@ class MainActivity : ComponentActivity() {
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            //结束应用
+            if (it.what == 404) {
+                val pid: Int = Process.myPid()
+                Process.killProcess(pid)
+            }
             try {
                 //关闭其他数据库连接
                 AppDatabaseCN.close()
