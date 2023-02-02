@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
+import cn.wthee.pcrtool.ui.common.DateRange
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -19,6 +20,7 @@ import java.io.IOException
 class NewsRemoteMediator(
     private val region: Int,
     private val keyword: String,
+    private val dateRange: DateRange,
     private val database: AppNewsDatabase,
     private val repository: MyAPIRepository
 ) : RemoteMediator<Int, NewsTable>() {
@@ -45,7 +47,13 @@ class NewsRemoteMediator(
             }
 
             //获取数据
-            val response = repository.getNews(region, after, keyword).data
+            val response = repository.getNews(
+                region,
+                after,
+                keyword,
+                dateRange.startDate,
+                dateRange.endDate
+            ).data
             val isEndOfList = response?.isEmpty() ?: false
 
             database.withTransaction {

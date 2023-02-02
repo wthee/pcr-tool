@@ -26,7 +26,7 @@ class GachaViewModel @Inject constructor(
     fun getGachaHistory(dateRange: DateRange) = flow {
         try {
             var list = gachaRepository.getGachaHistory(Int.MAX_VALUE)
-            if (dateRange.needFilter()) {
+            if (dateRange.hasFilter()) {
                 list = list.filter {
                     dateRange.predicate(it.startTime)
                 }

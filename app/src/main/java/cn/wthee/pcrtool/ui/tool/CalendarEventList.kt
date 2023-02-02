@@ -6,9 +6,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,9 +33,12 @@ fun CalendarEventList(
     scrollState: LazyStaggeredGridState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
     val coroutineScope = rememberCoroutineScope()
     val dataList =
-        eventViewModel.getCalendarEventList().collectAsState(initial = arrayListOf()).value
+        eventViewModel.getCalendarEventList(dateRange.value).collectAsState(initial = arrayListOf()).value
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {
@@ -52,13 +53,20 @@ fun CalendarEventList(
                 CommonSpacer()
             }
         }
+
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
         //回到顶部
         FabCompose(
-            iconType = MainIconType.CALENDAR,
-            text = stringResource(id = R.string.tool_calendar_event),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                ),
+            iconType = MainIconType.CALENDAR,
+            text = stringResource(id = R.string.tool_calendar_event)
         ) {
             coroutineScope.launch {
                 try {
@@ -67,6 +75,7 @@ fun CalendarEventList(
                 }
             }
         }
+
     }
 
 }

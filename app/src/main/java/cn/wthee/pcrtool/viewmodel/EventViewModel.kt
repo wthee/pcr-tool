@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.ui.common.DateRange
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareEvent
 import cn.wthee.pcrtool.utils.compareStoryEvent
@@ -20,11 +21,18 @@ class EventViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * 获取活动记录
+     * 获取剧情活动记录
      */
-    fun getStoryEventHistory() = flow {
+    fun getStoryEventHistory(dateRange: DateRange) = flow {
         try {
-            emit(eventRepository.getAllEvents(Int.MAX_VALUE).sortedWith(compareStoryEvent()))
+            var list = eventRepository.getAllEvents(Int.MAX_VALUE)
+            if (dateRange.hasFilter()) {
+                list = list.filter {
+                    dateRange.predicate(it.startTime)
+                }
+            }
+
+            emit(list.sortedWith(compareStoryEvent()))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getStoryEventHistory")
         }
@@ -44,7 +52,7 @@ class EventViewModel @Inject constructor(
     /**
      * 获取活动列表
      */
-    fun getCalendarEventList() = flow {
+    fun getCalendarEventList(dateRange: DateRange) = flow {
         try {
             val data = eventRepository.getDropEvent().toMutableList()
             data += eventRepository.getMissionEvent(Int.MAX_VALUE)
@@ -52,8 +60,16 @@ class EventViewModel @Inject constructor(
             data += eventRepository.getFortuneEvent(Int.MAX_VALUE)
             data += eventRepository.getTowerEvent(Int.MAX_VALUE)
             data += eventRepository.getSpDungeonEvent(Int.MAX_VALUE)
+
+            var list = data.toList()
+            if (dateRange.hasFilter()) {
+                list = data.filter {
+                    dateRange.predicate(it.startTime)
+                }
+            }
+
             emit(
-                data.sortedWith(compareEvent())
+                list.sortedWith(compareEvent())
             )
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getCalendarEventList")

@@ -45,10 +45,13 @@ fun NewsList(
     val keywordState = remember {
         mutableStateOf("")
     }
-
+    //时间范围
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
     //获取分页数据
-    val newsPager = remember(keywordState.value) {
-        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value)
+    val newsPager = remember(keywordState.value, dateRange.value) {
+        newsViewModel.getNewsPager(MainActivity.regionType, keywordState.value, dateRange.value)
     }
     val newsItems = newsPager.flow.collectAsLazyPagingItems()
 
@@ -95,6 +98,9 @@ fun NewsList(
             }
         }
 
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
         //搜索栏
         BottomSearchBar(
             modifier = Modifier
@@ -104,7 +110,11 @@ fun NewsList(
             keywordState = keywordState,
             leadingIcon = MainIconType.NEWS,
             scrollState = scrollState,
-            defaultKeywordList = keywordList
+            defaultKeywordList = keywordList,
+            onResetClick = {
+                //同时重置时间筛选
+                dateRange.value = DateRange()
+            }
         )
     }
 }

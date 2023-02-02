@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
+import cn.wthee.pcrtool.ui.common.DateRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -28,13 +29,14 @@ class NewsViewModel @Inject constructor(
      * 公告数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getNewsPager(region: Int, keyword: String) = Pager(
+    fun getNewsPager(region: Int, keyword: String, dateRange: DateRange) = Pager(
         config = PagingConfig(
             pageSize = pageSize
         ),
         remoteMediator = NewsRemoteMediator(
             region,
             keyword,
+            dateRange,
             database,
             apiRepository
         )

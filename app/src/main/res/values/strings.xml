@@ -205,6 +205,7 @@
     <string name="start_date">开始</string>
     <string name="end_date">结束</string>
     <string name="pick_date">选择日期</string>
+    <string name="picked_date">已选择</string>
 
 
     <!--竞技场查询-->
@@ -227,6 +228,7 @@
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
     <string name="close">关闭</string>
+    <string name="reset">重置</string>
     <string name="add_to_calendar">添加至系统日历</string>
     <string name="copy_event">复制活动信息</string>
     <string name="to_add_tool">添加功能</string>

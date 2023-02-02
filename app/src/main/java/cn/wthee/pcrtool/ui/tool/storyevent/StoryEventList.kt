@@ -41,7 +41,11 @@ fun StoryEventList(
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val events = eventViewModel.getStoryEventHistory().collectAsState(initial = arrayListOf()).value
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
+    val events = eventViewModel.getStoryEventHistory(dateRange.value)
+        .collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -69,13 +73,20 @@ fun StoryEventList(
                 }
             }
         }
+
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
         //回到顶部
         FabCompose(
-            iconType = MainIconType.EVENT,
-            text = stringResource(id = R.string.tool_event),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                ),
+            iconType = MainIconType.EVENT,
+            text = stringResource(id = R.string.tool_event),
         ) {
             coroutineScope.launch {
                 try {
@@ -179,7 +190,7 @@ fun StoryEventItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
-                if (inProgress || isSub || !hasTeaser(event.eventId)) {
+                if (inProgress || isSub || !hasTeaser(event.eventId) || previewEvent) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

@@ -422,4 +422,13 @@ enum class MainIconType(val icon: ImageVector) {
      */
     ALL_QUEST(Icons.Rounded.Map),
 
+    /**
+     * 日期范围
+     */
+    DATE_RANGE_NONE(Icons.Rounded.CalendarToday),
+
+    /**
+     * 已选择日期范围
+     */
+    DATE_RANGE_PICKED(Icons.Rounded.DateRange),
 }

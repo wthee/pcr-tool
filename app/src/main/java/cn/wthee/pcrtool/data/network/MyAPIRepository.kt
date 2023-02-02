@@ -3,17 +3,7 @@ package cn.wthee.pcrtool.data.network
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.data.model.LeaderTierData
-import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.data.model.PvpResultData
-import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.model.WebsiteGroupData
-import cn.wthee.pcrtool.data.model.cancel
-import cn.wthee.pcrtool.data.model.error
+import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.mediaType
@@ -72,13 +62,17 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
      * @param region 区服 2：b服，3：台服，4：日服
      * @param after 查询该id前的数据
      * @param keyword 关键词
+     * @param startTime 开始时间 格式如：2020/01/01 00:00:00
+     * @param endTime 结束时间
      */
-    suspend fun getNews(region: Int, after: Int?, keyword: String): ResponseData<List<NewsTable>> {
+    suspend fun getNews(region: Int, after: Int?, keyword: String, startTime:String, endTime:String): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
         json.addProperty("after", after)
         json.addProperty("keyword", keyword)
+        json.addProperty("startTime", startTime)
+        json.addProperty("endTime", endTime)
         val body =
             json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
@@ -156,12 +150,17 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
      * 查询推特信息
      * @param after 查询该id前的数据
      * @param keyword 关键词
+     * @param startTime 开始时间 格式如：2020/01/01 00:00:00
+     * @param endTime 结束时间
      */
-    suspend fun getTweet(after: Int?, keyword: String): ResponseData<List<TweetData>> {
+    suspend fun getTweet(after: Int?, keyword: String, startTime:String, endTime:String): ResponseData<List<TweetData>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("keyword", keyword)
         json.addProperty("after", after)
+        json.addProperty("startTime", startTime)
+        json.addProperty("endTime", endTime)
+
         val body =
             json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 

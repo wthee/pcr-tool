@@ -508,8 +508,8 @@ fun SelectTypeCompose(
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     paddingValues: PaddingValues = PaddingValues(
-        end = Dimen.fabMarginEnd,
         start = Dimen.fabMargin,
+        end = Dimen.fabMarginEnd,
         top = Dimen.fabMargin,
         bottom = Dimen.fabMargin,
     ),
@@ -685,13 +685,14 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
 )
 @Composable
 fun BottomSearchBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     @StringRes labelStringId: Int,
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     scrollState: LazyListState,
-    defaultKeywordList: List<KeywordData>? = null
+    defaultKeywordList: List<KeywordData>? = null,
+    onResetClick: (() -> Unit)? = null,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -723,8 +724,12 @@ fun BottomSearchBar(
                 ) {
                     keywordState.value = ""
                     keywordInputState.value = ""
+                    if (onResetClick != null) {
+                        onResetClick()
+                    }
                 }
             }
+
             //搜索
             FabCompose(
                 iconType = MainIconType.SEARCH,
@@ -738,6 +743,7 @@ fun BottomSearchBar(
 
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .padding(Dimen.mediumPadding)
             .imePadding()
     ) {

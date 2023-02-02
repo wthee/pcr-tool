@@ -75,27 +75,24 @@ fun GachaList(
             }
         }
 
-        Row(
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
+        //回到顶部
+        FabCompose(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(
                     end = Dimen.fabMarginEnd,
                     bottom = Dimen.fabMargin
-                )
+                ),
+            iconType = MainIconType.GACHA,
+            text = stringResource(id = R.string.tool_gacha)
         ) {
-            //日期选择
-            DateRangePickerCompose(dateRange = dateRange)
-
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.GACHA,
-                text = stringResource(id = R.string.tool_gacha)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
-                    }
+            coroutineScope.launch {
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (_: Exception) {
                 }
             }
         }

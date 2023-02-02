@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppTweetDatabase
+import cn.wthee.pcrtool.ui.common.DateRange
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -18,6 +19,7 @@ import java.io.IOException
 @OptIn(ExperimentalPagingApi::class)
 class TweetRemoteMediator(
     private val keyword: String,
+    private val dateRange: DateRange,
     private val database: AppTweetDatabase,
     private val repository: MyAPIRepository
 ) : RemoteMediator<Int, TweetData>() {
@@ -44,7 +46,12 @@ class TweetRemoteMediator(
             }
 
             //获取数据
-            val response = repository.getTweet(after, keyword).data
+            val response = repository.getTweet(
+                after,
+                keyword,
+                dateRange.startDate,
+                dateRange.endDate
+            ).data
             val isEndOfList = response?.isEmpty() ?: false
 
             database.withTransaction {
