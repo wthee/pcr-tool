@@ -49,7 +49,7 @@ fun CalendarEventList(
             items(dataList) {
                 CalendarEventItem(it)
             }
-            item {
+            items(2) {
                 CommonSpacer()
             }
         }

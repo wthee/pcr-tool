@@ -68,7 +68,7 @@ fun StoryEventList(
                         toAllPics = toAllPics
                     )
                 }
-                item {
+                items(2) {
                     CommonSpacer()
                 }
             }

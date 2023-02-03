@@ -152,45 +152,33 @@ fun BoxScope.DateRangePickerCompose(
                     MainText(text = stringResource(id = R.string.range_date))
 
                     //选择开始日期
-                    Row(
-                        modifier = Modifier.padding(Dimen.mediumPadding),
-                        verticalAlignment = Alignment.CenterVertically
+                    SubButton(
+                        text = if (dateRange.value.startDate == "") {
+                            stringResource(id = R.string.pick_start_date)
+                        } else {
+                            dateRange.value.startDate
+                        },
+                        textStyle = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(start = Dimen.mediumPadding)
+                            .fillMaxWidth()
                     ) {
-                        Subtitle1(text = stringResource(id = R.string.start_date))
-                        SubButton(
-                            text = if (dateRange.value.startDate == "") {
-                                stringResource(id = R.string.pick_date)
-                            } else {
-                                dateRange.value.startDate
-                            },
-                            textStyle = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .padding(start = Dimen.mediumPadding)
-                                .fillMaxWidth()
-                        ) {
-                            openStartDateDialog.value = true
-                        }
+                        openStartDateDialog.value = true
                     }
 
                     //选择结束日期
-                    Row(
-                        modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
-                        verticalAlignment = Alignment.CenterVertically
+                    SubButton(
+                        text = if (dateRange.value.endDate == "") {
+                            stringResource(id = R.string.pick_end_date)
+                        } else {
+                            dateRange.value.endDate
+                        },
+                        textStyle = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(start = Dimen.mediumPadding)
+                            .fillMaxWidth()
                     ) {
-                        Subtitle1(text = stringResource(id = R.string.end_date))
-                        SubButton(
-                            text = if (dateRange.value.endDate == "") {
-                                stringResource(id = R.string.pick_date)
-                            } else {
-                                dateRange.value.endDate
-                            },
-                            textStyle = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .padding(start = Dimen.mediumPadding)
-                                .fillMaxWidth()
-                        ) {
-                            openEndDateDialog.value = true
-                        }
+                        openEndDateDialog.value = true
                     }
                 }
 
@@ -202,6 +190,7 @@ fun BoxScope.DateRangePickerCompose(
                         modifier = Modifier.align(Alignment.TopEnd)
                     ) {
                         dateRange.value = DateRange()
+                        navViewModel.fabCloseClick.postValue(true)
                     }
                 }
             }
@@ -217,7 +206,7 @@ fun BoxScope.DateRangePickerCompose(
                     } else {
                         MainIconType.DATE_RANGE_NONE
                     },
-                    size = Dimen.menuIconSize
+                    size = Dimen.fabIconSize
                 )
                 Text(
                     text = if (dateRange.value.hasFilter()) {

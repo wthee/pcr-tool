@@ -589,7 +589,8 @@ fun SelectTypeCompose(
                 modifier = Modifier.padding(start = Dimen.largePadding)
             ) {
                 IconCompose(
-                    data = icon, tint = selectedColor, size = Dimen.menuIconSize
+                    data = icon, tint = selectedColor,
+                    size = Dimen.fabIconSize
                 )
                 Text(
                     text = tabs[type.value],
