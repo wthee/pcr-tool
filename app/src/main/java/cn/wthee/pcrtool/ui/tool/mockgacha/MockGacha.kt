@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants.MOCK_GACHA_MAX_UP_COUNT
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
@@ -128,7 +128,7 @@ fun MockGacha(
                                 modifier = Modifier.padding(top = Dimen.smallPadding)
                             ) {
                                 IconCompose(
-                                    data = ImageResourceHelper.getInstance()
+                                    data = ImageRequestHelper.getInstance()
                                         .getUnitIconUrl(gachaUnitInfo.unitId, 3),
                                     modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                                 ) {
@@ -353,8 +353,8 @@ private fun MockGachaUnitIconListCompose(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_UNIT, iconId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_UNIT, iconId)
                 ) {
                     onClickItem(gachaUnitInfo)
                 }

@@ -22,8 +22,8 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -86,7 +86,7 @@ private fun EquipDetail(
                         .padding(Dimen.largePadding)
                 ) {
                     IconCompose(
-                        data = ImageResourceHelper.getInstance().getEquipPic(equipId)
+                        data = ImageRequestHelper.getInstance().getEquipPic(equipId)
                     )
                     Subtitle2(
                         text = equipMaxData.getDesc(),
@@ -161,7 +161,7 @@ private fun EquipMaterialList(
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(
-                        data = ImageResourceHelper.getInstance().getEquipPic(material.id)
+                        data = ImageRequestHelper.getInstance().getEquipPic(material.id)
                     ) {
                         toEquipMaterial(material.id)
                     }

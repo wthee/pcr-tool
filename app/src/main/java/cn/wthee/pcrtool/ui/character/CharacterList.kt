@@ -208,7 +208,7 @@ fun CharacterItem(
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
             //图片
             ImageCompose(
-                data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
+                data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
                 ratio = RATIO,
                 contentScale = ContentScale.FillHeight,
                 onError = { loadError = true }

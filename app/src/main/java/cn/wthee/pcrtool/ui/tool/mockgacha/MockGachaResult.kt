@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.simpleDateFormat
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
@@ -227,8 +227,8 @@ private fun MockGachaResultRecordIconLine(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(
-                        data = ImageResourceHelper.getInstance()
-                            .getUrl(ImageResourceHelper.ICON_UNIT, iconId)
+                        data = ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.ICON_UNIT, iconId)
                     )
                     val textColor = when {
                         pickUpIndex.contains(index + line * 5) -> {

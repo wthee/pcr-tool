@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -159,7 +159,7 @@ private fun EquipCountItem(
     loved: Boolean,
     toEquipMaterial: (Int) -> Unit
 ) {
-    val placeholder = item.id == ImageResourceHelper.UNKNOWN_EQUIP_ID
+    val placeholder = item.id == ImageRequestHelper.UNKNOWN_EQUIP_ID
     var dataState by remember {
         mutableStateOf(item)
     }
@@ -175,7 +175,7 @@ private fun EquipCountItem(
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf({
             IconCompose(
-                data = ImageResourceHelper.getInstance().getEquipPic(dataState.id),
+                data = ImageRequestHelper.getInstance().getEquipPic(dataState.id),
                 modifier = Modifier.commonPlaceholder(placeholder)
             ) {
                 toEquipMaterial(dataState.id)

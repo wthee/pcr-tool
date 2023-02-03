@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -190,7 +190,7 @@ private fun ClanBattleItem(
                             contentAlignment = Alignment.Center
                         ) {
                             IconCompose(
-                                data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it)
+                                data = ImageRequestHelper.getInstance().getUrl(ICON_UNIT, it)
                             ) {
                                 if (!placeholder) {
                                     toClanBossInfo(

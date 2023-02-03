@@ -291,7 +291,7 @@
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
-    <string name="tip_save_image">将图片保存到本地</string>
+    <string name="tip_save_image">将图片保存到系统相册pcr文件夹中</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>

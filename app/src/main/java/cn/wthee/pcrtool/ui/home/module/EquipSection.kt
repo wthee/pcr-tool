@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlin.math.max
@@ -69,7 +69,7 @@ fun EquipSection(
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = ImageResourceHelper.getInstance()
+                            data = ImageRequestHelper.getInstance()
                                 .getEquipPic(it.equipmentId)
                         ) {
                             actions.toEquipDetail(it.equipmentId)

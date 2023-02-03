@@ -47,8 +47,8 @@ import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.COMIC4
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.PNG
 import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 

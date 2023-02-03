@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -247,8 +247,8 @@ private fun EquipWithOddCompose(
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_EQUIPMENT, dataState.equipId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EQUIPMENT, dataState.equipId)
                 )
             }
         )
@@ -263,7 +263,7 @@ private fun EquipWithOddCompose(
         val selected = selectedId == dataState.equipId
         Box(contentAlignment = Alignment.Center) {
             equipIcon()
-            if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {
+            if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {
                 SelectText(
                     selected = selected,
                     text = if (selected) stringResource(id = R.string.selected_mark) else "",
@@ -271,7 +271,7 @@ private fun EquipWithOddCompose(
                 )
             }
         }
-        if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID && dataState.odd > 0) {
+        if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && dataState.odd > 0) {
             SelectText(
                 selected = selected,
                 text = "${dataState.odd}%"
