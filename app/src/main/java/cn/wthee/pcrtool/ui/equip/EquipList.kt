@@ -38,7 +38,7 @@ import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -241,7 +241,7 @@ private fun EquipItem(
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getEquipPic(equipState.equipmentId)
+                    data = ImageRequestHelper.getInstance().getEquipPic(equipState.equipmentId)
                 )
             }
         )

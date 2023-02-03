@@ -5,7 +5,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
-class ImageResourceHelper {
+/**
+ * 图片资源地址
+ */
+class ImageRequestHelper {
 
     var type = "cn"
 
@@ -19,7 +22,7 @@ class ImageResourceHelper {
 
     companion object {
 
-        fun getInstance() = ImageResourceHelper()
+        fun getInstance() = ImageRequestHelper()
 
         private var RESOURCE_PREFIX_URL = "https://${URL_DOMAIN}/redive/"
         private var RESOURCE = "/resource/"

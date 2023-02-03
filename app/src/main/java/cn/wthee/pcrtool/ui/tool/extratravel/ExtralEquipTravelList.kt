@@ -25,8 +25,8 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toTimeText
@@ -88,7 +88,7 @@ private fun TravelItem(
     ) {
         //area
         CommonGroupTitle(
-            iconData = ImageResourceHelper.getInstance()
+            iconData = ImageRequestHelper.getInstance()
                 .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, travelData.travelAreaId),
             iconSize = Dimen.menuIconSize,
             titleStart = travelData.travelAreaName,
@@ -137,7 +137,7 @@ fun TravelQuestHeader(
     ) {
         //图标
         IconCompose(
-            data = ImageResourceHelper.getInstance()
+            data = ImageRequestHelper.getInstance()
                 .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questData.travelQuestId),
         )
         //标题

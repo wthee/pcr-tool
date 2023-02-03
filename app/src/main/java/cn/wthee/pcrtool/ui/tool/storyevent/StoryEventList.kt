@@ -22,8 +22,8 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_TEASER
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_TEASER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -198,14 +198,14 @@ fun StoryEventItem(
                         contentAlignment = Alignment.TopCenter
                     ) {
                         SubImageCompose(
-                            data = ImageResourceHelper.getInstance()
+                            data = ImageRequestHelper.getInstance()
                                 .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
                             contentScale = ContentScale.Crop
                         )
                     }
                 } else {
                     ImageCompose(
-                        data = ImageResourceHelper.getInstance()
+                        data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
                         ratio = RATIO_TEASER,
                     )
@@ -225,9 +225,9 @@ fun StoryEventItem(
                         //sp boss 图标，处理id 311403 -> 311400
                         if (!isSub && event.bossUnitId != 0) {
                             IconCompose(
-                                data = ImageResourceHelper.getInstance()
+                                data = ImageRequestHelper.getInstance()
                                     .getUrl(
-                                        ImageResourceHelper.ICON_UNIT,
+                                        ImageRequestHelper.ICON_UNIT,
                                         event.bossUnitId / 10 * 10
                                     ),
                                 modifier = Modifier.padding(start = Dimen.mediumPadding)
@@ -240,7 +240,7 @@ fun StoryEventItem(
                         event.getUnitIdList().forEach { itemId ->
                             val unitId = itemId % 10000 * 100 + 1
                             IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+                                data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
                                 modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                             ) {
                                 toCharacterDetail(unitId)

@@ -194,9 +194,9 @@ private fun ExtraEquipGroup(
 ) {
     //分组标题
     CommonGroupTitle(
-        iconData = ImageResourceHelper.getInstance()
+        iconData = ImageRequestHelper.getInstance()
             .getUrl(
-                ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                ImageRequestHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
                 equipGroupData.category
             ),
         iconSize = Dimen.smallIconSize,
@@ -254,8 +254,8 @@ private fun ExtraEquipItem(
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equip.equipmentId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equip.equipmentId)
                 )
             }
         )

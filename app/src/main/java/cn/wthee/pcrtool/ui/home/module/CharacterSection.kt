@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.common.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -121,7 +121,7 @@ private fun CharacterImageItem(
         }
     ) {
         ImageCompose(
-            data = ImageResourceHelper.getInstance().getMaxCardUrl(unitId),
+            data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
             ratio = RATIO
         )
     }

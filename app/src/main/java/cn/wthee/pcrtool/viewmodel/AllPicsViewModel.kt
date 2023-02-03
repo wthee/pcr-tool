@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class AllPicsViewModel @Inject constructor(
     fun getUniCardList(id: Int) = flow {
         val actualId = unitRepository.getActualId(id)
         val picUrls =
-            ImageResourceHelper.getInstance().getAllPicUrl(id, actualId)
+            ImageRequestHelper.getInstance().getAllPicUrl(id, actualId)
         val list = arrayListOf<String>()
         list.addAll(picUrls)
         emit(list)
@@ -38,9 +38,9 @@ class AllPicsViewModel @Inject constructor(
         val responseData = apiRepository.getStoryList(id)
         responseData.data?.let {
             val pathName = if (type == 0) {
-                ImageResourceHelper.CARD_STORY
+                ImageRequestHelper.CARD_STORY
             } else {
-                ImageResourceHelper.EVENT_STORY
+                ImageRequestHelper.EVENT_STORY
             }
             newResponse.data = getStoryUrls(it, pathName)
         }
@@ -56,7 +56,7 @@ class AllPicsViewModel @Inject constructor(
         val list = arrayListOf<String>()
         idStr.split(",").sortedBy { it }.forEach {
             if (it != "") {
-                list.add(ImageResourceHelper.getInstance().getUrl(path, it))
+                list.add(ImageRequestHelper.getInstance().getUrl(path, it))
             }
         }
         return list

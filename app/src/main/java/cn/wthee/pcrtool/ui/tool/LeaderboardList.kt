@@ -302,7 +302,7 @@ private fun LeaderboardItem(
         Box {
             IconCompose(
                 data = if (hasUnitId) {
-                    ImageResourceHelper.getInstance()
+                    ImageRequestHelper.getInstance()
                         .getMaxIconUrl(leader.unitId!!)
                 } else {
                     R.drawable.unknown_item

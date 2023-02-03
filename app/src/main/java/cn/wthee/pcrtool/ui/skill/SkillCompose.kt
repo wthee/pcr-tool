@@ -30,8 +30,8 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
@@ -221,7 +221,7 @@ fun SkillItem(
     val color = getSkillColor(type)
     val name =
         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) type else skillDetail.name
-    val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
+    val url = ImageRequestHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
 
 
     Column(

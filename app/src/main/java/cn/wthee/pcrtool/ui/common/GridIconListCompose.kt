@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 
 /**
  * 角色图标列表
@@ -54,7 +54,7 @@ private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(
-            data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+            data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
             onClick = if (onClickItem != null) {
                 {
                     onClickItem(unitId)

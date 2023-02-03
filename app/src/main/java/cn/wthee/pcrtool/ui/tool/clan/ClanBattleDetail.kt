@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.common.MainTitleText
 import cn.wthee.pcrtool.ui.common.SelectTypeCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyAllInfo
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
@@ -83,8 +83,8 @@ fun ClanBattleDetail(
                 val urls = arrayListOf<String>()
                 clanBattleValue.unitIds.split("-").subList(0, 5).forEach {
                     urls.add(
-                        ImageResourceHelper.getInstance()
-                            .getUrl(ImageResourceHelper.ICON_UNIT, it)
+                        ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.ICON_UNIT, it)
                     )
                 }
                 IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)

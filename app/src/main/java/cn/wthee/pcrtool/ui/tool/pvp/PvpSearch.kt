@@ -404,7 +404,7 @@ fun PvpIconItem(
     val icon = if (pvpCharacterData.unitId == 0) {
         R.drawable.unknown_gray
     } else {
-        ImageResourceHelper.getInstance().getMaxIconUrl(pvpCharacterData.unitId)
+        ImageRequestHelper.getInstance().getMaxIconUrl(pvpCharacterData.unitId)
     }
     //选中判断
     val selected = selectedIds.find { it.unitId == pvpCharacterData.unitId } != null
@@ -479,7 +479,7 @@ fun PvpUnitIconLine(
                 contentAlignment = Alignment.Center
             ) {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
+                    data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
                     wrapSize = true
                 ) {
                     if (!floatWindow) {

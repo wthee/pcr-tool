@@ -19,7 +19,7 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.FileSaveHelper
+import cn.wthee.pcrtool.utils.ImageSaveHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
@@ -93,7 +93,7 @@ fun AllCardList(
         }
     ) {
         loadedPicMap[checkedPicUrl.value]?.let {
-            FileSaveHelper(context).saveBitmap(
+            ImageSaveHelper(context).saveBitmap(
                 bitmap = (it as BitmapDrawable).bitmap,
                 displayName = "${getFileName(checkedPicUrl.value)}.jpg"
             )

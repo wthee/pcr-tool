@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -86,7 +86,7 @@ fun RankEquipListItem(
                         ) {
                             IconCompose(
                                 modifier = Modifier.padding(Dimen.smallPadding),
-                                data = ImageResourceHelper.getInstance().getEquipPic(it)
+                                data = ImageRequestHelper.getInstance().getEquipPic(it)
                             )
                         }
                     }

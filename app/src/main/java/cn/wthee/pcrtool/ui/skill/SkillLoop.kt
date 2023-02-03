@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -133,8 +133,8 @@ private fun SkillLoopIconList(
                 url = if (iconType == null) {
                     R.drawable.unknown_item
                 } else {
-                    ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_SKILL, iconType)
+                    ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_SKILL, iconType)
                 }
             }
 
