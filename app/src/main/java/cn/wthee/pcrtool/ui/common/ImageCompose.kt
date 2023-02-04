@@ -1,10 +1,17 @@
 package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -142,6 +149,7 @@ fun IconCompose(
                 modifier = mModifier
             )
         }
+
         is ImageVector -> {
             Icon(
                 imageVector = data,
@@ -150,6 +158,7 @@ fun IconCompose(
                 modifier = mModifier
             )
         }
+
         else -> {
             val contentScale = ContentScale.Crop
             val loading = remember {
@@ -182,41 +191,57 @@ fun IconCompose(
     }
 }
 
-
+/**
+ * 图片
+ * @param loading 保存原图时使用，等原图缓存结束
+ */
 @Composable
 fun SubImageCompose(
+    modifier: Modifier = Modifier,
     data: Any,
-    contentScale: ContentScale = ContentScale.FillWidth,
+    contentScale: ContentScale = ContentScale.Fit,
+    loading: MutableState<Boolean>? = null,
     onSuccess: (SuccessResult) -> Unit = {}
 ) {
 
-    SubcomposeAsyncImage(
-        model = data,
-        contentDescription = null,
-        contentScale = contentScale,
-        loading = {
-            Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = R.drawable.unknown_gray,
-                    contentDescription = null,
+    Box {
+        SubcomposeAsyncImage(
+            model = data,
+            contentDescription = null,
+            contentScale = contentScale,
+            loading = {
+                Box(
                     modifier = Modifier
+                        .fillMaxSize()
                         .aspectRatio(RATIO)
                         .commonPlaceholder(true)
                 )
-            }
-        },
-        error = {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = R.drawable.error,
-                    contentDescription = null,
-                    modifier = Modifier.aspectRatio(RATIO)
-                )
-            }
-        },
-        onSuccess = {
-            onSuccess(it.result)
-        },
-        modifier = Modifier.fillMaxWidth()
-    )
+            },
+            error = {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    AsyncImage(
+                        model = R.drawable.error,
+                        contentDescription = null,
+                        modifier = Modifier.aspectRatio(RATIO)
+                    )
+                }
+                loading?.value = false
+            },
+            onSuccess = {
+                onSuccess(it.result)
+            },
+            modifier = modifier.fillMaxWidth()
+        )
+
+        //加载立绘原图时
+        if (loading != null && loading.value) {
+            CircularProgressCompose(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(Dimen.smallPadding),
+                size = Dimen.textIconSize
+            )
+        }
+    }
+
 }

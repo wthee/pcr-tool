@@ -42,7 +42,7 @@ class ImageSaveHelper(private val context: Context) {
                 val file = File("$path/$displayName")
                 if (file.exists()) {
                     Looper.prepare()
-                    ToastUtil.short(getString(R.string.pic_exist))
+                    ToastUtil.short(getString(R.string.pic_exist, file.absolutePath))
                     Looper.loop()
                 }
 
@@ -52,14 +52,14 @@ class ImageSaveHelper(private val context: Context) {
                         Environment.DIRECTORY_PICTURES + File.separator + imageDir
                     )
                 } else {
-                    contentValues.put(MediaStore.Images.Media.DATE_ADDED, file.absolutePath)
+                    contentValues.put(MediaStore.Images.Media.DATA, file.absolutePath)
                 }
 
                 //保存
                 if (insertImage(bitmap, contentValues)) {
                     VibrateUtil(context).done()
                     Looper.prepare()
-                    ToastUtil.short(getString(R.string.save_success, "\n$displayName"))
+                    ToastUtil.long(getString(R.string.save_success, file.absolutePath))
                     Looper.loop()
                 } else {
                     VibrateUtil(context).error()
