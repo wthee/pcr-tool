@@ -119,5 +119,5 @@ object Constants {
     const val EXCEPTION_DATA_CHANGE = "db change exception:"
 
     //模拟抽卡最大up数
-    const val MOCK_GACHA_MAX_UP_COUNT = 6
+    const val MOCK_GACHA_MAX_UP_COUNT = 12
 }

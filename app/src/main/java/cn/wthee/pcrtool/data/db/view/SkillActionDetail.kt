@@ -1678,7 +1678,8 @@ data class SkillActionDetail(
      * 作用对象数量
      */
     private fun getTargetCount() = when (targetCount) {
-        0, 1, 99 -> ""
+        0, 1 -> ""
+        99 -> getString(R.string.skill_target_all)
         else -> getString(R.string.skill_target_count, targetCount)
     }
 
@@ -1697,8 +1698,9 @@ data class SkillActionDetail(
      */
     private fun getTargetType() = getString(
         when (targetType) {
-            0, 1, 3, 40, 41 -> R.string.none
+            0, 1, 40, 41 -> R.string.none
             2, 8 -> R.string.skill_target_2_8
+            3 -> R.string.skill_target_3
             4 -> R.string.skill_target_4
             5, 25 -> R.string.skill_target_5_25
             6, 26 -> R.string.skill_target_6_26
