@@ -491,7 +491,7 @@
     <string name="skill_target_38">攻击力最高的</string>
     <string name="skill_target_39">攻击力最低的</string>
     <string name="skill_target_42">多目标</string>
-    <string name="skill_target_43">物理攻击力最高（自身除外）的</string>
+    <string name="skill_target_43">物理攻击力最高(自身除外)的</string>
 
     <!--技能目标分配-->
     <string name="skill_target_assignment_0">自身</string>
@@ -514,7 +514,7 @@
     <string name="skill_hp_max">HP最大值</string>
     <string name="skill_increase">提升</string>
     <string name="skill_reduce">减少</string>
-    <string name="skill_fixed">（固定数值，无法被其他技能效果改变）</string>
+    <string name="skill_fixed">(固定数值，无法被其他技能效果改变)</string>
     <string name="skill_physical_critical_damage">物理暴击伤害</string>
     <string name="skill_magic_critical_damage">魔法暴击伤害</string>
     <string name="skill_critical_damage_take">受到的暴击伤害</string>
@@ -522,8 +522,8 @@
     <string name="skill_magic_damage_take">受到的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
-    <string name="skill_target_count">（%d 名）</string>
-    <string name="skill_target_all">（全体）</string>
+    <string name="skill_target_count">(%d 名)</string>
+    <string name="skill_target_all">(全体)</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
     <string name="skill_physical">物理</string>
@@ -534,7 +534,7 @@
     <string name="skill_magic_def">魔法防御力</string>
     <string name="skill_must_hit_physical">必定命中的物理</string>
     <string name="skill_must_hit_magic">必定命中的魔法</string>
-    <string name="skill_adaptive_lower_defense">（适应物理/魔法防御中较低的防御）</string>
+    <string name="skill_adaptive_lower_defense">(适应物理/魔法防御中较低的防御)</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
     <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s</string>
@@ -720,7 +720,7 @@
     <string name="skill_ailment_field">(范围)</string>
 
     <!--持续伤害-->
-    <string name="skill_dot_0">拘留（造成伤害）</string>
+    <string name="skill_dot_0">拘留(造成伤害)</string>
     <string name="skill_dot_1_7">中毒</string>
     <string name="skill_dot_2">烧伤</string>
     <string name="skill_dot_3_8">诅咒</string>

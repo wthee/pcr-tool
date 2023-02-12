@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -189,10 +191,12 @@ fun SkillItem(
                         ""
                     }
                 }
-                1, 21 -> {
+
+                1, 21, 201 -> {
                     isNormalSkill = false
                     stringResource(id = R.string.union_burst)
                 }
+
                 11 -> {
                     isNormalSkill = false
                     stringResource(id = R.string.union_burst) + "+"
@@ -252,6 +256,10 @@ fun SkillItem(
                         MaterialTheme.typography.titleSmall
                     }
                 )
+
+                if (BuildConfig.DEBUG) {
+                    CaptionText(text = skillDetail.skillId.toString())
+                }
 
                 //非装备技能时显示
                 if (!isExtraEquipSKill) {
@@ -460,7 +468,19 @@ fun SkillActionItem(
 
             //调试用
             if (BuildConfig.DEBUG) {
-                CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
+                val expand = remember {
+                    mutableStateOf(false)
+                }
+                if (expand.value) {
+                    CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
+                } else {
+                    IconTextButton(
+                        icon = MainIconType.HELP,
+                        text = stringResource(R.string.skill)
+                    ) {
+                        expand.value = true
+                    }
+                }
             }
         }
     }
