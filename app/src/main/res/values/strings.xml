@@ -464,6 +464,7 @@
 
     <!--技能目标类型相关-->
     <string name="skill_target_2_8">随机的</string>
+    <string name="skill_target_3">最近的</string>
     <string name="skill_target_4">最远的</string>
     <string name="skill_target_5_25">HP最低的</string>
     <string name="skill_target_6_26">HP最高的</string>
@@ -522,6 +523,7 @@
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
     <string name="skill_target_count">（%d 名）</string>
+    <string name="skill_target_all">（全体）</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
     <string name="skill_physical">物理</string>
