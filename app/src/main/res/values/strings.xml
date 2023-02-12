@@ -291,13 +291,13 @@
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
-    <string name="tip_save_image">将图片保存到系统相册pcr文件夹中</string>
+    <string name="tip_save_image">将图片保存至系统相册中</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
     <string name="update_database">数据更新</string>
-    <string name="pic_exist">图片已存在</string>
-    <string name="save_success">保存成功%s</string>
+    <string name="pic_exist">图片已存在\n%s</string>
+    <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
     <string name="db_diff">%s：%s\n最近更新：%s</string>
@@ -737,8 +737,8 @@
     <string name="attr_magic_critical">魔法暴击</string>
     <string name="attr_physical_penetrate">物理穿透</string>
     <string name="attr_magic_penetrate">魔法穿透</string>
-    <string name="attr_accuracy">命 中</string>
-    <string name="attr_dodge">回 避</string>
+    <string name="attr_accuracy">命中</string>
+    <string name="attr_dodge">回避</string>
     <string name="attr_wave_hp_recovery">HP回复</string>
     <string name="attr_hp_recovery_rate">回复上升</string>
     <string name="attr_wave_energy_recovery">TP回复</string>
