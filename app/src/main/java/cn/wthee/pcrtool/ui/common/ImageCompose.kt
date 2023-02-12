@@ -212,7 +212,7 @@ fun SubImageCompose(
             loading = {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .aspectRatio(RATIO)
                         .commonPlaceholder(true)
                 )

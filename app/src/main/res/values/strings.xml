@@ -60,8 +60,8 @@
     <string name="animation">动画效果</string>
     <string name="dynamic_color">动态色彩</string>
     <string name="use_ip">网络调整</string>
-    <string name="use_ip_tip_on">已调整访问地址。关闭后该设置项将隐藏</string>
-    <string name="use_ip_tip_off">网络异常时，可尝试开启。设置变更后将自动关闭应用！</string>
+    <string name="use_ip_tip_on">已调整访问地址。设置变更后将自动退出应用</string>
+    <string name="use_ip_tip_off">若一直提示网络请求异常，可尝试开启。设置变更后将自动退出应用</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
     <string name="color_on">根据系统壁纸，调整应用主题颜色</string>

@@ -159,8 +159,13 @@ fun BoxScope.DateRangePickerCompose(
                             dateRange.value.startDate
                         },
                         textStyle = MaterialTheme.typography.bodyMedium,
+                        color = if (dateRange.value.startDate == "") {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        },
                         modifier = Modifier
-                            .padding(start = Dimen.mediumPadding)
+                            .padding(start = Dimen.mediumPadding, top = Dimen.largePadding)
                             .fillMaxWidth()
                     ) {
                         openStartDateDialog.value = true
@@ -174,6 +179,11 @@ fun BoxScope.DateRangePickerCompose(
                             dateRange.value.endDate
                         },
                         textStyle = MaterialTheme.typography.bodyMedium,
+                        color = if (dateRange.value.endDate == "") {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        },
                         modifier = Modifier
                             .padding(start = Dimen.mediumPadding)
                             .fillMaxWidth()

@@ -21,7 +21,15 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.CommonTitleContentText
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.Subtitle1
+import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.common.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -46,14 +54,21 @@ fun ExtraEquipTravelList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (areaList != null) {
-            LazyColumn(state = scrollState) {
-                items(areaList) {
-                    TravelItem(it, toExtraEquipTravelAreaDetail)
+            if (areaList.isNotEmpty()) {
+                LazyColumn(state = scrollState) {
+                    items(areaList) {
+                        TravelItem(it, toExtraEquipTravelAreaDetail)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
-                item {
-                    CommonSpacer()
-                }
+            } else {
+                CenterTipText(
+                    stringResource(id = R.string.no_data)
+                )
             }
+
         } else {
             //功能未实装
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
