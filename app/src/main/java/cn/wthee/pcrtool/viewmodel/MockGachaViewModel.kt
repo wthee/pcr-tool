@@ -87,7 +87,7 @@ class MockGachaViewModel @Inject constructor(
             val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
             val data = MockGachaData(
                 gachaId,
-                MainActivity.regionType,
+                MainActivity.regionType.value,
                 mockGachaType.type,
                 sorted.getIdsStr(),
                 nowTime,
@@ -150,7 +150,7 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getHistory() {
         viewModelScope.launch {
-            val data = mockGachaRepository.getHistory(MainActivity.regionType)
+            val data = mockGachaRepository.getHistory(MainActivity.regionType.value)
             historyList.postValue(data)
         }
     }
@@ -165,7 +165,7 @@ class MockGachaViewModel @Inject constructor(
         //处理不同顺序相同角色
         val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
         return mockGachaRepository.getGachaByPickUpIds(
-            MainActivity.regionType,
+            MainActivity.regionType.value,
             mockGachaType.type,
             sorted.getIdsStr()
         )

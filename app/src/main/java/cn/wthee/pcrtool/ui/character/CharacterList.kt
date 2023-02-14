@@ -39,9 +39,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
-import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -762,7 +762,7 @@ private fun FilterCharacterSheet(
             ChipData(2, stringResource(id = R.string.six_locked)),
         )
         //是否选择了六星解放排序
-        val isUnlock6SortType = sortTypeIndex.value == SortType.SORT_UNLOCK_6.type
+        val isUnlock6SortType = sortTypeIndex.value == CharacterSortType.SORT_UNLOCK_6.type
         //未选择六星解放排序是显示
         ExpandAnimation(visible = !isUnlock6SortType) {
             Column {

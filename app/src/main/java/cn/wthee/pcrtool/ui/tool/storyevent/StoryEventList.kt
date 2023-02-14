@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
@@ -287,10 +288,9 @@ fun StoryEventItem(
  * 设置是否有teaser
  */
 private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
-    2 -> eventId >= 10002
-    3 -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
-    4 -> eventId >= 10052 && eventId != 10055
-    else -> false
+    RegionType.CN -> eventId >= 10002
+    RegionType.TW -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
+    RegionType.JP -> eventId >= 10052 && eventId != 10055
 } && eventId / 10000 == 1
 
 @CombinedPreviews

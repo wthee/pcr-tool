@@ -43,7 +43,7 @@ class PvpViewModel @Inject constructor(
      */
     fun getAllFavorites() {
         viewModelScope.launch {
-            val data = pvpRepository.getLiked(MainActivity.regionType)
+            val data = pvpRepository.getLiked(MainActivity.regionType.value)
             allFavoritesList.postValue(data)
         }
     }
@@ -53,7 +53,7 @@ class PvpViewModel @Inject constructor(
      */
     fun getFavoritesList(defs: String) {
         viewModelScope.launch {
-            val data = pvpRepository.getLikedList(defs, MainActivity.regionType)
+            val data = pvpRepository.getLikedList(defs, MainActivity.regionType.value)
             favoritesList.postValue(data)
         }
     }
@@ -73,7 +73,7 @@ class PvpViewModel @Inject constructor(
      */
     fun delete(atks: String, defs: String) {
         viewModelScope.launch {
-            pvpRepository.delete(atks, defs, MainActivity.regionType)
+            pvpRepository.delete(atks, defs, MainActivity.regionType.value)
             getAllFavorites()
             getFavoritesList(defs)
         }
@@ -84,7 +84,7 @@ class PvpViewModel @Inject constructor(
      * 获取搜索历史信息
      */
     fun getHistory() = flow {
-        val data = pvpRepository.getHistory(MainActivity.regionType, 10)
+        val data = pvpRepository.getHistory(MainActivity.regionType.value, 10)
         emit(data)
     }
 
@@ -97,10 +97,10 @@ class PvpViewModel @Inject constructor(
             //获取前60天
             val beforeDate = calcDate(today, 60, true)
             //仅保存60天数据，删除超过60天的历史数据
-            pvpRepository.deleteOldHistory(MainActivity.regionType, beforeDate)
+            pvpRepository.deleteOldHistory(MainActivity.regionType.value, beforeDate)
 
             //删除旧数据后，查询全部数据
-            val data = pvpRepository.getHistory(MainActivity.regionType, Int.MAX_VALUE)
+            val data = pvpRepository.getHistory(MainActivity.regionType.value, Int.MAX_VALUE)
 
             val unitList = arrayListOf<PvpCharacterData>()
             val map = hashMapOf<Int, Int>()
@@ -144,7 +144,7 @@ class PvpViewModel @Inject constructor(
      */
     fun insert(data: PvpHistoryData) {
         viewModelScope.launch {
-            val preData = pvpRepository.getHistory(MainActivity.regionType, 1)
+            val preData = pvpRepository.getHistory(MainActivity.regionType.value, 1)
             //避免重复插入
             if (preData.isNotEmpty()) {
                 //与上一记录不相同或间隔大于10分钟，插入新记录

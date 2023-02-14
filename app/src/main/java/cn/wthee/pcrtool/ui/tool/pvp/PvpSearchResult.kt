@@ -77,7 +77,7 @@ fun PvpSearchResult(
             pvpViewModel.insert(
                 PvpHistoryData(
                     UUID.randomUUID().toString(),
-                    "${MainActivity.regionType}@$unSplitDefIds",
+                    "${MainActivity.regionType.value}@$unSplitDefIds",
                     getToday(),
                 )
             )
@@ -240,7 +240,7 @@ private fun PvpResultItem(
                                     item.atk,
                                     item.def,
                                     getToday(true),
-                                    MainActivity.regionType
+                                    MainActivity.regionType.value
                                 )
                             )
                         }

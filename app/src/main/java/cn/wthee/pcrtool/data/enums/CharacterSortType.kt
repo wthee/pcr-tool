@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.enums
 /**
  * 角色排序
  */
-enum class SortType(val type: Int) {
+enum class CharacterSortType(val type: Int) {
     SORT_DATE(0),
     SORT_AGE(1),
     SORT_HEIGHT(2),
@@ -13,11 +13,11 @@ enum class SortType(val type: Int) {
     SORT_UNLOCK_6(6),
 }
 
-fun getSortType(value: Int): SortType {
-    for (item in SortType.values()) {
+fun getSortType(value: Int): CharacterSortType {
+    for (item in CharacterSortType.values()) {
         if (item.type == value) return item
     }
-    return SortType.SORT_DATE
+    return CharacterSortType.SORT_DATE
 }
 
 

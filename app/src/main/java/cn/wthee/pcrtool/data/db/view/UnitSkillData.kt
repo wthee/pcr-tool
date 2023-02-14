@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.data.enums.SkillIndexType
 
 /**
  * 角色技能信息
@@ -110,4 +111,42 @@ data class UnitSkillData(
         )
     }
 
+    /**
+     * 获取技能下标类型
+     */
+    fun getSkillIndexType(skillId:Int) =  when(skillId){
+        union_burst -> SkillIndexType.UB
+        union_burst_evolution -> SkillIndexType.UB_PLUS
+        main_skill_1 -> SkillIndexType.MAIN_SKILL_1
+        main_skill_2 -> SkillIndexType.MAIN_SKILL_2
+        main_skill_3 -> SkillIndexType.MAIN_SKILL_3
+        main_skill_4 -> SkillIndexType.MAIN_SKILL_4
+        main_skill_5 -> SkillIndexType.MAIN_SKILL_5
+        main_skill_6 -> SkillIndexType.MAIN_SKILL_6
+        main_skill_7 -> SkillIndexType.MAIN_SKILL_7
+        main_skill_8 -> SkillIndexType.MAIN_SKILL_8
+        main_skill_9 -> SkillIndexType.MAIN_SKILL_9
+        main_skill_10 -> SkillIndexType.MAIN_SKILL_10
+        main_skill_evolution_1 -> SkillIndexType.MAIN_SKILL_1_PLUS
+        main_skill_evolution_2 -> SkillIndexType.MAIN_SKILL_2_PLUS
+        ex_skill_1 -> SkillIndexType.EX_1
+        ex_skill_2 -> SkillIndexType.EX_2
+        ex_skill_3 -> SkillIndexType.EX_3
+        ex_skill_4 -> SkillIndexType.EX_4
+        ex_skill_5 -> SkillIndexType.EX_5
+        ex_skill_evolution_1-> SkillIndexType.EX_1_PLUS
+        ex_skill_evolution_2 -> SkillIndexType.EX_2_PLUS
+        ex_skill_evolution_3 -> SkillIndexType.EX_3_PLUS
+        ex_skill_evolution_4 -> SkillIndexType.EX_4_PLUS
+        ex_skill_evolution_5 -> SkillIndexType.EX_5_PLUS
+        sp_union_burst -> SkillIndexType.SP_UB
+        sp_skill_1 -> SkillIndexType.SP_SKILL_1
+        sp_skill_2 -> SkillIndexType.SP_SKILL_2
+        sp_skill_3 -> SkillIndexType.SP_SKILL_3
+        sp_skill_4 -> SkillIndexType.SP_SKILL_4
+        sp_skill_5 -> SkillIndexType.SP_SKILL_5
+        sp_skill_evolution_1 -> SkillIndexType.SP_SKILL_1_PLUS
+        sp_skill_evolution_2 -> SkillIndexType.SP_SKILL_2_PLUS
+        else -> SkillIndexType.UNKNOWN
+    }
 }
