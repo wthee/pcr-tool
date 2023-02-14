@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.db.repository
 import cn.wthee.pcrtool.data.db.dao.UnitDao
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
-import cn.wthee.pcrtool.data.enums.SortType
+import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.second
@@ -41,7 +41,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
             },
             if (filter.all) 1 else 0,
             //六星排序时，仅显示六星角色
-            if (filter.sortType == SortType.SORT_UNLOCK_6) 1 else filter.r6,
+            if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
             filter.starIds,
             filter.type,
             limit,
@@ -57,7 +57,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         )
 
         //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
-        if (filter.sortType == SortType.SORT_DATE) {
+        if (filter.sortType == CharacterSortType.SORT_DATE) {
             filterList = filterList.sortedWith { o1, o2 ->
                 val sd1 = o1.startTime.formatTime
                 val sd2 = o2.startTime.formatTime

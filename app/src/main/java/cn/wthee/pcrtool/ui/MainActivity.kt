@@ -20,6 +20,7 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.AppDatabaseCN
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppDatabaseTW
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
         var animOnFlag = true
         var dynamicColorOnFlag = true
         var r6Ids = listOf<Int>()
-        var regionType = 2
+        var regionType = RegionType.CN
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +80,8 @@ class MainActivity : ComponentActivity() {
         vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
         dynamicColorOnFlag = sp.getBoolean(Constants.SP_COLOR_STATE, true)
-        regionType = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
+        regionType =
+            RegionType.getByValue(sp.getInt(Constants.SP_DATABASE_TYPE, RegionType.CN.value))
         //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()

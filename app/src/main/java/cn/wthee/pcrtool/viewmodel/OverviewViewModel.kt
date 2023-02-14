@@ -170,7 +170,7 @@ class OverviewViewModel @Inject constructor(
     fun getNewsOverview() {
         viewModelScope.launch {
             try {
-                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType)
+                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
                 newOverview.postValue(data)
             } catch (e: Exception) {
                 LogReportUtil.upload(e, "getNewsOvervie")

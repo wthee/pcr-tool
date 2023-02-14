@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -117,12 +118,12 @@ class DatabaseDownloadWorker(
             AppDatabaseJP.close()
             //删除旧的wal
             FileUtil.apply {
-                delete(getDatabaseBackupWalPath(2))
-                delete(getDatabaseBackupWalPath(3))
-                delete(getDatabaseBackupWalPath(4))
-                delete(getDatabaseWalPath(2))
-                delete(getDatabaseWalPath(3))
-                delete(getDatabaseWalPath(4))
+                delete(getDatabaseBackupWalPath(RegionType.CN))
+                delete(getDatabaseBackupWalPath(RegionType.TW))
+                delete(getDatabaseBackupWalPath(RegionType.JP))
+                delete(getDatabaseWalPath(RegionType.CN))
+                delete(getDatabaseWalPath(RegionType.TW))
+                delete(getDatabaseWalPath(RegionType.JP))
             }
             //解压
             UnzippedUtil.deCompress(db, true)

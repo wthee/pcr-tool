@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.mediaType
 import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.getRegionCode
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -33,7 +34,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpResultData>> {
         //接口参数
         val json = JsonObject()
-        json.addProperty("region", MainActivity.regionType)
+        json.addProperty("region", MainActivity.regionType.value)
         json.add("ids", ids)
         val body =
             json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
@@ -231,40 +232,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 获取数据更新版本
-     */
-    suspend fun getDbVersion(): ResponseData<DatabaseVersion> {
-        //请求
-        try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty(
-                "regionCode", when (MainActivity.regionType) {
-                    2 -> "cn"
-                    3 -> "tw"
-                    4 -> "jp"
-                    else -> ""
-                }
-            )
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-
-            val response = service.getDbVersion(body)
-            if (isError(response)) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getDbVersion")
-            }
-        }
-        return error()
-    }
-
-    /**
      * 获取数据更新摘要
      */
     suspend fun getDbDiff(): ResponseData<String> {
@@ -272,14 +239,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         try {
             //接口参数
             val json = JsonObject()
-            json.addProperty(
-                "regionCode", when (MainActivity.regionType) {
-                    2 -> "cn"
-                    3 -> "tw"
-                    4 -> "jp"
-                    else -> ""
-                }
-            )
+            json.addProperty("regionCode", getRegionCode())
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
@@ -334,7 +294,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             //接口参数
             val json = JsonObject()
             json.addProperty("id", id)
-            json.addProperty("region", MainActivity.regionType)
+            json.addProperty("region", MainActivity.regionType.value)
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
@@ -409,7 +369,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             //接口参数
             val json = JsonObject()
             json.addProperty("type", type)
-            json.addProperty("region", MainActivity.regionType)
+            json.addProperty("region", MainActivity.regionType.value)
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
             val response = service.getKeywords(body)

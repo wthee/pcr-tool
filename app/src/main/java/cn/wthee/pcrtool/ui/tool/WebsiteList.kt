@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.common.*
@@ -126,7 +127,7 @@ private fun WebsiteGroup(
         } else {
             VerticalGrid(
                 itemWidth = getItemWidth(),
-                contentPadding = Dimen.mediumPadding ,
+                contentPadding = Dimen.mediumPadding,
                 modifier = Modifier.animateContentSize(defaultSpring())
             ) {
                 websiteList.forEach {
@@ -139,11 +140,15 @@ private fun WebsiteGroup(
 
 @Composable
 private fun WebsiteItem(data: WebsiteData) {
-    val regionName = if(LocalInspectionMode.current){
+    val regionName = if (LocalInspectionMode.current) {
         //预览模式
         stringResource(id = R.string.unknown)
-    }else{
-        getRegionName(data.region)
+    } else {
+        if(data.region == 0){
+            stringResource(id = R.string.all)
+        }else{
+            getRegionName(RegionType.getByValue(data.region))
+        }
     }
 
     Column(

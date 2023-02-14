@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 import android.content.Context
 import android.os.Build
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.utils.Constants.COIL_DIR
 import java.io.File
 import java.io.FileOutputStream
@@ -32,11 +33,11 @@ object FileUtil {
     /**
      * 数据库路径
      */
-    fun getDatabasePath(region: Int) =
+    fun getDatabasePath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
-            2 -> Constants.DATABASE_NAME_CN
-            3 -> Constants.DATABASE_NAME_TW
-            else -> Constants.DATABASE_NAME_JP
+            RegionType.CN -> Constants.DATABASE_NAME_CN
+            RegionType.TW -> Constants.DATABASE_NAME_TW
+            RegionType.JP -> Constants.DATABASE_NAME_JP
         }
 
     /**
@@ -53,37 +54,37 @@ object FileUtil {
     /**
      * 数据库备份路径
      */
-    fun getDatabaseBackupPath(region: Int) =
+    fun getDatabaseBackupPath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
-            2 -> Constants.DATABASE_BACKUP_NAME_CN
-            3 -> Constants.DATABASE_BACKUP_NAME_TW
-            else -> Constants.DATABASE_BACKUP_NAME_JP
+            RegionType.CN -> Constants.DATABASE_BACKUP_NAME_CN
+            RegionType.TW -> Constants.DATABASE_BACKUP_NAME_TW
+            RegionType.JP -> Constants.DATABASE_BACKUP_NAME_JP
         }
 
     /**
      * wal 文件路径
      */
-    fun getDatabaseWalPath(region: Int) =
+    fun getDatabaseWalPath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
-            2 -> Constants.DATABASE_WAL_CN
-            3 -> Constants.DATABASE_WAL_TW
-            else -> Constants.DATABASE_WAL_JP
+            RegionType.CN -> Constants.DATABASE_WAL_CN
+            RegionType.TW -> Constants.DATABASE_WAL_TW
+            RegionType.JP -> Constants.DATABASE_WAL_JP
         }
 
     /**
      * 备份 wal 文件路径
      */
-    fun getDatabaseBackupWalPath(region: Int) =
+    fun getDatabaseBackupWalPath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
-            2 -> Constants.DATABASE_WAL_BACKUP_CN
-            3 -> Constants.DATABASE_WAL_BACKUP_TW
-            else -> Constants.DATABASE_WAL_BACKUP_JP
+            RegionType.CN -> Constants.DATABASE_WAL_BACKUP_CN
+            RegionType.TW -> Constants.DATABASE_WAL_BACKUP_TW
+            RegionType.JP -> Constants.DATABASE_WAL_BACKUP_JP
         }
 
     /**
      * 数据库是否需要判断
      */
-    fun needUpdate(type: Int): Boolean {
+    fun needUpdate(type: RegionType): Boolean {
         val dbFile = File(getDatabasePath(type))
         val dbNotExists = !dbFile.exists()
         val dbSizeError = dbFile.length() < 1 * 1024 * 1024

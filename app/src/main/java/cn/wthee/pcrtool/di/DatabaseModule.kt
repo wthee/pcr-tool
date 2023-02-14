@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.di
 
 import cn.wthee.pcrtool.data.db.dao.*
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.*
 import cn.wthee.pcrtool.ui.MainActivity
 import dagger.Module
@@ -60,63 +61,63 @@ class DatabaseModule {
     @Provides
     fun provideGachaDao(): GachaDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getGachaDao()
-            3 -> provideAppDatabaseTW().getGachaDao()
-            else -> provideAppDatabaseJP().getGachaDao()
+            RegionType.CN -> provideAppDatabaseCN().getGachaDao()
+            RegionType.TW -> provideAppDatabaseTW().getGachaDao()
+            RegionType.JP -> provideAppDatabaseJP().getGachaDao()
         }
     }
 
     @Provides
     fun provideUnitDao(): UnitDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getUnitDao()
-            3 -> provideAppDatabaseTW().getUnitDao()
-            else -> provideAppDatabaseJP().getUnitDao()
+            RegionType.CN -> provideAppDatabaseCN().getUnitDao()
+            RegionType.TW -> provideAppDatabaseTW().getUnitDao()
+            RegionType.JP -> provideAppDatabaseJP().getUnitDao()
         }
     }
 
     @Provides
     fun provideClanBattleDao(): ClanBattleDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getClanDao()
-            3 -> provideAppDatabaseTW().getClanDao()
-            else -> provideAppDatabaseJP().getClanDao()
+            RegionType.CN -> provideAppDatabaseCN().getClanDao()
+            RegionType.TW -> provideAppDatabaseTW().getClanDao()
+            RegionType.JP -> provideAppDatabaseJP().getClanDao()
         }
     }
 
     @Provides
     fun provideEquipmentDao(): EquipmentDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getEquipmentDao()
-            3 -> provideAppDatabaseTW().getEquipmentDao()
-            else -> provideAppDatabaseJP().getEquipmentDao()
+            RegionType.CN -> provideAppDatabaseCN().getEquipmentDao()
+            RegionType.TW -> provideAppDatabaseTW().getEquipmentDao()
+            RegionType.JP -> provideAppDatabaseJP().getEquipmentDao()
         }
     }
 
     @Provides
     fun provideExtraEquipmentDao(): ExtraEquipmentDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getExtraEquipmentDao()
-            3 -> provideAppDatabaseTW().getExtraEquipmentDao()
-            else -> provideAppDatabaseJP().getExtraEquipmentDao()
+            RegionType.CN -> provideAppDatabaseCN().getExtraEquipmentDao()
+            RegionType.TW -> provideAppDatabaseTW().getExtraEquipmentDao()
+            RegionType.JP -> provideAppDatabaseJP().getExtraEquipmentDao()
         }
     }
 
     @Provides
     fun provideEventDao(): EventDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getEventDao()
-            3 -> provideAppDatabaseTW().getEventDao()
-            else -> provideAppDatabaseJP().getEventDao()
+            RegionType.CN -> provideAppDatabaseCN().getEventDao()
+            RegionType.TW -> provideAppDatabaseTW().getEventDao()
+            RegionType.JP -> provideAppDatabaseJP().getEventDao()
         }
     }
 
     @Provides
     fun provideSkillDao(): SkillDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getSkillDao()
-            3 -> provideAppDatabaseTW().getSkillDao()
-            else -> provideAppDatabaseJP().getSkillDao()
+            RegionType.CN -> provideAppDatabaseCN().getSkillDao()
+            RegionType.TW -> provideAppDatabaseTW().getSkillDao()
+            RegionType.JP -> provideAppDatabaseJP().getSkillDao()
         }
     }
 
@@ -148,18 +149,18 @@ class DatabaseModule {
     @Provides
     fun provideQuestDao(): QuestDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getQuestDao()
-            3 -> provideAppDatabaseTW().getQuestDao()
-            else -> provideAppDatabaseJP().getQuestDao()
+            RegionType.CN -> provideAppDatabaseCN().getQuestDao()
+            RegionType.TW -> provideAppDatabaseTW().getQuestDao()
+            RegionType.JP -> provideAppDatabaseJP().getQuestDao()
         }
     }
 
     @Provides
     fun provideEnemyDao(): EnemyDao {
         return when (getType()) {
-            2 -> provideAppDatabaseCN().getEnemyDao()
-            3 -> provideAppDatabaseTW().getEnemyDao()
-            else -> provideAppDatabaseJP().getEnemyDao()
+            RegionType.CN -> provideAppDatabaseCN().getEnemyDao()
+            RegionType.TW -> provideAppDatabaseTW().getEnemyDao()
+            RegionType.JP -> provideAppDatabaseJP().getEnemyDao()
         }
     }
 }

@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
 /**
@@ -13,11 +12,7 @@ class ImageRequestHelper {
     var type = "cn"
 
     init {
-        type = when (MainActivity.regionType) {
-            2 -> "cn"
-            3 -> "tw"
-            else -> "jp"
-        }
+        type = getRegionCode()
     }
 
     companion object {
