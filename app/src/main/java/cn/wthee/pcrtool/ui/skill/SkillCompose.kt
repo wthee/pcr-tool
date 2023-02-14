@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -163,60 +164,63 @@ fun SkillItem(
 
     //技能类型名
     var isNormalSkill = true
-    val type = when (unitType) {
-        UnitType.CHARACTER, UnitType.CHARACTER_SUMMON -> {
-            when (skillDetail.skillId % 1000) {
-                501 -> {
-                    isNormalSkill = false
-                    stringResource(id = R.string.ex_skill)
-                }
-                511 -> {
-                    isNormalSkill = false
-                    stringResource(id = R.string.ex_skill) + "+"
-                }
-                100 -> {
-                    isNormalSkill = false
-                    "SP" + stringResource(id = R.string.union_burst)
-                }
-                //sp 技能
-                101, 111, 102, 112, 103, 113 -> {
-                    "SP" + stringResource(
-                        id = R.string.skill_index,
-                        skillDetail.skillId % 10
-                    ) + if (skillDetail.skillId % 100 / 10 == 1) {
-                        "+"
-                    } else {
-                        ""
-                    }
-                }
-                1, 21 -> {
-                    isNormalSkill = false
-                    stringResource(id = R.string.union_burst)
-                }
-                11 -> {
-                    isNormalSkill = false
-                    stringResource(id = R.string.union_burst) + "+"
-                }
-                else -> {
-                    val skillIndex = skillDetail.skillId % 10 - 1
-                    stringResource(
-                        id = R.string.skill_index,
-                        skillIndex
-                    ) + if (skillDetail.skillId % 1000 / 10 == 1) {
-                        "+"
-                    } else {
-                        ""
-                    }
-                }
-            }
+    val type = when (skillDetail.skillIndexType) {
+        SkillIndexType.UB -> {
+            isNormalSkill = false
+            stringResource(id = R.string.union_burst)
         }
-        UnitType.ENEMY, UnitType.ENEMY_SUMMON -> {
-            if (skillDetail.enemySkillIndex == 0) {
-                stringResource(id = R.string.union_burst)
-            } else {
-                stringResource(id = R.string.skill_index, skillDetail.enemySkillIndex)
-            }
+        SkillIndexType.UB_PLUS -> {
+            isNormalSkill = false
+            stringResource(id = R.string.union_burst) + "+"
         }
+        SkillIndexType.MAIN_SKILL_1,
+        SkillIndexType.MAIN_SKILL_2,
+        SkillIndexType.MAIN_SKILL_3,
+        SkillIndexType.MAIN_SKILL_4,
+        SkillIndexType.MAIN_SKILL_5,
+        SkillIndexType.MAIN_SKILL_6,
+        SkillIndexType.MAIN_SKILL_7,
+        SkillIndexType.MAIN_SKILL_8,
+        SkillIndexType.MAIN_SKILL_9,
+        SkillIndexType.MAIN_SKILL_10 -> {
+            stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index)
+        }
+        SkillIndexType.MAIN_SKILL_1_PLUS,
+        SkillIndexType.MAIN_SKILL_2_PLUS -> {
+            stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
+        }
+        SkillIndexType.EX_1,
+        SkillIndexType.EX_2,
+        SkillIndexType.EX_3,
+        SkillIndexType.EX_4,
+        SkillIndexType.EX_5 -> {
+            isNormalSkill = false
+            stringResource(id = R.string.ex_skill)
+        }
+        SkillIndexType.EX_1_PLUS,
+        SkillIndexType.EX_2_PLUS,
+        SkillIndexType.EX_3_PLUS,
+        SkillIndexType.EX_4_PLUS,
+        SkillIndexType.EX_5_PLUS -> {
+            isNormalSkill = false
+            stringResource(id = R.string.ex_skill) + "+"
+        }
+        SkillIndexType.SP_UB -> {
+            isNormalSkill = false
+            "SP" + stringResource(id = R.string.union_burst)
+        }
+        SkillIndexType.SP_SKILL_1,
+        SkillIndexType.SP_SKILL_2,
+        SkillIndexType.SP_SKILL_3,
+        SkillIndexType.SP_SKILL_4,
+        SkillIndexType.SP_SKILL_5 -> {
+            "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index)
+        }
+        SkillIndexType.SP_SKILL_1_PLUS,
+        SkillIndexType.SP_SKILL_2_PLUS -> {
+            "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
+        }
+        else -> ""
     }
     val color = getSkillColor(type)
     val name =
