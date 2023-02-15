@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +15,7 @@ import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.simpleDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -69,7 +69,7 @@ class MockGachaViewModel @Inject constructor(
             )
             emit(units)
         } catch (e: Exception) {
-            Log.e("DEBUG", e.message ?: "")
+            LogReportUtil.upload(e, "getGachaUnits")
         }
     }
 
@@ -87,7 +87,7 @@ class MockGachaViewModel @Inject constructor(
             val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
             val data = MockGachaData(
                 gachaId,
-                MainActivity.regionType,
+                MainActivity.regionType.value,
                 mockGachaType.type,
                 sorted.getIdsStr(),
                 nowTime,
@@ -150,7 +150,7 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getHistory() {
         viewModelScope.launch {
-            val data = mockGachaRepository.getHistory(MainActivity.regionType)
+            val data = mockGachaRepository.getHistory(MainActivity.regionType.value)
             historyList.postValue(data)
         }
     }
@@ -165,7 +165,7 @@ class MockGachaViewModel @Inject constructor(
         //处理不同顺序相同角色
         val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
         return mockGachaRepository.getGachaByPickUpIds(
-            MainActivity.regionType,
+            MainActivity.regionType.value,
             mockGachaType.type,
             sorted.getIdsStr()
         )
@@ -191,8 +191,8 @@ class MockGachaViewModel @Inject constructor(
                 mockGachaRepository.deleteGachaResultByGachaId(gachaId)
                 //刷新记录
                 getResult(gachaId)
-            } catch (_: Exception) {
-
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, "deleteGachaResultByGachaId#gachaId:$gachaId")
             }
         }
     }
@@ -207,8 +207,8 @@ class MockGachaViewModel @Inject constructor(
                 mockGachaRepository.deleteGachaResultByGachaId(gachaId)
                 //刷新记录
                 getHistory()
-            } catch (_: Exception) {
-
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, "deleteGachaByGachaId#gachaId:$gachaId")
             }
         }
     }

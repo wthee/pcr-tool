@@ -1,12 +1,24 @@
 package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,10 +31,25 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.HeaderText
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.IconTextButton
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.tool.SettingCommonItem
+import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
@@ -75,6 +102,7 @@ fun TopBarCompose(
                         strokeWidth = 3.dp
                     )
                 }
+
                 -2 -> {
                     //异常
                     IconCompose(
@@ -86,18 +114,17 @@ fun TopBarCompose(
                         isExpanded = !isExpanded
                     }
                 }
+
                 else -> {
                     //提示
                     val updateColor =
                         when (updateApp.id) {
                             0 -> colorGreen
-                            -2 -> colorRed
                             else -> MaterialTheme.colorScheme.onSurface
                         }
                     val icon =
                         when (updateApp.id) {
                             0 -> MainIconType.APP_UPDATE
-                            -2 -> MainIconType.REQUEST_ERROR
                             else -> MainIconType.NOTICE
                         }
 
@@ -158,15 +185,6 @@ private fun UpdateContent(
     appNotice: AppNotice
 ) {
     val context = LocalContext.current
-    val mark0 = arrayListOf<ColorTextIndex>()
-    appNotice.message.forEachIndexed { index, c ->
-        if (c == '[') {
-            mark0.add(ColorTextIndex(start = index))
-        }
-        if (c == ']') {
-            mark0[mark0.size - 1].end = index
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -203,31 +221,7 @@ private fun UpdateContent(
         )
 
         //内容
-        Text(
-            text = buildAnnotatedString {
-                appNotice.message.forEachIndexed { index, char ->
-                    //替换括号及括号内字体颜色
-                    mark0.forEach {
-                        if (index >= it.start && index <= it.end) {
-                            withStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            ) {
-                                append(char)
-                            }
-                            return@forEachIndexed
-                        }
-                    }
-                    //添加非括号标记的参数
-                    append(char)
-                }
-            },
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        ColorText(appNotice.message)
 
         //前往更新
         if (appNotice.id == 0) {
@@ -250,6 +244,48 @@ private fun UpdateContent(
 }
 
 /**
+ * 优化字体风格
+ */
+@Composable
+private fun ColorText(message: String) {
+    val mark0 = arrayListOf<ColorTextIndex>()
+    message.forEachIndexed { index, c ->
+        if (c == '[') {
+            mark0.add(ColorTextIndex(start = index))
+        }
+        if (c == ']') {
+            mark0[mark0.size - 1].end = index
+        }
+    }
+
+    Text(
+        text = buildAnnotatedString {
+            message.forEachIndexed { index, char ->
+                //替换括号及括号内字体颜色
+                mark0.forEach {
+                    if (index >= it.start && index <= it.end) {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append(char)
+                        }
+                        return@forEachIndexed
+                    }
+                }
+                //添加非括号标记的参数
+                append(char)
+            }
+        },
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
+        style = MaterialTheme.typography.bodyLarge,
+    )
+}
+
+/**
  * 异常内容
  */
 @Composable
@@ -259,27 +295,32 @@ private fun ErrorContent() {
     Column(
         modifier = Modifier
             .padding(Dimen.mediumPadding)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainText(
             text = stringResource(id = R.string.title_api_request_error),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         //内容
-        MainContentText(
-            text = stringResource(id = R.string.content_api_request_error),
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(vertical = Dimen.mediumPadding)
-        )
+        ColorText(stringResource(id = R.string.content_api_request_error))
+
+        //网络异常设置
+        SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
 
         //加群反馈
-        IconTextButton(
-            modifier = Modifier
-                .align(Alignment.End),
-            icon = MainIconType.SUPPORT,
-            text = stringResource(id = R.string.qq_group)
+        SettingCommonItem(
+            iconType = MainIconType.SUPPORT,
+            title = stringResource(id = R.string.qq_group),
+            summary = stringResource(id = R.string.qq_group_summary),
+            onClick = {
+                joinQQGroup(context)
+            }
         ) {
-            joinQQGroup(context)
+            Subtitle2(
+                text = stringResource(id = R.string.to_join_qq_group),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

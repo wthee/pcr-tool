@@ -73,13 +73,13 @@ fun ExtraEquipList(
         keyboardController?.hide()
     }
 
-    val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
+    val colorNum by viewModel.getExtraEquipColorNum().collectAsState(initial = 0)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EXTRA_EQUIP, "")) ?: arrayListOf()
 
-        val equips by viewModel.getEquips(filterValue).collectAsState(initial = null)
+        val equips by viewModel.getExtraEquips(filterValue).collectAsState(initial = null)
         if (equips != null) {
             //分组
             val equipGroupList = arrayListOf<ExtraEquipGroupData>()
@@ -194,9 +194,9 @@ private fun ExtraEquipGroup(
 ) {
     //分组标题
     CommonGroupTitle(
-        iconData = ImageResourceHelper.getInstance()
+        iconData = ImageRequestHelper.getInstance()
             .getUrl(
-                ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                ImageRequestHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
                 equipGroupData.category
             ),
         iconSize = Dimen.smallIconSize,
@@ -254,8 +254,8 @@ private fun ExtraEquipItem(
         mutableStateOf(
             {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equip.equipmentId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equip.equipmentId)
                 )
             }
         )
@@ -332,7 +332,7 @@ private fun FilterExtraEquipSheet(
     }
     filter.rarity = rarityIndex.value
     //装备类型
-    val equipCategoryList by extraEquipmentViewModel.getEquipCategoryList()
+    val equipCategoryList by extraEquipmentViewModel.getExtraEquipCategoryList()
         .collectAsState(initial = arrayListOf())
     val categoryIndex = remember {
         mutableStateOf(filter.category)

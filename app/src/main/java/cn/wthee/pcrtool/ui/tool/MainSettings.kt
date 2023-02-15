@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.MyApplication.Companion.useIpOnFlag
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
@@ -101,6 +102,10 @@ fun MainSettings() {
         //- 动态色彩，仅 Android 12 及以上可用
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
             SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
+        }
+        //- 使用ip访问
+        if (useIpOnFlag) {
+            SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
         }
         //- 清除图片缓存
         SettingCommonItem(
@@ -267,6 +272,7 @@ fun SettingSwitchCompose(
             summaryOff = if (showSummary) stringResource(R.string.vibrate_off) else ""
             spKey = Constants.SP_VIBRATE_STATE
         }
+
         SettingSwitchType.ANIMATION -> {
             title = stringResource(id = R.string.animation)
             iconType = MainIconType.ANIMATION
@@ -274,6 +280,7 @@ fun SettingSwitchCompose(
             summaryOff = if (showSummary) stringResource(R.string.animation_off) else ""
             spKey = Constants.SP_ANIM_STATE
         }
+
         SettingSwitchType.DYNAMIC_COLOR -> {
             title = stringResource(id = R.string.dynamic_color)
             iconType = MainIconType.COLOR
@@ -281,8 +288,16 @@ fun SettingSwitchCompose(
             summaryOff = if (showSummary) stringResource(R.string.color_off) else ""
             spKey = Constants.SP_COLOR_STATE
         }
+
+        SettingSwitchType.USE_IP -> {
+            title = stringResource(id = R.string.use_ip)
+            iconType = MainIconType.REQUEST_ERROR
+            summaryOn = if (showSummary) stringResource(R.string.use_ip_tip_on) else ""
+            summaryOff = if (showSummary) stringResource(R.string.use_ip_tip_off) else ""
+            spKey = Constants.SP_USE_IP
+        }
     }
-    val spValue = sp.getBoolean(spKey, true)
+    val spValue = sp.getBoolean(spKey, spKey != Constants.SP_USE_IP)
     val checkedState = remember {
         mutableStateOf(spValue)
     }
@@ -293,12 +308,18 @@ fun SettingSwitchCompose(
             SettingSwitchType.VIBRATE -> {
                 vibrateOnFlag = checkedState.value
             }
+
             SettingSwitchType.ANIMATION -> {
                 animOnFlag = checkedState.value
 
             }
+
             SettingSwitchType.DYNAMIC_COLOR -> {
                 dynamicColorOnFlag = checkedState.value
+            }
+
+            SettingSwitchType.USE_IP -> {
+                useIpOnFlag = checkedState.value
             }
         }
     }
@@ -306,31 +327,39 @@ fun SettingSwitchCompose(
     //摘要
     val summary = if (checkedState.value) summaryOn else summaryOff
 
+    val onChange = {
+        checkedState.value = !checkedState.value
+        sp.edit {
+            putBoolean(spKey, checkedState.value)
+        }
+
+        //动态色彩变更后，重启应用
+        if (type == SettingSwitchType.DYNAMIC_COLOR) {
+            MainActivity.handler.sendEmptyMessage(1)
+        }
+        //ip变更，结束应用
+        if (type == SettingSwitchType.USE_IP) {
+            Thread.sleep(1500)
+            MainActivity.handler.sendEmptyMessage(404)
+        }
+    }
 
     SettingCommonItem(
         iconType = iconType,
         title = title,
         summary = summary,
         onClick = {
-            VibrateUtil(context).single()
-            checkedState.value = !checkedState.value
-            sp.edit {
-                putBoolean(spKey, checkedState.value)
-            }
-        }) {
+            onChange()
+        }
+    ) {
         Switch(
             checked = checkedState.value,
             thumbContent = {
                 SwitchThumbIcon(checkedState.value)
             },
             onCheckedChange = {
-                checkedState.value = it
-                sp.edit().putBoolean(spKey, it).apply()
                 VibrateUtil(context).single()
-                //动态色彩变更后，重启应用
-                if (type == SettingSwitchType.DYNAMIC_COLOR) {
-                    MainActivity.handler.sendEmptyMessage(1)
-                }
+                onChange()
             }
         )
     }

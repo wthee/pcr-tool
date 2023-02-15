@@ -1,14 +1,23 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,8 +28,25 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.common.DateRangePickerCompose
+import cn.wthee.pcrtool.ui.common.EventTitle
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.GridIconListCompose
+import cn.wthee.pcrtool.ui.common.IconTextButton
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainTitleText
+import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
@@ -69,33 +95,30 @@ fun GachaList(
                         toMockGacha = toMockGacha
                     )
                 }
-                item {
+                items(2) {
                     CommonSpacer()
                 }
             }
         }
 
-        Row(
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
+        //回到顶部
+        FabCompose(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(
                     end = Dimen.fabMarginEnd,
                     bottom = Dimen.fabMargin
-                )
+                ),
+            iconType = MainIconType.GACHA,
+            text = stringResource(id = R.string.tool_gacha)
         ) {
-            //日期选择
-            DateRangePickerCompose(dateRange = dateRange)
-
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.GACHA,
-                text = stringResource(id = R.string.tool_gacha)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
-                    }
+            coroutineScope.launch {
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (_: Exception) {
                 }
             }
         }

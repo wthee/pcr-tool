@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.ui.common.CircularProgressCompose
 import cn.wthee.pcrtool.ui.common.FabCompose
@@ -163,9 +164,9 @@ private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hi
     val typeName = getRegionName(region)
     val localVersion = sp.getString(
         when (region) {
-            2 -> Constants.SP_DATABASE_VERSION_CN
-            3 -> Constants.SP_DATABASE_VERSION_TW
-            else -> Constants.SP_DATABASE_VERSION_JP
+            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
+            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
+            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
         },
         ""
     )

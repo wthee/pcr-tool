@@ -26,7 +26,7 @@ class GachaViewModel @Inject constructor(
     fun getGachaHistory(dateRange: DateRange) = flow {
         try {
             var list = gachaRepository.getGachaHistory(Int.MAX_VALUE)
-            if (dateRange.needFilter()) {
+            if (dateRange.hasFilter()) {
                 list = list.filter {
                     dateRange.predicate(it.startTime)
                 }
@@ -44,8 +44,8 @@ class GachaViewModel @Inject constructor(
     fun getGachaFesUnitList() = flow {
         try {
             emit(gachaRepository.getFesUnitIds().unitIds.intArrayList)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getGachaFesUnitList")
         }
     }
 }

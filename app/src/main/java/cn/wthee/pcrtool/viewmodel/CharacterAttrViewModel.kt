@@ -11,10 +11,9 @@ import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -38,24 +37,26 @@ class CharacterAttrViewModel @Inject constructor(
      * @param unitId 角色编号
      * @param property 角色属性
      */
-    fun getCharacterInfo(unitId: Int, property: CharacterProperty?) =
-        flow {
-            try {
-                if (property != null && property.isInit()) {
-                    emit(
-                        getAttrs(
-                            unitId,
-                            property.level,
-                            property.rank,
-                            property.rarity,
-                            property.uniqueEquipmentLevel
-                        )
+    fun getCharacterInfo(unitId: Int, property: CharacterProperty?) = flow {
+        try {
+            if (property != null && property.isInit()) {
+                emit(
+                    getAttrs(
+                        unitId,
+                        property.level,
+                        property.rank,
+                        property.rarity,
+                        property.uniqueEquipmentLevel
                     )
-                }
-            } catch (_: Exception) {
-
+                )
             }
+        } catch (e: Exception) {
+            LogReportUtil.upload(
+                e,
+                "getCharacterInfo#unitId:$unitId,property:${property ?: ""}"
+            )
         }
+    }
 
     /**
      * 获取角色属性信息
@@ -113,9 +114,7 @@ class CharacterAttrViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                if (e !is CancellationException) {
-                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
-                }
+                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
             }
 
             //专武
@@ -129,9 +128,7 @@ class CharacterAttrViewModel @Inject constructor(
                     allData.uniqueEquip = uniqueEquip
                 }
             } catch (e: Exception) {
-                if (e !is CancellationException) {
-                    LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
-                }
+                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
             }
 
             //故事剧情
@@ -155,16 +152,14 @@ class CharacterAttrViewModel @Inject constructor(
             allData.exSkillAttr = skillAttr
             allData.sumAttr = info
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(
-                    e, Constants.EXCEPTION_LOAD_ATTR +
-                            "uid:$unitId," +
-                            "rank:${rank}," +
-                            "rarity:${rarity}" +
-                            "lv:${level}" +
-                            "ueLv:${uniqueEquipLevel}"
-                )
-            }
+            LogReportUtil.upload(
+                e, Constants.EXCEPTION_LOAD_ATTR +
+                        "getAttrs#uid:$unitId," +
+                        "rank:${rank}," +
+                        "rarity:${rarity}" +
+                        "lv:${level}" +
+                        "ueLv:${uniqueEquipLevel}"
+            )
         }
         return allData
     }
@@ -182,9 +177,7 @@ class CharacterAttrViewModel @Inject constructor(
                 storyAttr.add(it.getAttr())
             }
         } catch (e: Exception) {
-            if (e !is CancellationException) {
-                LogReportUtil.upload(e, "getStoryAttrs:$unitId")
-            }
+            LogReportUtil.upload(e, "getStoryAttrs:$unitId")
         }
         return storyAttr
     }
@@ -198,8 +191,8 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
             emit(storyInfo)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getStoryAttrDetail:$unitId")
         }
     }
 
@@ -267,8 +260,8 @@ class CharacterAttrViewModel @Inject constructor(
     fun getCoefficient() = flow {
         try {
             emit(unitRepository.getCoefficient())
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getCoefficient")
         }
     }
 

@@ -40,7 +40,7 @@ class LeaderViewModel @Inject constructor(
         if (filter.onlyLast) {
             val today = getToday()
             data = leaderData?.data?.filter {
-                it.updateTime != null && today.days(it.updateTime, showDay = false).toInt() <= day
+                it.updateTime == null || today.days(it.updateTime, showDay = false).toInt() <= day
             }
         }
 

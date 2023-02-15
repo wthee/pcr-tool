@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,8 +23,8 @@ class CommonApiViewModel @Inject constructor(
         try {
             val data = apiRepository.getKeywords(keywordType.type).data ?: arrayListOf()
             emit(data)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getKeywords#keywordType:$keywordType")
         }
     }
 }

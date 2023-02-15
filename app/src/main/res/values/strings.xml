@@ -45,7 +45,7 @@
     <string name="spine_preview">模型</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
-    <string name="tp_limit_level_action_desc">技能等级 > 260，TP数值不会继续增加</string>
+    <string name="tp_limit_level_action_desc">等级 > 260，TP数值不会继续增加</string>
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
@@ -59,6 +59,10 @@
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
     <string name="dynamic_color">动态色彩</string>
+    <string name="content_api_request_error">请切换网络后重试~\n</string>
+    <string name="use_ip">网络调整</string>
+    <string name="use_ip_tip_on">已调整访问地址。设置变更后将自动关闭应用</string>
+    <string name="use_ip_tip_off">若一直提示网络请求异常，可尝试开启。设置变更后将自动关闭应用</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
     <string name="color_on">根据系统壁纸，调整应用主题颜色</string>
@@ -202,9 +206,10 @@
     <string name="search_api_desc">需要网络</string>
     <string name="tool_all_quest">主线地图</string>
     <string name="range_date">日期范围</string>
-    <string name="start_date">开始</string>
-    <string name="end_date">结束</string>
     <string name="pick_date">选择日期</string>
+    <string name="pick_start_date">选择开始日期</string>
+    <string name="pick_end_date">选择结束日期</string>
+    <string name="picked_date">已选择</string>
 
 
     <!--竞技场查询-->
@@ -227,6 +232,7 @@
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
     <string name="close">关闭</string>
+    <string name="reset">重置</string>
     <string name="add_to_calendar">添加至系统日历</string>
     <string name="copy_event">复制活动信息</string>
     <string name="to_add_tool">添加功能</string>
@@ -286,18 +292,17 @@
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
-    <string name="tip_save_image">将图片保存到本地</string>
+    <string name="tip_save_image">将图片保存至系统相册中</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
     <string name="update_database">数据更新</string>
-    <string name="pic_exist">图片已存在</string>
-    <string name="save_success">保存成功%s</string>
+    <string name="pic_exist">图片已存在\n%s</string>
+    <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
     <string name="db_diff">%s：%s\n最近更新：%s</string>
     <string name="title_api_request_error">网络请求异常</string>
-    <string name="content_api_request_error">部分功能无法正常使用，请切换网络后重试~</string>
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
     <string name="title_dialog_clean_cache">清除缓存</string>
@@ -368,6 +373,7 @@
     <string name="color_red">红</string>
     <string name="color_green">绿</string>
     <string name="color_orange">橙</string>
+    <string name="color_cyan">青</string>
 
     <!--日历操作相关-->
     <string name="calendar_update_success">已更新%d项日程~</string>
@@ -459,6 +465,7 @@
 
     <!--技能目标类型相关-->
     <string name="skill_target_2_8">随机的</string>
+    <string name="skill_target_3">最近的</string>
     <string name="skill_target_4">最远的</string>
     <string name="skill_target_5_25">HP最低的</string>
     <string name="skill_target_6_26">HP最高的</string>
@@ -485,7 +492,7 @@
     <string name="skill_target_38">攻击力最高的</string>
     <string name="skill_target_39">攻击力最低的</string>
     <string name="skill_target_42">多目标</string>
-    <string name="skill_target_43">物理攻击力最高（自身除外）的</string>
+    <string name="skill_target_43">物理攻击力最高(自身除外)的</string>
 
     <!--技能目标分配-->
     <string name="skill_target_assignment_0">自身</string>
@@ -508,7 +515,7 @@
     <string name="skill_hp_max">HP最大值</string>
     <string name="skill_increase">提升</string>
     <string name="skill_reduce">减少</string>
-    <string name="skill_fixed">（固定数值，无法被其他技能效果改变）</string>
+    <string name="skill_fixed">(固定数值，无法被其他技能效果改变)</string>
     <string name="skill_physical_critical_damage">物理暴击伤害</string>
     <string name="skill_magic_critical_damage">魔法暴击伤害</string>
     <string name="skill_critical_damage_take">受到的暴击伤害</string>
@@ -516,7 +523,8 @@
     <string name="skill_magic_damage_take">受到的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
-    <string name="skill_target_count">（%d 名）</string>
+    <string name="skill_target_count">(%d 名)</string>
+    <string name="skill_target_all">(全体)</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
     <string name="skill_physical">物理</string>
@@ -527,7 +535,7 @@
     <string name="skill_magic_def">魔法防御力</string>
     <string name="skill_must_hit_physical">必定命中的物理</string>
     <string name="skill_must_hit_magic">必定命中的魔法</string>
-    <string name="skill_adaptive_lower_defense">（适应物理/魔法防御中较低的防御）</string>
+    <string name="skill_adaptive_lower_defense">(适应物理/魔法防御中较低的防御)</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
     <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s</string>
@@ -713,7 +721,7 @@
     <string name="skill_ailment_field">(范围)</string>
 
     <!--持续伤害-->
-    <string name="skill_dot_0">拘留（造成伤害）</string>
+    <string name="skill_dot_0">拘留(造成伤害)</string>
     <string name="skill_dot_1_7">中毒</string>
     <string name="skill_dot_2">烧伤</string>
     <string name="skill_dot_3_8">诅咒</string>
@@ -732,8 +740,8 @@
     <string name="attr_magic_critical">魔法暴击</string>
     <string name="attr_physical_penetrate">物理穿透</string>
     <string name="attr_magic_penetrate">魔法穿透</string>
-    <string name="attr_accuracy">命 中</string>
-    <string name="attr_dodge">回 避</string>
+    <string name="attr_accuracy">命中</string>
+    <string name="attr_dodge">回避</string>
     <string name="attr_wave_hp_recovery">HP回复</string>
     <string name="attr_hp_recovery_rate">回复上升</string>
     <string name="attr_wave_energy_recovery">TP回复</string>

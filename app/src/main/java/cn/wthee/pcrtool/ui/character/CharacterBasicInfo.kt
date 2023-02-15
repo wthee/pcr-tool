@@ -236,7 +236,7 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
             val urls = arrayListOf<String>()
             roomComments.forEach { roomComment ->
                 urls.add(
-                    ImageResourceHelper.getInstance().getMaxIconUrl(roomComment.unitId)
+                    ImageRequestHelper.getInstance().getMaxIconUrl(roomComment.unitId)
                 )
             }
             IconHorizontalPagerIndicator(pagerState, urls)

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.db.repository
 
+import android.util.Log
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.Constants
@@ -31,7 +32,6 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {
-        //TODO 校验逻辑是否正确
         if (lv > Constants.TP_LIMIT_LEVEL) {
             // 获取专武奖励属性
             val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
@@ -45,6 +45,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level)
             // 奖励属性不为空，计算总属性：初始属性 + 奖励属性
             if (bonusAttr != null && equipmentMaxData != null) {
+                equipmentMaxData.isTpLimitAction = true
                 equipmentMaxData.attr = equipmentMaxData.attr.add(bonusAttr)
             }
 
@@ -53,6 +54,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             equipmentDao.getUniqueEquipInfosV2(unitId, lv)
         }
     } catch (e: Exception) {
+        Log.e("DEBUG", e.message.toString())
         equipmentDao.getUniqueEquipInfos(unitId, lv)
     }
 
@@ -68,6 +70,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getMaxArea() = equipmentDao.getMaxArea()
 
-    suspend fun getEquipColorNum() = equipmentDao.getEquipColorNum()
+    suspend fun getEquipColorNum() = try {
+        equipmentDao.getEquipColorNum()
+    } catch (_: Exception) {
+        0
+    }
 
 }

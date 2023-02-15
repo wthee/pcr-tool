@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
+import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getString
@@ -20,13 +21,18 @@ data class SkillDetail(
     val level: Int = 1,
     val atk: Int = 100,
     val bossUbCooltime: Double = 0.0,
-    var enemySkillIndex: Int = 0
+    var enemySkillIndex: Int = 0,
 ) {
     /**
      * 角色技能效果
      * 在 SkillViewModel#getCharacterSkills 获取并中设置
      */
     var actions = listOf<SkillActionDetail>()
+
+    /**
+     * 角色技能下标
+     */
+    var skillIndexType: SkillIndexType = SkillIndexType.UNKNOWN
 
     /**
      * 获取技能效果信息

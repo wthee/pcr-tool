@@ -18,12 +18,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_TEASER
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_TEASER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -41,7 +42,11 @@ fun StoryEventList(
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    val events = eventViewModel.getStoryEventHistory().collectAsState(initial = arrayListOf()).value
+    val dateRange = remember {
+        mutableStateOf(DateRange())
+    }
+    val events = eventViewModel.getStoryEventHistory(dateRange.value)
+        .collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -64,18 +69,25 @@ fun StoryEventList(
                         toAllPics = toAllPics
                     )
                 }
-                item {
+                items(2) {
                     CommonSpacer()
                 }
             }
         }
+
+        //日期选择
+        DateRangePickerCompose(dateRange = dateRange)
+
         //回到顶部
         FabCompose(
-            iconType = MainIconType.EVENT,
-            text = stringResource(id = R.string.tool_event),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                ),
+            iconType = MainIconType.EVENT,
+            text = stringResource(id = R.string.tool_event),
         ) {
             coroutineScope.launch {
                 try {
@@ -179,7 +191,7 @@ fun StoryEventItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
-                if (inProgress || isSub || !hasTeaser(event.eventId)) {
+                if (inProgress || isSub || !hasTeaser(event.eventId) || previewEvent) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -187,14 +199,14 @@ fun StoryEventItem(
                         contentAlignment = Alignment.TopCenter
                     ) {
                         SubImageCompose(
-                            data = ImageResourceHelper.getInstance()
+                            data = ImageRequestHelper.getInstance()
                                 .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
                             contentScale = ContentScale.Crop
                         )
                     }
                 } else {
                     ImageCompose(
-                        data = ImageResourceHelper.getInstance()
+                        data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
                         ratio = RATIO_TEASER,
                     )
@@ -214,9 +226,9 @@ fun StoryEventItem(
                         //sp boss 图标，处理id 311403 -> 311400
                         if (!isSub && event.bossUnitId != 0) {
                             IconCompose(
-                                data = ImageResourceHelper.getInstance()
+                                data = ImageRequestHelper.getInstance()
                                     .getUrl(
-                                        ImageResourceHelper.ICON_UNIT,
+                                        ImageRequestHelper.ICON_UNIT,
                                         event.bossUnitId / 10 * 10
                                     ),
                                 modifier = Modifier.padding(start = Dimen.mediumPadding)
@@ -229,7 +241,7 @@ fun StoryEventItem(
                         event.getUnitIdList().forEach { itemId ->
                             val unitId = itemId % 10000 * 100 + 1
                             IconCompose(
-                                data = ImageResourceHelper.getInstance().getMaxIconUrl(unitId),
+                                data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
                                 modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                             ) {
                                 toCharacterDetail(unitId)
@@ -276,10 +288,9 @@ fun StoryEventItem(
  * 设置是否有teaser
  */
 private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
-    2 -> eventId >= 10002
-    3 -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
-    4 -> eventId >= 10052 && eventId != 10055
-    else -> false
+    RegionType.CN -> eventId >= 10002
+    RegionType.TW -> eventId >= 10052 || eventId == 10038 || eventId == 10040 || eventId == 10048 || eventId == 10050
+    RegionType.JP -> eventId >= 10052 && eventId != 10055
 } && eventId / 10000 == 1
 
 @CombinedPreviews

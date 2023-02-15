@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
@@ -253,7 +254,7 @@ private fun ChangeDbCompose(
             ) {
                 //版本
                 for (i in 0..2) {
-                    val mModifier = if (region == i + 2) {
+                    val mModifier = if (region == RegionType.getByValue(i + 2)) {
                         Modifier.fillMaxWidth()
                     } else {
                         Modifier
@@ -263,12 +264,12 @@ private fun ChangeDbCompose(
                                 navViewModel.openChangeDataDialog.postValue(false)
                                 navViewModel.fabCloseClick.postValue(true)
                                 coroutineScope.launch {
-                                    DatabaseUpdater.changeDatabase(i + 2)
+                                    DatabaseUpdater.changeDatabase(RegionType.getByValue(i + 2))
                                 }
                             }
                     }
                     SelectText(
-                        selected = region == i + 2,
+                        selected = region.value == i + 2,
                         text = menuTexts[i],
                         textStyle = MaterialTheme.typography.titleLarge,
                         modifier = mModifier.padding(Dimen.mediumPadding)

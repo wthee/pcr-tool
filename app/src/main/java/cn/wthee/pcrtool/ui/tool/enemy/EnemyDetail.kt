@@ -87,9 +87,9 @@ fun EnemyAllInfo(
         //图标，仅剧情活动boss显示
         if (enemyData.enemyId.toString()[0] == '6') {
             IconCompose(
-                data = ImageResourceHelper.getInstance()
+                data = ImageRequestHelper.getInstance()
                     .getUrl(
-                        ImageResourceHelper.ICON_UNIT,
+                        ImageRequestHelper.ICON_UNIT,
                         enemyData.prefabId
                     ),
                 modifier = Modifier

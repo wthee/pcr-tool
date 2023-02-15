@@ -48,7 +48,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -607,12 +607,12 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id6)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id6)) {
                 if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id3)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id3)) {
                 if (id3 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id3)
                 }
@@ -627,7 +627,7 @@ private fun CharacterEquip(
                 .padding(Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id5)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id5)) {
                 if (id5 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id5)
                 }
@@ -679,7 +679,7 @@ private fun CharacterEquip(
                     modifier = Modifier.padding(end = Dimen.mediumPadding))
             }
             val id2 = equips[3].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id2)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id2)) {
                 if (id2 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id2)
                 }
@@ -694,13 +694,13 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id4)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id4)) {
                 if (id4 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id4)
                 }
 
             }
-            IconCompose(data = ImageResourceHelper.getInstance().getEquipPic(id1)) {
+            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id1)) {
                 if (id1 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id1)
                 }
@@ -830,12 +830,19 @@ private fun UniqueEquip(
                     .fillMaxWidth()
             ) {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance().getEquipPic(it.equipmentId)
+                    data = ImageRequestHelper.getInstance().getEquipPic(it.equipmentId)
                 )
                 Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediumPadding),
                     selectable = true
+                )
+            }
+            //技能等级超过tp限制等级的，添加标识
+            if (uniqueEquipmentMaxData.isTpLimitAction) {
+                IconTextButton(
+                    icon = MainIconType.HELP,
+                    text = stringResource(R.string.tp_limit_level_action_desc)
                 )
             }
             //属性

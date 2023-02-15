@@ -32,7 +32,10 @@ class CharacterViewModel @Inject constructor(
                 emit(filterList)
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList")
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList#params:${params ?: ""}"
+            )
         }
 
     }

@@ -12,6 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.ui.MainActivity
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -112,12 +114,11 @@ fun copyText(context: Context, text: String) {
 /**
  * 服务器版本名称
  */
-fun getRegionName(region: Int) = getString(
+fun getRegionName(region: RegionType) = getString(
     when (region) {
-        2 -> R.string.db_cn
-        3 -> R.string.db_tw
-        4 -> R.string.db_jp
-        else -> R.string.all
+        RegionType.CN -> R.string.db_cn
+        RegionType.TW -> R.string.db_tw
+        RegionType.JP -> R.string.db_jp
     }
 )
 
@@ -164,4 +165,13 @@ fun getZhNumberText(section: Int): String {
         7 -> stringResource(R.string.no7)
         else -> section.toString()
     }
+}
+
+/**
+ * 获取区服代码
+ */
+fun getRegionCode(type: RegionType = MainActivity.regionType) =when (type) {
+    RegionType.CN -> "cn"
+    RegionType.TW -> "tw"
+    RegionType.JP -> "jp"
 }

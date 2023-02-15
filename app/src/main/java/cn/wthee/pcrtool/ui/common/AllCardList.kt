@@ -3,10 +3,20 @@ package cn.wthee.pcrtool.ui.common
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,10 +29,12 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.FileSaveHelper
+import cn.wthee.pcrtool.utils.ImageSaveHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
+import coil.ImageLoader
+import coil.request.ImageRequest
 
 //权限
 val permissions = arrayOf(
@@ -93,7 +105,7 @@ fun AllCardList(
         }
     ) {
         loadedPicMap[checkedPicUrl.value]?.let {
-            FileSaveHelper(context).saveBitmap(
+            ImageSaveHelper(context).saveBitmap(
                 bitmap = (it as BitmapDrawable).bitmap,
                 displayName = "${getFileName(checkedPicUrl.value)}.jpg"
             )
@@ -181,6 +193,10 @@ private fun CardGridList(
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
     VerticalGrid(itemWidth = getItemWidth()) {
+        val loading = remember {
+            mutableStateOf(true)
+        }
+
         urls.forEach { picUrl ->
             MainCard(
                 modifier = Modifier
@@ -200,9 +216,23 @@ private fun CardGridList(
             ) {
                 //图片
                 SubImageCompose(
-                    data = picUrl
+                    data = picUrl,
+                    loading = loading
                 ) {
-                    loadedPicMap[picUrl] = it.drawable
+                    //获取本地原图缓存
+                    if (it.diskCacheKey != null) {
+                        val request = ImageRequest.Builder(context)
+                            .data(picUrl)
+                            .diskCacheKey(it.diskCacheKey)
+                            .listener(
+                                onSuccess = { _, result ->
+                                    loadedPicMap[picUrl] = result.drawable
+                                    loading.value = false
+                                }
+                            )
+                            .build()
+                        ImageLoader(context).enqueue(request)
+                    }
                 }
             }
         }

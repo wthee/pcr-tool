@@ -1,13 +1,11 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
@@ -69,7 +67,7 @@ val Long.simpleDateFormatUTC: String
 val String.fixJpTime: String
     get() =
         if (this != "") {
-            if (MainActivity.regionType == 4) {
+            if (MainActivity.regionType == RegionType.JP) {
                 try {
                     val d = df1.parse(this)!!.time - 60 * 60 * 1000
                     df1.format(Date(d))

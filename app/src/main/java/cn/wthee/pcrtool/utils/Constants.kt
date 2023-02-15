@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
 import cn.wthee.pcrtool.R
 
 /**
@@ -26,21 +27,22 @@ object Constants {
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
     const val SP_COLOR_STATE = "dynamic_color_state"
+    const val SP_USE_IP = "use_ip"
     const val SP_TOOL_ORDER = "tool_order"
     const val SP_OVERVIEW_ORDER = "overview_order"
 
     const val mediaType = "application/json; charset=utf-8"
 
     //数据库资源地址
-    const val DATABASE_URL = "https://wthee.xyz/db/"
+    var DATABASE_URL = "https://$URL_DOMAIN/db/"
 
     //接口正式地址
-    const val API_URL = "https://wthee.xyz/pcr/api/v1/"
+    var API_URL = "https://$URL_DOMAIN/pcr/api/v1/"
 
     //Spine 预览地址
-    const val PREVIEW_URL = "https://wthee.xyz/spine/index.html"
-    const val PREVIEW_UNIT_URL = "$PREVIEW_URL?unitId="
-    const val PREVIEW_ENEMY_URL = "$PREVIEW_URL?enemyId="
+    var PREVIEW_URL = "https://$URL_DOMAIN/spine/index.html"
+    var PREVIEW_UNIT_URL = "$PREVIEW_URL?unitId="
+    var PREVIEW_ENEMY_URL = "$PREVIEW_URL?enemyId="
 
     //国服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_CN = "redive_cn.db.br"
@@ -117,5 +119,5 @@ object Constants {
     const val EXCEPTION_DATA_CHANGE = "db change exception:"
 
     //模拟抽卡最大up数
-    const val MOCK_GACHA_MAX_UP_COUNT = 6
+    const val MOCK_GACHA_MAX_UP_COUNT = 12
 }

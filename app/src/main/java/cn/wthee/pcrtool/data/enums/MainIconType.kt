@@ -2,7 +2,86 @@ package cn.wthee.pcrtool.data.enums
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AllInclusive
+import androidx.compose.material.icons.rounded.Android
+import androidx.compose.material.icons.rounded.Animation
+import androidx.compose.material.icons.rounded.Api
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.AutoStories
+import androidx.compose.material.icons.rounded.Bookmarks
+import androidx.compose.material.icons.rounded.Cake
+import androidx.compose.material.icons.rounded.Calculate
+import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Celebration
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.CloseFullscreen
+import androidx.compose.material.icons.rounded.CompareArrows
+import androidx.compose.material.icons.rounded.ContactSupport
+import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.CreditCard
+import androidx.compose.material.icons.rounded.DataObject
+import androidx.compose.material.icons.rounded.DataUsage
+import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.DeleteForever
+import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.DesktopWindows
+import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.EditCalendar
+import androidx.compose.material.icons.rounded.EmojiEvents
+import androidx.compose.material.icons.rounded.EventAvailable
+import androidx.compose.material.icons.rounded.EventNote
+import androidx.compose.material.icons.rounded.ExitToApp
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.Explore
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.FilterAlt
+import androidx.compose.material.icons.rounded.FitnessCenter
+import androidx.compose.material.icons.rounded.GraphicEq
+import androidx.compose.material.icons.rounded.Group
+import androidx.compose.material.icons.rounded.Help
+import androidx.compose.material.icons.rounded.HourglassTop
+import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Looks4
+import androidx.compose.material.icons.rounded.ManageSearch
+import androidx.compose.material.icons.rounded.Map
+import androidx.compose.material.icons.rounded.MiscellaneousServices
+import androidx.compose.material.icons.rounded.NavigateBefore
+import androidx.compose.material.icons.rounded.NavigateNext
+import androidx.compose.material.icons.rounded.NotificationsNone
+import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.Pets
+import androidx.compose.material.icons.rounded.PhoneAndroid
+import androidx.compose.material.icons.rounded.PlaylistAdd
+import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.ReceiptLong
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Remove
+import androidx.compose.material.icons.rounded.RemoveRedEye
+import androidx.compose.material.icons.rounded.Savings
+import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Security
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.SignalCellularAlt
+import androidx.compose.material.icons.rounded.SmartDisplay
+import androidx.compose.material.icons.rounded.Stream
+import androidx.compose.material.icons.rounded.SwapHoriz
+import androidx.compose.material.icons.rounded.SwapVert
+import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.rounded.Token
+import androidx.compose.material.icons.rounded.TrackChanges
+import androidx.compose.material.icons.rounded.UnfoldMore
+import androidx.compose.material.icons.rounded.Upcoming
+import androidx.compose.material.icons.rounded.Verified
+import androidx.compose.material.icons.rounded.Vibration
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material.icons.rounded.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -210,7 +289,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 接口请求一场
      */
-    REQUEST_ERROR(Icons.Rounded.ErrorOutline),
+    REQUEST_ERROR(Icons.Rounded.Warning),
 
     /**
      * 反馈交流群
@@ -422,4 +501,13 @@ enum class MainIconType(val icon: ImageVector) {
      */
     ALL_QUEST(Icons.Rounded.Map),
 
+    /**
+     * 日期范围
+     */
+    DATE_RANGE_NONE(Icons.Rounded.CalendarToday),
+
+    /**
+     * 已选择日期范围
+     */
+    DATE_RANGE_PICKED(Icons.Rounded.DateRange),
 }

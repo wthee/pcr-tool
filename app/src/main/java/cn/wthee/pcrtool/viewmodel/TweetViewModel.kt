@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.db.dao.TweetDao
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.TweetRemoteMediator
 import cn.wthee.pcrtool.database.AppTweetDatabase
+import cn.wthee.pcrtool.ui.common.DateRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -27,11 +28,16 @@ class TweetViewModel @Inject constructor(
      * 推特数据
      */
     @OptIn(ExperimentalPagingApi::class)
-    fun getTweet(keyword: String) = Pager(
+    fun getTweet(keyword: String, dateRange: DateRange) = Pager(
         config = PagingConfig(
             pageSize = pageSize
         ),
-        remoteMediator = TweetRemoteMediator(keyword, database, apiRepository)
+        remoteMediator = TweetRemoteMediator(
+            keyword,
+            dateRange,
+            database,
+            apiRepository
+        )
     ) {
         tweetDao.pagingSource(keyword)
     }

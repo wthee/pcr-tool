@@ -1,13 +1,13 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 
 
 /**
  * 装备掉落率
  */
 data class EquipmentIdWithOdds(
-    val equipId: Int = ImageResourceHelper.UNKNOWN_EQUIP_ID,
+    val equipId: Int = ImageRequestHelper.UNKNOWN_EQUIP_ID,
     val odd: Int = 0
 )
 

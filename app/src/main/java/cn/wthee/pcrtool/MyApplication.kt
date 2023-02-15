@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.BuglyInitializer
@@ -25,17 +26,28 @@ class MyApplication : Application(), ImageLoaderFactory {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         var backupMode = false
+        var URL_DOMAIN = "wthee.xyz"
+        var useIpOnFlag = false
+
     }
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        useIpOnFlag = context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+            .getBoolean(Constants.SP_USE_IP, false)
+        //使用ip访问
+        if (useIpOnFlag) {
+            URL_DOMAIN = "96.45.190.76"
+        }
+        Log.e("DEBUG", URL_DOMAIN)
         //Bugly
         BuglyInitializer().create(this)
         //数据库
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
+
         //清除coil旧的缓存文件
         FileUtil.delete(context.cacheDir.resolve("image_cache"), false)
     }

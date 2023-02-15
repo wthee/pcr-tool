@@ -51,9 +51,7 @@ interface EventDao {
             LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
             LEFT JOIN hatsune_special_battle AS battle ON battle.event_id = original_event_id AND battle.mode = 1
             LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
-            LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id 
-        GROUP BY
-            event.start_time 
+            LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id
         ORDER BY
             event.start_time DESC  
             LIMIT 0,:limit
@@ -108,14 +106,16 @@ interface EventDao {
         SELECT
             a.daily_mission_id AS id,
             18 AS type,
-            2000 AS value,
-            start_time,
-            end_time 
+            b.reward_num* 10 AS value,
+            a.start_time,
+            a.end_time 
         FROM
-            daily_mission_data AS a 
+            daily_mission_data AS a
+            LEFT JOIN mission_reward_data AS b ON a.mission_reward_id = b.mission_reward_id 
         WHERE
-            a.mission_reward_id = 18001003
-        ORDER BY id DESC 
+            b.reward_type = 6 AND b.reward_num > 100
+        ORDER BY
+            id DESC
         LIMIT 0,:limit
     """
     )
@@ -138,7 +138,7 @@ interface EventDao {
             login_bonus_data AS a
             LEFT JOIN login_bonus_detail AS b ON a.login_bonus_id = b.login_bonus_id 
         WHERE
-            b.reward_id = 91002
+            b.reward_id = 91002 AND a.login_bonus_id % 10000 > 2
         GROUP BY
             a.start_time
         ORDER BY a.start_time DESC

@@ -342,8 +342,9 @@ fun getRankColor(rank: Int): Color {
         in 11..17 -> colorPurple
         in 18..20 -> colorRed
         in 21..23 -> colorGreen
-        in 24..99 -> colorOrange
-        else -> colorBlue
+        in 24..27 -> colorOrange
+        in 28..99 -> colorCyan
+        else -> colorGray
     }
 }
 
@@ -508,8 +509,8 @@ fun SelectTypeCompose(
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     paddingValues: PaddingValues = PaddingValues(
-        end = Dimen.fabMarginEnd,
         start = Dimen.fabMargin,
+        end = Dimen.fabMarginEnd,
         top = Dimen.fabMargin,
         bottom = Dimen.fabMargin,
     ),
@@ -589,7 +590,8 @@ fun SelectTypeCompose(
                 modifier = Modifier.padding(start = Dimen.largePadding)
             ) {
                 IconCompose(
-                    data = icon, tint = selectedColor, size = Dimen.menuIconSize
+                    data = icon, tint = selectedColor,
+                    size = Dimen.fabIconSize
                 )
                 Text(
                     text = tabs[type.value],
@@ -685,13 +687,14 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
 )
 @Composable
 fun BottomSearchBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     @StringRes labelStringId: Int,
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     scrollState: LazyListState,
-    defaultKeywordList: List<KeywordData>? = null
+    defaultKeywordList: List<KeywordData>? = null,
+    onResetClick: (() -> Unit)? = null,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -723,8 +726,12 @@ fun BottomSearchBar(
                 ) {
                     keywordState.value = ""
                     keywordInputState.value = ""
+                    if (onResetClick != null) {
+                        onResetClick()
+                    }
                 }
             }
+
             //搜索
             FabCompose(
                 iconType = MainIconType.SEARCH,
@@ -738,6 +745,7 @@ fun BottomSearchBar(
 
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .padding(Dimen.mediumPadding)
             .imePadding()
     ) {

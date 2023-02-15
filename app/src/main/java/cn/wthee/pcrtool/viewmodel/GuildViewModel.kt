@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
+import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -39,8 +40,8 @@ class GuildViewModel @Inject constructor(
                 )
             }
             emit(list)
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getGuilds")
         }
     }
 

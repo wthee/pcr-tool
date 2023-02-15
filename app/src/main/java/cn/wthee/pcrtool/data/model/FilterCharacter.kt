@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.model
 
 import androidx.core.content.edit
-import cn.wthee.pcrtool.data.enums.SortType
+import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
@@ -41,7 +41,7 @@ class FilterCharacter(
     /**
      * 排序种类
      */
-    var sortType: SortType = SortType.SORT_DATE,
+    var sortType: CharacterSortType = CharacterSortType.SORT_DATE,
     /**
      * 角色名
      */
@@ -104,5 +104,5 @@ class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
+    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == CharacterSortType.SORT_DATE && name == "" && (!asc) && type == 0)
 }

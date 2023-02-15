@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 
@@ -104,9 +104,9 @@ fun ExtraEquipGroup(
     val containsSelectedId = equipIdList.contains(selectedId)
 
     CommonGroupTitle(
-        iconData = ImageResourceHelper.getInstance()
+        iconData = ImageRequestHelper.getInstance()
             .getUrl(
-                ImageResourceHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
+                ImageRequestHelper.ICON_EXTRA_EQUIPMENT_CATEGORY,
                 category
             ),
         iconSize = Dimen.smallIconSize,
@@ -157,8 +157,8 @@ private fun ExtraEquipRewardIconGrid(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconCompose(
-                    data = ImageResourceHelper.getInstance()
-                        .getUrl(ImageResourceHelper.ICON_EXTRA_EQUIPMENT, equipId),
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equipId),
                     onClick = if (toExtraEquipDetail != null) {
                         {
                             toExtraEquipDetail(equipId)

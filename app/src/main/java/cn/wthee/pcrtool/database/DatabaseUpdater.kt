@@ -9,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
 import cn.wthee.pcrtool.ui.MainActivity
@@ -36,23 +37,23 @@ object DatabaseUpdater {
     /**
      * 切换版本
      */
-    fun changeDatabase(region: Int) {
+    fun changeDatabase(region: RegionType) {
         sp.edit {
-            putInt(Constants.SP_DATABASE_TYPE, region)
+            putInt(Constants.SP_DATABASE_TYPE, region.value)
         }
         MainActivity.regionType = region
         when (region) {
-            2 -> {
+            RegionType.CN -> {
                 AppDatabaseTW.close()
                 AppDatabaseJP.close()
             }
 
-            3 -> {
+            RegionType.TW -> {
                 AppDatabaseCN.close()
                 AppDatabaseJP.close()
             }
 
-            4 -> {
+            RegionType.JP -> {
                 AppDatabaseCN.close()
                 AppDatabaseTW.close()
             }
@@ -74,14 +75,8 @@ object DatabaseUpdater {
             val service = ApiUtil.create(MyAPIService::class.java, API_URL)
             //接口参数
             val json = JsonObject()
-            json.addProperty(
-                "regionCode", when (MainActivity.regionType) {
-                    2 -> "cn"
-                    3 -> "tw"
-                    4 -> "jp"
-                    else -> ""
-                }
-            )
+            json.addProperty("regionCode", getRegionCode())
+
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
@@ -104,9 +99,9 @@ object DatabaseUpdater {
     private fun downloadDB(versionData: DatabaseVersion) {
         val region = MainActivity.regionType
         val localVersionKey = when (region) {
-            2 -> Constants.SP_DATABASE_VERSION_CN
-            3 -> Constants.SP_DATABASE_VERSION_TW
-            else -> Constants.SP_DATABASE_VERSION_JP
+            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
+            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
+            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
         }
         val localVersion = sp.getString(localVersionKey, "")
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
@@ -121,7 +116,7 @@ object DatabaseUpdater {
         if (toDownload || toDownloadRemoteBackup) {
             //远程备份时
             val fileName = when (region) {
-                2 -> {
+                RegionType.CN -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN
                     } else {
@@ -129,7 +124,7 @@ object DatabaseUpdater {
                     }
                 }
 
-                3 -> {
+                RegionType.TW -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW
                     } else {
@@ -137,7 +132,7 @@ object DatabaseUpdater {
                     }
                 }
 
-                else -> {
+                RegionType.JP -> {
                     if (remoteBackupMode) {
                         Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
                     } else {
@@ -150,7 +145,7 @@ object DatabaseUpdater {
                 val data = Data.Builder()
                     .putString(DatabaseDownloadWorker.KEY_VERSION, versionData.toString())
                     .putString(DatabaseDownloadWorker.KEY_FILE, fileName)
-                    .putInt(DatabaseDownloadWorker.KEY_REGION, region)
+                    .putInt(DatabaseDownloadWorker.KEY_REGION, region.value)
                     .build()
                 val uploadWorkRequest =
                     OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
@@ -183,9 +178,9 @@ object DatabaseUpdater {
 fun updateLocalDataBaseVersion(ver: String) {
     val sp = settingSP()
     val key = when (MainActivity.regionType) {
-        2 -> Constants.SP_DATABASE_VERSION_CN
-        3 -> Constants.SP_DATABASE_VERSION_TW
-        else -> Constants.SP_DATABASE_VERSION_JP
+        RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
+        RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
+        RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
     }
     sp.edit {
         putString(key, ver)
@@ -201,21 +196,21 @@ fun tryOpenDatabase(): Int {
     val msg: String
     val open: () -> Unit
     when (MainActivity.regionType) {
-        2 -> {
+        RegionType.CN -> {
             msg = "db error: cn"
             open = {
                 openDatabase(AppDatabaseCN.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
             }
         }
 
-        3 -> {
+        RegionType.TW -> {
             msg = "db error: tw"
             open = {
                 openDatabase(AppDatabaseTW.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
             }
         }
 
-        else -> {
+        RegionType.JP -> {
             msg = "db error: jp"
             open = {
                 openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)

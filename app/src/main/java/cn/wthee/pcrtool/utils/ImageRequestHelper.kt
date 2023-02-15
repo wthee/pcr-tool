@@ -1,26 +1,25 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
-class ImageResourceHelper {
+/**
+ * 图片资源地址
+ */
+class ImageRequestHelper {
 
     var type = "cn"
 
     init {
-        type = when (MainActivity.regionType) {
-            2 -> "cn"
-            3 -> "tw"
-            else -> "jp"
-        }
+        type = getRegionCode()
     }
 
     companion object {
 
-        fun getInstance() = ImageResourceHelper()
+        fun getInstance() = ImageRequestHelper()
 
-        private var RESOURCE_PREFIX_URL = "https://wthee.xyz/redive/"
+        private var RESOURCE_PREFIX_URL = "https://${URL_DOMAIN}/redive/"
         private var RESOURCE = "/resource/"
 
         //图片格式
@@ -60,10 +59,10 @@ class ImageResourceHelper {
         const val EVENT_STORY = "event/story/"
 
         //图片资源地址
-        private const val OTHER_RESOURCE_URL = "https://wthee.xyz/resource/"
+        private var OTHER_RESOURCE_URL = "https://${URL_DOMAIN}/resource/"
 
         //漫画地址
-        const val COMIC4 = OTHER_RESOURCE_URL + "comic/"
+        var COMIC4 = OTHER_RESOURCE_URL + "comic/"
 
     }
 

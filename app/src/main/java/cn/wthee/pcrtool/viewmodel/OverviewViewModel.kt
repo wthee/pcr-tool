@@ -40,8 +40,8 @@ class OverviewViewModel @Inject constructor(
     fun getCharacterCount() = flow {
         try {
             emit(unitRepository.getCount())
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getCharacterCount")
         }
     }
 
@@ -52,8 +52,8 @@ class OverviewViewModel @Inject constructor(
         try {
             val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
             emit(filterList.subList(0, 10))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getCharacterInfoList")
         }
     }
 
@@ -63,8 +63,8 @@ class OverviewViewModel @Inject constructor(
     fun getEquipCount() = flow {
         try {
             emit(equipmentRepository.getCount())
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipCount")
         }
     }
 
@@ -74,8 +74,8 @@ class OverviewViewModel @Inject constructor(
     fun getEquipList(limit: Int) = flow {
         try {
             emit(equipmentRepository.getEquipments(FilterEquipment(), limit))
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipList")
         }
     }
 
@@ -101,8 +101,8 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareGacha(today))
                 )
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getGachaList")
         }
     }
 
@@ -132,8 +132,8 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareEvent(today))
                 )
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getCalendarEventList#type:$type")
         }
 
     }
@@ -159,8 +159,8 @@ class OverviewViewModel @Inject constructor(
                     }.sortedWith(compareStoryEvent(today))
                 )
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getStoryEventList#type:$type")
         }
     }
 
@@ -170,10 +170,10 @@ class OverviewViewModel @Inject constructor(
     fun getNewsOverview() {
         viewModelScope.launch {
             try {
-                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType)
+                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
                 newOverview.postValue(data)
-            } catch (_: Exception) {
-
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, "getNewsOvervie")
             }
         }
     }
@@ -185,8 +185,8 @@ class OverviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
-            } catch (_: Exception) {
-
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, "getR6Ids")
             }
         }
     }
@@ -208,8 +208,8 @@ class OverviewViewModel @Inject constructor(
                     isComingSoon(today, it.startTime)
                 })
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getFreeGachaList#type:$type")
         }
     }
 
@@ -240,8 +240,8 @@ class OverviewViewModel @Inject constructor(
                 }
                 emit(list)
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getBirthdayList#type:$type")
         }
     }
 
@@ -262,8 +262,8 @@ class OverviewViewModel @Inject constructor(
                     isComingSoon(today, it.startTime)
                 })
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getClanBattleEvent#type:$type")
         }
     }
 }

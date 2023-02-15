@@ -26,7 +26,7 @@ fun ExtraEquipDropList(
     equipId: Int,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val dropList = extraEquipmentViewModel.getDropQuestList(equipId)
+    val dropList = extraEquipmentViewModel.getExtraDropQuestList(equipId)
         .collectAsState(initial = arrayListOf()).value
     val pagerState = rememberPagerState()
 
