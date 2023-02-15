@@ -234,14 +234,13 @@ interface EquipmentDao {
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND r.unit_id = :unitId
-            AND((1 = :tpLimitLevelFlag AND b.min_lv > 260) OR (0 = :tpLimitLevelFlag AND b.min_lv = 2))
+            a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv = 2
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, tpLimitLevelFlag: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int): UniqueEquipmentMaxData?
 
     /**
-     * 获取专武奖励信息（等级大于260）（废弃）
+     * 获取专武信息（等级大于260）
      * @param unitId 角色编号
      */
     @SkipQueryVerification
@@ -267,9 +266,9 @@ interface EquipmentDao {
             ( a.energy_reduce_rate * COALESCE( :lv, 0 ) ) AS energy_reduce_rate,
             ( a.accuracy * COALESCE( :lv, 0 ) ) AS accuracy
         FROM
-            unique_equipment_bonus AS a
+            unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equip AS r ON r.equip_id = a.equipment_id
-        WHERE r.unitId = :unitId
+        WHERE r.unit_id = :unitId AND a.min_lv = 261
     """
     )
     suspend fun getUniqueEquipBonus(unitId: Int, lv: Int): Attr?

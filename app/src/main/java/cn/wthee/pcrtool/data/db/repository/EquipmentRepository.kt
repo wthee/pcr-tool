@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.db.repository
 
+import android.util.Log
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.Constants
@@ -32,27 +33,28 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {
         if (lv > Constants.TP_LIMIT_LEVEL) {
-            // 获取专武等级 > 260 属性
-            val bonusData = equipmentDao.getUniqueEquipInfosV2(unitId, lv - Constants.TP_LIMIT_LEVEL, 1)
-
-            val level = if (bonusData != null) {
+            // 获取专武奖励属性
+            val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
+            val level = if (bonusAttr != null) {
                 //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
                 Constants.TP_LIMIT_LEVEL
             } else {
                 //正常计算等级提升属性
                 lv
             }
-            val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level, 0)
+            val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level)
             // 奖励属性不为空，计算总属性：初始属性 + 奖励属性
-            if (bonusData != null && equipmentMaxData != null) {
+            if (bonusAttr != null && equipmentMaxData != null) {
                 equipmentMaxData.isTpLimitAction = true
-                equipmentMaxData.attr = equipmentMaxData.attr.add(bonusData.attr)
+                equipmentMaxData.attr = equipmentMaxData.attr.add(bonusAttr)
             }
+
             equipmentMaxData
         } else {
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv, 0)
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
         }
     } catch (e: Exception) {
+        Log.e("DEBUG", e.message.toString())
         equipmentDao.getUniqueEquipInfos(unitId, lv)
     }
 

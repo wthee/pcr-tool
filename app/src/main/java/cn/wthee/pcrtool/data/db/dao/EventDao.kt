@@ -138,7 +138,7 @@ interface EventDao {
             login_bonus_data AS a
             LEFT JOIN login_bonus_detail AS b ON a.login_bonus_id = b.login_bonus_id 
         WHERE
-            b.reward_id = 91002
+            b.reward_id = 91002 AND a.login_bonus_id % 10000 > 2
         GROUP BY
             a.start_time
         ORDER BY a.start_time DESC

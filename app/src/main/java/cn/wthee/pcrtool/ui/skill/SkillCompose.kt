@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +26,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -467,7 +470,19 @@ fun SkillActionItem(
 
             //调试用
             if (BuildConfig.DEBUG) {
-                CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
+                val expand = remember {
+                    mutableStateOf(false)
+                }
+                if (expand.value) {
+                    CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
+                } else {
+                    IconTextButton(
+                        icon = MainIconType.MORE,
+                        text = stringResource(R.string.skill)
+                    ) {
+                        expand.value = true
+                    }
+                }
             }
         }
     }
