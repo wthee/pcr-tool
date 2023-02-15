@@ -469,6 +469,7 @@ private fun getEquipColor(colorType: Int): Color {
         6 -> colorRed
         7 -> colorGreen
         8 -> colorOrange
+        9 -> colorCyan
         else -> colorGray
     }
 }

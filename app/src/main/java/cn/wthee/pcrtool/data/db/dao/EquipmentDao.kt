@@ -227,19 +227,21 @@ interface EquipmentDao {
             ( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS hp_recovery_rate,
             ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS energy_recovery_rate,
             ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
-            ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
+            ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy,
+            false AS isTpLimitAction
         FROM
             unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId
+            AND((1 = :tpLimitLevelFlag AND b.min_lv > 260) OR (0 = :tpLimitLevelFlag AND b.min_lv = 2))
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, tpLimitLevelFlag: Int): UniqueEquipmentMaxData?
 
     /**
-     * 获取专武奖励信息（等级大于260）
+     * 获取专武奖励信息（等级大于260）（废弃）
      * @param unitId 角色编号
      */
     @SkipQueryVerification

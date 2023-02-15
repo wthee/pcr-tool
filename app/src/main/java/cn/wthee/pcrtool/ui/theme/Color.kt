@@ -59,9 +59,14 @@ val colorRed = Color(0xFFE95264)
 val colorGreen = Color(0xFF5EB56D)
 
 /**
- * 橙、Rank 24 ~ 28
+ * 橙、Rank 24 ~ 27
  */
 val colorOrange = Color(0xFFFF6C47)
+
+/**
+ * 青、Rank 28 ~
+ */
+val colorCyan = Color(0xFF00CED1)
 
 /**
  * 粉、ex装备4星
