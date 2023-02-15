@@ -342,8 +342,9 @@ fun getRankColor(rank: Int): Color {
         in 11..17 -> colorPurple
         in 18..20 -> colorRed
         in 21..23 -> colorGreen
-        in 24..99 -> colorOrange
-        else -> colorBlue
+        in 24..27 -> colorOrange
+        in 28..99 -> colorCyan
+        else -> colorGray
     }
 }
 
