@@ -31,26 +31,26 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {
-        //TODO 校验逻辑是否正确
         if (lv > Constants.TP_LIMIT_LEVEL) {
-            // 获取专武奖励属性
-            val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
-            val level = if (bonusAttr != null) {
+            // 获取专武等级 > 260 属性
+            val bonusData = equipmentDao.getUniqueEquipInfosV2(unitId, lv - Constants.TP_LIMIT_LEVEL, 1)
+
+            val level = if (bonusData != null) {
                 //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
                 Constants.TP_LIMIT_LEVEL
             } else {
                 //正常计算等级提升属性
                 lv
             }
-            val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level)
+            val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level, 0)
             // 奖励属性不为空，计算总属性：初始属性 + 奖励属性
-            if (bonusAttr != null && equipmentMaxData != null) {
-                equipmentMaxData.attr = equipmentMaxData.attr.add(bonusAttr)
+            if (bonusData != null && equipmentMaxData != null) {
+                equipmentMaxData.isTpLimitAction = true
+                equipmentMaxData.attr = equipmentMaxData.attr.add(bonusData.attr)
             }
-
             equipmentMaxData
         } else {
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv, 0)
         }
     } catch (e: Exception) {
         equipmentDao.getUniqueEquipInfos(unitId, lv)

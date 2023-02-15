@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
+import androidx.room.Ignore
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 
 /**
@@ -13,6 +14,7 @@ data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "equipment_name") val equipmentName: String = "?",
     @ColumnInfo(name = "description") val description: String = "?",
     @Embedded var attr: Attr = Attr(),
+    @Ignore var isTpLimitAction: Boolean = false
 ) {
 
     /**

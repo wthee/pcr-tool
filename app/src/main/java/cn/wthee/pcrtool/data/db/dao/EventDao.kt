@@ -106,14 +106,16 @@ interface EventDao {
         SELECT
             a.daily_mission_id AS id,
             18 AS type,
-            2000 AS value,
-            start_time,
-            end_time 
+            b.reward_num* 10 AS value,
+            a.start_time,
+            a.end_time 
         FROM
-            daily_mission_data AS a 
+            daily_mission_data AS a
+            LEFT JOIN mission_reward_data AS b ON a.mission_reward_id = b.mission_reward_id 
         WHERE
-            a.mission_reward_id = 18001003
-        ORDER BY id DESC 
+            b.reward_type = 6 AND b.reward_num > 100
+        ORDER BY
+            id DESC
         LIMIT 0,:limit
     """
     )

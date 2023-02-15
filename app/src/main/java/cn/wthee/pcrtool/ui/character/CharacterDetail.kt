@@ -838,6 +838,13 @@ private fun UniqueEquip(
                     selectable = true
                 )
             }
+            //技能等级超过tp限制等级的，添加标识
+            if (uniqueEquipmentMaxData.isTpLimitAction) {
+                IconTextButton(
+                    icon = MainIconType.HELP,
+                    text = stringResource(R.string.tp_limit_level_action_desc)
+                )
+            }
             //属性
             AttrList(attrs = it.attr.allNotZero(isPreview = LocalInspectionMode.current))
         }
