@@ -149,12 +149,11 @@ fun GachaItem(
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
         icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
-    val mockGachaType = when {
-        icons.find { !fesUnitIds.contains(it) } == null -> MockGachaType.FES
-        icons.size >= 6 -> MockGachaType.PICK_UP_SINGLE
+    val mockGachaType = when (type) {
+        GachaType.FES -> MockGachaType.FES
+        GachaType.RE_LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
         else -> MockGachaType.PICK_UP
     }
-
     Column(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,

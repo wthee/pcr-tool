@@ -38,6 +38,7 @@ data class GachaInfo(
                 GachaType.NORMAL
             }
         }
+
         "プライズガチャ", "獎勵轉蛋", "附奖扭蛋" -> {
             if (isLimited()) {
                 GachaType.RE_LIMIT
@@ -45,13 +46,16 @@ data class GachaInfo(
                 GachaType.RE_NORMAL
             }
         }
-        "選べるプライズガチャ" -> {
-            GachaType.RE_LIMIT_PICK
-        }
+
         "プリンセスフェス", "公主祭典", "公主庆典" -> GachaType.FES
         else -> {
             if (gachaName.contains("Anniversary") || gachaName.contains("周年")) {
                 GachaType.ANNIV
+            } else if (gachaName.contains("選べるプライズ")
+                || gachaName.contains("选择")
+                || gachaName.contains("選擇")
+            ) {
+                GachaType.RE_LIMIT_PICK
             } else {
                 GachaType.UNKNOWN
             }
