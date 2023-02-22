@@ -9,6 +9,8 @@
 
 > 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
 
+## 支持
+- [爱发电](https://afdian.net/a/wthee)
 ## 更新记录
 
 ### 3.X.X
