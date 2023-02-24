@@ -369,13 +369,19 @@ fun MainCard(
     onClick: (() -> Unit)? = null,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    fillMaxWidth: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
-    var mModifier = modifier
-        .fillMaxWidth()
-        .shadow(Dimen.cardElevation, shape, true)
+    var mModifier =if(fillMaxWidth){
+        modifier
+            .fillMaxWidth()
+            .shadow(Dimen.cardElevation, shape, true)
+    }else{
+        modifier
+            .shadow(Dimen.cardElevation, shape, true)
+    }
 
     if (onClick != null) {
         mModifier = mModifier.clickable {
@@ -619,6 +625,7 @@ fun IconTextButton(
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    maxLines : Int = 1,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -644,7 +651,7 @@ fun IconTextButton(
             color = contentColor,
             style = textStyle,
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            maxLines = 1,
+            maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
         )
     }

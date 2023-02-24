@@ -49,10 +49,7 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
     fun getDbDiff() {
         viewModelScope.launch {
             try {
-                var data = apiRepository.getDbDiff().data ?: ""
-                if (data == "") {
-                    data = "-"
-                }
+                val data = apiRepository.getDbDiff().data ?: ""
                 updateDb.postValue(data)
             } catch (e: Exception) {
                 updateDb.postValue("")

@@ -113,9 +113,7 @@ class DatabaseDownloadWorker(
             //保存
             FileUtil.save(response!!.body()!!.byteStream(), db)
             //关闭数据库
-            AppDatabaseCN.close()
-            AppDatabaseTW.close()
-            AppDatabaseJP.close()
+            AppBasicDatabase.close()
             //删除旧的wal
             FileUtil.apply {
                 delete(getDatabaseBackupWalPath(RegionType.CN))

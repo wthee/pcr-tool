@@ -290,6 +290,7 @@
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
+    <string name="data_file_error">文件损坏\n点击重新下载</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
     <string name="tip_save_image">将图片保存至系统相册中</string>
@@ -301,7 +302,7 @@
     <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
-    <string name="db_diff">%s：%s\n最近更新：%s</string>
+    <string name="db_diff">数据版本：%s%s</string>
     <string name="title_api_request_error">网络请求异常</string>
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
