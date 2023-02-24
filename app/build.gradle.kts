@@ -14,8 +14,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.4.0-alpha05"
-val composeCompilerVersion = "1.4.0"
+val composeVersion = "1.4.0-beta02"
+val composeCompilerVersion = "1.4.3"
 val appVersionCode = 355
 val appVersionName = "3.5.5"
 val appId = "cn.wthee.pcrtool"
@@ -106,7 +106,7 @@ android {
 dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.appcompat:appcompat:1.6.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.5.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
@@ -116,11 +116,11 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:1.4.0-alpha04")
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.0-beta01")
 //    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.1.0-alpha05")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha07")
 
     //Accompanist
     val accompanistVersion = "0.29.1-alpha"
@@ -133,7 +133,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.5.0-rc01")
+    implementation("androidx.browser:browser:1.5.0")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")
@@ -148,7 +148,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Lifecycle
-    val lifecycleVersion = "2.5.1"
+    val lifecycleVersion = "2.6.0-rc01"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -160,7 +160,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
@@ -168,7 +168,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.3"
+    val roomVersion = "2.5.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

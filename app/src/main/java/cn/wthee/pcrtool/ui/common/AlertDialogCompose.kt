@@ -90,10 +90,14 @@ fun MainAlertDialog(
 fun BoxScope.DateRangePickerCompose(
     dateRange: MutableState<DateRange>
 ) {
+    val context = LocalContext.current
     val openLayout = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val yearRange = getDatePickerYearRange()
+    val dateRangePickerState = rememberDateRangePickerState(yearRange = yearRange)
+
+    //关闭监听
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
-    //关闭监听
     if (close) {
         navViewModel.openChangeDataDialog.postValue(false)
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -103,18 +107,22 @@ fun BoxScope.DateRangePickerCompose(
         navViewModel.openChangeDataDialog.postValue(false)
     }
 
-    val context = LocalContext.current
-    val openStartDateDialog = remember { mutableStateOf(false) }
-    val openEndDateDialog = remember { mutableStateOf(false) }
-    val yearRange = getDatePickerYearRange()
-    val startDatePickerState = rememberDatePickerState(yearRange = yearRange)
-    val endDatePickerState = rememberDatePickerState(yearRange = yearRange)
 
     //更新日期
-    LaunchedEffect(openStartDateDialog.value, openEndDateDialog.value) {
+    LaunchedEffect(
+        dateRangePickerState.selectedStartDateMillis,
+        dateRangePickerState.selectedEndDateMillis
+    ) {
+        //日期字符串处理
+        val startDate = dateRangePickerState.selectedStartDateMillis?.simpleDateFormatUTC
+        var endDate = dateRangePickerState.selectedEndDateMillis?.simpleDateFormatUTC
+        if (endDate != null) {
+            endDate = endDate.replace("00:00:00", "23:59:59")
+        }
+
         dateRange.value = DateRange(
-            startDate = startDatePickerState.selectedDateMillis?.simpleDateFormatUTC ?: "",
-            endDate = endDatePickerState.selectedDateMillis?.simpleDateFormatUTC ?: ""
+            startDate = startDate ?: "",
+            endDate = endDate ?: ""
         )
     }
 
@@ -141,68 +149,56 @@ fun BoxScope.DateRangePickerCompose(
         }
     ) {
         if (openLayout) {
-            Box(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.mediumPadding,
-                    vertical = Dimen.largePadding
-                )
+            //日期选择
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.largePadding
+                    )
+                    .fillMaxHeight(0.618f),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
             ) {
-                Column {
-                    //标题
-                    MainText(text = stringResource(id = R.string.range_date))
+                //日期选择
+                DateRangePicker(
+                    state = dateRangePickerState,
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            //标题
+                            DateRangePickerDefaults.DateRangePickerTitle(
+                                state = dateRangePickerState,
+                                contentPadding = PaddingValues(Dimen.smallPadding)
+                            )
 
-                    //选择开始日期
-                    SubButton(
-                        text = if (dateRange.value.startDate == "") {
-                            stringResource(id = R.string.pick_start_date)
-                        } else {
-                            dateRange.value.startDate
-                        },
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        color = if (dateRange.value.startDate == "") {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        },
-                        modifier = Modifier
-                            .padding(start = Dimen.mediumPadding, top = Dimen.largePadding)
-                            .fillMaxWidth()
-                    ) {
-                        openStartDateDialog.value = true
-                    }
+                            Spacer(modifier = Modifier.weight(1f))
 
-                    //选择结束日期
-                    SubButton(
-                        text = if (dateRange.value.endDate == "") {
-                            stringResource(id = R.string.pick_end_date)
-                        } else {
-                            dateRange.value.endDate
-                        },
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        color = if (dateRange.value.endDate == "") {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        },
-                        modifier = Modifier
-                            .padding(start = Dimen.mediumPadding)
-                            .fillMaxWidth()
-                    ) {
-                        openEndDateDialog.value = true
-                    }
-                }
+                            //重置选择
+                            if (dateRange.value.hasFilter()) {
+                                IconTextButton(
+                                    icon = MainIconType.RESET,
+                                    text = stringResource(id = R.string.reset),
+                                ) {
+                                    dateRange.value = DateRange()
+                                    navViewModel.fabCloseClick.postValue(true)
+                                    //fixme 重置选择器状态
 
-                //重置
-                if (dateRange.value.hasFilter()) {
-                    IconTextButton(
-                        icon = MainIconType.RESET,
-                        text = stringResource(id = R.string.reset),
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        dateRange.value = DateRange()
-                        navViewModel.fabCloseClick.postValue(true)
+                                }
+                            }
+                        }
+
+                    },
+                    headline = {
+                        DateRangePickerDefaults.DateRangePickerHeadline(
+                            state = dateRangePickerState,
+                            dateFormatter = DatePickerFormatter(
+                                selectedDateSkeleton = "yyyy/MM/dd"
+                            ),
+                            contentPadding = PaddingValues(Dimen.smallPadding)
+                        )
                     }
-                }
+                )
+
             }
         } else {
             //fab
@@ -233,24 +229,6 @@ fun BoxScope.DateRangePickerCompose(
                 )
             }
         }
-    }
-
-    //开始时间，需小于结束时间
-    if (openStartDateDialog.value) {
-        MainDatePickerDialog(
-            startDatePickerState,
-            openStartDateDialog,
-            pickStartLimit = endDatePickerState.selectedDateMillis
-        )
-    }
-
-    //结束时间，需大于开始时间
-    if (openEndDateDialog.value) {
-        MainDatePickerDialog(
-            endDatePickerState,
-            openEndDateDialog,
-            pickEndLimit = startDatePickerState.selectedDateMillis
-        )
     }
 }
 
@@ -300,7 +278,7 @@ private fun MainDatePickerDialog(
             }
         ) {
             DatePicker(
-                datePickerState = datePickerState,
+                state = datePickerState,
                 dateValidator = {
                     var pickStartLimitFlag = true
                     var pickEndLimitFlag = true
