@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.mediaType
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.getRegionCode
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -226,33 +225,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 LogReportUtil.upload(e, Constants.EXCEPTION_API + "getUpdateContent")
-            }
-        }
-        return error()
-    }
-
-    /**
-     * 获取数据更新摘要
-     */
-    suspend fun getDbDiff(): ResponseData<String> {
-        //请求
-        try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("regionCode", getRegionCode())
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-
-            val response = service.getDbDiff(body)
-            if (isError(response)) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getDbDiff")
             }
         }
         return error()

@@ -3,10 +3,8 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.utils.getString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,11 +24,6 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
     val updateApp = MutableLiveData<AppNotice>()
 
     /**
-     * 数据更新
-     */
-    val updateDb = MutableLiveData<String>()
-
-    /**
      * 更新校验
      */
     fun check() {
@@ -45,20 +38,4 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
         }
     }
 
-    /**
-     * 更新校验
-     */
-    fun getDbDiff() {
-        viewModelScope.launch {
-            try {
-                var data = apiRepository.getDbDiff().data ?: ""
-                if (data == "") {
-                    data = getString(R.string.db_diff_content_none)
-                }
-                updateDb.postValue(data)
-            } catch (e: Exception) {
-                updateDb.postValue("")
-            }
-        }
-    }
 }

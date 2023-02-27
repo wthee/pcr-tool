@@ -67,6 +67,7 @@ object DatabaseUpdater {
 
             val version = service.getDbVersion(body)
             //更新判断
+            navViewModel.updateDb.postValue(version.data!!.desc)
             downloadDB(version.data!!, fixDb)
         } catch (e: Exception) {
             if (e !is CancellationException) {

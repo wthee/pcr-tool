@@ -7,7 +7,8 @@ import cn.wthee.pcrtool.utils.Constants.SQLITE_VERSION
  */
 data class DatabaseVersion(
     val TruthVersion: String,
-    val hash: String
+    val hash: String,
+    val desc:String
 ) {
     override fun toString(): String {
         return "$TruthVersion/$hash/${SQLITE_VERSION}"

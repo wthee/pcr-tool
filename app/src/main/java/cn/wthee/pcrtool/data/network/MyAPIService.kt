@@ -21,7 +21,7 @@ interface MyAPIService {
     /**
      * 获取数据库版本
      */
-    @POST("version")
+    @POST("db/info")
     suspend fun getDbVersion(@Body body: RequestBody): ResponseData<DatabaseVersion>
 
     /**
@@ -83,12 +83,6 @@ interface MyAPIService {
      */
     @POST("leaders/tier")
     suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
-
-    /**
-     * 数据更新摘要
-     */
-    @POST("diff")
-    suspend fun getDbDiff(@Body body: RequestBody): ResponseData<String>
 
     /**
      * 关键词

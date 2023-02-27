@@ -146,4 +146,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val rankEquipSelected = MutableLiveData(0)
 
+    /**
+     * 数据库更新描述
+     */
+    val updateDb = MutableLiveData<String>()
 }

@@ -377,7 +377,6 @@ private fun DbVersionList(
 private fun DbVersionContent(
     openDialog: Boolean,
     dbError: Boolean,
-    viewModel: NoticeViewModel = hiltViewModel()
 ) {
     val region = MainActivity.regionType
     val context = LocalContext.current
@@ -398,10 +397,8 @@ private fun DbVersionContent(
     } else {
         ""
     }
-    val updateDb = viewModel.updateDb.observeAsState().value ?: ""
-    LaunchedEffect(MainActivity.regionType) {
-        viewModel.getDbDiff()
-    }
+    val updateDb = navViewModel.updateDb.observeAsState().value ?: ""
+
 
     if (openDialog) {
         Column(
