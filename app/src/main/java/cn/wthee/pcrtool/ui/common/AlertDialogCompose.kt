@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -91,7 +93,7 @@ fun BoxScope.DateRangePickerCompose(
     dateRange: MutableState<DateRange>
 ) {
     val context = LocalContext.current
-    val openLayout = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val yearRange = getDatePickerYearRange()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = yearRange)
 
@@ -126,110 +128,135 @@ fun BoxScope.DateRangePickerCompose(
         )
     }
 
-
-    //日期选择布局
-    SmallFloatingActionButton(
-        modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .animateContentSize(defaultSpring())
-            .padding(
-                start = Dimen.fabMargin,
-                end = Dimen.fabMargin,
-                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-            )
-            .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
-        shape = if (openLayout) MaterialTheme.shapes.medium else CircleShape,
-        onClick = {
-            //点击展开布局
-            if (!openLayout) {
-                VibrateUtil(context).single()
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            }
-        }
-    ) {
-        if (openLayout) {
-            //日期选择
-            Column(
-                modifier = Modifier
-                    .padding(
-                        horizontal = Dimen.mediumPadding,
-                        vertical = Dimen.largePadding
-                    )
-                    .fillMaxHeight(0.618f),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.End
-            ) {
-                //日期选择
-                DateRangePicker(
-                    state = dateRangePickerState,
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            //标题
-                            DateRangePickerDefaults.DateRangePickerTitle(
-                                state = dateRangePickerState,
-                                contentPadding = PaddingValues(Dimen.smallPadding)
-                            )
-
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            //重置选择
-                            if (dateRange.value.hasFilter()) {
-                                IconTextButton(
-                                    icon = MainIconType.RESET,
-                                    text = stringResource(id = R.string.reset),
-                                ) {
-                                    dateRange.value = DateRange()
-                                    navViewModel.fabCloseClick.postValue(true)
-                                    //fixme 重置选择器状态
-
-                                }
-                            }
-                        }
-
-                    },
-                    headline = {
-                        DateRangePickerDefaults.DateRangePickerHeadline(
-                            state = dateRangePickerState,
-                            dateFormatter = DatePickerFormatter(
-                                selectedDateSkeleton = "yyyy/MM/dd"
-                            ),
-                            contentPadding = PaddingValues(Dimen.smallPadding)
-                        )
+    //点击组件之外内容关闭
+    val boxModifier = if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
                     }
                 )
-
             }
-        } else {
-            //fab
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                IconCompose(
-                    data = if (dateRange.value.hasFilter()) {
-                        MainIconType.DATE_RANGE_PICKED
-                    } else {
-                        MainIconType.DATE_RANGE_NONE
-                    },
-                    size = Dimen.fabIconSize
+    } else {
+        Modifier.fillMaxSize()
+    }
+
+    Box(modifier = boxModifier){
+        //日期选择布局
+        SmallFloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .animateContentSize(defaultSpring())
+                .padding(
+                    start = Dimen.fabMargin,
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                 )
-                Text(
-                    text = if (dateRange.value.hasFilter()) {
-                        stringResource(id = R.string.picked_date)
-                    } else {
-                        stringResource(id = R.string.pick_date)
-                    },
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
+                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                //点击展开布局
+                if (!openDialog) {
+                    VibrateUtil(context).single()
+                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                    navViewModel.openChangeDataDialog.postValue(true)
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog) {
+                    Dimen.popupMenuElevation
+                } else {
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog) {
+                //日期选择
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimen.mediumPadding,
+                            vertical = Dimen.largePadding
+                        )
+                        .fillMaxHeight(0.618f),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.End
+                ) {
+                    //日期选择
+                    DateRangePicker(
+                        state = dateRangePickerState,
+                        title = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                //标题
+                                DateRangePickerDefaults.DateRangePickerTitle(
+                                    state = dateRangePickerState,
+                                    contentPadding = PaddingValues(Dimen.smallPadding)
+                                )
+
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                //重置选择
+                                if (dateRange.value.hasFilter()) {
+                                    IconTextButton(
+                                        icon = MainIconType.RESET,
+                                        text = stringResource(id = R.string.reset),
+                                    ) {
+                                        dateRange.value = DateRange()
+                                        navViewModel.fabCloseClick.postValue(true)
+                                        //fixme 重置选择器状态
+
+                                    }
+                                }
+                            }
+
+                        },
+                        headline = {
+                            DateRangePickerDefaults.DateRangePickerHeadline(
+                                state = dateRangePickerState,
+                                dateFormatter = DatePickerFormatter(
+                                    selectedDateSkeleton = "yyyy/MM/dd"
+                                ),
+                                contentPadding = PaddingValues(Dimen.smallPadding)
+                            )
+                        }
                     )
-                )
+
+                }
+            } else {
+                //fab
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    IconCompose(
+                        data = if (dateRange.value.hasFilter()) {
+                            MainIconType.DATE_RANGE_PICKED
+                        } else {
+                            MainIconType.DATE_RANGE_NONE
+                        },
+                        size = Dimen.fabIconSize
+                    )
+                    Text(
+                        text = if (dateRange.value.hasFilter()) {
+                            stringResource(id = R.string.picked_date)
+                        } else {
+                            stringResource(id = R.string.pick_date)
+                        },
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
+                    )
+                }
             }
         }
     }
+
 }
 
 

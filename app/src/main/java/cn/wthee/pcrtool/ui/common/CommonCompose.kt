@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +31,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -370,17 +372,18 @@ fun MainCard(
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     fillMaxWidth: Boolean = true,
+    elevation: Dp = Dimen.cardElevation,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
-    var mModifier =if(fillMaxWidth){
+    var mModifier = if (fillMaxWidth) {
         modifier
             .fillMaxWidth()
-            .shadow(Dimen.cardElevation, shape, true)
-    }else{
+            .shadow(elevation, shape, true)
+    } else {
         modifier
-            .shadow(Dimen.cardElevation, shape, true)
+            .shadow(elevation, shape, true)
     }
 
     if (onClick != null) {
@@ -537,79 +540,103 @@ fun SelectTypeCompose(
         navViewModel.openChangeDataDialog.postValue(false)
     }
 
-
-    //切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(paddingValues)
-            .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-        onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            } else {
-                navViewModel.fabCloseClick.postValue(true)
+    //点击组件之外内容关闭
+    val boxModifier = if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
+                    }
+                )
             }
-        },
-    ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.widthIn(max = width),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //选择
-                tabs.forEachIndexed { index, tab ->
-                    val mModifier = if (type.value == index) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                navViewModel.openChangeDataDialog.postValue(false)
-                                navViewModel.fabCloseClick.postValue(true)
-                                if (type.value != index) {
-                                    coroutineScope.launch {
-                                        type.value = index
-                                        if (changeListener != null) {
-                                            changeListener()
+    } else {
+        Modifier.fillMaxSize()
+    }
+
+    Box(modifier = boxModifier) {
+        //切换
+        SmallFloatingActionButton(
+            modifier = modifier
+                .animateContentSize(defaultSpring())
+                .padding(paddingValues)
+                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                VibrateUtil(context).single()
+                if (!openDialog) {
+                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                    navViewModel.openChangeDataDialog.postValue(true)
+                } else {
+                    navViewModel.fabCloseClick.postValue(true)
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog) {
+                    Dimen.popupMenuElevation
+                } else {
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog) {
+                Column(
+                    modifier = Modifier.widthIn(max = width),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    //选择
+                    tabs.forEachIndexed { index, tab ->
+                        val mModifier = if (type.value == index) {
+                            Modifier.fillMaxWidth()
+                        } else {
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    VibrateUtil(context).single()
+                                    navViewModel.openChangeDataDialog.postValue(false)
+                                    navViewModel.fabCloseClick.postValue(true)
+                                    if (type.value != index) {
+                                        coroutineScope.launch {
+                                            type.value = index
+                                            if (changeListener != null) {
+                                                changeListener()
+                                            }
                                         }
                                     }
                                 }
-                            }
+                        }
+                        SelectText(
+                            selected = type.value == index,
+                            text = tab,
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            selectedColor = selectedColor,
+                            modifier = mModifier.padding(Dimen.mediumPadding)
+                        )
                     }
-                    SelectText(
-                        selected = type.value == index,
-                        text = tab,
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        selectedColor = selectedColor,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    IconCompose(
+                        data = icon, tint = selectedColor,
+                        size = Dimen.fabIconSize
+                    )
+                    Text(
+                        text = tabs[type.value],
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = selectedColor,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
                     )
                 }
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                IconCompose(
-                    data = icon, tint = selectedColor,
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = tabs[type.value],
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = selectedColor,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
-                )
-            }
 
+            }
         }
     }
 }
@@ -625,7 +652,7 @@ fun IconTextButton(
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    maxLines : Int = 1,
+    maxLines: Int = 1,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -689,8 +716,7 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
  * @param defaultKeywordList 默认关键词列表
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
 )
 @Composable
 fun BottomSearchBar(
