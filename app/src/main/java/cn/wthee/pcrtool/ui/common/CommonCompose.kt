@@ -16,11 +16,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -737,6 +734,9 @@ fun BottomSearchBar(
     }
     //键盘是否可见
     val isImeVisible = WindowInsets.isImeVisible
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
 
     if (!isImeVisible) {
         Row(
@@ -771,7 +771,10 @@ fun BottomSearchBar(
                 text = keywordState.value
             ) {
                 keyboardController?.show()
+                openDialog.value = true
                 focusRequester.requestFocus()
+                //如有日期弹窗，则关闭日期弹窗
+                navViewModel.fabCloseClick.postValue(true)
             }
         }
     }
@@ -784,11 +787,12 @@ fun BottomSearchBar(
     ) {
         //关键词列表，搜索时显示
         ExpandAnimation(
-            visible = isImeVisible && defaultKeywordList?.isNotEmpty() == true,
+            visible = openDialog.value && defaultKeywordList?.isNotEmpty() == true,
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             MainCard(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+                elevation = Dimen.popupMenuElevation
             ) {
                 Column(
                     modifier = Modifier.padding(Dimen.mediumPadding)
@@ -803,6 +807,7 @@ fun BottomSearchBar(
                         keywordState.value = keyword
                         keyboardController?.hide()
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 }
 
@@ -810,14 +815,16 @@ fun BottomSearchBar(
         }
 
         //focusRequester
-        MainCard {
+        MainCard(
+            elevation = Dimen.popupMenuElevation
+        ) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
+                    .heightIn(max = if (openDialog.value) Dp.Unspecified else 0.dp)
                     .padding(Dimen.smallPadding)
                     .focusRequester(focusRequester)
-                    .alpha(if (isImeVisible) 1f else 0f),
+                    .alpha(if (openDialog.value) 1f else 0f),
                 value = keywordInputState.value,
                 shape = MaterialTheme.shapes.medium,
                 onValueChange = { keywordInputState.value = it.deleteSpace },
@@ -836,6 +843,7 @@ fun BottomSearchBar(
                         keyboardController?.hide()
                         keywordState.value = keywordInputState.value
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -844,6 +852,7 @@ fun BottomSearchBar(
                         keyboardController?.hide()
                         keywordState.value = keywordInputState.value
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 ),
                 label = {

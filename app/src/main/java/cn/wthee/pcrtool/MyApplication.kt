@@ -3,7 +3,6 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.BuglyInitializer
@@ -40,7 +39,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         if (useIpOnFlag) {
             URL_DOMAIN = "96.45.190.76"
         }
-        Log.e("DEBUG", URL_DOMAIN)
+
         //Bugly
         BuglyInitializer().create(this)
         //数据库

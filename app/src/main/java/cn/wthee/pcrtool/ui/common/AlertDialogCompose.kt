@@ -89,7 +89,7 @@ fun MainAlertDialog(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoxScope.DateRangePickerCompose(
+fun DateRangePickerCompose(
     dateRange: MutableState<DateRange>
 ) {
     val context = LocalContext.current
@@ -133,12 +133,10 @@ fun BoxScope.DateRangePickerCompose(
         Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
+                detectTapGestures {
                         VibrateUtil(context).single()
                         navViewModel.fabCloseClick.postValue(true)
                     }
-                )
             }
     } else {
         Modifier.fillMaxSize()

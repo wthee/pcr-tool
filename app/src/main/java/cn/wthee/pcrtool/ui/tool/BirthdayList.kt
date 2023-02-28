@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -119,7 +120,7 @@ fun BirthdayItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (comingSoon) {
+                    if (comingSoon && !LocalInspectionMode.current) {
                         IconCompose(
                             data = MainIconType.COUNTDOWN,
                             size = Dimen.smallIconSize,
