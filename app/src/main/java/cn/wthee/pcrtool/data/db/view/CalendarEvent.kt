@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.utils.intArrayList
  * 活动信息
  */
 data class CalendarEvent(
-    @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "type") val type: String = "31",
     @ColumnInfo(name = "value") val value: Int = 1500,
     @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",
@@ -45,6 +44,7 @@ data class CalendarEvent(
                     )
                 )
             }
+
             "-1" -> {
                 //特殊地下城
                 events.add(
@@ -55,6 +55,18 @@ data class CalendarEvent(
                     )
                 )
             }
+
+            "-2" -> {
+                //次元断层
+                events.add(
+                    CalendarEventData(
+                        stringResource(id = R.string.fault),
+                        "",
+                        ""
+                    )
+                )
+            }
+
             else -> {
                 //正常活动
                 val list = type.intArrayList
@@ -88,10 +100,12 @@ data class CalendarEvent(
                                     //每日登录宝石
                                     value.toString()
                                 }
+
                                 20 -> {
                                     //兰德索尔杯
                                     ""
                                 }
+
                                 else -> stringResource(
                                     R.string.multiple,
                                     if ((multiple * 10).toInt() % 10 == 0) {
@@ -122,10 +136,17 @@ data class CalendarEvent(
                 //露娜塔
                 eventTitle = getString(R.string.tower)
             }
+
             "-1" -> {
                 //特殊地下城
                 eventTitle = getString(R.string.sp_dungeon)
             }
+
+            "-2" -> {
+                //次元断层
+                eventTitle = getString(R.string.fault)
+            }
+
             else -> {
                 //正常活动
                 val list = type.intArrayList
@@ -161,10 +182,12 @@ data class CalendarEvent(
                             //每日登录宝石
                             title + value
                         }
+
                         20 -> {
                             //兰德索尔杯
                             title
                         }
+
                         else -> title + typeName + multipleText
                     }
                     if (index != list.size - 1) {
