@@ -238,7 +238,7 @@ private fun ChangeDbCompose(
 
     Box(modifier = boxModifier) {
         Row(
-            modifier = mFabModifier,
+            modifier = mFabModifier.height(IntrinsicSize.Max),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.End
         ) {
@@ -331,8 +331,10 @@ private fun DbVersionList(
 
     Column(
         modifier = Modifier
-            .width(Dimen.dataChangeWidth),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .width(Dimen.dataChangeWidth)
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         //版本
         for (i in 0..2) {
@@ -419,7 +421,8 @@ private fun DbVersionContent(
                     modifier = Modifier.width(IntrinsicSize.Max),
                     title = stringResource(id = R.string.data_file_error),
                     content = stringResource(id = R.string.data_file_error_desc),
-                    color = colorRed
+                    color = colorRed,
+                    fillMaxWidth = false
                 ) {
                     VibrateUtil(context).single()
                     navViewModel.openChangeDataDialog.postValue(false)
@@ -432,13 +435,13 @@ private fun DbVersionContent(
             } else {
                 //数据更新内容
                 DbVersionContentItem(
+                    modifier = Modifier.weight(1f),
                     title = stringResource(id = R.string.db_diff_content),
-                    content = updateDb
+                    content = updateDb,
                 )
+                Spacer(modifier = Modifier.height(Dimen.largePadding))
                 //数据版本
                 DbVersionContentItem(
-                    modifier = Modifier
-                        .padding(top = Dimen.largePadding),
                     title = stringResource(id = R.string.db_diff_version),
                     content = dbVersionCode
                 )
@@ -457,11 +460,14 @@ private fun DbVersionContentItem(
     title: String,
     content: String,
     color: Color = MaterialTheme.colorScheme.primary,
+    fillMaxWidth: Boolean = true,
     onClick: (() -> Unit)? = null
 ) {
     MainCard(
-        modifier = modifier,
-        fillMaxWidth = false,
+        modifier = modifier
+            .widthIn(min = Dimen.dataChangeWidth)
+            .height(IntrinsicSize.Min),
+        fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
         onClick = onClick
     ) {
@@ -475,6 +481,7 @@ private fun DbVersionContentItem(
             ),
             color = color
         )
+        Spacer(modifier = Modifier.weight(1f))
         MainContentText(
             text = content,
             textAlign = TextAlign.Start,
@@ -630,16 +637,27 @@ fun editOverviewMenuOrder(id: Int) {
 @CombinedPreviews
 @Composable
 private fun DbVersionContentItemPreview() {
-    DbVersionContentItem(
-        title = stringResource(id = R.string.data_file_error),
-        content = stringResource(id = R.string.data_file_error_desc),
-        color = colorRed
-    )
+    PreviewLayout {
+        Column(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .width(Dimen.dataChangeWidth)
+        ) {
+            DbVersionContentItem(
+                title = stringResource(id = R.string.data_file_error),
+                content = stringResource(id = R.string.data_file_error_desc),
+                color = colorRed
+            )
+        }
+    }
+
 }
 
 
 @CombinedPreviews
 @Composable
 private fun DbVersionListPreview() {
-    DbVersionList(MaterialTheme.colorScheme.primary)
+    PreviewLayout {
+        DbVersionList(MaterialTheme.colorScheme.primary)
+    }
 }

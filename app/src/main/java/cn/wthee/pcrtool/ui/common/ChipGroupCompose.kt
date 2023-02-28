@@ -41,7 +41,6 @@ fun ChipGroup(
 /**
  * SuggestionChipGroup 展示用
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuggestionChipGroup(
     items: List<KeywordData>,
