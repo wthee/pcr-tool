@@ -1,31 +1,55 @@
 package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
@@ -35,9 +59,38 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.ChipGroup
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.SelectText
+import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.getString
+import cn.wthee.pcrtool.utils.listJoinStr
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -57,6 +110,8 @@ fun EquipList(
     toEquipMaterial: (Int) -> Unit,
     toSearchEquipQuest: (String) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState()
@@ -69,23 +124,22 @@ fun EquipList(
         ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
-    val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    //关闭时监听
-    if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
-        keyboardController?.hide()
-    }
 
     //搜索编号
-    val searchEquipIdList = navViewModel.searchEquipIdList.observeAsState()
+    val searchEquipIdList = navViewModel.searchEquipIdList.observeAsState().value ?: arrayListOf()
     //搜索模式
     val searchEquipMode = navViewModel.searchEquipMode.observeAsState().value ?: false
     if (searchEquipMode) {
         craftIndex.value = 0
     }
+
+    //关闭时监听
+    if (!state.isVisible && !searchEquipMode) {
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabOKCilck.postValue(false)
+        keyboardController?.hide()
+    }
+
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
 
@@ -126,7 +180,8 @@ fun EquipList(
                                 filterValue,
                                 toEquipDetail,
                                 toEquipMaterial,
-                                searchEquipMode
+                                searchEquipMode,
+                                searchEquipIdList
                             )
                         }
                         items(2) {
@@ -140,27 +195,27 @@ fun EquipList(
                 }
 
                 //搜索装备掉落
-                FabCompose(
-                    iconType = MainIconType.SEARCH,
-                    text = if (searchEquipIdList.value?.isNotEmpty() == true) {
-                        stringResource(id = R.string.equip_serach) + searchEquipIdList.value?.size
-                    } else {
-                        stringResource(id = R.string.equip_serach_mode)
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(
-                            end = Dimen.fabMargin,
-                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                        ),
-                ) {
-                    if (searchEquipIdList.value?.isNotEmpty() == true){
-                        navViewModel.searchEquipMode.postValue(!searchEquipMode)
-
-                    }else{
-                        toSearchEquipQuest(searchEquipIdList.value?.listJoinStr ?: "")
+                if (searchEquipMode) {
+                    SearchEquip(
+                        searchEquipIdList = searchEquipIdList,
+                        toSearchEquipQuest = toSearchEquipQuest
+                    )
+                } else {
+                    //切换至选择模式
+                    FabCompose(
+                        iconType = MainIconType.CHANGE_FILTER_TYPE,
+                        text = stringResource(id = R.string.equip_serach_mode),
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(
+                                end = Dimen.fabMargin,
+                                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                            ),
+                    ) {
+                        navViewModel.searchEquipMode.postValue(true)
                     }
                 }
+
 
                 Row(
                     modifier = Modifier
@@ -205,7 +260,132 @@ fun EquipList(
         }
     }
 
+}
 
+/**
+ * 装备搜索组件
+ */
+@Composable
+private fun SearchEquip(
+    searchEquipIdList: List<Int>,
+    toSearchEquipQuest: (String) -> Unit,
+) {
+    val context = LocalContext.current
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    //切换关闭监听
+    if (close) {
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
+    }
+    if (mainIcon == MainIconType.BACK) {
+        navViewModel.openChangeDataDialog.postValue(false)
+    }
+
+    //点击组件之外内容关闭
+    val boxModifier = if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
+                    }
+                )
+            }
+    } else {
+        Modifier.fillMaxSize()
+    }
+
+    Box(modifier = boxModifier) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                ),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            if (searchEquipIdList.isNotEmpty()) {
+                //预览已选择的
+                SmallFloatingActionButton(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.textfabMargin,
+                            end = Dimen.textfabMargin
+                        ),
+                    shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+                    onClick = {
+                        VibrateUtil(context).single()
+                        if (!openDialog) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                            navViewModel.openChangeDataDialog.postValue(true)
+                        }
+                    },
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = if (openDialog) {
+                            Dimen.popupMenuElevation
+                        } else {
+                            Dimen.fabElevation
+                        }
+                    ),
+                ) {
+                    if (openDialog) {
+                        Row(
+                            modifier = Modifier.padding(Dimen.mediumPadding),
+                        ) {
+                            searchEquipIdList.forEach {
+                                IconCompose(
+                                    data = ImageRequestHelper.getInstance().getEquipPic(it),
+                                    modifier = Modifier.padding(Dimen.mediumPadding),
+                                ) {
+                                    selectEquip(searchEquipIdList, it)
+                                }
+                            }
+                        }
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(start = Dimen.largePadding)
+                        ) {
+                            IconCompose(
+                                data = MainIconType.BOX,
+                                size = Dimen.fabIconSize
+                            )
+                            Text(
+                                text = searchEquipIdList.size.toString(),
+                                style = MaterialTheme.typography.titleSmall,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(
+                                    start = Dimen.mediumPadding, end = Dimen.largePadding
+                                )
+                            )
+                        }
+
+                    }
+                }
+            }
+
+            //搜索
+            val tipSerach = stringResource(id = R.string.tip_equip_serach)
+            FabCompose(
+                iconType = MainIconType.SEARCH,
+                text = stringResource(id = R.string.equip_serach),
+            ) {
+                if (searchEquipIdList.isNotEmpty()) {
+                    toSearchEquipQuest(searchEquipIdList.listJoinStr)
+                } else {
+                    ToastUtil.short(tipSerach)
+                }
+            }
+        }
+
+    }
 }
 
 /**
@@ -217,7 +397,8 @@ private fun EquipGroup(
     filterValue: FilterEquipment,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
-    searchEquipMode: Boolean
+    searchEquipMode: Boolean,
+    searchEquipIdList: List<Int>
 ) {
     //分组标题
     CommonGroupTitle(
@@ -235,7 +416,7 @@ private fun EquipGroup(
 
     //分组内容
     VerticalGrid(
-        itemWidth = Dimen.iconSize * 3,
+        itemWidth = if (searchEquipMode) Dimen.iconSize else Dimen.iconSize * 3,
         contentPadding = Dimen.largePadding,
         modifier = Modifier.padding(
             start = Dimen.commonItemPadding,
@@ -248,7 +429,8 @@ private fun EquipGroup(
                 equip,
                 toEquipDetail,
                 toEquipMaterial,
-                searchEquipMode
+                searchEquipMode,
+                searchEquipIdList
             )
         }
     }
@@ -263,7 +445,8 @@ private fun EquipItem(
     equip: EquipmentBasicInfo,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
-    searchEquipMode: Boolean
+    searchEquipMode: Boolean,
+    searchEquipIdList: List<Int>
 ) {
     val context = LocalContext.current
 
@@ -317,27 +500,7 @@ private fun EquipItem(
             .clickable {
                 VibrateUtil(context).single()
                 if (searchEquipMode) {
-                    //点击选择
-                    val searchEquipIdList = navViewModel.searchEquipIdList.value ?: arrayListOf()
-
-                    val newList = arrayListOf<Int>()
-                    newList.addAll(searchEquipIdList)
-                    if (newList.contains(equip.equipmentId)) {
-                        newList.remove(equip.equipmentId)
-                    } else {
-                        if (searchEquipIdList.size >= MAX_SEARCH_COUNT) {
-                            ToastUtil.short(
-                                getString(
-                                    R.string.equip_max_select_count,
-                                    MAX_SEARCH_COUNT
-                                )
-                            )
-                            return@clickable
-                        } else {
-                            newList.add(equip.equipmentId)
-                        }
-                    }
-                    navViewModel.searchEquipIdList.postValue(newList)
+                    selectEquip(searchEquipIdList, equip.equipmentId)
                 } else {
                     //点击跳转
                     if (equip.craftFlg == 1) {
@@ -349,9 +512,48 @@ private fun EquipItem(
             }
             .padding(Dimen.smallPadding)
     ) {
-        equipIcon()
-        equipName()
+        Box(contentAlignment = Alignment.Center) {
+            equipIcon()
+            if (searchEquipMode && searchEquipIdList.contains(equip.equipmentId)) {
+                SelectText(
+                    selected = true,
+                    text = stringResource(id = R.string.selected_mark),
+                    margin = 0.dp
+                )
+            }
+        }
+        if (!searchEquipMode) {
+            equipName()
+        }
     }
+}
+
+/**
+ * 选中或取消装备
+ */
+private fun selectEquip(
+    searchEquipIdList: List<Int>,
+    equipId: Int
+) {
+    //点击选择
+    val newList = arrayListOf<Int>()
+    newList.addAll(searchEquipIdList)
+    if (newList.contains(equipId)) {
+        newList.remove(equipId)
+    } else {
+        if (searchEquipIdList.size >= MAX_SEARCH_COUNT) {
+            ToastUtil.short(
+                getString(
+                    R.string.equip_max_select_count,
+                    MAX_SEARCH_COUNT
+                )
+            )
+            return
+        } else {
+            newList.add(equipId)
+        }
+    }
+    navViewModel.searchEquipIdList.postValue(newList)
 }
 
 /**
@@ -364,7 +566,7 @@ private fun EquipItem(
 private fun FilterEquipSheet(
     colorNum: Int,
     sheetState: ModalBottomSheetState,
-    craftIndex: MutableState<Int>
+    craftIndex: MutableState<Int>,
 ) {
     val filter = navViewModel.filterEquip.value ?: FilterEquipment()
 
@@ -397,6 +599,8 @@ private fun FilterEquipSheet(
             filter.craft = 1
             navViewModel.resetClick.postValue(false)
             navViewModel.filterEquip.postValue(FilterEquipment())
+            navViewModel.searchEquipMode.postValue(false)
+            navViewModel.searchEquipIdList.postValue(arrayListOf())
         }
         if (ok) {
             sheetState.hide()
@@ -556,7 +760,8 @@ private fun EquipGroupPreview() {
             FilterEquipment(),
             { },
             { },
-            false
+            false,
+            arrayListOf()
         )
     }
 }

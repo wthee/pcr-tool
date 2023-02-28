@@ -86,7 +86,7 @@ fun EquipMaterialDetail(
                             -1,
                             odds,
                             "30-15",
-                            colorWhite
+                            color = colorWhite
                         )
                     }
                     item {

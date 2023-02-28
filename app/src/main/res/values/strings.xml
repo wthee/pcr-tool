@@ -134,8 +134,9 @@
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
     <string name="equip_max_select_count">最多可选 %d 个装备</string>
-    <string name="equip_serach">装备掉落搜索</string>
-    <string name="equip_serach_mode">切换选择模式</string>
+    <string name="equip_serach">查询</string>
+    <string name="equip_serach_mode">切换查询</string>
+    <string name="tip_equip_serach">请先选择装备</string>
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>

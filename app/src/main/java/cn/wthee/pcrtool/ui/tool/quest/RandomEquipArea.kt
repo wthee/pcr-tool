@@ -115,8 +115,8 @@ fun RandomDropAreaList(
                     2 -> stringResource(id = R.string.random_drop_area_2)
                     else -> ""
                 },
-                colorGreen,
-                searchEquipIdList
+                searchEquipIdList,
+                colorGreen
             )
         }
         item {

@@ -78,7 +78,7 @@ fun QuestPager(
     if (normalList.isNotEmpty()) {
         pagerCount++
         tabs.add("Normal")
-        colorList.add(colorBlue)
+        colorList.add(colorCyan)
     }
 
     //困难
@@ -212,7 +212,7 @@ private fun List<QuestDetail>.filterAndSortSearch(
             getMatchCount(it, searchEquipIdList)
         }
     } else {
-        this
+        filterList
     }
 }
 
@@ -244,11 +244,10 @@ fun QuestList(
     searchEquipIdList: List<Int> = arrayListOf()
 ) {
     val color = when (type) {
-        1 -> colorBlue
+        1 -> colorCyan
         2 -> colorRed
         else -> colorPurple
     }
-
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(
             items = questList,
@@ -260,8 +259,8 @@ fun QuestList(
                 selectedId,
                 it.getAllOdd(),
                 it.questName,
-                color,
-                searchEquipIdList
+                searchEquipIdList,
+                color
             )
         }
         item {
@@ -281,8 +280,8 @@ fun AreaItem(
     selectedId: Int,
     odds: List<EquipmentIdWithOdds>,
     num: String,
-    color: Color,
-    searchEquipIdList: List<Int> = arrayListOf()
+    searchEquipIdList: List<Int> = arrayListOf(),
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     val placeholder = selectedId == -1
 
@@ -395,8 +394,7 @@ private fun AreaItemPreview() {
                 EquipmentIdWithOdds(0, 20),
                 EquipmentIdWithOdds(0, 20),
             ),
-            "1-1",
-            MaterialTheme.colorScheme.primary
+            "1-1"
         )
     }
 }
