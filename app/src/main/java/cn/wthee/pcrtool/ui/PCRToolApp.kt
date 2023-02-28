@@ -4,7 +4,11 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -163,7 +167,7 @@ private fun SettingDropMenu(actions: NavActions) {
                 MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             },
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.primaryContainer),
             offset = DpOffset(Dimen.fabMargin, 0.dp),
         ) {
             DropdownMenuItem(

@@ -335,6 +335,7 @@ fun RankText(
 @Composable
 fun getRankColor(rank: Int): Color {
     return when (rank) {
+        1 -> colorBlue
         in 2..3 -> colorCopper
         in 4..6 -> colorSilver
         in 7..10 -> colorGold

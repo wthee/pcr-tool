@@ -26,7 +26,7 @@ val colorAlphaWhite = Color(255, 255, 255, 128)
 /**
  * 浅蓝、Rank 1
  */
-val colorBlue = Color(0xFFA3D6EB)
+val colorBlue = Color(0xFFB9E3F3)
 
 /**
  * 铜、Rank 2 ~ 3
@@ -36,7 +36,7 @@ val colorCopper = Color(0xFFC28662)
 /**
  * 银、Rank 4 ~ 6
  */
-val colorSilver = Color(0xFF90B6B8)
+val colorSilver = Color(0xFFB9C8DA)
 
 /**
  * 金、Rank 7 ~ 10
@@ -61,12 +61,12 @@ val colorGreen = Color(0xFF5EB56D)
 /**
  * 橙、Rank 24 ~ 27
  */
-val colorOrange = Color(0xFFFF6C47)
+val colorOrange = Color(0xFFFF883E)
 
 /**
  * 青、Rank 28 ~
  */
-val colorCyan = Color(0xFF20EBE7)
+val colorCyan = Color(0xFF65B0FA)
 
 /**
  * 粉、ex装备4星
