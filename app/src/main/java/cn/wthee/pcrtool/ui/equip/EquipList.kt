@@ -2,13 +2,7 @@ package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -16,24 +10,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,36 +35,13 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.ChipGroup
-import cn.wthee.pcrtool.ui.common.CommonGroupTitle
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainContentText
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.colorBlue
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorOrange
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.colorSilver
-import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
+
+private const val MAX_SEARCH_COUNT = 3
 
 /**
  * 装备列表
@@ -96,9 +55,15 @@ fun EquipList(
     viewModel: EquipmentViewModel = hiltViewModel(),
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
+    toSearchEquipQuest: (String) -> Unit,
 ) {
+
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState()
+    //合成类型
+    val craftIndex = remember {
+        mutableStateOf(1)
+    }
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden,
@@ -112,6 +77,14 @@ fun EquipList(
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()
+    }
+
+    //搜索编号
+    val searchEquipIdList = navViewModel.searchEquipIdList.observeAsState()
+    //搜索模式
+    val searchEquipMode = navViewModel.searchEquipMode.observeAsState().value ?: false
+    if (searchEquipMode) {
+        craftIndex.value = 0
     }
 
     val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
@@ -138,7 +111,7 @@ fun EquipList(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
             sheetShape = shapeTop(),
             sheetContent = {
-                FilterEquipSheet(colorNum, state)
+                FilterEquipSheet(colorNum, state, craftIndex)
             }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -152,10 +125,11 @@ fun EquipList(
                                 equipGroupData,
                                 filterValue,
                                 toEquipDetail,
-                                toEquipMaterial
+                                toEquipMaterial,
+                                searchEquipMode
                             )
                         }
-                        item {
+                        items(2) {
                             CommonSpacer()
                         }
                     }
@@ -163,6 +137,29 @@ fun EquipList(
                     CenterTipText(
                         stringResource(id = R.string.no_data)
                     )
+                }
+
+                //搜索装备掉落
+                FabCompose(
+                    iconType = MainIconType.SEARCH,
+                    text = if (searchEquipIdList.value?.isNotEmpty() == true) {
+                        stringResource(id = R.string.equip_serach) + searchEquipIdList.value?.size
+                    } else {
+                        stringResource(id = R.string.equip_serach_mode)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                        ),
+                ) {
+                    if (searchEquipIdList.value?.isNotEmpty() == true){
+                        navViewModel.searchEquipMode.postValue(!searchEquipMode)
+
+                    }else{
+                        toSearchEquipQuest(searchEquipIdList.value?.listJoinStr ?: "")
+                    }
                 }
 
                 Row(
@@ -219,7 +216,8 @@ private fun EquipGroup(
     equipGroupData: EquipGroupData,
     filterValue: FilterEquipment,
     toEquipDetail: (Int) -> Unit,
-    toEquipMaterial: (Int) -> Unit
+    toEquipMaterial: (Int) -> Unit,
+    searchEquipMode: Boolean
 ) {
     //分组标题
     CommonGroupTitle(
@@ -249,7 +247,8 @@ private fun EquipGroup(
                 filterValue,
                 equip,
                 toEquipDetail,
-                toEquipMaterial
+                toEquipMaterial,
+                searchEquipMode
             )
         }
     }
@@ -264,6 +263,7 @@ private fun EquipItem(
     equip: EquipmentBasicInfo,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
+    searchEquipMode: Boolean
 ) {
     val context = LocalContext.current
 
@@ -316,10 +316,35 @@ private fun EquipItem(
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
-                if (equip.craftFlg == 1) {
-                    toEquipDetail(equipState.equipmentId)
+                if (searchEquipMode) {
+                    //点击选择
+                    val searchEquipIdList = navViewModel.searchEquipIdList.value ?: arrayListOf()
+
+                    val newList = arrayListOf<Int>()
+                    newList.addAll(searchEquipIdList)
+                    if (newList.contains(equip.equipmentId)) {
+                        newList.remove(equip.equipmentId)
+                    } else {
+                        if (searchEquipIdList.size >= MAX_SEARCH_COUNT) {
+                            ToastUtil.short(
+                                getString(
+                                    R.string.equip_max_select_count,
+                                    MAX_SEARCH_COUNT
+                                )
+                            )
+                            return@clickable
+                        } else {
+                            newList.add(equip.equipmentId)
+                        }
+                    }
+                    navViewModel.searchEquipIdList.postValue(newList)
                 } else {
-                    toEquipMaterial(equipState.equipmentId)
+                    //点击跳转
+                    if (equip.craftFlg == 1) {
+                        toEquipDetail(equipState.equipmentId)
+                    } else {
+                        toEquipMaterial(equipState.equipmentId)
+                    }
                 }
             }
             .padding(Dimen.smallPadding)
@@ -333,22 +358,19 @@ private fun EquipItem(
  * 装备筛选
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 private fun FilterEquipSheet(
     colorNum: Int,
-    sheetState: ModalBottomSheetState
+    sheetState: ModalBottomSheetState,
+    craftIndex: MutableState<Int>
 ) {
     val filter = navViewModel.filterEquip.value ?: FilterEquipment()
 
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
-    //合成类型
-    val craftIndex = remember {
-        mutableStateOf(filter.craft)
-    }
+
     filter.craft = craftIndex.value
     //收藏筛选
     val loveIndex = remember {
@@ -372,6 +394,7 @@ private fun FilterEquipSheet(
             loveIndex.value = 0
             typeIndex.value = 0
             craftIndex.value = 1
+            filter.craft = 1
             navViewModel.resetClick.postValue(false)
             navViewModel.filterEquip.postValue(FilterEquipment())
         }
@@ -532,7 +555,8 @@ private fun EquipGroupPreview() {
             ),
             FilterEquipment(),
             { },
-            { }
+            { },
+            false
         )
     }
 }

@@ -79,6 +79,18 @@ val String.intArrayList: List<Int>
         return list
     }
 
+/**
+ *  Int 数组转换为用 - 拼接的字符串
+ */
+val List<Int>.listJoinStr: String
+    get() {
+        var str = ""
+        this.forEach {
+            str += "$it-"
+        }
+        return str
+    }
+
 val String.stringArrayList: List<String>
     get() = this.split("-").filter { it != "" }
 

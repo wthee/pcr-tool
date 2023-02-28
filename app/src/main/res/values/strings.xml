@@ -133,6 +133,9 @@
     <string name="love_equip_material">收藏素材</string>
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
+    <string name="equip_max_select_count">最多可选 %d 个装备</string>
+    <string name="equip_serach">装备掉落搜索</string>
+    <string name="equip_serach_mode">切换选择模式</string>
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
@@ -780,7 +783,8 @@
     <string name="leader_tier_d">T%d</string>
 
     <!--测试用-->
-    <string name="debug_short_text">SHORT-TEXT</string>
-    <string name="debug_long_text">LONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXT</string>
+    <string name="debug_short_text">测试文本测试文本</string>
+    <string name="debug_medium_text">测试文本、测试文本，测试、文本</string>
+    <string name="debug_long_text">测试文本测试文本测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本</string>
 
 </resources>
