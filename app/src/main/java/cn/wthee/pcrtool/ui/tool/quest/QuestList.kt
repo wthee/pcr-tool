@@ -14,10 +14,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -26,9 +28,11 @@ import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 主线地图信息
+ * @param searchEquipIds 搜索的装备编号，-分隔
  */
 @Composable
 fun AllQuestList(
+    searchEquipIds: String = "",
     questViewModel: QuestViewModel = hiltViewModel(),
 ) {
     val questList = questViewModel.getQuestList().collectAsState(initial = null).value
@@ -37,7 +41,8 @@ fun AllQuestList(
         if (questList != null) {
             QuestPager(
                 questList,
-                0
+                0,
+                searchEquipIds.intArrayList
             )
         }
     }
@@ -53,6 +58,7 @@ fun AllQuestList(
 fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
+    searchEquipIdList: List<Int> = arrayListOf(),
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
     val flow = remember(equipId) {
@@ -68,7 +74,7 @@ fun QuestPager(
     val colorList = arrayListOf<Color>()
 
     //普通
-    val normalList = questList.filter { it.questType == 1 }
+    val normalList = questList.filterAndSortSearch(type = 1, searchEquipIdList = searchEquipIdList)
     if (normalList.isNotEmpty()) {
         pagerCount++
         tabs.add("Normal")
@@ -76,7 +82,7 @@ fun QuestPager(
     }
 
     //困难
-    val hardList = questList.filter { it.questType == 2 }
+    val hardList = questList.filterAndSortSearch(type = 2, searchEquipIdList = searchEquipIdList)
     if (hardList.isNotEmpty()) {
         pagerCount++
         tabs.add("Hard")
@@ -84,7 +90,8 @@ fun QuestPager(
     }
 
     //非常困难
-    val veryHardList = questList.filter { it.questType == 3 }
+    val veryHardList =
+        questList.filterAndSortSearch(type = 3, searchEquipIdList = searchEquipIdList)
     if (veryHardList.isNotEmpty()) {
         pagerCount++
         tabs.add("Very Hard")
@@ -93,7 +100,17 @@ fun QuestPager(
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
-    if (randomDropResponseData?.data?.isNotEmpty() == true) {
+    val randomList =
+        randomDropResponseData?.data?.filter {
+            if (searchEquipIdList.isNotEmpty()) {
+                getRandomQuestMatchCount(it, searchEquipIdList) > 0
+            } else {
+                true
+            }
+        }?.sortedByDescending {
+            getRandomQuestMatchCount(it, searchEquipIdList)
+        }
+    if (randomList?.isNotEmpty() == true) {
         pagerCount++
         tabs.add(randomDrop)
         colorList.add(colorGreen)
@@ -106,41 +123,113 @@ fun QuestPager(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        //Tab
-        MainTabRow(
-            pagerState = pagerState,
-            tabs = tabs,
-            colorList = colorList,
-            modifier = Modifier
-                .padding(
-                    top = Dimen.mediumPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                )
-                .fillMaxWidth(tabs.size * 0.25f)
-        )
+        if (tabs.size == 0) {
+            CircularProgressCompose()
+        } else {
+            //Tab
+            MainTabRow(
+                pagerState = pagerState,
+                tabs = tabs,
+                colorList = colorList,
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+                    .fillMaxWidth(tabs.size * 0.25f)
+            )
 
-        HorizontalPager(
-            count = pagerCount,
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { pagerIndex ->
-            if (tabs[pagerIndex] == randomDrop) {
-                //随机掉落
-                CommonResponseBox(responseData = randomDropResponseData) { data ->
-                    RandomDropAreaList(selectId = equipId, areaList = data)
+            HorizontalPager(
+                count = pagerCount,
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { pagerIndex ->
+                if (tabs[pagerIndex] == randomDrop) {
+                    //随机掉落
+                    CommonResponseBox(responseData = randomDropResponseData) {
+                        RandomDropAreaList(
+                            selectId = equipId,
+                            areaList = randomList!!,
+                            searchEquipIdList = searchEquipIdList
+                        )
+                    }
+                } else {
+                    //主线掉落
+                    val list = when (tabs[pagerIndex]) {
+                        "Normal" -> normalList
+                        "Hard" -> hardList
+                        else -> veryHardList
+                    }
+                    QuestList(
+                        selectedId = equipId,
+                        type = list[0].questType,
+                        questList = list,
+                        searchEquipIdList = searchEquipIdList
+                    )
                 }
-            } else {
-                //主线掉落
-                val list = when (tabs[pagerIndex]) {
-                    "Normal" -> normalList
-                    "Hard" -> hardList
-                    else -> veryHardList
-                }
-                QuestList(selectedId = equipId, type = list[0].questType, questList = list)
             }
         }
+
     }
+}
+
+/**
+ * 获取额外掉落区域匹配装备的数量
+ */
+private fun getRandomQuestMatchCount(
+    it: RandomEquipDropArea,
+    searchEquipIdList: List<Int>
+): Int {
+    var searchMatchCount = 0
+    it.equipIds.intArrayList.forEach { equipId ->
+        if (searchEquipIdList.contains(equipId)) {
+            searchMatchCount++
+        }
+    }
+    return searchMatchCount
+}
+
+/**
+ * 筛选区域
+ */
+@Composable
+private fun List<QuestDetail>.filterAndSortSearch(
+    type: Int,
+    searchEquipIdList: List<Int>
+): List<QuestDetail> {
+    val filterList = this.filter {
+        val questType = it.questType == type
+        val searchFlag = if (searchEquipIdList.isNotEmpty()) {
+            getMatchCount(it, searchEquipIdList) > 0
+        } else {
+            true
+        }
+        questType && searchFlag
+    }
+    return if (searchEquipIdList.isNotEmpty()) {
+        filterList.sortedByDescending {
+            getMatchCount(it, searchEquipIdList)
+        }
+    } else {
+        this
+    }
+}
+
+/**
+ * 获取区域匹配装备的数量
+ */
+private fun getMatchCount(
+    it: QuestDetail,
+    searchEquipIdList: List<Int>
+): Int {
+    var searchMatchCount = 0
+    it.getAllOdd().forEach { oddData ->
+        if (searchEquipIdList.contains(oddData.equipId)) {
+            searchMatchCount++
+        }
+    }
+    return searchMatchCount
 }
 
 /**
@@ -148,7 +237,12 @@ fun QuestPager(
  * @param selectedId 非0 装备详情-查看掉落跳转，0 主线地图模块
  */
 @Composable
-fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
+fun QuestList(
+    selectedId: Int,
+    type: Int,
+    questList: List<QuestDetail>,
+    searchEquipIdList: List<Int> = arrayListOf()
+) {
     val color = when (type) {
         1 -> colorBlue
         2 -> colorRed
@@ -166,7 +260,8 @@ fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
                 selectedId,
                 it.getAllOdd(),
                 it.questName,
-                color
+                color,
+                searchEquipIdList
             )
         }
         item {
@@ -179,13 +274,15 @@ fun QuestList(selectedId: Int, type: Int, questList: List<QuestDetail>) {
 /**
  * 掉落区域信息
  * @param selectedId unknow 随机掉落；非0 主线掉落，titleEnd显示概率；0 隐藏titleEnd
+ * @param searchEquipIdList 搜索的装备编号列表
  */
 @Composable
 fun AreaItem(
     selectedId: Int,
     odds: List<EquipmentIdWithOdds>,
     num: String,
-    color: Color
+    color: Color,
+    searchEquipIdList: List<Int> = arrayListOf()
 ) {
     val placeholder = selectedId == -1
 
@@ -225,7 +322,7 @@ fun AreaItem(
         contentPadding = Dimen.mediumPadding
     ) {
         odds.forEach {
-            EquipWithOddCompose(selectedId, it)
+            EquipWithOddCompose(selectedId, it, searchEquipIdList)
         }
     }
 }
@@ -237,7 +334,8 @@ fun AreaItem(
 @Composable
 private fun EquipWithOddCompose(
     selectedId: Int,
-    oddData: EquipmentIdWithOdds
+    oddData: EquipmentIdWithOdds,
+    searchEquipIdList: List<Int>
 ) {
     var dataState by remember { mutableStateOf(oddData) }
     if (dataState != oddData) {
@@ -260,7 +358,8 @@ private fun EquipWithOddCompose(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val selected = selectedId == dataState.equipId
+        val selected =
+            selectedId == dataState.equipId || searchEquipIdList.contains(dataState.equipId)
         Box(contentAlignment = Alignment.Center) {
             equipIcon()
             if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {

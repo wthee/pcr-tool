@@ -133,6 +133,9 @@
     <string name="love_equip_material">收藏素材</string>
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
+    <string name="equip_max_select_count">最多可选 %d 个装备</string>
+    <string name="equip_serach">装备掉落搜索</string>
+    <string name="equip_serach_mode">切换选择模式</string>
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
@@ -291,6 +294,8 @@
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
+    <string name="data_file_error">文件损坏</string>
+    <string name="data_file_error_desc">点击重新下载</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="save_image">保存图片</string>
     <string name="tip_save_image">将图片保存至系统相册中</string>
@@ -302,7 +307,9 @@
     <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
     <string name="copy_success">文本已复制~</string>
-    <string name="db_diff">%s：%s\n最近更新：%s</string>
+    <string name="db_diff_version">数据版本</string>
+    <string name="db_diff_content">更新内容</string>
+    <string name="db_diff_content_none">其他</string>
     <string name="title_api_request_error">网络请求异常</string>
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
@@ -777,7 +784,8 @@
     <string name="leader_tier_d">T%d</string>
 
     <!--测试用-->
-    <string name="debug_short_text">SHORT-TEXT</string>
-    <string name="debug_long_text">LONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXTLONGTEXT</string>
+    <string name="debug_short_text">测试文本测试文本</string>
+    <string name="debug_medium_text">测试文本、测试文本，测试、文本</string>
+    <string name="debug_long_text">测试文本测试文本测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本</string>
 
 </resources>

@@ -26,7 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.ui.common.CircularProgressCompose
 import cn.wthee.pcrtool.ui.common.FabCompose
@@ -35,10 +34,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.getRegionName
-import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -150,31 +146,9 @@ fun FabMain(modifier: Modifier = Modifier) {
  * 设置页面
  */
 @Composable
-private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hiltViewModel()) {
+private fun SettingDropMenu(actions: NavActions) {
     val fabMainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val context = LocalContext.current
-    val sp = settingSP()
-    val region = MainActivity.regionType
-    val updateDb = viewModel.updateDb.observeAsState().value ?: ""
-    LaunchedEffect(MainActivity.regionType) {
-        viewModel.getDbDiff()
-    }
-
-    //数据库版本
-    val typeName = getRegionName(region)
-    val localVersion = sp.getString(
-        when (region) {
-            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
-        },
-        ""
-    )
-    val dbVersionCode = if (localVersion != null) {
-        localVersion.split("/")[0]
-    } else {
-        ""
-    }
 
     //调整圆角
     PCRToolComposeTheme(
@@ -223,12 +197,7 @@ private fun SettingDropMenu(actions: NavActions, viewModel: NoticeViewModel = hi
                         iconType = R.drawable.ic_logo_large,
                         iconSize = Dimen.mediumIconSize,
                         title = "v" + BuildConfig.VERSION_NAME,
-                        summary = stringResource(
-                            id = R.string.db_diff,
-                            typeName,
-                            dbVersionCode,
-                            updateDb
-                        ),
+                        summary = stringResource(id = R.string.app_name),
                         titleColor = MaterialTheme.colorScheme.primary,
                         summaryColor = MaterialTheme.colorScheme.onSurface,
                         padding = Dimen.smallPadding,

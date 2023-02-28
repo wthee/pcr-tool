@@ -42,29 +42,14 @@ object DatabaseUpdater {
             putInt(Constants.SP_DATABASE_TYPE, region.value)
         }
         MainActivity.regionType = region
-        when (region) {
-            RegionType.CN -> {
-                AppDatabaseTW.close()
-                AppDatabaseJP.close()
-            }
-
-            RegionType.TW -> {
-                AppDatabaseCN.close()
-                AppDatabaseJP.close()
-            }
-
-            RegionType.JP -> {
-                AppDatabaseCN.close()
-                AppDatabaseTW.close()
-            }
-        }
         handler.sendEmptyMessage(0)
     }
 
     /**
      * 检查是否需要更新
+     * @param fixDb 修复数据库（强制重新下载）
      */
-    suspend fun checkDBVersion() {
+    suspend fun checkDBVersion(fixDb: Boolean = false) {
         //获取数据库最新版本
         try {
             navViewModel.downloadProgress.postValue(-1)
@@ -82,7 +67,8 @@ object DatabaseUpdater {
 
             val version = service.getDbVersion(body)
             //更新判断
-            downloadDB(version.data!!)
+            navViewModel.updateDb.postValue(version.data!!.desc)
+            downloadDB(version.data!!, fixDb)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 ToastUtil.short(getString(R.string.check_db_error))
@@ -96,7 +82,7 @@ object DatabaseUpdater {
      * @param versionData 版本信息
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private fun downloadDB(versionData: DatabaseVersion) {
+    private fun downloadDB(versionData: DatabaseVersion, fixDb: Boolean) {
         val region = MainActivity.regionType
         val localVersionKey = when (region) {
             RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
@@ -108,7 +94,8 @@ object DatabaseUpdater {
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
-                || (FileUtil.needUpdate(region) || localVersion == "0")  //数据库wal被清空
+                || (FileUtil.dbNotExists(region) || localVersion == "0")  //数据库wal被清空
+                || fixDb
 
         //下载远程备份
         val toDownloadRemoteBackup =
@@ -199,21 +186,21 @@ fun tryOpenDatabase(): Int {
         RegionType.CN -> {
             msg = "db error: cn"
             open = {
-                openDatabase(AppDatabaseCN.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
+                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
             }
         }
 
         RegionType.TW -> {
             msg = "db error: tw"
             open = {
-                openDatabase(AppDatabaseTW.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
+                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
             }
         }
 
         RegionType.JP -> {
             msg = "db error: jp"
             open = {
-                openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
+                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
             }
         }
     }

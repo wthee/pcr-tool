@@ -89,7 +89,8 @@ fun RandomEquipArea(
 fun RandomDropAreaList(
     selectId: Int,
     scrollState: LazyListState = rememberLazyListState(),
-    areaList: List<RandomEquipDropArea>
+    areaList: List<RandomEquipDropArea>,
+    searchEquipIdList: List<Int> = arrayListOf()
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -114,7 +115,8 @@ fun RandomDropAreaList(
                     2 -> stringResource(id = R.string.random_drop_area_2)
                     else -> ""
                 },
-                colorGreen
+                colorGreen,
+                searchEquipIdList
             )
         }
         item {

@@ -9,7 +9,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_CN
+import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_JP
+import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_TW
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_CN
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_JP
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_TW
 
 
 @Database(
@@ -20,9 +27,9 @@ import cn.wthee.pcrtool.utils.Constants
     exportSchema = false
 )
 /**
- * 台服版本数据库
+ * 游戏数据
  */
-abstract class AppDatabaseTW : RoomDatabase() {
+abstract class AppBasicDatabase : RoomDatabase() {
 
     abstract fun getUnitDao(): UnitDao
     abstract fun getSkillDao(): SkillDao
@@ -37,18 +44,27 @@ abstract class AppDatabaseTW : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var instance: AppDatabaseTW? = null
+        private var instance: AppBasicDatabase? = null
 
         /**
          * 自动获取数据库、远程备份数据
          */
-        fun getInstance(): AppDatabaseTW {
+        fun getInstance(type: RegionType): AppBasicDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(
                     if (MyApplication.backupMode) {
-                        Constants.DATABASE_BACKUP_NAME_TW
+                        when (type) {
+                            RegionType.CN -> DATABASE_BACKUP_NAME_CN
+                            RegionType.TW -> DATABASE_BACKUP_NAME_TW
+                            RegionType.JP -> DATABASE_BACKUP_NAME_JP
+                        }
+
                     } else {
-                        Constants.DATABASE_NAME_TW
+                        when (type) {
+                            RegionType.CN -> DATABASE_NAME_CN
+                            RegionType.TW -> DATABASE_NAME_TW
+                            RegionType.JP -> DATABASE_NAME_JP
+                        }
                     }
                 ).also { instance = it }
             }
@@ -66,9 +82,10 @@ abstract class AppDatabaseTW : RoomDatabase() {
             }
         }
 
+
         @SuppressLint("UnsafeOptInUsageError")
-        fun buildDatabase(name: String): AppDatabaseTW {
-            return Room.databaseBuilder(MyApplication.context, AppDatabaseTW::class.java, name)
+        fun buildDatabase(name: String): AppBasicDatabase {
+            return Room.databaseBuilder(MyApplication.context, AppBasicDatabase::class.java, name)
                 .fallbackToDestructiveMigration()
                 .addCallback(object : Callback() {
                     override fun onOpen(db: SupportSQLiteDatabase) {

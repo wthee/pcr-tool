@@ -5,10 +5,12 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,15 +39,14 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.home.module.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.settingSP
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 //权限
@@ -65,18 +67,6 @@ fun Overview(
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
         noticeViewModel.check()
-    }
-
-    val coroutineScope = rememberCoroutineScope()
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
-
-    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    //切换数据关闭监听
-    if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
-        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-        navViewModel.fabCloseClick.postValue(false)
     }
 
     //添加日历确认弹窗
@@ -186,9 +176,6 @@ fun Overview(
 
         //数据切换功能
         ChangeDbCompose(
-            openDialog,
-            downloadState,
-            coroutineScope,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
@@ -202,12 +189,139 @@ fun Overview(
  */
 @Composable
 private fun ChangeDbCompose(
-    openDialog: Boolean,
-    downloadState: Int,
-    coroutineScope: CoroutineScope,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     val context = LocalContext.current
+    val region = MainActivity.regionType
+
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    //切换数据关闭监听
+    if (close) {
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        navViewModel.fabCloseClick.postValue(false)
+    }
+
+    //点击组件之外内容关闭
+    val boxModifier = if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
+                    }
+                )
+            }
+    } else {
+        Modifier.fillMaxSize()
+    }
+
+
+    //展开边距修正
+    val mFabModifier = if (openDialog) {
+        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+    } else {
+        modifier
+    }
+    //校验数据文件是否异常
+    val dbError = FileUtil.dbSizeError(region)
+    //颜色
+    val tintColor = if (dbError) {
+        colorRed
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
+
+    Box(modifier = boxModifier) {
+        Row(
+            modifier = mFabModifier,
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
+        ) {
+            //数据提示
+            DbVersionContent(openDialog, dbError)
+
+
+            Box(
+                modifier = mFabModifier
+                    .animateContentSize(defaultSpring())
+                    .padding(
+                        end = Dimen.fabMarginEnd,
+                        start = Dimen.mediumPadding,
+                        top = Dimen.fabMargin,
+                        bottom = Dimen.fabMargin,
+                    )
+            ) {
+                //数据切换
+                SmallFloatingActionButton(
+                    shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+                    onClick = {
+                        //非加载中可点击，加载中禁止点击
+                        VibrateUtil(context).single()
+                        if (downloadState == -2) {
+                            if (!openDialog) {
+                                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                                navViewModel.openChangeDataDialog.postValue(true)
+                            } else {
+                                navViewModel.fabCloseClick.postValue(true)
+                            }
+                        }
+                    },
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = if (openDialog) {
+                            Dimen.popupMenuElevation
+                        } else {
+                            Dimen.fabElevation
+                        }
+                    ),
+                ) {
+                    if (openDialog) {
+                        //选择
+                        DbVersionList(tintColor)
+                    } else {
+                        //加载相关
+                        if (downloadState == -2) {
+                            IconCompose(
+                                data = MainIconType.CHANGE_DATA,
+                                tint = tintColor,
+                                size = Dimen.fabIconSize
+                            )
+                        } else {
+                            Box(contentAlignment = Alignment.Center) {
+                                CircularProgressCompose()
+                                //显示下载进度
+                                if (downloadState in 1..99) {
+                                    Text(
+                                        text = downloadState.toString(),
+                                        color = MaterialTheme.colorScheme.primary,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+
+}
+
+/**
+ * 版本选择列表
+ */
+@Composable
+private fun DbVersionList(
+    tintColor: Color
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val region = MainActivity.regionType
     val menuTexts = arrayListOf(
         stringResource(id = R.string.db_cn),
@@ -215,88 +329,161 @@ private fun ChangeDbCompose(
         stringResource(id = R.string.db_jp),
     )
 
-    //展开边距修正
-    val mFabModifier = if (openDialog) {
-        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
-
-    } else {
-        modifier
-    }
-
-    //数据切换
-    SmallFloatingActionButton(
-        modifier = mFabModifier
-            .animateContentSize(defaultSpring())
-            .padding(
-                end = Dimen.fabMarginEnd,
-                start = Dimen.fabMargin,
-                top = Dimen.fabMargin,
-                bottom = Dimen.fabMargin,
-            ),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-        onClick = {
-            //非加载中可点击，加载中禁止点击
-            VibrateUtil(context).single()
-            if (downloadState == -2) {
-                if (!openDialog) {
-                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    navViewModel.openChangeDataDialog.postValue(true)
-                } else {
-                    navViewModel.fabCloseClick.postValue(true)
-                }
-            }
-        },
+    Column(
+        modifier = Modifier
+            .width(Dimen.dataChangeWidth),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.width(Dimen.dataChangeWidth),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //版本
-                for (i in 0..2) {
-                    val mModifier = if (region == RegionType.getByValue(i + 2)) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                navViewModel.openChangeDataDialog.postValue(false)
-                                navViewModel.fabCloseClick.postValue(true)
-                                coroutineScope.launch {
-                                    DatabaseUpdater.changeDatabase(RegionType.getByValue(i + 2))
-                                }
-                            }
-                    }
-                    SelectText(
-                        selected = region.value == i + 2,
-                        text = menuTexts[i],
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
-                    )
-                }
-            }
-        } else {
-            if (downloadState == -2) {
-                IconCompose(
-                    data = MainIconType.CHANGE_DATA,
-                    tint = MaterialTheme.colorScheme.primary,
-                    size = Dimen.fabIconSize
-                )
+        //版本
+        for (i in 0..2) {
+            val regionType = RegionType.getByValue(i + 2)
+            //是否选中
+            val selected = region.value == i + 2
+
+            val mModifier = if (selected) {
+                Modifier
+                    .fillMaxWidth()
             } else {
-                Box(contentAlignment = Alignment.Center) {
-                    CircularProgressCompose()
-                    //显示下载进度
-                    if (downloadState in 1..99) {
-                        Text(
-                            text = downloadState.toString(),
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        VibrateUtil(context).single()
+                        navViewModel.openChangeDataDialog.postValue(false)
+                        navViewModel.fabCloseClick.postValue(true)
+                        coroutineScope.launch {
+                            //正常切换
+                            DatabaseUpdater.changeDatabase(regionType)
+                        }
+                    }
+            }
+
+            SelectText(
+                selected = selected,
+                text = menuTexts[i],
+                textStyle = MaterialTheme.typography.titleLarge,
+                modifier = mModifier
+                    .padding(Dimen.mediumPadding),
+                selectedColor = tintColor
+            )
+
+        }
+    }
+}
+
+/**
+ * 数据切换其他内容
+ */
+@Composable
+private fun DbVersionContent(
+    openDialog: Boolean,
+    dbError: Boolean,
+) {
+    val region = MainActivity.regionType
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    //数据库版本
+    val sp = settingSP()
+    val localVersion = sp.getString(
+        when (region) {
+            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
+            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
+            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
+        },
+        ""
+    )
+    val dbVersionCode = if (localVersion != null) {
+        localVersion.split("/")[0]
+    } else {
+        ""
+    }
+    val updateDb = navViewModel.updateDb.observeAsState().value ?: ""
+
+
+    if (openDialog) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .animateContentSize(defaultSpring())
+                .padding(
+                    end = Dimen.smallPadding,
+                    start = Dimen.fabMargin,
+                    top = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin,
+                )
+        ) {
+            //数据异常时显示
+            if (dbError) {
+                DbVersionContentItem(
+                    modifier = Modifier.width(IntrinsicSize.Max),
+                    title = stringResource(id = R.string.data_file_error),
+                    content = stringResource(id = R.string.data_file_error_desc),
+                    color = colorRed
+                ) {
+                    VibrateUtil(context).single()
+                    navViewModel.openChangeDataDialog.postValue(false)
+                    navViewModel.fabCloseClick.postValue(true)
+                    coroutineScope.launch {
+                        //数据库文件异常时，重新下载
+                        DatabaseUpdater.checkDBVersion(fixDb = true)
                     }
                 }
+            } else {
+                //数据更新内容
+                DbVersionContentItem(
+                    title = stringResource(id = R.string.db_diff_content),
+                    content = updateDb
+                )
+                //数据版本
+                DbVersionContentItem(
+                    modifier = Modifier
+                        .padding(top = Dimen.largePadding),
+                    title = stringResource(id = R.string.db_diff_version),
+                    content = dbVersionCode
+                )
             }
         }
+    }
+
+}
+
+/**
+ * 数据切换其他内容项
+ */
+@Composable
+private fun DbVersionContentItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    content: String,
+    color: Color = MaterialTheme.colorScheme.primary,
+    onClick: (() -> Unit)? = null
+) {
+    MainCard(
+        modifier = modifier,
+        fillMaxWidth = false,
+        elevation = Dimen.popupMenuElevation,
+        onClick = onClick
+    ) {
+        Subtitle2(
+            text = title,
+            modifier = Modifier.padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.mediumPadding,
+                bottom = Dimen.smallPadding
+            ),
+            color = color
+        )
+        MainContentText(
+            text = content,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                bottom = Dimen.mediumPadding
+            )
+        )
     }
 }
 
@@ -437,4 +624,22 @@ fun editOverviewMenuOrder(id: Int) {
         //更新
         navViewModel.overviewOrderData.postValue(edited)
     }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun DbVersionContentItemPreview() {
+    DbVersionContentItem(
+        title = stringResource(id = R.string.data_file_error),
+        content = stringResource(id = R.string.data_file_error_desc),
+        color = colorRed
+    )
+}
+
+
+@CombinedPreviews
+@Composable
+private fun DbVersionListPreview() {
+    DbVersionList(MaterialTheme.colorScheme.primary)
 }
