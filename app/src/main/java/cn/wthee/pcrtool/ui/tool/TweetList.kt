@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -105,7 +106,7 @@ fun TweetList(
                     it.id
                 }
             ) {
-                TweetItem(it ?: TweetData())
+                TweetItem(it ?: TweetData(), keywordState.value == "【4コマ更新】")
             }
             //暂无更多提示
             if (tweetItems.loadState.refresh != LoadState.Loading) {
@@ -146,27 +147,29 @@ fun TweetList(
  * 推特内容
  */
 @Composable
-private fun TweetItem(data: TweetData) {
+private fun TweetItem(data: TweetData, comicMode: Boolean) {
     val placeholder = data.id == 0
     val photos = data.getImageList()
-    val comicId: String
-    var url = if (data.tweet.contains("【4コマ更新】")) {
+    val isComicUrl = data.tweet.contains("【4コマ更新】")
+    var url = if (isComicUrl) {
         // 四格漫画
-        comicId = getComicId(data.tweet)
-        COMIC4 + comicId + PNG
+        COMIC4 + getComicId(data.tweet) + PNG
     } else {
         ""
     }
     // 时间
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
-    ) {
-        MainTitleText(
-            text = data.date,
-            modifier = Modifier.commonPlaceholder(placeholder)
-        )
+    if (!comicMode) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
+        ) {
+            MainTitleText(
+                text = data.date,
+                modifier = Modifier.commonPlaceholder(placeholder)
+            )
+        }
     }
+
     //内容
     Column(
         modifier = Modifier
@@ -181,37 +184,40 @@ private fun TweetItem(data: TweetData) {
             .commonPlaceholder(visible = placeholder),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //文本
-        MainContentText(
-            text = data.getFormatTweet(),
-            textAlign = TextAlign.Start,
-            selectable = true
-        )
-        //相关链接跳转
-        if (!placeholder) {
-            Row(
-                modifier = Modifier
-                    .padding(vertical = Dimen.smallPadding)
-                    .fillMaxWidth()
-            ) {
-                TweetButton(data.link)
-                data.getUrlList().forEach {
-                    TweetButton(it)
+        if (!comicMode) {
+            //文本
+            MainContentText(
+                text = data.getFormatTweet(),
+                textAlign = TextAlign.Start,
+                selectable = true
+            )
+            //相关链接跳转
+            if (!placeholder) {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = Dimen.smallPadding)
+                        .fillMaxWidth()
+                ) {
+                    TweetButton(data.link)
+                    data.getUrlList().forEach {
+                        TweetButton(it)
+                    }
                 }
             }
         }
+
         //图片
         if (photos.isNotEmpty()) {
             VerticalGrid(itemWidth = getItemWidth()) {
                 photos.forEach {
-                    val isComic = url != ""
-                    if (!isComic) {
+                    if (!isComicUrl) {
                         url = it
                     }
                     ImageCompose(
                         data = url,
-                        ratio = if (isComic) RATIO_COMIC else RATIO_COMMON,
-                        modifier = Modifier.fillMaxWidth()
+                        ratio = if (isComicUrl) RATIO_COMIC else RATIO_COMMON,
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.FillHeight
                     )
                 }
             }
@@ -233,22 +239,26 @@ private fun TweetButton(
         ) {
             BrowserUtil.open(url)
         }
+
         url.contains("priconne-redive.jp/news/") -> TweetButtonData(
             stringResource(id = R.string.read_news), MainIconType.NEWS
         ) {
             //公告详情
             BrowserUtil.open(url)
         }
+
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET
         ) {
             BrowserUtil.open(url)
         }
+
         url.contains("hibiki-radio.jp") -> TweetButtonData(
             stringResource(id = R.string.hibiki), MainIconType.HIBIKI
         ) {
             BrowserUtil.open(url)
         }
+
         else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
             BrowserUtil.open(url)
         }
@@ -275,7 +285,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewLayout {
-        TweetItem(data = TweetData(id = 1, tweet = "???"))
+        TweetItem(data = TweetData(id = 1, tweet = "???"), false)
     }
 }
 
