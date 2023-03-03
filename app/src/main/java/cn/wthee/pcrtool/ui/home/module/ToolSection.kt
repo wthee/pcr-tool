@@ -4,7 +4,11 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -185,7 +189,7 @@ fun getAction(
             ToolMenuType.LEADER -> actions.toLeader()
             ToolMenuType.EQUIP -> actions.toEquipList()
             ToolMenuType.TWEET -> actions.toTweetList()
-//            ToolMenuType.COMIC -> actions.toComicList()
+            ToolMenuType.COMIC -> actions.toComicList()
             ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
             ToolMenuType.ALL_EQUIP -> actions.toAllEquipList()
             ToolMenuType.RANDOM_AREA -> actions.toRandomEquipArea(0)
@@ -221,7 +225,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.PVP_SEARCH -> ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH)
         ToolMenuType.LEADER -> ToolMenuData(R.string.tool_leader, MainIconType.LEADER)
         ToolMenuType.TWEET -> ToolMenuData(R.string.tweet, MainIconType.TWEET)
-//        ToolMenuType.COMIC -> ToolMenuData(R.string.comic, MainIconType.COMIC)
+        ToolMenuType.COMIC -> ToolMenuData(R.string.comic, MainIconType.COMIC)
         ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)

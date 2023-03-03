@@ -106,7 +106,7 @@ fun TweetList(
                     it.id
                 }
             ) {
-                TweetItem(it ?: TweetData(), keywordState.value == "【4コマ更新】")
+                TweetItem(it ?: TweetData())
             }
             //暂无更多提示
             if (tweetItems.loadState.refresh != LoadState.Loading) {
@@ -147,7 +147,7 @@ fun TweetList(
  * 推特内容
  */
 @Composable
-private fun TweetItem(data: TweetData, comicMode: Boolean) {
+private fun TweetItem(data: TweetData) {
     val placeholder = data.id == 0
     val photos = data.getImageList()
     val isComicUrl = data.tweet.contains("【4コマ更新】")
@@ -158,16 +158,14 @@ private fun TweetItem(data: TweetData, comicMode: Boolean) {
         ""
     }
     // 时间
-    if (!comicMode) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
-        ) {
-            MainTitleText(
-                text = data.date,
-                modifier = Modifier.commonPlaceholder(placeholder)
-            )
-        }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
+    ) {
+        MainTitleText(
+            text = data.date,
+            modifier = Modifier.commonPlaceholder(placeholder)
+        )
     }
 
     //内容
@@ -184,24 +182,22 @@ private fun TweetItem(data: TweetData, comicMode: Boolean) {
             .commonPlaceholder(visible = placeholder),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!comicMode) {
-            //文本
-            MainContentText(
-                text = data.getFormatTweet(),
-                textAlign = TextAlign.Start,
-                selectable = true
-            )
-            //相关链接跳转
-            if (!placeholder) {
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = Dimen.smallPadding)
-                        .fillMaxWidth()
-                ) {
-                    TweetButton(data.link)
-                    data.getUrlList().forEach {
-                        TweetButton(it)
-                    }
+        //文本
+        MainContentText(
+            text = data.getFormatTweet(),
+            textAlign = TextAlign.Start,
+            selectable = true
+        )
+        //相关链接跳转
+        if (!placeholder) {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = Dimen.smallPadding)
+                    .fillMaxWidth()
+            ) {
+                TweetButton(data.link)
+                data.getUrlList().forEach {
+                    TweetButton(it)
                 }
             }
         }
@@ -285,7 +281,7 @@ private fun getComicId(title: String): String {
 @Composable
 private fun TweetItemPreview() {
     PreviewLayout {
-        TweetItem(data = TweetData(id = 1, tweet = "???"), false)
+        TweetItem(data = TweetData(id = 1, tweet = "???"))
     }
 }
 

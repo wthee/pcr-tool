@@ -76,6 +76,7 @@ import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.rounded.Toc
 import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material.icons.rounded.TrackChanges
 import androidx.compose.material.icons.rounded.UnfoldMore
@@ -380,6 +381,11 @@ enum class MainIconType(val icon: ImageVector) {
 
     /**
      * 漫画目录
+     */
+    COMIC_NAV(Icons.Rounded.Toc),
+
+    /**
+     * youtube
      */
     YOUTUBE(Icons.Rounded.SmartDisplay),
 

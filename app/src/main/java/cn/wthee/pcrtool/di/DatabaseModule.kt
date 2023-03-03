@@ -34,6 +34,13 @@ class DatabaseModule {
 
     @Singleton
     @Provides
+    fun provideAppComicDatabase(): AppComicDatabase {
+        return AppComicDatabase.getInstance()
+    }
+
+
+    @Singleton
+    @Provides
     fun provideAppPvpDatabase(): AppPvpDatabase {
         return AppPvpDatabase.getInstance()
     }
@@ -97,6 +104,11 @@ class DatabaseModule {
     @Provides
     fun provideTweetDao(): TweetDao {
         return provideAppTweetDatabase().getTweetDao()
+    }
+
+    @Provides
+    fun provideComicDao(): ComicDao {
+        return provideAppComicDatabase().getComicDao()
     }
 
     @Provides

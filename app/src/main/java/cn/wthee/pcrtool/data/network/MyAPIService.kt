@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.network
 
+import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
@@ -53,6 +54,12 @@ interface MyAPIService {
      */
     @POST("tweet/v2")
     suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
+
+    /**
+     * 获取漫画
+     */
+    @POST("comic")
+    suspend fun getComicData(@Body body: RequestBody): ResponseData<List<ComicData>>
 
     /**
      * 排行信息

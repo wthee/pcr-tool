@@ -134,9 +134,10 @@
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
     <string name="equip_max_select_count">最多可选 %d 个装备</string>
-    <string name="equip_serach">查询</string>
-    <string name="equip_serach_mode">切换查询</string>
+    <string name="equip_serach">开始查询</string>
+    <string name="equip_serach_mode">掉落查询</string>
     <string name="tip_equip_serach">请先选择装备</string>
+    <string name="picked_equip">已选择：</string>
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
@@ -166,13 +167,12 @@
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
-    <string name="read_comic">查看漫画</string>
-    <string name="comic_nav">目录</string>
-    <string name="comic_order">第%s话</string>
+    <string name="comic_toc">目录</string>
+    <string name="comic_toc_index">第%d话</string>
+    <string name="comic_intput_hint">输入跳转，如：382</string>
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其他</string>
-    <string name="about">关于</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
@@ -210,10 +210,7 @@
     <string name="search_api">查询</string>
     <string name="search_api_desc">需要网络</string>
     <string name="tool_all_quest">主线地图</string>
-    <string name="range_date">日期范围</string>
     <string name="pick_date">选择日期</string>
-    <string name="pick_start_date">选择开始日期</string>
-    <string name="pick_end_date">选择结束日期</string>
     <string name="picked_date">已选择</string>
 
 
@@ -298,8 +295,7 @@
     <string name="data_file_error">文件损坏</string>
     <string name="data_file_error_desc">点击重新下载</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="save_image">保存图片</string>
-    <string name="tip_save_image">将图片保存至系统相册中</string>
+    <string name="tip_save_image">将图片保存至系统相册</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
@@ -359,9 +355,9 @@
     <string name="extra_equip_no_drop_quest">暂无掉落区域</string>
     <string name="tool_travel">EX冒险</string>
     <string name="unit_extra_equip_slot">适用装备</string>
-    <string name="travel_limit_unit_num">角色限制</string>
-    <string name="travel_need_power">最低战力</string>
-    <string name="travel_time">冒险时间</string>
+    <string name="travel_limit_unit_num">人数上限</string>
+    <string name="travel_need_power">所需战力</string>
+    <string name="travel_time">所需时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
     <string name="ex_equip_drop_odd">%.2f%%</string>
     <string name="extra_area_quest">区域%d：%s</string>
@@ -778,6 +774,7 @@
 
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>
+    <string name="leader_new_character">新登场</string>
     <string name="only_jp">日服评价，仅供参考</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>
@@ -787,7 +784,6 @@
 
     <!--测试用-->
     <string name="debug_short_text">测试文本测试文本</string>
-    <string name="debug_medium_text">测试文本、测试文本，测试、文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本</string>
 
 </resources>
