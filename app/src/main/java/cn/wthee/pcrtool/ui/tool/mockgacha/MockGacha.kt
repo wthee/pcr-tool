@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -34,19 +35,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import java.util.*
 
-/**
- * 模拟卡池类型
- */
-enum class MockGachaType(val type: Int) {
-    PICK_UP(0),
-    FES(1),
-    PICK_UP_SINGLE(2);
 
-    companion object {
-        fun getByValue(value: Int) = MockGachaType.values()
-            .find { it.type == value } ?: MockGachaType.PICK_UP
-    }
-}
 
 /**
  * 模拟卡池
@@ -200,11 +189,7 @@ fun MockGacha(
                 ),
             visible = pickUpList.isNotEmpty() && allUnits != null
         ) {
-            val mockGachaHelper = MockGachaHelper(
-                pickUpType = MockGachaType.getByValue(mockGachaType.value),
-                pickUpList = pickUpList,
-                allUnits!!
-            )
+
 
             val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
             FabCompose(
@@ -212,6 +197,12 @@ fun MockGacha(
                 text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
                 if (pickUpList.isNotEmpty()) {
+                    val mockGachaHelper = MockGachaHelper(
+                        pickUpType = MockGachaType.getByValue(mockGachaType.value),
+                        pickUpList = pickUpList,
+                        allUnits!!
+                    )
+
                     if (!showResult) {
                         //自选单up，至少选择两名
                         if (mockGachaType.value == MockGachaType.PICK_UP_SINGLE.type && pickUpList.size < 2) {

@@ -343,7 +343,7 @@ private fun FilterExtraEquipSheet(
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    LaunchedEffect(sheetState.currentValue, reset, ok) {
+    LaunchedEffect(sheetState.isVisible, reset, ok) {
         if (reset) {
             textState.value = ""
             loveIndex.value = 0

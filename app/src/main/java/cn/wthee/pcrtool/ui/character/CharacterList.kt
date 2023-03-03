@@ -619,7 +619,7 @@ private fun FilterCharacterSheet(
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    LaunchedEffect(sheetState.currentValue, reset, ok) {
+    LaunchedEffect(sheetState.isVisible, reset, ok) {
         //点击重置
         if (reset) {
             textState.value = ""

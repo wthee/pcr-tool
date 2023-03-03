@@ -1,9 +1,9 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -64,11 +64,7 @@ class MockGachaHelper(
                 //仅up最后一个角色
                 gachaBoxList.add(
                     GachaWeightInfo(
-                        if (pickUpList.isEmpty()) {
-                            arrayListOf()
-                        } else {
-                            arrayListOf(pickUpList.last())
-                        },
+                        arrayListOf(pickUpList.last()),
                         pickUpWeight
                     )
                 )
