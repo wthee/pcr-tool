@@ -364,6 +364,7 @@
     <string name="travel_time">冒险时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
     <string name="ex_equip_drop_odd">%.2f%%</string>
+    <string name="extra_area_quest">区域%d：%s</string>
 
 
     <!--技能相关-->

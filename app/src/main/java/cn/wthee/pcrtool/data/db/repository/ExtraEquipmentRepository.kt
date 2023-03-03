@@ -53,7 +53,11 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
     suspend fun getSubRewardList(questId: Int) = equipmentDao.getSubRewardList(questId)
 
     suspend fun getTravelAreaList() = try {
-        equipmentDao.getTravelAreaList()
+        val areaList = equipmentDao.getTravelAreaList()
+        areaList.forEach {
+            it.questList = getTravelQuestList(it.travelAreaId)
+        }
+        areaList
     } catch (_: Exception) {
         null
     }

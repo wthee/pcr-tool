@@ -81,11 +81,8 @@ fun ExtraEquipTravelList(
 @Composable
 private fun TravelItem(
     travelData: ExtraEquipTravelData,
-    toExtraEquipTravelAreaDetail: (Int) -> Unit,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
+    toExtraEquipTravelAreaDetail: (Int) -> Unit
 ) {
-    val questList = extraEquipmentViewModel.getTravelQuestList(travelData.travelAreaId)
-        .collectAsState(initial = null).value
     Column(
         modifier = Modifier
             .padding(
@@ -104,7 +101,7 @@ private fun TravelItem(
         )
 
         //quest列表
-        questList?.forEachIndexed { _, questData ->
+        travelData.questList.forEachIndexed { _, questData ->
             MainCard(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
                 TravelQuestHeader(
                     clickable = true,

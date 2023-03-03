@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.db.view
+package cn.wthee.pcrtool.data.model
 
 
 /**
