@@ -1463,7 +1463,7 @@ data class SkillActionDetail(
                 )
             }
             // 93：无视挑衅
-            SkillActionType.IGNOR_TAUNT -> {
+            SkillActionType.IGNORE_TAUNT -> {
                 getString(R.string.skill_action_type_desc_93, getTarget())
             }
             // 94：技能特效

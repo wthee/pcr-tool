@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
                     return true
                 }
                 MainIconType.OK -> {
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                     return true
                 }
                 else -> {

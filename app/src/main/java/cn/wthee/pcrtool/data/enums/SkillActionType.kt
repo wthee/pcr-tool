@@ -413,7 +413,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 93：无视挑衅
      */
-    IGNOR_TAUNT(93, R.string.none),
+    IGNORE_TAUNT(93, R.string.none),
 
     /**
      * 94：技能特效

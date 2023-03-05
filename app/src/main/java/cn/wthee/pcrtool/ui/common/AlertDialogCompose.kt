@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.common
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -10,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -128,21 +126,8 @@ fun DateRangePickerCompose(
         )
     }
 
-    //点击组件之外内容关闭
-    val boxModifier = if (openDialog) {
-        Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures {
-                        VibrateUtil(context).single()
-                        navViewModel.fabCloseClick.postValue(true)
-                    }
-            }
-    } else {
-        Modifier.fillMaxSize()
-    }
 
-    Box(modifier = boxModifier){
+    Box(modifier = Modifier.clickClose(openDialog)) {
         //日期选择布局
         SmallFloatingActionButton(
             modifier = Modifier
@@ -179,13 +164,15 @@ fun DateRangePickerCompose(
                             horizontal = Dimen.mediumPadding,
                             vertical = Dimen.largePadding
                         )
-                        .fillMaxHeight(0.618f),
+                        .fillMaxHeight(0.85f)
+                        .imePadding(),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.End
                 ) {
                     //日期选择
                     DateRangePicker(
                         state = dateRangePickerState,
+                        showModeToggle = false,
                         title = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 //标题
@@ -350,6 +337,10 @@ data class DateRange(
         }
 
         return startFlag && endFlag
+    }
+
+    override fun toString(): String {
+        return "$startDate|$endDate"
     }
 }
 

@@ -28,7 +28,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 确认
      */
-    val fabOKCilck = MutableLiveData(false)
+    val fabOKClick = MutableLiveData(false)
 
     /**
      * 关闭

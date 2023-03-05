@@ -1,9 +1,16 @@
 package cn.wthee.pcrtool.ui.equip
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -37,7 +44,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -53,11 +59,45 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.ChipGroup
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainContentText
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.SelectText
+import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.common.clickClose
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.defaultTween
+import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.getString
+import cn.wthee.pcrtool.utils.listJoinStr
+import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 private const val MAX_SEARCH_COUNT = 5
 
@@ -101,7 +141,7 @@ fun EquipList(
     //关闭时监听
     if (!state.isVisible && !searchEquipMode) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
+        navViewModel.fabOKClick.postValue(false)
         keyboardController?.hide()
     }
 
@@ -168,7 +208,7 @@ fun EquipList(
                 } else {
                     //切换至选择模式
                     FabCompose(
-                        iconType = MainIconType.CHANGE_FILTER_TYPE,
+                        iconType = MainIconType.SEARCH,
                         text = stringResource(id = R.string.equip_serach_mode),
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
@@ -249,23 +289,8 @@ private fun SearchEquip(
         navViewModel.openChangeDataDialog.postValue(false)
     }
 
-    //点击组件之外内容关闭
-    val boxModifier = if (openDialog) {
-        Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        VibrateUtil(context).single()
-                        navViewModel.fabCloseClick.postValue(true)
-                    }
-                )
-            }
-    } else {
-        Modifier.fillMaxSize()
-    }
 
-    Box(modifier = boxModifier) {
+    Box(modifier = Modifier.clickClose(openDialog)) {
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -280,7 +305,7 @@ private fun SearchEquip(
                 SmallFloatingActionButton(
                     modifier = Modifier
                         .padding(
-                            start = Dimen.textfabMargin,
+                            start = Dimen.fabMargin,
                             end = Dimen.textfabMargin
                         ),
                     shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
@@ -300,15 +325,38 @@ private fun SearchEquip(
                     ),
                 ) {
                     if (openDialog) {
-                        Row(
-                            modifier = Modifier.padding(Dimen.mediumPadding),
+                        Column(
+                            modifier = Modifier.width(
+                                min(
+                                    ScreenUtil.getWidth().px2dp,
+                                    ScreenUtil.getHeight().px2dp
+                                ).dp
+                            )
                         ) {
-                            searchEquipIdList.forEach {
-                                IconCompose(
-                                    data = ImageRequestHelper.getInstance().getEquipPic(it),
-                                    modifier = Modifier.padding(Dimen.mediumPadding),
-                                ) {
-                                    selectEquip(searchEquipIdList, it)
+                            MainText(
+                                text = stringResource(id = R.string.picked_equip),
+                                modifier = Modifier.padding(
+                                    start = Dimen.mediumPadding,
+                                    end = Dimen.mediumPadding,
+                                    top = Dimen.mediumPadding,
+                                )
+                            )
+                            VerticalGrid(
+                                modifier = Modifier.padding(Dimen.mediumPadding),
+                                itemWidth = Dimen.iconSize,
+                                contentPadding = Dimen.largePadding
+                            ) {
+                                searchEquipIdList.forEach {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        IconCompose(
+                                            data = ImageRequestHelper.getInstance().getEquipPic(it),
+                                        ) {
+                                            selectEquip(searchEquipIdList, it)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -337,15 +385,15 @@ private fun SearchEquip(
             }
 
             //搜索
-            val tipSerach = stringResource(id = R.string.tip_equip_serach)
+            val tipSearch = stringResource(id = R.string.tip_equip_serach)
             FabCompose(
                 iconType = MainIconType.SEARCH,
-                text = stringResource(id = R.string.equip_serach),
+                text = stringResource(id = R.string.equip_serach)
             ) {
                 if (searchEquipIdList.isNotEmpty()) {
                     toSearchEquipQuest(searchEquipIdList.listJoinStr)
                 } else {
-                    ToastUtil.short(tipSerach)
+                    ToastUtil.short(tipSearch)
                 }
             }
         }
@@ -372,10 +420,7 @@ private fun EquipGroup(
             equipGroupData.requireLevel
         ),
         titleEnd = equipGroupData.equipIdList.size.toString(),
-        modifier = Modifier.padding(
-            horizontal = Dimen.mediumPadding,
-            vertical = Dimen.largePadding
-        ),
+        modifier = Modifier.padding(Dimen.mediumPadding),
         backgroundColor = getEquipColor(equipGroupData.promotionLevel)
     )
 
@@ -461,6 +506,7 @@ private fun EquipItem(
                 bottom = Dimen.mediumPadding
             )
             .fillMaxWidth()
+            .animateContentSize(defaultTween())
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
@@ -551,7 +597,7 @@ private fun FilterEquipSheet(
     filter.colorType = typeIndex.value
 
     //确认操作
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
@@ -570,7 +616,7 @@ private fun FilterEquipSheet(
         if (ok) {
             sheetState.hide()
             navViewModel.filterEquip.postValue(filter)
-            navViewModel.fabOKCilck.postValue(false)
+            navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
@@ -603,14 +649,14 @@ private fun FilterEquipSheet(
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             ),
             maxLines = 1,

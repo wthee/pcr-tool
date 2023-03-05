@@ -3,17 +3,33 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -33,7 +49,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.Attr
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
@@ -42,13 +62,29 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.AttrList
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.IconTextButton
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.SubButton
+import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.common.getRankColor
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -62,7 +98,6 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -73,14 +108,14 @@ fun CharacterDetail(
     //特殊形态角色id（吉塔）
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
     //形态切换
-    val isCcutinSkill = remember {
+    val isCutinSkill = remember {
         mutableStateOf(true)
     }
     //不同技能形态对应的 unitId
     val currentIdState = remember {
         mutableStateOf(0)
     }
-    currentIdState.value = if (isCcutinSkill.value && cutinId != 0) {
+    currentIdState.value = if (isCutinSkill.value && cutinId != 0) {
         cutinId
     } else {
         unitId
@@ -182,7 +217,7 @@ fun CharacterDetail(
                         iconSize = Dimen.fabIconSize,
                         textStyle = MaterialTheme.typography.bodyMedium
                     ) {
-                        actions.toCharacteEquipCount(unitId, maxValue.rank)
+                        actions.toCharacterEquipCount(unitId, maxValue.rank)
                     }
                     //ex装备
                     IconTextButton(
@@ -238,18 +273,18 @@ fun CharacterDetail(
                     ) {
                         //角色技能形态
                         FabCompose(
-                            iconType = if (isCcutinSkill.value) {
+                            iconType = if (isCutinSkill.value) {
                                 MainIconType.CHARACTER_CUTIN_SKILL
                             } else {
                                 MainIconType.CHARACTER_NORMAL_SKILL
                             },
-                            text = if (isCcutinSkill.value) {
+                            text = if (isCutinSkill.value) {
                                 stringResource(id = R.string.cutin_skill)
                             } else {
                                 ""
                             },
                         ) {
-                            isCcutinSkill.value = !isCcutinSkill.value
+                            isCutinSkill.value = !isCutinSkill.value
                         }
                     }
                 }
@@ -425,8 +460,7 @@ private fun CharacterCoe(
  * 角色等级
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
 )
 @Composable
 private fun CharacterLevel(
@@ -716,8 +750,7 @@ private fun CharacterEquip(
  * @param uniqueEquipmentMaxData 专武数值信息
  */
 @OptIn(
-    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 private fun UniqueEquip(

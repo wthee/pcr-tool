@@ -235,13 +235,14 @@ fun CaptionText(
     text: String,
     color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.bodySmall,
 ) {
     Text(
         text = text,
         textAlign = textAlign,
         color = color,
-        style = MaterialTheme.typography.bodySmall,
+        style = style,
         modifier = modifier,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
@@ -440,7 +441,7 @@ fun SelectText(
 fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
     PositionType.POSITION_0_299 -> colorRed
     PositionType.POSITION_300_599 -> colorGold
-    PositionType.POSITION_600_999 -> colorBlue
+    PositionType.POSITION_600_999 -> colorCyan
     PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
@@ -538,23 +539,8 @@ fun SelectTypeCompose(
         navViewModel.openChangeDataDialog.postValue(false)
     }
 
-    //点击组件之外内容关闭
-    val boxModifier = if (openDialog) {
-        Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        VibrateUtil(context).single()
-                        navViewModel.fabCloseClick.postValue(true)
-                    }
-                )
-            }
-    } else {
-        Modifier.fillMaxSize()
-    }
 
-    Box(modifier = boxModifier) {
+    Box(modifier = Modifier.clickClose(openDialog)) {
         //切换
         SmallFloatingActionButton(
             modifier = modifier
@@ -638,6 +624,30 @@ fun SelectTypeCompose(
         }
     }
 }
+
+/**
+ * 点击组件之外内容关闭
+ */
+fun Modifier.clickClose(
+    openDialog: Boolean,
+): Modifier = composed {
+    val context = LocalContext.current
+    if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
+                    }
+                )
+            }
+    } else {
+        Modifier.fillMaxSize()
+    }
+}
+
 
 /**
  * 带图标按钮
@@ -788,7 +798,7 @@ fun BottomSearchBar(
     ) {
         //关键词列表，搜索时显示
         ExpandAnimation(
-            visible = openDialog.value && defaultKeywordList?.isNotEmpty() == true,
+            visible = openDialog.value && isImeVisible && defaultKeywordList?.isNotEmpty() == true,
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             MainCard(
@@ -822,10 +832,10 @@ fun BottomSearchBar(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = if (openDialog.value) Dp.Unspecified else 0.dp)
+                    .heightIn(max = if (openDialog.value && isImeVisible) Dp.Unspecified else 0.dp)
                     .padding(Dimen.smallPadding)
                     .focusRequester(focusRequester)
-                    .alpha(if (openDialog.value) 1f else 0f),
+                    .alpha(if (openDialog.value && isImeVisible) 1f else 0f),
                 value = keywordInputState.value,
                 shape = MaterialTheme.shapes.medium,
                 onValueChange = { keywordInputState.value = it.deleteSpace },
@@ -935,6 +945,12 @@ fun CommonGroupTitle(
     textColor: Color = colorWhite,
     iconSize: Dp = Dimen.iconSize
 ) {
+    val startPadding = if (iconData == null) {
+        0.dp
+    } else {
+        Dimen.smallPadding
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -948,7 +964,7 @@ fun CommonGroupTitle(
         }
         Box(
             modifier = Modifier
-                .padding(start = Dimen.smallPadding)
+                .padding(start = startPadding)
                 .weight(1f)
                 .background(
                     color = backgroundColor,
@@ -1026,9 +1042,11 @@ fun EventTitle(
         inProgress -> {
             MaterialTheme.colorScheme.primary
         }
+
         comingSoon -> {
             colorPurple
         }
+
         else -> {
             if (showOverdueColor) {
                 MaterialTheme.colorScheme.outline

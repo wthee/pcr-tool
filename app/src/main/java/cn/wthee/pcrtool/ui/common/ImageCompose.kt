@@ -133,10 +133,10 @@ fun IconCompose(
     } else {
         modifier.clip(MaterialTheme.shapes.extraSmall)
     }
-    if (!wrapSize) {
-        mModifier = mModifier.size(size)
+    mModifier = if (!wrapSize) {
+        mModifier.size(size)
     } else {
-        mModifier = mModifier.sizeIn(maxWidth = size, maxHeight = size)
+        mModifier.sizeIn(maxWidth = size, maxHeight = size)
     }
 
 

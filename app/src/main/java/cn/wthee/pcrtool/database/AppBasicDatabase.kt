@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
@@ -87,14 +85,14 @@ abstract class AppBasicDatabase : RoomDatabase() {
         fun buildDatabase(name: String): AppBasicDatabase {
             return Room.databaseBuilder(MyApplication.context, AppBasicDatabase::class.java, name)
                 .fallbackToDestructiveMigration()
-                .addCallback(object : Callback() {
-                    override fun onOpen(db: SupportSQLiteDatabase) {
-                        super.onOpen(db)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            db.disableWriteAheadLogging()
-                        }
-                    }
-                })
+//                .addCallback(object : Callback() {
+//                    override fun onOpen(db: SupportSQLiteDatabase) {
+//                        super.onOpen(db)
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                            db.disableWriteAheadLogging()
+//                        }
+//                    }
+//                })
                 .build()
         }
     }

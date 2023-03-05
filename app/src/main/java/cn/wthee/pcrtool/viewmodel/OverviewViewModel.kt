@@ -181,7 +181,7 @@ class OverviewViewModel @Inject constructor(
                 val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
                 newOverview.postValue(data)
             } catch (e: Exception) {
-                LogReportUtil.upload(e, "getNewsOvervie")
+                LogReportUtil.upload(e, "getNewsOverview")
             }
         }
     }

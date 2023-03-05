@@ -2,7 +2,16 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,13 +21,23 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -48,9 +67,45 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.ui.common.ChipGroup
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.ImageCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.PositionIcon
+import cn.wthee.pcrtool.ui.common.RATIO
+import cn.wthee.pcrtool.ui.common.Subtitle1
+import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.commonPlaceholder
+import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.common.getPositionColor
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.RATIO_SHAPE
+import cn.wthee.pcrtool.ui.theme.TrapezoidShape
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.colorBlack
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.fixedStr
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
@@ -77,7 +132,7 @@ fun CharacterList(
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
+        navViewModel.fabOKClick.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
     }
@@ -442,7 +497,7 @@ fun getLimitTypeColor(limitType: Int) = when (limitType) {
         colorGreen
     }
     4 -> {
-        colorSilver
+        colorCyan
     }
     else -> {
         colorGold
@@ -545,8 +600,7 @@ private fun CharacterName(
  * 角色筛选
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 private fun FilterCharacterSheet(
@@ -584,9 +638,9 @@ private fun FilterCharacterSheet(
 
     //位置筛选
     val positionIndex = remember {
-        mutableStateOf(filter.positon)
+        mutableStateOf(filter.position)
     }
-    filter.positon = positionIndex.value
+    filter.position = positionIndex.value
 
     //攻击类型
     val atkIndex = remember {
@@ -615,7 +669,7 @@ private fun FilterCharacterSheet(
     filter.type = typeIndex.value
 
     //确认操作
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
@@ -639,7 +693,7 @@ private fun FilterCharacterSheet(
         if (ok) {
             sheetState.hide()
             navViewModel.filterCharacter.postValue(filter)
-            navViewModel.fabOKCilck.postValue(false)
+            navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
@@ -670,14 +724,14 @@ private fun FilterCharacterSheet(
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             ),
             maxLines = 1,

@@ -53,7 +53,7 @@ object Dimen {
 
     val menuItemSize = 64.dp
 
-    val dataChangeWidth = 120.dp
+    val dataChangeWidth = 110.dp
 
     val mockGachaTypeChangeWidth = 160.dp
 

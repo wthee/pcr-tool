@@ -126,19 +126,52 @@ fun QuestPager(
         if (tabs.size == 0) {
             CircularProgressCompose()
         } else {
+            if (searchEquipIdList.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimen.fabMargin,
+                            vertical = Dimen.mediumPadding
+                        )
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    searchEquipIdList.forEach {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .padding(horizontal = Dimen.largePadding)
+                                .weight(1f)
+                        ) {
+                            IconCompose(
+                                data = ImageRequestHelper.getInstance().getEquipPic(it),
+                            )
+                        }
+                    }
+                }
+            }
+
             //Tab
-            MainTabRow(
-                pagerState = pagerState,
-                tabs = tabs,
-                colorList = colorList,
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MainTabRow(
+                    pagerState = pagerState,
+                    tabs = tabs,
+                    colorList = colorList,
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                        .fillMaxWidth(tabs.size * 0.25f)
+                )
+                if (randomDropResponseData == null) {
+                    CircularProgressCompose(
+                        size = Dimen.smallIconSize
                     )
-                    .fillMaxWidth(tabs.size * 0.25f)
-            )
+                }
+            }
+
+
 
             HorizontalPager(
                 count = pagerCount,
@@ -272,7 +305,7 @@ fun QuestList(
 
 /**
  * 掉落区域信息
- * @param selectedId unknow 随机掉落；非0 主线掉落，titleEnd显示概率；0 隐藏titleEnd
+ * @param selectedId 随机掉落；非0 主线掉落，titleEnd显示概率；0 隐藏titleEnd
  * @param searchEquipIdList 搜索的装备编号列表
  */
 @Composable
@@ -306,7 +339,7 @@ fun AreaItem(
         titleEnd = titleEnd,
         backgroundColor = color,
         modifier = Modifier
-            .padding(horizontal = Dimen.mediumPadding, vertical = Dimen.largePadding)
+            .padding(Dimen.mediumPadding)
             .commonPlaceholder(placeholder)
     )
 

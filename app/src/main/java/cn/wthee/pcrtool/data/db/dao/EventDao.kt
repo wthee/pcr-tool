@@ -236,6 +236,7 @@ interface EventDao {
     @Query(
         """
         SELECT
+            a.id as id,
             COALESCE( b.relation_count, 0 ) AS max_count,
             a.start_time,
         CASE

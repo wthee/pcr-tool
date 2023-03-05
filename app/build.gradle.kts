@@ -116,8 +116,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:1.4.0-beta01")
-//    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     //compose material3
     implementation("androidx.compose.material3:material3:1.1.0-alpha07")
@@ -181,7 +180,7 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
-    val workVersion = "2.7.1"
+    val workVersion = "2.8.0"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     implementation(files("libs\\commons-compress-1.19.jar"))

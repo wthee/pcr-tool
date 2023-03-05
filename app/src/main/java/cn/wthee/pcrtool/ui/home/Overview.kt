@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,14 +51,15 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
+import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.CircularProgressCompose
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainContentText
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.common.SelectText
 import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.common.clickClose
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
@@ -118,7 +117,7 @@ fun Overview(
     //自定义显示
     val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, "0-1-2-3-4-5") ?: ""
     var overviewOrderData = navViewModel.overviewOrderData.observeAsState().value
-    if (overviewOrderData == null || overviewOrderData.isEmpty()) {
+    if (overviewOrderData.isNullOrEmpty()) {
         overviewOrderData = localData
         navViewModel.overviewOrderData.postValue(overviewOrderData)
     }
@@ -243,22 +242,6 @@ private fun ChangeDbCompose(
         navViewModel.fabCloseClick.postValue(false)
     }
 
-    //点击组件之外内容关闭
-    val boxModifier = if (openDialog) {
-        Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        VibrateUtil(context).single()
-                        navViewModel.fabCloseClick.postValue(true)
-                    }
-                )
-            }
-    } else {
-        Modifier.fillMaxSize()
-    }
-
 
     //展开边距修正
     val mFabModifier = if (openDialog) {
@@ -275,17 +258,17 @@ private fun ChangeDbCompose(
         MaterialTheme.colorScheme.primary
     }
 
-    Box(modifier = boxModifier) {
+    Box(modifier = Modifier.clickClose(openDialog)) {
         Row(
             modifier = mFabModifier.height(IntrinsicSize.Max),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.End
         ) {
             //数据提示
-            DbVersionContent(openDialog, dbError)
+            DbVersionContent(openDialog, dbError, tintColor)
 
-
-            Box(
+            //数据切换
+            SmallFloatingActionButton(
                 modifier = mFabModifier
                     .animateContentSize(defaultSpring())
                     .padding(
@@ -293,59 +276,54 @@ private fun ChangeDbCompose(
                         start = Dimen.mediumPadding,
                         top = Dimen.fabMargin,
                         bottom = Dimen.fabMargin,
-                    )
-            ) {
-                //数据切换
-                SmallFloatingActionButton(
-                    shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-                    onClick = {
-                        //非加载中可点击，加载中禁止点击
-                        VibrateUtil(context).single()
-                        if (downloadState == -2) {
-                            if (!openDialog) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                                navViewModel.openChangeDataDialog.postValue(true)
-                            } else {
-                                navViewModel.fabCloseClick.postValue(true)
-                            }
-                        }
-                    },
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = if (openDialog) {
-                            Dimen.popupMenuElevation
-                        } else {
-                            Dimen.fabElevation
-                        }
                     ),
-                ) {
-                    if (openDialog) {
-                        //选择
-                        DbVersionList(tintColor)
-                    } else {
-                        //加载相关
-                        if (downloadState == -2) {
-                            IconCompose(
-                                data = MainIconType.CHANGE_DATA,
-                                tint = tintColor,
-                                size = Dimen.fabIconSize
-                            )
+                shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+                onClick = {
+                    //非加载中可点击，加载中禁止点击
+                    VibrateUtil(context).single()
+                    if (downloadState == -2) {
+                        if (!openDialog) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                            navViewModel.openChangeDataDialog.postValue(true)
                         } else {
-                            Box(contentAlignment = Alignment.Center) {
-                                CircularProgressCompose()
-                                //显示下载进度
-                                if (downloadState in 1..99) {
-                                    Text(
-                                        text = downloadState.toString(),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                }
+                            navViewModel.fabCloseClick.postValue(true)
+                        }
+                    }
+                },
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = if (openDialog) {
+                        Dimen.popupMenuElevation
+                    } else {
+                        Dimen.fabElevation
+                    }
+                ),
+            ) {
+                if (openDialog) {
+                    //选择
+                    DbVersionList(tintColor)
+                } else {
+                    //加载相关
+                    if (downloadState == -2) {
+                        IconCompose(
+                            data = MainIconType.CHANGE_DATA,
+                            tint = tintColor,
+                            size = Dimen.fabIconSize
+                        )
+                    } else {
+                        Box(contentAlignment = Alignment.Center) {
+                            CircularProgressCompose()
+                            //显示下载进度
+                            if (downloadState in 1..99) {
+                                Text(
+                                    text = downloadState.toString(),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
                             }
                         }
                     }
                 }
             }
-
 
         }
     }
@@ -357,7 +335,7 @@ private fun ChangeDbCompose(
  */
 @Composable
 private fun DbVersionList(
-    tintColor: Color
+    color: Color
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -370,8 +348,7 @@ private fun DbVersionList(
 
     Column(
         modifier = Modifier
-            .width(Dimen.dataChangeWidth)
-            .fillMaxHeight(),
+            .width(Dimen.dataChangeWidth),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -403,8 +380,8 @@ private fun DbVersionList(
                 text = menuTexts[i],
                 textStyle = MaterialTheme.typography.titleLarge,
                 modifier = mModifier
-                    .padding(Dimen.mediumPadding),
-                selectedColor = tintColor
+                    .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding),
+                selectedColor = color
             )
 
         }
@@ -418,6 +395,7 @@ private fun DbVersionList(
 private fun DbVersionContent(
     openDialog: Boolean,
     dbError: Boolean,
+    color: Color
 ) {
     val region = MainActivity.regionType
     val context = LocalContext.current
@@ -448,7 +426,7 @@ private fun DbVersionContent(
                 .width(IntrinsicSize.Min)
                 .animateContentSize(defaultSpring())
                 .padding(
-                    end = Dimen.smallPadding,
+                    end = Dimen.commonItemPadding,
                     start = Dimen.fabMargin,
                     top = Dimen.fabMargin,
                     bottom = Dimen.fabMargin,
@@ -477,13 +455,14 @@ private fun DbVersionContent(
                     title = stringResource(id = R.string.db_diff_content),
                     content = updateDb,
                 )
-                Spacer(modifier = Modifier.height(Dimen.largePadding))
-                //数据版本
-                DbVersionContentItem(
-                    title = stringResource(id = R.string.db_diff_version),
-                    content = dbVersionCode
-                )
             }
+            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
+            //数据版本
+            DbVersionContentItem(
+                title = stringResource(id = R.string.db_diff_version),
+                content = dbVersionCode,
+                color = color
+            )
         }
     }
 
@@ -516,13 +495,15 @@ private fun DbVersionContentItem(
                 start = Dimen.mediumPadding,
                 end = Dimen.mediumPadding,
                 top = Dimen.mediumPadding,
-                bottom = Dimen.smallPadding
+                bottom = Dimen.smallPadding,
             ),
-            color = color
+            color = color,
+            style = MaterialTheme.typography.titleSmall,
         )
-        MainContentText(
+        CaptionText(
             text = content,
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .weight(1f)
                 .padding(

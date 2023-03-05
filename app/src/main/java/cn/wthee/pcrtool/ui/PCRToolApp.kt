@@ -134,7 +134,7 @@ fun FabMain(modifier: Modifier = Modifier) {
         }, modifier = modifier
     ) {
         when (icon) {
-            MainIconType.OK -> MainActivity.navViewModel.fabOKCilck.postValue(true)
+            MainIconType.OK -> MainActivity.navViewModel.fabOKClick.postValue(true)
             MainIconType.CLOSE -> MainActivity.navViewModel.fabCloseClick.postValue(true)
             MainIconType.MAIN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
             MainIconType.DOWN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)

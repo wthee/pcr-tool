@@ -108,7 +108,7 @@ fun ComicList(
             } else {
                 val titleIndex = items[i]!!.id
                 val titleText = items[i]!!.title
-                "$titleIndex：$titleText"
+                "$titleIndex $titleText"
             }
             tabs.add(title)
         }

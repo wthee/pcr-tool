@@ -28,7 +28,7 @@ data class ClanBattleInfo(
      * @param bossIndex boss 下标
      */
     fun getMultiCount(bossIndex: Int): Int {
-        val targetCountData = targetCountDataList.firstOrNull() {
+        val targetCountData = targetCountDataList.firstOrNull {
             it.multiEnemyId % 10 == bossIndex + 1 + it.offset
         }
         return targetCountData?.enemyPartIds?.intArrayList?.filter { it > 0 }?.size ?: 0

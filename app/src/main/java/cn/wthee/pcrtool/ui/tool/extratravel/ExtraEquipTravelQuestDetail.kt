@@ -15,7 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CommonGroupTitle
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.SelectText
+import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -72,7 +76,7 @@ fun TravelQuestItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         //标题
-        TravelQuestHeader(clickable = false, questData, showTitle = selectedId == 0)
+        TravelQuestHeader(questData, showTitle = selectedId == 0)
         //掉落
         subRewardList.forEach { subRewardData ->
             ExtraEquipGroup(
@@ -112,7 +116,7 @@ fun ExtraEquipGroup(
         iconSize = Dimen.smallIconSize,
         titleStart = categoryName,
         titleEnd = equipIdList.size.toString(),
-        modifier = Modifier.padding(Dimen.largePadding),
+        modifier = Modifier.padding(Dimen.mediumPadding),
         backgroundColor = if (containsSelectedId) {
             MaterialTheme.colorScheme.primary
         } else {

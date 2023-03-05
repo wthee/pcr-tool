@@ -136,7 +136,7 @@ object Navigation {
     const val CHARACTER_SKILL_LOOP = "characterSkillLoop"
     const val TOOL_EXTRA_EQUIP = "toolExtraEquip"
     const val TOOL_EXTRA_EQUIP_UNIT = "toolExtraEquipUnit"
-    const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
+    const val EXTRA_EQUIP_CATEGORY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
     const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
     const val TOOL_TRAVEL_AREA_DETAIL = "toolExtraEquipTravelAreaDetail"
@@ -345,13 +345,13 @@ fun NavGraph(
 
             //ex装备关联角色
             bottomSheet(
-                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_EQUIP_CATEGROY}}",
-                arguments = listOf(navArgument(Navigation.EXTRA_EQUIP_CATEGROY) {
+                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_EQUIP_CATEGORY}}",
+                arguments = listOf(navArgument(Navigation.EXTRA_EQUIP_CATEGORY) {
                     type = NavType.IntType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_EQUIP_CATEGROY))
+                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_EQUIP_CATEGORY))
             }
 
             //ex装备掉落信息
@@ -825,8 +825,8 @@ class NavActions(navController: NavHostController) {
     /**
      * ex装备详情关联角色
      */
-    val toExtraEquipUnit: (Int) -> Unit = { categroy: Int ->
-        navController.navigate("${Navigation.TOOL_EXTRA_EQUIP_UNIT}/${categroy}")
+    val toExtraEquipUnit: (Int) -> Unit = { category: Int ->
+        navController.navigate("${Navigation.TOOL_EXTRA_EQUIP_UNIT}/${category}")
     }
 
     /**
@@ -877,7 +877,7 @@ class NavActions(navController: NavHostController) {
     /**
      * 角装备统计
      */
-    val toCharacteEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
+    val toCharacterEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
         navController.navigate("${Navigation.EQUIP_COUNT}/${unitId}/${maxRank}")
     }
 

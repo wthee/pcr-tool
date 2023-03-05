@@ -97,7 +97,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
     }
 
     var toolOrderData = navViewModel.toolOrderData.observeAsState().value
-    if (toolOrderData == null || toolOrderData.isEmpty()) {
+    if (toolOrderData.isNullOrEmpty()) {
         toolOrderData = localData
         navViewModel.toolOrderData.postValue(toolOrderData)
     }
