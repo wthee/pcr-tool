@@ -188,7 +188,7 @@ fun GachaItem(
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
                             navViewModel.mockGachaType.postValue(mockGachaType)
-                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaUnitList())
+                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaPickUpUnitList())
                             //跳转
                             toMockGacha()
                         }

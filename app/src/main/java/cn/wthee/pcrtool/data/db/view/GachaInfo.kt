@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.enums.GachaType
-import cn.wthee.pcrtool.utils.Constants.MOCK_GACHA_MAX_UP_COUNT
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.stringArrayList
@@ -86,16 +85,19 @@ data class GachaInfo(
     }
 
     /**
-     * 获取模拟抽卡角色信息
+     * 获取模拟抽卡up角色信息
      */
-    fun getMockGachaUnitList(): List<GachaUnitInfo> {
+    fun getMockGachaPickUpUnitList(): List<GachaUnitInfo> {
         val ids = unitIds.intArrayList
         val names = unitNames.stringArrayList
         val isLimits = isLimiteds.intArrayList
         val upIds = isUps.intArrayList
         val list = arrayListOf<GachaUnitInfo>()
+        //无大于0的，却不添加
+        val addAll = upIds.none { it > 0 }
+        //遍历卡池角色
         ids.forEachIndexed { index, id ->
-            if (ids.size <= MOCK_GACHA_MAX_UP_COUNT || upIds[index] > 0) {
+            if (addAll || upIds[index] > 0) {
                 //正常卡池、或fes卡池up的角色
                 list.add(
                     GachaUnitInfo(id, names[index], isLimits[index], 3)
