@@ -7,7 +7,7 @@ import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.*
 
 //装备满属性视图
-const val viewEquipmentMaxData = """
+private const val viewEquipmentMaxData = """
         SELECT
 	a.equipment_id,
 	a.equipment_name,

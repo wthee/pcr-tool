@@ -2,16 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,11 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -67,45 +54,9 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.ChipGroup
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.ImageCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.PositionIcon
-import cn.wthee.pcrtool.ui.common.RATIO
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.common.Subtitle2
-import cn.wthee.pcrtool.ui.common.commonPlaceholder
-import cn.wthee.pcrtool.ui.common.getItemWidth
-import cn.wthee.pcrtool.ui.common.getPositionColor
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.RATIO_SHAPE
-import cn.wthee.pcrtool.ui.theme.TrapezoidShape
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.colorBlack
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.fixedStr
-import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
@@ -339,7 +290,7 @@ fun CharacterItem(
 
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth(RATIO_SHAPE)
+                            .fillMaxWidth(1 - RATIO_GOLDEN)
                             .fillMaxHeight()
                             .clip(TrapezoidShape)
                             .background(
@@ -579,7 +530,7 @@ private fun CharacterName(
 
     Column(
         modifier = mModifier
-            .fillMaxWidth(1f - RATIO_SHAPE)
+            .fillMaxWidth(RATIO_GOLDEN)
     ) {
         Subtitle1(
             text = nameExtra,

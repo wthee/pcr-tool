@@ -3,14 +3,7 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -59,46 +52,14 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.ChipGroup
-import cn.wthee.pcrtool.ui.common.CommonGroupTitle
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainContentText
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.SelectText
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.common.clickClose
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.colorBlue
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorOrange
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.colorSilver
-import cn.wthee.pcrtool.ui.theme.defaultTween
-import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getString
-import cn.wthee.pcrtool.utils.listJoinStr
-import cn.wthee.pcrtool.utils.px2dp
+import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
+//装备列表最大搜索数
 private const val MAX_SEARCH_COUNT = 5
 
 /**
