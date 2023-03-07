@@ -7,7 +7,7 @@ import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.*
 
 //装备满属性视图
-const val viewEquipmentMaxData = """
+private const val viewEquipmentMaxData = """
         SELECT
 	a.equipment_id,
 	a.equipment_name,
@@ -186,7 +186,8 @@ interface EquipmentDao {
             ( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS hp_recovery_rate,
             ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS energy_recovery_rate,
             ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
-            ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
+            ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy ,
+            0 AS isTpLimitAction
         FROM
             unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
@@ -228,7 +229,7 @@ interface EquipmentDao {
             ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS energy_recovery_rate,
             ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy,
-            false AS isTpLimitAction
+            0 AS isTpLimitAction
         FROM
             unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id

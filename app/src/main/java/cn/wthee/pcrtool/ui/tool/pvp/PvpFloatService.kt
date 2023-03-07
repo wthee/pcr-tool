@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import kotlin.math.max
 
-const val ACTION_FINISH = "pvp_service_finish"
+private const val ACTION_FINISH = "pvp_service_finish"
 
 @Suppress("DEPRECATION")
 class PvpFloatService : LifecycleService() {

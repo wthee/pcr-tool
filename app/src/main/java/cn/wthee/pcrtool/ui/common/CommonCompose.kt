@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -15,11 +16,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,6 +28,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -236,13 +235,14 @@ fun CaptionText(
     text: String,
     color: Color = MaterialTheme.colorScheme.onSurface,
     textAlign: TextAlign = TextAlign.End,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.bodySmall,
 ) {
     Text(
         text = text,
         textAlign = textAlign,
         color = color,
-        style = MaterialTheme.typography.bodySmall,
+        style = style,
         modifier = modifier,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
@@ -336,6 +336,7 @@ fun RankText(
 @Composable
 fun getRankColor(rank: Int): Color {
     return when (rank) {
+        1 -> colorBlue
         in 2..3 -> colorCopper
         in 4..6 -> colorSilver
         in 7..10 -> colorGold
@@ -362,6 +363,7 @@ fun CommonSpacer() {
 
 /**
  * 卡片布局
+ * @param onClick 自带点击振动
  */
 @Composable
 fun MainCard(
@@ -369,13 +371,20 @@ fun MainCard(
     onClick: (() -> Unit)? = null,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
     containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    fillMaxWidth: Boolean = true,
+    elevation: Dp = Dimen.cardElevation,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
 
-    var mModifier = modifier
-        .fillMaxWidth()
-        .shadow(Dimen.cardElevation, shape, true)
+    var mModifier = if (fillMaxWidth) {
+        modifier
+            .fillMaxWidth()
+            .shadow(elevation, shape, true)
+    } else {
+        modifier
+            .shadow(elevation, shape, true)
+    }
 
     if (onClick != null) {
         mModifier = mModifier.clickable {
@@ -433,7 +442,7 @@ fun SelectText(
 fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
     PositionType.POSITION_0_299 -> colorRed
     PositionType.POSITION_300_599 -> colorGold
-    PositionType.POSITION_600_999 -> colorBlue
+    PositionType.POSITION_600_999 -> colorCyan
     PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
@@ -532,81 +541,114 @@ fun SelectTypeCompose(
     }
 
 
-    //切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(paddingValues)
-            .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-        onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                navViewModel.openChangeDataDialog.postValue(true)
-            } else {
-                navViewModel.fabCloseClick.postValue(true)
-            }
-        },
-    ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.widthIn(max = width),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //选择
-                tabs.forEachIndexed { index, tab ->
-                    val mModifier = if (type.value == index) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                navViewModel.openChangeDataDialog.postValue(false)
-                                navViewModel.fabCloseClick.postValue(true)
-                                if (type.value != index) {
-                                    coroutineScope.launch {
-                                        type.value = index
-                                        if (changeListener != null) {
-                                            changeListener()
+    Box(modifier = Modifier.clickClose(openDialog)) {
+        //切换
+        SmallFloatingActionButton(
+            modifier = modifier
+                .animateContentSize(defaultSpring())
+                .padding(paddingValues)
+                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                VibrateUtil(context).single()
+                if (!openDialog) {
+                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                    navViewModel.openChangeDataDialog.postValue(true)
+                } else {
+                    navViewModel.fabCloseClick.postValue(true)
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog) {
+                    Dimen.popupMenuElevation
+                } else {
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog) {
+                Column(
+                    modifier = Modifier.widthIn(max = width),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    //选择
+                    tabs.forEachIndexed { index, tab ->
+                        val mModifier = if (type.value == index) {
+                            Modifier.fillMaxWidth()
+                        } else {
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    VibrateUtil(context).single()
+                                    navViewModel.openChangeDataDialog.postValue(false)
+                                    navViewModel.fabCloseClick.postValue(true)
+                                    if (type.value != index) {
+                                        coroutineScope.launch {
+                                            type.value = index
+                                            if (changeListener != null) {
+                                                changeListener()
+                                            }
                                         }
                                     }
                                 }
-                            }
+                        }
+                        SelectText(
+                            selected = type.value == index,
+                            text = tab,
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            selectedColor = selectedColor,
+                            modifier = mModifier.padding(Dimen.mediumPadding)
+                        )
                     }
-                    SelectText(
-                        selected = type.value == index,
-                        text = tab,
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        selectedColor = selectedColor,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    IconCompose(
+                        data = icon, tint = selectedColor,
+                        size = Dimen.fabIconSize
+                    )
+                    Text(
+                        text = tabs[type.value],
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = selectedColor,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
                     )
                 }
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                IconCompose(
-                    data = icon, tint = selectedColor,
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = tabs[type.value],
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = selectedColor,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
-                )
-            }
 
+            }
         }
     }
 }
+
+/**
+ * 点击组件之外内容关闭
+ */
+fun Modifier.clickClose(
+    openDialog: Boolean,
+): Modifier = composed {
+    val context = LocalContext.current
+    if (openDialog) {
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        VibrateUtil(context).single()
+                        navViewModel.fabCloseClick.postValue(true)
+                    }
+                )
+            }
+    } else {
+        Modifier.fillMaxSize()
+    }
+}
+
 
 /**
  * 带图标按钮
@@ -619,6 +661,7 @@ fun IconTextButton(
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    maxLines: Int = 1,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -644,7 +687,7 @@ fun IconTextButton(
             color = contentColor,
             style = textStyle,
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            maxLines = 1,
+            maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
         )
     }
@@ -682,8 +725,7 @@ fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
  * @param defaultKeywordList 默认关键词列表
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
 )
 @Composable
 fun BottomSearchBar(
@@ -704,6 +746,9 @@ fun BottomSearchBar(
     }
     //键盘是否可见
     val isImeVisible = WindowInsets.isImeVisible
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
 
     if (!isImeVisible) {
         Row(
@@ -738,7 +783,10 @@ fun BottomSearchBar(
                 text = keywordState.value
             ) {
                 keyboardController?.show()
+                openDialog.value = true
                 focusRequester.requestFocus()
+                //如有日期弹窗，则关闭日期弹窗
+                navViewModel.fabCloseClick.postValue(true)
             }
         }
     }
@@ -751,11 +799,12 @@ fun BottomSearchBar(
     ) {
         //关键词列表，搜索时显示
         ExpandAnimation(
-            visible = isImeVisible && defaultKeywordList?.isNotEmpty() == true,
+            visible = openDialog.value && isImeVisible && defaultKeywordList?.isNotEmpty() == true,
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             MainCard(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+                elevation = Dimen.popupMenuElevation
             ) {
                 Column(
                     modifier = Modifier.padding(Dimen.mediumPadding)
@@ -770,6 +819,7 @@ fun BottomSearchBar(
                         keywordState.value = keyword
                         keyboardController?.hide()
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 }
 
@@ -777,14 +827,16 @@ fun BottomSearchBar(
         }
 
         //focusRequester
-        MainCard {
+        MainCard(
+            elevation = Dimen.popupMenuElevation
+        ) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = if (isImeVisible) Dp.Unspecified else 0.dp)
+                    .heightIn(max = if (openDialog.value && isImeVisible) Dp.Unspecified else 0.dp)
                     .padding(Dimen.smallPadding)
                     .focusRequester(focusRequester)
-                    .alpha(if (isImeVisible) 1f else 0f),
+                    .alpha(if (openDialog.value && isImeVisible) 1f else 0f),
                 value = keywordInputState.value,
                 shape = MaterialTheme.shapes.medium,
                 onValueChange = { keywordInputState.value = it.deleteSpace },
@@ -803,6 +855,7 @@ fun BottomSearchBar(
                         keyboardController?.hide()
                         keywordState.value = keywordInputState.value
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -811,6 +864,7 @@ fun BottomSearchBar(
                         keyboardController?.hide()
                         keywordState.value = keywordInputState.value
                         focusRequester.freeFocus()
+                        openDialog.value = false
                     }
                 ),
                 label = {
@@ -892,6 +946,12 @@ fun CommonGroupTitle(
     textColor: Color = colorWhite,
     iconSize: Dp = Dimen.iconSize
 ) {
+    val startPadding = if (iconData == null) {
+        0.dp
+    } else {
+        Dimen.smallPadding
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -905,7 +965,7 @@ fun CommonGroupTitle(
         }
         Box(
             modifier = Modifier
-                .padding(start = Dimen.smallPadding)
+                .padding(start = startPadding)
                 .weight(1f)
                 .background(
                     color = backgroundColor,
@@ -983,9 +1043,11 @@ fun EventTitle(
         inProgress -> {
             MaterialTheme.colorScheme.primary
         }
+
         comingSoon -> {
             colorPurple
         }
+
         else -> {
             if (showOverdueColor) {
                 MaterialTheme.colorScheme.outline

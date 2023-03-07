@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.AllInclusive
 import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Animation
 import androidx.compose.material.icons.rounded.Api
+import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Bookmarks
@@ -60,9 +61,9 @@ import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material.icons.rounded.PlaylistAdd
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.ReceiptLong
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.RemoveRedEye
+import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.Search
@@ -73,7 +74,9 @@ import androidx.compose.material.icons.rounded.SmartDisplay
 import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
+import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.rounded.Toc
 import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material.icons.rounded.TrackChanges
 import androidx.compose.material.icons.rounded.UnfoldMore
@@ -119,7 +122,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 重置
      */
-    RESET(Icons.Rounded.Refresh),
+    RESET(Icons.Rounded.RestartAlt),
+
+    /**
+     * 同步
+     */
+    SYNC(Icons.Rounded.Sync),
 
     /**
      * 回到顶部
@@ -374,6 +382,11 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 漫画目录
      */
+    COMIC_NAV(Icons.Rounded.Toc),
+
+    /**
+     * youtube
+     */
     YOUTUBE(Icons.Rounded.SmartDisplay),
 
     /**
@@ -510,4 +523,10 @@ enum class MainIconType(val icon: ImageVector) {
      * 已选择日期范围
      */
     DATE_RANGE_PICKED(Icons.Rounded.DateRange),
+
+    /**
+     * box
+     */
+    BOX(Icons.Rounded.Archive),
+
 }

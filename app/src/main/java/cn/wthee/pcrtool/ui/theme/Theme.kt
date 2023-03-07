@@ -33,7 +33,7 @@ private val DarkColorPalette = darkColorScheme(
     onSurface = colorSurface,
     surfaceVariant = colorSurfaceDark,
     onSurfaceVariant = colorSurface,
-    outline = colorGrayDark,
+//    outline = colorGrayDark,
 )
 
 /**
@@ -58,7 +58,7 @@ private val LightColorPalette = lightColorScheme(
     onSurface = colorSurfaceDark,
     surfaceVariant = colorSurface,
     onSurfaceVariant = colorSurfaceDark,
-    outline = colorGray,
+//    outline = colorGray,
 )
 
 @SuppressLint("NewApi")
@@ -98,7 +98,7 @@ fun PCRToolComposeTheme(
 )
 @Preview(
     name = "normal",
-    group = "normal",
+    group = "themes",
     showBackground = true
 )
 annotation class CombinedPreviews
@@ -109,11 +109,13 @@ annotation class CombinedPreviews
 @Composable
 fun PreviewLayout(content: @Composable () -> Unit) {
     Column {
+        //正常主题
         MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
             Column {
                 content()
             }
         }
+        //动态色彩主题
         MaterialTheme(
             if (isSystemInDarkTheme()) {
                 dynamicDarkColorScheme(LocalContext.current)

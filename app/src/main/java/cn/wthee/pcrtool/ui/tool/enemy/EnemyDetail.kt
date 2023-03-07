@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -165,7 +166,7 @@ fun EnemyAllInfo(
             title = {
                 Column(
                     modifier = Modifier
-                        .heightIn(max = ScreenUtil.getHeight().px2dp.dp * 0.618f)
+                        .heightIn(max = ScreenUtil.getHeight().px2dp.dp * RATIO_GOLDEN)
                         .verticalScroll(rememberScrollState())
                 ) {
                     MainContentText(

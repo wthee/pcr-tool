@@ -75,7 +75,6 @@ interface EventDao {
     @Query(
         """
         SELECT
-            80000 + MAX( id ) AS id,
             COALESCE( GROUP_CONCAT( campaign_category, '-' ), '0' ) AS type,
             value,
             start_time,
@@ -104,7 +103,6 @@ interface EventDao {
     @Query(
         """
         SELECT
-            a.daily_mission_id AS id,
             18 AS type,
             b.reward_num* 10 AS value,
             a.start_time,
@@ -129,7 +127,6 @@ interface EventDao {
     @Query(
         """
        SELECT
-            a.login_bonus_id AS id,
             19 AS type,
             a.count_num * b.reward_num AS value,
             a.start_time,
@@ -155,7 +152,6 @@ interface EventDao {
     @Query(
         """
        SELECT
-            a.fortune_id AS id,
             20 AS type,
             0 AS value,
             a.start_time,
@@ -177,7 +173,6 @@ interface EventDao {
     @Query(
         """
         SELECT
-            90000 + tower_schedule_id as id,
             1 AS type,
             0 AS value,
             start_time,
@@ -199,7 +194,6 @@ interface EventDao {
     @Query(
         """
        SELECT
-            secret_dungeon_schedule.dungeon_area_id AS id,
             -1 AS type,
             0 AS value,
             start_time,
@@ -214,6 +208,27 @@ interface EventDao {
     suspend fun getSpDungeonEvent(limit: Int): List<CalendarEvent>
 
     /**
+     * 获取次元断层信息
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            -2 AS type,
+            0 AS value,
+            start_time,
+            end_time
+        FROM
+            tdf_schedule 
+        ORDER BY
+            tdf_schedule.schedule_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getFaultEvent(limit: Int): List<CalendarEvent>
+
+    /**
      * 获取免费十连信息
      */
     @SkipQueryVerification
@@ -221,7 +236,7 @@ interface EventDao {
     @Query(
         """
         SELECT
-            70000 + a.id as id,
+            a.id as id,
             COALESCE( b.relation_count, 0 ) AS max_count,
             a.start_time,
         CASE
@@ -247,7 +262,7 @@ interface EventDao {
     @Query(
         """
        SELECT
-            60000 + a.clan_battle_id AS id,
+            a.clan_battle_id AS id,
             a.release_month,
             a.start_time 
         FROM

@@ -6,10 +6,10 @@ import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 确认
      */
-    val fabOKCilck = MutableLiveData(false)
+    val fabOKClick = MutableLiveData(false)
 
     /**
      * 关闭
@@ -146,4 +146,18 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val rankEquipSelected = MutableLiveData(0)
 
+    /**
+     * 数据库更新描述
+     */
+    val updateDb = MutableLiveData<String>()
+
+    /**
+     * 搜索装备编号
+     */
+    val searchEquipIdList = MutableLiveData<ArrayList<Int>>()
+
+    /**
+     * 搜索装备模式
+     */
+    val searchEquipMode = MutableLiveData<Boolean>()
 }

@@ -60,6 +60,21 @@ enum class GachaType(val stringId: Int) {
 }
 
 /**
+ * 模拟卡池类型
+ */
+enum class MockGachaType(val type: Int) {
+    PICK_UP(0),
+    FES(1),
+    PICK_UP_SINGLE(2);
+
+    companion object {
+        fun getByValue(value: Int) = MockGachaType.values()
+            .find { it.type == value } ?: PICK_UP
+    }
+}
+
+
+/**
  *菜单
  */
 enum class ToolMenuType(val id: Int) {
@@ -75,6 +90,7 @@ enum class ToolMenuType(val id: Int) {
     PVP_SEARCH(209),
     LEADER(210),
     TWEET(211),
+    COMIC(212),
     ALL_SKILL(213),
     ALL_EQUIP(214),
     MOCK_GACHA(215),
@@ -196,7 +212,7 @@ enum class KeywordType(val type: Int) {
 /**
  * 角色评级
  */
-enum class LeaderTierType(val type:Int){
+enum class LeaderTierType(val type: Int) {
     ALL(0),
     PVP_ATK(1),
     PVP_DEF(2),
@@ -211,7 +227,7 @@ enum class LeaderTierType(val type:Int){
 /**
  * 技能下标类型
  */
-enum class SkillIndexType(val index:Int){
+enum class SkillIndexType(val index: Int) {
     UNKNOWN(-1),
     UB(0),
     UB_PLUS(0),
@@ -251,7 +267,7 @@ enum class SkillIndexType(val index:Int){
 /**
  * 区服
  */
-enum class RegionType (val value:Int){
+enum class RegionType(val value: Int) {
     CN(2),
     TW(3),
     JP(4),
@@ -260,5 +276,34 @@ enum class RegionType (val value:Int){
     companion object {
         fun getByValue(value: Int) = RegionType.values()
             .find { it.value == value } ?: CN
+    }
+}
+
+/**
+ * 活动日程类型
+ */
+enum class CalendarEventType(val type: Int) {
+    UNKNOWN(404),
+    TOWER(1),
+    SP_DUNGEON(-1),
+    TDF(-2),
+    DAILY(18),
+    LOGIN(19),
+    FORTUNE(20),
+    N_DROP(31),
+    N_MANA(41),
+    H_DROP(32),
+    H_MANA(42),
+    VH_DROP(39),
+    VH_MANA(49),
+    EXPLORE(34),
+    SHRINE(37),
+    TEMPLE(38),
+    DUNGEON(45),
+    ;
+
+    companion object {
+        fun getByValue(value: Int) = CalendarEventType.values()
+            .find { it.type == value } ?: UNKNOWN
     }
 }

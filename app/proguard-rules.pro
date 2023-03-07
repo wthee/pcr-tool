@@ -63,6 +63,7 @@
 -keep class cn.wthee.pcrtool.data.model.** { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.NewsTable { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.TweetData { *; }
+-keep class cn.wthee.pcrtool.data.db.entity.ComicData { *; }
 
 #Bugly
 -dontwarn com.tencent.bugly.**

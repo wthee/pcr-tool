@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.model
 
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
-import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil

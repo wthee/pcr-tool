@@ -48,6 +48,7 @@ import cn.wthee.pcrtool.ui.tool.AllSkillList
 import cn.wthee.pcrtool.ui.tool.AllToolMenu
 import cn.wthee.pcrtool.ui.tool.BirthdayList
 import cn.wthee.pcrtool.ui.tool.CalendarEventList
+import cn.wthee.pcrtool.ui.tool.ComicList
 import cn.wthee.pcrtool.ui.tool.FreeGachaList
 import cn.wthee.pcrtool.ui.tool.GachaList
 import cn.wthee.pcrtool.ui.tool.GuildList
@@ -111,6 +112,7 @@ object Navigation {
     const val TOOL_MOCK_GACHA = "toolMockGacha"
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
+    const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
     const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
@@ -134,7 +136,7 @@ object Navigation {
     const val CHARACTER_SKILL_LOOP = "characterSkillLoop"
     const val TOOL_EXTRA_EQUIP = "toolExtraEquip"
     const val TOOL_EXTRA_EQUIP_UNIT = "toolExtraEquipUnit"
-    const val EXTRA_EQUIP_CATEGROY = "toolExtraEquipCategory"
+    const val EXTRA_EQUIP_CATEGORY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
     const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
     const val TOOL_TRAVEL_AREA_DETAIL = "toolExtraEquipTravelAreaDetail"
@@ -146,6 +148,7 @@ object Navigation {
     const val PCR_WEBSITE = "pcrWebsite"
     const val TOOL_LEADER_TIER = "leaderTier"
     const val TOOL_ALL_QUEST = "allQuest"
+    const val SEARCH_EQUIP_IDS = "searchEquipIds"
 }
 
 /**
@@ -267,7 +270,8 @@ fun NavGraph(
                 EquipList(
                     scrollState = scrollState,
                     toEquipDetail = actions.toEquipDetail,
-                    toEquipMaterial = actions.toEquipMaterial
+                    toEquipMaterial = actions.toEquipMaterial,
+                    toSearchEquipQuest = actions.toSearchEquipQuest
                 )
             }
 
@@ -341,13 +345,13 @@ fun NavGraph(
 
             //ex装备关联角色
             bottomSheet(
-                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_EQUIP_CATEGROY}}",
-                arguments = listOf(navArgument(Navigation.EXTRA_EQUIP_CATEGROY) {
+                route = "${Navigation.TOOL_EXTRA_EQUIP_UNIT}/{${Navigation.EXTRA_EQUIP_CATEGORY}}",
+                arguments = listOf(navArgument(Navigation.EXTRA_EQUIP_CATEGORY) {
                     type = NavType.IntType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_EQUIP_CATEGROY))
+                ExtraEquipUnitList(category = arguments.getInt(Navigation.EXTRA_EQUIP_CATEGORY))
             }
 
             //ex装备掉落信息
@@ -582,6 +586,15 @@ fun NavGraph(
                 TweetList()
             }
 
+            //漫画信息
+            composable(
+                route = Navigation.COMIC
+            ) {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                ComicList()
+            }
+
+
             //技能列表
             composable(
                 route = Navigation.ALL_SKILL
@@ -745,6 +758,19 @@ fun NavGraph(
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 AllQuestList()
             }
+
+            //装备掉落搜索
+            bottomSheet(
+                route = "${Navigation.TOOL_ALL_QUEST}/{${Navigation.SEARCH_EQUIP_IDS}}",
+                arguments = listOf(navArgument(Navigation.SEARCH_EQUIP_IDS) {
+                    type = NavType.StringType
+                })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                AllQuestList(
+                    searchEquipIds = arguments.getString(Navigation.SEARCH_EQUIP_IDS) ?: ""
+                )
+            }
         }
     }
 }
@@ -799,8 +825,8 @@ class NavActions(navController: NavHostController) {
     /**
      * ex装备详情关联角色
      */
-    val toExtraEquipUnit: (Int) -> Unit = { categroy: Int ->
-        navController.navigate("${Navigation.TOOL_EXTRA_EQUIP_UNIT}/${categroy}")
+    val toExtraEquipUnit: (Int) -> Unit = { category: Int ->
+        navController.navigate("${Navigation.TOOL_EXTRA_EQUIP_UNIT}/${category}")
     }
 
     /**
@@ -851,7 +877,7 @@ class NavActions(navController: NavHostController) {
     /**
      * 角装备统计
      */
-    val toCharacteEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
+    val toCharacterEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
         navController.navigate("${Navigation.EQUIP_COUNT}/${unitId}/${maxRank}")
     }
 
@@ -963,6 +989,13 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
+     * 漫画
+     */
+    val toComicList = {
+        navController.navigate(Navigation.COMIC)
+    }
+
+    /**
      * 技能列表
      */
     val toAllSkillList = {
@@ -1066,5 +1099,12 @@ class NavActions(navController: NavHostController) {
      */
     val toAllQuest = {
         navController.navigate(Navigation.TOOL_ALL_QUEST)
+    }
+
+    /**
+     * 装备掉落搜索
+     */
+    val toSearchEquipQuest: (String) -> Unit = { searchEquipIds ->
+        navController.navigate("${Navigation.TOOL_ALL_QUEST}/${searchEquipIds}")
     }
 }

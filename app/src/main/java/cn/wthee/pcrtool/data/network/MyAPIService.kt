@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.network
 
+import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
@@ -21,7 +22,7 @@ interface MyAPIService {
     /**
      * 获取数据库版本
      */
-    @POST("version")
+    @POST("db/info")
     suspend fun getDbVersion(@Body body: RequestBody): ResponseData<DatabaseVersion>
 
     /**
@@ -55,6 +56,12 @@ interface MyAPIService {
     suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
 
     /**
+     * 获取漫画
+     */
+    @POST("comic")
+    suspend fun getComicData(@Body body: RequestBody): ResponseData<List<ComicData>>
+
+    /**
      * 排行信息
      */
     @POST("leaders/score")
@@ -83,12 +90,6 @@ interface MyAPIService {
      */
     @POST("leaders/tier")
     suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
-
-    /**
-     * 数据更新摘要
-     */
-    @POST("diff")
-    suspend fun getDbDiff(@Body body: RequestBody): ResponseData<String>
 
     /**
      * 关键词

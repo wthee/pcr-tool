@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -27,6 +28,7 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  * 通用悬浮按钮
  *
  * @param hasNavBarPadding 适配导航栏
+ * @param extraContent 不为空时，将替换text内容
  */
 @Composable
 fun FabCompose(
@@ -34,6 +36,7 @@ fun FabCompose(
     modifier: Modifier = Modifier,
     text: String = "",
     hasNavBarPadding: Boolean = true,
+    extraContent: (@Composable () -> Unit)? = null,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -42,9 +45,10 @@ fun FabCompose(
     } else {
         modifier
     }
+    val isTextFab = text != "" && extraContent == null
 
-    if (text != "") {
-        mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+    if (isTextFab) {
+        mModifier = mModifier.padding(horizontal = Dimen.textfabMargin)
     }
 
     SmallFloatingActionButton(
@@ -57,32 +61,37 @@ fun FabCompose(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = if (text != "") {
+            modifier = (if (isTextFab) {
                 Modifier.padding(start = Dimen.largePadding)
             } else {
-                Modifier
-            }
+                Modifier.padding(start = 0.dp)
+            }).animateContentSize(defaultTween())
         ) {
-            IconCompose(
-                data = iconType,
-                size = Dimen.fabIconSize,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-            )
-            Text(
-                text = text,
-                style = MaterialTheme.typography.titleSmall,
-                textAlign = TextAlign.Center,
-                modifier = if (text != "") {
-                    Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
-                } else {
-                    Modifier
-                }
-                    .animateContentSize(defaultTween())
-                    .widthIn(max = Dimen.fabTextMaxWidth),
-                color = MaterialTheme.colorScheme.primary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+
+            if (extraContent == null) {
+                IconCompose(
+                    data = iconType,
+                    size = Dimen.fabIconSize,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                )
+
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = if (isTextFab) {
+                        Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
+                    } else {
+                        Modifier
+                    }
+                        .widthIn(max = Dimen.fabTextMaxWidth),
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else {
+                extraContent()
+            }
         }
     }
 

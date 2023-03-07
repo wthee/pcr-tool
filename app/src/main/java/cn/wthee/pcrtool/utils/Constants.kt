@@ -81,6 +81,7 @@ object Constants {
     //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
+    const val DATABASE_COMIC = "comic.db"
     const val DATABASE_PVP = "pvp.db"
     const val DATABASE_MOCK_GACHA = "mock_gacha.db"
     const val RANK_UPPER = "RANK"
@@ -118,6 +119,4 @@ object Constants {
     const val EXCEPTION_PVP_SERVICE = "pvp search exception:"
     const val EXCEPTION_DATA_CHANGE = "db change exception:"
 
-    //模拟抽卡最大up数
-    const val MOCK_GACHA_MAX_UP_COUNT = 12
 }

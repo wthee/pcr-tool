@@ -6,8 +6,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.CalendarEventType
 import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.intArrayList
@@ -16,7 +18,6 @@ import cn.wthee.pcrtool.utils.intArrayList
  * 活动信息
  */
 data class CalendarEvent(
-    @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "type") val type: String = "31",
     @ColumnInfo(name = "value") val value: Int = 1500,
     @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",
@@ -25,17 +26,23 @@ data class CalendarEvent(
     /*
      * 去零
      */
-    fun getFixedValue() = if (value % 1000 != 0) {
+    private fun getFixedValue() = if (value % 1000 != 0) {
         (value / 1000f)
     } else {
         (value / 1000).toFloat()
     }
 
+    private fun getTypeInt() = try {
+        type.toInt()
+    } catch (_: Exception) {
+        404
+    }
+
     @Composable
     fun getEventList(): ArrayList<CalendarEventData> {
         val events = arrayListOf<CalendarEventData>()
-        when (type) {
-            "1" -> {
+        when (CalendarEventType.getByValue(getTypeInt())) {
+            CalendarEventType.TOWER -> {
                 //露娜塔
                 events.add(
                     CalendarEventData(
@@ -45,7 +52,8 @@ data class CalendarEvent(
                     )
                 )
             }
-            "-1" -> {
+
+            CalendarEventType.SP_DUNGEON -> {
                 //特殊地下城
                 events.add(
                     CalendarEventData(
@@ -55,43 +63,58 @@ data class CalendarEvent(
                     )
                 )
             }
+
+            CalendarEventType.TDF -> {
+                //次元断层
+                events.add(
+                    CalendarEventData(
+                        stringResource(id = R.string.fault),
+                        "",
+                        ""
+                    )
+                )
+            }
+
             else -> {
                 //正常活动
                 val list = type.intArrayList
                 list.forEach { type ->
-                    val title = when (type) {
-                        18 -> stringResource(id = R.string.daily_mission)
-                        19 -> stringResource(id = R.string.daily_login)
-                        20 -> getString(R.string.fortune_event)
-                        31, 41 -> stringResource(id = R.string.normal)
-                        32, 42 -> stringResource(id = R.string.hard)
-                        39, 49 -> stringResource(id = R.string.very_hard)
-                        34 -> stringResource(id = R.string.explore)
-                        37 -> stringResource(id = R.string.shrine)
-                        38 -> stringResource(id = R.string.temple)
-                        45 -> stringResource(id = R.string.dungeon)
+                    val title = when (CalendarEventType.getByValue(type)) {
+                        CalendarEventType.DAILY -> stringResource(id = R.string.daily_mission)
+                        CalendarEventType.LOGIN -> stringResource(id = R.string.daily_login)
+                        CalendarEventType.FORTUNE -> getString(R.string.fortune_event)
+                        CalendarEventType.N_DROP, CalendarEventType.N_MANA -> stringResource(id = R.string.normal)
+                        CalendarEventType.H_DROP, CalendarEventType.H_MANA -> stringResource(id = R.string.hard)
+                        CalendarEventType.VH_DROP, CalendarEventType.VH_MANA -> stringResource(id = R.string.very_hard)
+                        CalendarEventType.EXPLORE -> stringResource(id = R.string.explore)
+                        CalendarEventType.SHRINE -> stringResource(id = R.string.shrine)
+                        CalendarEventType.TEMPLE -> stringResource(id = R.string.temple)
+                        CalendarEventType.DUNGEON -> stringResource(id = R.string.dungeon)
                         else -> ""
                     }
 
                     val dropMumColor = when (getFixedValue()) {
                         1.5f, 2.0f -> colorGold
-                        3f -> colorRed
+                        2.5f, 3f -> colorRed
                         4f -> colorGreen
+                        5f -> colorOrange
                         else -> MaterialTheme.colorScheme.primary
                     }
                     val multiple = getFixedValue()
                     events.add(
                         CalendarEventData(
                             title,
-                            when (type) {
-                                19 -> {
-                                    //每日登录宝石
+                            when (CalendarEventType.getByValue(type)) {
+                                CalendarEventType.LOGIN -> {
+                                    //登录宝石
                                     value.toString()
                                 }
-                                20 -> {
+
+                                CalendarEventType.FORTUNE -> {
                                     //兰德索尔杯
                                     ""
                                 }
+
                                 else -> stringResource(
                                     R.string.multiple,
                                     if ((multiple * 10).toInt() % 10 == 0) {
@@ -101,8 +124,8 @@ data class CalendarEvent(
                                     }
                                 )
                             },
-                            when (type) {
-                                18, 19, 20 -> ""
+                            when (CalendarEventType.getByValue(type)) {
+                                CalendarEventType.DAILY, CalendarEventType.LOGIN, CalendarEventType.FORTUNE -> ""
                                 else -> stringResource(id = if (type > 40) R.string.mana else R.string.drop)
                             },
                             dropMumColor
@@ -117,35 +140,42 @@ data class CalendarEvent(
 
     override fun toString(): String {
         var eventTitle = ""
-        when (type) {
-            "1" -> {
+        when (CalendarEventType.getByValue(getTypeInt())) {
+            CalendarEventType.TOWER -> {
                 //露娜塔
                 eventTitle = getString(R.string.tower)
             }
-            "-1" -> {
+
+            CalendarEventType.SP_DUNGEON -> {
                 //特殊地下城
                 eventTitle = getString(R.string.sp_dungeon)
             }
+
+            CalendarEventType.TDF -> {
+                //次元断层
+                eventTitle = getString(R.string.fault)
+            }
+
             else -> {
                 //正常活动
                 val list = type.intArrayList
                 list.forEachIndexed { index, type ->
-                    val title = when (type) {
-                        18 -> getString(R.string.daily_mission)
-                        19 -> getString(R.string.daily_login)
-                        20 -> getString(R.string.fortune_event)
-                        31, 41 -> getString(R.string.normal)
-                        32, 42 -> getString(R.string.hard)
-                        39, 49 -> getString(R.string.very_hard)
-                        34 -> getString(R.string.explore)
-                        37 -> getString(R.string.shrine)
-                        38 -> getString(R.string.temple)
-                        45 -> getString(R.string.dungeon)
+                    val title = when (CalendarEventType.getByValue(type)) {
+                        CalendarEventType.DAILY -> getString(R.string.daily_mission)
+                        CalendarEventType.LOGIN -> getString(R.string.daily_login)
+                        CalendarEventType.FORTUNE -> getString(R.string.fortune_event)
+                        CalendarEventType.N_DROP, CalendarEventType.N_MANA -> getString(R.string.normal)
+                        CalendarEventType.H_DROP, CalendarEventType.H_MANA -> getString(R.string.hard)
+                        CalendarEventType.VH_DROP, CalendarEventType.VH_MANA -> getString(R.string.very_hard)
+                        CalendarEventType.EXPLORE -> getString(R.string.explore)
+                        CalendarEventType.SHRINE -> getString(R.string.shrine)
+                        CalendarEventType.TEMPLE -> getString(R.string.temple)
+                        CalendarEventType.DUNGEON -> getString(R.string.dungeon)
                         else -> ""
                     }
                     val multiple = getFixedValue()
-                    val typeName = when (type) {
-                        18, 19, 20 -> ""
+                    val typeName = when (CalendarEventType.getByValue(type)) {
+                        CalendarEventType.DAILY, CalendarEventType.LOGIN, CalendarEventType.FORTUNE -> ""
                         else -> getString(if (type > 40) R.string.mana else R.string.drop)
                     }
                     val multipleText = getString(
@@ -156,15 +186,17 @@ data class CalendarEvent(
                             multiple.toString()
                         }
                     )
-                    eventTitle += when (type) {
-                        19 -> {
-                            //每日登录宝石
+                    eventTitle += when (CalendarEventType.getByValue(type)) {
+                        CalendarEventType.LOGIN -> {
+                            //登录宝石
                             title + value
                         }
-                        20 -> {
+
+                        CalendarEventType.FORTUNE -> {
                             //兰德索尔杯
                             title
                         }
+
                         else -> title + typeName + multipleText
                     }
                     if (index != list.size - 1) {

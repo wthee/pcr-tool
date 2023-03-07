@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
 
-@Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterEquipment(
     var all: Boolean = true,
     var craft: Int = 1,

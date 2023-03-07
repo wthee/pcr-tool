@@ -25,8 +25,6 @@ class MockGachaRepository @Inject constructor(private val mockGachaDao: MockGach
 
     suspend fun getHistory(region: Int) = mockGachaDao.getHistory(region)
 
-    suspend fun getGachaByGachaId(gachaId: String) = mockGachaDao.getGachaByGachaId(gachaId)
-
     suspend fun getGachaByPickUpIds(region: Int, gachaType: Int, pickUpIds: String) =
         mockGachaDao.getGachaByPickUpIds(region, gachaType, pickUpIds)
 

@@ -13,15 +13,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants.MOCK_GACHA_MAX_UP_COUNT
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -34,19 +31,10 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import java.util.*
 
-/**
- * 模拟卡池类型
- */
-enum class MockGachaType(val type: Int) {
-    PICK_UP(0),
-    FES(1),
-    PICK_UP_SINGLE(2);
-
-    companion object {
-        fun getByValue(value: Int) = MockGachaType.values()
-            .find { it.type == value } ?: MockGachaType.PICK_UP
-    }
-}
+//模拟抽卡最大up数
+private const val MOCK_GACHA_MAX_UP_COUNT = 12
+//模拟抽卡fes最大up数
+private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 
 /**
  * 模拟卡池
@@ -160,7 +148,7 @@ fun MockGacha(
                     pagerState = pagerState,
                     tabs = pageTabs,
                     modifier = Modifier
-                        .fillMaxWidth(0.618f)
+                        .fillMaxWidth(RATIO_GOLDEN)
                         .align(Alignment.CenterHorizontally)
                 )
 
@@ -200,11 +188,7 @@ fun MockGacha(
                 ),
             visible = pickUpList.isNotEmpty() && allUnits != null
         ) {
-            val mockGachaHelper = MockGachaHelper(
-                pickUpType = MockGachaType.getByValue(mockGachaType.value),
-                pickUpList = pickUpList,
-                allUnits!!
-            )
+
 
             val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
             FabCompose(
@@ -212,6 +196,12 @@ fun MockGacha(
                 text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
                 if (pickUpList.isNotEmpty()) {
+                    val mockGachaHelper = MockGachaHelper(
+                        pickUpType = MockGachaType.getByValue(mockGachaType.value),
+                        pickUpList = pickUpList,
+                        allUnits!!
+                    )
+
                     if (!showResult) {
                         //自选单up，至少选择两名
                         if (mockGachaType.value == MockGachaType.PICK_UP_SINGLE.type && pickUpList.size < 2) {
@@ -370,7 +360,8 @@ private fun MockGachaUnitIconListCompose(
 private fun updatePickUpList(data: GachaUnitInfo) {
     val pickUpList = navViewModel.pickUpList.value ?: arrayListOf()
     val gachaType = navViewModel.mockGachaType.value ?: 0
-    val maxPick = if (gachaType == MockGachaType.FES) 1 else MOCK_GACHA_MAX_UP_COUNT
+    val maxPick =
+        if (gachaType == MockGachaType.FES) MOCK_GACHA_FES_MAX_UP_COUNT else MOCK_GACHA_MAX_UP_COUNT
 
     val newList = arrayListOf<GachaUnitInfo>()
     newList.addAll(pickUpList)

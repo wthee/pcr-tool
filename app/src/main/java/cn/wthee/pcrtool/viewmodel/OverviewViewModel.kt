@@ -15,7 +15,14 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.compareBirthDay
+import cn.wthee.pcrtool.utils.compareEvent
+import cn.wthee.pcrtool.utils.compareGacha
+import cn.wthee.pcrtool.utils.compareStoryEvent
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.isComingSoon
+import cn.wthee.pcrtool.utils.isInProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -118,6 +125,7 @@ class OverviewViewModel @Inject constructor(
             data += eventRepository.getFortuneEvent(1)
             data += eventRepository.getTowerEvent(1)
             data += eventRepository.getSpDungeonEvent(1)
+            data += eventRepository.getFaultEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
@@ -173,7 +181,7 @@ class OverviewViewModel @Inject constructor(
                 val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
                 newOverview.postValue(data)
             } catch (e: Exception) {
-                LogReportUtil.upload(e, "getNewsOvervie")
+                LogReportUtil.upload(e, "getNewsOverview")
             }
         }
     }

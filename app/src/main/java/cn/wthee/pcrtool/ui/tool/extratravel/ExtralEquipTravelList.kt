@@ -1,9 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -14,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -35,7 +34,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
@@ -53,33 +51,33 @@ fun ExtraEquipTravelList(
     val areaList = extraEquipmentViewModel.getTravelAreaList().collectAsState(initial = null).value
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (areaList != null) {
-            if (areaList.isNotEmpty()) {
-                LazyColumn(state = scrollState) {
-                    items(areaList) {
-                        TravelItem(it, toExtraEquipTravelAreaDetail)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        if (areaList?.isNotEmpty() == true) {
+            LazyColumn(state = scrollState) {
+                items(areaList) {
+                    TravelItem(it, toExtraEquipTravelAreaDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        } else {
+            if (areaList == null) {
+                //功能未实装
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CenterTipText(
+                        stringResource(
+                            id = R.string.not_installed,
+                            getRegionName(MainActivity.regionType)
+                        )
+                    )
                 }
             } else {
                 CenterTipText(
                     stringResource(id = R.string.no_data)
                 )
             }
-
-        } else {
-            //功能未实装
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CenterTipText(
-                    stringResource(
-                        id = R.string.not_installed,
-                        getRegionName(MainActivity.regionType)
-                    )
-                )
-            }
         }
+
     }
 }
 
@@ -89,36 +87,42 @@ fun ExtraEquipTravelList(
 @Composable
 private fun TravelItem(
     travelData: ExtraEquipTravelData,
-    toExtraEquipTravelAreaDetail: (Int) -> Unit,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
+    toExtraEquipTravelAreaDetail: (Int) -> Unit
 ) {
-    val questList = extraEquipmentViewModel.getTravelQuestList(travelData.travelAreaId)
-        .collectAsState(initial = null).value
-    Column(
-        modifier = Modifier
-            .padding(
-                horizontal = Dimen.largePadding,
-                vertical = Dimen.mediumPadding
-            )
-    ) {
-        //area
-        CommonGroupTitle(
-            iconData = ImageRequestHelper.getInstance()
-                .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, travelData.travelAreaId),
-            iconSize = Dimen.menuIconSize,
-            titleStart = travelData.travelAreaName,
-            titleEnd = travelData.questCount.toString(),
-            modifier = Modifier.padding(vertical = Dimen.smallPadding)
-        )
 
-        //quest列表
-        questList?.forEachIndexed { _, questData ->
-            MainCard(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
-                TravelQuestHeader(
-                    clickable = true,
-                    questData = questData,
-                    toExtraEquipTravelAreaDetail = toExtraEquipTravelAreaDetail
-                )
+    //area
+    CommonGroupTitle(
+        iconData = ImageRequestHelper.getInstance()
+            .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, travelData.travelAreaId),
+        iconSize = Dimen.menuIconSize,
+        titleStart = travelData.travelAreaName,
+        titleEnd = travelData.questCount.toString(),
+        modifier = Modifier.padding(Dimen.mediumPadding)
+    )
+
+    //quest列表
+    VerticalGrid(
+        itemWidth = getItemWidth() / 2,
+        contentPadding = Dimen.largePadding,
+        modifier = Modifier.padding(
+            start = Dimen.commonItemPadding,
+            end = Dimen.commonItemPadding
+        ),
+    ) {
+        travelData.questList.forEachIndexed { _, questData ->
+            MainCard(modifier = Modifier.padding(Dimen.mediumPadding),
+                onClick = {
+                    toExtraEquipTravelAreaDetail(questData.travelQuestId)
+                }
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    TravelQuestHeader(
+                        questData = questData,
+                    )
+                }
             }
         }
     }
@@ -126,29 +130,19 @@ private fun TravelItem(
 
 /**
  * ex冒险区域公用头部布局
- * @param clickable 列表项可点击；查看详情时不可点击
  * @param showTitle 查看掉落列表时，不显示标题
  */
 @Composable
 fun TravelQuestHeader(
-    clickable: Boolean,
     questData: ExtraEquipQuestData,
     showTitle: Boolean = true,
-    toExtraEquipTravelAreaDetail: ((Int) -> Unit)? = null,
 ) {
-    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .clip(MaterialTheme.shapes.medium)
-            .clickable(enabled = clickable) {
-                if (toExtraEquipTravelAreaDetail != null) {
-                    VibrateUtil(context).single()
-                    toExtraEquipTravelAreaDetail(questData.travelQuestId)
-                }
-            }
-            .padding(vertical = Dimen.largePadding)
+            .padding(vertical = Dimen.mediumPadding)
     ) {
         //图标
         IconCompose(
@@ -191,11 +185,9 @@ fun TravelQuestHeader(
 private fun TravelQuestHeaderPreview() {
     PreviewLayout {
         TravelQuestHeader(
-            clickable = false,
             questData = ExtraEquipQuestData(
                 0, 0, "?", 10, 10000, 500, 1, 1000, 1
-            ),
-            toExtraEquipTravelAreaDetail = { }
+            )
         )
     }
 }

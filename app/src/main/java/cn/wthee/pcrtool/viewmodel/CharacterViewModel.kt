@@ -47,7 +47,14 @@ class CharacterViewModel @Inject constructor(
      * @param unitId 角色编号
      */
     fun getCharacterBasicInfo(unitId: Int) = flow {
-        emit(unitRepository.getCharacterBasicInfo(unitId))
+        try {
+            emit(unitRepository.getCharacterBasicInfo(unitId))
+        }catch (e:Exception){
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_UNIT_NULL + "getCharacterBasicInfo#unitId:$unitId"
+            )
+        }
     }
 
     /**

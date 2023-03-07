@@ -24,12 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
-import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.*
@@ -400,88 +400,83 @@ fun SkillActionItem(
     map[2] = mark2
     map[3] = mark3
 
-    Row(
+
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
             .padding(vertical = Dimen.smallPadding)
+            .fillMaxWidth()
+            .heightIn(min = Dimen.skillActionMinHeight)
+            .padding(Dimen.smallPadding)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.small
             )
     ) {
-        Column(
-            modifier = Modifier
-                .padding(Dimen.smallPadding)
-                .fillMaxWidth()
-                .heightIn(min = Dimen.skillActionMinHeight)
-        ) {
-            //设置字体
-            Text(
-                style = TextStyle(
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
-                    letterSpacing = 0.5.sp
-                ),
-                modifier = Modifier.padding(Dimen.smallPadding),
-                color = MaterialTheme.colorScheme.onSurface,
-                text = buildAnnotatedString {
-                    skillAction.action.forEachIndexed { index, char ->
-                        //替换括号及括号内字体颜色
-                        for (i in 0..3) {
-                            map[i]?.forEach {
-                                if (index >= it.start && index <= it.end) {
-                                    withStyle(style = SpanStyle(color = colors[i])) {
-                                        append(char)
-                                    }
-                                    return@forEachIndexed
+        //设置字体
+        Text(
+            style = TextStyle(
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                letterSpacing = 0.5.sp
+            ),
+            modifier = Modifier.padding(Dimen.smallPadding),
+            color = MaterialTheme.colorScheme.onSurface,
+            text = buildAnnotatedString {
+                skillAction.action.forEachIndexed { index, char ->
+                    //替换括号及括号内字体颜色
+                    for (i in 0..3) {
+                        map[i]?.forEach {
+                            if (index >= it.start && index <= it.end) {
+                                withStyle(style = SpanStyle(color = colors[i])) {
+                                    append(char)
                                 }
+                                return@forEachIndexed
                             }
                         }
-                        //添加非括号标记的参数
-                        append(char)
                     }
+                    //添加非括号标记的参数
+                    append(char)
                 }
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                //查看召唤物
-                if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
-                    IconTextButton(
-                        icon = MainIconType.SUMMON,
-                        text = stringResource(R.string.to_summon)
-                    ) {
-                        toSummonDetail(
-                            skillAction.summonUnitId,
-                            unitType.type,
-                            property.level,
-                            property.rank,
-                            property.rarity
-                        )
-                    }
-                }
-                //技能等级超过tp限制等级的，添加标识
-                if (skillAction.isTpLimitAction) {
-                    IconTextButton(
-                        icon = MainIconType.HELP,
-                        text = stringResource(R.string.tp_limit_level_action_desc)
+            }
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            //查看召唤物
+            if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+                IconTextButton(
+                    icon = MainIconType.SUMMON,
+                    text = stringResource(R.string.to_summon)
+                ) {
+                    toSummonDetail(
+                        skillAction.summonUnitId,
+                        unitType.type,
+                        property.level,
+                        property.rank,
+                        property.rarity
                     )
                 }
             }
+            //技能等级超过tp限制等级的，添加标识
+            if (skillAction.isTpLimitAction) {
+                IconTextButton(
+                    icon = MainIconType.HELP,
+                    text = stringResource(R.string.tp_limit_level_action_desc)
+                )
+            }
+        }
 
-            //调试用
-            if (BuildConfig.DEBUG) {
-                val expand = remember {
-                    mutableStateOf(false)
-                }
-                if (expand.value) {
-                    CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
-                } else {
-                    IconTextButton(
-                        icon = MainIconType.MORE,
-                        text = stringResource(R.string.skill)
-                    ) {
-                        expand.value = true
-                    }
+        //调试用
+        if (BuildConfig.DEBUG) {
+            val expand = remember {
+                mutableStateOf(false)
+            }
+            if (expand.value) {
+                CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
+            } else {
+                IconTextButton(
+                    icon = MainIconType.MORE,
+                    text = stringResource(R.string.skill)
+                ) {
+                    expand.value = true
                 }
             }
         }

@@ -10,12 +10,23 @@
 > 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
 
 ## 支持
+
 - [爱发电](https://afdian.net/a/wthee)
+
 ## 更新记录
 
 ### 3.X.X
 
 > 更换图片资源地址，后续将删除旧版本图片资源
+
+#### 3.6.0
+
+- [装备列表] 新增掉落查询功能
+- 重构 [漫画] 功能
+- 调整部分技能描述
+- 细节调整
+- 修复已知 BUG
+-
 
 #### 3.5.5
 

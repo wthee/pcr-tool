@@ -34,7 +34,13 @@ fun ExtraEquipDropList(
         if (dropList.isNotEmpty()) {
             val tabs = arrayListOf<String>()
             dropList.forEach {
-                tabs.add(it.getQuestName())
+                tabs.add(
+                    stringResource(
+                        id = R.string.extra_area_quest,
+                        it.getAreaOrder(),
+                        it.getQuestName()
+                    )
+                )
             }
             MainTabRow(
                 pagerState = pagerState,

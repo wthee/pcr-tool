@@ -12,7 +12,6 @@ import com.google.gson.Gson
  * 角色信息筛选
  *
  */
-@Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterCharacter(
     /**
      * 是否全部显示：0全部、1仅收藏
@@ -21,7 +20,7 @@ class FilterCharacter(
     /**
      * 位置：0全部、1前、2中、3后
      */
-    var positon: Int = 0,
+    var position: Int = 0,
     /**
      * 攻击类型
      */
@@ -61,7 +60,7 @@ class FilterCharacter(
 
 ) {
 
-    fun position() = when (this.positon) {
+    fun position() = when (this.position) {
         1 -> arrayListOf(0, 299)
         2 -> arrayListOf(300, 599)
         3 -> arrayListOf(600, 9999)
@@ -104,5 +103,5 @@ class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && positon == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == CharacterSortType.SORT_DATE && name == "" && (!asc) && type == 0)
+    return !(all && position == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == CharacterSortType.SORT_DATE && name == "" && (!asc) && type == 0)
 }

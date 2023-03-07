@@ -4,7 +4,11 @@ import androidx.compose.ui.unit.dp
 
 object Dimen {
 
-    val cardElevation = 4.dp
+    val cardElevation = 3.dp
+
+    val fabElevation = 6.dp
+
+    val popupMenuElevation = 8.dp
 
     val textElevation = 1.5.dp
 
@@ -49,7 +53,7 @@ object Dimen {
 
     val menuItemSize = 64.dp
 
-    val dataChangeWidth = 120.dp
+    val dataChangeWidth = 110.dp
 
     val mockGachaTypeChangeWidth = 160.dp
 

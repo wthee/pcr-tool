@@ -88,13 +88,6 @@ class ExtraEquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 冒险区域详情列表
-     */
-    fun getTravelQuestList(areaId: Int) = flow {
-        emit(equipmentRepository.getTravelQuestList(areaId))
-    }
-
-    /**
      * ex冒险区域
      */
     fun getTravelAreaList() = flow {

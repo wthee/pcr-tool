@@ -21,10 +21,7 @@ import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
-import cn.wthee.pcrtool.database.AppDatabaseCN
-import cn.wthee.pcrtool.database.AppDatabaseJP
-import cn.wthee.pcrtool.database.AppDatabaseTW
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.*
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,7 +112,7 @@ class MainActivity : ComponentActivity() {
                     return true
                 }
                 MainIconType.OK -> {
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                     return true
                 }
                 else -> {
@@ -141,9 +138,7 @@ class MainActivity : ComponentActivity() {
             }
             try {
                 //关闭其他数据库连接
-                AppDatabaseCN.close()
-                AppDatabaseTW.close()
-                AppDatabaseJP.close()
+                AppBasicDatabase.close()
                 //重启应用
                 val intent = Intent(this, MainActivity::class.java)
                 finish()

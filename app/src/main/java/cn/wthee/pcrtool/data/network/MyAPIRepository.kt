@@ -1,14 +1,23 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.model.*
+import cn.wthee.pcrtool.data.model.AppNotice
+import cn.wthee.pcrtool.data.model.KeywordData
+import cn.wthee.pcrtool.data.model.LeaderTierData
+import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.data.model.WebsiteGroupData
+import cn.wthee.pcrtool.data.model.cancel
+import cn.wthee.pcrtool.data.model.error
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.mediaType
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.getRegionCode
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -183,6 +192,36 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 查询漫画数量
+     * 参数暂不生效
+     */
+    suspend fun getComic(after: Int?, keyword: String): ResponseData<List<ComicData>> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("keyword", keyword)
+        json.addProperty("after", after)
+
+        val body =
+            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+
+        //请求
+        try {
+            val response = service.getComicData(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getTweet" + "$after")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 获取排名信息
      */
     suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
@@ -226,33 +265,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 LogReportUtil.upload(e, Constants.EXCEPTION_API + "getUpdateContent")
-            }
-        }
-        return error()
-    }
-
-    /**
-     * 获取数据更新摘要
-     */
-    suspend fun getDbDiff(): ResponseData<String> {
-        //请求
-        try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("regionCode", getRegionCode())
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-
-            val response = service.getDbDiff(body)
-            if (isError(response)) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getDbDiff")
             }
         }
         return error()

@@ -10,11 +10,11 @@ import cn.wthee.pcrtool.data.db.repository.MockGachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.simpleDateFormat

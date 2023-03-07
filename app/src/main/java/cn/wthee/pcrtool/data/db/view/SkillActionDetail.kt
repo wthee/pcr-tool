@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
+import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -123,6 +124,8 @@ data class SkillActionDetail(
             // 1：造成伤害
             SkillActionType.DAMAGE -> {
                 val atkType = getAtkType()
+
+                //适应伤害类型
                 val adaptive = getString(
                     when (actionDetail2) {
                         1 -> R.string.skill_adaptive_lower_defense
@@ -151,6 +154,14 @@ data class SkillActionDetail(
                     }
                 )
 
+                //无视防御
+                val ignoreDef = if (actionValue7 > 0) {
+                    val def = " [${actionValue7.toInt()}] "
+                    getString(R.string.skill_ignore_def, def)
+                } else {
+                    ""
+                }
+
                 val value = getValueText(1, actionValue1, actionValue2, actionValue3)
 
                 getString(
@@ -158,8 +169,10 @@ data class SkillActionDetail(
                     getTarget(),
                     value,
                     atkType,
-                    adaptive + multipleDamage,
-                    mustCritical
+                    adaptive ,
+                    multipleDamage,
+                    mustCritical,
+                    ignoreDef
                 )
             }
             // 2：位移
@@ -1462,7 +1475,7 @@ data class SkillActionDetail(
                 )
             }
             // 93：无视挑衅
-            SkillActionType.IGNOR_TAUNT -> {
+            SkillActionType.IGNORE_TAUNT -> {
                 getString(R.string.skill_action_type_desc_93, getTarget())
             }
             // 94：技能特效

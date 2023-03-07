@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.df1
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getString
-import java.util.*
+import java.util.Calendar
 
 /**
  * 公会战日程
@@ -17,11 +17,6 @@ data class ClanBattleEvent(
     @ColumnInfo(name = "start_time") var startTime: String = "2020/01/01 00:00:00",
     @Ignore var endTime: String = "2020/01/07 00:00:00"
 ) {
-    /**
-     * 获取id
-     */
-    fun getClanBattleId() = id - 60000
-
     /**
      * 获取结束日期，开始加5天
      */

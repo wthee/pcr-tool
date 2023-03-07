@@ -1,17 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,27 +21,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.DateRange
-import cn.wthee.pcrtool.ui.common.DateRangePickerCompose
-import cn.wthee.pcrtool.ui.common.EventTitle
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.GridIconListCompose
-import cn.wthee.pcrtool.ui.common.IconTextButton
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainContentText
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.getItemWidth
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorOrange
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaType
+import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
@@ -59,7 +36,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GachaList(
     scrollState: LazyStaggeredGridState,
@@ -149,12 +126,11 @@ fun GachaItem(
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
         icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
-    val mockGachaType = when {
-        icons.find { !fesUnitIds.contains(it) } == null -> MockGachaType.FES
-        icons.size >= 6 -> MockGachaType.PICK_UP_SINGLE
+    val mockGachaType = when (type) {
+        GachaType.FES -> MockGachaType.FES
+        GachaType.RE_LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
         else -> MockGachaType.PICK_UP
     }
-
     Column(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
@@ -212,7 +188,7 @@ fun GachaItem(
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
                             navViewModel.mockGachaType.postValue(mockGachaType)
-                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaUnitList())
+                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaPickUpUnitList())
                             //跳转
                             toMockGacha()
                         }

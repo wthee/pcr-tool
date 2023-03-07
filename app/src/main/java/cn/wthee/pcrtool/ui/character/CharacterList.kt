@@ -13,12 +13,18 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -77,7 +83,7 @@ fun CharacterList(
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKCilck.postValue(false)
+        navViewModel.fabOKClick.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
     }
@@ -284,7 +290,7 @@ fun CharacterItem(
 
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth(RATIO_SHAPE)
+                            .fillMaxWidth(1 - RATIO_GOLDEN)
                             .fillMaxHeight()
                             .clip(TrapezoidShape)
                             .background(
@@ -442,7 +448,7 @@ fun getLimitTypeColor(limitType: Int) = when (limitType) {
         colorGreen
     }
     4 -> {
-        colorSilver
+        colorCyan
     }
     else -> {
         colorGold
@@ -524,7 +530,7 @@ private fun CharacterName(
 
     Column(
         modifier = mModifier
-            .fillMaxWidth(1f - RATIO_SHAPE)
+            .fillMaxWidth(RATIO_GOLDEN)
     ) {
         Subtitle1(
             text = nameExtra,
@@ -545,8 +551,7 @@ private fun CharacterName(
  * 角色筛选
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 private fun FilterCharacterSheet(
@@ -584,9 +589,9 @@ private fun FilterCharacterSheet(
 
     //位置筛选
     val positionIndex = remember {
-        mutableStateOf(filter.positon)
+        mutableStateOf(filter.position)
     }
-    filter.positon = positionIndex.value
+    filter.position = positionIndex.value
 
     //攻击类型
     val atkIndex = remember {
@@ -615,11 +620,11 @@ private fun FilterCharacterSheet(
     filter.type = typeIndex.value
 
     //确认操作
-    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    LaunchedEffect(sheetState.currentValue, reset, ok) {
+    LaunchedEffect(sheetState.isVisible, reset, ok) {
         //点击重置
         if (reset) {
             textState.value = ""
@@ -639,7 +644,7 @@ private fun FilterCharacterSheet(
         if (ok) {
             sheetState.hide()
             navViewModel.filterCharacter.postValue(filter)
-            navViewModel.fabOKCilck.postValue(false)
+            navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
     }
@@ -670,14 +675,14 @@ private fun FilterCharacterSheet(
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
-                    navViewModel.fabOKCilck.postValue(true)
+                    navViewModel.fabOKClick.postValue(true)
                 }
             ),
             maxLines = 1,

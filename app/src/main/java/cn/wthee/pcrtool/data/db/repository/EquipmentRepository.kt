@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.db.repository
 
-import android.util.Log
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.Constants
@@ -54,7 +53,6 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             equipmentDao.getUniqueEquipInfosV2(unitId, lv)
         }
     } catch (e: Exception) {
-        Log.e("DEBUG", e.message.toString())
         equipmentDao.getUniqueEquipInfos(unitId, lv)
     }
 
