@@ -124,6 +124,8 @@ data class SkillActionDetail(
             // 1：造成伤害
             SkillActionType.DAMAGE -> {
                 val atkType = getAtkType()
+
+                //适应伤害类型
                 val adaptive = getString(
                     when (actionDetail2) {
                         1 -> R.string.skill_adaptive_lower_defense
@@ -152,6 +154,14 @@ data class SkillActionDetail(
                     }
                 )
 
+                //无视防御
+                val ignoreDef = if (actionValue7 > 0) {
+                    val def = " [${actionValue7.toInt()}] "
+                    getString(R.string.skill_ignore_def, def)
+                } else {
+                    ""
+                }
+
                 val value = getValueText(1, actionValue1, actionValue2, actionValue3)
 
                 getString(
@@ -159,8 +169,10 @@ data class SkillActionDetail(
                     getTarget(),
                     value,
                     atkType,
-                    adaptive + multipleDamage,
-                    mustCritical
+                    adaptive ,
+                    multipleDamage,
+                    mustCritical,
+                    ignoreDef
                 )
             }
             // 2：位移
