@@ -14,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -35,7 +34,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
@@ -91,7 +89,6 @@ private fun TravelItem(
     travelData: ExtraEquipTravelData,
     toExtraEquipTravelAreaDetail: (Int) -> Unit
 ) {
-    val context = LocalContext.current
 
     //area
     CommonGroupTitle(
@@ -115,7 +112,6 @@ private fun TravelItem(
         travelData.questList.forEachIndexed { _, questData ->
             MainCard(modifier = Modifier.padding(Dimen.mediumPadding),
                 onClick = {
-                    VibrateUtil(context).single()
                     toExtraEquipTravelAreaDetail(questData.travelQuestId)
                 }
             ) {

@@ -136,7 +136,7 @@ fun ComicList(
             if (items[pagerIndex] == null) {
                 MainText(text = "$pagerIndex")
             } else {
-                ComicTweetItem(items[pagerIndex]!!)
+                ComicItem(items[pagerIndex]!!)
             }
         }
 
@@ -192,7 +192,7 @@ fun ComicList(
  * 漫画内容
  */
 @Composable
-private fun ComicTweetItem(data: ComicData) {
+private fun ComicItem(data: ComicData) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -211,7 +211,8 @@ private fun ComicTweetItem(data: ComicData) {
                 )
             )
             Subtitle1(
-                text = data.title
+                text = data.title,
+                selectable = true
             )
         }
 
@@ -221,6 +222,7 @@ private fun ComicTweetItem(data: ComicData) {
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillHeight
         )
+        CommonSpacer()
         CommonSpacer()
     }
 

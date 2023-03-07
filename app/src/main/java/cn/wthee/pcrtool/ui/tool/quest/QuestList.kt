@@ -133,7 +133,7 @@ fun QuestPager(
                             horizontal = Dimen.fabMargin,
                             vertical = Dimen.mediumPadding
                         )
-                        .fillMaxWidth(),
+                        .fillMaxWidth(searchEquipIdList.size * 0.2f),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     searchEquipIdList.forEach {

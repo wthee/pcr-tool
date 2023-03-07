@@ -363,6 +363,7 @@ fun CommonSpacer() {
 
 /**
  * 卡片布局
+ * @param onClick 自带点击振动
  */
 @Composable
 fun MainCard(

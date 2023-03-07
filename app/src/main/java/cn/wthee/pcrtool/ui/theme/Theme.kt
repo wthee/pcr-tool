@@ -33,7 +33,7 @@ private val DarkColorPalette = darkColorScheme(
     onSurface = colorSurface,
     surfaceVariant = colorSurfaceDark,
     onSurfaceVariant = colorSurface,
-    outline = colorGrayDark,
+//    outline = colorGrayDark,
 )
 
 /**
@@ -58,7 +58,7 @@ private val LightColorPalette = lightColorScheme(
     onSurface = colorSurfaceDark,
     surfaceVariant = colorSurface,
     onSurfaceVariant = colorSurfaceDark,
-    outline = colorGray,
+//    outline = colorGray,
 )
 
 @SuppressLint("NewApi")

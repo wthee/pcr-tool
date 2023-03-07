@@ -339,7 +339,7 @@ fun SettingSwitchCompose(
         }
         //ip变更，结束应用
         if (type == SettingSwitchType.USE_IP) {
-            Thread.sleep(1500)
+            Thread.sleep(600)
             MainActivity.handler.sendEmptyMessage(404)
         }
     }
