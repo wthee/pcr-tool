@@ -190,13 +190,12 @@ fun DateRangePickerCompose(
                                         text = stringResource(id = R.string.reset),
                                     ) {
                                         dateRange.value = DateRange()
+                                        //重置选择器状态
+                                        dateRangePickerState.setSelection(null, null)
                                         navViewModel.fabCloseClick.postValue(true)
-                                        //fixme 重置选择器状态
-
                                     }
                                 }
                             }
-
                         },
                         headline = {
                             DateRangePickerDefaults.DateRangePickerHeadline(

@@ -1,7 +1,11 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
@@ -24,10 +28,6 @@ import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -39,7 +39,7 @@ private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 /**
  * 模拟卡池
  */
-@OptIn(ExperimentalPagerApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun MockGacha(
     pagerState: PagerState = rememberPagerState(),
@@ -153,7 +153,7 @@ fun MockGacha(
                 )
 
                 HorizontalPager(
-                    count = 2,
+                    pageCount = 2,
                     state = pagerState,
                     modifier = Modifier
                         .padding(top = Dimen.mediumPadding)

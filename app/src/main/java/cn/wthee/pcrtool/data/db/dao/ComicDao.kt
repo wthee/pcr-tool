@@ -8,7 +8,7 @@ import androidx.room.Query
 import cn.wthee.pcrtool.data.db.entity.ComicData
 
 /**
- * 推特信息 DAO
+ * 漫画信息 DAO
  */
 @Dao
 interface ComicDao {

@@ -1,8 +1,11 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,9 +25,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.QuestViewModel
 import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 主线地图信息
@@ -54,7 +54,7 @@ fun AllQuestList(
  * 装备掉落主线地图信息
  */
 @Composable
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
@@ -174,7 +174,7 @@ fun QuestPager(
 
 
             HorizontalPager(
-                count = pagerCount,
+                pageCount = pagerCount,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { pagerIndex ->

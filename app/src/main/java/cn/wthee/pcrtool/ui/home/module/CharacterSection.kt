@@ -1,8 +1,11 @@
 package cn.wthee.pcrtool.ui.home.module
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -22,15 +25,12 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 
 /**
  * 角色预览
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterSection(
     actions: NavActions,
@@ -63,13 +63,13 @@ fun CharacterSection(
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
-                    count = characterList.size,
+                    pageCount = characterList.size,
                     state = rememberPagerState(),
                     modifier = Modifier
                         .padding(vertical = Dimen.mediumPadding)
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = Dimen.largePadding),
-                    itemSpacing = Dimen.mediumPadding
+                    pageSpacing = Dimen.mediumPadding
                 ) { index ->
                     val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
                     CharacterImageItem(

@@ -4,12 +4,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,9 +38,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -45,7 +45,7 @@ import kotlin.math.max
 /**
  * 竞技场查询
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean,
@@ -174,7 +174,7 @@ fun PvpSearchCompose(
                 )
 
                 HorizontalPager(
-                    count = pageCount,
+                    pageCount = pageCount,
                     state = pagerState,
                     modifier = Modifier.padding(top = mediumPadding)
                 ) { pageIndex ->
@@ -348,7 +348,7 @@ private fun PvpToSelectList(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(5) {
+            items(if(floatWindow) 5 else 10) {
                 CommonSpacer()
             }
         }

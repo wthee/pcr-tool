@@ -3,14 +3,11 @@ package cn.wthee.pcrtool.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -21,43 +18,15 @@ import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterDetail
-import cn.wthee.pcrtool.ui.character.CharacterExtraEquip
-import cn.wthee.pcrtool.ui.character.CharacterList
-import cn.wthee.pcrtool.ui.character.CharacterSkillLoop
-import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
-import cn.wthee.pcrtool.ui.character.CharacterStoryDetail
-import cn.wthee.pcrtool.ui.character.RankCompare
-import cn.wthee.pcrtool.ui.character.RankEquipCount
-import cn.wthee.pcrtool.ui.character.RankEquipList
+import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.common.AllCardList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.skill.SummonDetail
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.myExit
-import cn.wthee.pcrtool.ui.theme.myFadeIn
-import cn.wthee.pcrtool.ui.theme.myPopExit
-import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.ui.tool.AllCharacterRankEquipCount
-import cn.wthee.pcrtool.ui.tool.AllSkillList
-import cn.wthee.pcrtool.ui.tool.AllToolMenu
-import cn.wthee.pcrtool.ui.tool.BirthdayList
-import cn.wthee.pcrtool.ui.tool.CalendarEventList
-import cn.wthee.pcrtool.ui.tool.ComicList
-import cn.wthee.pcrtool.ui.tool.FreeGachaList
-import cn.wthee.pcrtool.ui.tool.GachaList
-import cn.wthee.pcrtool.ui.tool.GuildList
-import cn.wthee.pcrtool.ui.tool.LeaderTier
-import cn.wthee.pcrtool.ui.tool.LeaderboardList
-import cn.wthee.pcrtool.ui.tool.MainSettings
-import cn.wthee.pcrtool.ui.tool.NewsList
-import cn.wthee.pcrtool.ui.tool.TweetList
-import cn.wthee.pcrtool.ui.tool.WebsiteList
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
@@ -79,8 +48,6 @@ import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 导航路径
@@ -155,7 +122,6 @@ object Navigation {
  * 导航内容
  */
 @OptIn(
-    ExperimentalPagerApi::class,
     ExperimentalAnimationApi::class,
     ExperimentalMaterialNavigationApi::class, ExperimentalFoundationApi::class
 )

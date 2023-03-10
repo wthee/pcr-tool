@@ -1,6 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -13,14 +16,11 @@ import cn.wthee.pcrtool.ui.common.MainTabRow
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.extratravel.TravelQuestItem
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 /**
  * ex装备掉落信息
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExtraEquipDropList(
     equipId: Int,
@@ -52,7 +52,7 @@ fun ExtraEquipDropList(
             )
 
             HorizontalPager(
-                count = dropList.size,
+                pageCount = dropList.size,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) {

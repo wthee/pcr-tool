@@ -2,13 +2,12 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -49,9 +48,6 @@ import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -450,7 +446,7 @@ fun getPositionColor(position: Int) = when (PositionType.getPositionType(positio
  * 带指示器图标
  * @param urls 最大5个
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
     val scope = rememberCoroutineScope()
@@ -1121,7 +1117,7 @@ fun EventTitleCountdown(
 /**
  * 通用 TabRow
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainTabRow(
     modifier: Modifier = Modifier,
@@ -1173,7 +1169,7 @@ fun MainTabRow(
 /**
  * 通用 Tab
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MainTabList(
     pagerState: PagerState,
@@ -1210,7 +1206,7 @@ private fun MainTabList(
 }
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
