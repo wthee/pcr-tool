@@ -446,6 +446,7 @@
     <string name="skill_type_90">被动</string>
     <string name="skill_type_901_902">装备</string>
     <string name="skill_type_95">隐匿</string>
+    <string name="skill_type_100">免疫</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -708,7 +709,8 @@
     <string name="skill_action_type_desc_95">%s进入隐匿状态%s</string>
     <string name="skill_action_type_desc_96_tp">每秒回复 %s TP</string>
     <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
-    <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍</string>
+    <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍%s</string>
+    <string name="skill_action_type_desc_100">%s免疫无法行动异常状态 [%d] 次%s</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
