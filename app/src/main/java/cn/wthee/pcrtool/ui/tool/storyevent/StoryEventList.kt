@@ -192,18 +192,12 @@ fun StoryEventItem(
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
                 if (inProgress || isSub || !hasTeaser(event.eventId) || previewEvent) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(RATIO_BANNER),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        SubImageCompose(
-                            data = ImageRequestHelper.getInstance()
-                                .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
+                    SubImageCompose(
+                        data = ImageRequestHelper.getInstance()
+                            .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
+                        contentScale = ContentScale.FillBounds,
+                        ratio = RATIO_BANNER
+                    )
                 } else {
                     ImageCompose(
                         data = ImageRequestHelper.getInstance()

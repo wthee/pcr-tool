@@ -1,13 +1,7 @@
 package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -39,7 +33,7 @@ const val RATIO = 16 / 9f
 // 741 * 1200
 const val RATIO_COMIC = 0.63f
 const val RATIO_COMMON = 371 / 208f
-const val RATIO_BANNER = 1024 / 682f
+const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
 
 
@@ -201,6 +195,7 @@ fun SubImageCompose(
     data: Any,
     contentScale: ContentScale = ContentScale.Fit,
     loading: MutableState<Boolean>? = null,
+    ratio: Float? = null,
     onSuccess: (SuccessResult) -> Unit = {}
 ) {
 
@@ -230,7 +225,13 @@ fun SubImageCompose(
             onSuccess = {
                 onSuccess(it.result)
             },
-            modifier = modifier.fillMaxWidth()
+            modifier = if (ratio != null) {
+                modifier
+                    .fillMaxWidth()
+                    .aspectRatio(ratio)
+            } else {
+                modifier.fillMaxWidth()
+            }
         )
 
         //加载立绘原图时
