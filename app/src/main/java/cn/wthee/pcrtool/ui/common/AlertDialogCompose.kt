@@ -178,7 +178,7 @@ fun DateRangePickerCompose(
                                 //标题
                                 DateRangePickerDefaults.DateRangePickerTitle(
                                     state = dateRangePickerState,
-                                    contentPadding = PaddingValues(Dimen.smallPadding)
+                                    modifier = Modifier.padding(Dimen.smallPadding)
                                 )
 
                                 Spacer(modifier = Modifier.weight(1f))
@@ -190,13 +190,12 @@ fun DateRangePickerCompose(
                                         text = stringResource(id = R.string.reset),
                                     ) {
                                         dateRange.value = DateRange()
+                                        //重置选择器状态
+                                        dateRangePickerState.setSelection(null, null)
                                         navViewModel.fabCloseClick.postValue(true)
-                                        //fixme 重置选择器状态
-
                                     }
                                 }
                             }
-
                         },
                         headline = {
                             DateRangePickerDefaults.DateRangePickerHeadline(
@@ -204,7 +203,7 @@ fun DateRangePickerCompose(
                                 dateFormatter = DatePickerFormatter(
                                     selectedDateSkeleton = "yyyy/MM/dd"
                                 ),
-                                contentPadding = PaddingValues(Dimen.smallPadding)
+                                modifier = Modifier.padding(Dimen.smallPadding)
                             )
                         }
                     )

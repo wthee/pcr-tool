@@ -1,7 +1,10 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +26,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 角色基本信息
@@ -124,7 +124,7 @@ private fun BasicInfo(info: CharacterInfoPro) {
 /**
  * 主页交流信息
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomePageCommentInfo(
     selfText: String?,
@@ -186,7 +186,7 @@ private fun HomePageCommentInfo(
 
         HorizontalPager(
             state = pagerState,
-            count = homePageCommentList.size,
+            pageCount = homePageCommentList.size,
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
@@ -203,7 +203,7 @@ private fun HomePageCommentInfo(
 /**
  * 小屋交流文本
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
     val roomComments =
@@ -243,7 +243,7 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
         }
         HorizontalPager(
             state = pagerState,
-            count = roomComments.size,
+            pageCount = roomComments.size,
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {

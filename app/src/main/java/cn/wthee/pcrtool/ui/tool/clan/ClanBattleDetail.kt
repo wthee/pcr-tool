@@ -1,7 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,16 +25,13 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 
 /**
  * 公会战 BOSS 详情
  * @see [cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail]
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClanBattleDetail(
     clanBattleId: Int,
@@ -90,7 +90,7 @@ fun ClanBattleDetail(
                 IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)
                 //BOSS信息
                 HorizontalPager(
-                    count = 5,
+                    pageCount = 5,
                     state = pagerState,
                 ) { pagerIndex ->
                     if (bossDataList.isNotEmpty()) {

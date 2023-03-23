@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * 推特信息
+ * 漫画信息
  */
 @Entity(tableName = "comic")
 data class ComicData(

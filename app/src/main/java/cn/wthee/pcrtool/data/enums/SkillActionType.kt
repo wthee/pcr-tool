@@ -444,6 +444,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 99：范围加速
      */
     SPEED_FIELD(99, R.string.none),
+
+    /**
+     * 100：免疫无法行动的异常状态
+     */
+    IGNORE_SPEED_DOWN(100, R.string.skill_type_100),
 }
 
 /**
