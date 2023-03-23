@@ -317,7 +317,7 @@ private fun LeaderboardItem(
     } else {
         Color.Unspecified
     }
-    val tipText = getLeaderUnknownTip()
+    val tipText = getLeaderUnknownTip(hasUnitId)
 
     Row(
         modifier = Modifier
@@ -397,11 +397,7 @@ private fun LeaderboardItem(
                         //提示
                         CaptionText(
                             modifier = Modifier.padding(start = Dimen.mediumPadding),
-                            text = if (!hasUnitId) {
-                                stringResource(id = R.string.leader_need_sync)
-                            } else {
-                                tipText
-                            },
+                            text = tipText,
                             color = colorGray
                         )
                     }
@@ -466,17 +462,21 @@ fun GradeText(
  * 未实装提示
  */
 @Composable
-fun getLeaderUnknownTip(): String {
+fun getLeaderUnknownTip(hasUnitId: Boolean): String {
     val regionName = if (LocalInspectionMode.current) {
         ""
     } else {
         getRegionName(MainActivity.regionType)
 
     }
-    return stringResource(
-        id = R.string.unknown_character_type,
-        regionName
-    )
+    return if (!hasUnitId) {
+        stringResource(id = R.string.leader_need_sync)
+    } else {
+        stringResource(
+            id = R.string.unknown_character_type,
+            regionName
+        )
+    }
 }
 
 @CombinedPreviews

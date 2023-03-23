@@ -183,8 +183,8 @@
     <string name="last_update">最近评分调整</string>
     <string name="random_area">额外掉落</string>
     <string name="random_drop_area_title">区域 %d</string>
-    <string name="random_drop_area_1">（前半：1 ~ 7）</string>
-    <string name="random_drop_area_2">（后半：8 ~ 14）</string>
+    <string name="random_drop_area_1">（前半）</string>
+    <string name="random_drop_area_2">（后半）</string>
     <string name="qq_group">反馈交流群</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
