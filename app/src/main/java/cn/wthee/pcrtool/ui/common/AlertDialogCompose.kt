@@ -178,7 +178,7 @@ fun DateRangePickerCompose(
                                 //标题
                                 DateRangePickerDefaults.DateRangePickerTitle(
                                     state = dateRangePickerState,
-                                    contentPadding = PaddingValues(Dimen.smallPadding)
+                                    modifier = Modifier.padding(Dimen.smallPadding)
                                 )
 
                                 Spacer(modifier = Modifier.weight(1f))
@@ -203,7 +203,7 @@ fun DateRangePickerCompose(
                                 dateFormatter = DatePickerFormatter(
                                     selectedDateSkeleton = "yyyy/MM/dd"
                                 ),
-                                contentPadding = PaddingValues(Dimen.smallPadding)
+                                modifier = Modifier.padding(Dimen.smallPadding)
                             )
                         }
                     )
