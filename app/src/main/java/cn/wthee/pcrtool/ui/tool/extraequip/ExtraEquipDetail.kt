@@ -275,7 +275,7 @@ fun ExtraEquipUnitList(
 
         //角色图标
         item {
-            GridIconListCompose(unitIds) {}
+            GridIconListCompose(unitIds, isSubLayout = false) {}
         }
 
         item {
