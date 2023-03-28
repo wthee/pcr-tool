@@ -12,7 +12,7 @@ data class LeaderTierData(
 data class LeaderTierItem(
     val icon: String = "",
     val name: String = "",
-    val tier: Int = -1,
+    val tier: String = "-1",
     val type: Int = 0,
     val unitId: Int? = 0,
     val url: String = "",
@@ -24,7 +24,7 @@ data class TierSummary(
 )
 
 data class LeaderTierGroup(
-    val tier: Int,
+    val tier: String,
     val leaderList: ArrayList<LeaderTierItem>,
     val desc: String
 )

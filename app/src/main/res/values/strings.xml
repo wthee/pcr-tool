@@ -781,7 +781,7 @@
     <string name="leader_tier_0">综合评级</string>
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
-    <string name="leader_tier_d">T%d</string>
+    <string name="leader_tier_d">T%s</string>
 
     <!--测试用-->
     <string name="debug_short_text">测试文本测试文本</string>

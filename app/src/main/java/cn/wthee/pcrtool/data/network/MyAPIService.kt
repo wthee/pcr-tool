@@ -88,7 +88,7 @@ interface MyAPIService {
     /**
      * 排行评级信息
      */
-    @POST("leaders/tier")
+    @POST("leaders/tier/v2")
     suspend fun getLeaderTier(@Body body: RequestBody): ResponseData<LeaderTierData>
 
     /**
