@@ -235,7 +235,7 @@ private fun LeaderItem(
     } else {
         Color.Unspecified
     }
-    val tipText = getLeaderUnknownTip()
+    val tipText = getLeaderUnknownTip(hasUnitId)
 
 
     Row(
@@ -322,11 +322,7 @@ private fun LeaderItem(
                         //提示
                         CaptionText(
                             modifier = Modifier.padding(start = Dimen.mediumPadding),
-                            text = if (!hasUnitId) {
-                                stringResource(id = R.string.leader_need_sync)
-                            } else {
-                                tipText
-                            },
+                            text = tipText,
                             color = colorGray
                         )
                     }

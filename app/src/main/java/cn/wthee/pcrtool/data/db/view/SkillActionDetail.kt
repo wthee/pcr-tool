@@ -169,7 +169,7 @@ data class SkillActionDetail(
                     getTarget(),
                     value,
                     atkType,
-                    adaptive ,
+                    adaptive,
                     multipleDamage,
                     mustCritical,
                     ignoreDef
@@ -1519,8 +1519,19 @@ data class SkillActionDetail(
                 getString(
                     R.string.skill_action_type_desc_98,
                     getTarget(),
-                    actionValue1.toString()
-                ) + time
+                    actionValue1.toString(),
+                    time
+                )
+            }
+            // 100：免疫无法行动的异常状态
+            SkillActionType.IGNORE_SPEED_DOWN -> {
+                val time = getTimeText(3, actionValue3)
+                getString(
+                    R.string.skill_action_type_desc_100,
+                    getTarget(),
+                    actionValue1.toInt(),
+                    time
+                )
             }
 
             else -> {
