@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
@@ -198,11 +199,16 @@ private fun UpdateContent(
         ) {
             //版本
             Text(
-                text = "v${appNotice.title}",
+                text = (if (appNotice.id == 0) {
+                    "v${BuildConfig.VERSION_NAME} > "
+                } else {
+                    ""
+                }) + "v${appNotice.title}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.weight(1f)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
             //反馈群
             IconTextButton(
                 icon = MainIconType.SUPPORT,
@@ -234,7 +240,7 @@ private fun UpdateContent(
             ) {
                 MainContentText(
                     text = stringResource(id = R.string.to_update),
-                    color = MaterialTheme.colorScheme.primary,
+                    color = colorGreen,
                     textAlign = TextAlign.Center
                 )
             }
