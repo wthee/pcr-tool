@@ -430,7 +430,7 @@ private fun DbVersionContent(
                 extraContent = {
                     IconTextButton(
                         icon = MainIconType.SYNC,
-                        text = "",
+                        text = stringResource(id = R.string.db_re_download),
                         modifier = Modifier.padding(end = Dimen.smallPadding)
                     ) {
                         navViewModel.openChangeDataDialog.postValue(false)
