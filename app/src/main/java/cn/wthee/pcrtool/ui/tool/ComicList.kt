@@ -138,11 +138,9 @@ fun ComicList(
             }
         ) {
             scope.launch {
-                scope.launch {
-                    try {
-                        pagerState.scrollToPage(0)
-                    } catch (_: Exception) {
-                    }
+                try {
+                    pagerState.scrollToPage(0)
+                } catch (_: Exception) {
                 }
             }
         }

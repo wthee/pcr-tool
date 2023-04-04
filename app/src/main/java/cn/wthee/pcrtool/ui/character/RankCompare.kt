@@ -15,11 +15,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.AttrCompareData
-import cn.wthee.pcrtool.ui.common.AttrCompare
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.RankText
-import cn.wthee.pcrtool.ui.common.Subtitle1
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -61,9 +59,6 @@ fun RankCompare(
         rank1.value
     ).collectAsState(initial = arrayListOf()).value
 
-    val openDialog = remember {
-        mutableStateOf(false)
-    }
 
     Box(
         modifier = Modifier
@@ -101,24 +96,22 @@ fun RankCompare(
         }
 
         FabCompose(
-            iconType = MainIconType.RANK_SELECT,
-            text = stringResource(id = R.string.rank_select),
+            iconType = MainIconType.RANK_COMPARE,
+            text = stringResource(id = R.string.rank_compare),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            openDialog.value = true
+        ){
+
         }
 
         //RANK 选择
-        if (openDialog.value) {
-            RankSelectCompose(
-                rank0,
-                rank1,
-                maxRank,
-                openDialog,
-            )
-        }
+        RankRangePickerCompose(
+            rank0,
+            rank1,
+            maxRank,
+            type = RankSelectType.LIMIT
+        )
     }
 }
 

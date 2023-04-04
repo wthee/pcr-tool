@@ -212,6 +212,10 @@
     <string name="tool_all_quest">主线地图</string>
     <string name="pick_date">选择日期</string>
     <string name="picked_date">已选择</string>
+    <string name="beta_tool_group">测试</string>
+    <string name="beta_tool_group_title">后续将调整至其他分组或移除</string>
+    <string name="all_unit_calc_equip">全角色装备统计</string>
+    <string name="to"> ~ </string>
 
 
     <!--竞技场查询-->
