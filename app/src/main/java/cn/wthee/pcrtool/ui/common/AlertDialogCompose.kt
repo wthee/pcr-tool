@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.ui.common
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -14,8 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.*
 
@@ -245,6 +249,135 @@ fun DateRangePickerCompose(
 
 
 /**
+ * 选择RANK范围
+ */
+@Composable
+fun RankRangePickerCompose(
+    rank0: MutableState<Int>,
+    rank1: MutableState<Int>,
+    maxRank: Int,
+    type: RankSelectType = RankSelectType.DEFAULT
+) {
+    val context = LocalContext.current
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+
+    val rankList = arrayListOf<Int>()
+    for (i in maxRank downTo 1) {
+        rankList.add(i)
+    }
+
+    //选择
+    val selectIndex0 = remember {
+        mutableStateOf(maxRank - rank0.value)
+    }
+    val selectIndex1 = remember {
+        mutableStateOf(maxRank - rank1.value)
+    }
+
+    rank0.value = maxRank - selectIndex0.value
+    rank1.value = maxRank - selectIndex1.value
+
+
+    //关闭监听
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    if (close) {
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
+    }
+    if (mainIcon == MainIconType.BACK) {
+        navViewModel.openChangeDataDialog.postValue(false)
+    }
+
+
+    Box(modifier = Modifier.clickClose(openDialog)) {
+        //选择布局
+        SmallFloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .animateContentSize(defaultSpring())
+                .padding(
+                    start = Dimen.fabMargin,
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                )
+                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                //点击展开布局
+                if (!openDialog) {
+                    VibrateUtil(context).single()
+                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                    navViewModel.openChangeDataDialog.postValue(true)
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog) {
+                    Dimen.popupMenuElevation
+                } else {
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimen.mediumPadding,
+                            vertical = Dimen.largePadding
+                        )
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.Bottom
+                ){
+                    //当前
+                    MainText(text = stringResource(id = R.string.cur_rank))
+                    RankSelectItem(
+                        selectIndex = selectIndex0,
+                        rankList = rankList,
+                        targetType = RankSelectType.DEFAULT,
+                        currentRank = maxRank - selectIndex0.value
+                    )
+                    //目标
+                    MainText(
+                        text = stringResource(id = R.string.target_rank),
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    )
+                    RankSelectItem(
+                        selectIndex = selectIndex1,
+                        rankList = rankList,
+                        targetType = type,
+                        currentRank = maxRank - selectIndex0.value
+                    )
+                }
+            } else {
+                //fab
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    IconCompose(
+                        data = MainIconType.RANK_SELECT,
+                        size = Dimen.fabIconSize
+                    )
+                    Text(
+                        text = stringResource(id = R.string.rank_select),
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+
+/**
  * 日期选择弹窗
  *
  * @param pickStartLimit    限制开始时间可选择范围，开始时间必须小于结束时间
@@ -349,4 +482,65 @@ data class DateRange(
 private fun getDatePickerYearRange(): IntRange {
     val maxYear = getYear() + 1
     return IntRange(2018, maxYear)
+}
+
+
+/**
+ * RANK 选择器
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RankSelectItem(
+    selectIndex: MutableState<Int>,
+    rankList: List<Int>,
+    targetType: RankSelectType,
+    currentRank: Int
+) {
+    val context = LocalContext.current
+
+    VerticalGrid(itemWidth = Dimen.rankTextWidth) {
+        rankList.forEachIndexed { index, rank ->
+            val rankColor = getRankColor(rank = rank)
+            val selected = selectIndex.value == index
+            val enabled = targetType == RankSelectType.DEFAULT ||
+                    (targetType == RankSelectType.LIMIT && rank >= currentRank)
+
+            FilterChip(
+                selected = selected,
+                enabled = enabled,
+                onClick = {
+                    VibrateUtil(context).single()
+                    selectIndex.value = index
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = if (enabled) {
+                        rankColor
+                    } else {
+                        MaterialTheme.colorScheme.outline
+                    }
+                ),
+                label = {
+                    CaptionText(
+                        text = rankFillBlank(rank),
+                        color = if (enabled) {
+                            if (selected) colorWhite else rankColor
+                        } else {
+                            MaterialTheme.colorScheme.outline
+                        }
+                    )
+                }
+            )
+        }
+    }
+
+}
+
+/**
+ * 填充空格
+ */
+private fun rankFillBlank(rank: Int): String {
+    return when (rank) {
+        in 0..9 -> "0$rank"
+        else -> "$rank"
+    }
 }

@@ -290,7 +290,7 @@ interface EquipmentDao {
         """
         SELECT
             equip_slot AS equip_id,
-            COUNT( equip_slot ) AS equip_count 
+            COUNT( equip_slot ) AS equip_count
         FROM
             (
             SELECT
@@ -357,8 +357,9 @@ interface EquipmentDao {
         WHERE 
             1 = CASE
                 WHEN 0 = :unitId THEN 1
-                WHEN unit_id = :unitId AND promotion_level >= :startRank AND promotion_level <= :endRank THEN 1
+                WHEN unit_id = :unitId THEN 1
             END
+            AND promotion_level >= :startRank AND promotion_level <= :endRank
         GROUP BY
             equip_slot
     """
@@ -397,4 +398,17 @@ interface EquipmentDao {
     """
     )
     suspend fun getEquipColorNum(): Int
+
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            MAX( promotion_level ) AS maxRank
+        FROM
+            unit_promotion 
+        WHERE
+            unit_id = 100101
+    """
+    )
+    suspend fun getMaxRank(): Int
 }

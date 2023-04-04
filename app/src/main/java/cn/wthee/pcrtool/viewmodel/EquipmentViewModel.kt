@@ -248,4 +248,12 @@ class EquipmentViewModel @Inject constructor(
     fun getEquipColorNum() = flow {
         emit(equipmentRepository.getEquipColorNum())
     }
+
+
+    /**
+     * 获取 RANK 最大值
+     */
+    fun getMaxRank() = flow {
+        emit(equipmentRepository.getMaxRank())
+    }
 }

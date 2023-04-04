@@ -2,9 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,22 +21,27 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import kotlinx.coroutines.launch
 
 /**
  * rank 范围装备素材数量统计
  *
- * @param unitId 角色编号
+ * @param unitId 角色编号，传 0 返回所有角色
  * @param maxRank 角色最大rank
  */
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,
     maxRank: Int,
     toEquipMaterial: (Int) -> Unit,
+    isAllUnit: Boolean = false,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+    val scrollState = rememberLazyGridState()
+
     val rank0 = remember {
         mutableStateOf(maxRank)
     }
@@ -51,9 +54,6 @@ fun RankEquipCount(
             initial = arrayListOf()
         ).value
 
-    val openDialog = remember {
-        mutableStateOf(false)
-    }
 
     val starIds = remember {
         mutableStateOf(arrayListOf<Int>())
@@ -64,45 +64,35 @@ fun RankEquipCount(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .padding(top = Dimen.mediumPadding)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             //标题
-            FlowRow(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimen.mediumPadding)
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = Dimen.mediumPadding, end = Dimen.mediumPadding)
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.cur_rank))
-                    RankText(
-                        rank = rank0.value,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .padding(top = Dimen.mediumPadding)
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.target_rank))
-                    RankText(
-                        rank = rank1.value,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-
+                MainTitleText(text = stringResource(id = if (isAllUnit) R.string.all_unit_calc_equip else R.string.calc_equip_count))
+                RankText(
+                    rank = rank0.value,
+                    modifier = Modifier.padding(start = Dimen.mediumPadding)
+                )
+                MainContentText(
+                    text = stringResource(id = R.string.to),
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+                )
+                RankText(
+                    rank = rank1.value
+                )
             }
+
 
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding),
-                contentPadding = PaddingValues(horizontal = Dimen.mediumPadding)
+                contentPadding = PaddingValues(horizontal = Dimen.mediumPadding),
+                state = scrollState
             ) {
                 if (rankEquipMaterials.isNotEmpty()) {
                     items(
@@ -122,33 +112,45 @@ fun RankEquipCount(
                         EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
                     }
                 }
-                items(5) {
+                items(10) {
                     CommonSpacer()
                 }
             }
         }
 
-        //选择
+
+        //回到顶部
+        var allCount = 0
+        rankEquipMaterials.forEach {
+            allCount += it.count
+        }
         FabCompose(
-            iconType = MainIconType.RANK_SELECT,
-            text = stringResource(id = R.string.rank_select),
+            iconType = MainIconType.EQUIP_CALC,
+            text = "${rankEquipMaterials.size} · $allCount",
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+            extraContent = if (rankEquipMaterials.isEmpty()) {
+                //加载提示
+                {
+                    CircularProgressCompose()
+                }
+            } else {
+                null
+            }
         ) {
-            openDialog.value = true
+            scope.launch {
+                scrollState.scrollToItem(0)
+            }
         }
 
         //RANK 选择
-        if (openDialog.value) {
-            RankSelectCompose(
-                rank0,
-                rank1,
-                maxRank,
-                openDialog,
-                type = RankSelectType.LIMIT
-            )
-        }
+        RankRangePickerCompose(
+            rank0,
+            rank1,
+            maxRank,
+            type = RankSelectType.LIMIT
+        )
     }
 
 }
