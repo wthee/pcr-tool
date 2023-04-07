@@ -447,4 +447,8 @@ enum class MainIconType(val icon: ImageVector) {
      */
     BOX(Icons.Rounded.Archive),
 
+    /**
+     * 下载
+     */
+    DOWNLOAD(Icons.Rounded.Download),
 }
