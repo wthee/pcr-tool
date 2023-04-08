@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.WEIGHT_DIALOG
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.*
@@ -168,7 +169,7 @@ fun DateRangePickerCompose(
                             horizontal = Dimen.mediumPadding,
                             vertical = Dimen.largePadding
                         )
-                        .fillMaxHeight(0.85f)
+                        .fillMaxHeight(WEIGHT_DIALOG)
                         .imePadding(),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.End
@@ -329,7 +330,7 @@ fun RankRangePickerCompose(
                         )
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.Bottom
-                ){
+                ) {
                     //当前
                     MainText(text = stringResource(id = R.string.cur_rank))
                     RankSelectItem(
@@ -341,7 +342,7 @@ fun RankRangePickerCompose(
                     //目标
                     MainText(
                         text = stringResource(id = R.string.target_rank),
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        modifier = Modifier.padding(top = Dimen.largePadding)
                     )
                     RankSelectItem(
                         selectIndex = selectIndex1,
@@ -498,39 +499,47 @@ private fun RankSelectItem(
 ) {
     val context = LocalContext.current
 
-    VerticalGrid(itemWidth = Dimen.rankTextWidth) {
+    VerticalGrid(
+        itemWidth = Dimen.rankTextWidth,
+        contentPadding = Dimen.mediumPadding,
+        isSubLayout = true
+    ) {
         rankList.forEachIndexed { index, rank ->
-            val rankColor = getRankColor(rank = rank)
-            val selected = selectIndex.value == index
-            val enabled = targetType == RankSelectType.DEFAULT ||
-                    (targetType == RankSelectType.LIMIT && rank >= currentRank)
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
-            FilterChip(
-                selected = selected,
-                enabled = enabled,
-                onClick = {
-                    VibrateUtil(context).single()
-                    selectIndex.value = index
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = if (enabled) {
-                        rankColor
-                    } else {
-                        MaterialTheme.colorScheme.outline
-                    }
-                ),
-                label = {
-                    CaptionText(
-                        text = rankFillBlank(rank),
-                        color = if (enabled) {
-                            if (selected) colorWhite else rankColor
+                val rankColor = getRankColor(rank = rank)
+                val selected = selectIndex.value == index
+                val enabled = targetType == RankSelectType.DEFAULT ||
+                        (targetType == RankSelectType.LIMIT && rank >= currentRank)
+
+                FilterChip(
+                    selected = selected,
+                    enabled = enabled,
+                    onClick = {
+                        VibrateUtil(context).single()
+                        selectIndex.value = index
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = if (enabled) {
+                            rankColor
                         } else {
                             MaterialTheme.colorScheme.outline
                         }
-                    )
-                }
-            )
+                    ),
+                    label = {
+                        CaptionText(
+                            text = rankFillBlank(rank),
+                            color = if (enabled) {
+                                if (selected) colorWhite else rankColor
+                            } else {
+                                MaterialTheme.colorScheme.outlineVariant
+                            }
+                        )
+                    }
+                )
+            }
         }
+
     }
 
 }

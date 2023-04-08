@@ -142,7 +142,7 @@ private fun EquipMaterialList(
     }
 
 
-    Column {
+    Column(modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)) {
         MainText(
             text = stringResource(R.string.equip_material),
             modifier = Modifier
@@ -158,7 +158,8 @@ private fun EquipMaterialList(
                         .fillMaxWidth()
                         .padding(
                             bottom = Dimen.largePadding
-                        ), horizontalAlignment = Alignment.CenterHorizontally
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(
                         data = ImageRequestHelper.getInstance().getEquipPic(material.id)

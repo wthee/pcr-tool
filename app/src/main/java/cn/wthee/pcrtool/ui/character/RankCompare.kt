@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -109,8 +108,7 @@ fun RankCompare(
         RankRangePickerCompose(
             rank0,
             rank1,
-            maxRank,
-            type = RankSelectType.LIMIT
+            maxRank
         )
     }
 }

@@ -1181,7 +1181,6 @@ private fun MainTabList(
 
     tabs.forEachIndexed { index, s ->
         Tab(
-            modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
             selected = pagerState.currentPage == index,
             onClick = {
                 scope.launch {

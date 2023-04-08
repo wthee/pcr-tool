@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.WEIGHT_DIALOG
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -372,7 +373,7 @@ private fun ComicTocList(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimen.smallPadding)
-                .fillMaxHeight(0.85f),
+                .fillMaxHeight(WEIGHT_DIALOG),
             state = gridState,
             columns = GridCells.Adaptive(getItemWidth())
         ) {

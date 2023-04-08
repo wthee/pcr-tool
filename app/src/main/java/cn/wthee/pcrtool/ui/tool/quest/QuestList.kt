@@ -158,10 +158,7 @@ fun QuestPager(
                     tabs = tabs,
                     colorList = colorList,
                     modifier = Modifier
-                        .padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        )
+                        .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(tabs.size * 0.25f)
                 )
                 if (randomDropResponseData == null) {

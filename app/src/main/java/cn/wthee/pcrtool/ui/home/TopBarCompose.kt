@@ -1,12 +1,23 @@
 package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,18 +28,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.HeaderText
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.IconTextButton
+import cn.wthee.pcrtool.ui.common.MainButton
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.common.SubButton
+import cn.wthee.pcrtool.ui.common.Subtitle2
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
@@ -40,8 +62,7 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
  */
 @Composable
 fun TopBarCompose(
-    isEditMode: MutableState<Boolean>,
-    noticeViewModel: NoticeViewModel
+    isEditMode: MutableState<Boolean>, noticeViewModel: NoticeViewModel
 ) {
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
     var isExpanded by remember {
@@ -53,9 +74,7 @@ fun TopBarCompose(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(
-                top = Dimen.largePadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
+                top = Dimen.largePadding, start = Dimen.largePadding, end = Dimen.largePadding
             )
             .fillMaxWidth()
     ) {
@@ -94,16 +113,14 @@ fun TopBarCompose(
 
                 else -> {
                     //提示
-                    val updateColor =
-                        when (updateApp.id) {
-                            0 -> colorGreen
-                            else -> MaterialTheme.colorScheme.onSurface
-                        }
-                    val icon =
-                        when (updateApp.id) {
-                            0 -> MainIconType.APP_UPDATE
-                            else -> MainIconType.NOTICE
-                        }
+                    val updateColor = when (updateApp.id) {
+                        0 -> colorGreen
+                        else -> MaterialTheme.colorScheme.onSurface
+                    }
+                    val icon = when (updateApp.id) {
+                        0 -> MainIconType.APP_UPDATE
+                        else -> MainIconType.NOTICE
+                    }
 
                     IconCompose(
                         data = if (isExpanded) MainIconType.CLOSE else icon,
@@ -142,8 +159,7 @@ private fun AppUpdateContent(appNotice: AppNotice) {
 
     MainCard(
         modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
+            horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding
         )
     ) {
         if (appNotice.id != -2) {
@@ -165,23 +181,23 @@ private fun UpdateContent(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = Dimen.largePadding)
+            .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
             .fillMaxWidth()
     ) {
+        if (appNotice.id == 0) {
+            MainText(
+                text = "发现新版本", modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
         Row(
-            modifier = Modifier
-                .padding(top = Dimen.mediumPadding),
+            modifier = Modifier.padding(top = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             //版本
             Text(
-                text = (if (appNotice.id == 0) {
-                    "v${BuildConfig.VERSION_NAME} > "
-                } else {
-                    ""
-                }) + "v${appNotice.title}",
+                text = "v${appNotice.title}",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.ExtraBold,
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -197,8 +213,7 @@ private fun UpdateContent(
         //日期
         CaptionText(
             text = stringResource(
-                id = R.string.release,
-                appNotice.date.formatTime
+                id = R.string.release, appNotice.date.formatTime
             )
         )
 
@@ -206,29 +221,26 @@ private fun UpdateContent(
         ColorText(appNotice.message)
 
         //前往更新
-        if (appNotice.id == 0 || BuildConfig.DEBUG) {
-            TextButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {
-                    VibrateUtil(context).single()
+        if (appNotice.id == 0) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Dimen.mediumPadding),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                //从酷安下载
+                MainButton(
+                    text = stringResource(id = R.string.download_apk_from_coolapk)
+                ) {
                     BrowserUtil.open(appNotice.url)
                 }
-            ) {
-                MainContentText(
-                    text = stringResource(id = R.string.to_update),
-                    color = colorGreen,
-                    textAlign = TextAlign.Center
-                )
+                // 从 github 下载
+                val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
+                SubButton(text = stringResource(id = R.string.download_apk_from_github)) {
+                    BrowserUtil.open(githubReleaseUrl)
+                }
             }
-            // 下载 github 上发布的安装包
-            val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
-            IconTextButton(
-                icon= MainIconType.DOWNLOAD,
-                text = stringResource(id = R.string.download_apk_from_github),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ){
-                BrowserUtil.open(githubReleaseUrl)
-            }
+
         }
 
     }
@@ -300,14 +312,12 @@ private fun ErrorContent() {
         SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
 
         //加群反馈
-        SettingCommonItem(
-            iconType = MainIconType.SUPPORT,
+        SettingCommonItem(iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),
             summary = stringResource(id = R.string.qq_group_summary),
             onClick = {
                 joinQQGroup(context)
-            }
-        ) {
+            }) {
             Subtitle2(
                 text = stringResource(id = R.string.to_join_qq_group),
                 color = MaterialTheme.colorScheme.primary
@@ -320,6 +330,14 @@ private fun ErrorContent() {
 @Composable
 private fun AppUpdateContentPreview() {
     PreviewLayout {
+        AppUpdateContent(
+            AppNotice(
+                date = "2022-01-01 01:01:01",
+                title = "3.2.1",
+                message = "- [BUG] BUGBUG\n- [测试] 测试",
+                file_url = "123"
+            )
+        )
         AppUpdateContent(
             AppNotice(
                 id = 0,
