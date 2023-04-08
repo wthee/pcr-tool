@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -217,7 +218,8 @@ private fun CardGridList(
                 //图片
                 SubImageCompose(
                     data = picUrl,
-                    loading = loading
+                    loading = loading,
+                    contentScale = ContentScale.FillWidth
                 ) {
                     //获取本地原图缓存
                     if (it.diskCacheKey != null) {

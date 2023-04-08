@@ -62,7 +62,6 @@ import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.common.MainContentText
 import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -101,7 +100,6 @@ fun ExtraEquipList(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    val sp = mainSP()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听

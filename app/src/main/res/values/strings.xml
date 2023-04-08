@@ -163,7 +163,9 @@
     <string name="fault">次元断层</string>
     <string name="result">数值变化</string>
     <string name="character_name">角色名</string>
-    <string name="to_update">前往更新</string>
+    <string name="download_apk_from_coolapk">立即更新</string>
+    <string name="download_apk_from_github">从 Github 下载</string>
+    <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
@@ -212,6 +214,10 @@
     <string name="tool_all_quest">主线地图</string>
     <string name="pick_date">选择日期</string>
     <string name="picked_date">已选择</string>
+    <string name="beta_tool_group">测试</string>
+    <string name="beta_tool_group_title">后续将调整至其他分组或移除</string>
+    <string name="all_unit_calc_equip">全角色装备统计</string>
+    <string name="to"> ~ </string>
 
 
     <!--竞技场查询-->
@@ -258,8 +264,6 @@
     <string name="dungeon">地下城</string>
     <string name="drop">掉落量</string>
     <string name="mana">玛那掉落量</string>
-    <string name="progressing">%s</string>
-    <string name="coming_soon">%s</string>
     <string name="multiple">%s倍</string>
     <string name="title_drop_event">▶ 掉落活动%s</string>
     <string name="title_story_event">▶ 剧情活动%s</string>
@@ -311,6 +315,7 @@
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
     <string name="title_dialog_clean_cache">清除缓存</string>
+    <string name="db_re_download">重新下载</string>
 
     <!--模拟抽卡-->
     <string name="limit_re">复刻限定</string>
@@ -466,7 +471,7 @@
     <string name="skill_status_1600">恐慌状态</string>
     <string name="skill_status_1601">隐匿状态</string>
     <string name="skill_status_1700">魔法防御减少状态</string>
-    <string name="skill_status_721_6107">龙眼状态</string>
+    <string name="skill_status_721_6107">龙之眼状态</string>
     <string name="skill_status_1800">多目标状态</string>
     <string name="skill_status_1900">护盾展开</string>
 
@@ -783,10 +788,10 @@
     <string name="leader_tier_0">综合评级</string>
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
-    <string name="leader_tier_d">T%d</string>
 
     <!--测试用-->
     <string name="debug_short_text">测试文本测试文本</string>
-    <string name="debug_long_text">测试文本测试文本测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本</string>
+    <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
+    <string name="leader_tier_d">T%s</string>
 
 </resources>

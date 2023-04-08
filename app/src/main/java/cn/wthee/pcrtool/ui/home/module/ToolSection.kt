@@ -4,11 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -227,7 +223,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.TWEET -> ToolMenuData(R.string.tweet, MainIconType.TWEET)
         ToolMenuType.COMIC -> ToolMenuData(R.string.comic, MainIconType.COMIC)
         ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
-        ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC)
+        ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.calc_equip_count, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)
         ToolMenuType.CALENDAR_EVENT -> ToolMenuData(

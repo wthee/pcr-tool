@@ -186,7 +186,8 @@ private fun TweetItem(data: TweetData) {
         MainContentText(
             text = data.getFormatTweet(),
             textAlign = TextAlign.Start,
-            selectable = true
+            selectable = true,
+            modifier = Modifier.fillMaxWidth()
         )
         //相关链接跳转
         if (!placeholder) {

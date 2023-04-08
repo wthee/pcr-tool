@@ -19,13 +19,15 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 @Composable
 fun GridIconListCompose(
     icons: List<Int>,
+    isSubLayout: Boolean = true,
     onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalGrid(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
         itemWidth = Dimen.iconSize,
         contentPadding = Dimen.mediumPadding,
-        fixCount = if(LocalInspectionMode.current) 5 else 0
+        fixCount = if (LocalInspectionMode.current) 5 else 0,
+        isSubLayout = isSubLayout
     ) {
         icons.forEach {
             UnitIcon(

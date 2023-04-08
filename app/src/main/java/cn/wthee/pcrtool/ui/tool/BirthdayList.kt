@@ -127,7 +127,7 @@ fun BirthdayItem(
                             tint = colorPurple
                         )
                         MainContentText(
-                            text = stringResource(R.string.coming_soon, sd.days(today)),
+                            text = sd.days(today),
                             modifier = Modifier.padding(start = Dimen.smallPadding),
                             textAlign = TextAlign.Start,
                             color = colorPurple

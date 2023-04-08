@@ -14,17 +14,17 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.4.0"
+val composeBom = "2023.04.00"
 val composeCompilerVersion = "1.4.4"
-val appVersionCode = 361
-val appVersionName = "3.6.1"
+val appVersionCode = 362
+val appVersionName = "3.6.2"
 val appId = "cn.wthee.pcrtool"
 
 android {
 
     namespace = appId
     compileSdk = 33
-    buildToolsVersion = "33.0.0"
+    buildToolsVersion = "33.0.2"
     flavorDimensions += listOf("version")
 
     defaultConfig {
@@ -112,17 +112,18 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
-    //compose
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    //compose bom
+    implementation(platform("androidx.compose:compose-bom:${composeBom}"))
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.runtime:runtime-livedata")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.1.0-beta01")
+    implementation("androidx.compose.material3:material3:1.1.0-beta02")
 
     //Accompanist
-    val accompanistVersion = "0.30.0"
+    val accompanistVersion = "0.30.1"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -137,8 +138,8 @@ dependencies {
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")
 
-    //Coil(compose verion 1.2.1)
-    val coilVersion = "2.2.2"
+    //Coil
+    val coilVersion = "2.3.0"
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
@@ -180,7 +181,7 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
-    val workVersion = "2.8.0"
+    val workVersion = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     implementation(files("libs\\commons-compress-1.19.jar"))

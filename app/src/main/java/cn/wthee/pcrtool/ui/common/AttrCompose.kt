@@ -94,7 +94,9 @@ fun AttrCompare(
                 }
             }
         }
+        //rank对比时
         if (!isExtraEquip) {
+            CommonSpacer()
             CommonSpacer()
         }
     }

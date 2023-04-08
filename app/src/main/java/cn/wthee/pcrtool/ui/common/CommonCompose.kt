@@ -1092,7 +1092,7 @@ fun EventTitleCountdown(
                 size = Dimen.smallIconSize,
             )
             MainContentText(
-                text = stringResource(R.string.progressing, ed.dates(today)),
+                text = ed.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.primary
@@ -1105,7 +1105,7 @@ fun EventTitleCountdown(
                 tint = colorPurple
             )
             MainContentText(
-                text = stringResource(R.string.coming_soon, sd.dates(today)),
+                text = sd.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = colorPurple

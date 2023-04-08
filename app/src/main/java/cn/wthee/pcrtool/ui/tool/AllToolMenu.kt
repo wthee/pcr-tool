@@ -1,13 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -34,25 +28,9 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.Subtitle2
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.home.module.ToolMenu
-import cn.wthee.pcrtool.ui.home.module.ToolMenuData
-import cn.wthee.pcrtool.ui.home.module.editToolMenuOrder
-import cn.wthee.pcrtool.ui.home.module.getAction
-import cn.wthee.pcrtool.ui.home.module.getToolMenuData
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.home.module.*
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 
@@ -122,10 +100,20 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     otherList.addItem(ToolMenuType.MOCK_GACHA)
     if (BuildConfig.DEBUG) {
         otherList.addItem(ToolMenuType.ALL_SKILL)
-        otherList.addItem(ToolMenuType.ALL_EQUIP)
-        otherList.addItem(ToolMenuType.ALL_QUEST)
     }
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
+
+    //测试
+    val betaList = arrayListOf<ToolMenuData>()
+    betaList.addItem(ToolMenuType.ALL_EQUIP)
+    betaList.addItem(ToolMenuType.ALL_QUEST)
+    itemGroupList.add(
+        ToolMenuGroup(
+            stringResource(id = R.string.beta_tool_group),
+            betaList,
+            stringResource(id = R.string.beta_tool_group_title)
+        )
+    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {

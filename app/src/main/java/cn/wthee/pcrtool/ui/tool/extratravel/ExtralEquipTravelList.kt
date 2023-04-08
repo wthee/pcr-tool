@@ -120,7 +120,7 @@ private fun TravelItem(
                     contentAlignment = Alignment.Center
                 ) {
                     TravelQuestHeader(
-                        questData = questData,
+                        questData = questData
                     )
                 }
             }
@@ -135,7 +135,7 @@ private fun TravelItem(
 @Composable
 fun TravelQuestHeader(
     questData: ExtraEquipQuestData,
-    showTitle: Boolean = true,
+    showTitle: Boolean = true
 ) {
 
     Column(
@@ -155,9 +155,7 @@ fun TravelQuestHeader(
         }
         //其它参数
         VerticalGrid(
-            modifier = Modifier.padding(
-                Dimen.smallPadding
-            ),
+            contentPadding = Dimen.smallPadding,
             itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(
