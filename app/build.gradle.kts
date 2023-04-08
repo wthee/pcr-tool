@@ -16,15 +16,15 @@ hilt {
 
 val composeBom = "2023.04.00"
 val composeCompilerVersion = "1.4.4"
-val appVersionCode = 361
-val appVersionName = "3.6.1"
+val appVersionCode = 362
+val appVersionName = "3.6.2"
 val appId = "cn.wthee.pcrtool"
 
 android {
 
     namespace = appId
     compileSdk = 33
-    buildToolsVersion = "33.0.0"
+    buildToolsVersion = "33.0.2"
     flavorDimensions += listOf("version")
 
     defaultConfig {
@@ -181,7 +181,7 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
-    val workVersion = "2.8.0"
+    val workVersion = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     implementation(files("libs\\commons-compress-1.19.jar"))
