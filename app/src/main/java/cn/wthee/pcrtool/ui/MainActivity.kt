@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.*
+import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.AndroidEntryPoint

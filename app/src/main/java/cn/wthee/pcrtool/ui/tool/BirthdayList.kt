@@ -17,8 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
+import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
@@ -58,7 +59,7 @@ fun BirthdayList(
             }
         }
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.BIRTHDAY,
             text = stringResource(id = R.string.tool_birthday),
             modifier = Modifier
@@ -85,7 +86,7 @@ fun BirthdayItem(
     toCharacterDetail: (Int) -> Unit
 ) {
     val today = getToday()
-    val sd = data.getStartTime().formatTime
+    val sd = data.startTime.formatTime
     val comingSoon = isComingSoon(today, sd, false)
     val icons = data.getOrderUnitIdList()
 
@@ -121,7 +122,7 @@ fun BirthdayItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (comingSoon && !LocalInspectionMode.current) {
-                        IconCompose(
+                        MainIcon(
                             data = MainIconType.COUNTDOWN,
                             size = Dimen.smallIconSize,
                             tint = colorPurple
@@ -140,7 +141,7 @@ fun BirthdayItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //图标
-                GridIconListCompose(
+                GridIconList(
                     icons = icons,
                     onClickItem = toCharacterDetail
                 )

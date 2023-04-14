@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,11 +16,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.int
 
 

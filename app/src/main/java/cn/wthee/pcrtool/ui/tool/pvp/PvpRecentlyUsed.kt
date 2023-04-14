@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
-import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlin.math.max
 

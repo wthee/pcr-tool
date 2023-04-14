@@ -30,7 +30,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -80,7 +80,7 @@ fun MainSettings() {
                 text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             )
-            IconCompose(
+            MainIcon(
                 data = R.drawable.ic_logo_large,
                 size = Dimen.largeIconSize,
                 modifier = Modifier.padding(Dimen.mediumPadding),
@@ -402,7 +402,7 @@ fun SettingCommonItem(
             })
     ) {
         Spacer(modifier = Modifier.width(padding))
-        IconCompose(
+        MainIcon(
             data = iconType,
             size = iconSize,
             colorFilter = ColorFilter.tint(tintColor)

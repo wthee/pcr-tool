@@ -3,33 +3,15 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -49,42 +31,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.Attr
-import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
+import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.AttrList
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.IconTextButton
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.SubButton
-import cn.wthee.pcrtool.ui.common.Subtitle2
-import cn.wthee.pcrtool.ui.common.getItemWidth
-import cn.wthee.pcrtool.ui.common.getRankColor
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -272,7 +234,7 @@ fun CharacterDetail(
                         )
                     ) {
                         //角色技能形态
-                        FabCompose(
+                        MainSmallFab(
                             iconType = if (isCutinSkill.value) {
                                 MainIconType.CHARACTER_CUTIN_SKILL
                             } else {
@@ -294,7 +256,7 @@ fun CharacterDetail(
                     )
                 ) {
                     //收藏
-                    FabCompose(
+                    MainSmallFab(
                         iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     ) {
                         FilterCharacter.addOrRemove(unitId)
@@ -302,7 +264,7 @@ fun CharacterDetail(
                     }
 
                     //技能循环
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.SKILL_LOOP,
                     ) {
                         actions.toCharacterSkillLoop(currentIdState.value)
@@ -450,7 +412,7 @@ private fun CharacterCoe(
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
         )
-        IconCompose(
+        MainIcon(
             data = MainIconType.HELP, size = Dimen.smallIconSize
         )
     }
@@ -518,7 +480,7 @@ private fun CharacterLevel(
         shape = MaterialTheme.shapes.medium,
         textStyle = MaterialTheme.typography.bodyMedium,
         trailingIcon = {
-            IconCompose(
+            MainIcon(
                 data = MainIconType.OK, size = Dimen.fabIconSize
             ) {
                 keyboardController?.hide()
@@ -589,7 +551,7 @@ private fun AttrLists(
             horizontalArrangement = Arrangement.Center
         ) {
             MainText(text = stringResource(id = R.string.title_story_attr))
-            IconCompose(
+            MainIcon(
                 data = MainIconType.HELP, size = Dimen.smallIconSize
             )
         }
@@ -641,12 +603,12 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id6)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id6)) {
                 if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id3)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id3)) {
                 if (id3 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id3)
                 }
@@ -661,13 +623,13 @@ private fun CharacterEquip(
                 .padding(Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id5)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id5)) {
                 if (id5 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id5)
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconCompose(data = MainIconType.BACK,
+                MainIcon(data = MainIconType.BACK,
                     tint = if (currentValueState.value.rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
@@ -694,7 +656,7 @@ private fun CharacterEquip(
                 ) {
                     toCharacterRankEquip(unitId, rank)
                 }
-                IconCompose(data = MainIconType.MORE,
+                MainIcon(data = MainIconType.MORE,
                     tint = if (rank > 1) {
                         getRankColor(rank = rank - 1)
                     } else {
@@ -713,7 +675,7 @@ private fun CharacterEquip(
                     modifier = Modifier.padding(end = Dimen.mediumPadding))
             }
             val id2 = equips[3].equipmentId
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id2)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id2)) {
                 if (id2 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id2)
                 }
@@ -728,13 +690,13 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id4)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id4)) {
                 if (id4 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id4)
                 }
 
             }
-            IconCompose(data = ImageRequestHelper.getInstance().getEquipPic(id1)) {
+            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id1)) {
                 if (id1 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id1)
                 }
@@ -815,7 +777,7 @@ private fun UniqueEquip(
                 },
                 textStyle = MaterialTheme.typography.bodyMedium,
                 trailingIcon = {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.OK, size = Dimen.fabIconSize
                     ) {
                         keyboardController?.hide()
@@ -862,7 +824,7 @@ private fun UniqueEquip(
                     )
                     .fillMaxWidth()
             ) {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance().getEquipPic(it.equipmentId)
                 )
                 Subtitle2(
@@ -903,7 +865,7 @@ private fun StarSelect(
                 i == 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
-            IconCompose(
+            MainIcon(
                 data = iconId,
                 size = Dimen.fabIconSize,
                 modifier = Modifier.padding(Dimen.smallPadding)

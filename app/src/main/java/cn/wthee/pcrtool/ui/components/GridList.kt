@@ -1,67 +1,86 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.components
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.spanCount
 import kotlin.math.max
 
+
 /**
- * 网格布局
+ * 角色图标列表
+ * @param icons unitId
  */
-//@Composable
-//fun VerticalGrid(
-//    modifier: Modifier = Modifier,
-//    maxColumnWidth: Dp,
-//    children: @Composable () -> Unit
-//) {
-//    Layout(
-//        content = children,
-//        modifier = modifier
-//    ) { measurables, constraints ->
-//        check(constraints.hasBoundedWidth) {
-//            "Unbounded width not supported"
-//        }
-//        val columns = max(1, ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt())
-//        val columnWidth = constraints.maxWidth / columns
-//        val itemConstraints = constraints.copy(maxWidth = columnWidth)
-//        val colHeights = IntArray(columns) { 0 } // track each column's height
-//        val placeables = measurables.map { measurable ->
-//            val column = shortestColumn(colHeights)
-//            val placeable = measurable.measure(itemConstraints)
-//            colHeights[column] += placeable.height
-//            placeable
-//        }
-//
-//        val height = colHeights.maxOrNull()?.coerceIn(constraints.minHeight, constraints.maxHeight)
-//            ?: constraints.minHeight
-//        layout(
-//            width = constraints.maxWidth,
-//            height = height
-//        ) {
-//            val colY = IntArray(columns) { 0 }
-//            placeables.forEach { placeable ->
-//                val column = shortestColumn(colY)
-//                placeable.place(
-//                    x = columnWidth * column,
-//                    y = colY[column]
-//                )
-//                colY[column] += placeable.height
-//            }
-//        }
-//    }
-//}
+@Composable
+fun GridIconList(
+    icons: List<Int>,
+    isSubLayout: Boolean = true,
+    onClickItem: ((Int) -> Unit)? = null
+) {
+    VerticalGrid(
+        modifier = Modifier.padding(top = Dimen.mediumPadding),
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.mediumPadding,
+        fixCount = if (LocalInspectionMode.current) 5 else 0,
+        isSubLayout = isSubLayout
+    ) {
+        icons.forEach {
+            UnitIcon(
+                it,
+                onClickItem
+            )
+        }
+    }
+}
+
+/**
+ * 角色图标
+ */
+@Composable
+private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
+    val unitId: Int = if (id / 10000 == 3) {
+        //item 转 unit
+        id % 10000 * 100 + 1
+    } else {
+        id
+    }
+    Column(
+        modifier = Modifier
+            .padding(
+                bottom = Dimen.mediumPadding
+            )
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        MainIcon(
+            data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
+            onClick = if (onClickItem != null) {
+                {
+                    onClickItem(unitId)
+                }
+            } else {
+                null
+            }
+        )
+    }
+
+}
+
 
 /**
  * 网格布局
@@ -151,3 +170,16 @@ fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
 } else {
     Dimen.iconSize + Dimen.mediumPadding * 2
 } * 5
+
+
+@CombinedPreviews
+@Composable
+private fun IconListComposePreview() {
+    val mockData = arrayListOf<Int>()
+    for (i in 0..10) {
+        mockData.add(i)
+    }
+    PreviewLayout {
+        GridIconList(icons = mockData, onClickItem = {})
+    }
+}

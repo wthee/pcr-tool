@@ -52,9 +52,9 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -144,7 +144,7 @@ fun CharacterList(
                 horizontalArrangement = Arrangement.End
             ) {
                 //回到顶部
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.TOP
                 ) {
                     coroutineScope.launch {
@@ -153,7 +153,7 @@ fun CharacterList(
                 }
                 //重置筛选
                 if (filter.value != null && filter.value!!.isFilter()) {
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.RESET
                     ) {
                         coroutineScope.launch {
@@ -164,7 +164,7 @@ fun CharacterList(
                 }
                 val count = characterList.size
                 // 数量显示&筛选按钮
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.CHARACTER,
                     text = "$count"
                 ) {
@@ -213,7 +213,7 @@ fun CharacterItem(
     ) {
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
             //图片
-            ImageCompose(
+            MainImage(
                 data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
                 ratio = RATIO,
                 contentScale = ContentScale.FillHeight,
@@ -407,7 +407,7 @@ fun CharacterItem(
 
             //收藏标识
             FadeAnimation(visible = loved && (loadSuccess || loadError)) {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.LOVE_FILL,
                     size = Dimen.textIconSize,
                     modifier = Modifier.padding(Dimen.mediumPadding)
@@ -664,13 +664,13 @@ private fun FilterCharacterSheet(
             onValueChange = { textState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.CHARACTER,
                     size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.SEARCH,
                     size = Dimen.fabIconSize
                 ) {

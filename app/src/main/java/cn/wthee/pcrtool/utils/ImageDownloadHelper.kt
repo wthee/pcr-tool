@@ -18,7 +18,7 @@ import java.io.File
 /**
  * 图片保存到本地
  */
-class ImageSaveHelper(private val context: Context) {
+class ImageDownloadHelper(private val context: Context) {
     //图片文件夹名
     private val imageDir = "pcr"
 

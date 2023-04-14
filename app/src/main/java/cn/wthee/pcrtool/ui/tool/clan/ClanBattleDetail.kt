@@ -16,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.IconHorizontalPagerIndicator
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.SelectTypeCompose
+import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyAllInfo
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -110,7 +110,7 @@ fun ClanBattleDetail(
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
             val sectionColor = getSectionTextColor(section = phaseIndex.value + 1)
-            SelectTypeCompose(
+            SelectTypeFab(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,
                 type = phaseIndex,

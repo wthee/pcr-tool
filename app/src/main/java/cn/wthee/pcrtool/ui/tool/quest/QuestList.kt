@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -143,7 +143,7 @@ fun QuestPager(
                                 .padding(horizontal = Dimen.largePadding)
                                 .weight(1f)
                         ) {
-                            IconCompose(
+                            MainIcon(
                                 data = ImageRequestHelper.getInstance().getEquipPic(it),
                             )
                         }
@@ -373,7 +373,7 @@ private fun EquipWithOddCompose(
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf(
             {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance()
                         .getUrl(ImageRequestHelper.ICON_EQUIPMENT, dataState.equipId)
                 )

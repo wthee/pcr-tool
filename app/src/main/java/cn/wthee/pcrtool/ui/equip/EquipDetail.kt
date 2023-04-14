@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -85,7 +85,7 @@ private fun EquipDetail(
                         .fillMaxWidth()
                         .padding(Dimen.largePadding)
                 ) {
-                    IconCompose(
+                    MainIcon(
                         data = ImageRequestHelper.getInstance().getEquipPic(equipId)
                     )
                     Subtitle2(
@@ -102,7 +102,7 @@ private fun EquipDetail(
             EquipMaterialList(materialList, toEquipMaterial)
         }
         //装备收藏
-        FabCompose(
+        MainSmallFab(
             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             modifier = Modifier
                 .padding(
@@ -161,7 +161,7 @@ private fun EquipMaterialList(
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconCompose(
+                    MainIcon(
                         data = ImageRequestHelper.getInstance().getEquipPic(material.id)
                     ) {
                         toEquipMaterial(material.id)

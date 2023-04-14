@@ -74,5 +74,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
-    suspend fun getMaxRank() =equipmentDao.getMaxRank()
+    suspend fun getMaxRank() = try {
+        equipmentDao.getMaxRank()
+    }catch (_: Exception) {
+        0
+    }
 }

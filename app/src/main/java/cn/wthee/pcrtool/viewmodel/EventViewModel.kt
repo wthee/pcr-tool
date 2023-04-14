@@ -2,10 +2,9 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EventRepository
-import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.compareEvent
-import cn.wthee.pcrtool.utils.compareStoryEvent
+import cn.wthee.pcrtool.utils.compareAllTypeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class EventViewModel @Inject constructor(
                 }
             }
 
-            emit(list.sortedWith(compareStoryEvent()))
+            emit(list.sortedWith(compareAllTypeEvent()))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getStoryEventHistory")
         }
@@ -70,7 +69,7 @@ class EventViewModel @Inject constructor(
             }
 
             emit(
-                list.sortedWith(compareEvent())
+                list.sortedWith(compareAllTypeEvent())
             )
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getCalendarEventList")

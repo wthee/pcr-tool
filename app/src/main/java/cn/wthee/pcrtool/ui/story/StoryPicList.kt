@@ -1,22 +1,12 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.components
 
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,7 +20,7 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageSaveHelper
+import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
@@ -48,10 +38,10 @@ val loadedPicMap = hashMapOf<String, Drawable?>()
 
 
 /**
- * 角色所有卡面/剧情故事图片
+ * 角色/活动剧情图片
  */
 @Composable
-fun AllCardList(
+fun StoryPicList(
     id: Int,
     allPicsType: AllPicsType,
     picsViewModel: AllPicsViewModel = hiltViewModel()
@@ -106,7 +96,7 @@ fun AllCardList(
         }
     ) {
         loadedPicMap[checkedPicUrl.value]?.let {
-            ImageSaveHelper(context).saveBitmap(
+            ImageDownloadHelper(context).saveBitmap(
                 bitmap = (it as BitmapDrawable).bitmap,
                 displayName = "${getFileName(checkedPicUrl.value)}.jpg"
             )
@@ -216,7 +206,7 @@ private fun CardGridList(
                 }
             ) {
                 //图片
-                SubImageCompose(
+                SubImage(
                     data = picUrl,
                     loading = loading,
                     contentScale = ContentScale.FillWidth

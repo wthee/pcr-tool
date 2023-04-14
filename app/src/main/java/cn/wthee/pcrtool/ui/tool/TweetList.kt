@@ -1,12 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -27,26 +21,8 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
-import cn.wthee.pcrtool.ui.common.BottomSearchBar
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.CircularProgressCompose
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.DateRange
-import cn.wthee.pcrtool.ui.common.DateRangePickerCompose
-import cn.wthee.pcrtool.ui.common.IconTextButton
-import cn.wthee.pcrtool.ui.common.ImageCompose
-import cn.wthee.pcrtool.ui.common.MainContentText
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.RATIO_COMIC
-import cn.wthee.pcrtool.ui.common.RATIO_COMMON
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.common.commonPlaceholder
-import cn.wthee.pcrtool.ui.common.getItemWidth
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.PNG
@@ -210,7 +186,7 @@ private fun TweetItem(data: TweetData) {
                     if (!isComicUrl) {
                         url = it
                     }
-                    ImageCompose(
+                    MainImage(
                         data = url,
                         ratio = if (isComicUrl) RATIO_COMIC else RATIO_COMMON,
                         modifier = Modifier.fillMaxWidth(),

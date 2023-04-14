@@ -52,7 +52,7 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -168,7 +168,7 @@ fun EquipList(
                     )
                 } else {
                     //切换至选择模式
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.SEARCH,
                         text = stringResource(id = R.string.equip_serach_mode),
                         modifier = Modifier
@@ -190,7 +190,7 @@ fun EquipList(
                     horizontalArrangement = Arrangement.End
                 ) {
                     //回到顶部
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.TOP
                     ) {
                         coroutineScope.launch {
@@ -199,7 +199,7 @@ fun EquipList(
                     }
                     //重置筛选
                     if (filter.value != null && filter.value!!.isFilter()) {
-                        FabCompose(
+                        MainSmallFab(
                             iconType = MainIconType.RESET
                         ) {
                             coroutineScope.launch {
@@ -210,7 +210,7 @@ fun EquipList(
                     }
                     val count = equips.size
                     // 数量显示&筛选按钮
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.EQUIP,
                         text = "$count"
                     ) {
@@ -312,7 +312,7 @@ private fun SearchEquip(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        IconCompose(
+                                        MainIcon(
                                             data = ImageRequestHelper.getInstance().getEquipPic(it),
                                         ) {
                                             selectEquip(searchEquipIdList, it)
@@ -326,7 +326,7 @@ private fun SearchEquip(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(start = Dimen.largePadding)
                         ) {
-                            IconCompose(
+                            MainIcon(
                                 data = MainIconType.BOX,
                                 size = Dimen.fabIconSize
                             )
@@ -347,7 +347,7 @@ private fun SearchEquip(
 
             //搜索
             val tipSearch = stringResource(id = R.string.tip_equip_serach)
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.SEARCH,
                 text = stringResource(id = R.string.equip_serach)
             ) {
@@ -434,7 +434,7 @@ private fun EquipItem(
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf(
             {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance().getEquipPic(equipState.equipmentId)
                 )
             }
@@ -599,13 +599,13 @@ private fun FilterEquipSheet(
             onValueChange = { textState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.EQUIP,
                     size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.SEARCH,
                     size = Dimen.fabIconSize
                 ) {

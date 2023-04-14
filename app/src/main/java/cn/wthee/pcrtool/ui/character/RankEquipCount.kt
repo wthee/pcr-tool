@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -124,7 +124,7 @@ fun RankEquipCount(
         rankEquipMaterials.forEach {
             allCount += it.count
         }
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.EQUIP_CALC,
             text = "${rankEquipMaterials.size} · $allCount",
             modifier = Modifier
@@ -176,7 +176,7 @@ private fun EquipCountItem(
 
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf({
-            IconCompose(
+            MainIcon(
                 data = ImageRequestHelper.getInstance().getEquipPic(dataState.id),
                 modifier = Modifier.commonPlaceholder(placeholder)
             ) {

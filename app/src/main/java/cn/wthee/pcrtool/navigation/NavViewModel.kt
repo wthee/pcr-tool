@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui
+package cn.wthee.pcrtool.navigation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

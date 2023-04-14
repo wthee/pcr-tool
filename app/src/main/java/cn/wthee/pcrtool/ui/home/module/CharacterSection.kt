@@ -13,11 +13,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.ImageCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.RATIO
-import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -120,7 +120,7 @@ private fun CharacterImageItem(
             toCharacterDetail(unitId)
         }
     ) {
-        ImageCompose(
+        MainImage(
             data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
             ratio = RATIO
         )

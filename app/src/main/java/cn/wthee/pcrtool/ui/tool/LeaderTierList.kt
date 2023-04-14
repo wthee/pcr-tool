@@ -26,7 +26,7 @@ import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -97,7 +97,7 @@ fun LeaderTier(
             responseData = leaderData,
             fabContent = { data ->
                 //切换类型
-                SelectTypeCompose(
+                SelectTypeFab(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     icon = MainIconType.CHANGE_FILTER_TYPE,
                     tabs = tabs,
@@ -112,7 +112,7 @@ fun LeaderTier(
                 }
 
                 //回到顶部
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.LEADER_TIER,
                     text = data.leader.size.toString(),
                     modifier = Modifier
@@ -249,7 +249,7 @@ private fun LeaderItem(
             .fillMaxWidth()
     ) {
         Box {
-            IconCompose(
+            MainIcon(
                 data = if (hasUnitId) {
                     ImageRequestHelper.getInstance()
                         .getMaxIconUrl(leader.unitId!!)

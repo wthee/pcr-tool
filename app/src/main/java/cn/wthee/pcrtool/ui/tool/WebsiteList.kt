@@ -1,14 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -27,18 +20,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.CommonResponseBox
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.SelectTypeCompose
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -76,7 +58,7 @@ fun WebsiteList(
     //列表
     CommonResponseBox(responseData = responseData, fabContent = {
         //切换类型
-        SelectTypeCompose(
+        SelectTypeFab(
             modifier = Modifier.align(Alignment.BottomEnd),
             icon = MainIconType.FILTER,
             tabs = tabs,
@@ -88,7 +70,7 @@ fun WebsiteList(
         )
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.WEBSITE_BOOKMARK,
             text = stringResource(id = R.string.tool_website),
             modifier = Modifier
@@ -208,7 +190,7 @@ private fun WebsiteItem(data: WebsiteData) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //图标
-                IconCompose(
+                MainIcon(
                     data = data.icon, size = Dimen.smallIconSize
                 )
 
@@ -226,21 +208,21 @@ private fun WebsiteItem(data: WebsiteData) {
                 horizontalArrangement = Arrangement.End
             ) {
                 if (data.browserType == 0 || data.browserType == 1) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_PC,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)
                     )
                 }
                 if (data.browserType == 0 || data.browserType == 2) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_PHONE,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)
                     )
                 }
                 if (data.browserType == 3) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_APP,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)

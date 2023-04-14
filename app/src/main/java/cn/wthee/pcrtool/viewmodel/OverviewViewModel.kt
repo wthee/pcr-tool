@@ -8,6 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.db.view.endTime
+import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
@@ -15,14 +17,7 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.compareBirthDay
-import cn.wthee.pcrtool.utils.compareEvent
-import cn.wthee.pcrtool.utils.compareGacha
-import cn.wthee.pcrtool.utils.compareStoryEvent
-import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.isComingSoon
-import cn.wthee.pcrtool.utils.isInProgress
+import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -99,13 +94,13 @@ class OverviewViewModel @Inject constructor(
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime)
-                    }.sortedWith(compareGacha(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             } else {
                 emit(
                     data.filter {
                         isComingSoon(today, it.startTime)
-                    }.sortedWith(compareGacha(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             }
         } catch (e: Exception) {
@@ -131,13 +126,13 @@ class OverviewViewModel @Inject constructor(
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime)
-                    }.sortedWith(compareEvent(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             } else {
                 emit(
                     data.filter {
                         isComingSoon(today, it.startTime)
-                    }.sortedWith(compareEvent(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             }
         } catch (e: Exception) {
@@ -158,13 +153,13 @@ class OverviewViewModel @Inject constructor(
                 emit(
                     data.filter {
                         isInProgress(today, it.startTime, it.endTime)
-                    }.sortedWith(compareStoryEvent(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             } else {
                 emit(
                     data.filter {
                         isComingSoon(today, it.startTime)
-                    }.sortedWith(compareStoryEvent(today))
+                    }.sortedWith(compareAllTypeEvent(today))
                 )
             }
         } catch (e: Exception) {
@@ -227,11 +222,11 @@ class OverviewViewModel @Inject constructor(
     fun getBirthdayList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getBirthdayList().sortedWith(compareBirthDay())
+            val data = eventRepository.getBirthdayList().sortedWith(compareAllTypeEvent())
 
             if (type == EventType.IN_PROGRESS) {
                 var list = data.filter {
-                    isInProgress(today, it.getStartTime(), it.getEndTime())
+                    isInProgress(today, it.startTime, it.endTime)
                 }
                 //只取一条记录
                 if (list.isNotEmpty()) {
@@ -240,7 +235,7 @@ class OverviewViewModel @Inject constructor(
                 emit(list)
             } else {
                 var list = data.filter {
-                    isComingSoon(today, it.getStartTime())
+                    isComingSoon(today, it.startTime)
                 }
                 //只取一条记录
                 if (list.isNotEmpty()) {

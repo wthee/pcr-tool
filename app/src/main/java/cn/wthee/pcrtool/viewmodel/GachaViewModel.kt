@@ -2,9 +2,9 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
-import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.compareGacha
+import cn.wthee.pcrtool.utils.compareAllTypeEvent
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -32,7 +32,7 @@ class GachaViewModel @Inject constructor(
                 }
             }
 
-            emit(list.sortedWith(compareGacha()))
+            emit(list.sortedWith(compareAllTypeEvent()))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getGachaHistory:${dateRange}")
         }

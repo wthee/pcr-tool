@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildMemberInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -66,7 +66,7 @@ fun GuildList(
             }
         }
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.GUILD,
             text = stringResource(id = R.string.tool_guild),
             modifier = Modifier
@@ -141,7 +141,7 @@ private fun GuildItem(
                     )
                 }
                 //角色图标列表
-                GridIconListCompose(
+                GridIconList(
                     icons = iconIdList,
                     onClickItem = toCharacterDetail
                 )
