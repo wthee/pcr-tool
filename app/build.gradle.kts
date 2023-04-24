@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.04.00"
+val composeBom = "2023.04.01"
 val composeCompilerVersion = "1.4.4"
 val appVersionCode = 362
 val appVersionName = "3.6.2"
@@ -107,7 +107,7 @@ dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.6")
+    implementation("androidx.fragment:fragment-ktx:1.5.7")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.preference:preference-ktx:1.2.0")
@@ -120,7 +120,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata")
 
     //compose material3
-    implementation("androidx.compose.material3:material3:1.1.0-beta02")
+    implementation("androidx.compose.material3:material3:1.1.0-rc01")
 
     //Accompanist
     val accompanistVersion = "0.30.1"

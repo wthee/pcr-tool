@@ -1,7 +1,14 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -20,7 +27,18 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -123,7 +141,7 @@ private fun WebsiteGroup(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainText(
-            text = getTitle(groupData.type),
+            text = groupData.typeName,
             modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
         )
         if (websiteList.isEmpty()) {
@@ -234,22 +252,6 @@ private fun WebsiteItem(data: WebsiteData) {
 
 
 }
-
-/**
- * 获取分组标题
- */
-@Composable
-private fun getTitle(type: Int) = stringResource(
-    id = when (type) {
-        1 -> R.string.website_type_1
-        2 -> R.string.website_type_2
-        3 -> R.string.website_type_3
-        4 -> R.string.website_type_4
-        5 -> R.string.website_type_5
-        6 -> R.string.website_type_6
-        else -> R.string.other
-    }
-)
 
 
 @CombinedPreviews

@@ -772,14 +772,6 @@
     <string name="respon_error">未正常获取数据，请切换网络后重试~</string>
     <string name="respon_cancel">查询取消~</string>
 
-    <!--网站类型-->
-    <string name="website_type_1">第三方网站</string>
-    <string name="website_type_2">wiki</string>
-    <string name="website_type_3">论坛</string>
-    <string name="website_type_4">官方网站</string>
-    <string name="website_type_5">第三方账号</string>
-    <string name="website_type_6">官方账号</string>
-
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>
     <string name="leader_new_character">新登场</string>

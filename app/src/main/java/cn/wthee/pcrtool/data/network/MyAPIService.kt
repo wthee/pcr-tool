@@ -82,7 +82,7 @@ interface MyAPIService {
     /**
      * 获取网站列表
      */
-    @POST("website/list")
+    @POST("website/list/v2")
     suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>>
 
     /**
