@@ -375,7 +375,7 @@ private fun EquipWithOddCompose(
             {
                 MainIcon(
                     data = ImageRequestHelper.getInstance()
-                        .getUrl(ImageRequestHelper.ICON_EQUIPMENT, dataState.equipId)
+                        .getEquipPic(dataState.equipId)
                 )
             }
         )

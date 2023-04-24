@@ -77,7 +77,7 @@ class ImageRequestHelper {
     fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {
         R.drawable.unknown_item
     } else {
-        RESOURCE_PREFIX_URL + type + RESOURCE + ICON_EQUIPMENT + id.toString() + WEBP
+        getUrl(ICON_EQUIPMENT, id.toString())
     }
 
     /**
