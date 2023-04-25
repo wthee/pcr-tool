@@ -84,6 +84,7 @@ object Constants {
     const val DATABASE_COMIC = "comic.db"
     const val DATABASE_PVP = "pvp.db"
     const val DATABASE_MOCK_GACHA = "mock_gacha.db"
+
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(

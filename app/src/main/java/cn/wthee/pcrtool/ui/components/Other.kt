@@ -312,7 +312,7 @@ fun <T> CommonResponseBox(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = isResultError(responseData)) {
-            CenterTipText(text = stringResource(id = R.string.respon_error))
+            CenterTipText(text = stringResource(id = R.string.response_error))
         }
         FadeAnimation(visible = responseData?.data != null) {
             content(responseData!!.data!!)

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.db.view
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
