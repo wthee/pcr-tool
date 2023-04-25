@@ -127,24 +127,6 @@ interface ExtraEquipmentDao {
     ): List<ExtraEquipmentBasicInfo>
 
     /**
-     * 获取数量
-     */
-    @SkipQueryVerification
-    @Transaction
-    @Query(
-        """
-        SELECT
-            COUNT(*)
-        FROM
-            equipment_data AS a
-        LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
-        LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
-        WHERE a.equipment_id < 140000 AND (a.craft_flg = 1 OR (a.craft_flg = 0 AND a.promotion_level = 1))
-    """
-    )
-    suspend fun getCount(): Int
-
-    /**
      * 获取装备颜色种类数
      */
     @SkipQueryVerification

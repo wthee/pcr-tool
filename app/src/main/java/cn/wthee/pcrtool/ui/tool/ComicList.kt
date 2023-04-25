@@ -315,7 +315,7 @@ private fun ComicTocList(
             value = input.value,
             placeholder = {
                 MainContentText(
-                    text = stringResource(id = R.string.comic_intput_hint),
+                    text = stringResource(id = R.string.comic_input_hint),
                     color = MaterialTheme.colorScheme.outline
                 )
             },
@@ -388,10 +388,8 @@ private fun ComicTocList(
                             VibrateUtil(context).single()
                             MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                             MainActivity.navViewModel.fabCloseClick.postValue(true)
-                            if (pagerState.currentPage != index) {
-                                tocSelectedIndex.value = index
-                                changeListener()
-                            }
+                            tocSelectedIndex.value = index
+                            changeListener()
                         }
                 }
                 SelectText(
