@@ -128,7 +128,7 @@ interface EventDao {
         """
        SELECT
             19 AS type,
-            a.count_num * b.reward_num AS value,
+            SUM(b.reward_num) AS value, 
             a.start_time,
             a.end_time
         FROM
