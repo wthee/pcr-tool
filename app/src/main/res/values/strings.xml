@@ -689,6 +689,7 @@
     <string name="skill_action_type_desc_60_1">自身每次攻击%s时%s</string>
     <string name="skill_action_type_desc_60_2">%s每次造成伤害时%s</string>
     <string name="skill_action_type_desc_60_3">%s每次造成暴击时%s</string>
+    <string name="skill_action_type_desc_60_4">%s每次攻击命中敌人时%s</string>
     <string name="skill_action_type_desc_61">以 %s 的概率使%s进入%s状态%s</string>
     <string name="skill_action_type_desc_62_0">%s的UB对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
     <string name="skill_action_type_desc_62_1">%s的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
@@ -713,7 +714,8 @@
     <string name="skill_action_type_desc_96_tp">每秒回复 %s TP</string>
     <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
     <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍%s</string>
-    <string name="skill_action_type_desc_100">%s免疫无法行动异常状态 [%d] 次%s</string>
+    <string name="skill_action_type_desc_100">%s免疫 [无法行动] 异常状态%s%s</string>
+    <string name="skill_action_type_desc_100_count">&#160;[%d] 次</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
