@@ -1,6 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -15,14 +21,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.BottomSearchBar
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.DateRange
+import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.RATIO_COMIC
+import cn.wthee.pcrtool.ui.components.RATIO_COMMON
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.COMIC4
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.PNG
@@ -77,12 +102,16 @@ fun TweetList(
                 }
             }
             items(
-                items = tweetItems,
-                key = {
-                    it.id
-                }
-            ) {
-                TweetItem(it ?: TweetData())
+                count = tweetItems.itemCount,
+                key = tweetItems.itemKey(
+                    key = {
+                        it.id
+                    }
+                ),
+                contentType = tweetItems.itemContentType()
+            ) { index ->
+                val item = tweetItems[index]
+                TweetItem(item ?: TweetData())
             }
             //暂无更多提示
             if (tweetItems.loadState.refresh != LoadState.Loading) {

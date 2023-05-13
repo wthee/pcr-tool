@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.04.01"
+val composeBom = "2023.05.01"
 val composeCompilerVersion = "1.4.4"
-val appVersionCode = 362
-val appVersionName = "3.6.2"
+val appVersionCode = 363
+val appVersionName = "3.6.3"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -47,7 +47,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -56,7 +56,7 @@ android {
             )
         }
 
-        debug {
+        getByName("debug") {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
@@ -83,14 +83,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += "-Xjvm-default=all"
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -109,7 +103,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.5.7")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose bom
@@ -118,9 +112,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-
-    //compose material3
-    implementation("androidx.compose.material3:material3:1.1.0-rc01")
+    implementation("androidx.compose.material3:material3")
 
     //Accompanist
     val accompanistVersion = "0.30.1"
@@ -160,7 +152,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha19")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

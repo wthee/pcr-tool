@@ -40,10 +40,10 @@ fun <T> compareAllTypeEvent(today: String? = null) = Comparator<T> { o1, o2 ->
         }
 
         is BirthdayData -> {
-            sd1 = o1.startTime.formatTime
-            ed1 = o1.endTime.formatTime
-            sd2 = (o2 as BirthdayData).startTime.formatTime
-            ed2 = (o2 as BirthdayData).endTime.formatTime
+            sd2 = o1.startTime.formatTime
+            ed2 = o1.endTime.formatTime
+            sd1 = (o2 as BirthdayData).startTime.formatTime
+            ed1 = (o2 as BirthdayData).endTime.formatTime
         }
     }
     compareDate(today, sd1, ed1, sd2, ed2)

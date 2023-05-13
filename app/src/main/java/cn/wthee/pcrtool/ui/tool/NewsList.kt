@@ -1,6 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
@@ -14,15 +20,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.NewsType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.BottomSearchBar
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.DateRange
+import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
@@ -51,7 +73,11 @@ fun NewsList(
     }
     //获取分页数据
     val newsPager = remember(keywordState.value, dateRange.value) {
-        newsViewModel.getNewsPager(MainActivity.regionType.value, keywordState.value, dateRange.value)
+        newsViewModel.getNewsPager(
+            MainActivity.regionType.value,
+            keywordState.value,
+            dateRange.value
+        )
     }
     val newsItems = newsPager.flow.collectAsLazyPagingItems()
 
@@ -76,13 +102,17 @@ fun NewsList(
                 }
             }
             items(
-                items = newsItems,
-                key = {
-                    it.id
-                }
-            ) {
-                if (it != null) {
-                    NewsItem(news = it)
+                count = newsItems.itemCount,
+                key = newsItems.itemKey(
+                    key = {
+                        it.id
+                    }
+                ),
+                contentType = newsItems.itemContentType()
+            ) { index ->
+                val item = newsItems[index]
+                if (item != null) {
+                    NewsItem(news = item)
                 }
             }
             //暂无更多提示
