@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.db.dao.TweetDao
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.TweetRemoteMediator
 import cn.wthee.pcrtool.database.AppTweetDatabase
-import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.components.DateRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

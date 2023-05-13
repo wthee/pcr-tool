@@ -134,9 +134,9 @@
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
     <string name="equip_max_select_count">最多可选 %d 个装备</string>
-    <string name="equip_serach">开始查询</string>
-    <string name="equip_serach_mode">掉落查询</string>
-    <string name="tip_equip_serach">请先选择装备</string>
+    <string name="equip_search">开始查询</string>
+    <string name="equip_search_mode">掉落查询</string>
+    <string name="tip_equip_search">请先选择装备</string>
     <string name="picked_equip">已选择：</string>
 
     <!--其它工具-->
@@ -171,11 +171,10 @@
     <string name="comic">漫画</string>
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
-    <string name="comic_intput_hint">输入跳转，如：382</string>
+    <string name="comic_input_hint">输入跳转，如：382</string>
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其他</string>
-    <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
     <string name="no_limit">无限制</string>
@@ -315,7 +314,6 @@
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
     <string name="title_dialog_clean_cache">清除缓存</string>
-    <string name="db_re_download">重新下载</string>
 
     <!--模拟抽卡-->
     <string name="limit_re">复刻限定</string>
@@ -350,7 +348,7 @@
     <string name="extra_equip_clan">公会战</string>
     <string name="extra_equip_flag">适用场景</string>
     <string name="extra_equip_category">类型</string>
-    <string name="extra_equip_poassive_skill">被动技能</string>
+    <string name="extra_equip_passive_skill">被动技能</string>
     <string name="extra_equip_default_value">初始</string>
     <string name="extra_equip_max_value">上限</string>
     <string name="tool_extra_equip">EX装备</string>
@@ -691,6 +689,7 @@
     <string name="skill_action_type_desc_60_1">自身每次攻击%s时%s</string>
     <string name="skill_action_type_desc_60_2">%s每次造成伤害时%s</string>
     <string name="skill_action_type_desc_60_3">%s每次造成暴击时%s</string>
+    <string name="skill_action_type_desc_60_4">%s每次攻击命中敌人时%s</string>
     <string name="skill_action_type_desc_61">以 %s 的概率使%s进入%s状态%s</string>
     <string name="skill_action_type_desc_62_0">%s的UB对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
     <string name="skill_action_type_desc_62_1">%s的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 %s%s</string>
@@ -715,7 +714,8 @@
     <string name="skill_action_type_desc_96_tp">每秒回复 %s TP</string>
     <string name="skill_action_type_desc_97">；受击时减少 [1] 层标记，TP回复 [%d]</string>
     <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍%s</string>
-    <string name="skill_action_type_desc_100">%s免疫无法行动异常状态 [%d] 次%s</string>
+    <string name="skill_action_type_desc_100">%s免疫 [无法行动] 异常状态%s%s</string>
+    <string name="skill_action_type_desc_100_count">&#160;[%d] 次</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
@@ -769,16 +769,8 @@
     <string name="minute">%d分</string>
 
     <!--请求-->
-    <string name="respon_error">未正常获取数据，请切换网络后重试~</string>
-    <string name="respon_cancel">查询取消~</string>
-
-    <!--网站类型-->
-    <string name="website_type_1">第三方网站</string>
-    <string name="website_type_2">wiki</string>
-    <string name="website_type_3">论坛</string>
-    <string name="website_type_4">官方网站</string>
-    <string name="website_type_5">第三方账号</string>
-    <string name="website_type_6">官方账号</string>
+    <string name="response_error">未正常获取数据，请切换网络后重试~</string>
+    <string name="response_cancel">查询取消~</string>
 
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>

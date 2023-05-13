@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.story
 
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
@@ -27,10 +27,20 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SubImage
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.ImageSaveHelper
+import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
@@ -48,10 +58,10 @@ val loadedPicMap = hashMapOf<String, Drawable?>()
 
 
 /**
- * 角色所有卡面/剧情故事图片
+ * 角色/活动剧情图片
  */
 @Composable
-fun AllCardList(
+fun StoryPicList(
     id: Int,
     allPicsType: AllPicsType,
     picsViewModel: AllPicsViewModel = hiltViewModel()
@@ -106,7 +116,7 @@ fun AllCardList(
         }
     ) {
         loadedPicMap[checkedPicUrl.value]?.let {
-            ImageSaveHelper(context).saveBitmap(
+            ImageDownloadHelper(context).saveBitmap(
                 bitmap = (it as BitmapDrawable).bitmap,
                 displayName = "${getFileName(checkedPicUrl.value)}.jpg"
             )
@@ -216,7 +226,7 @@ private fun CardGridList(
                 }
             ) {
                 //图片
-                SubImageCompose(
+                SubImage(
                     data = picUrl,
                     loading = loading,
                     contentScale = ContentScale.FillWidth

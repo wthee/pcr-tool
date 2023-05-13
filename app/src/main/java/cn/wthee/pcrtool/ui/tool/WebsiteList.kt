@@ -27,18 +27,18 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.CommonResponseBox
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.SelectTypeCompose
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -76,7 +76,7 @@ fun WebsiteList(
     //列表
     CommonResponseBox(responseData = responseData, fabContent = {
         //切换类型
-        SelectTypeCompose(
+        SelectTypeFab(
             modifier = Modifier.align(Alignment.BottomEnd),
             icon = MainIconType.FILTER,
             tabs = tabs,
@@ -88,7 +88,7 @@ fun WebsiteList(
         )
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.WEBSITE_BOOKMARK,
             text = stringResource(id = R.string.tool_website),
             modifier = Modifier
@@ -141,7 +141,7 @@ private fun WebsiteGroup(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainText(
-            text = getTitle(groupData.type),
+            text = groupData.typeName,
             modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
         )
         if (websiteList.isEmpty()) {
@@ -208,7 +208,7 @@ private fun WebsiteItem(data: WebsiteData) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //图标
-                IconCompose(
+                MainIcon(
                     data = data.icon, size = Dimen.smallIconSize
                 )
 
@@ -226,21 +226,21 @@ private fun WebsiteItem(data: WebsiteData) {
                 horizontalArrangement = Arrangement.End
             ) {
                 if (data.browserType == 0 || data.browserType == 1) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_PC,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)
                     )
                 }
                 if (data.browserType == 0 || data.browserType == 2) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_PHONE,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)
                     )
                 }
                 if (data.browserType == 3) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.BROWSER_APP,
                         size = Dimen.smallIconSize,
                         modifier = Modifier.padding(end = Dimen.mediumPadding)
@@ -252,22 +252,6 @@ private fun WebsiteItem(data: WebsiteData) {
 
 
 }
-
-/**
- * 获取分组标题
- */
-@Composable
-private fun getTitle(type: Int) = stringResource(
-    id = when (type) {
-        1 -> R.string.website_type_1
-        2 -> R.string.website_type_2
-        3 -> R.string.website_type_3
-        4 -> R.string.website_type_4
-        5 -> R.string.website_type_5
-        6 -> R.string.website_type_6
-        else -> R.string.other
-    }
-)
 
 
 @CombinedPreviews

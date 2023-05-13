@@ -4,11 +4,7 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -31,9 +27,13 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
-import cn.wthee.pcrtool.ui.common.CircularProgressCompose
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.navigation.NavGraph
+import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.navigation.NavViewModel
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
@@ -94,7 +94,7 @@ private fun Home(
 
     //首页使用bottomsheet时，关闭时主按钮初始
     LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (MainActivity.navController.currentDestination?.route == Navigation.HOME) {
+        if (MainActivity.navController.currentDestination?.route == NavRoute.HOME) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
     }
@@ -126,7 +126,7 @@ private fun Home(
 fun FabMain(modifier: Modifier = Modifier) {
     val icon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
-    FabCompose(
+    MainSmallFab(
         if (icon == MainIconType.MAIN) {
             MainIconType.SETTING
         } else {
@@ -210,7 +210,7 @@ private fun SettingDropMenu(actions: NavActions) {
                             actions.toSetting()
                         }
                     ) {
-                        IconCompose(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                        MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
                     }
                 },
                 onClick = {}

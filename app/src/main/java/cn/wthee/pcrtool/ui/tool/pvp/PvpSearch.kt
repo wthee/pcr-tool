@@ -33,7 +33,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -225,7 +225,7 @@ fun PvpSearchCompose(
                     )
             ) {
                 //悬浮窗
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.FLOAT
                 ) {
                     val homeIntent = Intent(Intent.ACTION_MAIN)
@@ -250,7 +250,7 @@ fun PvpSearchCompose(
                     }
                 }
                 //查询
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.PVP_SEARCH,
                     text = stringResource(id = R.string.pvp_search)
                 ) {
@@ -338,7 +338,7 @@ private fun PvpToSelectList(
                         modifier = Modifier.size(Dimen.iconSize),
                         contentAlignment = Alignment.Center
                     ) {
-                        IconCompose(
+                        MainIcon(
                             data = iconId,
                             size = Dimen.smallIconSize
                         )
@@ -376,7 +376,7 @@ private fun PvpToSelectList(
                 R.drawable.ic_position_0,
             )
             icons.forEachIndexed { index, it ->
-                IconCompose(
+                MainIcon(
                     data = it,
                     size = Dimen.fabIconSize,
                     modifier = Modifier.padding(Dimen.smallPadding)
@@ -414,7 +414,7 @@ fun PvpIconItem(
         modifier = Modifier.padding(Dimen.smallPadding)
     ) {
         //图标
-        IconCompose(
+        MainIcon(
             data = icon
         ) {
             val newList = arrayListOf<PvpCharacterData>()
@@ -478,7 +478,7 @@ fun PvpUnitIconLine(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
                     wrapSize = true
                 ) {

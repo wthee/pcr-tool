@@ -19,12 +19,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
+import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.IconTextButton
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.mainSP
@@ -157,7 +157,7 @@ private fun MenuItem(
             .padding(Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconCompose(data = toolMenuData.iconType, size = Dimen.menuIconSize)
+        MainIcon(data = toolMenuData.iconType, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = toolMenuData.titleId),
             modifier = Modifier.padding(top = Dimen.mediumPadding),

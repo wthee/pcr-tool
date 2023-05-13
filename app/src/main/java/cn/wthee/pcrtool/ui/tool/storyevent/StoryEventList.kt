@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
@@ -79,7 +79,7 @@ fun StoryEventList(
         DateRangePickerCompose(dateRange = dateRange)
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(
@@ -192,14 +192,14 @@ fun StoryEventItem(
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
                 if (inProgress || isSub || !hasTeaser(event.eventId) || previewEvent) {
-                    SubImageCompose(
+                    SubImage(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
                         contentScale = ContentScale.FillBounds,
                         ratio = RATIO_BANNER
                     )
                 } else {
-                    ImageCompose(
+                    MainImage(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
                         ratio = RATIO_TEASER,
@@ -219,7 +219,7 @@ fun StoryEventItem(
                     Row {
                         //sp boss 图标，处理id 311403 -> 311400
                         if (!isSub && event.bossUnitId != 0) {
-                            IconCompose(
+                            MainIcon(
                                 data = ImageRequestHelper.getInstance()
                                     .getUrl(
                                         ImageRequestHelper.ICON_UNIT,
@@ -234,7 +234,7 @@ fun StoryEventItem(
                         //活动掉落角色图标
                         event.getUnitIdList().forEach { itemId ->
                             val unitId = itemId % 10000 * 100 + 1
-                            IconCompose(
+                            MainIcon(
                                 data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
                                 modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
                             ) {

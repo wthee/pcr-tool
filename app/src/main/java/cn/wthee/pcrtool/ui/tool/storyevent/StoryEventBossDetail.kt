@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.SelectTypeCompose
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 
 
@@ -48,7 +48,7 @@ fun StoryEventBossDetail(
         for (i in 1..3) {
             tabs.add(stringResource(id = R.string.mode, i))
         }
-        SelectTypeCompose(
+        SelectTypeFab(
             icon = MainIconType.CLAN_SECTION,
             tabs = tabs,
             type = modeIndex,

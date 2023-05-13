@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.CenterTipText
+import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.tool.NewsItem

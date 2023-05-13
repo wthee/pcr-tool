@@ -19,9 +19,9 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.tool.quest.AreaItem
@@ -98,7 +98,7 @@ fun EquipMaterialDetail(
 
 
         //装备素材收藏
-        FabCompose(
+        MainSmallFab(
             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             modifier = Modifier
                 .padding(

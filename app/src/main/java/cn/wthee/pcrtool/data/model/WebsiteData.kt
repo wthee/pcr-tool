@@ -6,6 +6,7 @@ package cn.wthee.pcrtool.data.model
  */
 data class WebsiteGroupData(
     val type: Int,
+    val typeName: String,
     var websiteList: List<WebsiteData>
 )
 

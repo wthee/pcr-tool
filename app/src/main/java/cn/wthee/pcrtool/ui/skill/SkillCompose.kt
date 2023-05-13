@@ -31,7 +31,7 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
@@ -238,7 +238,7 @@ fun SkillItem(
 
         Row {
             //技能图标
-            IconCompose(data = url)
+            MainIcon(data = url)
             Column(
                 modifier = Modifier
                     .padding(horizontal = Dimen.mediumPadding)

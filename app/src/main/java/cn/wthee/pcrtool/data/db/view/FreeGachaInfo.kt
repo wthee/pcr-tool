@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.R

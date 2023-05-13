@@ -35,7 +35,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.WEIGHT_DIALOG
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -123,7 +123,7 @@ fun ComicList(
         }
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.COMIC,
             text = count.toString(),
             modifier = Modifier
@@ -179,7 +179,7 @@ private fun ComicItem(data: ComicData) {
             )
         }
 
-        ImageCompose(
+        MainImage(
             data = data.url,
             ratio = RATIO_COMIC,
             modifier = Modifier.fillMaxWidth(),
@@ -266,7 +266,7 @@ private fun ComicIndexChange(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(start = Dimen.largePadding)
                 ) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.COMIC_NAV,
                         size = Dimen.fabIconSize
                     )
@@ -315,7 +315,7 @@ private fun ComicTocList(
             value = input.value,
             placeholder = {
                 MainContentText(
-                    text = stringResource(id = R.string.comic_intput_hint),
+                    text = stringResource(id = R.string.comic_input_hint),
                     color = MaterialTheme.colorScheme.outline
                 )
             },
@@ -335,7 +335,7 @@ private fun ComicTocList(
             },
             trailingIcon = {
                 if (isImeVisible) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.OK, size = Dimen.fabIconSize
                     ) {
                         keyboardController?.hide()
@@ -388,10 +388,8 @@ private fun ComicTocList(
                             VibrateUtil(context).single()
                             MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                             MainActivity.navViewModel.fabCloseClick.postValue(true)
-                            if (pagerState.currentPage != index) {
-                                tocSelectedIndex.value = index
-                                changeListener()
-                            }
+                            tocSelectedIndex.value = index
+                            changeListener()
                         }
                 }
                 SelectText(

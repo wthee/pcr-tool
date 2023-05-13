@@ -19,10 +19,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.common.CommonResponseBox
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.MainText
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.intArrayList
@@ -49,7 +49,7 @@ fun RandomEquipArea(
         responseData = areaList,
         fabContent = {
             //回到顶部
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.RANDOM_AREA,
                 text = stringResource(id = R.string.random_area),
                 modifier = Modifier

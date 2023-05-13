@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
@@ -224,7 +224,7 @@ private fun PvpResultItem(
             Spacer(modifier = Modifier.weight(1f))
             //收藏
             if (!placeholder) {
-                IconCompose(
+                MainIcon(
                     data = if (liked) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                     size = Dimen.fabIconSize
                 ) {

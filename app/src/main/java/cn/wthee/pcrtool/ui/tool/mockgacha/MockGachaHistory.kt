@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
@@ -156,7 +156,7 @@ private fun MockGachaHistoryItem(
                 gachaData.pickUpIds.intArrayList.forEach { unitId ->
                     idList.add(unitId + 30)
                 }
-                GridIconListCompose(
+                GridIconList(
                     icons = idList
                 )
                 Row(

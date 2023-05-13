@@ -17,10 +17,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillLoop
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainTitleText
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -144,7 +144,7 @@ private fun SkillLoopIconList(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconCompose(data = url)
+                MainIcon(data = url)
                 Text(
                     text = type,
                     color = getSkillColor(type = type),

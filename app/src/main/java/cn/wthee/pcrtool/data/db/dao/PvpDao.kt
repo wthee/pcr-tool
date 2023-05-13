@@ -18,15 +18,6 @@ interface PvpDao {
     suspend fun getAll(region: Int): List<PvpFavoriteData>
 
     /**
-     * 获取单个收藏信息
-     * @param atks 进攻队伍成员编码
-     * @param defs 防守队伍成员编码
-     * @param region 区服版本
-     */
-    @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
-    suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?
-
-    /**
      * 获取收藏列表
      * @param defs 防守队伍成员编码
      * @param region 区服版本

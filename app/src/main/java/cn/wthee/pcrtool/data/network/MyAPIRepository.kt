@@ -306,7 +306,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             //接口参数
             val json = JsonObject()
             json.addProperty("id", id)
-            json.addProperty("region", MainActivity.regionType.value)
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 

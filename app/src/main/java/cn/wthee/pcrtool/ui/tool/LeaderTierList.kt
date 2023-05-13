@@ -1,11 +1,18 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -25,10 +33,33 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.character.CharacterTag
+import cn.wthee.pcrtool.ui.character.getAtkColor
+import cn.wthee.pcrtool.ui.character.getAtkText
+import cn.wthee.pcrtool.ui.character.getLimitTypeColor
+import cn.wthee.pcrtool.ui.character.getLimitTypeText
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonGroupTitle
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.PositionIcon
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.fixedLeaderDate
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -97,7 +128,7 @@ fun LeaderTier(
             responseData = leaderData,
             fabContent = { data ->
                 //切换类型
-                SelectTypeCompose(
+                SelectTypeFab(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     icon = MainIconType.CHANGE_FILTER_TYPE,
                     tabs = tabs,
@@ -112,7 +143,7 @@ fun LeaderTier(
                 }
 
                 //回到顶部
-                FabCompose(
+                MainSmallFab(
                     iconType = MainIconType.LEADER_TIER,
                     text = data.leader.size.toString(),
                     modifier = Modifier
@@ -138,7 +169,7 @@ fun LeaderTier(
                 }
                 if (group == null) {
                     val descInfo = data.tierSummary.find {
-                        it.tier == leaderItem.tier.toString()
+                        it.tier == leaderItem.tier
                     }
                     group =
                         LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
@@ -203,7 +234,6 @@ private fun LeaderGroup(
                     start = Dimen.commonItemPadding,
                     end = Dimen.commonItemPadding
                 )
-                .animateContentSize(defaultSpring())
         ) {
             groupData.leaderList.forEach { leader ->
                 LeaderItem(leader, toCharacterDetail, characterViewModel)
@@ -249,7 +279,7 @@ private fun LeaderItem(
             .fillMaxWidth()
     ) {
         Box {
-            IconCompose(
+            MainIcon(
                 data = if (hasUnitId) {
                     ImageRequestHelper.getInstance()
                         .getMaxIconUrl(leader.unitId!!)
@@ -293,7 +323,7 @@ private fun LeaderItem(
                     )
                 ) {
                     //名称
-                    MainContentText(
+                    Subtitle2(
                         text = if (hasUnitId && !unknown) {
                             basicInfo!!.getNameF()
                         } else {
@@ -305,25 +335,31 @@ private fun LeaderItem(
                     )
 
                 }
-                Row(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
+                Row(
+                    modifier = Modifier.padding(vertical = Dimen.mediumPadding)
+                ) {
                     if (!unknown) {
                         //获取方式
                         CharacterTag(
                             modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                             text = getLimitTypeText(limitType = basicInfo!!.limitType),
                             backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType),
+                            style = MaterialTheme.typography.bodySmall
                         )
                         //攻击
                         CharacterTag(
                             text = getAtkText(atkType = basicInfo.atkType),
                             backgroundColor = getAtkColor(atkType = basicInfo.atkType),
+                            style = MaterialTheme.typography.bodySmall
                         )
                     } else {
                         //提示
-                        CaptionText(
-                            modifier = Modifier.padding(start = Dimen.mediumPadding),
+                        CharacterTag(
                             text = tipText,
-                            color = colorGray
+                            backgroundColor = Color.Transparent,
+                            textColor = colorGray,
+                            fontWeight = FontWeight.Light,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }

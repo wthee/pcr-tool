@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -37,8 +37,11 @@ const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
 
 
+/**
+ * 图片加载
+ */
 @Composable
-fun ImageCompose(
+fun MainImage(
     modifier: Modifier = Modifier,
     data: String,
     ratio: Float,
@@ -93,7 +96,7 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
         PositionType.UNKNOWN -> R.drawable.unknown_item
     }
 
-    IconCompose(
+    MainIcon(
         data = positionIconId,
         size = size,
         modifier = modifier
@@ -106,7 +109,7 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
  * @param colorFilter 其他类型图标中适用
  */
 @Composable
-fun IconCompose(
+fun MainIcon(
     modifier: Modifier = Modifier,
     data: Any,
     size: Dp = Dimen.iconSize,
@@ -190,7 +193,7 @@ fun IconCompose(
  * @param loading 保存原图时使用，等原图缓存结束
  */
 @Composable
-fun SubImageCompose(
+fun SubImage(
     modifier: Modifier = Modifier,
     data: Any,
     contentScale: ContentScale = ContentScale.Fit,

@@ -21,8 +21,6 @@ class ComicViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
-    private val pageSize = 10
-
     /**
      * 推特数据
      */

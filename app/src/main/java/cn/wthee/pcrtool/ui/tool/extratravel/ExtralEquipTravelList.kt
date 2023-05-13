@@ -1,10 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -20,15 +16,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.common.CenterTipText
-import cn.wthee.pcrtool.ui.common.CommonGroupTitle
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.CommonTitleContentText
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainCard
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.common.VerticalGrid
-import cn.wthee.pcrtool.ui.common.getItemWidth
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -145,7 +133,7 @@ fun TravelQuestHeader(
             .padding(vertical = Dimen.mediumPadding)
     ) {
         //图标
-        IconCompose(
+        MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ICON_EXTRA_EQUIPMENT_TRAVEL_MAP, questData.travelQuestId),
         )

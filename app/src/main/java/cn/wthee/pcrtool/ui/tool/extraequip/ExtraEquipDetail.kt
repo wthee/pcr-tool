@@ -33,14 +33,14 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
-import cn.wthee.pcrtool.ui.common.AttrCompare
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.GridIconListCompose
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.MainText
-import cn.wthee.pcrtool.ui.common.Subtitle1
-import cn.wthee.pcrtool.ui.common.Subtitle2
+import cn.wthee.pcrtool.ui.components.AttrCompare
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.GridIconList
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -106,21 +106,21 @@ fun ExtraEquipDetail(
             horizontalArrangement = Arrangement.End
         ) {
             //装备收藏
-            FabCompose(
+            MainSmallFab(
                 iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             ) {
                 FilterExtraEquipment.addOrRemove(equipId)
                 loved.value = !loved.value
             }
             //关联角色
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.CHARACTER,
                 text = unitIds.size.toString()
             ) {
                 toExtraEquipUnit(extraEquipmentData.category)
             }
             //掉落信息
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.EXTRA_EQUIP_DROP
             ) {
                 toExtraEquipDrop(extraEquipmentData.equipmentId)
@@ -151,7 +151,7 @@ private fun ExtraEquipBasicInfo(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconCompose(
+        MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ICON_EXTRA_EQUIPMENT_CATEGORY, extraEquipmentData.category),
             size = Dimen.smallIconSize,
@@ -168,7 +168,7 @@ private fun ExtraEquipBasicInfo(
             .padding(Dimen.largePadding)
     ) {
         //图标
-        IconCompose(
+        MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, extraEquipmentData.equipmentId)
         )
@@ -227,7 +227,7 @@ private fun ExtraEquipSkill(
         ) {
             //技能信息标题
             MainText(
-                text = stringResource(R.string.extra_equip_poassive_skill),
+                text = stringResource(R.string.extra_equip_passive_skill),
                 modifier = Modifier
                     .padding(top = Dimen.largePadding)
             )
@@ -275,7 +275,7 @@ fun ExtraEquipUnitList(
 
         //角色图标
         item {
-            GridIconListCompose(unitIds, isSubLayout = false) {}
+            GridIconList(unitIds, isSubLayout = false) {}
         }
 
         item {

@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.FabMain
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -42,7 +42,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
                 //最大/小化
-                FabCompose(
+                MainSmallFab(
                     iconType = if (min) {
                         R.drawable.ic_logo_large
                     } else {
@@ -53,7 +53,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 }
                 //退出
                 if (!min) {
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.FLOAT_CLOSE
                     ) {
                         navViewModel.floatServiceRun.postValue(false)
@@ -61,7 +61,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 }
                 //查询
                 if (!min && !showResult) {
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.PVP_SEARCH
                     ) {
                         try {

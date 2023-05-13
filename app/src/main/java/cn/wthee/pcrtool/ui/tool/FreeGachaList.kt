@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -60,7 +60,7 @@ fun FreeGachaList(
             }
         }
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             iconType = MainIconType.FREE_GACHA,
             text = stringResource(id = R.string.tool_free_gacha),
             modifier = Modifier

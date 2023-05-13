@@ -18,9 +18,9 @@ import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -324,8 +324,8 @@ private fun CalendarEventOperation(
                             birthdayList.forEach {
                                 allEvents.add(
                                     SystemCalendarEventData(
-                                        it.getStartTime(),
-                                        it.getEndTime(),
+                                        it.startTime,
+                                        it.endTime,
                                         it.getDesc()
                                     )
                                 )
@@ -349,7 +349,7 @@ private fun CalendarEventOperation(
                     .padding(Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconCompose(data = MainIconType.ADD_CALENDAR, size = Dimen.fabIconSize)
+                MainIcon(data = MainIconType.ADD_CALENDAR, size = Dimen.fabIconSize)
                 MainText(
                     text = stringResource(R.string.add_to_calendar),
                     modifier = Modifier.padding(horizontal = Dimen.smallPadding)
@@ -422,7 +422,7 @@ private fun CalendarEventOperation(
                         var birthdayText = ""
                         birthdayList.forEach {
                             val date = it
-                                .getStartTime()
+                                .startTime
                                 .substring(0, 10)
                             birthdayText += "• $date\n${it.getDesc()}"
 
@@ -454,7 +454,7 @@ private fun CalendarEventOperation(
                     .padding(Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconCompose(data = MainIconType.COPY, size = Dimen.fabIconSize)
+                MainIcon(data = MainIconType.COPY, size = Dimen.fabIconSize)
                 MainText(
                     text = stringResource(R.string.copy_event),
                     modifier = Modifier.padding(horizontal = Dimen.smallPadding)

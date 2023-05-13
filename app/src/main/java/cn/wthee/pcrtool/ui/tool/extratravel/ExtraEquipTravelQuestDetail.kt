@@ -15,11 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
-import cn.wthee.pcrtool.ui.common.CommonGroupTitle
-import cn.wthee.pcrtool.ui.common.CommonSpacer
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.SelectText
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -160,7 +156,7 @@ private fun ExtraEquipRewardIconGrid(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance()
                         .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equipId),
                     onClick = if (toExtraEquipDetail != null) {

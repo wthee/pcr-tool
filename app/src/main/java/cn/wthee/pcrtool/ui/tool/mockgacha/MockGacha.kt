@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
@@ -115,7 +115,7 @@ fun MockGacha(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier.padding(top = Dimen.smallPadding)
                             ) {
-                                IconCompose(
+                                MainIcon(
                                     data = ImageRequestHelper.getInstance()
                                         .getUnitIconUrl(gachaUnitInfo.unitId, 3),
                                     modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
@@ -191,7 +191,7 @@ fun MockGacha(
 
 
             val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.MOCK_GACHA_PAY,
                 text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
             ) {
@@ -206,7 +206,7 @@ fun MockGacha(
                         //自选单up，至少选择两名
                         if (mockGachaType.value == MockGachaType.PICK_UP_SINGLE.type && pickUpList.size < 2) {
                             ToastUtil.short(tipSingleError)
-                            return@FabCompose
+                            return@MainSmallFab
                         }
                         navViewModel.showMockGachaResult.postValue(true)
                         //创建卡池，若存在相同卡池，则不重新创建
@@ -237,7 +237,7 @@ fun MockGacha(
         }
         //卡池类型选择
         if (!showResult) {
-            SelectTypeCompose(
+            SelectTypeFab(
                 icon = MainIconType.CHANGE_FILTER_TYPE,
                 tabs = tabs,
                 type = mockGachaType,
@@ -251,7 +251,7 @@ fun MockGacha(
                 navViewModel.mockGachaType.postValue(MockGachaType.getByValue(mockGachaType.value))
             }
         } else {
-            FabCompose(
+            MainSmallFab(
                 iconType = MainIconType.RESET,
                 text = stringResource(id = R.string.reset_record),
                 modifier = Modifier
@@ -342,7 +342,7 @@ private fun MockGachaUnitIconListCompose(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance()
                         .getUrl(ImageRequestHelper.ICON_UNIT, iconId)
                 ) {

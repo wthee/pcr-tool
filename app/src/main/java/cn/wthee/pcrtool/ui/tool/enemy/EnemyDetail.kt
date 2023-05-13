@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -87,7 +87,7 @@ fun EnemyAllInfo(
     ) {
         //图标，仅剧情活动boss显示
         if (enemyData.enemyId.toString()[0] == '6') {
-            IconCompose(
+            MainIcon(
                 data = ImageRequestHelper.getInstance()
                     .getUrl(
                         ImageRequestHelper.ICON_UNIT,

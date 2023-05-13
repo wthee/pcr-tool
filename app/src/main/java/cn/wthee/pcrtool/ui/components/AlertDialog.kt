@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
@@ -44,7 +44,7 @@ fun MainAlertDialog(
 
         AlertDialog(
             icon = {
-                IconCompose(data = icon, wrapSize = true)
+                MainIcon(data = icon, wrapSize = true)
             },
             title = {
                 Text(text = title)
@@ -220,7 +220,7 @@ fun DateRangePickerCompose(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(start = Dimen.largePadding)
                 ) {
-                    IconCompose(
+                    MainIcon(
                         data = if (dateRange.value.hasFilter()) {
                             MainIconType.DATE_RANGE_PICKED
                         } else {
@@ -357,7 +357,7 @@ fun RankRangePickerCompose(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(start = Dimen.largePadding)
                 ) {
-                    IconCompose(
+                    MainIcon(
                         data = MainIconType.RANK_SELECT,
                         size = Dimen.fabIconSize
                     )

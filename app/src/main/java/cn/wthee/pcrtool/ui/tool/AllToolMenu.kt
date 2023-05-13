@@ -26,9 +26,9 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
+import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.home.module.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.intArrayList
@@ -169,7 +169,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         }
 
         //编辑
-        FabCompose(
+        MainSmallFab(
             iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
             text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
             modifier = Modifier
@@ -251,7 +251,7 @@ private fun MenuItem(
                 .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconCompose(
+            MainIcon(
                 modifier = Modifier.padding(start = Dimen.mediumPadding),
                 data = toolMenuData.iconType,
                 size = Dimen.mediumIconSize,

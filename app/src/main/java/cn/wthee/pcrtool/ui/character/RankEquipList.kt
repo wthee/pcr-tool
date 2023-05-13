@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -84,7 +84,7 @@ fun RankEquipListItem(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            IconCompose(
+                            MainIcon(
                                 modifier = Modifier.padding(Dimen.smallPadding),
                                 data = ImageRequestHelper.getInstance().getEquipPic(it)
                             )

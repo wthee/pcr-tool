@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui
+package cn.wthee.pcrtool.navigation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -92,7 +92,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val floatServiceRun = MutableLiveData(true)
 
     /**
-     * 悬浮闯最小化
+     * 悬浮窗最小化
      */
     val floatSearchMin = MutableLiveData(false)
 

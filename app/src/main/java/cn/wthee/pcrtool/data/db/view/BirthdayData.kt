@@ -17,7 +17,7 @@ data class BirthdayData(
     @ColumnInfo(name = "unit_names") val unitNames: String = "",
 ) {
 
-    private fun getDate(): String {
+    fun getDate(): String {
         val c = Calendar.getInstance()
         c.time = Date(System.currentTimeMillis())
         c.timeZone = TimeZone.getTimeZone("GMT+8:00")
@@ -33,10 +33,6 @@ data class BirthdayData(
 
         }
     }
-
-    fun getStartTime() = getDate() + " 00:00:00"
-
-    fun getEndTime() = getDate() + " 23:59:59"
 
     /**
      * 按角色名重新升序排序
@@ -63,3 +59,8 @@ data class BirthdayData(
      */
     fun getDesc() = getString(R.string.character_birthday, unitNames.replace("-", "、"))
 }
+
+val BirthdayData.startTime: String
+    get() = this.getDate() + " 00:00:00"
+val BirthdayData.endTime: String
+    get() = this.getDate() + " 23:59:59"

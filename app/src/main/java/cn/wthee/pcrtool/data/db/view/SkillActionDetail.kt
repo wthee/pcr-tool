@@ -1067,15 +1067,15 @@ data class SkillActionDetail(
                     UNKNOWN
                 }
             }
-            // 34：伤害递增
-            SkillActionType.ACCUMULATIVE_DAMAGE -> {
+            // 34、102：伤害递增
+            SkillActionType.ACCUMULATIVE_DAMAGE, SkillActionType.ACCUMULATIVE_DAMAGE_v2 -> {
                 val value = getValueText(2, actionValue2, actionValue3)
                 val limit =
                     getString(R.string.skill_action_limit_int, actionValue4.toInt())
                 getString(R.string.skill_action_type_desc_34, value, limit)
             }
             // 35：特殊标记
-            SkillActionType.SEAL -> {
+            SkillActionType.SEAL, SkillActionType.SEAL_v2 -> {
                 val count = abs(actionValue4.toInt())
                 if (actionValue4.toInt() > 0) {
                     val time = getTimeText(3, actionValue3, hideIndex = true)
@@ -1315,6 +1315,8 @@ data class SkillActionDetail(
                     getString(R.string.skill_action_type_desc_60_2, target, desc)
                 } else if (actionDetail1 == 4 && actionDetail3 == 1) {
                     getString(R.string.skill_action_type_desc_60_3, target, desc)
+                } else if (actionDetail1 == 5 && actionDetail3 == 1) {
+                    getString(R.string.skill_action_type_desc_60_4, target, desc)
                 } else {
                     UNKNOWN
                 }
@@ -1526,10 +1528,15 @@ data class SkillActionDetail(
             // 100：免疫无法行动的异常状态
             SkillActionType.IGNORE_SPEED_DOWN -> {
                 val time = getTimeText(3, actionValue3)
+                val limit = if (actionValue1.toInt() == -1) {
+                    getString(R.string.none)
+                } else {
+                    getString(R.string.skill_action_type_desc_100_count, actionValue1.toInt())
+                }
                 getString(
                     R.string.skill_action_type_desc_100,
                     getTarget(),
-                    actionValue1.toInt(),
+                    limit,
                     time
                 )
             }

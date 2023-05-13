@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
-import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.components.DateRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

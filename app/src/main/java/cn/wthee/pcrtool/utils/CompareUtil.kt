@@ -4,51 +4,49 @@ import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.endTime
+import cn.wthee.pcrtool.data.db.view.startTime
 
 
 /**
- * 排序活动
+ * 日常相关排序
  */
-fun compareEvent(today: String? = null) = Comparator<CalendarEvent> { o1, o2 ->
-    val sd1 = o1.startTime.formatTime
-    val ed1 = o1.endTime.formatTime
-    val sd2 = o2.startTime.formatTime
-    val ed2 = o2.endTime.formatTime
+fun <T> compareAllTypeEvent(today: String? = null) = Comparator<T> { o1, o2 ->
+    var sd1 = ""
+    var ed1 = ""
+    var sd2 = ""
+    var ed2 = ""
+
+    when (o1) {
+        is CalendarEvent -> {
+            sd1 = o1.startTime.formatTime
+            ed1 = o1.endTime.formatTime
+            sd2 = (o2 as CalendarEvent).startTime.formatTime
+            ed2 = (o2 as CalendarEvent).endTime.formatTime
+        }
+
+        is GachaInfo -> {
+            sd1 = o1.startTime.formatTime
+            ed1 = o1.endTime.formatTime
+            sd2 = (o2 as GachaInfo).startTime.formatTime
+            ed2 = (o2 as GachaInfo).endTime.formatTime
+        }
+
+        is EventData -> {
+            sd1 = o1.startTime.formatTime
+            ed1 = o1.endTime.formatTime
+            sd2 = (o2 as EventData).startTime.formatTime
+            ed2 = (o2 as EventData).endTime.formatTime
+        }
+
+        is BirthdayData -> {
+            sd2 = o1.startTime.formatTime
+            ed2 = o1.endTime.formatTime
+            sd1 = (o2 as BirthdayData).startTime.formatTime
+            ed1 = (o2 as BirthdayData).endTime.formatTime
+        }
+    }
     compareDate(today, sd1, ed1, sd2, ed2)
-}
-
-/**
- * 排序卡池
- */
-fun compareGacha(today: String? = null) = Comparator<GachaInfo> { o1, o2 ->
-    val sd1 = o1.startTime.formatTime
-    val ed1 = o1.endTime.formatTime
-    val sd2 = o2.startTime.formatTime
-    val ed2 = o2.endTime.formatTime
-    compareDate(today, sd1, ed1, sd2, ed2)
-}
-
-/**
- * 排序剧情活动
- */
-fun compareStoryEvent(today: String? = null) = Comparator<EventData> { o1, o2 ->
-    val sd1 = o1.startTime.formatTime
-    val ed1 = o1.endTime.formatTime
-    val sd2 = o2.startTime.formatTime
-    val ed2 = o2.endTime.formatTime
-    compareDate(today, sd1, ed1, sd2, ed2)
-}
-
-
-/**
- * 排序生日日程，正序
- */
-fun compareBirthDay(today: String? = null) = Comparator<BirthdayData> { o1, o2 ->
-    val sd1 = o1.getStartTime().formatTime
-    val ed1 = o1.getEndTime().formatTime
-    val sd2 = o2.getStartTime().formatTime
-    val ed2 = o2.getEndTime().formatTime
-    compareDate(today, sd2, ed2, sd1, ed1)
 }
 
 

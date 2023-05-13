@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
-import cn.wthee.pcrtool.ui.common.DateRange
+import cn.wthee.pcrtool.ui.components.DateRange
 import retrofit2.HttpException
 import java.io.IOException
 

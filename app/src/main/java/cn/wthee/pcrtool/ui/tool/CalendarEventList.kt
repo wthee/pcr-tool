@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
@@ -58,7 +58,7 @@ fun CalendarEventList(
         DateRangePickerCompose(dateRange = dateRange)
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(

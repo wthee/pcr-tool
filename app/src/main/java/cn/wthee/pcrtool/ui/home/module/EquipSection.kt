@@ -11,9 +11,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -68,7 +68,7 @@ fun EquipSection(
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        IconCompose(
+                        MainIcon(
                             data = ImageRequestHelper.getInstance()
                                 .getEquipPic(it.equipmentId)
                         ) {

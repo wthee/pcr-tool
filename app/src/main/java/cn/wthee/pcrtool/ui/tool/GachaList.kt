@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
@@ -82,7 +82,7 @@ fun GachaList(
         DateRangePickerCompose(dateRange = dateRange)
 
         //回到顶部
-        FabCompose(
+        MainSmallFab(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(
@@ -169,7 +169,7 @@ fun GachaItem(
                         textAlign = TextAlign.Start
                     )
                 } else {
-                    GridIconListCompose(
+                    GridIconList(
                         icons = icons,
                         onClickItem = toCharacterDetail
                     )

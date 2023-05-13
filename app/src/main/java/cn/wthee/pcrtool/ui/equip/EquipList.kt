@@ -3,7 +3,14 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -52,9 +59,42 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.ChipGroup
+import cn.wthee.pcrtool.ui.components.CommonGroupTitle
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.clickClose
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.defaultTween
+import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.getString
+import cn.wthee.pcrtool.utils.listJoinStr
+import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.min
@@ -168,9 +208,9 @@ fun EquipList(
                     )
                 } else {
                     //切换至选择模式
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.SEARCH,
-                        text = stringResource(id = R.string.equip_serach_mode),
+                        text = stringResource(id = R.string.equip_search_mode),
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(
@@ -190,7 +230,7 @@ fun EquipList(
                     horizontalArrangement = Arrangement.End
                 ) {
                     //回到顶部
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.TOP
                     ) {
                         coroutineScope.launch {
@@ -199,7 +239,7 @@ fun EquipList(
                     }
                     //重置筛选
                     if (filter.value != null && filter.value!!.isFilter()) {
-                        FabCompose(
+                        MainSmallFab(
                             iconType = MainIconType.RESET
                         ) {
                             coroutineScope.launch {
@@ -210,7 +250,7 @@ fun EquipList(
                     }
                     val count = equips.size
                     // 数量显示&筛选按钮
-                    FabCompose(
+                    MainSmallFab(
                         iconType = MainIconType.EQUIP,
                         text = "$count"
                     ) {
@@ -312,7 +352,7 @@ private fun SearchEquip(
                                         contentAlignment = Alignment.Center,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        IconCompose(
+                                        MainIcon(
                                             data = ImageRequestHelper.getInstance().getEquipPic(it),
                                         ) {
                                             selectEquip(searchEquipIdList, it)
@@ -326,7 +366,7 @@ private fun SearchEquip(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(start = Dimen.largePadding)
                         ) {
-                            IconCompose(
+                            MainIcon(
                                 data = MainIconType.BOX,
                                 size = Dimen.fabIconSize
                             )
@@ -346,10 +386,10 @@ private fun SearchEquip(
             }
 
             //搜索
-            val tipSearch = stringResource(id = R.string.tip_equip_serach)
-            FabCompose(
+            val tipSearch = stringResource(id = R.string.tip_equip_search)
+            MainSmallFab(
                 iconType = MainIconType.SEARCH,
-                text = stringResource(id = R.string.equip_serach)
+                text = stringResource(id = R.string.equip_search)
             ) {
                 if (searchEquipIdList.isNotEmpty()) {
                     toSearchEquipQuest(searchEquipIdList.listJoinStr)
@@ -434,7 +474,7 @@ private fun EquipItem(
     val equipIcon: @Composable () -> Unit by remember {
         mutableStateOf(
             {
-                IconCompose(
+                MainIcon(
                     data = ImageRequestHelper.getInstance().getEquipPic(equipState.equipmentId)
                 )
             }
@@ -599,13 +639,13 @@ private fun FilterEquipSheet(
             onValueChange = { textState.value = it.deleteSpace },
             textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.EQUIP,
                     size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
-                IconCompose(
+                MainIcon(
                     data = MainIconType.SEARCH,
                     size = Dimen.fabIconSize
                 ) {
