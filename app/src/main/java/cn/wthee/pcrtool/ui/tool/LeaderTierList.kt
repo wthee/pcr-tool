@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -43,18 +44,17 @@ import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.PositionIcon
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -234,7 +234,6 @@ private fun LeaderGroup(
                     start = Dimen.commonItemPadding,
                     end = Dimen.commonItemPadding
                 )
-                .animateContentSize(defaultSpring())
         ) {
             groupData.leaderList.forEach { leader ->
                 LeaderItem(leader, toCharacterDetail, characterViewModel)
@@ -324,7 +323,7 @@ private fun LeaderItem(
                     )
                 ) {
                     //名称
-                    MainContentText(
+                    Subtitle2(
                         text = if (hasUnitId && !unknown) {
                             basicInfo!!.getNameF()
                         } else {
@@ -336,25 +335,31 @@ private fun LeaderItem(
                     )
 
                 }
-                Row(modifier = Modifier.padding(vertical = Dimen.mediumPadding)) {
+                Row(
+                    modifier = Modifier.padding(vertical = Dimen.mediumPadding)
+                ) {
                     if (!unknown) {
                         //获取方式
                         CharacterTag(
                             modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                             text = getLimitTypeText(limitType = basicInfo!!.limitType),
                             backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType),
+                            style = MaterialTheme.typography.bodySmall
                         )
                         //攻击
                         CharacterTag(
                             text = getAtkText(atkType = basicInfo.atkType),
                             backgroundColor = getAtkColor(atkType = basicInfo.atkType),
+                            style = MaterialTheme.typography.bodySmall
                         )
                     } else {
                         //提示
-                        CaptionText(
-                            modifier = Modifier.padding(start = Dimen.mediumPadding),
+                        CharacterTag(
                             text = tipText,
-                            color = colorGray
+                            backgroundColor = Color.Transparent,
+                            textColor = colorGray,
+                            fontWeight = FontWeight.Light,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }

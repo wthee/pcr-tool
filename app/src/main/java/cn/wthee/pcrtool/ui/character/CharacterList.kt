@@ -2,7 +2,16 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,7 +21,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -36,6 +49,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -54,9 +68,45 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.ChipGroup
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.PositionIcon
+import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.getPositionColor
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
+import cn.wthee.pcrtool.ui.theme.TrapezoidShape
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
+import cn.wthee.pcrtool.ui.theme.colorBlack
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.fixedStr
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
@@ -483,7 +533,9 @@ fun CharacterTag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = colorWhite
+    textColor: Color = colorWhite,
+    fontWeight: FontWeight = FontWeight.ExtraBold,
+    style: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Box(
         modifier = modifier
@@ -495,8 +547,8 @@ fun CharacterTag(
         Text(
             text = text,
             color = textColor,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.ExtraBold,
+            style = style,
+            fontWeight = fontWeight,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
