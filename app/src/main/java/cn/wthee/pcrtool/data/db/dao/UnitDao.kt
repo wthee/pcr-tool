@@ -599,4 +599,20 @@ interface UnitDao {
         """
     )
     suspend fun getHomePageComments(unitId: Int): List<CharacterHomePageComment>
+
+    /**
+     * 获取普通攻击时间
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            normal_atk_cast_time 
+        FROM
+            unit_data 
+        WHERE
+            unit_id = :unitId
+    """
+    )
+    suspend fun getAtkCastTime(unitId: Int): Double
 }

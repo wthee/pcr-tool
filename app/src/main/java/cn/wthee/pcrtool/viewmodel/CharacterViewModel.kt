@@ -155,5 +155,16 @@ class CharacterViewModel @Inject constructor(
             arrayListOf()
         }
 
+    /**
+     * 获取普通攻击时间
+     */
+    fun getAtkCastTime(unitId: Int) = flow {
+        try {
+            emit(unitRepository.getAtkCastTime(unitId))
+        } catch (_: Exception) {
+
+        }
+    }
+
 }
 

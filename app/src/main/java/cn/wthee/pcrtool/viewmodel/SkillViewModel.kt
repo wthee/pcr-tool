@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.db.view.SkillBasicData
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
@@ -173,7 +174,7 @@ class SkillViewModel @Inject constructor(
      */
     fun getSkillIconTypes(loopIdList: List<Int>, unitId: Int) = flow {
         try {
-            val map = hashMapOf<Int, Int>()
+            val map = hashMapOf<Int, SkillBasicData>()
             val unitSkill = skillRepository.getUnitSkill(unitId)
             val mLoopIdList = loopIdList.distinct()
 

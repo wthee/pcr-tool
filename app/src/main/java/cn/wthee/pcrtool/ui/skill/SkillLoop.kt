@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
+import cn.wthee.pcrtool.data.db.view.SkillBasicData
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -25,6 +26,8 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -36,7 +39,9 @@ fun SkillLoopList(
     loopData: List<AttackPattern>,
     modifier: Modifier = Modifier,
     unitType: UnitType,
-    skillViewModel: SkillViewModel = hiltViewModel()
+    skillViewModel: SkillViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
+    enemyViewModel: EnemyViewModel = hiltViewModel(),
 ) {
     val loops = arrayListOf<SkillLoop>()
     val loopList = arrayListOf<Int>()
@@ -71,7 +76,12 @@ fun SkillLoopList(
     val skillLoopList =
         skillViewModel.getSkillIconTypes(loopList, unitId).collectAsState(initial = hashMapOf())
             .value
-
+    //获取普攻时间
+    val atkCastTime = if (unitType == UnitType.CHARACTER || unitType == UnitType.CHARACTER_SUMMON) {
+        characterViewModel.getAtkCastTime(unitId).collectAsState(initial = 0.0).value
+    } else {
+        enemyViewModel.getAtkCastTime(unitId).collectAsState(initial = 0.0).value
+    }
 
     Column(
         modifier = if (unitType == UnitType.CHARACTER) {
@@ -82,7 +92,7 @@ fun SkillLoopList(
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
-                SkillLoopItem(loop = it, skillLoopList)
+                SkillLoopItem(loop = it, skillLoopList, atkCastTime)
             }
         }
         if (unitType == UnitType.CHARACTER) {
@@ -97,10 +107,11 @@ fun SkillLoopList(
 @Composable
 private fun SkillLoopItem(
     loop: SkillLoop,
-    iconTypes: HashMap<Int, Int>,
+    skillMap: HashMap<Int, SkillBasicData>,
+    atkCastTime: Double
 ) {
     MainTitleText(text = loop.loopTitle)
-    SkillLoopIconList(loop.loopList.filter { it != 0 }, iconTypes)
+    SkillLoopIconList(loop.loopList.filter { it != 0 }, skillMap, atkCastTime)
 }
 
 /**
@@ -109,7 +120,8 @@ private fun SkillLoopItem(
 @Composable
 private fun SkillLoopIconList(
     loopList: List<Int>,
-    iconTypes: HashMap<Int, Int>
+    skillMap: HashMap<Int, SkillBasicData>,
+    atkCastTime: Double
 ) {
 
     VerticalGrid(
@@ -120,6 +132,12 @@ private fun SkillLoopIconList(
         loopList.forEach {
             val type: String
             val url: Any
+            val skillBasicData = skillMap[it]
+            //准备时间
+            val castTime =
+                (skillBasicData?.skillCastTime ?: atkCastTime).toBigDecimal().stripTrailingZeros()
+                    .toPlainString()
+
             if (it == 1) {
                 type = stringResource(id = R.string.normal_attack)
                 url = R.drawable.unknown_item
@@ -129,12 +147,12 @@ private fun SkillLoopIconList(
                     2 -> "SP" + stringResource(id = R.string.skill_index, it % 10)
                     else -> ""
                 }
-                val iconType = iconTypes[it]
-                url = if (iconType == null) {
+
+                url = if (skillBasicData == null) {
                     R.drawable.unknown_item
                 } else {
                     ImageRequestHelper.getInstance()
-                        .getUrl(ImageRequestHelper.ICON_SKILL, iconType)
+                        .getUrl(ImageRequestHelper.ICON_SKILL, skillBasicData.iconType)
                 }
             }
 
@@ -148,6 +166,15 @@ private fun SkillLoopIconList(
                 Text(
                     text = type,
                     color = getSkillColor(type = type),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.smallPadding)
+                )
+
+                //准备时间
+                Text(
+                    text = castTime,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -170,7 +197,8 @@ private fun SkillLoopItemPreview() {
                 stringResource(R.string.before_loop),
                 arrayListOf(1001, 1002)
             ),
-            hashMapOf()
+            hashMapOf(),
+            0.0
         )
     }
 }

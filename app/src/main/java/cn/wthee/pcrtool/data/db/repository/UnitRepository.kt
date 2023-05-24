@@ -147,4 +147,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getHomePageComments(unitId: Int) = unitDao.getHomePageComments(unitId)
 
+    suspend fun getAtkCastTime(unitId: Int) = unitDao.getAtkCastTime(unitId)
+
 }
