@@ -131,7 +131,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9")
 
     //Coil
-    val coilVersion = "2.3.0"
+    val coilVersion = "2.4.0"
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
