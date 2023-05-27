@@ -410,7 +410,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     EX(90, R.string.skill_type_90),
 
     /**
-     * 901：ex装备被动被动
+     * 901：ex装备被动
      */
     EX_EQUIP(901, R.string.skill_type_901_902),
     EX_EQUIP_HALF(902, R.string.skill_type_901_902),

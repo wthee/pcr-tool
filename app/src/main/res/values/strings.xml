@@ -706,7 +706,8 @@
     <string name="skill_action_type_desc_79">%s行动时，受到 %s伤害%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
     <string name="skill_action_type_desc_90">自身的%s提升 %s</string>
-    <string name="skill_action_type_desc_90X">装备技能</string>
+    <string name="skill_action_type_desc_901">战斗开始时生效</string>
+    <string name="skill_action_type_desc_902">战斗时间剩余%s秒时生效</string>
     <string name="skill_action_type_desc_92">使%s受击获得的TP变更为初始值的 [%s] 倍</string>
     <string name="skill_action_type_desc_93">攻击%s时，无视挑衅效果</string>
     <string name="skill_action_type_desc_94">%s附加技能特效</string>
