@@ -781,7 +781,17 @@ data class SkillActionDetail(
 
                     0 -> getString(R.string.skill_action_change_coe_0, commonDesc)
                     1 -> getString(R.string.skill_action_change_coe_1, commonDesc)
-                    4 -> getString(R.string.skill_action_change_coe_4, commonDesc)
+                    4 -> {
+                        val targetStr = getTargetType()
+                        val targetType = if (targetStr != "") {
+                            targetStr
+                        } else {
+                            getString(R.string.skill_target_none)
+                        }
+                        getString(R.string.skill_action_change_coe_4, commonDesc, targetType)
+
+                    }
+
                     5 -> getString(R.string.skill_action_change_coe_5, commonDesc)
                     6 -> getString(R.string.skill_action_change_coe_6, commonDesc)
                     in 7..10 -> getString(
@@ -1852,6 +1862,7 @@ data class SkillActionDetail(
             39 -> R.string.skill_target_39
             42 -> R.string.skill_target_42
             43 -> R.string.skill_target_43
+            44 -> R.string.skill_target_44
             else -> R.string.unknown
         }
     )

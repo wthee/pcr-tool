@@ -59,10 +59,10 @@ import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Pets
 import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material.icons.rounded.PlaylistAdd
+import androidx.compose.material.icons.rounded.Preview
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.ReceiptLong
 import androidx.compose.material.icons.rounded.Remove
-import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.Savings
 import androidx.compose.material.icons.rounded.Schedule
@@ -83,6 +83,8 @@ import androidx.compose.material.icons.rounded.UnfoldMore
 import androidx.compose.material.icons.rounded.Upcoming
 import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material.icons.rounded.Vibration
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -432,7 +434,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 预览模型
      */
-    PREVIEW_UNIT_SPINE(Icons.Rounded.RemoveRedEye),
+    PREVIEW_UNIT_SPINE(Icons.Rounded.Preview),
 
     /**
      * 图片
@@ -524,4 +526,13 @@ enum class MainIconType(val icon: ImageVector) {
      */
     BOX(Icons.Rounded.Archive),
 
+    /**
+     * 显示
+     */
+    SHOW(Icons.Rounded.Visibility),
+
+    /**
+     * 隐藏
+     */
+    HIDE(Icons.Rounded.VisibilityOff),
 }

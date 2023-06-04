@@ -83,5 +83,5 @@ interface EnemyDao {
             unit_id = :unitId
     """
     )
-    suspend fun getAtkCastTime(unitId: Int): Double
+    suspend fun getAtkCastTime(unitId: Int): Double?
 }
