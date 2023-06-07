@@ -15,7 +15,7 @@ hilt {
 }
 
 val composeBom = "2023.05.01"
-val composeCompilerVersion = "1.4.4"
+val composeCompilerVersion = "1.4.7"
 val appVersionCode = 363
 val appVersionName = "3.6.3"
 val appId = "cn.wthee.pcrtool"
@@ -152,7 +152,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha19")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha20")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
