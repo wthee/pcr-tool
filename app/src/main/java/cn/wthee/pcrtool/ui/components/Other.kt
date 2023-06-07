@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardActions
@@ -428,7 +430,37 @@ fun EventTitleCountdown(
     }
 }
 
+/**
+ * 装备适用角色
+ */
+@Composable
+fun UnitList(unitIds: List<Int>){
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimen.mediumPadding),
+        state = rememberLazyListState()
+    ) {
+        //标题
+        item {
+            MainText(
+                text = stringResource(R.string.extra_equip_unit),
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .fillMaxWidth()
+            )
+        }
 
+        //角色图标
+        item {
+            GridIconList(unitIds, isSubLayout = false) {}
+        }
+
+        item {
+            CommonSpacer()
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews

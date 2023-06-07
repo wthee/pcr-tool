@@ -386,6 +386,9 @@ interface EquipmentDao {
     @Query("SELECT MAX(area_id) FROM quest_data WHERE area_id < 12000")
     suspend fun getMaxArea(): Int
 
+    /**
+     * 获取rank颜色数
+     */
     @SkipQueryVerification
     @Query(
         """
@@ -399,6 +402,9 @@ interface EquipmentDao {
     )
     suspend fun getEquipColorNum(): Int
 
+    /**
+     * 获取最大rank
+     */
     @SkipQueryVerification
     @Query(
         """
@@ -411,4 +417,28 @@ interface EquipmentDao {
     """
     )
     suspend fun getMaxRank(): Int
+
+    /**
+     * 装备适用角色
+     * @param unitId 角色编号
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            unit_id
+        FROM
+            unit_promotion 
+        WHERE
+            equip_slot_1 = :equipId 
+            OR equip_slot_2 = :equipId 
+            OR equip_slot_3 = :equipId 
+            OR equip_slot_4 = :equipId 
+            OR equip_slot_5 = :equipId 
+            OR equip_slot_6 = :equipId
+            GROUP BY unit_id
+        """
+    )
+    suspend fun getEquipUnitList(equipId: Int): List<Int>
+
 }

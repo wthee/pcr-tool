@@ -53,6 +53,7 @@ object NavRoute {
     const val CHARACTER_SKILL_LOOP = "characterSkillLoop"
     const val TOOL_EXTRA_EQUIP = "toolExtraEquip"
     const val TOOL_EXTRA_EQUIP_UNIT = "toolExtraEquipUnit"
+    const val TOOL_EQUIP_UNIT = "toolEquipUnit"
     const val EXTRA_EQUIP_CATEGORY = "toolExtraEquipCategory"
     const val EXTRA_EQUIP_DROP = "toolExtraEquipDrop"
     const val TOOL_TRAVEL_AREA = "toolExtraEquipTravelArea"
