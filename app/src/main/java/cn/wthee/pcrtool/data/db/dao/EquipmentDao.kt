@@ -430,12 +430,13 @@ interface EquipmentDao {
         FROM
             unit_promotion 
         WHERE
-            equip_slot_1 = :equipId 
+            (equip_slot_1 = :equipId 
             OR equip_slot_2 = :equipId 
             OR equip_slot_3 = :equipId 
             OR equip_slot_4 = :equipId 
             OR equip_slot_5 = :equipId 
-            OR equip_slot_6 = :equipId
+            OR equip_slot_6 = :equipId)
+            AND unit_id < 400000
             GROUP BY unit_id
         """
     )

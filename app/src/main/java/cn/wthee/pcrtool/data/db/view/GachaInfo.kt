@@ -52,7 +52,8 @@ data class GachaInfo(
                 GachaType.ANNIV
             } else if (gachaName.contains("選べるプライズ")
                 || gachaName.contains("选择")
-                || gachaName.contains("選擇")
+                || gachaName.contains("自选")
+                || gachaName.contains("自選")
             ) {
                 GachaType.RE_LIMIT_PICK
             } else {
