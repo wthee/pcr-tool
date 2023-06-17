@@ -239,6 +239,21 @@ fun EnemySkillList(
             .padding(Dimen.largePadding)
             .fillMaxSize()
     ) {
+        if (allLoopData != null) {
+            MainText(
+                text = stringResource(R.string.skill_loop),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+                    .align(Alignment.CenterHorizontally)
+            )
+            SkillLoopList(
+                allLoopData,
+                unitType = unitType,
+                modifier = Modifier
+                    .padding(top = Dimen.mediumPadding)
+            )
+        }
+
         if (allSkillList?.isNotEmpty() == true || allLoopData?.isNotEmpty() == true) {
             MainText(
                 text = stringResource(R.string.skill),
@@ -247,17 +262,11 @@ fun EnemySkillList(
                     .align(Alignment.CenterHorizontally)
             )
         }
-        if (allLoopData != null) {
-            SkillLoopList(
-                allLoopData,
-                unitType = unitType,
-                modifier = Modifier
-                    .padding(top = Dimen.mediumPadding)
-            )
-        }
+
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
+
         allSkillList?.let { skillList ->
-            skillList.forEach { skillDetail ->
+            skillList.filter { it.level > 0 }.forEach { skillDetail ->
                 SkillItem(
                     skillDetail = skillDetail,
                     unitType = unitType,

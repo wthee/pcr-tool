@@ -1,6 +1,11 @@
 package cn.wthee.pcrtool.ui.skill
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -12,7 +17,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.PositionIcon
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 import cn.wthee.pcrtool.utils.int
@@ -118,13 +127,26 @@ private fun CharacterSummonDetail(
         }
         attrs?.let {
             Column {
+                //属性
                 AttrList(attrs = it.sumAttr.summonAttr())
+
                 //技能循环
+                MainText(
+                    text = stringResource(R.string.skill_loop),
+                    modifier = Modifier
+                        .padding(top = Dimen.largePadding * 2)
+                        .align(Alignment.CenterHorizontally)
+                )
                 SkillLoopList(
                     loopData,
                     unitType = UnitType.CHARACTER_SUMMON,
-                    modifier = Modifier.padding(Dimen.largePadding)
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
                 )
+
                 //技能信息
                 SkillCompose(
                     unitId = unitId,

@@ -127,7 +127,7 @@ private fun SkillLoopItem(
         modifier = Modifier
             .padding(top = Dimen.mediumPadding),
         itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding
+        contentPadding = Dimen.largePadding
     ) {
         loopList.forEach {
             val type: String
@@ -166,7 +166,8 @@ private fun SkillLoopItem(
                 CaptionText(
                     text = type,
                     color = getSkillColor(type = type),
-                    modifier = Modifier.padding(top = Dimen.smallPadding)
+                    modifier = Modifier.padding(top = Dimen.smallPadding),
+                    maxLines = 1
                 )
 
                 //准备时间

@@ -36,9 +36,10 @@
     <string name="target_rank">目标 RANK</string>
     <string name="function">功能</string>
     <string name="skill">技能信息</string>
+    <string name="skill_loop">技能循环</string>
     <string name="title_unlock_6">★6解放</string>
     <string name="rank_select">RANK选择</string>
-    <string name="rank_compare">RANK 对比</string>
+    <string name="rank_compare">RANK对比</string>
     <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_basic_info">资料</string>
