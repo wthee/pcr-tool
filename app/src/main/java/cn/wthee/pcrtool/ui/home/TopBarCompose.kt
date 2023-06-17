@@ -1,11 +1,23 @@
 package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,9 +32,22 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.HeaderText
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainButton
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SubButton
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -88,23 +113,26 @@ fun TopBarCompose(
 
                 else -> {
                     //提示
-                    val updateColor = when (updateApp.id) {
-                        0 -> colorGreen
-                        else -> MaterialTheme.colorScheme.onSurface
-                    }
-                    val icon = when (updateApp.id) {
-                        0 -> MainIconType.APP_UPDATE
-                        else -> MainIconType.NOTICE
+                    if (updateApp.id == 0 && !isExpanded) {
+                        IconTextButton(
+                            icon = MainIconType.APP_UPDATE,
+                            text = stringResource(R.string.find_new_release, updateApp.title),
+                            contentColor = colorGreen,
+                            iconSize = Dimen.fabIconSize
+                        ) {
+                            isExpanded = !isExpanded
+                        }
+                    } else {
+                        MainIcon(
+                            data = if (isExpanded) MainIconType.CLOSE else MainIconType.NOTICE,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            size = Dimen.fabIconSize,
+                            modifier = Modifier.padding(start = Dimen.smallPadding)
+                        ) {
+                            isExpanded = !isExpanded
+                        }
                     }
 
-                    MainIcon(
-                        data = if (isExpanded) MainIconType.CLOSE else icon,
-                        tint = if (isExpanded) MaterialTheme.colorScheme.onSurface else updateColor,
-                        size = Dimen.fabIconSize,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    ) {
-                        isExpanded = !isExpanded
-                    }
                 }
             }
             Spacer(modifier = Modifier.width(Dimen.largePadding))
@@ -159,11 +187,6 @@ private fun UpdateContent(
             .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
             .fillMaxWidth()
     ) {
-        if (appNotice.id == 0) {
-            MainText(
-                text = "发现新版本", modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
         Row(
             modifier = Modifier.padding(top = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
@@ -205,7 +228,8 @@ private fun UpdateContent(
             ) {
                 //从酷安下载
                 MainButton(
-                    text = stringResource(id = R.string.download_apk_from_coolapk)
+                    text = stringResource(id = R.string.download_apk_from_coolapk),
+                    containerColor = colorGreen
                 ) {
                     BrowserUtil.open(appNotice.url)
                 }

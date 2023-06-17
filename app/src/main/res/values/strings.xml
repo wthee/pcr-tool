@@ -318,6 +318,7 @@
     <string name="title_dialog_delete">删除</string>
     <string name="title_dialog_save_img">保存图片</string>
     <string name="title_dialog_clean_cache">清除缓存</string>
+    <string name="find_new_release">v%s 已发布</string>
 
     <!--模拟抽卡-->
     <string name="limit_re">复刻限定</string>
