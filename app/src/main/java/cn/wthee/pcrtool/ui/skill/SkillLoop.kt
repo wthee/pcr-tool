@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,18 +16,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillBasicData
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -53,9 +47,6 @@ fun SkillLoopList(
     val loops = arrayListOf<SkillLoop>()
     val loopList = arrayListOf<Int>()
     var unitId = 0
-    val showCastTime = remember {
-        mutableStateOf(false)
-    }
 
     //处理技能循环数据
     loopData.forEach { attackPattern ->
@@ -104,8 +95,8 @@ fun SkillLoopList(
     ) {
 
         if (loops.isNotEmpty()) {
-            loops.forEachIndexed { index, it ->
-                SkillLoopItem(loop = it, skillLoopList, atkCastTime, showCastTime, index)
+            loops.forEach {
+                SkillLoopItem(loop = it, skillLoopList, atkCastTime)
             }
         }
         if (unitType == UnitType.CHARACTER) {
@@ -121,9 +112,7 @@ fun SkillLoopList(
 private fun SkillLoopItem(
     loop: SkillLoop,
     skillMap: HashMap<Int, SkillBasicData>,
-    atkCastTime: Double,
-    showCastTime: MutableState<Boolean>,
-    index: Int
+    atkCastTime: Double
 ) {
     val loopList = loop.loopList.filter { it != 0 }
 
@@ -132,26 +121,6 @@ private fun SkillLoopItem(
         //标题
         MainTitleText(text = loop.loopTitle)
         Spacer(modifier = Modifier.weight(1f))
-        //仅第一个显示按钮
-        if (index == 0) {
-            IconTextButton(
-                icon = if (showCastTime.value) {
-                    MainIconType.HIDE
-                } else {
-                    MainIconType.SHOW
-                },
-                text = stringResource(
-                    if (showCastTime.value) {
-                        R.string.hide_skill_cast_time
-                    } else {
-                        R.string.show_skill_cast_time
-                    }
-                ),
-            ) {
-                showCastTime.value = !showCastTime.value
-            }
-        }
-
     }
 
     VerticalGrid(
@@ -201,14 +170,12 @@ private fun SkillLoopItem(
                 )
 
                 //准备时间
-                ExpandAnimation(showCastTime.value) {
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.cast_time,
-                            castTime.toBigDecimal().stripTrailingZeros().toPlainString()
-                        )
+                CaptionText(
+                    text = stringResource(
+                        id = R.string.cast_time,
+                        castTime.toBigDecimal().stripTrailingZeros().toPlainString()
                     )
-                }
+                )
             }
         }
     }
@@ -218,9 +185,6 @@ private fun SkillLoopItem(
 @CombinedPreviews
 @Composable
 private fun SkillLoopItemPreview() {
-    val showCastTime = remember {
-        mutableStateOf(false)
-    }
     PreviewLayout {
         SkillLoopItem(
             loop = SkillLoop(
@@ -230,9 +194,7 @@ private fun SkillLoopItemPreview() {
                 arrayListOf(1001, 1002)
             ),
             hashMapOf(),
-            0.0,
-            showCastTime,
-            0
+            0.0
         )
     }
 }
