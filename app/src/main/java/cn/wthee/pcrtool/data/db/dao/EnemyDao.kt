@@ -68,4 +68,20 @@ interface EnemyDao {
     """
     )
     suspend fun getMultiTargetEnemyInfo(enemyId: Int): MultiTargetEnemyInfo?
+
+    /**
+     * 获取普通攻击时间
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            normal_atk_cast_time 
+        FROM
+            unit_enemy_data 
+        WHERE
+            unit_id = :unitId
+    """
+    )
+    suspend fun getAtkCastTime(unitId: Int): Double?
 }

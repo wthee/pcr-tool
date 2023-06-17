@@ -31,8 +31,8 @@ interface SkillDao {
      * @param skillId 技能编号
      */
     @SkipQueryVerification
-    @Query("SELECT icon_type FROM skill_data  WHERE skill_id = :skillId")
-    suspend fun getSkillIconType(skillId: Int): Int
+    @Query("SELECT skill_id, name, skill_cast_time, icon_type FROM skill_data  WHERE skill_id = :skillId")
+    suspend fun getSkillIconType(skillId: Int): SkillBasicData
 
     /**
      * 获取角色技能动作效果列表

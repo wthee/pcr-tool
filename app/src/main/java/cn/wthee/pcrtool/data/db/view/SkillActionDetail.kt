@@ -781,7 +781,17 @@ data class SkillActionDetail(
 
                     0 -> getString(R.string.skill_action_change_coe_0, commonDesc)
                     1 -> getString(R.string.skill_action_change_coe_1, commonDesc)
-                    4 -> getString(R.string.skill_action_change_coe_4, commonDesc)
+                    4 -> {
+                        val targetStr = getTargetType()
+                        val targetType = if (targetStr != "") {
+                            targetStr
+                        } else {
+                            getString(R.string.skill_target_none)
+                        }
+                        getString(R.string.skill_action_change_coe_4, commonDesc, targetType)
+
+                    }
+
                     5 -> getString(R.string.skill_action_change_coe_5, commonDesc)
                     6 -> getString(R.string.skill_action_change_coe_6, commonDesc)
                     in 7..10 -> getString(
@@ -1464,9 +1474,13 @@ data class SkillActionDetail(
 
                 getString(R.string.skill_action_type_desc_90, type, value)
             }
-            // 901：ex装备被动被动 902：45秒
-            SkillActionType.EX_EQUIP, SkillActionType.EX_EQUIP_HALF -> {
-                getString(R.string.skill_action_type_desc_90X)
+            // 901：战斗开始时生效
+            SkillActionType.EX_EQUIP -> {
+                getString(R.string.skill_action_type_desc_901)
+            }
+            // 902：45秒
+            SkillActionType.EX_EQUIP_HALF -> {
+                getString(R.string.skill_action_type_desc_902, actionValue3.toInt())
             }
             // 92：改变 TP 获取倍率
             SkillActionType.CHANGE_TP_RATIO -> {
@@ -1848,6 +1862,7 @@ data class SkillActionDetail(
             39 -> R.string.skill_target_39
             42 -> R.string.skill_target_42
             43 -> R.string.skill_target_43
+            44 -> R.string.skill_target_44
             else -> R.string.unknown
         }
     )

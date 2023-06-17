@@ -2,14 +2,27 @@ package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,15 +34,27 @@ import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainTabRow
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MockGachaHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 //模拟抽卡最大up数
 private const val MOCK_GACHA_MAX_UP_COUNT = 12
@@ -288,7 +313,7 @@ private fun ToSelectMockGachaUnitList(
             ToSelectMockGachaUnitListItem(allUnits.normal3, stringResource(R.string.gacha_normal))
         }
         CommonSpacer()
-
+        CommonSpacer()
     }
 }
 

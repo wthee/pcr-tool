@@ -35,6 +35,7 @@ import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
+import cn.wthee.pcrtool.ui.equip.EquipUnitList
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.story.StoryPicList
@@ -252,9 +253,23 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                EquipMainInfo(arguments.getInt(NavRoute.EQUIP_ID), actions.toEquipMaterial)
+                EquipMainInfo(
+                    arguments.getInt(NavRoute.EQUIP_ID),
+                    toEquipMaterial= actions.toEquipMaterial,
+                    toEquipUnit = actions.toEquipUnit
+                )
             }
 
+            //装备关联角色
+            bottomSheet(
+                route = "${NavRoute.TOOL_EQUIP_UNIT}/{${NavRoute.EQUIP_ID}}",
+                arguments = listOf(navArgument(NavRoute.EQUIP_ID) {
+                    type = NavType.IntType
+                })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                EquipUnitList(equipId = arguments.getInt(NavRoute.EQUIP_ID))
+            }
 
             //ex装备详情
             composable(
@@ -735,6 +750,13 @@ class NavActions(navController: NavHostController) {
      */
     val toEquipDetail: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${NavRoute.EQUIP_DETAIL}/${equipId}")
+    }
+
+    /**
+     * 装备详情关联角色
+     */
+    val toEquipUnit: (Int) -> Unit = { equipId: Int ->
+        navController.navigate("${NavRoute.TOOL_EQUIP_UNIT}/${equipId}")
     }
 
     /**

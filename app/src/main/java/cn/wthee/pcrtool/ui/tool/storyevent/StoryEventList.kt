@@ -152,7 +152,7 @@ fun StoryEventItem(
 
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
-    val comingSoon = today.second(sd) < 0 && (!previewEvent)
+    val comingSoon = today.second(sd) < 0
 
 
     Column(
@@ -185,13 +185,13 @@ fun StoryEventItem(
                 )
             }
             //计时
-            EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
+            EventTitleCountdown(today, sd, ed, inProgress, comingSoon && (!previewEvent))
         }
 
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
-                if (inProgress || isSub || !hasTeaser(event.eventId) || previewEvent) {
+                if (inProgress || isSub || !hasTeaser(event.eventId)) {
                     SubImage(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),

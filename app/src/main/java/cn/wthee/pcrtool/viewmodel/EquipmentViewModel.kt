@@ -256,4 +256,12 @@ class EquipmentViewModel @Inject constructor(
     fun getMaxRank() = flow {
         emit(equipmentRepository.getMaxRank())
     }
+
+
+    /**
+     * 获取装备适用角色
+     */
+    fun getEquipUnitList(equipId: Int) = flow {
+        emit(equipmentRepository.getEquipUnitList(equipId))
+    }
 }

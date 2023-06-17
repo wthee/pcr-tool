@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -35,12 +33,12 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.UnitList
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -257,32 +255,7 @@ fun ExtraEquipUnitList(
     val unitIds = extraEquipmentViewModel.getExtraEquipUnitList(category)
         .collectAsState(initial = arrayListOf()).value
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Dimen.mediumPadding),
-        state = rememberLazyListState()
-    ) {
-        //标题
-        item {
-            MainText(
-                text = stringResource(R.string.extra_equip_unit),
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth()
-            )
-        }
-
-        //角色图标
-        item {
-            GridIconList(unitIds, isSubLayout = false) {}
-        }
-
-        item {
-            CommonSpacer()
-        }
-    }
-
+    UnitList(unitIds)
 }
 
 

@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.05.01"
-val composeCompilerVersion = "1.4.4"
-val appVersionCode = 363
-val appVersionName = "3.6.3"
+val composeBom = "2023.06.00"
+val composeCompilerVersion = "1.4.7"
+val appVersionCode = 364
+val appVersionName = "3.6.4"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -77,7 +77,7 @@ android {
         create("beta") {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
-            resValue("string", "app_name", "Beta: PCR Tool")
+            resValue("string", "app_name", "PCR Tool *")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -101,7 +101,7 @@ dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.7")
+    implementation("androidx.fragment:fragment-ktx:1.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
@@ -131,7 +131,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9")
 
     //Coil
-    val coilVersion = "2.3.0"
+    val coilVersion = "2.4.0"
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
@@ -148,11 +148,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha19")
+    val pagingVersion = "3.2.0-beta01"
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation("androidx.paging:paging-compose:$pagingVersion")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

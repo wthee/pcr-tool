@@ -15,4 +15,6 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
     suspend fun getAllBossIds() = enemyDao.getAllBossIds()
 
     suspend fun getMultiTargetEnemyInfo(enemyId: Int) = enemyDao.getMultiTargetEnemyInfo(enemyId)
+
+    suspend fun getAtkCastTime(unitId: Int) = enemyDao.getAtkCastTime(unitId)
 }

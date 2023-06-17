@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 fun EquipMainInfo(
     equipId: Int,
     toEquipMaterial: (Int) -> Unit,
+    toEquipUnit: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val equipMaxData =
@@ -46,17 +47,22 @@ fun EquipMainInfo(
     val loved = remember {
         mutableStateOf(starIds.contains(equipId))
     }
+    val unitIds = equipmentViewModel.getEquipUnitList(equipId)
+        .collectAsState(initial = arrayListOf()).value
 
-    EquipDetail(equipId, equipMaxData, materialList, loved, toEquipMaterial)
+
+    EquipDetail(equipId, unitIds, equipMaxData, materialList, loved, toEquipMaterial, toEquipUnit)
 }
 
 @Composable
 private fun EquipDetail(
     equipId: Int,
+    unitIds: List<Int>,
     equipMaxData: EquipmentMaxData,
     materialList: ArrayList<EquipmentMaterial>,
     loved: MutableState<Boolean>,
-    toEquipMaterial: (Int) -> Unit
+    toEquipMaterial: (Int) -> Unit,
+    toEquipUnit: (Int) -> Unit,
 ) {
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip)
 
@@ -101,22 +107,34 @@ private fun EquipDetail(
             //合成素材
             EquipMaterialList(materialList, toEquipMaterial)
         }
-        //装备收藏
-        MainSmallFab(
-            iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+
+        Row(
             modifier = Modifier
-                .padding(
-                    end = Dimen.fabMarginEnd,
-                    start = Dimen.fabMargin,
-                    top = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin,
-                )
-                .align(Alignment.BottomEnd),
-            text = text
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+            horizontalArrangement = Arrangement.End
         ) {
-            FilterEquipment.addOrRemove(equipId)
-            loved.value = !loved.value
+            //装备收藏
+            MainSmallFab(
+                iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                text = text
+            ) {
+                FilterEquipment.addOrRemove(equipId)
+                loved.value = !loved.value
+            }
+
+            //关联角色
+            if(unitIds.isNotEmpty()){
+                MainSmallFab(
+                    iconType = MainIconType.CHARACTER,
+                    text = unitIds.size.toString()
+                ) {
+                    toEquipUnit(equipId)
+                }
+            }
+
         }
+
     }
 }
 
@@ -176,6 +194,19 @@ private fun EquipMaterialList(
     }
 }
 
+/**
+ * 可使用装备角色列表
+ */
+@Composable
+fun EquipUnitList(
+    equipId: Int,
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
+) {
+    val unitIds = equipmentViewModel.getEquipUnitList(equipId)
+        .collectAsState(initial = arrayListOf()).value
+
+    UnitList(unitIds)
+}
 
 @CombinedPreviews
 @Composable
@@ -186,9 +217,11 @@ private fun EquipDetailPreview() {
     PreviewLayout {
         EquipDetail(
             equipId = 0,
+            arrayListOf(),
             equipMaxData = EquipmentMaxData(1001, "?", "", "?", 1, attr = Attr().random()),
             materialList = arrayListOf(EquipmentMaterial()),
             loved = loved,
-            toEquipMaterial = {})
+            toEquipMaterial = {},
+            {})
     }
 }

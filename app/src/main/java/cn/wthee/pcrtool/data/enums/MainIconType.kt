@@ -522,6 +522,6 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * box
      */
-    BOX(Icons.Rounded.Archive),
+    BOX(Icons.Rounded.Archive)
 
 }

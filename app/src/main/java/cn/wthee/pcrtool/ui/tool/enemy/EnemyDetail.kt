@@ -1,7 +1,12 @@
 package cn.wthee.pcrtool.ui.tool.enemy
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -22,14 +27,29 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainButton
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SubButton
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.copyText
+import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -219,6 +239,21 @@ fun EnemySkillList(
             .padding(Dimen.largePadding)
             .fillMaxSize()
     ) {
+        if (allLoopData != null) {
+            MainText(
+                text = stringResource(R.string.skill_loop),
+                modifier = Modifier
+                    .padding(top = Dimen.largePadding)
+                    .align(Alignment.CenterHorizontally)
+            )
+            SkillLoopList(
+                allLoopData,
+                unitType = unitType,
+                modifier = Modifier
+                    .padding(top = Dimen.mediumPadding)
+            )
+        }
+
         if (allSkillList?.isNotEmpty() == true || allLoopData?.isNotEmpty() == true) {
             MainText(
                 text = stringResource(R.string.skill),
@@ -227,15 +262,11 @@ fun EnemySkillList(
                     .align(Alignment.CenterHorizontally)
             )
         }
-        if (allLoopData != null) {
-            SkillLoopList(
-                allLoopData,
-                unitType = unitType
-            )
-        }
+
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
+
         allSkillList?.let { skillList ->
-            skillList.forEach { skillDetail ->
+            skillList.filter { it.level > 0 }.forEach { skillDetail ->
                 SkillItem(
                     skillDetail = skillDetail,
                     unitType = unitType,
