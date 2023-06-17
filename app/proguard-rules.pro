@@ -59,8 +59,19 @@
       publicstatic** valueOf(java.lang.String);
 }
 
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+
+# TODO: Waiting for new retrofit release to remove these rules
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
 # 实体类
 -keep class cn.wthee.pcrtool.data.model.** { *; }
+-keep class cn.wthee.pcrtool.data.network.** { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.NewsTable { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.TweetData { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.ComicData { *; }
