@@ -162,7 +162,7 @@ data class SkillActionDetail(
                     ""
                 }
 
-                val value = getValueText(1, actionValue1, actionValue2, actionValue3)
+                val value = getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
 
                 getString(
                     R.string.skill_action_type_desc_1,
@@ -1632,7 +1632,8 @@ data class SkillActionDetail(
         v2: Double,
         v3: Double = 0.0,
         percent: String = "",
-        hideIndex: Boolean = false
+        hideIndex: Boolean = false,
+        v4: Double = 0.0
     ): String {
         val skillLevelText = getString(R.string.skill_level_text)
         val skillAtkStrText = getString(R.string.skill_atk_text)
@@ -1647,7 +1648,9 @@ data class SkillActionDetail(
                 "{$index}[0]$percent"
             }
         } else {
-            if (v1 == 0.0 && v2 != 0.0) {
+            if(v4 != 0.0){
+                "[${(v1 + v2 * level + (v3 + v4 * level) * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + ﹙{${index + 2}}$v3 + {${index + 3}}$v4 * $skillLevelText﹚ * $skillAtkStrText>"
+            }else if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * $skillAtkStrText>"
             } else if (v1 == 0.0) {
                 "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * $skillAtkStrText>"
