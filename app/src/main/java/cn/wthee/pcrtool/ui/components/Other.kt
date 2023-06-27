@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -125,7 +126,7 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 }
 
 /**
- * 加载中
+ * 加载中-圆形
  */
 @Composable
 fun CircularProgressCompose(
@@ -137,7 +138,24 @@ fun CircularProgressCompose(
             .size(size)
             .padding(Dimen.smallPadding),
         color = MaterialTheme.colorScheme.primary,
-        strokeWidth = 2.dp
+        strokeWidth = Dimen.strokeWidth
+    )
+}
+
+/**
+ * 加载中-直线
+ */
+@Composable
+fun LinearProgressCompose(
+    modifier: Modifier = Modifier,
+    width: Dp = Dimen.linearProgressWidth
+) {
+    LinearProgressIndicator(
+        modifier = modifier
+            .width(width)
+            .height(Dimen.linearProgressHeight)
+            .clip(MaterialTheme.shapes.medium),
+        color = MaterialTheme.colorScheme.primary,
     )
 }
 
@@ -434,7 +452,7 @@ fun EventTitleCountdown(
  * 装备适用角色
  */
 @Composable
-fun UnitList(unitIds: List<Int>){
+fun UnitList(unitIds: List<Int>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
