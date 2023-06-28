@@ -1,7 +1,13 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -239,11 +245,10 @@ fun SubImage(
 
         //加载立绘原图时
         if (loading != null && loading.value) {
-            CircularProgressCompose(
+            LinearProgressCompose(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(Dimen.smallPadding),
-                size = Dimen.textIconSize
+                    .padding(Dimen.mediumPadding)
             )
         }
     }

@@ -53,9 +53,6 @@ val permissions = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE,
 )
 
-//缓存
-val loadedPicMap = hashMapOf<String, Drawable?>()
-
 
 /**
  * 角色/活动剧情图片
@@ -66,7 +63,6 @@ fun StoryPicList(
     allPicsType: AllPicsType,
     picsViewModel: AllPicsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     //角色卡面
     val basicUrls = if (allPicsType == AllPicsType.CHARACTER) {
         picsViewModel.getUniCardList(id).collectAsState(initial = arrayListOf()).value
@@ -83,8 +79,6 @@ fun StoryPicList(
         mutableStateOf("")
     }
     val hasStory = responseData?.data?.isNotEmpty() == true
-    val openDialog = remember { mutableStateOf(checkedPicUrl.value != "") }
-    openDialog.value = checkedPicUrl.value != ""
 
 
     Box(
@@ -105,24 +99,7 @@ fun StoryPicList(
         }
     }
 
-    //下载确认
-    MainAlertDialog(
-        openDialog = openDialog,
-        icon = MainIconType.PREVIEW_IMAGE,
-        title = stringResource(R.string.title_dialog_save_img),
-        text = stringResource(R.string.tip_save_image),
-        onDismissRequest = {
-            checkedPicUrl.value = ""
-        }
-    ) {
-        loadedPicMap[checkedPicUrl.value]?.let {
-            ImageDownloadHelper(context).saveBitmap(
-                bitmap = (it as BitmapDrawable).bitmap,
-                displayName = "${getFileName(checkedPicUrl.value)}.jpg"
-            )
-            checkedPicUrl.value = ""
-        }
-    }
+
 }
 
 /**
@@ -204,21 +181,23 @@ private fun CardGridList(
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
     VerticalGrid(itemWidth = getItemWidth()) {
-        val loading = remember {
-            mutableStateOf(true)
-        }
 
         urls.forEach { picUrl ->
+            val openDialog = remember { mutableStateOf(false) }
+            val loadedPic: MutableState<Drawable?> = remember { mutableStateOf(null) }
+            val loading = remember {
+                mutableStateOf(true)
+            }
+
             MainCard(
                 modifier = Modifier
                     .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding),
                 onClick = {
-                    //下载
-                    val loaded = loadedPicMap[picUrl] != null
-                    if (loaded) {
+                    //加载完成，下载
+                    if (!loading.value) {
                         //权限校验
                         checkPermissions(context, permissions) {
-                            checkedPicUrl.value = picUrl
+                            openDialog.value = true
                         }
                     } else {
                         ToastUtil.short(unLoadToast)
@@ -238,7 +217,7 @@ private fun CardGridList(
                             .diskCacheKey(it.diskCacheKey)
                             .listener(
                                 onSuccess = { _, result ->
-                                    loadedPicMap[picUrl] = result.drawable
+                                    loadedPic.value = result.drawable
                                     loading.value = false
                                 }
                             )
@@ -247,8 +226,28 @@ private fun CardGridList(
                     }
                 }
             }
+
+            //下载确认
+            MainAlertDialog(
+                openDialog = openDialog,
+                icon = MainIconType.PREVIEW_IMAGE,
+                title = stringResource(R.string.title_dialog_save_img),
+                text = stringResource(R.string.tip_save_image),
+                onDismissRequest = {
+                    checkedPicUrl.value = ""
+                }
+            ) {
+                loadedPic.value.let {
+                    ImageDownloadHelper(context).saveBitmap(
+                        bitmap = (it as BitmapDrawable).bitmap,
+                        displayName = "${getFileName(checkedPicUrl.value)}.jpg"
+                    )
+                    checkedPicUrl.value = ""
+                }
+            }
         }
     }
+
 }
 
 /**
