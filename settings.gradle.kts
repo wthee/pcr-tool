@@ -7,6 +7,7 @@ dependencyResolutionManagement {
         maven("https://www.jitpack.io")
     }
 }
+
 rootProject.name = "pcr-tool-compose"
 include(":app")
  
