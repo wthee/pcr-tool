@@ -162,7 +162,8 @@ data class SkillActionDetail(
                     ""
                 }
 
-                val value = getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
+                val value =
+                    getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
 
                 getString(
                     R.string.skill_action_type_desc_1,
@@ -319,7 +320,14 @@ data class SkillActionDetail(
                     1, 2 -> {
                         val descText =
                             if (actionType == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
-                                getString(R.string.skill_action_speed_add, value)
+                                val type = getString(
+                                    if (actionDetail1 == 1) {
+                                        R.string.skill_reduce
+                                    } else {
+                                        R.string.skill_increase
+                                    }
+                                )
+                                getString(R.string.skill_action_speed_change, type, value)
                             } else {
                                 getString(R.string.skill_action_speed_multipl, value)
                             }
@@ -610,14 +618,6 @@ data class SkillActionDetail(
                                 )
                             }
 
-                            1300 -> {
-                                getString(
-                                    R.string.skill_action_if_target,
-                                    getTarget(),
-                                    actionDetail3 % 10
-                                )
-                            }
-
                             else -> UNKNOWN
                         }
                     }
@@ -654,14 +654,6 @@ data class SkillActionDetail(
                                     getTarget(),
                                     actionDetail1 - 900,
                                     actionDetail3 % 10
-                                )
-                            }
-
-                            1300 -> {
-                                getString(
-                                    R.string.skill_action_if_target_not,
-                                    getTarget(),
-                                    actionDetail2 % 10
                                 )
                             }
 
@@ -1554,6 +1546,15 @@ data class SkillActionDetail(
                     time
                 )
             }
+            // 103：复制攻击力
+            SkillActionType.COPY_ATK -> {
+                getString(
+                    R.string.skill_action_type_desc_103,
+                    actionDetail2 % 10,
+                    getTarget()
+                )
+            }
+
 
             else -> {
                 val value = getValueText(
@@ -1648,9 +1649,9 @@ data class SkillActionDetail(
                 "{$index}[0]$percent"
             }
         } else {
-            if(v4 != 0.0){
+            if (v4 != 0.0) {
                 "[${(v1 + v2 * level + (v3 + v4 * level) * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + ﹙{${index + 2}}$v3 + {${index + 3}}$v4 * $skillLevelText﹚ * $skillAtkStrText>"
-            }else if (v1 == 0.0 && v2 != 0.0) {
+            } else if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * $skillAtkStrText>"
             } else if (v1 == 0.0) {
                 "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * $skillAtkStrText>"
@@ -1799,7 +1800,7 @@ data class SkillActionDetail(
      * 作用对象数量
      */
     private fun getTargetCount() = when (targetCount) {
-        0, 1 -> ""
+        0, 1, 99 -> ""
 //        1 -> {
 //            //目标是敌人时，显示生效目标数量
 //            if(targetAssignment == 1){
@@ -1808,7 +1809,7 @@ data class SkillActionDetail(
 //                ""
 //            }
 //        }
-        99 -> getString(R.string.skill_target_all)
+//        99 -> getString(R.string.n)
         else -> getString(R.string.skill_target_count, targetCount)
     }
 
@@ -1911,8 +1912,10 @@ data class SkillActionDetail(
             1700 -> R.string.skill_status_1700
             721, 6107 -> R.string.skill_status_721_6107
             1513 -> R.string.skill_ailment_13
+            1300 -> R.string.skill_status_1300
             1800 -> R.string.skill_status_1800
             1900 -> R.string.skill_status_1900
+            2001 -> R.string.skill_status_2001
             else -> R.string.unknown
         }
     )

@@ -460,6 +460,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      */
     IGNORE_SPEED_DOWN(100, R.string.skill_type_100),
 
+    /**
+     * 103：复制攻击力
+     */
+    COPY_ATK(103, R.string.none),
+
 }
 
 /**
