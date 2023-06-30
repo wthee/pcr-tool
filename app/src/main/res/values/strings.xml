@@ -221,6 +221,9 @@
     <string name="beta_tool_group_title">后续将调整至其他分组或移除</string>
     <string name="all_unit_calc_equip">全角色装备统计</string>
     <string name="to"> ~ </string>
+    <string name="title_comic_zh">优妮hnn汉化组</string>
+    <string name="tip_comic_zh">漫画汉化</string>
+    <string name="comic_zh_url">https://space.bilibili.com/3260075</string>
 
 
     <!--竞技场查询-->
@@ -793,5 +796,6 @@
     <string name="debug_short_text">测试文本测试文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
     <string name="leader_tier_d">T%s</string>
+    <string name="to_zh">（汉化）</string>
 
 </resources>

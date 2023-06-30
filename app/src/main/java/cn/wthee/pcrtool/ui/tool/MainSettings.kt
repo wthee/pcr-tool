@@ -228,6 +228,17 @@ fun MainSettings() {
                 BrowserUtil.open(leaderUrl)
             }
         )
+        //- 漫画汉化
+        val comicZhUrl = stringResource(id = R.string.comic_zh_url)
+        SettingCommonItem(
+            iconType = MainIconType.COMIC,
+            title = stringResource(id = R.string.title_comic_zh),
+            summary = stringResource(id = R.string.tip_comic_zh),
+            onClick = {
+                BrowserUtil.open(comicZhUrl)
+            }
+        )
+
         CommonSpacer()
     }
 

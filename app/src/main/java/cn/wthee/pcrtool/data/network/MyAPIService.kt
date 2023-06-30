@@ -58,7 +58,7 @@ interface MyAPIService {
     /**
      * 获取漫画
      */
-    @POST("comic")
+    @POST("comic/zh")
     suspend fun getComicData(@Body body: RequestBody): ResponseData<List<ComicData>>
 
     /**

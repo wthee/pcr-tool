@@ -28,16 +28,18 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
 import coil.request.ErrorResult
 import coil.request.SuccessResult
 
 const val RATIO = 16 / 9f
 
 // 741 * 1200
-const val RATIO_COMIC = 0.63f
+const val RATIO_COMIC = 0.64f
 const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
@@ -46,6 +48,7 @@ const val RATIO_TEASER = 1024 / 430f
 /**
  * 图片加载
  */
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MainImage(
     modifier: Modifier = Modifier,
@@ -65,6 +68,7 @@ fun MainImage(
     val loading = remember {
         mutableStateOf(true)
     }
+    val loader = LocalContext.current.imageLoader
 
     AsyncImage(
         model = data,
@@ -77,6 +81,7 @@ fun MainImage(
         },
         onError = {
             loading.value = false
+            loader.diskCache?.remove(data)
             onError(it.result)
         },
         onLoading = {
@@ -248,7 +253,7 @@ fun SubImage(
             LinearProgressCompose(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(Dimen.mediumPadding)
+                    .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding)
             )
         }
     }
