@@ -44,8 +44,6 @@ import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
-import coil.ImageLoader
-import coil.request.ImageRequest
 
 //权限
 val permissions = arrayOf(
@@ -211,19 +209,7 @@ private fun CardGridList(
                     contentScale = ContentScale.FillWidth
                 ) {
                     //获取本地原图缓存
-                    if (it.diskCacheKey != null) {
-                        val request = ImageRequest.Builder(context)
-                            .data(picUrl)
-                            .diskCacheKey(it.diskCacheKey)
-                            .listener(
-                                onSuccess = { _, result ->
-                                    loadedPic.value = result.drawable
-                                    loading.value = false
-                                }
-                            )
-                            .build()
-                        ImageLoader(context).enqueue(request)
-                    }
+                    loadedPic.value = it
                 }
             }
 
@@ -234,15 +220,15 @@ private fun CardGridList(
                 title = stringResource(R.string.title_dialog_save_img),
                 text = stringResource(R.string.tip_save_image),
                 onDismissRequest = {
-                    checkedPicUrl.value = ""
+                    openDialog.value = false
                 }
             ) {
                 loadedPic.value.let {
                     ImageDownloadHelper(context).saveBitmap(
                         bitmap = (it as BitmapDrawable).bitmap,
-                        displayName = "${getFileName(checkedPicUrl.value)}.jpg"
+                        displayName = "${getFileName(picUrl)}.jpg"
                     )
-                    checkedPicUrl.value = ""
+                    openDialog.value = false
                 }
             }
         }

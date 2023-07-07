@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +36,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
 import coil.request.ErrorResult
+import coil.request.ImageRequest
 import coil.request.SuccessResult
 
 const val RATIO = 16 / 9f
@@ -206,18 +209,22 @@ fun MainIcon(
 @Composable
 fun SubImage(
     modifier: Modifier = Modifier,
-    data: Any,
+    data: String,
     contentScale: ContentScale = ContentScale.Fit,
     loading: MutableState<Boolean>? = null,
     ratio: Float? = null,
-    onSuccess: (SuccessResult) -> Unit = {}
+    onSuccess: (Drawable?) -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val loader = LocalContext.current.imageLoader
+
 
     Box {
         SubcomposeAsyncImage(
             model = data,
             contentDescription = null,
             contentScale = contentScale,
+            filterQuality = FilterQuality.None,
             loading = {
                 Box(
                     modifier = Modifier
@@ -237,7 +244,17 @@ fun SubImage(
                 loading?.value = false
             },
             onSuccess = {
-                onSuccess(it.result)
+                val request = ImageRequest.Builder(context)
+                    .data(data)
+                    .diskCacheKey(data)
+                    .listener(
+                        onSuccess = { _, result ->
+                            onSuccess(result.drawable)
+                            loading?.value = false
+                        }
+                    )
+                    .build()
+                loader.enqueue(request)
             },
             modifier = if (ratio != null) {
                 modifier
@@ -250,10 +267,11 @@ fun SubImage(
 
         //加载立绘原图时
         if (loading != null && loading.value) {
-            LinearProgressCompose(
+            CircularProgressCompose(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding)
+                    .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding),
+                size = Dimen.fabIconSize
             )
         }
     }
