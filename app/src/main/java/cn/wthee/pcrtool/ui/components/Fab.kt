@@ -2,7 +2,14 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +30,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.launch
 
@@ -143,7 +154,11 @@ fun SelectTypeFab(
             modifier = modifier
                 .animateContentSize(defaultSpring())
                 .padding(paddingValues)
-                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+                .padding(
+                    start = Dimen.mediumPadding,
+                    end = Dimen.textfabMargin,
+                    top = Dimen.mediumPadding,
+                ),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 VibrateUtil(context).single()

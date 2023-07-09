@@ -7,7 +7,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.KeywordData
@@ -51,17 +50,15 @@ fun SuggestionChipGroup(
 
     FlowRow(modifier = modifier) {
         items.forEach {
-            SuggestionChip(
+            ElevatedSuggestionChip(
                 onClick = {
                     VibrateUtil(context).single()
                     onClick(it.keyword)
                 },
                 modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                 label = {
-                    Text(
-                        text = "${it.desc}：${it.keyword}",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleMedium
+                    Subtitle2(
+                        text = "${it.desc}：${it.keyword}"
                     )
                 }
             )
@@ -85,29 +82,23 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         //未选中字体颜色
         MaterialTheme.colorScheme.onSurface
     }
-    //Chip 背景色
-    val containerColor = if (isSelected) {
-        //选中背景色
-        MaterialTheme.colorScheme.primary
-    } else {
-        //未选中背景色
-        Color.Transparent
-    }
-    val chipColor = FilterChipDefaults.filterChipColors(selectedContainerColor = containerColor)
 
-    FilterChip(
+
+    ElevatedFilterChip(
         selected = isSelected,
         onClick = {
             VibrateUtil(context).single()
             selectIndex.value = index
         },
         modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-        colors = chipColor,
+        colors = FilterChipDefaults.elevatedFilterChipColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            selectedContainerColor = MaterialTheme.colorScheme.primary
+        ),
         label = {
-            Text(
+            CaptionText(
                 text = item.text,
-                color = textColor,
-                style = MaterialTheme.typography.titleMedium
+                color = textColor
             )
         }
     )

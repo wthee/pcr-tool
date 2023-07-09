@@ -192,7 +192,7 @@ fun StoryEventItem(
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //banner 图片
                 if (inProgress || isSub || !hasTeaser(event.eventId)) {
-                    SubImage(
+                    MainImage(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
                         contentScale = ContentScale.FillBounds,

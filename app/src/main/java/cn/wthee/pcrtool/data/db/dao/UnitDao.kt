@@ -61,7 +61,7 @@ interface UnitDao {
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE(quest_data.quest_id, 0 ) AS r6Id,
-            COALESCE(unit_data.start_time, '2015/04/01 00:00:00') AS unit_start_time,
+            (CASE WHEN unit_data.cutin_1 = 0 THEN '2000/01/01 00:00:00' ELSE COALESCE(unit_data.start_time, '2015/01/01 00:00:00') END) AS unit_start_time,
             (
                 CASE
                     WHEN is_limited = 0 AND unit_profile.unit_id NOT IN $limitedIds THEN 1 
@@ -157,6 +157,27 @@ interface UnitDao {
         """
     )
     suspend fun getCount(): Int
+
+    /**
+     * 角色数量（未登场）
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COUNT(*)
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id 
+        WHERE
+            unit_data.search_area_width > 0
+            AND unit_profile.unit_id < $maxUnitId 
+            AND unit_data.unit_id IS NOT NULL
+            AND unit_data.cutin_1 = 0
+        """
+    )
+    suspend fun getUnknowCount(): Int
 
     /**
      * 角色信息

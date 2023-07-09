@@ -228,6 +228,27 @@ fun MainSettings() {
                 BrowserUtil.open(leaderUrl)
             }
         )
+        //- 漫画汉化
+        val comicZhUrl = stringResource(id = R.string.comic_zh_url)
+        SettingCommonItem(
+            iconType = MainIconType.COMIC,
+            title = stringResource(id = R.string.title_comic_zh),
+            summary = stringResource(id = R.string.tip_comic_zh),
+            onClick = {
+                BrowserUtil.open(comicZhUrl)
+            }
+        )
+        //- 日服情报
+        val jpInfoUrl = stringResource(id = R.string.jp_info_url)
+        SettingCommonItem(
+            iconType = MainIconType.TWEET,
+            title = stringResource(id = R.string.title_jp_info),
+            summary = stringResource(id = R.string.tip_jp_info),
+            onClick = {
+                BrowserUtil.open(jpInfoUrl)
+            }
+        )
+
         CommonSpacer()
     }
 

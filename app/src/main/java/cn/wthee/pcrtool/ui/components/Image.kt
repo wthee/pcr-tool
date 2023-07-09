@@ -1,7 +1,14 @@
 package cn.wthee.pcrtool.ui.components
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -13,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -22,16 +30,19 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
 import coil.request.ErrorResult
+import coil.request.ImageRequest
 import coil.request.SuccessResult
 
 const val RATIO = 16 / 9f
 
 // 741 * 1200
-const val RATIO_COMIC = 0.63f
+const val RATIO_COMIC = 0.64f
 const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
@@ -40,6 +51,7 @@ const val RATIO_TEASER = 1024 / 430f
 /**
  * 图片加载
  */
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MainImage(
     modifier: Modifier = Modifier,
@@ -59,6 +71,7 @@ fun MainImage(
     val loading = remember {
         mutableStateOf(true)
     }
+    val loader = LocalContext.current.imageLoader
 
     AsyncImage(
         model = data,
@@ -71,6 +84,7 @@ fun MainImage(
         },
         onError = {
             loading.value = false
+            loader.diskCache?.remove(data)
             onError(it.result)
         },
         onLoading = {
@@ -195,18 +209,22 @@ fun MainIcon(
 @Composable
 fun SubImage(
     modifier: Modifier = Modifier,
-    data: Any,
+    data: String,
     contentScale: ContentScale = ContentScale.Fit,
     loading: MutableState<Boolean>? = null,
     ratio: Float? = null,
-    onSuccess: (SuccessResult) -> Unit = {}
+    onSuccess: (Drawable?) -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val loader = LocalContext.current.imageLoader
+
 
     Box {
         SubcomposeAsyncImage(
             model = data,
             contentDescription = null,
             contentScale = contentScale,
+            filterQuality = FilterQuality.None,
             loading = {
                 Box(
                     modifier = Modifier
@@ -226,7 +244,17 @@ fun SubImage(
                 loading?.value = false
             },
             onSuccess = {
-                onSuccess(it.result)
+                val request = ImageRequest.Builder(context)
+                    .data(data)
+                    .diskCacheKey(data)
+                    .listener(
+                        onSuccess = { _, result ->
+                            onSuccess(result.drawable)
+                            loading?.value = false
+                        }
+                    )
+                    .build()
+                loader.enqueue(request)
             },
             modifier = if (ratio != null) {
                 modifier
@@ -242,8 +270,8 @@ fun SubImage(
             CircularProgressCompose(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(Dimen.smallPadding),
-                size = Dimen.textIconSize
+                    .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding),
+                size = Dimen.fabIconSize
             )
         }
     }

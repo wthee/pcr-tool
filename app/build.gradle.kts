@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.06.00"
-val composeCompilerVersion = "1.4.7"
-val appVersionCode = 364
-val appVersionName = "3.6.4"
+val composeBom = "2023.06.01"
+val composeCompilerVersion = "1.4.8"
+val appVersionCode = 365
+val appVersionName = "3.6.5"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -103,7 +103,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose bom
@@ -151,7 +151,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
 
     //Paging3
-    val pagingVersion = "3.2.0-beta01"
+    val pagingVersion = "3.2.0-rc01"
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:$pagingVersion")
 
@@ -161,7 +161,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.5.1"
+    val roomVersion = "2.5.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

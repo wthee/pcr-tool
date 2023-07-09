@@ -171,7 +171,7 @@
     <string name="download_apk_from_github">从 Github 下载</string>
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="twitter">查看原文</string>
-    <string name="tweet">推文</string>
+    <string name="tweet">日服情报</string>
     <string name="comic">漫画</string>
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
@@ -221,7 +221,12 @@
     <string name="beta_tool_group_title">后续将调整至其他分组或移除</string>
     <string name="all_unit_calc_equip">全角色装备统计</string>
     <string name="to"> ~ </string>
-
+    <string name="title_comic_zh">优妮hnn汉化组</string>
+    <string name="tip_comic_zh">漫画汉化</string>
+    <string name="comic_zh_url">https://space.bilibili.com/3260075</string>
+    <string name="title_jp_info">PCR公主连结日服情报站</string>
+    <string name="tip_jp_info">日服最新情报</string>
+    <string name="jp_info_url">https://space.bilibili.com/1731293061</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>
@@ -475,8 +480,10 @@
     <string name="skill_status_1601">隐匿状态</string>
     <string name="skill_status_1700">魔法防御减少状态</string>
     <string name="skill_status_721_6107">龙之眼状态</string>
+    <string name="skill_status_1300">魔法攻击</string>
     <string name="skill_status_1800">多目标状态</string>
     <string name="skill_status_1900">护盾展开</string>
+    <string name="skill_status_2001">魔法攻击</string>
 
     <!--技能目标类型相关-->
     <string name="skill_target_none">目标</string>
@@ -573,7 +580,7 @@
     <string name="skill_action_type_desc_4">使%sHP回复 %s</string>
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
     <string name="skill_action_type_desc_7">锁定%s</string>
-    <string name="skill_action_speed_add">速度额外增加初始值的 %s 倍</string>
+    <string name="skill_action_speed_change">速度额外%s初始值的 %s 倍</string>
     <string name="skill_action_speed_multipl">速度变更为初始值的 %s 倍</string>
     <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
@@ -622,8 +629,6 @@
     <string name="skill_action_if_alone_not">%s多于一名时，使用动作(%d)</string>
     <string name="skill_action_if_hp_below">%s的HP在 [%d%%] 以下时，使用动作(%d)</string>
     <string name="skill_action_if_hp_above">%s的HP在 [%d%%] 以上时，使用动作(%d)</string>
-    <string name="skill_action_if_target">目标是%s时，使用动作(%d)</string>
-    <string name="skill_action_if_target_not">目标不是%s时，使用动作(%d)</string>
     <string name="skill_action_random_1">随机：[%d%%] 的概率使用动作(%d)，否则使用动作(%d)</string>
     <string name="skill_action_random_2">随机：[%d%%] 的概率使用动作(%d)</string>
     <string name="skill_action_type_desc_24">复活%s，并回复其 [%d%%]HP</string>
@@ -724,6 +729,7 @@
     <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍%s</string>
     <string name="skill_action_type_desc_100">%s免疫 [无法行动] 异常状态%s%s</string>
     <string name="skill_action_type_desc_100_count">&#160;[%d] 次</string>
+    <string name="skill_action_type_desc_103">动作(%d)造成的伤害将依据%s的攻击力</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 
     <!--异常状态-->
@@ -793,5 +799,6 @@
     <string name="debug_short_text">测试文本测试文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
     <string name="leader_tier_d">T%s</string>
+    <string name="to_zh">（汉化）</string>
 
 </resources>

@@ -63,11 +63,11 @@ import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -483,7 +483,7 @@ private fun EquipItem(
     val equipName: @Composable () -> Unit by remember {
         mutableStateOf(
             {
-                MainContentText(
+                Subtitle2(
                     text = equipState.equipmentName,
                     textAlign = TextAlign.Start,
                     maxLines = 2,

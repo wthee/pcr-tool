@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.R
@@ -65,21 +66,7 @@ fun ComicList(
 
     //目录
     val count = lazyPagingItems.itemCount
-    val tabs = arrayListOf<String>()
-    if (count > 0) {
-        for (i in 0 until count) {
-            val title = if (items[i] == null) {
-                "${count - i}"
-            } else {
-                val titleIndex = items[i]!!.id
-                val titleText = items[i]!!.title
-                "$titleIndex $titleText"
-            }
-            tabs.add(title)
-        }
-    } else {
-        tabs.add("")
-    }
+
     //选中的目录下标
     val tocSelectedIndex = remember {
         mutableStateOf(max(0, count - 1))
@@ -111,7 +98,7 @@ fun ComicList(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .navigationBarsPadding(),
-                tabs = tabs,
+                items = items,
                 pagerState = pagerState,
                 gridState = gridState,
                 tocSelectedIndex = tocSelectedIndex
@@ -183,7 +170,7 @@ private fun ComicItem(data: ComicData) {
             data = data.url,
             ratio = RATIO_COMIC,
             modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillHeight,
         )
         CommonSpacer()
         CommonSpacer()
@@ -199,7 +186,7 @@ private fun ComicItem(data: ComicData) {
 private fun ComicIndexChange(
     modifier: Modifier = Modifier,
     gridState: LazyGridState,
-    tabs: List<String>,
+    items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
     tocSelectedIndex: MutableState<Int>,
     changeListener: (() -> Unit)
@@ -256,7 +243,7 @@ private fun ComicIndexChange(
             if (openDialog) {
                 ComicTocList(
                     gridState,
-                    tabs,
+                    items,
                     pagerState,
                     tocSelectedIndex,
                     changeListener,
@@ -292,12 +279,35 @@ private fun ComicIndexChange(
 @Composable
 private fun ComicTocList(
     gridState: LazyGridState,
-    tabs: List<String>,
+    items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
     tocSelectedIndex: MutableState<Int>,
     changeListener: (() -> Unit)
 ) {
     val context = LocalContext.current
+
+    val tabs = arrayListOf<String>()
+    if (items.size > 0) {
+        for (i in 0 until items.size) {
+            val title = if (items[i] == null) {
+                "${items.size - i}"
+            } else {
+                val titleIndex = items[i]!!.id
+                val titleText = items[i]!!.title
+                val zh = if (items[i]!!.url.contains("_zh")) {
+                    stringResource(R.string.to_zh)
+                } else {
+                    stringResource(R.string.none)
+                }
+                "$titleIndex$zh $titleText"
+
+            }
+            tabs.add(title)
+        }
+    } else {
+        tabs.add("")
+    }
+
     val pageCount = tabs.size
     val input = remember {
         mutableStateOf("")

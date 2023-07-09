@@ -504,36 +504,31 @@ private fun RankSelectItem(
         contentPadding = Dimen.mediumPadding,
         isSubLayout = true
     ) {
-        rankList.forEachIndexed { index, rank ->
+
+        rankList.filter {
+            targetType == RankSelectType.DEFAULT ||
+                    (targetType == RankSelectType.LIMIT && it >= currentRank)
+        }.forEachIndexed { index, rank ->
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
                 val rankColor = getRankColor(rank = rank)
                 val selected = selectIndex.value == index
-                val enabled = targetType == RankSelectType.DEFAULT ||
-                        (targetType == RankSelectType.LIMIT && rank >= currentRank)
 
-                FilterChip(
+
+                ElevatedFilterChip(
                     selected = selected,
-                    enabled = enabled,
                     onClick = {
                         VibrateUtil(context).single()
                         selectIndex.value = index
                     },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = if (enabled) {
-                            rankColor
-                        } else {
-                            MaterialTheme.colorScheme.outline
-                        }
+                    colors = FilterChipDefaults.elevatedFilterChipColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        selectedContainerColor = rankColor
                     ),
                     label = {
                         CaptionText(
                             text = rankFillBlank(rank),
-                            color = if (enabled) {
-                                if (selected) colorWhite else rankColor
-                            } else {
-                                MaterialTheme.colorScheme.outlineVariant
-                            }
+                            color = if (selected) colorWhite else rankColor
                         )
                     }
                 )
