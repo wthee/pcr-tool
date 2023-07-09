@@ -40,7 +40,7 @@ fun CharacterSection(
     val id = OverviewType.CHARACTER.id
     //角色总数
     val characterCount =
-        overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
+        overviewViewModel.getCharacterCount().collectAsState(initial = "0").value
     //角色列表
     val characterList =
         overviewViewModel.getCharacterInfoList().collectAsState(initial = arrayListOf()).value
@@ -49,7 +49,7 @@ fun CharacterSection(
         id = id,
         titleId = R.string.character,
         iconType = MainIconType.CHARACTER,
-        hintText = characterCount.toString(),
+        hintText = characterCount,
         contentVisible = characterList.isNotEmpty(),
         isEditMode = isEditMode,
         onClick = {
