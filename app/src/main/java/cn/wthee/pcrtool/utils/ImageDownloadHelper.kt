@@ -42,7 +42,12 @@ class ImageDownloadHelper(private val context: Context) {
                 val file = File("$path/$displayName")
                 if (file.exists()) {
                     Looper.prepare()
-                    ToastUtil.short(getString(R.string.pic_exist, file.absolutePath))
+                    ToastUtil.short(
+                        getString(
+                            R.string.pic_exist,
+                            file.absolutePath.replace(DIR, "")
+                        )
+                    )
                     Looper.loop()
                 }
 
@@ -59,7 +64,12 @@ class ImageDownloadHelper(private val context: Context) {
                 if (insertImage(bitmap, contentValues)) {
                     VibrateUtil(context).done()
                     Looper.prepare()
-                    ToastUtil.long(getString(R.string.save_success, file.absolutePath))
+                    ToastUtil.short(
+                        getString(
+                            R.string.save_success,
+                            file.absolutePath.replace(DIR, "")
+                        )
+                    )
                     Looper.loop()
                 } else {
                     VibrateUtil(context).error()
@@ -106,13 +116,13 @@ class ImageDownloadHelper(private val context: Context) {
     }
 
     companion object {
-
+        private const val DIR = "/storage/emulated/0"
         /**
          * 获取图片保存路径
          */
         fun getImagePath(): String {
             var path: String = Environment.DIRECTORY_PICTURES
-            path = "/storage/emulated/0" + File.separator + path
+            path = DIR + File.separator + path
             return path
         }
     }
