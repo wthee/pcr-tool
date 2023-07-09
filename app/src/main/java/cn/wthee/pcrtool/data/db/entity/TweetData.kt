@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.utils.deleteSpace
 
 /**
  * 推特信息
@@ -15,7 +14,7 @@ data class TweetData(
     val date: String = "2021-01-01 12:00:00",
     val tweet: String = "",
     val photos: String = "",
-    val urls: String = "",
+    val urls: String? = "",
     val link: String = "",
 ) {
     fun getImageList(): ArrayList<String> {
@@ -28,9 +27,13 @@ data class TweetData(
         return urls
     }
 
-    fun getUrlList() = urls.split(",").filter { it != "" }
-
+    /**
+     * 处理文本格式
+     */
     fun getFormatTweet(): String {
-        return tweet.substringBefore("http").deleteSpace.substringBeforeLast("\n")
+        return tweet.replace("【公主连结】", "")
+            .replace("#公主连结#", "")
+            .replace("#公主连结Re:Dive#", "")
+            .replace("\n\n", "")
     }
 }

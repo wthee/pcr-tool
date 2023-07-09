@@ -171,7 +171,7 @@
     <string name="download_apk_from_github">从 Github 下载</string>
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="twitter">查看原文</string>
-    <string name="tweet">推文</string>
+    <string name="tweet">日服情报</string>
     <string name="comic">漫画</string>
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
@@ -224,7 +224,9 @@
     <string name="title_comic_zh">优妮hnn汉化组</string>
     <string name="tip_comic_zh">漫画汉化</string>
     <string name="comic_zh_url">https://space.bilibili.com/3260075</string>
-
+    <string name="title_jp_info">PCR公主连结日服情报站</string>
+    <string name="tip_jp_info">日服最新情报</string>
+    <string name="jp_info_url">https://space.bilibili.com/1731293061</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>

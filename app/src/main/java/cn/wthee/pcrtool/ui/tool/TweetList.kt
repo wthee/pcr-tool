@@ -1,14 +1,16 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +29,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.components.BottomSearchBar
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
@@ -35,22 +36,17 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.RATIO_COMIC
-import cn.wthee.pcrtool.ui.components.RATIO_COMMON
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
-import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.COMIC4
-import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.PNG
 import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 
@@ -153,135 +149,86 @@ fun TweetList(
  */
 @Composable
 private fun TweetItem(data: TweetData) {
-    val placeholder = data.id == 0
     val photos = data.getImageList()
-    val isComicUrl = data.tweet.contains("【4コマ更新】")
-    var url = if (isComicUrl) {
-        // 四格漫画
-        COMIC4 + getComicId(data.tweet) + PNG
-    } else {
-        ""
-    }
-    // 时间
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = Dimen.largePadding, start = Dimen.largePadding)
-    ) {
-        MainTitleText(
-            text = data.date,
-            modifier = Modifier.commonPlaceholder(placeholder)
-        )
-    }
 
-    //内容
+
     Column(
-        modifier = Modifier
-            .padding(
-                start = Dimen.largePadding,
-                end = Dimen.largePadding,
-                top = Dimen.smallPadding,
-                bottom = Dimen.largePadding
-            )
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = Dimen.cardHeight * 2)
-            .commonPlaceholder(visible = placeholder),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        //文本
-        MainContentText(
-            text = data.getFormatTweet(),
-            textAlign = TextAlign.Start,
-            selectable = true,
-            modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
         )
-        //相关链接跳转
-        if (!placeholder) {
-            Row(
-                modifier = Modifier
-                    .padding(vertical = Dimen.smallPadding)
-                    .fillMaxWidth()
-            ) {
-                TweetButton(data.link)
-                data.getUrlList().forEach {
-                    TweetButton(it)
-                }
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(bottom = Dimen.mediumPadding)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(text = data.date)
+            //相关链接跳转
+            IconTextButton(text = stringResource(id = R.string.twitter)) {
+                BrowserUtil.open(data.link)
             }
         }
 
-        //图片
-        if (photos.isNotEmpty()) {
-            VerticalGrid(itemWidth = getItemWidth()) {
-                photos.forEach {
-                    if (!isComicUrl) {
-                        url = it
+
+        MainCard {
+            Column {
+
+                //来源
+                val jpInfoUrl = stringResource(id = R.string.jp_info_url)
+                IconTextButton(
+                    text = "@" + stringResource(id = R.string.title_jp_info),
+                    contentColor = MaterialTheme.colorScheme.primary
+                ) {
+                    BrowserUtil.open(jpInfoUrl)
+                }
+
+                //文本
+                MainContentText(
+                    text = data.getFormatTweet(),
+                    textAlign = TextAlign.Start,
+                    selectable = true,
+                    modifier = Modifier.padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.smallPadding,
+                        bottom = Dimen.mediumPadding,
+                    ),
+                )
+
+                //图片
+                if (photos.isNotEmpty()) {
+                    if (photos.size > 1) {
+                        VerticalGrid(fixCount = 3, contentPadding = Dimen.mediumPadding) {
+                            photos.forEach {
+                                MainImage(
+                                    data = it,
+                                    ratio = -1f,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(Dimen.tweetImgHeight),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
+                    } else {
+                        MainImage(
+                            data = photos[0],
+                            ratio = -1f,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentScale = ContentScale.Crop
+                        )
                     }
-                    MainImage(
-                        data = url,
-                        ratio = if (isComicUrl) RATIO_COMIC else RATIO_COMMON,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.FillHeight
-                    )
+
                 }
             }
         }
+
     }
+
 }
 
-/**
- * 相关链接按钮
- */
-@Composable
-private fun TweetButton(
-    url: String
-) {
-    //根据链接获取相符的图标
-    val btn = when {
-        url.contains("youtu.be") || url.contains("www.youtube.com") -> TweetButtonData(
-            stringResource(id = R.string.youtube), MainIconType.YOUTUBE,
-        ) {
-            BrowserUtil.open(url)
-        }
-
-        url.contains("priconne-redive.jp/news/") -> TweetButtonData(
-            stringResource(id = R.string.read_news), MainIconType.NEWS
-        ) {
-            //公告详情
-            BrowserUtil.open(url)
-        }
-
-        url.contains("twitter.com") -> TweetButtonData(
-            stringResource(id = R.string.twitter), MainIconType.TWEET
-        ) {
-            BrowserUtil.open(url)
-        }
-
-        url.contains("hibiki-radio.jp") -> TweetButtonData(
-            stringResource(id = R.string.hibiki), MainIconType.HIBIKI
-        ) {
-            BrowserUtil.open(url)
-        }
-
-        else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
-            BrowserUtil.open(url)
-        }
-    }
-
-    IconTextButton(icon = btn.iconType, text = btn.text) {
-        btn.action()
-    }
-}
-
-/**
- * 获取id
- */
-private fun getComicId(title: String): String {
-    return try {
-        val result = Regex("(.*)第(.*?)話「(.*?)」").findAll(title)
-        result.first().groups[2]!!.value
-    } catch (e: Exception) {
-        ""
-    }
-}
 
 @CombinedPreviews
 @Composable
