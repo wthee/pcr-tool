@@ -6,18 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.NewsDao
-import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
 
 
 @Database(
     entities = [
-        NewsTable::class,
-        RemoteKey::class,
+        NewsTable::class
     ],
-    version = 4,
+    version = 365,
     exportSchema = false
 )
 /**
@@ -26,7 +23,6 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
 abstract class AppNewsDatabase : RoomDatabase() {
 
     abstract fun getNewsDao(): NewsDao
-    abstract fun getRemoteKeyDao(): RemoteKeyDao
 
     companion object {
 

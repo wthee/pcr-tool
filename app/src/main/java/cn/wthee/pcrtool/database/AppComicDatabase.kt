@@ -6,18 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.ComicDao
-import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
 import cn.wthee.pcrtool.data.db.entity.ComicData
-import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.utils.Constants.DATABASE_COMIC
 
 
 @Database(
     entities = [
-        ComicData::class,
-        RemoteKey::class,
+        ComicData::class
     ],
-    version = 1,
+    version = 365,
     exportSchema = false
 )
 /**
@@ -26,7 +23,6 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_COMIC
 abstract class AppComicDatabase : RoomDatabase() {
 
     abstract fun getComicDao(): ComicDao
-    abstract fun getRemoteKeyDao(): RemoteKeyDao
 
     companion object {
 

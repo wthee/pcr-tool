@@ -5,19 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
 import cn.wthee.pcrtool.data.db.dao.TweetDao
-import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.utils.Constants.DATABASE_TWEET
 
 
 @Database(
     entities = [
-        TweetData::class,
-        RemoteKey::class,
+        TweetData::class
     ],
-    version = 4,
+    version = 365,
     exportSchema = false
 )
 /**
@@ -26,7 +23,6 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_TWEET
 abstract class AppTweetDatabase : RoomDatabase() {
 
     abstract fun getTweetDao(): TweetDao
-    abstract fun getRemoteKeyDao(): RemoteKeyDao
 
     companion object {
 

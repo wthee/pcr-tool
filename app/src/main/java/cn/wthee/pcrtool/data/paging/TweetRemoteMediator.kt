@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppTweetDatabase
@@ -25,7 +24,6 @@ class TweetRemoteMediator(
 ) : RemoteMediator<Int, TweetData>() {
 
     private val tweetDao = database.getTweetDao()
-    private val remoteKeyDao = database.getRemoteKeyDao()
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, TweetData>
@@ -39,7 +37,7 @@ class TweetRemoteMediator(
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(
-                            endOfPaginationReached = true
+                            endOfPaginationReached = false
                         )
                     lastItem.id
                 }
@@ -56,23 +54,12 @@ class TweetRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.deleteByQuery(keyword)
                     tweetDao.deleteByQuery(keyword)
                 }
 
-                if (response?.isNotEmpty() == true) {
-                    //保存远程键
-                    remoteKeyDao.insert(
-                        RemoteKey(
-                            query = keyword,
-                            nextKey = response.last().id
-                        )
-                    )
-
-                    //保存到本地
-                    response.let {
-                        tweetDao.insertAll(it)
-                    }
+                //保存到本地
+                response?.let {
+                    tweetDao.insertAll(it)
                 }
             }
 
