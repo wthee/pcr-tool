@@ -275,6 +275,40 @@ interface EquipmentDao {
     suspend fun getUniqueEquipBonus(unitId: Int, lv: Int): Attr?
 
     /**
+     * 获取专武信息（等级大于260）
+     * @param unitId 角色编号
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            ( a.hp * COALESCE( :lv, 0 ) ) AS hp,
+            ( a.atk * COALESCE( :lv, 0 ) ) AS atk,
+            ( a.magic_str * COALESCE( :lv, 0 ) ) AS magic_str,
+            ( a.def * COALESCE( :lv, 0 ) ) AS def,
+            ( a.magic_def * COALESCE( :lv, 0 ) ) AS magic_def,
+            ( a.physical_critical * COALESCE( :lv, 0 ) ) AS physical_critical,
+            ( a.magic_critical * COALESCE( :lv, 0 ) ) AS magic_critical,
+            ( a.wave_hp_recovery * COALESCE( :lv, 0 ) ) AS wave_hp_recovery,
+            ( a.wave_energy_recovery * COALESCE( :lv, 0 ) ) AS wave_energy_recovery,
+            ( a.dodge * COALESCE( :lv, 0 ) ) AS dodge,
+            ( a.physical_penetrate * COALESCE( :lv, 0 ) ) AS physical_penetrate,
+            ( a.magic_penetrate * COALESCE( :lv, 0 ) ) AS magic_penetrate,
+            ( a.life_steal * COALESCE( :lv, 0 ) ) AS life_steal,
+            ( a.hp_recovery_rate * COALESCE( :lv, 0 ) ) AS hp_recovery_rate,
+            ( a.energy_recovery_rate * COALESCE( :lv, 0 ) ) AS energy_recovery_rate,
+            ( a.energy_reduce_rate * COALESCE( :lv, 0 ) ) AS energy_reduce_rate,
+            ( a.accuracy * COALESCE( :lv, 0 ) ) AS accuracy
+        FROM
+            unique_equip_enhance_rate AS a
+            LEFT JOIN unit_unique_equipment AS r ON r.equip_id = a.equipment_id
+        WHERE r.unit_id = :unitId AND a.min_lv = 261
+    """
+    )
+    suspend fun getUniqueEquipBonusV2(unitId: Int, lv: Int): Attr?
+
+    /**
      * 根获取专武最大强化等级
      */
     @SkipQueryVerification
