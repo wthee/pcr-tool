@@ -191,7 +191,7 @@ interface EquipmentDao {
         FROM
             unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
-            LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
+            LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
@@ -231,7 +231,7 @@ interface EquipmentDao {
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy,
             0 AS isTpLimitAction
         FROM
-            unit_unique_equip AS r
+            unit_unique_equipment AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
