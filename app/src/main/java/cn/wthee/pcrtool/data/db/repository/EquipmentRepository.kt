@@ -30,26 +30,30 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
-    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = if (lv > Constants.TP_LIMIT_LEVEL) {
-        // 获取专武奖励属性
-        val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
-        val level = if (bonusAttr != null) {
-            //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
-            Constants.TP_LIMIT_LEVEL
-        } else {
-            //正常计算等级提升属性
-            lv
-        }
-        val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level)
-        // 奖励属性不为空，计算总属性：初始属性 + 奖励属性
-        if (bonusAttr != null && equipmentMaxData != null) {
-            equipmentMaxData.isTpLimitAction = true
-            equipmentMaxData.attr = equipmentMaxData.attr.add(bonusAttr)
-        }
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) = try {
+        if (lv > Constants.TP_LIMIT_LEVEL) {
+            // 获取专武奖励属性
+            val bonusAttr = equipmentDao.getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
+            val level = if (bonusAttr != null) {
+                //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
+                Constants.TP_LIMIT_LEVEL
+            } else {
+                //正常计算等级提升属性
+                lv
+            }
+            val equipmentMaxData = equipmentDao.getUniqueEquipInfosV2(unitId, level)
+            // 奖励属性不为空，计算总属性：初始属性 + 奖励属性
+            if (bonusAttr != null && equipmentMaxData != null) {
+                equipmentMaxData.isTpLimitAction = true
+                equipmentMaxData.attr = equipmentMaxData.attr.add(bonusAttr)
+            }
 
-        equipmentMaxData
-    } else {
-        equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+            equipmentMaxData
+        } else {
+            equipmentDao.getUniqueEquipInfosV2(unitId, lv)
+        }
+    } catch (e: Exception) {
+        equipmentDao.getUniqueEquipInfos(unitId, lv)
     }
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
