@@ -729,6 +729,8 @@
     <string name="skill_action_type_desc_98">使%s受到TP降低时，效果变更为初始值的 [%s] 倍%s</string>
     <string name="skill_action_type_desc_100">%s免疫 [无法行动] 异常状态%s%s</string>
     <string name="skill_action_type_desc_100_count">&#160;[%d] 次</string>
+    <string name="skill_action_type_desc_101">%s攻击时，对敌人追加 [%d] 层标记%s%s</string>
+    <string name="skill_action_type_desc_101_reduce">%s攻击时，敌人减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_103">动作(%d)造成的伤害将依据%s的攻击力</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
 

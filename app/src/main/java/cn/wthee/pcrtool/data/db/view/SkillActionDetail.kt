@@ -13,8 +13,9 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getString
-import cn.wthee.pcrtool.utils.int
+import cn.wthee.pcrtool.utils.intStr
 import kotlin.math.abs
+import kotlin.math.max
 
 
 /**
@@ -847,7 +848,7 @@ data class SkillActionDetail(
                                 getString(
                                     R.string.skill_action_sp_if_mark_count,
                                     getTarget(),
-                                    actionValue3.toInt(),
+                                    max(actionValue3.toInt(), 1),
                                     actionDetail2 % 10
                                 )
                             }
@@ -939,7 +940,7 @@ data class SkillActionDetail(
                                 getString(
                                     R.string.skill_action_sp_if_mark_count_not,
                                     getTarget(),
-                                    actionValue3.toInt(),
+                                    max(actionValue3.toInt(), 1),
                                     actionDetail3 % 10
                                 )
                             }
@@ -1077,7 +1078,7 @@ data class SkillActionDetail(
                 getString(R.string.skill_action_type_desc_34, value, limit)
             }
             // 35：特殊标记
-            SkillActionType.SEAL, SkillActionType.SEAL_v2 -> {
+            SkillActionType.SEAL -> {
                 val count = abs(actionValue4.toInt())
                 if (actionValue4.toInt() > 0) {
                     val time = getTimeText(3, actionValue3, hideIndex = true)
@@ -1088,7 +1089,22 @@ data class SkillActionDetail(
                     getString(
                         R.string.skill_action_type_desc_35_reduce,
                         getTarget(),
-                        abs(actionValue4.toInt())
+                        count
+                    )
+                }
+            }
+            // 101：特殊标记v2
+            SkillActionType.SEAL_v2 -> {
+                val count = abs(actionDetail2)
+                if (actionDetail2 >= 0) {
+                    val time = getTimeText(3, actionValue3, hideIndex = true)
+                    val limit = getString(R.string.skill_action_limit_int, actionValue1.toInt())
+                    getString(R.string.skill_action_type_desc_101, getTarget(), count, time, limit)
+                } else {
+                    getString(
+                        R.string.skill_action_type_desc_101_reduce,
+                        getTarget(),
+                        count
                     )
                 }
             }
@@ -1460,6 +1476,8 @@ data class SkillActionDetail(
                     3 -> getString(R.string.attr_def)
                     4 -> getString(R.string.attr_magic_str)
                     5 -> getString(R.string.attr_magic_def)
+                    6 -> getString(R.string.attr_physical_critical)
+                    7 -> getString(R.string.attr_magic_critical)
                     else -> UNKNOWN
                 }
                 val value = getValueText(2, actionValue2, actionValue3)
@@ -1640,23 +1658,23 @@ data class SkillActionDetail(
         val skillAtkStrText = getString(R.string.skill_atk_text)
         val value = if (v3 == 0.0) {
             if (v1 == 0.0 && v2 != 0.0) {
-                "[${(v2 * level).int}$percent] <{${index + 1}}$v2 * $skillLevelText>"
+                "[${(v2 * level).intStr}$percent] <{${index + 1}}$v2 * $skillLevelText>"
             } else if (v1 != 0.0 && v2 == 0.0) {
                 "{${index}}[${v1.toBigDecimal().stripTrailingZeros().toPlainString()}$percent]"
             } else if (v1 != 0.0) {
-                "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText>"
+                "[${(v1 + v2 * level).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText>"
             } else {
                 "{$index}[0]$percent"
             }
         } else {
             if (v4 != 0.0) {
-                "[${(v1 + v2 * level + (v3 + v4 * level) * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + ﹙{${index + 2}}$v3 + {${index + 3}}$v4 * $skillLevelText﹚ * $skillAtkStrText>"
+                "[${(v1 + v2 * level + (v3 + v4 * level) * atk).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + ﹙{${index + 2}}$v3 + {${index + 3}}$v4 * $skillLevelText﹚ * $skillAtkStrText>"
             } else if (v1 == 0.0 && v2 != 0.0) {
-                "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v2 + v3 * atk).intStr}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * $skillAtkStrText>"
             } else if (v1 == 0.0) {
-                "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v3 * atk).intStr}$percent] <{${index + 2}}$v3 * $skillAtkStrText>"
             } else if (v2 != 0.0) {
-                "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + {${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v1 + v2 * level + v3 * atk).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + {${index + 2}}$v3 * $skillAtkStrText>"
             } else {
                 "{$index}[0]$percent"
             }
