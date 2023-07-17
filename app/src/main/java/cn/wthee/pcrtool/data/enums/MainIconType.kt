@@ -10,6 +10,7 @@ import androidx.compose.material.icons.rounded.Api
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.AutoStories
+import androidx.compose.material.icons.rounded.Bolt
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cake
 import androidx.compose.material.icons.rounded.Calculate
@@ -528,4 +529,10 @@ enum class MainIconType(val icon: ImageVector) {
      * 关注
      */
     VERIFIED(Icons.Rounded.Verified),
+
+    /**
+     * 专用装备
+     */
+    UNIQUE_EQUIP(Icons.Rounded.Bolt),
+
 }

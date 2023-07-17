@@ -1,7 +1,10 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import javax.inject.Inject
 
@@ -27,6 +30,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         )
 
     suspend fun getCount() = equipmentDao.getCount()
+
+    suspend fun getUniqueEquipCount() = try {
+        equipmentDao.getUniqueEquipCountV2()
+    } catch (_: Exception) {
+        equipmentDao.getUniqueEquipCount()
+    }
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
@@ -88,7 +97,33 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getMaxRank() = try {
         equipmentDao.getMaxRank()
-    }catch (_: Exception) {
+    } catch (_: Exception) {
         0
+    }
+
+    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData> {
+        val data = (try {
+            val data = equipmentDao.getUniqueEquipListV2(name)
+            if (data.isEmpty()) {
+                equipmentDao.getUniqueEquipList(name)
+            }
+            data
+        } catch (_: Exception) {
+            equipmentDao.getUniqueEquipList(name)
+        }).reversed()
+
+        //处理台服排序
+        return if (MainActivity.regionType == RegionType.TW) {
+            data.sortedBy {
+                arrayListOf(
+                    138011,
+                    138021,
+                    138041,
+                    138061
+                ).contains(it.equipId)
+            }
+        } else {
+            data
+        }
     }
 }

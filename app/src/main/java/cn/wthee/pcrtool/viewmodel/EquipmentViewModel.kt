@@ -264,4 +264,19 @@ class EquipmentViewModel @Inject constructor(
     fun getEquipUnitList(equipId: Int) = flow {
         emit(equipmentRepository.getEquipUnitList(equipId))
     }
+
+
+    /**
+     * 获取专用装备列表
+     *
+     * @param name 装备或角色名
+     */
+    fun getUniqueEquips(name: String) = flow {
+        try {
+            val data = equipmentRepository.getUniqueEquipList(name)
+            emit(data)
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getUniqueEquips#name:$name")
+        }
+    }
 }

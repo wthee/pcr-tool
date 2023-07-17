@@ -15,6 +15,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -75,6 +77,7 @@ import cn.wthee.pcrtool.ui.tool.quest.AllQuestList
 import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipList
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -255,7 +258,7 @@ fun NavGraph(
                 val arguments = requireNotNull(it.arguments)
                 EquipMainInfo(
                     arguments.getInt(NavRoute.EQUIP_ID),
-                    toEquipMaterial= actions.toEquipMaterial,
+                    toEquipMaterial = actions.toEquipMaterial,
                     toEquipUnit = actions.toEquipUnit
                 )
             }
@@ -715,6 +718,39 @@ fun NavGraph(
                     searchEquipIds = arguments.getString(NavRoute.SEARCH_EQUIP_IDS) ?: ""
                 )
             }
+
+            //专用装备列表
+            composable(
+                route = NavRoute.UNIQUE_EQUIP_LIST
+            ) {
+                val scrollState = rememberLazyGridState()
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                UniqueEquipList(
+                    scrollState = scrollState,
+                    toUniqueEquipDetail = actions.toUniqueEquipDetail
+                )
+            }
+
+            //专用装备属性详情
+            composable(
+                route = "${NavRoute.UNIQUE_EQUIP_DETAIL}/{${NavRoute.UNIT_ID}}",
+                arguments = listOf(navArgument(NavRoute.UNIT_ID) {
+                    type = NavType.IntType
+                })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                val scrollState = rememberScrollState()
+                val showDetail = remember {
+                    mutableStateOf(false)
+                }
+                CharacterDetail(
+                    scrollState,
+                    unitId = arguments.getInt(NavRoute.UNIT_ID),
+                    actions,
+                    showDetailState = showDetail
+                )
+            }
         }
     }
 }
@@ -1058,4 +1094,19 @@ class NavActions(navController: NavHostController) {
     val toSearchEquipQuest: (String) -> Unit = { searchEquipIds ->
         navController.navigate("${NavRoute.TOOL_ALL_QUEST}/${searchEquipIds}")
     }
+
+    /**
+     * 专用装备列表
+     */
+    val toUniqueEquipList = {
+        navController.navigate(NavRoute.UNIQUE_EQUIP_LIST)
+    }
+
+    /**
+     * 专用装备详情
+     */
+    val toUniqueEquipDetail: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}")
+    }
+
 }

@@ -1,7 +1,13 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -28,9 +34,25 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.home.module.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.home.module.ToolMenu
+import cn.wthee.pcrtool.ui.home.module.ToolMenuData
+import cn.wthee.pcrtool.ui.home.module.editToolMenuOrder
+import cn.wthee.pcrtool.ui.home.module.getAction
+import cn.wthee.pcrtool.ui.home.module.getToolMenuData
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 
@@ -66,6 +88,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     dataList.addItem(ToolMenuType.CLAN)
     dataList.addItem(ToolMenuType.EXTRA_EQUIP)
     dataList.addItem(ToolMenuType.TRAVEL_AREA)
+    dataList.addItem(ToolMenuType.UNIQUE_EQUIP)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询

@@ -5,6 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -165,6 +166,7 @@ fun LinearProgressCompose(
  * @param keywordState 关键词，用于查询
  * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
  * @param defaultKeywordList 默认关键词列表
+ * @param fabText 不为空时，fab将显示该文本
  */
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
@@ -172,11 +174,13 @@ fun LinearProgressCompose(
 @Composable
 fun BottomSearchBar(
     modifier: Modifier = Modifier,
+    fabText: String? = null,
     @StringRes labelStringId: Int,
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState,
+    scrollState: LazyListState? = null,
+    gridScrollState: LazyGridState? = null,
     defaultKeywordList: List<KeywordData>? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -203,7 +207,8 @@ fun BottomSearchBar(
                 iconType = MainIconType.TOP
             ) {
                 coroutineScope.launch {
-                    scrollState.scrollToItem(0)
+                    scrollState?.scrollToItem(0)
+                    gridScrollState?.scrollToItem(0)
                 }
             }
             //重置
@@ -221,8 +226,8 @@ fun BottomSearchBar(
 
             //搜索
             MainSmallFab(
-                iconType = MainIconType.SEARCH,
-                text = keywordState.value
+                iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
+                text = fabText ?: keywordState.value
             ) {
                 keyboardController?.show()
                 openDialog.value = true

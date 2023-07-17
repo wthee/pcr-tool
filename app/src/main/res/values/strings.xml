@@ -227,6 +227,9 @@
     <string name="title_jp_info">PCR公主连结日服情报站</string>
     <string name="tip_jp_info">日服最新情报</string>
     <string name="jp_info_url">https://space.bilibili.com/1731293061</string>
+    <string name="tool_unique_equip">专用装备</string>
+    <string name="search_unique_equip">装备名/角色名</string>
+    <string name="character_detail">角色详情</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>

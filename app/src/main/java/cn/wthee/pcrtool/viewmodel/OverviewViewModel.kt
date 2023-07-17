@@ -17,7 +17,11 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.compareAllTypeEvent
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.isComingSoon
+import cn.wthee.pcrtool.utils.isInProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -76,6 +80,28 @@ class OverviewViewModel @Inject constructor(
     fun getEquipList(limit: Int) = flow {
         try {
             emit(equipmentRepository.getEquipments(FilterEquipment(), limit))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipList")
+        }
+    }
+
+    /**
+     * 获取专用装备数量
+     */
+    fun getUniqueEquipCount() = flow {
+        try {
+            emit(equipmentRepository.getUniqueEquipCount())
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getEquipCount")
+        }
+    }
+
+    /**
+     * 获取专用装备列表
+     */
+    fun getUniqueEquipList(limit: Int) = flow {
+        try {
+            emit(equipmentRepository.getUniqueEquipList("").subList(0, limit))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getEquipList")
         }

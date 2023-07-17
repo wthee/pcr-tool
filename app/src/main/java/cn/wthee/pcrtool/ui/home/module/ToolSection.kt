@@ -4,7 +4,11 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -199,6 +203,7 @@ fun getAction(
             ToolMenuType.WEBSITE -> actions.toWebsiteList()
             ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
             ToolMenuType.ALL_QUEST -> actions.toAllQuest()
+            ToolMenuType.UNIQUE_EQUIP -> actions.toUniqueEquipList()
         }
     }
 
@@ -238,14 +243,21 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_travel,
             MainIconType.EXTRA_EQUIP_DROP
         )
+
         ToolMenuType.WEBSITE -> ToolMenuData(R.string.tool_website, MainIconType.WEBSITE_BOOKMARK)
         ToolMenuType.LEADER_TIER -> ToolMenuData(
             R.string.tool_leader_tier,
             MainIconType.LEADER_TIER
         )
+
         ToolMenuType.ALL_QUEST -> ToolMenuData(
             R.string.tool_all_quest,
             MainIconType.ALL_QUEST
+        )
+
+        ToolMenuType.UNIQUE_EQUIP -> ToolMenuData(
+            R.string.tool_unique_equip,
+            MainIconType.UNIQUE_EQUIP
         )
     }
     //设置模块类别

@@ -67,4 +67,7 @@ object NavRoute {
     const val TOOL_LEADER_TIER = "leaderTier"
     const val TOOL_ALL_QUEST = "allQuest"
     const val SEARCH_EQUIP_IDS = "searchEquipIds"
+    const val UNIQUE_EQUIP_LIST = "uniqueEquipList"
+    const val UNIQUE_EQUIP_DETAIL = "UniqueEquipDetail"
+
 }

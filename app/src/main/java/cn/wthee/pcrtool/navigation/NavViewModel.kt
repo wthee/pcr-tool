@@ -160,4 +160,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 搜索装备模式
      */
     val searchEquipMode = MutableLiveData<Boolean>()
+
+    /**
+     * 专用装备搜索
+     */
+    val uniqueEquipName = MutableLiveData<String>()
 }

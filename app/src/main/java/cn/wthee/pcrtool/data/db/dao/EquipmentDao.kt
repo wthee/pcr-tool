@@ -476,4 +476,77 @@ interface EquipmentDao {
     )
     suspend fun getEquipUnitList(equipId: Int): List<Int>
 
+    /**
+     * 获取专用装备列表
+     * @param name 装备或角色名称
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            ued.equipment_id,
+            ued.equipment_name,
+            ued.description,
+            ud.unit_id,
+            ud.unit_name
+        FROM
+            unit_unique_equip AS uue
+            LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
+            LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
+        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        """
+    )
+    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData>
+
+    /**
+     * 获取专用装备列表
+     * @param name 装备或角色名称
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            ued.equipment_id,
+            ued.equipment_name,
+            ued.description,
+            ud.unit_id,
+            ud.unit_name
+        FROM
+            unit_unique_equipment AS uue
+            LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
+            LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
+        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        """
+    )
+    suspend fun getUniqueEquipListV2(name: String): List<UniqueEquipBasicData>
+
+
+    /**
+     * 获取专用装备数量
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+           COUNT(*)
+        FROM
+            unit_unique_equip
+        """
+    )
+    suspend fun getUniqueEquipCount(): Int
+
+
+    /**
+     * 获取专用装备数量
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+           COUNT(*)
+        FROM
+            unit_unique_equipment
+        """
+    )
+    suspend fun getUniqueEquipCountV2(): Int
 }

@@ -45,6 +45,7 @@ import com.google.accompanist.flowlayout.FlowRow
  * @param atk 攻击力
  * @param property 角色属性
  * @param unitType
+ * @param isFilterSkill 仅显示专武技能
  */
 @Composable
 fun SkillCompose(
@@ -53,6 +54,7 @@ fun SkillCompose(
     property: CharacterProperty,
     unitType: UnitType,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    isFilterSkill: Boolean = false,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     //普通技能
@@ -61,6 +63,7 @@ fun SkillCompose(
             .collectAsState(
                 initial = arrayListOf()
             ).value
+
     //sp技能
     val spSkillData =
         skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP).collectAsState(
@@ -85,7 +88,16 @@ fun SkillCompose(
             )
         }
         //普通技能
-        normalSkillData.forEach { skillDetail ->
+        (if (isFilterSkill) {
+            normalSkillData.filter {
+                it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
+                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_1
+            }
+        } else {
+            normalSkillData
+        }).forEach { skillDetail ->
             SkillItem(
                 skillDetail = skillDetail,
                 unitType = unitType,
@@ -104,8 +116,16 @@ fun SkillCompose(
                 CaptionText(text = it)
             }
         }
-
-        spSkillData.forEach { skillDetail ->
+        (if (isFilterSkill) {
+            spSkillData.filter {
+                it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
+                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_1
+            }
+        } else {
+            spSkillData
+        }).forEach { skillDetail ->
             SkillItem(
                 skillDetail = skillDetail,
                 unitType = unitType,
@@ -171,10 +191,12 @@ fun SkillItem(
             isNormalSkill = false
             stringResource(id = R.string.union_burst)
         }
+
         SkillIndexType.UB_PLUS -> {
             isNormalSkill = false
             stringResource(id = R.string.union_burst) + "+"
         }
+
         SkillIndexType.MAIN_SKILL_1,
         SkillIndexType.MAIN_SKILL_2,
         SkillIndexType.MAIN_SKILL_3,
@@ -187,10 +209,12 @@ fun SkillItem(
         SkillIndexType.MAIN_SKILL_10 -> {
             stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index)
         }
+
         SkillIndexType.MAIN_SKILL_1_PLUS,
         SkillIndexType.MAIN_SKILL_2_PLUS -> {
             stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
         }
+
         SkillIndexType.EX_1,
         SkillIndexType.EX_2,
         SkillIndexType.EX_3,
@@ -199,6 +223,7 @@ fun SkillItem(
             isNormalSkill = false
             stringResource(id = R.string.ex_skill)
         }
+
         SkillIndexType.EX_1_PLUS,
         SkillIndexType.EX_2_PLUS,
         SkillIndexType.EX_3_PLUS,
@@ -207,10 +232,12 @@ fun SkillItem(
             isNormalSkill = false
             stringResource(id = R.string.ex_skill) + "+"
         }
+
         SkillIndexType.SP_UB -> {
             isNormalSkill = false
             "SP" + stringResource(id = R.string.union_burst)
         }
+
         SkillIndexType.SP_SKILL_1,
         SkillIndexType.SP_SKILL_2,
         SkillIndexType.SP_SKILL_3,
@@ -218,10 +245,12 @@ fun SkillItem(
         SkillIndexType.SP_SKILL_5 -> {
             "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index)
         }
+
         SkillIndexType.SP_SKILL_1_PLUS,
         SkillIndexType.SP_SKILL_2_PLUS -> {
             "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
         }
+
         else -> ""
     }
     val color = getSkillColor(type)
