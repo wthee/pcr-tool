@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,7 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -49,6 +55,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.CommonApiViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
+import java.util.regex.Pattern
 
 /**
  * 推特列表
@@ -186,16 +193,65 @@ private fun TweetItem(data: TweetData) {
                 }
 
                 //文本
-                MainContentText(
-                    text = data.getFormatTweet(),
-                    textAlign = TextAlign.Start,
-                    selectable = true,
-                    modifier = Modifier.padding(
-                        start = Dimen.smallPadding,
-                        end = Dimen.smallPadding,
-                        bottom = Dimen.mediumPadding,
-                    ),
-                )
+                if (data.tweet.contains("http")) {
+                    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+                        val str = data.getFormatTweet()
+                        val urlIndexList = clickableLink(str)
+
+                        urlIndexList.forEachIndexed { i, it ->
+                            val startIndex = it.first
+                            val endIndex = it.second
+                            //多个url时 只添加一次
+                            if (i == 0) {
+                                append(str)
+                            }
+                            addStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = 16.sp,
+                                    textDecoration = TextDecoration.Underline
+                                ),
+                                start = startIndex,
+                                end = endIndex
+                            )
+
+                            addStringAnnotation(
+                                tag = "URL",
+                                annotation = str.substring(startIndex, endIndex),
+                                start = startIndex,
+                                end = endIndex
+                            )
+                        }
+                    }
+
+                    ClickableText(
+                        modifier = Modifier.padding(
+                            start = Dimen.smallPadding,
+                            end = Dimen.smallPadding,
+                            bottom = Dimen.mediumPadding,
+                        ),
+                        text = annotatedLinkString,
+                        onClick = {
+                            annotatedLinkString
+                                .getStringAnnotations("URL", it, it)
+                                .firstOrNull()?.let { stringAnnotation ->
+                                    BrowserUtil.open(stringAnnotation.item)
+                                }
+                        }
+                    )
+                } else {
+                    MainContentText(
+                        text = data.getFormatTweet(),
+                        textAlign = TextAlign.Start,
+                        selectable = true,
+                        modifier = Modifier.padding(
+                            start = Dimen.smallPadding,
+                            end = Dimen.smallPadding,
+                            bottom = Dimen.mediumPadding,
+                        ),
+                    )
+                }
+
 
                 //图片
                 if (photos.isNotEmpty()) {
@@ -229,6 +285,30 @@ private fun TweetItem(data: TweetData) {
 
 }
 
+private val urlPattern: Pattern = Pattern.compile(
+    "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+            + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+            + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+    Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
+)
+
+private fun clickableLink(longText: String): ArrayList<Pair<Int, Int>> {
+    val urlList = arrayListOf<Pair<Int, Int>>()
+    try {
+        val matcher = urlPattern.matcher(longText)
+        var matchStart: Int
+        var matchEnd: Int
+
+        while (matcher.find()) {
+            matchStart = matcher.start(1)
+            matchEnd = matcher.end()
+            urlList.add(Pair(matchStart, matchEnd))
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return urlList
+}
 
 @CombinedPreviews
 @Composable
