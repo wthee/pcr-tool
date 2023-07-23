@@ -24,17 +24,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.character.CharacterPositionTag
+import cn.wthee.pcrtool.ui.character.CharacterTag
+import cn.wthee.pcrtool.ui.character.getAtkColor
+import cn.wthee.pcrtool.ui.character.getAtkText
+import cn.wthee.pcrtool.ui.character.getLimitTypeColor
+import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.launch
@@ -484,6 +492,76 @@ fun UnitList(unitIds: List<Int>) {
         }
     }
 }
+
+/**
+ * 角色标签行
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun CharacterTagRow(
+    modifier: Modifier = Modifier,
+    unknown: Boolean = false,
+    basicInfo: CharacterInfo?,
+    tipText: String? = null,
+    endText: String? = null,
+    endTextColor: Color? = null,
+) {
+    FlowRow(
+        modifier = modifier
+    ) {
+        if (!unknown) {
+            //位置
+            CharacterPositionTag(
+                modifier = Modifier.padding(
+                    start = Dimen.smallPadding,
+                    end = Dimen.smallPadding,
+                    bottom = Dimen.smallPadding
+                ),
+                character = basicInfo!!,
+                textColor = colorWhite
+            )
+
+            //获取方式
+            CharacterTag(
+                modifier = Modifier.padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding),
+                text = getLimitTypeText(limitType = basicInfo.limitType),
+                backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
+            )
+            //攻击
+            CharacterTag(
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                text = getAtkText(atkType = basicInfo.atkType),
+                backgroundColor = getAtkColor(atkType = basicInfo.atkType)
+            )
+        } else {
+            Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                if (unknown && tipText != null) {
+                    //提示
+                    CharacterTag(
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        text = tipText,
+                        backgroundColor = Color.Transparent,
+                        textColor = colorGray,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+
+                //日期
+                if (endText != null && endTextColor != null) {
+                    CharacterTag(
+                        text = endText,
+                        backgroundColor = Color.Transparent,
+                        textColor = endTextColor,
+                        fontWeight = FontWeight.Light,
+                        modifier = Modifier.weight(1f),
+                        endAlignment = true
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews

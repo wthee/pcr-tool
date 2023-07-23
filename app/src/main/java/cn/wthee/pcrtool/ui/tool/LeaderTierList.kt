@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -33,24 +31,18 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.CharacterTag
-import cn.wthee.pcrtool.ui.character.getAtkColor
-import cn.wthee.pcrtool.ui.character.getAtkText
-import cn.wthee.pcrtool.ui.character.getLimitTypeColor
-import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.PositionIcon
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
-import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -71,7 +63,8 @@ import kotlinx.coroutines.launch
 fun LeaderTier(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
-    leaderViewModel: LeaderViewModel = hiltViewModel()
+    leaderViewModel: LeaderViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -180,16 +173,27 @@ fun LeaderTier(
 
             if (groupList.isNotEmpty()) {
                 LazyColumn(state = scrollState) {
-                    items(
-                        items = groupList,
-                        key = {
-                            it.tier
+                    groupList.forEach {
+                        item {
+                            //分组标题
+                            CommonGroupTitle(
+                                titleStart = stringResource(
+                                    id = R.string.leader_tier_d,
+                                    it.tier
+                                ),
+                                titleCenter = it.desc,
+                                titleEnd = it.leaderList.size.toString(),
+                                modifier = Modifier.padding(Dimen.mediumPadding)
+                            )
                         }
-                    ) { groupList ->
-                        LeaderGroup(
-                            groupList,
-                            toCharacterDetail
-                        )
+                        items(
+                            it.leaderList,
+                            key = {
+                                it.url
+                            }
+                        ) { leader ->
+                            LeaderItem(leader, toCharacterDetail, characterViewModel)
+                        }
                     }
                     items(count = 2) {
                         CommonSpacer()
@@ -226,15 +230,20 @@ private fun LeaderGroup(
         )
 
         //分组内容
-        VerticalGrid(
-            itemWidth = Dimen.iconSize * 3,
-            contentPadding = Dimen.largePadding * 2,
-            modifier = Modifier
-                .padding(
-                    start = Dimen.commonItemPadding,
-                    end = Dimen.commonItemPadding
-                )
-        ) {
+//        VerticalGrid(
+//            itemWidth = Dimen.iconSize * 3,
+//            contentPadding = Dimen.largePadding * 2,
+//            modifier = Modifier
+//                .padding(
+//                    start = Dimen.commonItemPadding,
+//                    end = Dimen.commonItemPadding
+//                )
+//        ) {
+//            groupData.leaderList.forEach { leader ->
+//                LeaderItem(leader, toCharacterDetail, characterViewModel)
+//            }
+//        }
+        Column {
             groupData.leaderList.forEach { leader ->
                 LeaderItem(leader, toCharacterDetail, characterViewModel)
             }
@@ -293,18 +302,7 @@ private fun LeaderItem(
                     ToastUtil.short(tipText)
                 }
             }
-            if (!unknown) {
-                PositionIcon(
-                    position = basicInfo!!.position,
-                    modifier = Modifier
-                        .padding(
-                            end = Dimen.divLineHeight,
-                            bottom = Dimen.divLineHeight
-                        )
-                        .align(Alignment.BottomEnd),
-                    size = Dimen.exSmallIconSize
-                )
-            }
+
         }
 
         MainCard(
@@ -315,55 +313,31 @@ private fun LeaderItem(
                 BrowserUtil.open(leader.url)
             }
         ) {
-            Column {
-                Row(
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.mediumPadding,
-                        vertical = Dimen.smallPadding
-                    )
-                ) {
-                    //名称
-                    Subtitle2(
-                        text = if (hasUnitId && !unknown) {
-                            basicInfo!!.getNameF()
-                        } else {
-                            leader.name
-                        },
-                        textAlign = TextAlign.Start,
-                        color = textColor,
-                        maxLines = 1
-                    )
-
-                }
-                Row(
-                    modifier = Modifier.padding(vertical = Dimen.mediumPadding)
-                ) {
-                    if (!unknown) {
-                        //获取方式
-                        CharacterTag(
-                            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                            text = getLimitTypeText(limitType = basicInfo!!.limitType),
-                            backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        //攻击
-                        CharacterTag(
-                            text = getAtkText(atkType = basicInfo.atkType),
-                            backgroundColor = getAtkColor(atkType = basicInfo.atkType),
-                            style = MaterialTheme.typography.bodySmall
-                        )
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.mediumPadding,
+                    vertical = Dimen.smallPadding
+                )
+            ) {
+                //名称
+                MainContentText(
+                    text = if (hasUnitId && !unknown) {
+                        basicInfo!!.getNameF()
                     } else {
-                        //提示
-                        CharacterTag(
-                            text = tipText,
-                            backgroundColor = Color.Transparent,
-                            textColor = colorGray,
-                            fontWeight = FontWeight.Light,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
+                        leader.name
+                    },
+                    textAlign = TextAlign.Start,
+                    color = textColor,
+                    maxLines = 1
+                )
+
             }
+            CharacterTagRow(
+                modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
+                unknown = unknown,
+                basicInfo = basicInfo,
+                tipText = tipText
+            )
         }
     }
 }

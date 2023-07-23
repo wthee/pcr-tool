@@ -1,7 +1,15 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -27,9 +35,31 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CharacterTagRow
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.PositionIcon
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -337,62 +367,48 @@ private fun LeaderboardItem(
                 BrowserUtil.open(leader.url)
             }
         ) {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //名称
-                MainContentText(
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.mediumPadding,
-                        vertical = Dimen.smallPadding
-                    ),
-                    text = "${index + 1}、" + if (hasUnitId && !unknown) {
-                        basicInfo!!.name
-                    } else {
-                        leader.name
-                    },
-                    textAlign = TextAlign.Start,
-                    color = textColor,
-                    maxLines = 1
-                )
-                //评价
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    GradeText(leader.quest, modifier = Modifier.weight(1f))
-                    GradeText(leader.tower, modifier = Modifier.weight(1f))
-                    GradeText(leader.pvp, modifier = Modifier.weight(1f))
-                    GradeText(leader.clan, modifier = Modifier.weight(1f))
-                }
-
-                Row {
-                    if (unknown) {
-                        //提示
-                        CaptionText(
-                            modifier = Modifier.padding(start = Dimen.mediumPadding),
-                            text = tipText,
-                            color = colorGray
-                        )
-                    }
-
-                    //日期
-                    if (leader.updateTime == null) {
-                        CaptionText(
-                            text = stringResource(id = R.string.leader_new_character),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = Dimen.mediumPadding),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    } else {
-                        CaptionText(
-                            text = leader.updateTime.substring(0, 11),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = Dimen.mediumPadding),
-                            color = textColor
-                        )
-                    }
-                }
+            //名称
+            MainContentText(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.mediumPadding,
+                    vertical = Dimen.smallPadding
+                ),
+                text = "${index + 1}、" + if (hasUnitId && !unknown) {
+                    basicInfo!!.name
+                } else {
+                    leader.name
+                },
+                textAlign = TextAlign.Start,
+                color = textColor,
+                maxLines = 1
+            )
+            //评价
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                GradeText(leader.quest, modifier = Modifier.weight(1f))
+                GradeText(leader.tower, modifier = Modifier.weight(1f))
+                GradeText(leader.pvp, modifier = Modifier.weight(1f))
+                GradeText(leader.clan, modifier = Modifier.weight(1f))
             }
+
+            CharacterTagRow(
+                modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
+                unknown = unknown,
+                basicInfo = basicInfo,
+                tipText = tipText,
+                endText = if (leader.updateTime == null) {
+                    stringResource(id = R.string.leader_new_character)
+                } else {
+                    leader.updateTime.substring(0, 11)
+                },
+                endTextColor = if (leader.updateTime == null) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    textColor
+                }
+            )
+
         }
 
     }

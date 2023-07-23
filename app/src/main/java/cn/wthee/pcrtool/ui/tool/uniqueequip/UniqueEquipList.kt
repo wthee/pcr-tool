@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,20 +24,18 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.CharacterTag
-import cn.wthee.pcrtool.ui.character.getAtkColor
-import cn.wthee.pcrtool.ui.character.getAtkText
-import cn.wthee.pcrtool.ui.character.getLimitTypeColor
-import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.components.BottomSearchBar
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -86,10 +83,17 @@ fun UniqueEquipList(
                         it.equipId
                     }
                 ) { uniqueEquip ->
+                    //获取角色名
+                    val flow = remember(uniqueEquip.unitId) {
+                        characterViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
+                    }
+                    val basicInfo =
+                        flow.collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
+
                     UniqueEquipItem(
                         uniqueEquip,
-                        toUniqueEquipDetail,
-                        characterViewModel
+                        basicInfo,
+                        toUniqueEquipDetail
                     )
                 }
                 item {
@@ -128,20 +132,13 @@ fun UniqueEquipList(
 @Composable
 private fun UniqueEquipItem(
     equip: UniqueEquipBasicData,
-    toUniqueEquipDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel
+    basicInfo: CharacterInfo,
+    toUniqueEquipDetail: (Int) -> Unit
 ) {
-    //获取角色名
-    val flow = remember(equip.unitId) {
-        characterViewModel.getCharacterBasicInfo(equip.unitId)
-    }
-    val basicInfo = flow.collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
-
 
     Row(
         modifier = Modifier.padding(
             top = Dimen.largePadding,
-            bottom = Dimen.mediumPadding,
             start = Dimen.largePadding,
             end = Dimen.largePadding,
         )
@@ -174,48 +171,26 @@ private fun UniqueEquipItem(
                 )
 
                 Row(
-                    modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                    modifier = Modifier.padding(Dimen.mediumPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MainIcon(
                         data = ImageRequestHelper.getInstance().getMaxIconUrl(equip.unitId)
                     )
 
-                    Column {
-                        Row(
-                            modifier = Modifier.padding(
-                                horizontal = Dimen.mediumPadding,
-                                vertical = Dimen.smallPadding
-                            )
-                        ) {
-                            //名称
-                            Subtitle2(
-                                text = equip.unitName,
-                                textAlign = TextAlign.Start,
-                                maxLines = 1
-                            )
+                    Column(modifier = Modifier.padding(start = Dimen.smallPadding)) {
+                        //名称
+                        Subtitle2(
+                            text = equip.unitName,
+                            textAlign = TextAlign.Start,
+                            maxLines = 1,
+                            modifier = Modifier.padding(Dimen.smallPadding)
+                        )
 
-                        }
-                        Row(
-                            modifier = Modifier.padding(
-                                vertical = Dimen.mediumPadding,
-                                horizontal = Dimen.smallPadding
-                            )
-                        ) {
-                            //获取方式
-                            CharacterTag(
-                                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                                text = getLimitTypeText(limitType = basicInfo.limitType),
-                                backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                            //攻击
-                            CharacterTag(
-                                text = getAtkText(atkType = basicInfo.atkType),
-                                backgroundColor = getAtkColor(atkType = basicInfo.atkType),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
+                        CharacterTagRow(
+                            modifier = Modifier.padding(top = Dimen.smallPadding),
+                            basicInfo = basicInfo
+                        )
                     }
                 }
 
@@ -224,4 +199,22 @@ private fun UniqueEquipItem(
 
     }
 
+}
+
+
+@CombinedPreviews
+@Composable
+private fun UniqueEquipItemPreview() {
+    PreviewLayout {
+        UniqueEquipItem(
+            UniqueEquipBasicData(
+                equipName = stringResource(id = R.string.debug_short_text),
+                description = stringResource(id = R.string.debug_long_text),
+            ),
+            CharacterInfo(
+                name = stringResource(id = R.string.debug_short_text)
+            ),
+            {}
+        )
+    }
 }

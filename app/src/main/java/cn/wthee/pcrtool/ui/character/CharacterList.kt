@@ -327,16 +327,7 @@ fun CharacterItem(
                 if (character != null) {
 
                     //位置信息
-                    var positionText = ""
-                    val pos = when (PositionType.getPositionType(character.position)) {
-                        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-                        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-                        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-                        PositionType.UNKNOWN -> Constants.UNKNOWN
-                    }
-                    if (pos != Constants.UNKNOWN) {
-                        positionText = "$pos ${character.position}"
-                    }
+                    val positionText = getPositionText(character)
 
                     Column(
                         modifier = Modifier
@@ -420,25 +411,14 @@ fun CharacterItem(
                                     textColor = textColor
                                 )
                             }
-
-                            Row(
+                            //位置信息
+                            CharacterPositionTag(
                                 modifier = Modifier.padding(
                                     top = Dimen.mediumPadding
                                 ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                //位置图标
-                                PositionIcon(
-                                    position = character.position
-                                )
-                                //位置
-                                CharacterTag(
-                                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                                    text = positionText,
-                                    backgroundColor = getPositionColor(character.position),
-                                    textColor = textColor
-                                )
-                            }
+                                character,
+                                textColor
+                            )
                         }
 
                         //最近登场日期
@@ -468,6 +448,54 @@ fun CharacterItem(
 }
 
 /**
+ * 位置信息
+ */
+@Composable
+fun CharacterPositionTag(
+    modifier: Modifier = Modifier,
+    character: CharacterInfo,
+    textColor: Color
+) {
+    val positionText = getPositionText(character = character)
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        //位置图标
+        PositionIcon(
+            position = character.position
+        )
+        //位置
+        CharacterTag(
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            text = positionText,
+            backgroundColor = getPositionColor(character.position),
+            textColor = textColor
+        )
+    }
+}
+
+/**
+ * 获取位置描述
+ */
+@Composable
+private fun getPositionText(character: CharacterInfo?): String {
+    var positionText = ""
+    character?.let {
+        val pos = when (PositionType.getPositionType(character.position)) {
+            PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+            PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+            PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+            PositionType.UNKNOWN -> Constants.UNKNOWN
+        }
+        if (pos != Constants.UNKNOWN) {
+            positionText = "$pos ${character.position}"
+        }
+    }
+    return positionText
+}
+
+/**
  * 获取限定类型
  */
 @Composable
@@ -475,13 +503,16 @@ fun getLimitTypeText(limitType: Int) = when (limitType) {
     2 -> {
         stringResource(id = R.string.type_limit)
     }
+
     3 -> {
         stringResource(id = R.string.type_event_limit)
     }
+
     4 -> {
         stringResource(id = R.string.type_extra_character)
 
     }
+
     else -> {
         stringResource(id = R.string.type_normal)
     }
@@ -494,12 +525,15 @@ fun getLimitTypeColor(limitType: Int) = when (limitType) {
     2 -> {
         colorRed
     }
+
     3 -> {
         colorGreen
     }
+
     4 -> {
         colorCyan
     }
+
     else -> {
         colorGold
     }
@@ -535,14 +569,15 @@ fun CharacterTag(
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = colorWhite,
     fontWeight: FontWeight = FontWeight.ExtraBold,
-    style: TextStyle = MaterialTheme.typography.bodyMedium
+    style: TextStyle = MaterialTheme.typography.bodyMedium,
+    endAlignment: Boolean = false
 ) {
     Box(
         modifier = modifier
             .clip(CircleShape)
             .background(color = backgroundColor, shape = CircleShape)
             .padding(horizontal = Dimen.mediumPadding),
-        contentAlignment = Alignment.Center
+        contentAlignment = if (endAlignment) Alignment.CenterEnd else Alignment.Center
     ) {
         Text(
             text = text,
