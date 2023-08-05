@@ -80,7 +80,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlinx.coroutines.launch
 
@@ -96,12 +95,10 @@ val permissions = arrayOf(
 @Composable
 fun Overview(
     actions: NavActions,
-    overviewViewModel: OverviewViewModel = hiltViewModel(),
-    noticeViewModel: NoticeViewModel = hiltViewModel()
+    overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
-        noticeViewModel.check()
     }
 
     //添加日历确认弹窗
@@ -128,7 +125,7 @@ fun Overview(
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = rememberLazyListState()) {
             item {
-                TopBarCompose(isEditMode, noticeViewModel)
+                TopBarCompose(isEditMode)
             }
             if (!isEditMode.value) {
                 overviewOrderData.intArrayList.forEach {
