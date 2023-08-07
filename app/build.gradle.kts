@@ -16,11 +16,19 @@ hilt {
 
 val composeBom = "2023.06.01"
 val composeCompilerVersion = "1.4.8"
-val appVersionCode = 365
-val appVersionName = "3.6.5"
+val appVersionCode = 370
+val appVersionName = "3.7.0"
 val appId = "cn.wthee.pcrtool"
 
 android {
+//    splits {
+//        abi {
+//            isEnable = true
+//            reset()
+//            include("x86", "x86_64")
+//            isUniversalApk = true
+//        }
+//    }
 
     namespace = appId
     compileSdk = 33
@@ -103,7 +111,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
     //compose bom
@@ -151,7 +159,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
 
     //Paging3
-    val pagingVersion = "3.2.0-rc01"
+    val pagingVersion = "3.2.0"
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:$pagingVersion")
 

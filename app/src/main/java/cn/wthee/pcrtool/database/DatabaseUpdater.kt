@@ -71,9 +71,6 @@ object DatabaseUpdater {
             if(desc == ""){
                 desc = getString(R.string.db_diff_content_none)
             }
-//            if(BuildConfig.DEBUG){
-//                desc = getString(R.string.debug_medium_text)
-//            }
             navViewModel.updateDb.postValue(desc)
             downloadDB(version.data!!, fixDb)
         } catch (e: Exception) {
