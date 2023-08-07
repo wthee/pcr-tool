@@ -143,7 +143,7 @@ class SkillViewModel @Inject constructor(
                         level = lv,
                         atk = atk,
                         bossUbCooltime = skill.bossUbCoolTime,
-                        enemySkillIndex = index
+                        enemySkillIndex = index,
                     )
                     val actions = skillRepository.getSkillActions(
                         lv,

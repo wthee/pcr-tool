@@ -1,15 +1,22 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,16 +27,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CharacterTagRow
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -75,31 +104,34 @@ fun LeaderboardList(
     val coroutineScope = rememberCoroutineScope()
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
+    val scrollChange = remember { derivedStateOf { scrollState.firstVisibleItemIndex } }
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         //更新
-        Row(
-            modifier = Modifier.padding(
-                horizontal = Dimen.largePadding,
-                vertical = Dimen.mediumPadding
-            ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            MainTitleText(
-                text = "GameWith",
-                modifier = Modifier
-                    .clickable {
-                        VibrateUtil(context).single()
-                        BrowserUtil.open(url)
-                    }
-            )
+        ExpandAnimation(visible = scrollChange.value == 0) {
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = "GameWith",
+                    modifier = Modifier
+                        .clickable {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(url)
+                        }
+                )
 
-            CaptionText(
-                text = stringResource(id = R.string.only_jp),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
+                CaptionText(
+                    text = stringResource(id = R.string.only_jp),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
         }
         //标题
         SortTitleGroup(sort, asc)
@@ -293,110 +325,121 @@ private fun LeaderboardItem(
     Row(
         modifier = Modifier
             .padding(
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding,
-                top = Dimen.smallPadding,
-                bottom = Dimen.mediumPadding
+                top = Dimen.largePadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding,
             )
             .fillMaxWidth()
     ) {
-        Box {
-            MainIcon(
-                data = if (hasUnitId) {
-                    ImageRequestHelper.getInstance()
-                        .getMaxIconUrl(leader.unitId!!)
-                } else {
-                    R.drawable.unknown_item
-                }
-            ) {
+        //图标
+        LeaderCharacterIcon(
+            hasUnitId,
+            leader.unitId!!,
+            leader.url,
+            unknown,
+            tipText,
+            toCharacterDetail
+        )
+
+        //信息
+        MainCard(
+            modifier = Modifier.padding(
+                start = Dimen.mediumPadding
+            ),
+            onClick = {
                 if (!unknown) {
-                    toCharacterDetail(leader.unitId!!)
+                    toCharacterDetail(leader.unitId)
                 } else {
                     ToastUtil.short(tipText)
                 }
             }
-            if (!unknown) {
-                PositionIcon(
-                    position = basicInfo!!.position,
-                    modifier = Modifier
-                        .padding(
-                            end = Dimen.divLineHeight,
-                            bottom = Dimen.divLineHeight
-                        )
-                        .align(Alignment.BottomEnd),
-                    size = Dimen.exSmallIconSize
-                )
-            }
-
-        }
-
-
-        MainCard(
-            modifier = Modifier.padding(start = Dimen.mediumPadding),
-            onClick = {
-                BrowserUtil.open(leader.url)
-            }
         ) {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //名称
-                MainContentText(
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.mediumPadding,
-                        vertical = Dimen.smallPadding
-                    ),
-                    text = "${index + 1}、" + if (hasUnitId && !unknown) {
-                        basicInfo!!.name
-                    } else {
-                        leader.name
-                    },
-                    textAlign = TextAlign.Start,
-                    color = textColor,
-                    maxLines = 1
-                )
-                //评价
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    GradeText(leader.quest, modifier = Modifier.weight(1f))
-                    GradeText(leader.tower, modifier = Modifier.weight(1f))
-                    GradeText(leader.pvp, modifier = Modifier.weight(1f))
-                    GradeText(leader.clan, modifier = Modifier.weight(1f))
-                }
-
-                Row {
-                    if (unknown) {
-                        //提示
-                        CaptionText(
-                            modifier = Modifier.padding(start = Dimen.mediumPadding),
-                            text = tipText,
-                            color = colorGray
-                        )
-                    }
-
-                    //日期
-                    if (leader.updateTime == null) {
-                        CaptionText(
-                            text = stringResource(id = R.string.leader_new_character),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = Dimen.mediumPadding),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    } else {
-                        CaptionText(
-                            text = leader.updateTime.substring(0, 11),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = Dimen.mediumPadding),
-                            color = textColor
-                        )
-                    }
-                }
+            //名称
+            MainContentText(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.mediumPadding,
+                    vertical = Dimen.smallPadding
+                ),
+                text = "${index + 1}." + if (hasUnitId && !unknown) {
+                    basicInfo!!.name
+                } else {
+                    leader.name
+                },
+                textAlign = TextAlign.Start,
+                color = textColor,
+                maxLines = 1
+            )
+            //评价
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                GradeText(leader.quest, modifier = Modifier.weight(1f))
+                GradeText(leader.tower, modifier = Modifier.weight(1f))
+                GradeText(leader.pvp, modifier = Modifier.weight(1f))
+                GradeText(leader.clan, modifier = Modifier.weight(1f))
             }
+
+            CharacterTagRow(
+                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.smallPadding),
+                unknown = unknown,
+                basicInfo = basicInfo,
+                tipText = tipText,
+                endText = if (leader.updateTime == null) {
+                    stringResource(id = R.string.leader_new_character)
+                } else {
+                    leader.updateTime.substring(0, 11)
+                },
+                endTextColor = if (leader.updateTime == null) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    textColor
+                },
+                horizontalArrangement = Arrangement.End
+            )
+
         }
 
     }
 
+}
+
+/**
+ * 角色图标、wiki跳转
+ */
+@Composable
+fun LeaderCharacterIcon(
+    hasUnitId: Boolean,
+    unitId: Int,
+    url: String,
+    unknown: Boolean,
+    tipText: String,
+    toCharacterDetail: (Int) -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        //角色图标
+        MainIcon(
+            data = if (hasUnitId) {
+                ImageRequestHelper.getInstance()
+                    .getMaxIconUrl(unitId)
+            } else {
+                R.drawable.unknown_item
+            }
+        ) {
+            if (!unknown) {
+                toCharacterDetail(unitId)
+            } else {
+                ToastUtil.short(tipText)
+            }
+        }
+
+        //wiki页面
+        IconTextButton(
+            icon = MainIconType.BROWSER,
+            text = "wiki"
+        ) {
+            BrowserUtil.open(url)
+        }
+    }
 }
 
 /**
@@ -405,12 +448,11 @@ private fun LeaderboardItem(
 @Composable
 fun GradeText(
     grade: String,
-    textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier
 ) {
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
+        MainText(
             text = grade,
             color = when (grade) {
                 "SS+" -> colorRed
@@ -422,9 +464,7 @@ fun GradeText(
                 "C" -> colorBlue
                 "D" -> colorGray
                 else -> colorGray
-            },
-            textAlign = textAlign,
-            fontWeight = FontWeight.Bold,
+            }
         )
     }
 }

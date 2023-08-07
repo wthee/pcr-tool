@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -49,11 +48,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.palette.graphics.Palette
@@ -61,7 +58,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -70,6 +66,7 @@ import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -77,13 +74,11 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.PositionIcon
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
-import cn.wthee.pcrtool.ui.components.getPositionColor
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -93,7 +88,6 @@ import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.TrapezoidShape
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.colorBlack
 import cn.wthee.pcrtool.ui.theme.colorCopper
 import cn.wthee.pcrtool.ui.theme.colorCyan
 import cn.wthee.pcrtool.ui.theme.colorGold
@@ -102,7 +96,6 @@ import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixedStr
@@ -254,7 +247,11 @@ fun CharacterItem(
         mutableStateOf(initColor)
     }
     //主要字体颜色
-    val textColor = if (loadSuccess) colorWhite else colorBlack
+    val textColor = if (loadSuccess) {
+        MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
 
 
     MainCard(
@@ -325,31 +322,18 @@ fun CharacterItem(
             ) {
                 //年龄等
                 if (character != null) {
-
-                    //位置信息
-                    var positionText = ""
-                    val pos = when (PositionType.getPositionType(character.position)) {
-                        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-                        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-                        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-                        PositionType.UNKNOWN -> Constants.UNKNOWN
-                    }
-                    if (pos != Constants.UNKNOWN) {
-                        positionText = "$pos ${character.position}"
-                    }
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth(1 - RATIO_GOLDEN)
                             .fillMaxHeight()
                             .clip(TrapezoidShape)
                             .background(
-                                brush = Brush.horizontalGradient(
+                                brush = Brush.linearGradient(
                                     colors = listOf(
                                         cardMaskColor,
                                         cardMaskColor,
                                         MaterialTheme.colorScheme.primary,
-                                    ),
+                                    )
                                 ),
                                 alpha = 0.6f
                             ),
@@ -395,50 +379,15 @@ fun CharacterItem(
 
                         }
 
-                        Column(
-                            modifier = Modifier
-                                .padding(end = Dimen.mediumPadding)
-                                .weight(1f),
-                            verticalArrangement = Arrangement.Bottom,
-                            horizontalAlignment = Alignment.End
+                        //获取方式等
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.BottomEnd
                         ) {
-                            //位置
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                //获取方式
-                                CharacterTag(
-                                    modifier = Modifier.padding(end = Dimen.smallPadding),
-                                    text = getLimitTypeText(limitType = character.limitType),
-                                    backgroundColor = getLimitTypeColor(limitType = character.limitType),
-                                    textColor = textColor
-                                )
-                                //攻击
-                                CharacterTag(
-                                    text = getAtkText(atkType = character.atkType),
-                                    backgroundColor = getAtkColor(atkType = character.atkType),
-                                    textColor = textColor
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.padding(
-                                    top = Dimen.mediumPadding
-                                ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                //位置图标
-                                PositionIcon(
-                                    position = character.position
-                                )
-                                //位置
-                                CharacterTag(
-                                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                                    text = positionText,
-                                    backgroundColor = getPositionColor(character.position),
-                                    textColor = textColor
-                                )
-                            }
+                            CharacterTagRow(
+                                basicInfo = character,
+                                horizontalArrangement = Arrangement.End
+                            )
                         }
 
                         //最近登场日期
@@ -446,7 +395,6 @@ fun CharacterItem(
                             text = character.startTime.formatTime.substring(0, 10),
                             color = textColor,
                             modifier = Modifier.padding(
-                                top = Dimen.mediumPadding,
                                 end = Dimen.mediumPadding,
                                 bottom = Dimen.smallPadding
                             )
@@ -467,6 +415,8 @@ fun CharacterItem(
     }
 }
 
+
+
 /**
  * 获取限定类型
  */
@@ -475,13 +425,16 @@ fun getLimitTypeText(limitType: Int) = when (limitType) {
     2 -> {
         stringResource(id = R.string.type_limit)
     }
+
     3 -> {
         stringResource(id = R.string.type_event_limit)
     }
+
     4 -> {
         stringResource(id = R.string.type_extra_character)
 
     }
+
     else -> {
         stringResource(id = R.string.type_normal)
     }
@@ -494,12 +447,15 @@ fun getLimitTypeColor(limitType: Int) = when (limitType) {
     2 -> {
         colorRed
     }
+
     3 -> {
         colorGreen
     }
+
     4 -> {
         colorCyan
     }
+
     else -> {
         colorGold
     }
@@ -525,35 +481,6 @@ fun getAtkColor(atkType: Int) = when (atkType) {
     else -> colorCopper
 }
 
-/**
- * 角色属性标签
- */
-@Composable
-fun CharacterTag(
-    modifier: Modifier = Modifier,
-    text: String,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = colorWhite,
-    fontWeight: FontWeight = FontWeight.ExtraBold,
-    style: TextStyle = MaterialTheme.typography.bodyMedium
-) {
-    Box(
-        modifier = modifier
-            .clip(CircleShape)
-            .background(color = backgroundColor, shape = CircleShape)
-            .padding(horizontal = Dimen.mediumPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = textColor,
-            style = style,
-            fontWeight = fontWeight,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
 
 /**
  * 角色名称
@@ -917,16 +844,5 @@ private fun CharacterItemPreview() {
             character = CharacterInfo(),
             loved = true,
         ) {}
-    }
-}
-
-@CombinedPreviews
-@Composable
-private fun CharacterTagPreview() {
-    PreviewLayout {
-        CharacterTag(
-            text = getLimitTypeText(limitType = 1),
-            backgroundColor = getLimitTypeColor(limitType = 1)
-        )
     }
 }

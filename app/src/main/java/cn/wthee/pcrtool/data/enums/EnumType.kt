@@ -100,7 +100,9 @@ enum class ToolMenuType(val id: Int) {
     TRAVEL_AREA(219),
     WEBSITE(220),
     LEADER_TIER(221),
-    ALL_QUEST(222);
+    ALL_QUEST(222),
+    UNIQUE_EQUIP(223),
+    ;
 
 
     companion object {
@@ -155,7 +157,9 @@ enum class OverviewType(val id: Int) {
     TOOL(2),
     NEWS(3),
     IN_PROGRESS_EVENT(4),
-    COMING_SOON_EVENT(5);
+    COMING_SOON_EVENT(5),
+    UNIQUE_EQUIP(6)
+    ;
 
     companion object {
         fun getByValue(value: Int) = values()

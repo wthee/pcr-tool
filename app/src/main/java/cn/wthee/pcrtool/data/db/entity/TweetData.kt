@@ -34,6 +34,5 @@ data class TweetData(
         return tweet.replace("【公主连结】", "")
             .replace("#公主连结#", "")
             .replace("#公主连结Re:Dive#", "")
-            .replace("\n\n", "")
     }
 }

@@ -112,6 +112,18 @@ val Double.int: Int
     }
 
 /**
+ * [Double] 转 [String]
+ */
+val Double.intStr: String
+    get() {
+        return if (this < 1) {
+            this.toString()
+        } else {
+            (if (this * 10 % 10 > 1) ceil(this).toInt() else floor(this).toInt()).toString()
+        }
+    }
+
+/**
  * 复制
  */
 fun copyText(context: Context, text: String) {

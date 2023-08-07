@@ -6,7 +6,6 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
@@ -26,7 +25,6 @@ class NewsRemoteMediator(
 ) : RemoteMediator<Int, NewsTable>() {
 
     private val newsDao = database.getNewsDao()
-    private val remoteKeyDao = database.getRemoteKeyDao()
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
@@ -40,7 +38,7 @@ class NewsRemoteMediator(
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(
-                            endOfPaginationReached = true
+                            endOfPaginationReached = false
                         )
                     lastItem.id
                 }
@@ -58,23 +56,12 @@ class NewsRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.deleteByQuery("${region}|${keyword}")
                     newsDao.deleteByRegionAndQuery(region, keyword)
                 }
 
-                if (response?.isNotEmpty() == true) {
-                    //保存远程键
-                    remoteKeyDao.insert(
-                        RemoteKey(
-                            query = "${region}|${keyword}",
-                            nextKey = response.last().id
-                        )
-                    )
-
-                    //保存到本地
-                    response.let {
-                        newsDao.insertAll(it)
-                    }
+                //保存到本地
+                response?.let {
+                    newsDao.insertAll(it)
                 }
             }
 

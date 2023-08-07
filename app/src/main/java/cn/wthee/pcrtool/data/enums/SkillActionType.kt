@@ -185,7 +185,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     ACCUMULATIVE_DAMAGE(34, R.string.skill_type_34),
 
     /**
-     * 102：免疫无法行动的异常状态
+     * 102：伤害递增v2
      */
     ACCUMULATIVE_DAMAGE_v2(102, R.string.skill_type_34),
 
@@ -195,7 +195,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     SEAL(35, R.string.skill_type_35_43_60_77),
 
     /**
-     * 35：特殊标记
+     * 101：特殊标记v2
      */
     SEAL_v2(101, R.string.skill_type_35_43_60_77),
 

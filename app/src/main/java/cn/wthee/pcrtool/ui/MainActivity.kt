@@ -12,6 +12,7 @@ import android.os.Process
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.core.view.WindowCompat
@@ -25,6 +26,7 @@ import cn.wthee.pcrtool.database.*
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -45,10 +47,13 @@ fun settingSP(mContext: Context = context): SharedPreferences =
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val mNoticeViewModel: NoticeViewModel by viewModels()
+
     companion object {
         lateinit var handler: Handler
 
         lateinit var navViewModel: NavViewModel
+        lateinit var noticeViewModel: NoticeViewModel
 
         @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
@@ -80,12 +85,19 @@ class MainActivity : ComponentActivity() {
         dynamicColorOnFlag = sp.getBoolean(Constants.SP_COLOR_STATE, true)
         regionType =
             RegionType.getByValue(sp.getInt(Constants.SP_DATABASE_TYPE, RegionType.CN.value))
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         //校验数据库版本
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
+        //更新通知
+        noticeViewModel = mNoticeViewModel
+        noticeViewModel.check()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

@@ -5,9 +5,11 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -23,17 +25,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.character.getAtkColor
+import cn.wthee.pcrtool.ui.character.getAtkText
+import cn.wthee.pcrtool.ui.character.getLimitTypeColor
+import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.launch
@@ -165,6 +175,7 @@ fun LinearProgressCompose(
  * @param keywordState 关键词，用于查询
  * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
  * @param defaultKeywordList 默认关键词列表
+ * @param fabText 不为空时，fab将显示该文本
  */
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
@@ -172,11 +183,13 @@ fun LinearProgressCompose(
 @Composable
 fun BottomSearchBar(
     modifier: Modifier = Modifier,
+    fabText: String? = null,
     @StringRes labelStringId: Int,
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState,
+    scrollState: LazyListState? = null,
+    gridScrollState: LazyGridState? = null,
     defaultKeywordList: List<KeywordData>? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -203,7 +216,8 @@ fun BottomSearchBar(
                 iconType = MainIconType.TOP
             ) {
                 coroutineScope.launch {
-                    scrollState.scrollToItem(0)
+                    scrollState?.scrollToItem(0)
+                    gridScrollState?.scrollToItem(0)
                 }
             }
             //重置
@@ -221,8 +235,8 @@ fun BottomSearchBar(
 
             //搜索
             MainSmallFab(
-                iconType = MainIconType.SEARCH,
-                text = keywordState.value
+                iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
+                text = fabText ?: keywordState.value
             ) {
                 keyboardController?.show()
                 openDialog.value = true
@@ -480,6 +494,185 @@ fun UnitList(unitIds: List<Int>) {
     }
 }
 
+/**
+ * 角色标签行
+ *
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun CharacterTagRow(
+    modifier: Modifier = Modifier,
+    unknown: Boolean = false,
+    basicInfo: CharacterInfo?,
+    tipText: String? = null,
+    endText: String? = null,
+    endTextColor: Color? = null,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
+) {
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (!unknown) {
+            //位置
+            CharacterPositionTag(
+                modifier = Modifier.padding(
+                    start = Dimen.smallPadding,
+                    end = Dimen.smallPadding,
+                    bottom = Dimen.smallPadding
+                ),
+                character = basicInfo!!
+            )
+
+            Row {
+                //获取方式
+                CharacterTag(
+                    modifier = Modifier.padding(
+                        bottom = Dimen.smallPadding,
+                        end = Dimen.smallPadding
+                    ),
+                    text = getLimitTypeText(limitType = basicInfo.limitType),
+                    backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
+                )
+                //攻击
+                CharacterTag(
+                    modifier = Modifier.padding(
+                        bottom = Dimen.smallPadding,
+                        end = Dimen.smallPadding
+                    ),
+                    text = getAtkText(atkType = basicInfo.atkType),
+                    backgroundColor = getAtkColor(atkType = basicInfo.atkType)
+                )
+            }
+
+            //日期
+            if (endText != null && endTextColor != null) {
+                CharacterTag(
+                    text = endText,
+                    backgroundColor = Color.Transparent,
+                    textColor = endTextColor,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.weight(1f),
+                    endAlignment = true
+                )
+            }
+
+        } else {
+            Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                if (unknown && tipText != null) {
+                    //提示
+                    CharacterTag(
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        text = tipText,
+                        backgroundColor = Color.Transparent,
+                        textColor = colorGray,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+
+                //日期
+                if (endText != null && endTextColor != null) {
+                    CharacterTag(
+                        text = endText,
+                        backgroundColor = Color.Transparent,
+                        textColor = endTextColor,
+                        fontWeight = FontWeight.Light,
+                        modifier = Modifier.weight(1f),
+                        endAlignment = true
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 位置信息
+ *
+ */
+@Composable
+fun CharacterPositionTag(
+    modifier: Modifier = Modifier,
+    character: CharacterInfo
+) {
+    val positionText = getPositionText(character = character)
+
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        //位置图标
+        PositionIcon(
+            position = character.position
+        )
+        //位置
+        CharacterTag(
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            text = positionText,
+            backgroundColor = getPositionColor(character.position)
+        )
+    }
+}
+
+/**
+ * 获取位置描述
+ */
+@Composable
+private fun getPositionText(character: CharacterInfo?): String {
+    var positionText = ""
+    character?.let {
+        val pos = when (PositionType.getPositionType(character.position)) {
+            PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+            PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+            PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+            PositionType.UNKNOWN -> Constants.UNKNOWN
+        }
+        if (pos != Constants.UNKNOWN) {
+            positionText = "$pos ${character.position}"
+        }
+    }
+    return positionText
+}
+
+/**
+ * 角色属性标签
+ *
+ * @param leadingContent 开头内容
+ */
+@Composable
+fun CharacterTag(
+    modifier: Modifier = Modifier,
+    text: String,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = colorWhite,
+    fontWeight: FontWeight = FontWeight.ExtraBold,
+    style: TextStyle = MaterialTheme.typography.bodyMedium,
+    endAlignment: Boolean = false,
+    leadingContent: @Composable (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
+            .padding(horizontal = Dimen.mediumPadding),
+        contentAlignment = if (endAlignment) Alignment.CenterEnd else Alignment.Center
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            leadingContent?.let {
+                it()
+                Spacer(modifier = Modifier.padding(start = Dimen.smallPadding))
+            }
+
+            Text(
+                text = text,
+                color = textColor,
+                style = style,
+                fontWeight = fontWeight,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
@@ -496,6 +689,17 @@ private fun AllPreview() {
         MainTabRow(
             pagerState = rememberPagerState(),
             tabs = arrayListOf(text, text)
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterTagPreview() {
+    PreviewLayout {
+        CharacterTag(
+            text = getLimitTypeText(limitType = 1),
+            backgroundColor = getLimitTypeColor(limitType = 1)
         )
     }
 }

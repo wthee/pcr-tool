@@ -43,6 +43,7 @@ import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Group
+import androidx.compose.material.icons.rounded.Handyman
 import androidx.compose.material.icons.rounded.Help
 import androidx.compose.material.icons.rounded.HourglassTop
 import androidx.compose.material.icons.rounded.Image
@@ -528,4 +529,10 @@ enum class MainIconType(val icon: ImageVector) {
      * 关注
      */
     VERIFIED(Icons.Rounded.Verified),
+
+    /**
+     * 专用装备
+     */
+    UNIQUE_EQUIP(Icons.Rounded.Handyman),
+
 }

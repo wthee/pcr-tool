@@ -85,14 +85,6 @@ abstract class AppBasicDatabase : RoomDatabase() {
         fun buildDatabase(name: String): AppBasicDatabase {
             return Room.databaseBuilder(MyApplication.context, AppBasicDatabase::class.java, name)
                 .fallbackToDestructiveMigration()
-//                .addCallback(object : Callback() {
-//                    override fun onOpen(db: SupportSQLiteDatabase) {
-//                        super.onOpen(db)
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//                            db.disableWriteAheadLogging()
-//                        }
-//                    }
-//                })
                 .build()
         }
     }

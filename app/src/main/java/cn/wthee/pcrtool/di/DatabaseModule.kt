@@ -92,11 +92,6 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideRemoteKeyDao(): RemoteKeyDao {
-        return provideAppNewsDatabase().getRemoteKeyDao()
-    }
-
-    @Provides
     fun providePvpDao(): PvpDao {
         return provideAppPvpDatabase().getPvpDao()
     }

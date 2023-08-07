@@ -32,6 +32,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.IconTextButton
@@ -62,7 +63,8 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
  */
 @Composable
 fun TopBarCompose(
-    isEditMode: MutableState<Boolean>, noticeViewModel: NoticeViewModel
+    isEditMode: MutableState<Boolean>,
+    noticeViewModel: NoticeViewModel = MainActivity.noticeViewModel
 ) {
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
     var isExpanded by remember {
