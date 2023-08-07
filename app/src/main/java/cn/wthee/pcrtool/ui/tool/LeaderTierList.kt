@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,16 +40,15 @@ import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
-import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fixedLeaderDate
@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LeaderTier(
     scrollState: LazyListState,
@@ -86,36 +87,41 @@ fun LeaderTier(
 
     val url = stringResource(id = R.string.leader_source_url)
 
+    val scrollChange = remember { derivedStateOf { scrollState.firstVisibleItemIndex } }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         //更新
-        Row(
-            modifier = Modifier.padding(
-                horizontal = Dimen.largePadding,
-                vertical = Dimen.mediumPadding
-            ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            MainTitleText(
-                text = stringResource(id = R.string.leader_source),
-                modifier = Modifier
-                    .clickable {
-                        VibrateUtil(context).single()
-                        BrowserUtil.open(url)
-                    }
-            )
+        ExpandAnimation(visible = scrollChange.value == 0) {
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = stringResource(id = R.string.leader_source),
+                    modifier = Modifier
+                        .clickable {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(url)
+                        }
+                )
 
-            CaptionText(
-                text = stringResource(id = R.string.only_jp),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-            CaptionText(
-                text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
-                modifier = Modifier.fillMaxWidth()
-            )
+                CaptionText(
+                    text = stringResource(id = R.string.only_jp),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                CaptionText(
+                    text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
+
 
         CommonResponseBox(
             responseData = leaderData,
@@ -174,7 +180,7 @@ fun LeaderTier(
             if (groupList.isNotEmpty()) {
                 LazyColumn(state = scrollState) {
                     groupList.forEach {
-                        item {
+                        stickyHeader {
                             //分组标题
                             CommonGroupTitle(
                                 titleStart = stringResource(
@@ -183,7 +189,11 @@ fun LeaderTier(
                                 ),
                                 titleCenter = it.desc,
                                 titleEnd = it.leaderList.size.toString(),
-                                modifier = Modifier.padding(Dimen.mediumPadding)
+                                modifier = Modifier.padding(
+                                    start = Dimen.mediumPadding,
+                                    end = Dimen.mediumPadding,
+                                    bottom = Dimen.mediumPadding,
+                                )
                             )
                         }
                         items(
@@ -206,50 +216,6 @@ fun LeaderTier(
     }
 }
 
-/**
- * 角色评价信息
- */
-@Composable
-private fun LeaderGroup(
-    groupData: LeaderTierGroup,
-    toCharacterDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel? = hiltViewModel()
-) {
-
-    Column {
-        //分组标题
-        CommonGroupTitle(
-            titleStart = stringResource(
-                id = R.string.leader_tier_d,
-                groupData.tier
-            ),
-            titleCenter = groupData.desc,
-            titleEnd = groupData.leaderList.size.toString(),
-//            backgroundColor = getTierColor(groupData.tier),
-            modifier = Modifier.padding(Dimen.mediumPadding)
-        )
-
-        //分组内容
-//        VerticalGrid(
-//            itemWidth = Dimen.iconSize * 3,
-//            contentPadding = Dimen.largePadding * 2,
-//            modifier = Modifier
-//                .padding(
-//                    start = Dimen.commonItemPadding,
-//                    end = Dimen.commonItemPadding
-//                )
-//        ) {
-//            groupData.leaderList.forEach { leader ->
-//                LeaderItem(leader, toCharacterDetail, characterViewModel)
-//            }
-//        }
-        Column {
-            groupData.leaderList.forEach { leader ->
-                LeaderItem(leader, toCharacterDetail, characterViewModel)
-            }
-        }
-    }
-}
 
 /**
  * 角色
@@ -280,37 +246,31 @@ private fun LeaderItem(
     Row(
         modifier = Modifier
             .padding(
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding,
-                top = Dimen.smallPadding,
-                bottom = Dimen.mediumPadding
+                bottom = Dimen.largePadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding,
             )
-            .fillMaxWidth()
     ) {
-        Box {
-            MainIcon(
-                data = if (hasUnitId) {
-                    ImageRequestHelper.getInstance()
-                        .getMaxIconUrl(leader.unitId!!)
-                } else {
-                    leader.icon
-                }
-            ) {
-                if (!unknown) {
-                    toCharacterDetail(leader.unitId!!)
-                } else {
-                    ToastUtil.short(tipText)
-                }
-            }
-
-        }
+        //图标
+        LeaderCharacterIcon(
+            hasUnitId,
+            leader.unitId!!,
+            leader.url,
+            unknown,
+            tipText,
+            toCharacterDetail
+        )
 
         MainCard(
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
-                BrowserUtil.open(leader.url)
+                if (!unknown) {
+                    toCharacterDetail(leader.unitId)
+                } else {
+                    ToastUtil.short(tipText)
+                }
             }
         ) {
             Row(
@@ -322,7 +282,7 @@ private fun LeaderItem(
                 //名称
                 MainContentText(
                     text = if (hasUnitId && !unknown) {
-                        basicInfo!!.getNameF()
+                        basicInfo!!.name
                     } else {
                         leader.name
                     },
@@ -333,7 +293,7 @@ private fun LeaderItem(
 
             }
             CharacterTagRow(
-                modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
+                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.smallPadding),
                 unknown = unknown,
                 basicInfo = basicInfo,
                 tipText = tipText
@@ -345,17 +305,11 @@ private fun LeaderItem(
 
 @CombinedPreviews
 @Composable
-private fun LeaderGroupPreview() {
+private fun LeaderItemPreview() {
     val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
-        LeaderGroup(
-            LeaderTierGroup(
-                "",
-                arrayListOf(
-                    LeaderTierItem(name = text)
-                ),
-                text
-            ),
+        LeaderItem(
+            LeaderTierItem(),
             {},
             null
         )

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -24,9 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
@@ -37,8 +40,6 @@ import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.character.CharacterPositionTag
-import cn.wthee.pcrtool.ui.character.CharacterTag
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
 import cn.wthee.pcrtool.ui.character.getLimitTypeColor
@@ -495,6 +496,7 @@ fun UnitList(unitIds: List<Int>) {
 
 /**
  * 角色标签行
+ *
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -505,9 +507,12 @@ fun CharacterTagRow(
     tipText: String? = null,
     endText: String? = null,
     endTextColor: Color? = null,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
     FlowRow(
-        modifier = modifier
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (!unknown) {
             //位置
@@ -517,22 +522,42 @@ fun CharacterTagRow(
                     end = Dimen.smallPadding,
                     bottom = Dimen.smallPadding
                 ),
-                character = basicInfo!!,
-                textColor = colorWhite
+                character = basicInfo!!
             )
 
-            //获取方式
-            CharacterTag(
-                modifier = Modifier.padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding),
-                text = getLimitTypeText(limitType = basicInfo.limitType),
-                backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
-            )
-            //攻击
-            CharacterTag(
-                modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                text = getAtkText(atkType = basicInfo.atkType),
-                backgroundColor = getAtkColor(atkType = basicInfo.atkType)
-            )
+            Row {
+                //获取方式
+                CharacterTag(
+                    modifier = Modifier.padding(
+                        bottom = Dimen.smallPadding,
+                        end = Dimen.smallPadding
+                    ),
+                    text = getLimitTypeText(limitType = basicInfo.limitType),
+                    backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
+                )
+                //攻击
+                CharacterTag(
+                    modifier = Modifier.padding(
+                        bottom = Dimen.smallPadding,
+                        end = Dimen.smallPadding
+                    ),
+                    text = getAtkText(atkType = basicInfo.atkType),
+                    backgroundColor = getAtkColor(atkType = basicInfo.atkType)
+                )
+            }
+
+            //日期
+            if (endText != null && endTextColor != null) {
+                CharacterTag(
+                    text = endText,
+                    backgroundColor = Color.Transparent,
+                    textColor = endTextColor,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier.weight(1f),
+                    endAlignment = true
+                )
+            }
+
         } else {
             Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 if (unknown && tipText != null) {
@@ -562,6 +587,91 @@ fun CharacterTagRow(
     }
 }
 
+/**
+ * 位置信息
+ *
+ */
+@Composable
+fun CharacterPositionTag(
+    modifier: Modifier = Modifier,
+    character: CharacterInfo
+) {
+    val positionText = getPositionText(character = character)
+
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        //位置图标
+        PositionIcon(
+            position = character.position
+        )
+        //位置
+        CharacterTag(
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            text = positionText,
+            backgroundColor = getPositionColor(character.position)
+        )
+    }
+}
+
+/**
+ * 获取位置描述
+ */
+@Composable
+private fun getPositionText(character: CharacterInfo?): String {
+    var positionText = ""
+    character?.let {
+        val pos = when (PositionType.getPositionType(character.position)) {
+            PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+            PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+            PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+            PositionType.UNKNOWN -> Constants.UNKNOWN
+        }
+        if (pos != Constants.UNKNOWN) {
+            positionText = "$pos ${character.position}"
+        }
+    }
+    return positionText
+}
+
+/**
+ * 角色属性标签
+ *
+ * @param leadingContent 开头内容
+ */
+@Composable
+fun CharacterTag(
+    modifier: Modifier = Modifier,
+    text: String,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = colorWhite,
+    fontWeight: FontWeight = FontWeight.ExtraBold,
+    style: TextStyle = MaterialTheme.typography.bodyMedium,
+    endAlignment: Boolean = false,
+    leadingContent: @Composable (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
+            .padding(horizontal = Dimen.mediumPadding),
+        contentAlignment = if (endAlignment) Alignment.CenterEnd else Alignment.Center
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            leadingContent?.let {
+                it()
+                Spacer(modifier = Modifier.padding(start = Dimen.smallPadding))
+            }
+
+            Text(
+                text = text,
+                color = textColor,
+                style = style,
+                fontWeight = fontWeight,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
@@ -579,6 +689,17 @@ private fun AllPreview() {
         MainTabRow(
             pagerState = rememberPagerState(),
             tabs = arrayListOf(text, text)
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun CharacterTagPreview() {
+    PreviewLayout {
+        CharacterTag(
+            text = getLimitTypeText(limitType = 1),
+            backgroundColor = getLimitTypeColor(limitType = 1)
         )
     }
 }

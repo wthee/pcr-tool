@@ -173,10 +173,7 @@ private fun TweetItem(data: TweetData) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             MainTitleText(text = data.date)
-            //相关链接跳转
-            IconTextButton(text = stringResource(id = R.string.twitter)) {
-                BrowserUtil.open(data.link)
-            }
+
         }
 
 
@@ -252,6 +249,16 @@ private fun TweetItem(data: TweetData) {
                     )
                 }
 
+                //相关链接跳转
+                IconTextButton(
+                    icon = MainIconType.BROWSER,
+                    text = stringResource(id = R.string.twitter),
+                    modifier = Modifier
+                        .padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding)
+                        .align(Alignment.End)
+                ) {
+                    BrowserUtil.open(data.link)
+                }
 
                 //图片
                 if (photos.isNotEmpty()) {
