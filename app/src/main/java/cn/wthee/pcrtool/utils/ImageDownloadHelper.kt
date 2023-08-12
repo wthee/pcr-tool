@@ -96,18 +96,17 @@ class ImageDownloadHelper(private val context: Context) {
     ): Boolean {
         var uri: Uri? = null
         val resolver = context.contentResolver
-        var saveSuccess: Boolean
+        var saveSuccess = false
 
         try {
             uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            resolver.openOutputStream(uri!!).use {
+            resolver.openOutputStream(uri!!)?.use {
                 //保存
                 saveSuccess = bitmap.compress(CompressFormat.PNG, 100, it)
             }
 
             resolver.update(uri, contentValues, null, null)
         } catch (e: Exception) {
-            saveSuccess = false
             if (uri != null) {
                 resolver.delete(uri, null, null)
             }

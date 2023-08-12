@@ -96,7 +96,7 @@ private fun MockGachaHistoryItem(
         //标题
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.Center
         ) {
             MainTitleText(
                 text = gachaData.createTime.formatTime.substring(0, 10)

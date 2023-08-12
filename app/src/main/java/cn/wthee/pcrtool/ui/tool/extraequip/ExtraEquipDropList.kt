@@ -28,7 +28,7 @@ fun ExtraEquipDropList(
 ) {
     val dropList = extraEquipmentViewModel.getExtraDropQuestList(equipId)
         .collectAsState(initial = arrayListOf()).value
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { dropList.size }
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (dropList.isNotEmpty()) {
@@ -52,7 +52,6 @@ fun ExtraEquipDropList(
             )
 
             HorizontalPager(
-                pageCount = dropList.size,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) {

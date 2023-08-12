@@ -49,7 +49,7 @@ fun ClanBattleDetail(
         clanBattleViewModel.getAllClanBattleData(clanBattleId, phaseIndex.value + 1)
             .collectAsState(initial = null).value
     val pagerState =
-        rememberPagerState(initialPage = index)
+        rememberPagerState(initialPage = index) { 5 }
 
 
     //页面
@@ -89,10 +89,7 @@ fun ClanBattleDetail(
                 }
                 IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)
                 //BOSS信息
-                HorizontalPager(
-                    pageCount = 5,
-                    state = pagerState,
-                ) { pagerIndex ->
+                HorizontalPager(state = pagerState) { pagerIndex ->
                     if (bossDataList.isNotEmpty()) {
                         EnemyAllInfo(
                             bossDataList[pagerIndex],

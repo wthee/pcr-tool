@@ -512,7 +512,7 @@ fun CharacterTagRow(
     FlowRow(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement,
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.Center
     ) {
         if (!unknown) {
             //位置
@@ -687,7 +687,7 @@ private fun AllPreview() {
         IconTextButton(icon = MainIconType.MORE, text = text)
         CommonTitleContentText(title = text, content = text)
         MainTabRow(
-            pagerState = rememberPagerState(),
+            pagerState = rememberPagerState { 2 },
             tabs = arrayListOf(text, text)
         )
     }

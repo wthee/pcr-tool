@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -78,8 +79,6 @@ import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipList
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -89,8 +88,8 @@ import com.google.accompanist.navigation.material.bottomSheet
  * 导航内容
  */
 @OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterialNavigationApi::class, ExperimentalFoundationApi::class
+    ExperimentalMaterialNavigationApi::class,
+    ExperimentalFoundationApi::class
 )
 @Composable
 fun NavGraph(
@@ -109,7 +108,7 @@ fun NavGraph(
         sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator
     ) {
-        AnimatedNavHost(
+        NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             startDestination = NavRoute.HOME,
@@ -490,7 +489,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_PVP
             ) {
-                val pagerState = rememberPagerState()
+                val pagerState = rememberPagerState { 4 }
                 val selectListState = rememberLazyGridState()
                 val usedListState = rememberLazyGridState()
                 val resultListState = rememberLazyGridState()

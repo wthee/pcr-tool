@@ -94,7 +94,6 @@ fun PvpSearchCompose(
         stringResource(id = R.string.title_love),
         stringResource(id = R.string.title_history),
     )
-    val pageCount = tabs.size
     //动态调整 spanCount
     val normalSize = (Dimen.iconSize + Dimen.largePadding * 2)
     val spanCount = if (initSpanCount == 0) normalSize.spanCount else initSpanCount
@@ -174,7 +173,6 @@ fun PvpSearchCompose(
                 )
 
                 HorizontalPager(
-                    pageCount = pageCount,
                     state = pagerState,
                     modifier = Modifier.padding(top = mediumPadding)
                 ) { pageIndex ->

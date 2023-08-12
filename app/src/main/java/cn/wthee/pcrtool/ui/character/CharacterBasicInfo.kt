@@ -143,7 +143,7 @@ private fun HomePageCommentInfo(
     }
 
     //主页交流
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { homePageCommentList.size }
 
     Row(
         modifier = Modifier.padding(
@@ -186,7 +186,6 @@ private fun HomePageCommentInfo(
 
         HorizontalPager(
             state = pagerState,
-            pageCount = homePageCommentList.size,
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {
@@ -208,7 +207,6 @@ private fun HomePageCommentInfo(
 private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
     val roomComments =
         viewModel.getRoomComments(unitId).collectAsState(initial = null).value
-    val pagerState = rememberPagerState()
 
 
     Row(
@@ -231,6 +229,8 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
         Spacer(modifier = Modifier.weight(0.7f))
     }
     roomComments?.let {
+        val pagerState = rememberPagerState { roomComments.size }
+
         //多角色时，显示角色图标
         if (roomComments.size > 1) {
             val urls = arrayListOf<String>()
@@ -243,7 +243,6 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
         }
         HorizontalPager(
             state = pagerState,
-            pageCount = roomComments.size,
             verticalAlignment = Alignment.Top
         ) { index ->
             Column {

@@ -72,7 +72,7 @@ fun ComicList(
         mutableStateOf(max(0, count - 1))
     }
     //分页状态
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { count }
     //同步滚动目录位置
     LaunchedEffect(pagerState.currentPage) {
         gridState.scrollToItem(pagerState.currentPage)
@@ -81,7 +81,6 @@ fun ComicList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = count,
             modifier = Modifier.align(Alignment.Center),
             state = pagerState
         ) { pagerIndex ->

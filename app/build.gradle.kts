@@ -14,8 +14,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.06.01"
-val composeCompilerVersion = "1.4.8"
+val composeBom = "2023.08.00"
+val composeCompilerVersion = "1.5.1"
 val appVersionCode = 370
 val appVersionName = "3.7.0"
 val appId = "cn.wthee.pcrtool"
@@ -31,8 +31,8 @@ android {
 //    }
 
     namespace = appId
-    compileSdk = 33
-    buildToolsVersion = "33.0.2"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
@@ -123,7 +123,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     //Accompanist
-    val accompanistVersion = "0.30.1"
+    val accompanistVersion = "0.31.6-rc"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -156,7 +156,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.navigation:navigation-compose:2.7.0")
 
     //Paging3
     val pagingVersion = "3.2.0"
@@ -169,7 +169,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.5.2"
+    val roomVersion = "2.6.0-alpha02"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

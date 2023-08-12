@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -57,7 +58,7 @@ fun AllSkillList(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HorizontalPager(pageCount = 2) { index ->
+        HorizontalPager(state = rememberPagerState { 2 }) { index ->
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
                     MainText(text = "$index：${if (index == 0) skills.size else equipSkills.size}")
