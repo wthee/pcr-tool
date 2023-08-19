@@ -113,7 +113,7 @@ interface EventDao {
         WHERE
             b.reward_type = 6 AND b.reward_num > 100
         ORDER BY
-            id DESC
+            a.start_time DESC
         LIMIT 0,:limit
     """
     )
