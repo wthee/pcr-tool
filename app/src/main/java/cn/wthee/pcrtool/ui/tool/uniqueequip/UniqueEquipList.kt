@@ -152,7 +152,8 @@ private fun UniqueEquipItem(
         Column {
             MainTitleText(
                 text = equip.equipName,
-                modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
+                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                selectable = true
             )
 
             MainCard(
@@ -167,38 +168,50 @@ private fun UniqueEquipItem(
             ) {
                 Subtitle2(
                     text = equip.description.deleteSpace,
-                    modifier = Modifier.padding(Dimen.mediumPadding)
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    selectable = true
                 )
 
-                Row(
-                    modifier = Modifier.padding(Dimen.mediumPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainIcon(
-                        data = ImageRequestHelper.getInstance().getMaxIconUrl(equip.unitId)
-                    )
-
-                    Column(modifier = Modifier.padding(start = Dimen.smallPadding)) {
-                        //名称
-                        Subtitle2(
-                            text = equip.unitName,
-                            textAlign = TextAlign.Start,
-                            maxLines = 1,
-                            modifier = Modifier.padding(Dimen.smallPadding)
-                        )
-
-                        CharacterTagRow(
-                            modifier = Modifier.padding(top = Dimen.smallPadding),
-                            basicInfo = basicInfo
-                        )
-                    }
-                }
+                UnitIconAndTag(basicInfo)
 
             }
         }
 
     }
 
+}
+
+/**
+ * 角色图标和标签
+ */
+@Composable
+fun UnitIconAndTag(
+    basicInfo: CharacterInfo
+) {
+    Row(
+        modifier = Modifier.padding(Dimen.mediumPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MainIcon(
+            data = ImageRequestHelper.getInstance().getMaxIconUrl(basicInfo.id)
+        )
+
+        Column(modifier = Modifier.padding(start = Dimen.smallPadding)) {
+            //名称
+            Subtitle2(
+                text = basicInfo.name,
+                textAlign = TextAlign.Start,
+                maxLines = 1,
+                modifier = Modifier.padding(Dimen.smallPadding),
+                selectable = true
+            )
+
+            CharacterTagRow(
+                modifier = Modifier.padding(top = Dimen.smallPadding),
+                basicInfo = basicInfo
+            )
+        }
+    }
 }
 
 

@@ -1,7 +1,15 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,17 +37,33 @@ fun MainTitleText(
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    selectable: Boolean = false,
 ) {
-    Text(
-        text = text,
-        color = colorWhite,
-        style = textStyle,
-        maxLines = maxLines,
-        modifier = modifier
-            .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
-            .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
-    )
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                color = colorWhite,
+                style = textStyle,
+                maxLines = maxLines,
+                modifier = modifier
+                    .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
+                    .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
+            )
+        }
+    } else {
+        Text(
+            text = text,
+            color = colorWhite,
+            style = textStyle,
+            maxLines = maxLines,
+            modifier = modifier
+                .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
+                .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
+        )
+    }
+
 }
 
 /**

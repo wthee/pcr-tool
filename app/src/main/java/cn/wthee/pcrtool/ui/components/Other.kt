@@ -517,29 +517,27 @@ fun CharacterTagRow(
         if (!unknown) {
             //位置
             CharacterPositionTag(
-                modifier = Modifier.padding(
-                    start = Dimen.smallPadding,
-                    end = Dimen.smallPadding,
-                    bottom = Dimen.smallPadding
-                ),
+                modifier = Modifier
+                    .padding(
+                        start = Dimen.smallPadding
+                    )
+                    .align(Alignment.CenterVertically),
                 character = basicInfo!!
             )
+
 
             Row {
                 //获取方式
                 CharacterTag(
-                    modifier = Modifier.padding(
-                        bottom = Dimen.smallPadding,
-                        end = Dimen.smallPadding
-                    ),
-                    text = getLimitTypeText(limitType = basicInfo.limitType),
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    text = getLimitTypeText(limitType = basicInfo!!.limitType),
                     backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
                 )
                 //攻击
                 CharacterTag(
                     modifier = Modifier.padding(
                         bottom = Dimen.smallPadding,
-                        end = Dimen.smallPadding
+                        top = Dimen.smallPadding
                     ),
                     text = getAtkText(atkType = basicInfo.atkType),
                     backgroundColor = getAtkColor(atkType = basicInfo.atkType)
@@ -553,7 +551,9 @@ fun CharacterTagRow(
                     backgroundColor = Color.Transparent,
                     textColor = endTextColor,
                     fontWeight = FontWeight.Light,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
                     endAlignment = true
                 )
             }

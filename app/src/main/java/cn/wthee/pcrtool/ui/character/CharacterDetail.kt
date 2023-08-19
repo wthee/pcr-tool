@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -76,6 +77,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquip
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UnitIconAndTag
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -86,9 +88,6 @@ import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.math.max
 
 
@@ -98,6 +97,7 @@ import kotlin.math.max
  * @param unitId 角色编号
  * @param showDetailState 非空时从专用装备跳转
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -105,6 +105,7 @@ fun CharacterDetail(
     actions: NavActions,
     showDetailState: MutableState<Boolean>? = null,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val showDetail = showDetailState == null || showDetailState.value
 
@@ -149,6 +150,11 @@ fun CharacterDetail(
     val characterAttrData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value
 
+    //基本信息
+    val basicInfo =
+        characterViewModel.getCharacterBasicInfo(unitId)
+            .collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
+
     //数据加载后，展示页面
     val visible = characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
     //未实装角色
@@ -173,7 +179,7 @@ fun CharacterDetail(
                 if (showDetail) {
                     //角色卡面
                     CharacterCard(
-                        unitId = unitId,
+                        basicInfo = basicInfo,
                         cutinId = cutinId,
                         loved = loved.value,
                         characterAttrData,
@@ -195,9 +201,7 @@ fun CharacterDetail(
                         modifier = Modifier
                             .padding(Dimen.largePadding)
                             .fillMaxWidth(),
-                        crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                        mainAxisAlignment = MainAxisAlignment.Center,
-                        lastLineMainAxisAlignment = MainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         //RANK对比
                         IconTextButton(
@@ -243,10 +247,7 @@ fun CharacterDetail(
                         toCharacterRankEquip = actions.toCharacterRankEquip
                     )
                 } else {
-                    MainIcon(
-                        data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
-                        modifier = Modifier.padding(top = Dimen.largePadding)
-                    )
+                    UnitIconAndTag(basicInfo)
                 }
 
                 //显示专武
@@ -349,19 +350,14 @@ fun CharacterDetail(
  */
 @Composable
 private fun CharacterCard(
-    unitId: Int,
+    basicInfo: CharacterInfo,
     cutinId: Int = 0,
     loved: Boolean,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
     actions: NavActions,
-    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
-
-    //基本信息
-    val basicInfo =
-        characterViewModel.getCharacterBasicInfo(unitId)
-            .collectAsState(initial = CharacterInfo()).value
+    val unitId = basicInfo.id
 
     Column(
         modifier = Modifier
