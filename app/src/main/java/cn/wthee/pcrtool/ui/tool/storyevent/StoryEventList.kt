@@ -26,8 +26,6 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_TEASER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -104,6 +102,7 @@ fun StoryEventList(
 /**
  * 剧情活动
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StoryEventItem(
     event: EventData,
@@ -165,7 +164,7 @@ fun StoryEventItem(
         //标题
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            verticalArrangement = Arrangement.Center
         ) {
             MainTitleText(
                 text = type,

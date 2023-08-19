@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,8 +55,6 @@ import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -148,6 +148,7 @@ fun ClanBattleOverview(
  * 图标列表
  * @param clanBattleEvent 不为空时，首页日程展示用
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ClanBattleItem(
     clanBattleEvent: ClanBattleEvent? = null,
@@ -170,8 +171,7 @@ private fun ClanBattleItem(
     ) {
         //标题
         FlowRow(
-            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             if (clanBattleEvent == null) {
                 //日期

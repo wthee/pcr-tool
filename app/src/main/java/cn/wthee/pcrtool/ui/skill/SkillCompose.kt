@@ -36,7 +36,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * 角色技能列表
@@ -141,6 +140,7 @@ fun SkillCompose(
  * 技能
  * @param property 角色属性，怪物技能不需要该参数
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(

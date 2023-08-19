@@ -19,8 +19,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.viewmodel.EventViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 
@@ -83,6 +81,7 @@ fun CalendarEventList(
 /**
  * 日历信息
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CalendarEventItem(calendar: CalendarEvent) {
 
@@ -94,7 +93,7 @@ fun CalendarEventItem(calendar: CalendarEvent) {
     ) {
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            verticalArrangement = Arrangement.Center
         ) {
             EventTitle(calendar.startTime, calendar.endTime, showOverdueColor = true)
         }

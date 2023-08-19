@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,7 +17,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * ChipGroup
@@ -23,6 +24,7 @@ import com.google.accompanist.flowlayout.FlowRow
  * @param items chip 数据列表
  * @param selectIndex 选择位置状态
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChipGroup(
     items: List<ChipData>,
@@ -40,6 +42,7 @@ fun ChipGroup(
 /**
  * SuggestionChipGroup 展示用
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SuggestionChipGroup(
     items: List<KeywordData>,
