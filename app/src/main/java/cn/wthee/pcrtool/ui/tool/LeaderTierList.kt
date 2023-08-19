@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -43,6 +42,7 @@ import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -196,13 +196,16 @@ fun LeaderTier(
                                 )
                             )
                         }
-                        items(
-                            it.leaderList,
-                            key = {
-                                it.url
+                        item {
+                            //分组内容
+                            VerticalGrid(
+                                itemWidth = Dimen.iconSize * 4,
+                                contentPadding = Dimen.largePadding,
+                            ) {
+                                it.leaderList.forEach { leader ->
+                                    LeaderItem(leader, toCharacterDetail, characterViewModel)
+                                }
                             }
-                        ) { leader ->
-                            LeaderItem(leader, toCharacterDetail, characterViewModel)
                         }
                     }
                     items(count = 2) {
@@ -247,8 +250,8 @@ private fun LeaderItem(
         modifier = Modifier
             .padding(
                 bottom = Dimen.largePadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding,
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
             )
     ) {
         //图标
@@ -293,7 +296,8 @@ private fun LeaderItem(
 
             }
             CharacterTagRow(
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
                 unknown = unknown,
                 basicInfo = basicInfo,
                 tipText = tipText
