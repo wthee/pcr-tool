@@ -158,14 +158,32 @@ fun CircularProgressCompose(
 @Composable
 fun LinearProgressCompose(
     modifier: Modifier = Modifier,
-    width: Dp = Dimen.linearProgressWidth
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     LinearProgressIndicator(
         modifier = modifier
-            .width(width)
             .height(Dimen.linearProgressHeight)
             .clip(MaterialTheme.shapes.medium),
-        color = MaterialTheme.colorScheme.primary,
+        color = color
+    )
+}
+
+/**
+ * 加载中进度-直线
+ */
+@Composable
+fun LinearProgressCompose(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary
+) {
+    LinearProgressIndicator(
+        progress = progress,
+        modifier = modifier
+            .height(Dimen.linearProgressHeight)
+            .clip(MaterialTheme.shapes.medium),
+        color = color,
+        trackColor = MaterialTheme.colorScheme.outlineVariant
     )
 }
 
@@ -522,7 +540,7 @@ fun CharacterTagRow(
                         start = Dimen.smallPadding
                     )
                     .align(Alignment.CenterVertically),
-                character = basicInfo!!
+                position = basicInfo!!.position
             )
 
 
@@ -530,7 +548,7 @@ fun CharacterTagRow(
                 //获取方式
                 CharacterTag(
                     modifier = Modifier.padding(Dimen.smallPadding),
-                    text = getLimitTypeText(limitType = basicInfo!!.limitType),
+                    text = getLimitTypeText(limitType = basicInfo.limitType),
                     backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
                 )
                 //攻击
@@ -594,20 +612,20 @@ fun CharacterTagRow(
 @Composable
 fun CharacterPositionTag(
     modifier: Modifier = Modifier,
-    character: CharacterInfo
+    position: Int
 ) {
-    val positionText = getPositionText(character = character)
+    val positionText = getPositionText(position)
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //位置图标
         PositionIcon(
-            position = character.position
+            position = position
         )
         //位置
         CharacterTag(
             modifier = Modifier.padding(start = Dimen.smallPadding),
             text = positionText,
-            backgroundColor = getPositionColor(character.position)
+            backgroundColor = getPositionColor(position)
         )
     }
 }
@@ -616,18 +634,16 @@ fun CharacterPositionTag(
  * 获取位置描述
  */
 @Composable
-private fun getPositionText(character: CharacterInfo?): String {
+private fun getPositionText(position: Int): String {
     var positionText = ""
-    character?.let {
-        val pos = when (PositionType.getPositionType(character.position)) {
-            PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-            PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-            PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-            PositionType.UNKNOWN -> Constants.UNKNOWN
-        }
-        if (pos != Constants.UNKNOWN) {
-            positionText = "$pos ${character.position}"
-        }
+    val pos = when (PositionType.getPositionType(position)) {
+        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
+        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
+        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
+        PositionType.UNKNOWN -> Constants.UNKNOWN
+    }
+    if (pos != Constants.UNKNOWN) {
+        positionText = "$pos ${position}"
     }
     return positionText
 }

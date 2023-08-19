@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,9 +18,9 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CharacterPositionTag
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.PositionIcon
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 import cn.wthee.pcrtool.utils.int
@@ -114,16 +113,10 @@ private fun CharacterSummonDetail(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //位置
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(Dimen.mediumPadding)
-            ) {
-                PositionIcon(position = it.position)
-                MainText(
-                    text = it.position.toString(),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
+            CharacterPositionTag(
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                position = it.position
+            )
         }
         attrs?.let {
             Column {

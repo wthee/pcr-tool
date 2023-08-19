@@ -348,6 +348,7 @@ fun CharacterDetail(
 /**
  * 角色卡
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CharacterCard(
     basicInfo: CharacterInfo,
@@ -380,35 +381,39 @@ private fun CharacterCard(
             modifier = Modifier
                 .padding(top = Dimen.smallPadding)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
         ) {
             //战力计算
             CharacterCoe(characterAttrData, currentValue, actions.toCoe)
             Spacer(modifier = Modifier.weight(1f))
-            //资料
-            IconTextButton(
-                icon = MainIconType.CHARACTER_INTRO,
-                text = stringResource(id = R.string.character_basic_info),
-            ) {
-                actions.toCharacterBasicInfo(unitId)
+
+            FlowRow(horizontalArrangement = Arrangement.End) {
+                //资料
+                IconTextButton(
+                    icon = MainIconType.CHARACTER_INTRO,
+                    text = stringResource(id = R.string.character_basic_info),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    actions.toCharacterBasicInfo(unitId)
+                }
+                //立绘预览
+                IconTextButton(
+                    icon = MainIconType.PREVIEW_IMAGE,
+                    text = stringResource(id = R.string.character_pic),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+                }
+                //模型预览
+                IconTextButton(
+                    icon = MainIconType.PREVIEW_UNIT_SPINE,
+                    text = stringResource(id = R.string.spine_preview),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    val id = if (cutinId != 0) cutinId else unitId
+                    BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+                }
             }
-            //立绘预览
-            IconTextButton(
-                icon = MainIconType.PREVIEW_IMAGE,
-                text = stringResource(id = R.string.character_pic),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            ) {
-                actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
-            }
-            //模型预览
-            IconTextButton(
-                icon = MainIconType.PREVIEW_UNIT_SPINE,
-                text = stringResource(id = R.string.spine_preview),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            ) {
-                val id = if (cutinId != 0) cutinId else unitId
-                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
-            }
+
         }
     }
 
@@ -430,6 +435,7 @@ private fun CharacterCoe(
 
     Row(
         modifier = Modifier
+            .padding(start = Dimen.smallPadding)
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
@@ -475,9 +481,6 @@ private fun CharacterCoe(
         //战力数值
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
-        )
-        MainIcon(
-            data = MainIconType.HELP, size = Dimen.smallIconSize
         )
     }
 }
