@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -70,6 +71,12 @@ fun TopBarCompose(
     var isExpanded by remember {
         mutableStateOf(false)
     }
+    LaunchedEffect(updateApp) {
+        if (updateApp.id == -1) {
+            isExpanded = false
+        }
+    }
+
 
     Row(
         horizontalArrangement = Arrangement.Center,
