@@ -1,5 +1,11 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
@@ -37,22 +48,27 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.LinearProgressCompose
 import cn.wthee.pcrtool.ui.components.MainButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
+import cn.wthee.pcrtool.utils.ApkDownloadWorker
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
@@ -68,6 +84,7 @@ fun TopBarCompose(
     noticeViewModel: NoticeViewModel = MainActivity.noticeViewModel
 ) {
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
+    val downloadState = MainActivity.navViewModel.apkDownloadProgress.observeAsState().value ?: -2
     var isExpanded by remember {
         mutableStateOf(false)
     }
@@ -77,64 +94,46 @@ fun TopBarCompose(
         }
     }
 
-
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(
-                top = Dimen.largePadding, start = Dimen.largePadding, end = Dimen.largePadding
-            )
-            .fillMaxWidth()
-    ) {
-        HeaderText(
-            text = stringResource(id = R.string.app_name)
-        )
+    //Toolbar
+    if (downloadState <= -2) {
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth()
         ) {
-            //应用更新
-            when (updateApp.id) {
-                -1 -> {
-                    //校验更新中
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(Dimen.fabIconSize)
-                            .padding(Dimen.smallPadding),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        strokeWidth = 3.dp
-                    )
-                }
+            HeaderText(
+                text = stringResource(id = R.string.app_name)
+            )
 
-                -2 -> {
-                    //异常
-                    MainIcon(
-                        data = MainIconType.REQUEST_ERROR,
-                        tint = colorRed,
-                        size = Dimen.fabIconSize,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    ) {
-                        isExpanded = !isExpanded
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //应用更新
+                when (updateApp.id) {
+                    -1 -> {
+                        //校验更新中
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(Dimen.fabIconSize)
+                                .padding(Dimen.smallPadding),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            strokeWidth = 3.dp
+                        )
                     }
-                }
 
-                else -> {
-                    //提示
-                    if (updateApp.id == 0 && !isExpanded) {
-                        IconTextButton(
-                            icon = MainIconType.APP_UPDATE,
-                            text = stringResource(R.string.find_new_release, updateApp.title),
-                            contentColor = colorGreen,
-                            iconSize = Dimen.fabIconSize
-                        ) {
-                            isExpanded = !isExpanded
-                        }
-                    } else {
+                    -2 -> {
+                        //异常
                         MainIcon(
-                            data = if (isExpanded) MainIconType.CLOSE else MainIconType.NOTICE,
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            data = MainIconType.REQUEST_ERROR,
+                            tint = colorRed,
                             size = Dimen.fabIconSize,
                             modifier = Modifier.padding(start = Dimen.smallPadding)
                         ) {
@@ -142,24 +141,48 @@ fun TopBarCompose(
                         }
                     }
 
-                }
-            }
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
-            //编辑
-            MainIcon(
-                data = if (isEditMode.value) MainIconType.OK else MainIconType.EDIT_TOOL,
-                tint = MaterialTheme.colorScheme.onSurface,
-                size = Dimen.fabIconSize
-            ) {
-                isEditMode.value = !isEditMode.value
-            }
-            Spacer(modifier = Modifier.width(Dimen.largePadding))
-        }
+                    else -> {
+                        //提示
+                        if (updateApp.id == 0 && !isExpanded) {
+                            IconTextButton(
+                                icon = MainIconType.APP_UPDATE,
+                                text = stringResource(R.string.find_new_release, updateApp.title),
+                                contentColor = colorGreen,
+                                iconSize = Dimen.fabIconSize
+                            ) {
+                                isExpanded = !isExpanded
+                            }
+                        } else {
+                            MainIcon(
+                                data = if (isExpanded) MainIconType.CLOSE else MainIconType.NOTICE,
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                size = Dimen.fabIconSize,
+                                modifier = Modifier.padding(start = Dimen.smallPadding)
+                            ) {
+                                isExpanded = !isExpanded
+                            }
+                        }
 
+                    }
+                }
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
+                //编辑
+                MainIcon(
+                    data = if (isEditMode.value) MainIconType.OK else MainIconType.EDIT_TOOL,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    size = Dimen.fabIconSize
+                ) {
+                    isEditMode.value = !isEditMode.value
+                }
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
+            }
+
+        }
     }
 
-    ExpandAnimation(visible = isExpanded || updateApp.id == -2) {
-        AppUpdateContent(appNotice = updateApp)
+    //更新卡片布局
+    ExpandAnimation(visible = isExpanded || updateApp.id == -2 || downloadState > -2) {
+        AppUpdateContent(appNotice = updateApp, downloadState)
     }
 }
 
@@ -167,17 +190,108 @@ fun TopBarCompose(
  * 应用更新内容或异常提示
  */
 @Composable
-private fun AppUpdateContent(appNotice: AppNotice) {
+private fun AppUpdateContent(appNotice: AppNotice, downloadState: Int) {
+    val downloading = downloadState > -2
+    //下载、安装状态通知
+    when (downloadState) {
+        -3 -> {
+            ToastUtil.long(stringResource(R.string.download_apk_error))
+            MainActivity.navViewModel.apkDownloadProgress.postValue(-2)
+        }
 
-    MainCard(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding
-        )
+        -4 -> {
+            ToastUtil.long(stringResource(R.string.install_apk_error))
+            MainActivity.navViewModel.apkDownloadProgress.postValue(-2)
+        }
+    }
+
+
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(defaultSpring())
     ) {
-        if (appNotice.id != -2) {
-            UpdateContent(appNotice)
-        } else {
-            ErrorContent()
+        if (downloading) {
+            HeaderText(
+                text = stringResource(id = R.string.app_name),
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            //下载进度
+            if (downloadState > -1) {
+                CaptionText(
+                    text = "$downloadState%",
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding
+                    )
+                )
+            }
+
+        }
+
+        MainCard(
+            modifier = if (downloading) {
+                Modifier
+                    .padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+            } else {
+                Modifier
+                    .padding(
+                        top = Dimen.largePadding,
+                        bottom = Dimen.mediumPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+            },
+            fillMaxWidth = !downloading
+        ) {
+            if (appNotice.id != -2) {
+                //下载相关
+                if (downloading) {
+                    DownloadingContent(downloadState)
+                } else {
+                    UpdateContent(appNotice)
+                }
+            } else {
+                //异常
+                ErrorContent()
+            }
+        }
+    }
+
+}
+
+/**
+ * 下载进度
+ */
+@Composable
+private fun DownloadingContent(
+    downloadState: Int
+) {
+    when (downloadState) {
+        -1, 100 -> {
+            LinearProgressCompose(
+                modifier = Modifier.fillMaxWidth(1 - RATIO_GOLDEN),
+                color = colorGreen
+            )
+        }
+
+        in 0..99 -> {
+            LinearProgressCompose(
+                modifier = Modifier.fillMaxWidth(1 - RATIO_GOLDEN),
+                progress = downloadState / 100f,
+                color = colorGreen
+            )
         }
     }
 }
@@ -192,12 +306,13 @@ private fun UpdateContent(
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-            .fillMaxWidth()
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.smallPadding
+        )
     ) {
+        //更新内容
         Row(
-            modifier = Modifier.padding(top = Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             //版本
@@ -229,28 +344,86 @@ private fun UpdateContent(
 
         //前往更新
         if (appNotice.id == 0) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Dimen.mediumPadding),
-                horizontalArrangement = Arrangement.Center
+                    .padding(top = Dimen.largePadding)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //从酷安下载
-                MainButton(
-                    text = stringResource(id = R.string.download_apk_from_coolapk),
-                    containerColor = colorGreen
-                ) {
-                    BrowserUtil.open(appNotice.url)
-                }
-                // 从 github 下载
+                //github下载链接
                 val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
-                SubButton(text = stringResource(id = R.string.download_apk_from_github)) {
-                    BrowserUtil.open(githubReleaseUrl)
+                //从GitHub下载
+                IconTextButton(
+                    text = stringResource(id = R.string.download_apk_from_github),
+                    contentColor = MaterialTheme.colorScheme.outline
+                ) {
+                    downloadApk(githubReleaseUrl, context)
                 }
-            }
 
+                MainButton(
+                    text = stringResource(id = R.string.download_apk),
+                    containerColor = colorGreen,
+                    modifier = Modifier.fillMaxWidth(RATIO_GOLDEN)
+                ) {
+                    if (appNotice.url.contains("coolapk")) {
+                        //从酷安下载
+                        BrowserUtil.open(appNotice.url)
+                    } else {
+                        //直接从服务器下载
+                        downloadApk(appNotice.url, context)
+                    }
+
+                }
+
+            }
         }
 
+    }
+
+}
+
+/**
+ * 下载文件
+ */
+private fun downloadApk(
+    url: String,
+    context: Context
+) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        BrowserUtil.open(url)
+    } else {
+        //请求应用安装权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!context.packageManager.canRequestPackageInstalls()) {
+                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.data =
+                    Uri.parse(
+                        java.lang.String.format(
+                            "package:%s",
+                            context.packageName
+                        )
+                    )
+                context.startActivity(intent)
+                return
+            }
+        }
+
+        //准备下载
+        MainActivity.navViewModel.apkDownloadProgress.postValue(-1)
+        //下载
+        val data = Data.Builder()
+            .putString(ApkDownloadWorker.KEY_URL, url)
+            .build()
+        val updateApkRequest =
+            OneTimeWorkRequestBuilder<ApkDownloadWorker>()
+                .setInputData(data)
+                .build()
+        WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+            Constants.DOWNLOAD_APK_WORK,
+            ExistingWorkPolicy.KEEP,
+            updateApkRequest
+        )
     }
 }
 
@@ -344,7 +517,8 @@ private fun AppUpdateContentPreview() {
                 title = "3.2.1",
                 message = "- [BUG] BUGBUG\n- [测试] 测试",
                 file_url = "123"
-            )
+            ),
+            22
         )
         AppUpdateContent(
             AppNotice(
@@ -353,7 +527,8 @@ private fun AppUpdateContentPreview() {
                 title = "3.2.1",
                 message = "- [BUG] BUGBUG\n- [测试] 测试",
                 file_url = "123"
-            )
+            ),
+            -2
         )
     }
 }

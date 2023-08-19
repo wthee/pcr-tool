@@ -13,5 +13,5 @@ data class AppNotice(
     val message: String = "",
     val title: String = "1.1.0",
     val type: Int = -1,
-    val url: String = ""
+    var url: String = ""
 ) : Serializable

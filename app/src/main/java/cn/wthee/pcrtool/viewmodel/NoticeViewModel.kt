@@ -31,6 +31,8 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
             updateApp.postValue(AppNotice(id = -1))
             try {
                 val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
+                data.id = 0
+                data.url = "https://wthee.xyz/pcrtool/app-official-release3.7.0.apk"
                 updateApp.postValue(data)
             } catch (e: Exception) {
                 updateApp.postValue(AppNotice(id = -2))

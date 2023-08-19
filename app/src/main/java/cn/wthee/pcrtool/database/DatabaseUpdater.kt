@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
 import cn.wthee.pcrtool.utils.Constants.mediaType
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
@@ -68,7 +69,7 @@ object DatabaseUpdater {
             val version = service.getDbVersion(body)
             //更新判断
             var desc = version.data!!.desc
-            if(desc == ""){
+            if (desc == "") {
                 desc = getString(R.string.db_diff_content_none)
             }
             navViewModel.updateDb.postValue(desc)
@@ -143,7 +144,7 @@ object DatabaseUpdater {
                         .setInputData(data)
                         .build()
                 WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
-                    "updateDatabase",
+                    DOWNLOAD_DB_WORK,
                     ExistingWorkPolicy.KEEP,
                     uploadWorkRequest
                 )

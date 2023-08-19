@@ -44,6 +44,17 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val downloadProgress = MutableLiveData(-1)
 
     /**
+     * apk下载状态
+     * -4: 安装包安装失败
+     * -3: 下载失败
+     * -2: 隐藏
+     * -1: 显示加载中
+     * >0: 进度
+     * >200: 下载成功
+     */
+    val apkDownloadProgress = MutableLiveData(-2)
+
+    /**
      * 加载中
      */
     val loading = MutableLiveData(false)

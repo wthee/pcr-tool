@@ -23,7 +23,7 @@ import javax.net.ssl.X509TrustManager
 object ApiUtil {
 
     private const val TIMEOUT_NORMAL_SECOND = 10L
-    private const val TIMEOUT_DOWNLOAD_SECOND = 120L
+    private const val TIMEOUT_DOWNLOAD_SECOND = 60L
     private const val MAX_RETRY = 3
 
     @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
@@ -69,7 +69,7 @@ object ApiUtil {
                     .build()
             })
             .retryOnConnectionFailure(true)
-            .connectTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT_NORMAL_SECOND, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_DOWNLOAD_SECOND, TimeUnit.SECONDS)
         return builder.setSSL().build()
