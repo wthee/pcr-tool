@@ -20,12 +20,16 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.NotificationUtil
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp2pxNotComposable
 import kotlin.math.max
 
 private const val ACTION_FINISH = "pvp_service_finish"
 
-@Suppress("DEPRECATION")
 class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
@@ -84,7 +88,12 @@ class PvpFloatService : LifecycleService() {
         } catch (_: Exception) {
 
         }
-        stopForeground(true)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            stopForeground(true)
+        }
         super.onDestroy()
     }
 
