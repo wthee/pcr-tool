@@ -288,8 +288,8 @@
 
     <!--战力系数-->
     <string name="title_ex_skill_add">EX+ 额外数值</string>
-    <string name="title_skill_1_add">技能1+ 额外数值</string>
-    <string name="title_skill_1_coe">技能1+ 系数</string>
+    <string name="title_skill_1_add">技能+ 额外数值</string>
+    <string name="title_skill_1_coe">技能+ 系数</string>
     <string name="title_ub_add">连结爆发+ 额外数值</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
     <string name="attr_all_value">战力：%s</string>

@@ -13,6 +13,6 @@ data class AllAttrData(
     var exSkillAttr: Attr = Attr(),
     var storyAttr: Attr = Attr(),
     var equips: List<EquipmentMaxData> = arrayListOf(),
-    var uniqueEquip: UniqueEquipmentMaxData = UniqueEquipmentMaxData(),
+    var uniqueEquipList: List<UniqueEquipmentMaxData> = arrayListOf(),
     var rankBonus: UnitPromotionBonus = UnitPromotionBonus()
 )

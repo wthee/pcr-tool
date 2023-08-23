@@ -47,6 +47,7 @@ import androidx.compose.material.icons.rounded.Handyman
 import androidx.compose.material.icons.rounded.Help
 import androidx.compose.material.icons.rounded.HourglassTop
 import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Looks4
@@ -394,6 +395,11 @@ enum class MainIconType(val icon: ImageVector) {
      * 帮助
      */
     HELP(Icons.Rounded.Help),
+
+    /**
+     * 信息
+     */
+    INFO(Icons.Rounded.Info),
 
     /**
      * 随机掉落地区

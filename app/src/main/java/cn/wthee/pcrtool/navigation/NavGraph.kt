@@ -351,6 +351,8 @@ fun NavGraph(
                     type = NavType.IntType
                 }, navArgument(NavRoute.UNIQUE_EQUIP_LEVEL) {
                     type = NavType.IntType
+                }, navArgument(NavRoute.UNIQUE_EQUIP_LEVEL2) {
+                    type = NavType.IntType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
@@ -359,7 +361,8 @@ fun NavGraph(
                     maxRank = arguments.getInt(NavRoute.MAX_RANK),
                     level = arguments.getInt(NavRoute.LEVEL),
                     rarity = arguments.getInt(NavRoute.RARITY),
-                    uniqueEquipLevel = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL)
+                    uniqueEquipLevel = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL),
+                    uniqueEquipLevel2 = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL2)
                 )
             }
 
@@ -846,9 +849,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色 RANK 对比
      */
-    val toCharacterRankCompare: (Int, Int, Int, Int, Int) -> Unit =
-        { unitId: Int, maxRank: Int, level: Int, rarity: Int, uniqueEquipLevel: Int ->
-            navController.navigate("${NavRoute.RANK_COMPARE}/${unitId}/${maxRank}/${level}/${rarity}/${uniqueEquipLevel}")
+    val toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit =
+        { unitId: Int, maxRank: Int, level: Int, rarity: Int, uniqueEquipLevel: Int, uniqueEquipLevel2: Int ->
+            navController.navigate("${NavRoute.RANK_COMPARE}/${unitId}/${maxRank}/${level}/${rarity}/${uniqueEquipLevel}/${uniqueEquipLevel2}")
         }
 
 

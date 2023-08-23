@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -46,7 +47,8 @@ class CharacterAttrViewModel @Inject constructor(
                         property.level,
                         property.rank,
                         property.rarity,
-                        property.uniqueEquipmentLevel
+                        property.uniqueEquipmentLevel,
+                        property.uniqueEquipmentLevel2
                     )
                 )
             }
@@ -66,7 +68,8 @@ class CharacterAttrViewModel @Inject constructor(
         level: Int,
         rank: Int,
         rarity: Int,
-        uniqueEquipLevel: Int
+        uniqueEquipLevel: Int,
+        uniqueEquipLevel2: Int
     ): AllAttrData {
         val info = Attr()
         val allData = AllAttrData()
@@ -119,13 +122,21 @@ class CharacterAttrViewModel @Inject constructor(
 
             //专武
             try {
-                val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, uniqueEquipLevel)
-                if (uniqueEquip != null) {
-                    if (uniqueEquipLevel == 0) {
-                        uniqueEquip.attr = Attr()
+                val uniqueEquip = equipmentRepository.getUniqueEquipInfo(
+                    unitId,
+                    uniqueEquipLevel,
+                    uniqueEquipLevel2
+                )
+                if (uniqueEquip.isNotEmpty()) {
+                    val uniqueEquipList = arrayListOf<UniqueEquipmentMaxData>()
+                    uniqueEquip.forEach {
+                        if (uniqueEquipLevel == 0) {
+                            it.attr = Attr()
+                        }
+                        info.add(it.attr)
+                        uniqueEquipList.add(it)
                     }
-                    info.add(uniqueEquip.attr)
-                    allData.uniqueEquip = uniqueEquip
+                    allData.uniqueEquipList = uniqueEquipList
                 }
             } catch (e: Exception) {
                 LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
@@ -224,9 +235,11 @@ class CharacterAttrViewModel @Inject constructor(
             val rank = unitRepository.getMaxRank(unitId)
             val rarity = unitRepository.getMaxRarity(unitId)
             val level = unitRepository.getMaxLevel()
-            val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv()
-            emit(CharacterProperty(level, rank, rarity, uniqueEquipLevel))
+            val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv(1) ?: 0
+            val uniqueEquipLevel2 = equipmentRepository.getUniqueEquipMaxLv(2) ?: 0
+            emit(CharacterProperty(level, rank, rarity, uniqueEquipLevel, uniqueEquipLevel2))
         } catch (e: Exception) {
+            LogReportUtil.upload(e, "getMaxRankAndRarity:$unitId")
             emit(CharacterProperty(level = -1))
         }
     }
@@ -242,12 +255,13 @@ class CharacterAttrViewModel @Inject constructor(
         level: Int,
         rarity: Int,
         uniqueEquipLevel: Int,
+        uniqueEquipLevel2: Int,
         rank0: Int,
         rank1: Int
     ) = flow {
         try {
-            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
-            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
+            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel, uniqueEquipLevel2)
+            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel, uniqueEquipLevel2)
             emit(attr0.sumAttr.compareWith(attr1.sumAttr))
         } catch (_: Exception) {
 

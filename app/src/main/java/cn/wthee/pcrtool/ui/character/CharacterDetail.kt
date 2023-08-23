@@ -76,6 +76,7 @@ import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquip
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UnitIconAndTag
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -173,6 +174,7 @@ fun CharacterDetail(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .animateContentSize(defaultTween())
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -216,6 +218,7 @@ fun CharacterDetail(
                                 currentValueState.value.level,
                                 currentValueState.value.rarity,
                                 currentValueState.value.uniqueEquipmentLevel,
+                                currentValueState.value.uniqueEquipmentLevel2,
                             )
                         }
                         //装备统计
@@ -251,11 +254,12 @@ fun CharacterDetail(
                 }
 
                 //显示专武
-                if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
+                characterAttrData.uniqueEquipList.forEachIndexed { index, uniqueEquipmentMaxData ->
                     UniqueEquip(
+                        slot = index + 1,
                         currentValueState = currentValueState,
-                        uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                        uniqueEquipmentMaxData = characterAttrData.uniqueEquip,
+                        uniqueEquipLevelMax = if (index == 0) maxValue.uniqueEquipmentLevel else 5,
+                        uniqueEquipmentMaxData = uniqueEquipmentMaxData,
                     )
                 }
                 //技能列表
@@ -268,7 +272,8 @@ fun CharacterDetail(
                     ),
                     unitType = UnitType.CHARACTER,
                     toSummonDetail = actions.toSummonDetail,
-                    isFilterSkill = !showDetail
+                    isFilterSkill = !showDetail,
+                    filterSkillCount = characterAttrData.uniqueEquipList.size
                 )
                 CommonSpacer()
                 Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
@@ -453,9 +458,9 @@ private fun CharacterCoe(
             //技能2：默认加上技能2
             var skill = currentValue.level * coe.skill_lv_coefficient
             //技能1：解锁专武，技能1系数提升
-            if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
-                skill += coe.skill1_evolution_coefficient
-                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
+            if (characterAttrData.uniqueEquipList.isNotEmpty()) {
+                skill += coe.skill1_evolution_coefficient * characterAttrData.uniqueEquipList.size
+                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * characterAttrData.uniqueEquipList.size
             } else {
                 skill += currentValue.level * coe.skill_lv_coefficient
             }
@@ -481,6 +486,9 @@ private fun CharacterCoe(
         //战力数值
         MainText(
             text = stringResource(id = R.string.attr_all_value, value),
+        )
+        MainIcon(
+            data = MainIconType.HELP, size = Dimen.smallIconSize
         )
     }
 }
@@ -583,7 +591,7 @@ private fun CharacterLevel(
                 .focusRequester(focusRequester)
                 .height(1.dp)
                 .alpha(0f)
-        }
+        }.animateContentSize(defaultTween())
     )
 }
 

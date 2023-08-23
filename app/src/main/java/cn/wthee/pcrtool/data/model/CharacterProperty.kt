@@ -10,6 +10,7 @@ data class CharacterProperty(
     var rank: Int = 0,
     var rarity: Int = 5,
     var uniqueEquipmentLevel: Int = 0,
+    var uniqueEquipmentLevel2: Int = 0,
 ) {
     fun isInit() = level != 0
 
@@ -20,8 +21,9 @@ data class CharacterProperty(
         level: Int = this.level,
         rank: Int = this.rank,
         rarity: Int = this.rarity,
-        uniqueEquipmentLevel: Int = this.uniqueEquipmentLevel
+        uniqueEquipmentLevel: Int = this.uniqueEquipmentLevel,
+        uniqueEquipmentLevel2: Int = this.uniqueEquipmentLevel2,
     ): CharacterProperty {
-        return CharacterProperty(level, rank, rarity, uniqueEquipmentLevel)
+        return CharacterProperty(level, rank, rarity, uniqueEquipmentLevel, uniqueEquipmentLevel2)
     }
 }
