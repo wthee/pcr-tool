@@ -1,8 +1,27 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -12,8 +31,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,8 +71,30 @@ import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
 import cn.wthee.pcrtool.ui.character.getLimitTypeColor
 import cn.wthee.pcrtool.ui.character.getLimitTypeText
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.dates
+import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.isComingSoon
+import cn.wthee.pcrtool.utils.isInProgress
 import kotlinx.coroutines.launch
 
 
@@ -141,15 +190,45 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 @Composable
 fun CircularProgressCompose(
     modifier: Modifier = Modifier,
-    size: Dp = Dimen.menuIconSize
+    size: Dp = Dimen.menuIconSize,
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     CircularProgressIndicator(
         modifier = modifier
             .size(size)
             .padding(Dimen.smallPadding),
-        color = MaterialTheme.colorScheme.primary,
+        color = color,
         strokeWidth = Dimen.strokeWidth
     )
+}
+
+/**
+ * 加载中-圆形
+ */
+@Composable
+fun CircularProgressCompose(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    size: Dp = Dimen.menuIconSize,
+    color: Color = MaterialTheme.colorScheme.primary
+
+) {
+    Box(contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            progress = progress,
+            modifier = modifier
+                .size(size)
+                .padding(Dimen.smallPadding),
+            color = color,
+            strokeWidth = Dimen.strokeWidth,
+        )
+        Text(
+            text = (progress * 100).toInt().toString(),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelSmall
+        )
+    }
+
 }
 
 /**
@@ -182,8 +261,7 @@ fun LinearProgressCompose(
         modifier = modifier
             .height(Dimen.linearProgressHeight)
             .clip(MaterialTheme.shapes.medium),
-        color = color,
-        trackColor = MaterialTheme.colorScheme.outlineVariant
+        color = color
     )
 }
 

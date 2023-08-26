@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -312,23 +311,21 @@ private fun ChangeDbCompose(
                     DbVersionList(tintColor)
                 } else {
                     //加载相关
-                    if (downloadState == -2) {
-                        MainIcon(
-                            data = MainIconType.CHANGE_DATA,
-                            tint = tintColor,
-                            size = Dimen.fabIconSize
-                        )
-                    } else {
-                        Box(contentAlignment = Alignment.Center) {
+                    when (downloadState) {
+                        -2 -> {
+                            MainIcon(
+                                data = MainIconType.CHANGE_DATA,
+                                tint = tintColor,
+                                size = Dimen.fabIconSize
+                            )
+                        }
+
+                        in 1..99 -> {
+                            CircularProgressCompose(progress = downloadState / 100f)
+                        }
+
+                        else -> {
                             CircularProgressCompose()
-                            //显示下载进度
-                            if (downloadState in 1..99) {
-                                Text(
-                                    text = downloadState.toString(),
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
                         }
                     }
                 }

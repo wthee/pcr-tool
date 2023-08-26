@@ -11,7 +11,7 @@ data class AppNotice(
     var id: Int = -1,
     val img_url: String = "",
     val message: String = "",
-    val title: String = "1.1.0",
+    val title: String = "",
     val type: Int = -1,
     var url: String = ""
 ) : Serializable

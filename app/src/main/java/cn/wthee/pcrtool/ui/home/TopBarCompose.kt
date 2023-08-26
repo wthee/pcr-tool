@@ -70,6 +70,7 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
@@ -395,6 +396,7 @@ private fun downloadApk(
         //请求应用安装权限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!context.packageManager.canRequestPackageInstalls()) {
+                ToastUtil.long(getString(R.string.request_install))
                 val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.data =
