@@ -40,6 +40,7 @@ object NavRoute {
     const val RARITY = "rarity"
     const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
+    const val UNIQUE_EQUIP_LEVEL2 = "uniqueEquipLevel2"
     const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CLAN_BOSS_PHASE = "toolClanBattlePhase"

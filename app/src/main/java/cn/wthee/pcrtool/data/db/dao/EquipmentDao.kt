@@ -235,10 +235,10 @@ interface EquipmentDao {
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv = 2
+            a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv <= 2 AND a.equipment_id % 10 = :slot
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
 
     /**
      * 获取专武信息（等级大于260）
@@ -313,8 +313,8 @@ interface EquipmentDao {
      */
     @SkipQueryVerification
     @Transaction
-    @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data")
-    suspend fun getUniqueEquipMaxLv(): Int
+    @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data WHERE equip_slot = :slot")
+    suspend fun getUniqueEquipMaxLv(slot: Int): Int?
 
     /**
      * 获取所有角色所需的装备统计

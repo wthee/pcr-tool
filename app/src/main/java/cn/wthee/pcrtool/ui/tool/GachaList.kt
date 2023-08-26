@@ -29,8 +29,6 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -107,6 +105,7 @@ fun GachaList(
 /**
  * 单个卡池
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GachaItem(
     gachaInfo: GachaInfo,
@@ -140,7 +139,7 @@ fun GachaItem(
         //标题
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            verticalArrangement = Arrangement.Center
         ) {
             //类型
             MainTitleText(

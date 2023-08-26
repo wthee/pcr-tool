@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  * @param level 角色等级
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
+ * @param uniqueEquipLevel2 角色专武2等级
  */
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +41,7 @@ fun RankCompare(
     level: Int,
     rarity: Int,
     uniqueEquipLevel: Int,
+    uniqueEquipLevel2: Int,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val rank0 = remember {
@@ -54,6 +56,7 @@ fun RankCompare(
         level,
         rarity,
         uniqueEquipLevel,
+        uniqueEquipLevel2,
         rank0.value,
         rank1.value
     ).collectAsState(initial = arrayListOf()).value

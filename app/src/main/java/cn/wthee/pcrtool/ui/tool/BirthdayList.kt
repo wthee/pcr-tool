@@ -23,8 +23,7 @@ import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
+
 import kotlinx.coroutines.launch
 
 
@@ -80,6 +79,7 @@ fun BirthdayList(
 /**
  * 具体角色
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BirthdayItem(
     data: BirthdayData,
@@ -99,7 +99,7 @@ fun BirthdayItem(
         //标题
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            verticalArrangement = Arrangement.Center
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),

@@ -58,6 +58,7 @@ import java.util.UUID
 
 //模拟抽卡最大up数
 private const val MOCK_GACHA_MAX_UP_COUNT = 12
+
 //模拟抽卡fes最大up数
 private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 
@@ -67,7 +68,7 @@ private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun MockGacha(
-    pagerState: PagerState = rememberPagerState(),
+    pagerState: PagerState = rememberPagerState { 2 },
     mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -178,7 +179,6 @@ fun MockGacha(
                 )
 
                 HorizontalPager(
-                    pageCount = 2,
                     state = pagerState,
                     modifier = Modifier
                         .padding(top = Dimen.mediumPadding)
@@ -193,6 +193,7 @@ fun MockGacha(
                                     it
                                 )
                             }
+
                         else -> {
                             //历史记录展示
                             MockGachaHistory()

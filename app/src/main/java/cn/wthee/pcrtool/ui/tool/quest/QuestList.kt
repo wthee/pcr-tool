@@ -66,7 +66,6 @@ fun QuestPager(
     }
     val randomDropResponseData = flow.collectAsState(initial = null).value
 
-    val pagerState = rememberPagerState()
     var pagerCount = 0
     //tab文本
     val tabs = arrayListOf<String>()
@@ -115,6 +114,8 @@ fun QuestPager(
         tabs.add(randomDrop)
         colorList.add(colorGreen)
     }
+
+    val pagerState = rememberPagerState { pagerCount }
 
 
     //按照地图难度分类
@@ -171,7 +172,6 @@ fun QuestPager(
 
 
             HorizontalPager(
-                pageCount = pagerCount,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { pagerIndex ->

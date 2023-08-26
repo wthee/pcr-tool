@@ -14,10 +14,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.06.01"
-val composeCompilerVersion = "1.4.8"
-val appVersionCode = 370
-val appVersionName = "3.7.0"
+val composeBom = "2023.08.00"
+val composeCompilerVersion = "1.5.2"
+val appVersionCode = 371
+val appVersionName = "3.7.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -31,14 +31,14 @@ android {
 //    }
 
     namespace = appId
-    compileSdk = 33
-    buildToolsVersion = "33.0.2"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = appId
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -109,7 +109,7 @@ dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.6.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.preference:preference-ktx:1.2.0")
@@ -123,7 +123,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     //Accompanist
-    val accompanistVersion = "0.30.1"
+    val accompanistVersion = "0.32.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -133,7 +133,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.5.0")
+    implementation("androidx.browser:browser:1.6.0")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9")
@@ -156,7 +156,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.navigation:navigation-compose:2.7.0")
 
     //Paging3
     val pagingVersion = "3.2.0"
@@ -169,7 +169,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.5.2"
+    val roomVersion = "2.6.0-alpha03"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -185,7 +185,7 @@ dependencies {
     val workVersion = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
-    implementation(files("libs\\commons-compress-1.19.jar"))
-    implementation(files("libs\\dec-0.1.2.jar"))
+    implementation(files("libs/commons-compress-1.19.jar"))
+    implementation(files("libs/dec-0.1.2.jar"))
 
 }

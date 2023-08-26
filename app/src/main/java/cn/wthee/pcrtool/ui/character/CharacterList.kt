@@ -152,7 +152,7 @@ fun CharacterList(
         ) {
             if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(getItemWidth() * 1.3f),
+                    columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState
                 ) {
                     items(
@@ -381,7 +381,9 @@ fun CharacterItem(
 
                         //获取方式等
                         Box(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .padding(end = Dimen.smallPadding)
+                                .weight(1f),
                             contentAlignment = Alignment.BottomEnd
                         ) {
                             CharacterTagRow(
@@ -414,7 +416,6 @@ fun CharacterItem(
         }
     }
 }
-
 
 
 /**

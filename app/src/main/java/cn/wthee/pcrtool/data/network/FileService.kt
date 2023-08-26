@@ -9,11 +9,11 @@ import retrofit2.http.Path
 /**
  * 数据库
  */
-interface DatabaseService {
+interface FileService {
     /**
-     * 根据文件名 [file]下载数据库文件
+     * 根据文件名 [file]下载文件
      */
     @GET("{file}")
-    fun getDb(@Path("file") file: String): Call<ResponseBody>
+    fun getFile(@Path("file") file: String): Call<ResponseBody>
 
 }

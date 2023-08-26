@@ -23,8 +23,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.viewmodel.EventViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -82,6 +80,7 @@ fun FreeGachaList(
 /**
  * 免费十连
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
 
@@ -94,7 +93,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
         //标题
         FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center
+            verticalArrangement = Arrangement.Center
         ) {
             EventTitle(startTime = freeGachaInfo.startTime, endTime = freeGachaInfo.endTime)
         }

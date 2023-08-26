@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,6 @@ import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * 角色技能列表
@@ -46,6 +46,7 @@ import com.google.accompanist.flowlayout.FlowRow
  * @param property 角色属性
  * @param unitType
  * @param isFilterSkill 仅显示专武技能
+ * @param filterSkillCount 显示专武技能数量
  */
 @Composable
 fun SkillCompose(
@@ -55,6 +56,7 @@ fun SkillCompose(
     unitType: UnitType,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     isFilterSkill: Boolean = false,
+    filterSkillCount: Int = 0,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     //普通技能
@@ -90,10 +92,19 @@ fun SkillCompose(
         //普通技能
         (if (isFilterSkill) {
             normalSkillData.filter {
-                it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
+                val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1
+                val skill2 = it.skillIndexType == SkillIndexType.MAIN_SKILL_2_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
+                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_2
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_2
+                if (filterSkillCount == 1) {
+                    skill1
+                } else {
+                    skill1 || skill2
+                }
             }
         } else {
             normalSkillData
@@ -141,6 +152,7 @@ fun SkillCompose(
  * 技能
  * @param property 角色属性，怪物技能不需要该参数
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
@@ -384,6 +396,10 @@ fun SkillActionItem(
     property: CharacterProperty,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
+    //调试用
+    val expand = remember {
+        mutableStateOf(false)
+    }
 
     //详细描述
     val mark0 = arrayListOf<ColorTextIndex>()
@@ -440,6 +456,7 @@ fun SkillActionItem(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.small
             )
+            .clickable(BuildConfig.DEBUG) { expand.value = !expand.value }
     ) {
         //设置字体
         Text(
@@ -487,7 +504,7 @@ fun SkillActionItem(
             //技能等级超过tp限制等级的，添加标识
             if (skillAction.isTpLimitAction) {
                 IconTextButton(
-                    icon = MainIconType.HELP,
+                    icon = MainIconType.INFO,
                     text = stringResource(R.string.tp_limit_level_action_desc)
                 )
             }
@@ -495,18 +512,8 @@ fun SkillActionItem(
 
         //调试用
         if (BuildConfig.DEBUG) {
-            val expand = remember {
-                mutableStateOf(false)
-            }
             if (expand.value) {
                 CaptionText(text = skillAction.debugText, textAlign = TextAlign.Start)
-            } else {
-                IconTextButton(
-                    icon = MainIconType.MORE,
-                    text = stringResource(R.string.skill)
-                ) {
-                    expand.value = true
-                }
             }
         }
     }

@@ -73,7 +73,7 @@ object Dimen {
 
     val linearProgressWidth = 32.dp
 
-    val linearProgressHeight = 3.dp
+    val linearProgressHeight = 6.dp
 
     val tweetImgHeight = 128.dp
 

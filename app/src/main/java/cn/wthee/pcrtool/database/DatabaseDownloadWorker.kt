@@ -4,14 +4,26 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.ForegroundInfo
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
-import cn.wthee.pcrtool.data.network.DatabaseService
+import cn.wthee.pcrtool.data.network.FileService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ApiUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
+import cn.wthee.pcrtool.utils.DownloadListener
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.NotificationUtil
+import cn.wthee.pcrtool.utils.UnzippedUtil
+import cn.wthee.pcrtool.utils.getString
 import kotlinx.coroutines.coroutineScope
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -56,7 +68,7 @@ class DatabaseDownloadWorker(
             //通知更新数据
             handler.sendEmptyMessage(region)
         } else if (result == Result.failure()) {
-            WorkManager.getInstance(MyApplication.context).cancelAllWork()
+            WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_DB_WORK)
         }
         return@coroutineScope result
     }
@@ -67,7 +79,8 @@ class DatabaseDownloadWorker(
         try {
             //创建Retrofit服务
             service = ApiUtil.createWithClient(
-                DatabaseService::class.java, Constants.DATABASE_URL,
+                FileService::class.java,
+                Constants.DATABASE_URL,
                 ApiUtil.buildDownloadClient(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
@@ -91,7 +104,7 @@ class DatabaseDownloadWorker(
                         notificationManager.cancelAll()
                     }
                 })
-            ).getDb(fileName)
+            ).getFile(fileName)
             //下载文件
             response = service.execute()
         } catch (e: Exception) {

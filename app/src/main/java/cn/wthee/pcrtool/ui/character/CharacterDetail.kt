@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -75,7 +76,9 @@ import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquip
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UnitIconAndTag
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -86,9 +89,6 @@ import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.math.max
 
 
@@ -98,6 +98,7 @@ import kotlin.math.max
  * @param unitId 角色编号
  * @param showDetailState 非空时从专用装备跳转
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
@@ -105,6 +106,7 @@ fun CharacterDetail(
     actions: NavActions,
     showDetailState: MutableState<Boolean>? = null,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val showDetail = showDetailState == null || showDetailState.value
 
@@ -149,6 +151,11 @@ fun CharacterDetail(
     val characterAttrData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value
 
+    //基本信息
+    val basicInfo =
+        characterViewModel.getCharacterBasicInfo(unitId)
+            .collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
+
     //数据加载后，展示页面
     val visible = characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
     //未实装角色
@@ -167,13 +174,14 @@ fun CharacterDetail(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .animateContentSize(defaultTween())
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (showDetail) {
                     //角色卡面
                     CharacterCard(
-                        unitId = unitId,
+                        basicInfo = basicInfo,
                         cutinId = cutinId,
                         loved = loved.value,
                         characterAttrData,
@@ -195,9 +203,7 @@ fun CharacterDetail(
                         modifier = Modifier
                             .padding(Dimen.largePadding)
                             .fillMaxWidth(),
-                        crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                        mainAxisAlignment = MainAxisAlignment.Center,
-                        lastLineMainAxisAlignment = MainAxisAlignment.Center,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         //RANK对比
                         IconTextButton(
@@ -212,6 +218,7 @@ fun CharacterDetail(
                                 currentValueState.value.level,
                                 currentValueState.value.rarity,
                                 currentValueState.value.uniqueEquipmentLevel,
+                                currentValueState.value.uniqueEquipmentLevel2,
                             )
                         }
                         //装备统计
@@ -243,18 +250,16 @@ fun CharacterDetail(
                         toCharacterRankEquip = actions.toCharacterRankEquip
                     )
                 } else {
-                    MainIcon(
-                        data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
-                        modifier = Modifier.padding(top = Dimen.largePadding)
-                    )
+                    UnitIconAndTag(basicInfo)
                 }
 
                 //显示专武
-                if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
+                characterAttrData.uniqueEquipList.forEachIndexed { index, uniqueEquipmentMaxData ->
                     UniqueEquip(
+                        slot = index + 1,
                         currentValueState = currentValueState,
-                        uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                        uniqueEquipmentMaxData = characterAttrData.uniqueEquip,
+                        uniqueEquipLevelMax = if (index == 0) maxValue.uniqueEquipmentLevel else 5,
+                        uniqueEquipmentMaxData = uniqueEquipmentMaxData,
                     )
                 }
                 //技能列表
@@ -267,7 +272,8 @@ fun CharacterDetail(
                     ),
                     unitType = UnitType.CHARACTER,
                     toSummonDetail = actions.toSummonDetail,
-                    isFilterSkill = !showDetail
+                    isFilterSkill = !showDetail,
+                    filterSkillCount = characterAttrData.uniqueEquipList.size
                 )
                 CommonSpacer()
                 Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
@@ -347,21 +353,17 @@ fun CharacterDetail(
 /**
  * 角色卡
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CharacterCard(
-    unitId: Int,
+    basicInfo: CharacterInfo,
     cutinId: Int = 0,
     loved: Boolean,
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
     actions: NavActions,
-    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
-
-    //基本信息
-    val basicInfo =
-        characterViewModel.getCharacterBasicInfo(unitId)
-            .collectAsState(initial = CharacterInfo()).value
+    val unitId = basicInfo.id
 
     Column(
         modifier = Modifier
@@ -384,35 +386,39 @@ private fun CharacterCard(
             modifier = Modifier
                 .padding(top = Dimen.smallPadding)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
         ) {
             //战力计算
             CharacterCoe(characterAttrData, currentValue, actions.toCoe)
             Spacer(modifier = Modifier.weight(1f))
-            //资料
-            IconTextButton(
-                icon = MainIconType.CHARACTER_INTRO,
-                text = stringResource(id = R.string.character_basic_info),
-            ) {
-                actions.toCharacterBasicInfo(unitId)
+
+            FlowRow(horizontalArrangement = Arrangement.End) {
+                //资料
+                IconTextButton(
+                    icon = MainIconType.CHARACTER_INTRO,
+                    text = stringResource(id = R.string.character_basic_info),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    actions.toCharacterBasicInfo(unitId)
+                }
+                //立绘预览
+                IconTextButton(
+                    icon = MainIconType.PREVIEW_IMAGE,
+                    text = stringResource(id = R.string.character_pic),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+                }
+                //模型预览
+                IconTextButton(
+                    icon = MainIconType.PREVIEW_UNIT_SPINE,
+                    text = stringResource(id = R.string.spine_preview),
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                ) {
+                    val id = if (cutinId != 0) cutinId else unitId
+                    BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+                }
             }
-            //立绘预览
-            IconTextButton(
-                icon = MainIconType.PREVIEW_IMAGE,
-                text = stringResource(id = R.string.character_pic),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            ) {
-                actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
-            }
-            //模型预览
-            IconTextButton(
-                icon = MainIconType.PREVIEW_UNIT_SPINE,
-                text = stringResource(id = R.string.spine_preview),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            ) {
-                val id = if (cutinId != 0) cutinId else unitId
-                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
-            }
+
         }
     }
 
@@ -434,6 +440,7 @@ private fun CharacterCoe(
 
     Row(
         modifier = Modifier
+            .padding(start = Dimen.smallPadding)
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
@@ -451,9 +458,9 @@ private fun CharacterCoe(
             //技能2：默认加上技能2
             var skill = currentValue.level * coe.skill_lv_coefficient
             //技能1：解锁专武，技能1系数提升
-            if (characterAttrData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
-                skill += coe.skill1_evolution_coefficient
-                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
+            if (characterAttrData.uniqueEquipList.isNotEmpty()) {
+                skill += coe.skill1_evolution_coefficient * characterAttrData.uniqueEquipList.size
+                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * characterAttrData.uniqueEquipList.size
             } else {
                 skill += currentValue.level * coe.skill_lv_coefficient
             }
@@ -584,7 +591,7 @@ private fun CharacterLevel(
                 .focusRequester(focusRequester)
                 .height(1.dp)
                 .alpha(0f)
-        }
+        }.animateContentSize(defaultTween())
     )
 }
 

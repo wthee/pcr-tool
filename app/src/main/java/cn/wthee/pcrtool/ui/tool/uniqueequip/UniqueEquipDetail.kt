@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.uniqueequip
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -47,6 +48,7 @@ import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -54,6 +56,7 @@ import cn.wthee.pcrtool.utils.deleteSpace
 
 /**
  * 专武信息
+ * @param slot 装备槽 1、 2
  * @param currentValueState 当前属性
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
@@ -63,18 +66,20 @@ import cn.wthee.pcrtool.utils.deleteSpace
 )
 @Composable
 fun UniqueEquip(
+    slot: Int,
     currentValueState: MutableState<CharacterProperty>,
     uniqueEquipLevelMax: Int,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
-    val inputLevel = remember {
+    val inputLevel = remember(uniqueEquipLevelMax) {
         mutableStateOf("")
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = remember(uniqueEquipLevelMax) { FocusRequester() }
     val isImeVisible = WindowInsets.isImeVisible
     val context = LocalContext.current
+    val minLv = if (slot == 1) 1 else 0
 
     uniqueEquipmentMaxData?.let {
         Column(
@@ -86,7 +91,12 @@ fun UniqueEquip(
                 text = it.equipmentName, selectable = true
             )
             //专武等级
-            Text(text = currentValueState.value.uniqueEquipmentLevel.toString(),
+            Text(
+                text = if (slot == 1) {
+                    currentValueState.value.uniqueEquipmentLevel.toString()
+                } else {
+                    currentValueState.value.uniqueEquipmentLevel2.toString()
+                },
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
@@ -117,8 +127,8 @@ fun UniqueEquip(
                     }
                     inputLevel.value = when {
                         filterStr == "" -> ""
-                        filterStr.toInt() < 1 -> "1"
-                        filterStr.toInt() in 1..uniqueEquipLevelMax -> filterStr
+                        filterStr.toInt() < minLv -> minLv.toString()
+                        filterStr.toInt() in minLv..uniqueEquipLevelMax -> filterStr
                         else -> uniqueEquipLevelMax.toString()
                     }
                 },
@@ -130,9 +140,15 @@ fun UniqueEquip(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (inputLevel.value != "") {
-                            currentValueState.value = currentValueState.value.update(
-                                uniqueEquipmentLevel = inputLevel.value.toInt()
-                            )
+                            currentValueState.value = if (slot == 1) {
+                                currentValueState.value.update(
+                                    uniqueEquipmentLevel = inputLevel.value.toInt()
+                                )
+                            } else {
+                                currentValueState.value.update(
+                                    uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                                )
+                            }
                         }
                     }
                 },
@@ -143,9 +159,15 @@ fun UniqueEquip(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                     if (inputLevel.value != "") {
-                        currentValueState.value = currentValueState.value.update(
-                            uniqueEquipmentLevel = inputLevel.value.toInt()
-                        )
+                        currentValueState.value = if (slot == 1) {
+                            currentValueState.value.update(
+                                uniqueEquipmentLevel = inputLevel.value.toInt()
+                            )
+                        } else {
+                            currentValueState.value.update(
+                                uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                            )
+                        }
                     }
                 }),
                 modifier = if (isImeVisible) {
@@ -157,7 +179,7 @@ fun UniqueEquip(
                         .focusRequester(focusRequester)
                         .height(1.dp)
                         .alpha(0f)
-                },
+                }.animateContentSize(defaultTween()),
                 maxLines = 1,
                 singleLine = true
             )
@@ -183,7 +205,7 @@ fun UniqueEquip(
             //技能等级超过tp限制等级的，添加标识
             if (uniqueEquipmentMaxData.isTpLimitAction) {
                 IconTextButton(
-                    icon = MainIconType.HELP,
+                    icon = MainIconType.INFO,
                     text = stringResource(R.string.tp_limit_level_action_desc)
                 )
             }
@@ -203,6 +225,7 @@ private fun UniqueEquipPreview() {
     }
     PreviewLayout {
         UniqueEquip(
+            1,
             currentValueState = currentValueState,
             uniqueEquipLevelMax = 100,
             uniqueEquipmentMaxData = UniqueEquipmentMaxData(
