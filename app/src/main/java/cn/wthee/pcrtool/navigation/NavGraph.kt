@@ -126,7 +126,8 @@ fun NavGraph(
                 if (navController.currentDestination?.route == NavRoute.HOME) {
                     viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                 }
-                Overview(actions = actions)
+                val scrollState = rememberScrollState()
+                Overview(actions = actions, scrollState = scrollState)
             }
 
             //角色列表
