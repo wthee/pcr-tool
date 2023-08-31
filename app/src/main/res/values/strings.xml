@@ -460,6 +460,7 @@
     <string name="skill_type_901_902">装备</string>
     <string name="skill_type_95">隐匿</string>
     <string name="skill_type_100">免疫</string>
+    <string name="skill_type_105">环境</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -484,6 +485,7 @@
     <string name="skill_status_1800">多目标状态</string>
     <string name="skill_status_1900">护盾展开</string>
     <string name="skill_status_2001">魔法攻击</string>
+    <string name="skill_status_3137">界雷</string>
 
     <!--技能目标类型相关-->
     <string name="skill_target_none">目标</string>
@@ -545,6 +547,7 @@
     <string name="skill_critical_damage_take">受到的暴击伤害</string>
     <string name="skill_physical_damage_take">受到的物理伤害</string>
     <string name="skill_magic_damage_take">受到的魔法伤害</string>
+    <string name="skill_magic_damage">造成的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
     <string name="skill_target_count">(%d 名)</string>
@@ -638,6 +641,7 @@
     <string name="skill_action_change_coe">动作(%d)的数值{%d}%s %s</string>
     <string name="skill_action_limit">；叠加上限 %s</string>
     <string name="skill_action_limit_int">；叠加上限 [%d]</string>
+    <string name="skill_action_damage_limit_int">；伤害上限 [%d]</string>
     <string name="skill_action_change_coe_0">%s * [剩余的HP]</string>
     <string name="skill_action_change_coe_1">%s * [损失的HP]</string>
     <string name="skill_action_change_coe_2">%s * [击杀数量]</string>
@@ -715,7 +719,7 @@
     <string name="skill_action_type_desc_75">每造成 [%d] 次伤害时，触发动作(%d) %s</string>
     <string name="skill_action_type_desc_76">%s治疗量变为原来的 %s%s</string>
     <string name="skill_action_type_desc_77">被动效果：每当%s受到%s时，为自身追加 [%d] 层标记%s%s</string>
-    <string name="skill_action_type_desc_79">%s行动时，受到 %s伤害%s</string>
+    <string name="skill_action_type_desc_79">%s行动时，受到%s %s 伤害%s%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
     <string name="skill_action_type_desc_90">自身的%s提升 %s</string>
     <string name="skill_action_type_desc_901">战斗开始时生效</string>
@@ -733,6 +737,7 @@
     <string name="skill_action_type_desc_101_reduce">%s攻击时，敌人减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_103">动作(%d)造成的伤害将依据%s的攻击力</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
+    <string name="skill_action_type_desc_105">发动 [%s] 环境效果%s</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>
