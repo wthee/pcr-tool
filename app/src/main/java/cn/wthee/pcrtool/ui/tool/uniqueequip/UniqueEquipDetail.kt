@@ -88,7 +88,8 @@ fun UniqueEquip(
         ) {
             //名称
             MainText(
-                text = it.equipmentName, selectable = true
+                text = it.equipmentName,
+                selectable = true
             )
             //专武等级
             Text(
@@ -197,7 +198,7 @@ fun UniqueEquip(
                     data = ImageRequestHelper.getInstance().getEquipPic(it.equipmentId)
                 )
                 Subtitle2(
-                    text = it.getDesc(),
+                    text = "(${it.equipmentId % 10}) ${it.description.deleteSpace}",
                     modifier = Modifier.padding(start = Dimen.mediumPadding),
                     selectable = true
                 )

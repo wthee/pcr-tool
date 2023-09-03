@@ -150,11 +150,13 @@ private fun UniqueEquipItem(
         }
 
         Column {
+
             MainTitleText(
                 text = equip.equipName,
-                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                modifier = Modifier.padding(start = Dimen.smallPadding),
                 selectable = true
             )
+
 
             MainCard(
                 modifier = Modifier.padding(
@@ -167,7 +169,7 @@ private fun UniqueEquipItem(
                 }
             ) {
                 Subtitle2(
-                    text = equip.description.deleteSpace,
+                    text = "(${equip.equipId % 10}) ${equip.description.deleteSpace}",
                     modifier = Modifier.padding(Dimen.mediumPadding),
                     selectable = true
                 )
