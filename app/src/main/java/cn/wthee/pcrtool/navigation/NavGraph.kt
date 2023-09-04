@@ -341,7 +341,7 @@ fun NavGraph(
 
             //角色 RANK 对比
             composable(
-                route = "${NavRoute.RANK_COMPARE}/{${NavRoute.UNIT_ID}}/{${NavRoute.MAX_RANK}}/{${NavRoute.LEVEL}}/{${NavRoute.RARITY}}/{${NavRoute.UNIQUE_EQUIP_LEVEL}}",
+                route = "${NavRoute.RANK_COMPARE}/{${NavRoute.UNIT_ID}}/{${NavRoute.MAX_RANK}}/{${NavRoute.LEVEL}}/{${NavRoute.RARITY}}/{${NavRoute.UNIQUE_EQUIP_LEVEL}}/{${NavRoute.UNIQUE_EQUIP_LEVEL2}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
                 }, navArgument(NavRoute.MAX_RANK) {
