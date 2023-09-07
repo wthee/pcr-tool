@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,14 +88,14 @@ fun LeaderTier(
 
     val url = stringResource(id = R.string.leader_source_url)
 
-    val scrollChange = remember { derivedStateOf { scrollState.firstVisibleItemIndex } }
+    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         //更新
-        ExpandAnimation(visible = scrollChange.value == 0) {
+        ExpandAnimation(visible = showTitle) {
             Row(
                 modifier = Modifier.padding(
                     horizontal = Dimen.largePadding,
@@ -310,7 +311,6 @@ private fun LeaderItem(
 @CombinedPreviews
 @Composable
 private fun LeaderItemPreview() {
-    val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         LeaderItem(
             LeaderTierItem(),

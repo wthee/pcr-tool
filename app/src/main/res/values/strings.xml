@@ -27,6 +27,7 @@
     <string name="title_comments">交流</string>
     <string name="title_home_page_comments">主页</string>
     <string name="title_room_comments">小屋</string>
+    <string name="character_attr">属性</string>
     <string name="title_story_attr">剧情属性</string>
     <string name="title_basic_coe">基本系数</string>
     <string name="title_skill_coe">技能基本系数</string>
@@ -39,8 +40,8 @@
     <string name="skill_loop">技能循环</string>
     <string name="title_unlock_6">★6解放</string>
     <string name="rank_select">RANK选择</string>
-    <string name="rank_compare">RANK对比</string>
-    <string name="calc_equip_count">装备统计</string>
+    <string name="rank_compare">对比</string>
+    <string name="calc_equip_count">统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_basic_info">资料</string>
     <string name="basic_info">基本信息</string>
@@ -57,6 +58,11 @@
     <string name="value_100_m">%s亿</string>
     <string name="value_10_k">%d万</string>
     <string name="unit_level">等级：%d</string>
+    <string name="title_unit_level">等级</string>
+    <string name="order_character_detail">未选中模块显示在次要页面（退出编辑后滑动切换）</string>
+    <string name="character_card">角色卡片</string>
+    <string name="character_tool">功能（资料、模型等）</string>
+    <string name="character_power">战力</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>
@@ -119,7 +125,7 @@
     <string name="equip_craft">装备合成</string>
     <string name="craft">装备</string>
     <string name="uncraft">素材</string>
-    <string name="title_rarity">角色星级</string>
+    <string name="title_rarity">星级</string>
     <string name="title_type">类型</string>
     <string name="six_star">★6</string>
     <string name="cutin_skill">★6技能</string>

@@ -72,10 +72,6 @@ fun StoryPicList(
         picsViewModel.getStoryList(id, allPicsType.type)
     }
     val responseData = flow.collectAsState(initial = null).value
-
-    val checkedPicUrl = remember {
-        mutableStateOf("")
-    }
     val hasStory = responseData?.data?.isNotEmpty() == true
 
 
@@ -89,10 +85,10 @@ fun StoryPicList(
         ) {
             //角色
             if (allPicsType == AllPicsType.CHARACTER) {
-                CharacterPicList(basicUrls, checkedPicUrl)
+                CharacterPicList(basicUrls)
             }
             //剧情
-            StoryPicList(hasStory, responseData, checkedPicUrl)
+            StoryPicList(hasStory, responseData)
             CommonSpacer()
         }
     }
@@ -106,8 +102,7 @@ fun StoryPicList(
 @Composable
 private fun StoryPicList(
     hasStory: Boolean,
-    responseData: ResponseData<ArrayList<String>>?,
-    checkedPicUrl: MutableState<String>
+    responseData: ResponseData<ArrayList<String>>?
 ) {
     Row(
         modifier = Modifier
@@ -129,7 +124,6 @@ private fun StoryPicList(
     CommonResponseBox(responseData) { data ->
         if (data.isNotEmpty()) {
             CardGridList(
-                checkedPicUrl = checkedPicUrl,
                 urls = data
             )
         } else {
@@ -144,8 +138,7 @@ private fun StoryPicList(
  */
 @Composable
 private fun CharacterPicList(
-    basicUrls: java.util.ArrayList<String>,
-    checkedPicUrl: MutableState<String>
+    basicUrls: java.util.ArrayList<String>
 ) {
     Row(
         modifier = Modifier
@@ -162,7 +155,6 @@ private fun CharacterPicList(
         MainText(text = basicUrls.size.toString())
     }
     CardGridList(
-        checkedPicUrl = checkedPicUrl,
         urls = basicUrls
     )
 }
@@ -172,7 +164,6 @@ private fun CharacterPicList(
  */
 @Composable
 private fun CardGridList(
-    checkedPicUrl: MutableState<String>,
     urls: ArrayList<String>
 ) {
     val context = LocalContext.current
@@ -256,10 +247,7 @@ private fun getFileName(url: String): String {
 @CombinedPreviews
 @Composable
 private fun CharacterPicListPreview() {
-    val checkedPicUrl = remember {
-        mutableStateOf("")
-    }
     PreviewLayout {
-        CharacterPicList(arrayListOf("1"), checkedPicUrl)
+        CharacterPicList(arrayListOf("1"))
     }
 }
