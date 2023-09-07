@@ -71,7 +71,7 @@ fun AllSkillList(
                 ) { skillDetail ->
                     var error = false
                     skillDetail.getActionInfo().forEach { action ->
-                        if (action.action.contains("?")) {
+                        if (action.action.contains("敌人和己方")) {
                             error = true
                             return@forEach
                         }

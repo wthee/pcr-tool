@@ -15,11 +15,4 @@ data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "description") var description: String = "?",
     @Embedded var attr: Attr = Attr(),
     @Ignore var isTpLimitAction: Boolean = false
-) {
-
-    /**
-     * 获取装备描述
-     */
-    fun getDesc() = description.replace("\\n", "")
-
-}
+)

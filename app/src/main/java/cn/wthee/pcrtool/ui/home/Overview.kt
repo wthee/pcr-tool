@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.home
 import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,15 +20,15 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -94,6 +95,7 @@ val permissions = arrayOf(
 @Composable
 fun Overview(
     actions: NavActions,
+    scrollState: ScrollState,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     LaunchedEffect(null) {
@@ -102,7 +104,7 @@ fun Overview(
 
     //添加日历确认弹窗
     val confirmState = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     //编辑模式
@@ -122,102 +124,82 @@ fun Overview(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = rememberLazyListState()) {
-            item {
-                TopBarCompose(isEditMode)
-            }
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            TopBarCompose(isEditMode)
             if (!isEditMode.value) {
                 overviewOrderData.intArrayList.forEach {
-                    item {
-                        when (OverviewType.getByValue(it)) {
-                            OverviewType.CHARACTER -> CharacterSection(
-                                actions = actions,
-                                isEditMode = false
-                            )
+                    when (OverviewType.getByValue(it)) {
+                        OverviewType.CHARACTER -> CharacterSection(
+                            actions = actions,
+                            isEditMode = false
+                        )
 
-                            OverviewType.EQUIP -> EquipSection(
-                                actions = actions,
-                                isEditMode = false
-                            )
+                        OverviewType.EQUIP -> EquipSection(
+                            actions = actions,
+                            isEditMode = false
+                        )
 
-                            OverviewType.TOOL -> ToolSection(
-                                actions = actions,
-                                isEditMode = false
-                            )
+                        OverviewType.TOOL -> ToolSection(
+                            actions = actions,
+                            isEditMode = false
+                        )
 
-                            OverviewType.NEWS -> NewsSection(
-                                actions = actions,
-                                isEditMode = false
-                            )
+                        OverviewType.NEWS -> NewsSection(
+                            actions = actions,
+                            isEditMode = false
+                        )
 
-                            OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
-                                confirmState,
-                                actions = actions, isEditMode = false
-                            )
+                        OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
+                            confirmState,
+                            actions = actions, isEditMode = false
+                        )
 
-                            OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
-                                confirmState,
-                                actions = actions, isEditMode = false
-                            )
+                        OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
+                            confirmState,
+                            actions = actions, isEditMode = false
+                        )
 
-                            OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
-                                actions = actions,
-                                isEditMode = false
-                            )
-                        }
+                        OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
+                            actions = actions,
+                            isEditMode = false
+                        )
                     }
                 }
             } else {
                 // 编辑模式显示全部
-                item {
-                    Subtitle2(
-                        text = stringResource(R.string.tip_click_to_add),
-                        modifier = Modifier
-                            .padding(vertical = Dimen.mediumPadding)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Subtitle2(
+                    text = stringResource(R.string.tip_click_to_add),
+                    modifier = Modifier
+                        .padding(vertical = Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
 
                 //角色
-                item {
-                    CharacterSection(actions, isEditMode = true)
-                }
+                CharacterSection(actions, isEditMode = true)
 
                 //装备
-                item {
-                    EquipSection(actions, isEditMode = true)
-                }
+                EquipSection(actions, isEditMode = true)
 
                 //专用装备
-                item {
-                    UniqueEquipSection(actions, isEditMode = true)
-                }
+                UniqueEquipSection(actions, isEditMode = true)
 
                 //更多功能
-                item {
-                    ToolSection(actions, isEditMode = true)
-                }
+                ToolSection(actions, isEditMode = true)
 
                 //新闻
-                item {
-                    NewsSection(actions, isEditMode = true)
-                }
+                NewsSection(actions, isEditMode = true)
 
                 //进行中
-                item {
-                    InProgressEventSection(confirmState, actions, isEditMode = true)
-                }
+                InProgressEventSection(confirmState, actions, isEditMode = true)
 
                 //活动预告
-                item {
-                    ComingSoonEventSection(confirmState, actions, isEditMode = true)
-                }
+                ComingSoonEventSection(confirmState, actions, isEditMode = true)
+
             }
 
-            item {
-                CommonSpacer()
-            }
+            CommonSpacer()
+
         }
 
         //数据切换功能

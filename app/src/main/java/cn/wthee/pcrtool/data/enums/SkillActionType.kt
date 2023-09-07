@@ -465,6 +465,10 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      */
     COPY_ATK(103, R.string.none),
 
+    /**
+     * 105：环境效果
+     */
+    ENVIRONMENT(105, R.string.skill_type_105),
 }
 
 /**

@@ -4,7 +4,22 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
+import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.db.view.GuildAllMember
+import cn.wthee.pcrtool.data.db.view.GuildData
+import cn.wthee.pcrtool.data.db.view.NoGuildMemberInfo
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.RoomCommentData
+import cn.wthee.pcrtool.data.db.view.SummonData
+import cn.wthee.pcrtool.data.db.view.UnitPromotion
+import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
+import cn.wthee.pcrtool.data.db.view.UnitPromotionStatus
+import cn.wthee.pcrtool.data.db.view.UnitRarity
+import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 
 //角色最大编号
 const val maxUnitId = 200000
@@ -450,11 +465,11 @@ interface UnitDao {
         """
         SELECT 
             GROUP_CONCAT(unit_data.unit_id,'-') as unit_ids,
-            GROUP_CONCAT(unit_data.kana,'-') as unit_names
+            GROUP_CONCAT(unit_data.unit_name,'-') as unit_names
         FROM
             unit_profile
 			LEFT JOIN unit_data ON unit_profile.unit_id = unit_data.unit_id
-        WHERE unit_data.search_area_width > 0 AND unit_profile.guild_id = ''
+        WHERE unit_data.search_area_width > 0 AND unit_profile.guild_id = '' AND unit_profile.unit_id < $maxUnitId
         GROUP BY unit_profile.guild_id
     """
     )

@@ -47,6 +47,7 @@ class ClanBattleViewModel @Inject constructor(
                 e,
                 "getAllClanBattleData#clanBattleId:$clanBattleId,pharse:$pharse"
             )
+            emit(arrayListOf())
         }
     }
 

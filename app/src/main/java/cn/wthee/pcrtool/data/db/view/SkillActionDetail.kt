@@ -103,12 +103,14 @@ data class SkillActionDetail(
                     action_id:${this.actionId}
                     action_type:${this.actionType}
                     detail:${this.actionDetail1}/${this.actionDetail2}/${this.actionDetail3}
-                    value:${this.actionValue1}/${this.actionValue2}/${this.actionValue3}/${this.actionValue4}/${this.actionValue5}
+                    value:${this.actionValue1}/${this.actionValue2}/${this.actionValue3}/${this.actionValue4}
+                    /${this.actionValue5}/${this.actionValue6}/${this.actionValue7}
                     targetAssignment:${this.targetAssignment}
                     targetCount:${this.targetCount}
                     targetNumber:${this.targetNumber}
                     targetRange:${this.targetRange}
                     targetType:${this.targetType}
+                    targetArea:${this.targetArea}
                 """.trimIndent()
 
     /**
@@ -1460,9 +1462,18 @@ data class SkillActionDetail(
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
-                val value = getValueText(1, actionValue1, actionValue2)
+                val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
                 val time = getTimeText(3, actionValue3, actionValue4)
-                getString(R.string.skill_action_type_desc_79, getTarget(), value, time)
+                val type: String
+                val limit: String
+                if (actionDetail1 == 10) {
+                    type = getString(R.string.skill_hp_max)
+                    limit = getString(R.string.skill_action_damage_limit_int, actionValue5.toInt())
+                } else {
+                    type = ""
+                    limit = ""
+                }
+                getString(R.string.skill_action_type_desc_79, getTarget(), type, value, time, limit)
             }
             // 81：无效目标
             SkillActionType.NO_TARGET -> {
@@ -1573,6 +1584,15 @@ data class SkillActionDetail(
                 )
             }
 
+            // 105：环境效果
+            SkillActionType.ENVIRONMENT -> {
+                val type = when (actionDetail2) {
+                    137 -> getString(R.string.skill_status_3137)
+                    else -> getString(R.string.unknown)
+                }
+                val time = getTimeText(1, actionValue1)
+                getString(R.string.skill_action_type_desc_105, type, time)
+            }
 
             else -> {
                 val value = getValueText(
@@ -1613,7 +1633,7 @@ data class SkillActionDetail(
      */
     private fun getPercent() = when (toSkillActionType(actionType)) {
         SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
-            if (actionValue1.toInt() == 2 || actionDetail1 / 10 in setOf(11, 12, 14, 16, 17)) {
+            if (actionValue1.toInt() == 2 || actionDetail1 / 10 in setOf(11, 12, 14, 16, 17, 19)) {
                 "%"
             } else {
                 ""
@@ -1622,6 +1642,7 @@ data class SkillActionDetail(
 
         SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (actionDetail2 == 2) "%" else ""
         SkillActionType.DAMAGE_REDUCE -> "%"
+        SkillActionType.ACTION_DOT -> if (actionDetail1 == 10) "%" else ""
         else -> ""
     }
 
@@ -1711,6 +1732,7 @@ data class SkillActionDetail(
                     14 -> R.string.skill_critical_damage_take
                     16 -> R.string.skill_physical_damage_take
                     17 -> R.string.skill_magic_damage_take
+                    19 -> R.string.skill_magic_damage
                     else -> R.string.unknown
                 }
             }
@@ -1893,12 +1915,23 @@ data class SkillActionDetail(
      * 获取目标具体描述
      */
     private fun getTarget(): String {
-        val target = if (dependId != 0) {
+        //依赖
+        val depend = if (dependId != 0) {
             getString(R.string.skill_depend_action, dependId % 10)
         } else {
             ""
-        } + getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
-        return target
+        }
+        //范围
+        val range = if (targetCount == 99 && targetRange == 2160 && actionValue6.toInt() == 1
+            && actionValue7.toInt() == 0 && actionDetail2 == 1
+        ) {
+            // fixme 敌方友方均生效，判断逻辑
+            getString(R.string.skill_target_assignment_3)
+        } else {
+            getTargetNumber() + getTargetRange() + getTargetAssignment()
+        }
+
+        return depend + getTargetType() + range + getTargetCount()
 //            .replace("己方自身", "自身")
 //            .replace("自身己方", "自身")
 //            .replace("自身全体", "自身")
@@ -1934,6 +1967,7 @@ data class SkillActionDetail(
             1800 -> R.string.skill_status_1800
             1900 -> R.string.skill_status_1900
             2001 -> R.string.skill_status_2001
+            3137 -> R.string.skill_status_3137
             else -> R.string.unknown
         }
     )
