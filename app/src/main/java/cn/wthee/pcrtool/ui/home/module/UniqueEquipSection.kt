@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +12,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.home.Section
@@ -52,7 +50,6 @@ fun UniqueEquipSection(
         hintText = equipCount.toString(),
         contentVisible = equipList.isNotEmpty(),
         isEditMode = isEditMode,
-        orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)
