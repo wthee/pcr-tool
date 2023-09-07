@@ -89,6 +89,9 @@ val permissions = arrayOf(
     Manifest.permission.WRITE_CALENDAR,
 )
 
+private const val defaultOrder = "0-1-6-2-3-4-5-"
+
+
 /**
  * 首页纵览
  */
@@ -115,7 +118,7 @@ fun Overview(
     val sp = mainSP()
 
     //自定义显示
-    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, "0-1-6-2-3-4-5") ?: ""
+    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
     var overviewOrderData = navViewModel.overviewOrderData.observeAsState().value
     if (overviewOrderData.isNullOrEmpty()) {
         overviewOrderData = localData
@@ -533,16 +536,16 @@ private fun DbVersionContentItem(
 fun Section(
     id: Int,
     @StringRes titleId: Int,
-    iconType: MainIconType,
+    iconType: MainIconType? = null,
     hintText: String = "",
     contentVisible: Boolean = true,
     isEditMode: Boolean,
     rightIconType: MainIconType? = null,
+    orderStr: String,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val orderStr = navViewModel.overviewOrderData.observeAsState().value ?: ""
     //是否已显示到首页
     val hasAdded = orderStr.intArrayList.contains(id) && isEditMode
     //首页排序
@@ -592,11 +595,13 @@ fun Section(
                     color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
                 )
             }
-            MainIcon(
-                data = iconType,
-                size = Dimen.fabIconSize,
-                tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
-            )
+            if (iconType != null) {
+                MainIcon(
+                    data = iconType,
+                    size = Dimen.fabIconSize,
+                    tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
+                )
+            }
             MainText(
                 text = stringResource(id = titleId),
                 modifier = Modifier
@@ -647,7 +652,7 @@ fun Section(
  */
 fun editOverviewMenuOrder(id: Int) {
     val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, "") ?: ""
+    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
     val idStr = "$id-"
     val hasAdded = orderStr.intArrayList.contains(id)
 

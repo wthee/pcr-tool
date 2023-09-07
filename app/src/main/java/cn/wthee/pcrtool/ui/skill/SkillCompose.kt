@@ -3,7 +3,14 @@ package cn.wthee.pcrtool.ui.skill
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +39,21 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -84,9 +104,7 @@ fun SkillCompose(
         //技能信息标题
         if (normalSkillData.isNotEmpty() or spSkillData.isNotEmpty()) {
             MainText(
-                text = stringResource(R.string.skill),
-                modifier = Modifier
-                    .padding(top = Dimen.largePadding)
+                text = stringResource(R.string.skill)
             )
         }
         //普通技能

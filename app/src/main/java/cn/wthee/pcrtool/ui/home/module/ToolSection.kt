@@ -59,6 +59,7 @@ fun ToolSection(
         titleId = R.string.function,
         iconType = MainIconType.FUNCTION,
         isEditMode = isEditMode,
+        orderStr = navViewModel.overviewOrderData.observeAsState().value ?: "",
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)

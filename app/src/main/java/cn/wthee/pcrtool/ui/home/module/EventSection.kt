@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.ui.home.module
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -14,13 +17,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.BirthdayData
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
+import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
+import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
+import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.endTime
+import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -31,10 +45,17 @@ import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.SystemCalendarEventData
+import cn.wthee.pcrtool.utils.SystemCalendarHelper
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.checkPermissions
+import cn.wthee.pcrtool.utils.copyText
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.getRegionName
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import com.google.accompanist.flowlayout.FlowColumn
 
 
 /**
@@ -182,6 +203,7 @@ private fun CalendarEventLayout(
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
             rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
             isEditMode = isEditMode,
+            orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
             onClick = {
                 if (isEditMode) {
                     editOverviewMenuOrder(id)
@@ -250,6 +272,7 @@ private fun CalendarEventLayout(
 /**
  * 添加日历确认
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CalendarEventOperation(
     confirmState: MutableState<Int>,

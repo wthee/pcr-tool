@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
@@ -39,6 +40,7 @@ fun NewsSection(
         titleId = R.string.tool_news,
         iconType = MainIconType.NEWS,
         isEditMode = isEditMode,
+        orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)
