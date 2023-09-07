@@ -150,6 +150,7 @@
     <string name="tool_calendar_event">活动记录</string>
     <string name="tool_website">收藏夹</string>
     <string name="tool_clan">公会战</string>
+    <string name="tool_clan_no_boss">公会战（BOSS 信息暂未实装）</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="tool_gacha">卡池</string>

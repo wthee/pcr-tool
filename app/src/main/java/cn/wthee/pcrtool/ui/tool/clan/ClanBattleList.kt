@@ -35,6 +35,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -140,8 +141,57 @@ fun ClanBattleOverview(
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
     val info = clanBattleViewModel.getAllClanBattleData(clanBattleEvent.id)
-        .collectAsState(initial = arrayListOf(ClanBattleInfo())).value[0]
-    ClanBattleItem(clanBattleEvent, info, toClanBossInfo)
+        .collectAsState(initial = arrayListOf(ClanBattleInfo())).value
+    if(info.isNotEmpty()){
+        ClanBattleItem(clanBattleEvent, info[0], toClanBossInfo)
+    }else{
+        Column(
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            )
+        ) {
+            //标题
+            Row(
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+            ) {
+                //标题
+                MainTitleText(
+                    text = stringResource(id = R.string.tool_clan),
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                    backgroundColor = colorOrange
+                )
+                //显示倒计时
+                EventTitle(
+                    clanBattleEvent.startTime.formatTime,
+                    clanBattleEvent.getFixedEndTime(),
+                    showDays = false
+                )
+            }
+
+            MainCard() {
+                Column(Modifier.padding(bottom = Dimen.mediumPadding)) {
+                    Row(
+                        modifier = Modifier
+                            .padding(Dimen.mediumPadding)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Subtitle2(text = stringResource(id = R.string.tool_clan_no_boss))
+                    }
+
+                    //结束日期
+                    CaptionText(
+                        text = clanBattleEvent.getFixedEndTime().fixJpTime,
+                        modifier = Modifier
+                            .padding(end = Dimen.mediumPadding)
+                            .fillMaxWidth()
+                    )
+                }
+
+            }
+        }
+    }
 }
 
 /**
