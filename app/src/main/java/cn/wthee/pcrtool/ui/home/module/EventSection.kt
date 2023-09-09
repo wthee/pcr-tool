@@ -1,20 +1,10 @@
 package cn.wthee.pcrtool.ui.home.module
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
@@ -23,37 +13,22 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.db.view.GachaInfo
-import cn.wthee.pcrtool.data.db.view.endTime
-import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.MainIcon
-import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.tool.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
-import cn.wthee.pcrtool.utils.SystemCalendarEventData
-import cn.wthee.pcrtool.utils.SystemCalendarHelper
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.checkPermissions
-import cn.wthee.pcrtool.utils.copyText
-import cn.wthee.pcrtool.utils.fixJpTime
-import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.utils.getRegionName
-import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
@@ -63,7 +38,6 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
  */
 @Composable
 fun InProgressEventSection(
-    confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel()
@@ -97,7 +71,6 @@ fun InProgressEventSection(
     CalendarEventLayout(
         isEditMode,
         EventType.IN_PROGRESS,
-        confirmState,
         actions,
         inProgressEventList,
         inProgressStoryEventList,
@@ -114,7 +87,6 @@ fun InProgressEventSection(
  */
 @Composable
 fun ComingSoonEventSection(
-    confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
@@ -147,7 +119,6 @@ fun ComingSoonEventSection(
     CalendarEventLayout(
         isEditMode,
         EventType.COMING_SOON,
-        confirmState,
         actions,
         comingSoonEventList,
         comingSoonStoryEventList,
@@ -166,7 +137,6 @@ fun ComingSoonEventSection(
 private fun CalendarEventLayout(
     isEditMode: Boolean,
     calendarType: EventType,
-    confirmState: MutableState<Int>,
     actions: NavActions,
     eventList: List<CalendarEvent>,
     storyEventList: List<EventData>,
@@ -201,34 +171,18 @@ private fun CalendarEventLayout(
             id = id,
             titleId = titleId,
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-            rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
             isEditMode = isEditMode,
             orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
             onClick = {
                 if (isEditMode) {
                     editOverviewMenuOrder(id)
                 } else {
-                    //弹窗确认
-                    if (confirmState.value == calendarType.type) {
-                        confirmState.value = 0
-                    } else {
-                        confirmState.value = calendarType.type
-                    }
+                   actions.toCalendarEventList()
                 }
             }
         ) {
-            ExpandAnimation(visible = confirmState.value == calendarType.type) {
-                CalendarEventOperation(
-                    confirmState,
-                    eventList,
-                    storyEventList,
-                    gachaList,
-                    freeGachaList,
-                    birthdayList,
-                    clanBattleList
-                )
-            }
-            VerticalGrid(
+
+        VerticalGrid(
                 itemWidth = getItemWidth(),
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
@@ -267,231 +221,3 @@ private fun CalendarEventLayout(
         }
     }
 }
-
-
-/**
- * 添加日历确认
- */
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun CalendarEventOperation(
-    confirmState: MutableState<Int>,
-    eventList: List<CalendarEvent>,
-    storyEventList: List<EventData>,
-    gachaList: List<GachaInfo>,
-    freeGachaList: List<FreeGachaInfo>,
-    birthdayList: List<BirthdayData>,
-    clanBattleList: List<ClanBattleEvent>,
-) {
-    val context = LocalContext.current
-    val regionName = getRegionName(MainActivity.regionType)
-
-    // 添加日历确认
-    MainCard(
-        modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
-            vertical = Dimen.mediumPadding
-        )
-    ) {
-        FlowColumn {
-            //添加日历
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        checkPermissions(context, cn.wthee.pcrtool.ui.home.permissions, false) {
-                            val allEvents = arrayListOf<SystemCalendarEventData>()
-                            //掉落活动
-                            eventList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.toString()
-                                    )
-                                )
-                            }
-                            //剧情活动
-                            storyEventList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getEventTitle()
-                                    )
-                                )
-                            }
-                            //卡池
-                            gachaList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //免费十连
-                            freeGachaList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //生日日程
-                            birthdayList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //公会战
-                            clanBattleList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.getFixedEndTime(),
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //添加至系统日历
-                            SystemCalendarHelper().insertEvents(allEvents)
-
-                            confirmState.value = 0
-                        }
-                    }
-                    .padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainIcon(data = MainIconType.ADD_CALENDAR, size = Dimen.fabIconSize)
-                MainText(
-                    text = stringResource(R.string.add_to_calendar),
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
-                )
-            }
-
-            //复制至剪贴板
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        var allText = ""
-                        //掉落活动
-                        var eventText = ""
-                        eventList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            eventText += "• $date\n${it}\n"
-                        }
-                        if (eventText != "") {
-                            allText += getString(
-                                R.string.title_drop_event,
-                                "\n$eventText\n"
-                            )
-                        }
-
-                        //剧情活动
-                        var storyText = ""
-                        storyEventList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            storyText += "• $date\n${it.getEventTitle()}"
-                        }
-                        if (storyText != "") {
-                            allText += getString(
-                                R.string.title_story_event,
-                                "\n$storyText\n\n"
-                            )
-                        }
-
-                        //卡池
-                        var gachaText = ""
-                        gachaList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            gachaText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (gachaText != "") {
-                            allText += getString(
-                                R.string.title_gacha_event,
-                                "\n$gachaText\n\n"
-                            )
-                        }
-
-                        //免费十连
-                        var freeGachaText = ""
-                        freeGachaList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            freeGachaText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (freeGachaText != "") {
-                            allText += getString(
-                                R.string.title_free_gacha_event,
-                                "\n$freeGachaText\n\n"
-                            )
-                        }
-
-                        //生日
-                        var birthdayText = ""
-                        birthdayList.forEach {
-                            val date = it
-                                .startTime
-                                .substring(0, 10)
-                            birthdayText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (birthdayText != "") {
-                            allText += getString(
-                                R.string.title_character_birthday_event,
-                                "\n$birthdayText\n\n"
-                            )
-                        }
-
-                        //公会战
-                        var clanBattleText = ""
-                        clanBattleList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.getFixedEndTime())
-                            clanBattleText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (clanBattleText != "") {
-                            allText += getString(
-                                R.string.title_clan_battle_event,
-                                "\n$clanBattleText\n"
-                            )
-                        }
-                        //复制
-                        copyText(context, "——$regionName——\n\n$allText")
-                        confirmState.value = 0
-                    }
-                    .padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainIcon(data = MainIconType.COPY, size = Dimen.fabIconSize)
-                MainText(
-                    text = stringResource(R.string.copy_event),
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
-                )
-            }
-        }
-
-    }
-}
-
-/**
- * 日历日程时间范围文本
- */
-private fun getCalendarEventDateText(
-    startTime: String,
-    endTime: String
-) = startTime.formatTime.fixJpTime + " ~ " + endTime.formatTime.fixJpTime

@@ -153,12 +153,10 @@ fun Overview(
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
-                            confirmState,
                             actions = actions, isEditMode = false
                         )
 
                         OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
-                            confirmState,
                             actions = actions, isEditMode = false
                         )
 
@@ -194,10 +192,10 @@ fun Overview(
                 NewsSection(actions, isEditMode = true)
 
                 //进行中
-                InProgressEventSection(confirmState, actions, isEditMode = true)
+                InProgressEventSection(actions, isEditMode = true)
 
                 //活动预告
-                ComingSoonEventSection(confirmState, actions, isEditMode = true)
+                ComingSoonEventSection(actions, isEditMode = true)
 
             }
 
