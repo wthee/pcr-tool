@@ -215,7 +215,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getTweet" + "$after")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComic" + "$after")
             }
         }
         return error()

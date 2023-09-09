@@ -13,6 +13,7 @@ import java.io.IOException
 
 /**
  * 漫画加载
+ * 漫画一次请求全部加载，仅实现缓存
  */
 @OptIn(ExperimentalPagingApi::class)
 class ComicRemoteMediator(
@@ -29,17 +30,9 @@ class ComicRemoteMediator(
         try {
             val after = when (loadType) {
                 LoadType.REFRESH -> null
-                LoadType.PREPEND -> return MediatorResult.Success(
+                LoadType.APPEND, LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
                 )
-
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                        ?: return MediatorResult.Success(
-                            endOfPaginationReached = false
-                        )
-                    lastItem.id
-                }
             }
 
             //获取数据
