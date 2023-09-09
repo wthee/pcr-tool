@@ -147,6 +147,7 @@ class OverviewViewModel @Inject constructor(
             data += eventRepository.getTowerEvent(1)
             data += eventRepository.getSpDungeonEvent(1)
             data += eventRepository.getFaultEvent(1)
+            data += eventRepository.getColosseumEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(

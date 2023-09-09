@@ -75,6 +75,17 @@ data class CalendarEvent(
                 )
             }
 
+            CalendarEventType.COLOSSEUM -> {
+                //次元断层
+                events.add(
+                    CalendarEventData(
+                        stringResource(id = R.string.colosseum),
+                        "",
+                        ""
+                    )
+                )
+            }
+
             else -> {
                 //正常活动
                 val list = type.intArrayList
@@ -154,6 +165,11 @@ data class CalendarEvent(
             CalendarEventType.TDF -> {
                 //次元断层
                 eventTitle = getString(R.string.fault)
+            }
+
+            CalendarEventType.COLOSSEUM -> {
+                //斗技场
+                eventTitle = getString(R.string.colosseum)
             }
 
             else -> {

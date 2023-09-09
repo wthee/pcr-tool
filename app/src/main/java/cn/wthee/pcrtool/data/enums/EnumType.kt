@@ -10,7 +10,7 @@ enum class AllPicsType(val type: Int) {
     STORY(1);
 
     companion object {
-        fun getByValue(value: Int) = values().find { it.type == value } ?: CHARACTER
+        fun getByValue(value: Int) = entries.find { it.type == value } ?: CHARACTER
     }
 }
 
@@ -33,7 +33,7 @@ enum class UnitType(val type: Int) {
     ENEMY_SUMMON(3);
 
     companion object {
-        fun getByValue(value: Int) = values().find { it.type == value } ?: CHARACTER
+        fun getByValue(value: Int) = entries.find { it.type == value } ?: CHARACTER
     }
 }
 
@@ -68,7 +68,7 @@ enum class MockGachaType(val type: Int) {
     PICK_UP_SINGLE(2);
 
     companion object {
-        fun getByValue(value: Int) = MockGachaType.values()
+        fun getByValue(value: Int) = entries
             .find { it.type == value } ?: PICK_UP
     }
 }
@@ -106,7 +106,7 @@ enum class ToolMenuType(val id: Int) {
 
 
     companion object {
-        fun getByValue(value: Int) = values()
+        fun getByValue(value: Int) = entries
             .find { it.id == value }
     }
 }
@@ -162,7 +162,7 @@ enum class OverviewType(val id: Int) {
     ;
 
     companion object {
-        fun getByValue(value: Int) = values()
+        fun getByValue(value: Int) = entries
             .find { it.id == value } ?: CHARACTER
     }
 }
@@ -223,7 +223,7 @@ enum class LeaderTierType(val type: Int) {
     CLAN(3);
 
     companion object {
-        fun getByValue(value: Int) = values()
+        fun getByValue(value: Int) = entries
             .find { it.type == value } ?: ALL
     }
 }
@@ -278,7 +278,7 @@ enum class RegionType(val value: Int) {
     ;
 
     companion object {
-        fun getByValue(value: Int) = RegionType.values()
+        fun getByValue(value: Int) = entries
             .find { it.value == value } ?: CN
     }
 }
@@ -291,6 +291,7 @@ enum class CalendarEventType(val type: Int) {
     TOWER(1),
     SP_DUNGEON(-1),
     TDF(-2),
+    COLOSSEUM(-3),
     DAILY(18),
     LOGIN(19),
     FORTUNE(20),
@@ -307,7 +308,31 @@ enum class CalendarEventType(val type: Int) {
     ;
 
     companion object {
-        fun getByValue(value: Int) = CalendarEventType.values()
+        fun getByValue(value: Int) = entries
             .find { it.type == value } ?: UNKNOWN
+    }
+}
+
+
+/**
+ * 角色详情模块
+ */
+enum class CharacterDetailModuleType(val id: Int) {
+    CARD(0),
+    COE(1),
+    TOOLS(2),
+    STAR(3),
+    LEVEL(4),
+    ATTR(5),
+    EQUIP(6),
+    UNIQUE_EQUIP(7),
+    SKILL_LOOP(8),
+    SKILL(9),
+    UNIT_ICON(10),
+    ;
+
+    companion object {
+        fun getByValue(value: Int) = entries
+            .find { it.id == value } ?: CARD
     }
 }
