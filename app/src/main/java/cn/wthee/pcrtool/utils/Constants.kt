@@ -30,6 +30,7 @@ object Constants {
     const val SP_USE_IP = "use_ip"
     const val SP_TOOL_ORDER = "tool_order"
     const val SP_OVERVIEW_ORDER = "overview_order"
+    const val SP_CHARACTER_DETAIL_ORDER = "character_detail_order"
 
     const val mediaType = "application/json; charset=utf-8"
 

@@ -650,7 +650,7 @@ fun Section(
  */
 fun editOverviewMenuOrder(id: Int) {
     val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
+    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, "") ?: ""
     val idStr = "$id-"
     val hasAdded = orderStr.intArrayList.contains(id)
 

@@ -95,6 +95,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
+import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.launch
 
 
@@ -182,6 +183,20 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
             }
         }
     }
+}
+
+/**
+ * 指示器
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MainHorizontalPagerIndicator(modifier: Modifier, pagerState: PagerState, pageCount: Int) {
+    HorizontalPagerIndicator(
+        modifier = modifier,
+        pagerState = pagerState,
+        pageCount = pageCount,
+        activeColor = MaterialTheme.colorScheme.primary
+    )
 }
 
 /**
@@ -721,7 +736,7 @@ private fun getPositionText(position: Int): String {
         PositionType.UNKNOWN -> Constants.UNKNOWN
     }
     if (pos != Constants.UNKNOWN) {
-        positionText = "$pos ${position}"
+        positionText = "$pos $position"
     }
     return positionText
 }

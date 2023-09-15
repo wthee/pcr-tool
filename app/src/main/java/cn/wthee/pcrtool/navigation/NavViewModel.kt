@@ -148,6 +148,11 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val overviewOrderData = MutableLiveData<String>()
 
     /**
+     * 角色详情显示
+     */
+    val characterDetailOrderData = MutableLiveData<String>()
+
+    /**
      * 角色评级类型
      */
     val leaderTierType = MutableLiveData(LeaderTierType.ALL)

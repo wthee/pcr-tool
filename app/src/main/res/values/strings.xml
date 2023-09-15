@@ -40,8 +40,8 @@
     <string name="skill_loop">技能循环</string>
     <string name="title_unlock_6">★6解放</string>
     <string name="rank_select">RANK选择</string>
-    <string name="rank_compare">对比</string>
-    <string name="calc_equip_count">统计</string>
+    <string name="rank_compare">RANK对比</string>
+    <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_basic_info">资料</string>
     <string name="basic_info">基本信息</string>
@@ -61,8 +61,11 @@
     <string name="title_unit_level">等级</string>
     <string name="order_character_detail">未选中模块显示在次要页面（退出编辑后滑动切换）</string>
     <string name="character_card">角色卡片</string>
-    <string name="character_tool">功能（资料、模型等）</string>
+    <string name="character_other_tool">其他功能（装备统计等）</string>
+    <string name="character_tool">功能（资料、立绘、模型）</string>
     <string name="character_power">战力</string>
+    <string name="tip_skill_loop">技能循环（未选中时显示悬浮按钮）</string>
+    <string name="character_icon_info">角色图标</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>

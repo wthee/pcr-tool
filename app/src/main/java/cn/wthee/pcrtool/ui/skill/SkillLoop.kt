@@ -40,6 +40,7 @@ fun SkillLoopList(
     loopData: List<AttackPattern>,
     modifier: Modifier = Modifier,
     unitType: UnitType,
+    scrollable: Boolean = false,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     enemyViewModel: EnemyViewModel = hiltViewModel(),
@@ -87,7 +88,7 @@ fun SkillLoopList(
 
 
     Column(
-        modifier = if (unitType == UnitType.CHARACTER) {
+        modifier = if (scrollable) {
             modifier.verticalScroll(rememberScrollState())
         } else {
             modifier
@@ -99,7 +100,7 @@ fun SkillLoopList(
                 SkillLoopItem(loop = it, skillLoopList, atkCastTime)
             }
         }
-        if (unitType == UnitType.CHARACTER) {
+        if (scrollable) {
             CommonSpacer()
         }
     }

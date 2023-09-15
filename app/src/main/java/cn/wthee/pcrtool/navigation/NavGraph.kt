@@ -148,10 +148,7 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberScrollState()
-                CharacterDetail(
-                    scrollState, unitId = arguments.getInt(NavRoute.UNIT_ID), actions
-                )
+                CharacterDetail(unitId = arguments.getInt(NavRoute.UNIT_ID), actions)
             }
 
             //角色图片详情
@@ -595,7 +592,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                CharacterSkillLoop(unitId = arguments.getInt(NavRoute.UNIT_ID))
+                CharacterSkillLoop(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
             }
 
             //所有角色所需装备统计
@@ -748,7 +745,6 @@ fun NavGraph(
                     mutableStateOf(false)
                 }
                 CharacterDetail(
-                    scrollState,
                     unitId = arguments.getInt(NavRoute.UNIT_ID),
                     actions,
                     showDetailState = showDetail

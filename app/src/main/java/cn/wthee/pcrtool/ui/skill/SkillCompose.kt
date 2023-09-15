@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.db.view.SpSkillLabelData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.SkillType
@@ -80,21 +81,47 @@ fun SkillCompose(
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     //普通技能
-    val normalSkillData =
+    val normalSkillFlow = remember(property.level, atk) {
         skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
-            .collectAsState(
-                initial = arrayListOf()
-            ).value
+    }
+    val normalSkillData = normalSkillFlow.collectAsState(initial = arrayListOf()).value
 
     //sp技能
-    val spSkillData =
-        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP).collectAsState(
-            initial = arrayListOf()
-        ).value
+    val spSkillFlow = remember(property.level, atk) {
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP)
+    }
+    val spSkillData = spSkillFlow.collectAsState(initial = arrayListOf()).value
+
     // sp技能标签
-    val spLabel = skillViewModel.getSpSkillLabel(unitId).collectAsState(initial = null).value
+    val spLabelFlow = remember(unitId) {
+        skillViewModel.getSpSkillLabel(unitId)
+    }
+    val spLabel = spLabelFlow.collectAsState(initial = null).value
 
 
+    SkillLayout(
+        normalSkillData,
+        spSkillData,
+        spLabel,
+        isFilterSkill,
+        filterSkillCount,
+        unitType,
+        property,
+        toSummonDetail
+    )
+}
+
+@Composable
+fun SkillLayout(
+    normalSkillData: MutableList<SkillDetail>,
+    spSkillData: MutableList<SkillDetail>,
+    spLabel: SpSkillLabelData?,
+    isFilterSkill: Boolean,
+    filterSkillCount: Int,
+    unitType: UnitType,
+    property: CharacterProperty,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,7 +129,7 @@ fun SkillCompose(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //技能信息标题
-        if (normalSkillData.isNotEmpty() or spSkillData.isNotEmpty()) {
+        if (normalSkillData.isNotEmpty() || spSkillData.isNotEmpty()) {
             MainText(
                 text = stringResource(R.string.skill)
             )
@@ -111,13 +138,9 @@ fun SkillCompose(
         (if (isFilterSkill) {
             normalSkillData.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.MAIN_SKILL_2_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_2
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_2
                 if (filterSkillCount == 1) {
                     skill1
                 } else {
@@ -147,10 +170,15 @@ fun SkillCompose(
         }
         (if (isFilterSkill) {
             spSkillData.filter {
-                it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
+                val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1
+                val skill2 = it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_2
+                if (filterSkillCount == 1) {
+                    skill1
+                } else {
+                    skill1 || skill2
+                }
             }
         } else {
             spSkillData
@@ -181,7 +209,10 @@ fun SkillItem(
     isExtraEquipSKill: Boolean = false
 ) {
     //是否显示参数判断
-    val actionData = skillDetail.getActionInfo()
+    val actionData = remember(skillDetail.skillId, skillDetail.level, skillDetail.atk) {
+        skillDetail.getActionInfo()
+    }
+
     try {
         val showCoeIndex = skillDetail.getActionIndexWithCoe()
         actionData.mapIndexed { index, skillActionText ->
