@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -541,7 +542,7 @@ fun Section(
     rightIconType: MainIconType? = null,
     orderStr: String,
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
     //是否已显示到首页
@@ -636,9 +637,7 @@ fun Section(
         }
 
         if (contentVisible && !isEditMode) {
-            Column {
-                content()
-            }
+            content()
         }
     }
 

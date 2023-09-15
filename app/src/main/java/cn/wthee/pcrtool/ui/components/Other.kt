@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -300,7 +299,6 @@ fun BottomSearchBar(
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     scrollState: LazyListState? = null,
-    gridScrollState: LazyGridState? = null,
     defaultKeywordList: List<KeywordData>? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -323,14 +321,16 @@ fun BottomSearchBar(
             horizontalArrangement = Arrangement.End
         ) {
             //回到顶部
-            MainSmallFab(
-                iconType = MainIconType.TOP
-            ) {
-                coroutineScope.launch {
-                    scrollState?.scrollToItem(0)
-                    gridScrollState?.scrollToItem(0)
+            scrollState?.let {
+                MainSmallFab(
+                    iconType = MainIconType.TOP
+                ) {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
                 }
             }
+
             //重置
             if (keywordState.value != "") {
                 MainSmallFab(

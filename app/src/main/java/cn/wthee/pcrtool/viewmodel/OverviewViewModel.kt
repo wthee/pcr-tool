@@ -26,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.min
 
 /**
  * 首页纵览
@@ -99,9 +100,10 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取专用装备列表
      */
-    fun getUniqueEquipList(limit: Int) = flow {
+    fun getUniqueEquipList(limit: Int, slot: Int) = flow {
         try {
-            emit(equipmentRepository.getUniqueEquipList("").subList(0, limit))
+            val list = equipmentRepository.getUniqueEquipList("", slot)
+            emit(list.subList(0, min(limit, list.size)))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getEquipList")
         }

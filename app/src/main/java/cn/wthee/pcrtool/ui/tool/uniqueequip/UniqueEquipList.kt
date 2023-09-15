@@ -1,14 +1,18 @@
 package cn.wthee.pcrtool.ui.tool.uniqueequip
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,6 +34,7 @@ import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -45,9 +50,9 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 /**
  * 专用装备列表
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UniqueEquipList(
-    scrollState: LazyGridState,
     viewModel: EquipmentViewModel = hiltViewModel(),
     toUniqueEquipDetail: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel()
@@ -65,42 +70,81 @@ fun UniqueEquipList(
     LaunchedEffect(keywordState.value) {
         navViewModel.uniqueEquipName.value = keywordState.value
     }
+    //专用装备1
+    val uniqueEquips1Flow = remember(keywordState.value) {
+        viewModel.getUniqueEquips(keywordState.value, 1)
+    }
+    val uniqueEquips1 = uniqueEquips1Flow.collectAsState(initial = arrayListOf()).value
 
-    val uniqueEquips =
-        viewModel.getUniqueEquips(keywordState.value).collectAsState(initial = arrayListOf()).value
+    //专用装备2
+    val uniqueEquips2Flow = remember(keywordState.value) {
+        viewModel.getUniqueEquips(keywordState.value, 2)
+    }
+    val uniqueEquips2 = uniqueEquips2Flow.collectAsState(initial = arrayListOf()).value
 
+    //总列表
+    val uniqueEquips = uniqueEquips1 + uniqueEquips2
+
+    val gridState1 = rememberLazyGridState()
+    val gridState2 = rememberLazyGridState()
+    var pagerCount = 0
+    if (uniqueEquips1.isNotEmpty()) {
+        pagerCount++
+    }
+    if (uniqueEquips2.isNotEmpty()) {
+        pagerCount++
+    }
+    val pagerState = rememberPagerState {
+        pagerCount
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (uniqueEquips.isNotEmpty()) {
-
-            LazyVerticalGrid(
-                state = scrollState,
-                columns = GridCells.Adaptive(getItemWidth())
-            ) {
-                items(
-                    uniqueEquips,
-                    key = {
-                        it.equipId
-                    }
-                ) { uniqueEquip ->
-                    //获取角色名
-                    val flow = remember(uniqueEquip.unitId) {
-                        characterViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
-                    }
-                    val basicInfo =
-                        flow.collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
-
-                    UniqueEquipItem(
-                        uniqueEquip,
-                        basicInfo,
-                        toUniqueEquipDetail
+            Column {
+                if (pagerCount == 2) {
+                    MainTabRow(
+                        pagerState = pagerState,
+                        tabs = arrayListOf(
+                            "${stringResource(id = R.string.tool_unique_equip)}1（${uniqueEquips1.size}）",
+                            "${stringResource(id = R.string.tool_unique_equip)}2（${uniqueEquips2.size}）"
+                        ),
+                        gridStateList = arrayListOf(gridState1, gridState2)
                     )
                 }
-                item {
-                    CommonSpacer()
-                }
-            }
 
+                HorizontalPager(state = pagerState) { index ->
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(getItemWidth()),
+                        modifier = Modifier.fillMaxHeight(),
+                        state = if (index == 0) gridState1 else gridState2
+                    ) {
+                        items(
+                            if (index == 0) uniqueEquips1 else uniqueEquips2,
+                            key = {
+                                it.equipId
+                            }
+                        ) { uniqueEquip ->
+                            //获取角色名
+                            val flow = remember(uniqueEquip.unitId) {
+                                characterViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
+                            }
+                            val basicInfo =
+                                flow.collectAsState(initial = CharacterInfo()).value
+                                    ?: CharacterInfo()
+
+                            UniqueEquipItem(
+                                uniqueEquip,
+                                basicInfo,
+                                toUniqueEquipDetail
+                            )
+                        }
+                        item {
+                            CommonSpacer()
+                        }
+                    }
+                }
+
+            }
         } else {
             CenterTipText(
                 stringResource(id = R.string.no_data)
@@ -118,7 +162,6 @@ fun UniqueEquipList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.UNIQUE_EQUIP,
-            gridScrollState = scrollState,
             fabText = count.toString()
         )
     }
@@ -228,8 +271,7 @@ private fun UniqueEquipItemPreview() {
             ),
             CharacterInfo(
                 name = stringResource(id = R.string.debug_short_text)
-            ),
-            {}
-        )
+            )
+        ) {}
     }
 }

@@ -4,7 +4,15 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.Attr
+import cn.wthee.pcrtool.data.db.view.CharacterPromotionEquipCount
+import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentCraft
+import cn.wthee.pcrtool.data.db.view.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UnitPromotion
 
 //装备满属性视图
 private const val viewEquipmentMaxData = """
@@ -454,7 +462,7 @@ interface EquipmentDao {
 
     /**
      * 装备适用角色
-     * @param unitId 角色编号
+     * @param equipId 装备编号
      */
     @SkipQueryVerification
     @Query(
@@ -515,10 +523,10 @@ interface EquipmentDao {
             unit_unique_equipment AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
-        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
         """
     )
-    suspend fun getUniqueEquipListV2(name: String): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipListV2(name: String, slot: Int): List<UniqueEquipBasicData>
 
 
     /**

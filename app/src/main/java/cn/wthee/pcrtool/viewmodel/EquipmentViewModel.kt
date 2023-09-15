@@ -271,9 +271,9 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param name 装备或角色名
      */
-    fun getUniqueEquips(name: String) = flow {
+    fun getUniqueEquips(name: String, slot: Int) = flow {
         try {
-            val data = equipmentRepository.getUniqueEquipList(name)
+            val data = equipmentRepository.getUniqueEquipList(name, slot)
             emit(data)
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getUniqueEquips#name:$name")

@@ -723,10 +723,8 @@ fun NavGraph(
             composable(
                 route = NavRoute.UNIQUE_EQUIP_LIST
             ) {
-                val scrollState = rememberLazyGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 UniqueEquipList(
-                    scrollState = scrollState,
                     toUniqueEquipDetail = actions.toUniqueEquipDetail
                 )
             }

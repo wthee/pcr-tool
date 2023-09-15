@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,15 +43,22 @@ fun UniqueEquipSection(
     //装备总数
     val equipCount = overviewViewModel.getUniqueEquipCount().collectAsState(initial = 0).value
     //装备列表
-    val equipList = overviewViewModel.getUniqueEquipList(equipSpanCount)
-        .collectAsState(initial = arrayListOf()).value
+    val equipList1Flow = remember(equipSpanCount, 1) {
+        overviewViewModel.getUniqueEquipList(equipSpanCount, 1)
+    }
+    val equipList1 = equipList1Flow.collectAsState(initial = arrayListOf()).value
+    val equipList2Flow = remember(equipSpanCount, 2) {
+        overviewViewModel.getUniqueEquipList(equipSpanCount, 2)
+    }
+    val equipList2 = equipList2Flow.collectAsState(initial = arrayListOf()).value
+
 
     Section(
         id = id,
         titleId = R.string.tool_unique_equip,
         iconType = MainIconType.UNIQUE_EQUIP,
         hintText = equipCount.toString(),
-        contentVisible = equipList.isNotEmpty(),
+        contentVisible = equipList1.isNotEmpty() || equipList2.isNotEmpty(),
         isEditMode = isEditMode,
         orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
         onClick = {
@@ -63,23 +71,38 @@ fun UniqueEquipSection(
         VerticalGrid(
             itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
-            if (equipList.isNotEmpty()) {
-                equipList.forEach {
-                    Box(
-                        modifier = Modifier
-                            .padding(Dimen.mediumPadding)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+            equipList1.forEach {
+                Box(
+                    modifier = Modifier
+                        .padding(Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MainIcon(
+                        data = ImageRequestHelper.getInstance()
+                            .getEquipPic(it.equipId)
                     ) {
-                        MainIcon(
-                            data = ImageRequestHelper.getInstance()
-                                .getEquipPic(it.equipId)
-                        ) {
-                            actions.toUniqueEquipDetail(it.unitId)
-                        }
+                        actions.toUniqueEquipDetail(it.unitId)
+                    }
+                }
+            }
+
+            equipList2.forEach {
+                Box(
+                    modifier = Modifier
+                        .padding(Dimen.mediumPadding)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MainIcon(
+                        data = ImageRequestHelper.getInstance()
+                            .getEquipPic(it.equipId)
+                    ) {
+                        actions.toUniqueEquipDetail(it.unitId)
                     }
                 }
             }
         }
+
     }
 }

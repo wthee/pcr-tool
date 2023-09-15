@@ -118,9 +118,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
-    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData> {
+    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData> {
         val data = (try {
-            val data = equipmentDao.getUniqueEquipListV2(name)
+            val data = equipmentDao.getUniqueEquipListV2(name, slot)
             if (data.isEmpty()) {
                 equipmentDao.getUniqueEquipList(name)
             }
