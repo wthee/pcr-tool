@@ -181,4 +181,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 专用装备搜索
      */
     val uniqueEquipName = MutableLiveData<String>()
+
+    /**
+     * 数据文件异常
+     */
+    val dbError = MutableLiveData<Boolean>(false)
 }

@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -78,7 +79,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -222,7 +222,6 @@ private fun ChangeDbCompose(
     modifier: Modifier,
 ) {
     val context = LocalContext.current
-    val region = MainActivity.regionType
 
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
@@ -242,7 +241,7 @@ private fun ChangeDbCompose(
         modifier
     }
     //校验数据文件是否异常
-    val dbError = FileUtil.dbSizeError(region)
+    val dbError by navViewModel.dbError.observeAsState(initial = false)
     //颜色
     val tintColor = if (dbError) {
         colorRed
