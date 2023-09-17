@@ -47,7 +47,8 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         R.drawable.ic_logo_large
                     } else {
                         MainIconType.FLOAT_MIN
-                    }
+                    },
+                    vibrate = !showResult || !min
                 ) {
                     navViewModel.floatSearchMin.postValue(!min)
                 }

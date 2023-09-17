@@ -51,6 +51,7 @@ fun MainSmallFab(
     text: String = "",
     hasNavBarPadding: Boolean = true,
     extraContent: (@Composable () -> Unit)? = null,
+    vibrate: Boolean = true,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -67,7 +68,9 @@ fun MainSmallFab(
 
     SmallFloatingActionButton(
         onClick = {
-            VibrateUtil(context).single()
+            if (vibrate) {
+                VibrateUtil(context).single()
+            }
             onClick()
         },
         shape = CircleShape,
