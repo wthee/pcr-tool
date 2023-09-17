@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.ui.home.module
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -44,29 +46,35 @@ fun InProgressEventSection(
 ) {
 
     //进行中掉落活动
-    val inProgressEventList =
+    val inProgressEventListFlow = remember {
         overviewViewModel.getCalendarEventList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressEventList by inProgressEventListFlow.collectAsState(initial = arrayListOf())
     //进行中剧情活动
-    val inProgressStoryEventList =
+    val inProgressStoryEventListFlow = remember {
         overviewViewModel.getStoryEventList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressStoryEventList by inProgressStoryEventListFlow.collectAsState(initial = arrayListOf())
     //进行中卡池
-    val inProgressGachaList =
+    val inProgressGachaListFlow = remember {
         overviewViewModel.getGachaList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressGachaList by inProgressGachaListFlow.collectAsState(initial = arrayListOf())
     //进行中免费十连
-    val inProgressFreeGachaList =
+    val inProgressFreeGachaListFlow = remember {
         overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressFreeGachaList by inProgressFreeGachaListFlow.collectAsState(initial = arrayListOf())
     //进行中生日日程
-    val inProgressBirthdayList =
+    val inProgressBirthdayListFlow = remember {
         overviewViewModel.getBirthdayList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressBirthdayList by inProgressBirthdayListFlow.collectAsState(initial = arrayListOf())
     //进行中公会战
-    val inProgressClanBattleList =
+    val inProgressClanBattleListFlow = remember {
         overviewViewModel.getClanBattleEvent(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressClanBattleList by inProgressClanBattleListFlow.collectAsState(initial = arrayListOf())
 
     CalendarEventLayout(
         isEditMode,
@@ -92,29 +100,35 @@ fun ComingSoonEventSection(
     overviewViewModel: OverviewViewModel = hiltViewModel(),
 ) {
     //预告掉落活动
-    val comingSoonEventList =
+    val comingSoonEventListFlow = remember {
         overviewViewModel.getCalendarEventList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonEventList by comingSoonEventListFlow.collectAsState(initial = arrayListOf())
     //预告剧情活动
-    val comingSoonStoryEventList =
+    val comingSoonStoryEventListFlow = remember {
         overviewViewModel.getStoryEventList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonStoryEventList by comingSoonStoryEventListFlow.collectAsState(initial = arrayListOf())
     //预告卡池
-    val comingSoonGachaList =
+    val comingSoonGachaListFlow = remember {
         overviewViewModel.getGachaList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonGachaList by comingSoonGachaListFlow.collectAsState(initial = arrayListOf())
     //预告免费十连
-    val comingSoonFreeGachaList =
+    val comingSoonFreeGachaFlow = remember {
         overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonFreeGachaList by comingSoonFreeGachaFlow.collectAsState(initial = arrayListOf())
     //生日
-    val comingSoonBirthdayList =
+    val comingSoonBirthdayListFlow = remember {
         overviewViewModel.getBirthdayList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonBirthdayList by comingSoonBirthdayListFlow.collectAsState(initial = arrayListOf())
     //公会战
-    val comingSoonClanBattleList =
+    val comingSoonClanBattleListFlow = remember {
         overviewViewModel.getClanBattleEvent(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonClanBattleList by comingSoonClanBattleListFlow.collectAsState(initial = arrayListOf())
 
     CalendarEventLayout(
         isEditMode,
@@ -147,8 +161,10 @@ private fun CalendarEventLayout(
     gachaViewModel: GachaViewModel = hiltViewModel(),
 ) {
     //fes 角色id
-    val fesUnitIds =
-        gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
+    val fesUnitIdsFlow = remember {
+        gachaViewModel.getGachaFesUnitList()
+    }
+    val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
 
     val id = if (calendarType == EventType.IN_PROGRESS) {
         OverviewType.IN_PROGRESS_EVENT.id
@@ -177,12 +193,12 @@ private fun CalendarEventLayout(
                 if (isEditMode) {
                     editOverviewMenuOrder(id)
                 } else {
-                   actions.toCalendarEventList()
+                    actions.toCalendarEventList()
                 }
             }
         ) {
 
-        VerticalGrid(
+            VerticalGrid(
                 itemWidth = getItemWidth(),
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {

@@ -26,4 +26,5 @@ data class CharacterProperty(
     ): CharacterProperty {
         return CharacterProperty(level, rank, rarity, uniqueEquipmentLevel, uniqueEquipmentLevel2)
     }
+
 }

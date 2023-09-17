@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,12 +40,19 @@ fun EquipMaterialDetail(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
+    //掉落列表
+    val dropInfoListFlow = remember {
+        equipmentViewModel.getDropInfos(equipId)
+    }
+    val dropInfoList by dropInfoListFlow.collectAsState(initial = null)
 
-    val dropInfoList =
-        equipmentViewModel.getDropInfos(equipId).collectAsState(initial = null).value
-    val basicInfo =
-        equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
+    //基本信息
+    val basicInfoFlow = remember {
+        equipmentViewModel.getEquip(equipId)
+    }
+    val basicInfo by basicInfoFlow.collectAsState(initial = EquipmentMaxData())
 
+    //收藏信息
     val starIds = FilterEquipment.getStarIdList()
     val loved = remember {
         mutableStateOf(starIds.contains(equipId))
@@ -66,15 +74,16 @@ fun EquipMaterialDetail(
                 selectable = true
             )
             //掉落信息
-            if (dropInfoList != null) {
-                if (dropInfoList.isNotEmpty()) {
-                    QuestPager(dropInfoList, equipId)
+            dropInfoList?.let { questList ->
+                if (questList.isNotEmpty()) {
+                    QuestPager(questList, equipId)
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         MainText(text = stringResource(id = R.string.tip_no_equip_get_area))
                     }
                 }
-            } else {
+            }
+            if (dropInfoList == null) {
                 //加载中
                 val odds = arrayListOf<EquipmentIdWithOdds>()
                 for (i in 0..9) {

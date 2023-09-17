@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -28,9 +30,10 @@ fun PvpRecentlyUsedList(
     pvpViewModel: PvpViewModel,
 ) {
     //常用角色
-    val recentlyUsedUnitList =
+    val recentlyUsedUnitListFlow = remember {
         pvpViewModel.getRecentlyUsedUnitList(characterDataList)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val recentlyUsedUnitList by recentlyUsedUnitListFlow.collectAsState(initial = arrayListOf())
 
 
     //常用角色一览

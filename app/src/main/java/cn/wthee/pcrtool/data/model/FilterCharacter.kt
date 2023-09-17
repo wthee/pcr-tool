@@ -12,7 +12,7 @@ import com.google.gson.Gson
  * 角色信息筛选
  *
  */
-class FilterCharacter(
+data class FilterCharacter(
     /**
      * 是否全部显示：0全部、1仅收藏
      */

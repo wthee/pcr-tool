@@ -337,7 +337,7 @@ fun NavGraph(
             }
 
             //角色 RANK 对比
-            composable(
+            bottomSheet(
                 route = "${NavRoute.RANK_COMPARE}/{${NavRoute.UNIT_ID}}/{${NavRoute.MAX_RANK}}/{${NavRoute.LEVEL}}/{${NavRoute.RARITY}}/{${NavRoute.UNIQUE_EQUIP_LEVEL}}/{${NavRoute.UNIQUE_EQUIP_LEVEL2}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
@@ -1048,13 +1048,6 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterSkillLoop: (Int) -> Unit = { unitId ->
         navController.navigate("${NavRoute.CHARACTER_SKILL_LOOP}/${unitId}")
-    }
-
-    /**
-     * 怪物详情信息
-     */
-    val toEnemyDetail: (Int) -> Unit = { enemyId ->
-        navController.navigate("${NavRoute.ENEMY_DETAIL}/${enemyId}")
     }
 
     /**

@@ -19,8 +19,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -86,7 +87,10 @@ fun MockGacha(
     )
 
     //角色列表
-    val allUnits = mockGachaViewModel.getGachaUnits().collectAsState(initial = null).value
+    val allUnitsFlow = remember {
+        mockGachaViewModel.getGachaUnits()
+    }
+    val allUnits by allUnitsFlow.collectAsState(initial = null)
 
     //页面
     val showResult = navViewModel.showMockGachaResult.observeAsState().value ?: false
@@ -95,14 +99,13 @@ fun MockGacha(
     val pickUpList = navViewModel.pickUpList.observeAsState().value ?: arrayListOf()
     // 类型
     val mockGachaType = remember {
-        mutableStateOf(navViewModel.mockGachaType.value?.type ?: MockGachaType.PICK_UP.type)
+        mutableIntStateOf(navViewModel.mockGachaType.value?.type ?: MockGachaType.PICK_UP.type)
     }
-    mockGachaType.value =
+    mockGachaType.intValue =
         navViewModel.mockGachaType.observeAsState().value?.type ?: MockGachaType.PICK_UP.type
 
     //关闭
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-
     if (showResult) {
         navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
     } else {
@@ -114,6 +117,7 @@ fun MockGacha(
         navViewModel.fabCloseClick.postValue(false)
     }
 
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -124,7 +128,7 @@ fun MockGacha(
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 FadeAnimation(pickUpList.isEmpty()) {
                     MainText(
-                        text = when (mockGachaType.value) {
+                        text = when (mockGachaType.intValue) {
                             MockGachaType.PICK_UP.type -> stringResource(id = R.string.tip_to_pick_up_normal)
                             MockGachaType.PICK_UP_SINGLE.type -> stringResource(id = R.string.tip_to_pick_up_single)
                             else -> stringResource(id = R.string.tip_to_pick_up)
@@ -151,7 +155,7 @@ fun MockGacha(
                                         updatePickUpList(gachaUnitInfo)
                                     }
                                 }
-                                if (mockGachaType.value == MockGachaType.PICK_UP_SINGLE.type && index == pickUpList.size - 1) {
+                                if (mockGachaType.intValue == MockGachaType.PICK_UP_SINGLE.type && index == pickUpList.size - 1) {
                                     SelectText(
                                         selected = true,
                                         text = stringResource(id = R.string.selected_mark)
@@ -167,7 +171,7 @@ fun MockGacha(
                 MockGachaResult(
                     gachaId,
                     pickUpList.getIds(),
-                    MockGachaType.getByValue(mockGachaType.value)
+                    MockGachaType.getByValue(mockGachaType.intValue)
                 )
             } else {
                 MainTabRow(
@@ -189,7 +193,7 @@ fun MockGacha(
                         0 -> //角色选择
                             allUnits?.let {
                                 ToSelectMockGachaUnitList(
-                                    MockGachaType.getByValue(mockGachaType.value),
+                                    MockGachaType.getByValue(mockGachaType.intValue),
                                     it
                                 )
                             }
@@ -214,8 +218,6 @@ fun MockGacha(
                 ),
             visible = pickUpList.isNotEmpty() && allUnits != null
         ) {
-
-
             val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
             MainSmallFab(
                 iconType = MainIconType.MOCK_GACHA_PAY,
@@ -223,14 +225,14 @@ fun MockGacha(
             ) {
                 if (pickUpList.isNotEmpty()) {
                     val mockGachaHelper = MockGachaHelper(
-                        pickUpType = MockGachaType.getByValue(mockGachaType.value),
+                        pickUpType = MockGachaType.getByValue(mockGachaType.intValue),
                         pickUpList = pickUpList,
                         allUnits!!
                     )
 
                     if (!showResult) {
                         //自选单up，至少选择两名
-                        if (mockGachaType.value == MockGachaType.PICK_UP_SINGLE.type && pickUpList.size < 2) {
+                        if (mockGachaType.intValue == MockGachaType.PICK_UP_SINGLE.type && pickUpList.size < 2) {
                             ToastUtil.short(tipSingleError)
                             return@MainSmallFab
                         }
@@ -239,17 +241,17 @@ fun MockGacha(
                         scope.launch {
                             var id = UUID.randomUUID().toString()
                             val oldGacha = mockGachaViewModel.getGachaByPickUp(
-                                MockGachaType.getByValue(mockGachaType.value),
+                                MockGachaType.getByValue(mockGachaType.intValue),
                                 pickUpList
                             )
                             if (oldGacha != null) {
                                 id = oldGacha.gachaId
-                                mockGachaType.value = oldGacha.gachaType
+                                mockGachaType.intValue = oldGacha.gachaType
                             }
                             navViewModel.gachaId.postValue(id)
                             mockGachaViewModel.createMockGacha(
                                 id,
-                                MockGachaType.getByValue(mockGachaType.value),
+                                MockGachaType.getByValue(mockGachaType.intValue),
                                 pickUpList,
                             )
                         }
@@ -274,7 +276,7 @@ fun MockGacha(
             ) {
                 //切换时清空
                 navViewModel.pickUpList.postValue(arrayListOf())
-                navViewModel.mockGachaType.postValue(MockGachaType.getByValue(mockGachaType.value))
+                navViewModel.mockGachaType.postValue(MockGachaType.getByValue(mockGachaType.intValue))
             }
         } else {
             MainSmallFab(
@@ -306,12 +308,12 @@ private fun ToSelectMockGachaUnitList(
     ) {
         if (mockGachaType == MockGachaType.FES) {
             // Fes
-            ToSelectMockGachaUnitListItem(allUnits.fesLimit, stringResource(R.string.gacha_fes))
+            ToSelectMockGachaUnitGroup(allUnits.fesLimit, stringResource(R.string.gacha_fes))
         } else {
             // 限定
-            ToSelectMockGachaUnitListItem(allUnits.limit, stringResource(R.string.gacha_limit))
+            ToSelectMockGachaUnitGroup(allUnits.limit, stringResource(R.string.gacha_limit))
             // 常驻
-            ToSelectMockGachaUnitListItem(allUnits.normal3, stringResource(R.string.gacha_normal))
+            ToSelectMockGachaUnitGroup(allUnits.normal3, stringResource(R.string.gacha_normal))
         }
         CommonSpacer()
         CommonSpacer()
@@ -319,10 +321,10 @@ private fun ToSelectMockGachaUnitList(
 }
 
 /**
- * 角色列表
+ * 角色列表分组
  */
 @Composable
-private fun ToSelectMockGachaUnitListItem(
+private fun ToSelectMockGachaUnitGroup(
     data: List<GachaUnitInfo>,
     title: String,
 ) {
@@ -381,7 +383,6 @@ private fun MockGachaUnitIconListCompose(
 
 /**
  * 更新选中列表
- * 最大可选角色数 6
  */
 private fun updatePickUpList(data: GachaUnitInfo) {
     val pickUpList = navViewModel.pickUpList.value ?: arrayListOf()

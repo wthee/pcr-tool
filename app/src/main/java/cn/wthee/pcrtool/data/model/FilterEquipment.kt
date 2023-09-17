@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
 
-class FilterEquipment(
+data class FilterEquipment(
     var all: Boolean = true,
     var craft: Int = 1,
     var colorType: Int = 0,

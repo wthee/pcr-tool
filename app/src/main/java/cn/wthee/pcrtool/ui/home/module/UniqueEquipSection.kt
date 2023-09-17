@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,16 +42,20 @@ fun UniqueEquipSection(
         (Dimen.iconSize + Dimen.largePadding * 2).spanCount
     )
     //装备总数
-    val equipCount = overviewViewModel.getUniqueEquipCount().collectAsState(initial = 0).value
-    //装备列表
+    val equipCountFlow = remember {
+        overviewViewModel.getUniqueEquipCount()
+    }
+    val equipCount by equipCountFlow.collectAsState(initial = 0)
+    //专用装备1
     val equipList1Flow = remember(equipSpanCount, 1) {
         overviewViewModel.getUniqueEquipList(equipSpanCount, 1)
     }
-    val equipList1 = equipList1Flow.collectAsState(initial = arrayListOf()).value
+    val equipList1 by equipList1Flow.collectAsState(initial = arrayListOf())
+    //专用装备2
     val equipList2Flow = remember(equipSpanCount, 2) {
         overviewViewModel.getUniqueEquipList(equipSpanCount, 2)
     }
-    val equipList2 = equipList2Flow.collectAsState(initial = arrayListOf()).value
+    val equipList2 by equipList2Flow.collectAsState(initial = arrayListOf())
 
 
     Section(

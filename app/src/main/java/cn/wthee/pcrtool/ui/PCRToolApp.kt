@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui
 
 import android.os.Build
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -68,7 +67,7 @@ fun PCRToolApp(){
 
 
 @OptIn(
-    ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class,
+    ExperimentalMaterialNavigationApi::class,
     ExperimentalMaterialApi::class
 )
 @Composable
@@ -96,7 +95,7 @@ private fun Home(
         MainActivity.r6Ids = r6IdList.value!!
     }
 
-    //首页使用bottomsheet时，关闭时主按钮初始
+    //首页使用bottom sheet时，关闭时主按钮初始
     LaunchedEffect(MainActivity.navSheetState.isVisible) {
         if (MainActivity.navController.currentDestination?.route == NavRoute.HOME) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)

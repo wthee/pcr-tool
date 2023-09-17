@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -65,20 +66,28 @@ fun GachaList(
     toMockGacha: () -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    //日期选择
     val dateRange = remember {
         mutableStateOf(DateRange())
     }
-    val gachaList = gachaViewModel.getGachaHistory(dateRange.value)
-        .collectAsState(initial = arrayListOf()).value
-    val fesUnitIds =
-        gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
-    val coroutineScope = rememberCoroutineScope()
+    //卡池信息
+    val gachaListFlow = remember {
+        gachaViewModel.getGachaHistory(dateRange.value)
+    }
+    val gachaList by gachaListFlow.collectAsState(initial = arrayListOf())
+    //fes角色
+    val fesUnitIdsFlow = remember {
+        gachaViewModel.getGachaFesUnitList()
+    }
+    val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
 
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (gachaList.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
-                state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
+                state = scrollState,
+                columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
                 items(
                     items = gachaList,

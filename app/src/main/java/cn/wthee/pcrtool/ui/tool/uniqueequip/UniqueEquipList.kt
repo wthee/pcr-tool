@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,6 +17,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +43,7 @@ import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -74,13 +77,13 @@ fun UniqueEquipList(
     val uniqueEquips1Flow = remember(keywordState.value) {
         viewModel.getUniqueEquips(keywordState.value, 1)
     }
-    val uniqueEquips1 = uniqueEquips1Flow.collectAsState(initial = arrayListOf()).value
+    val uniqueEquips1 by uniqueEquips1Flow.collectAsState(initial = arrayListOf())
 
     //专用装备2
     val uniqueEquips2Flow = remember(keywordState.value) {
         viewModel.getUniqueEquips(keywordState.value, 2)
     }
-    val uniqueEquips2 = uniqueEquips2Flow.collectAsState(initial = arrayListOf()).value
+    val uniqueEquips2 by uniqueEquips2Flow.collectAsState(initial = arrayListOf())
 
     //总列表
     val uniqueEquips = uniqueEquips1 + uniqueEquips2
@@ -105,10 +108,13 @@ fun UniqueEquipList(
                     MainTabRow(
                         pagerState = pagerState,
                         tabs = arrayListOf(
-                            "${stringResource(id = R.string.tool_unique_equip)}1（${uniqueEquips1.size}）",
-                            "${stringResource(id = R.string.tool_unique_equip)}2（${uniqueEquips2.size}）"
+                            "(1) ${uniqueEquips1.size}",
+                            "(2) ${uniqueEquips2.size}"
                         ),
-                        gridStateList = arrayListOf(gridState1, gridState2)
+                        gridStateList = arrayListOf(gridState1, gridState2),
+                        modifier = Modifier
+                            .fillMaxWidth(RATIO_GOLDEN)
+                            .align(Alignment.CenterHorizontally)
                     )
                 }
 
@@ -128,15 +134,15 @@ fun UniqueEquipList(
                             val flow = remember(uniqueEquip.unitId) {
                                 characterViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
                             }
-                            val basicInfo =
-                                flow.collectAsState(initial = CharacterInfo()).value
-                                    ?: CharacterInfo()
+                            val basicInfo by flow.collectAsState(initial = CharacterInfo())
 
-                            UniqueEquipItem(
-                                uniqueEquip,
-                                basicInfo,
-                                toUniqueEquipDetail
-                            )
+                            basicInfo?.let {
+                                UniqueEquipItem(
+                                    uniqueEquip,
+                                    it,
+                                    toUniqueEquipDetail
+                                )
+                            }
                         }
                         item {
                             CommonSpacer()
@@ -231,30 +237,32 @@ private fun UniqueEquipItem(
  */
 @Composable
 fun UnitIconAndTag(
-    basicInfo: CharacterInfo
+    basicInfo: CharacterInfo?
 ) {
-    Row(
-        modifier = Modifier.padding(Dimen.mediumPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        MainIcon(
-            data = ImageRequestHelper.getInstance().getMaxIconUrl(basicInfo.id)
-        )
-
-        Column(modifier = Modifier.padding(start = Dimen.smallPadding)) {
-            //名称
-            Subtitle2(
-                text = basicInfo.name,
-                textAlign = TextAlign.Start,
-                maxLines = 1,
-                modifier = Modifier.padding(Dimen.smallPadding),
-                selectable = true
+    basicInfo?.let {
+        Row(
+            modifier = Modifier.padding(Dimen.mediumPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance().getMaxIconUrl(basicInfo.id)
             )
 
-            CharacterTagRow(
-                modifier = Modifier.padding(top = Dimen.smallPadding),
-                basicInfo = basicInfo
-            )
+            Column(modifier = Modifier.padding(start = Dimen.smallPadding)) {
+                //名称
+                Subtitle2(
+                    text = basicInfo.name,
+                    textAlign = TextAlign.Start,
+                    maxLines = 1,
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    selectable = true
+                )
+
+                CharacterTagRow(
+                    modifier = Modifier.padding(top = Dimen.smallPadding),
+                    basicInfo = basicInfo
+                )
+            }
         }
     }
 }

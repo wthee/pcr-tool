@@ -30,6 +30,9 @@ import kotlin.math.max
 
 private const val ACTION_FINISH = "pvp_service_finish"
 
+/**
+ * 竞技场查询（悬浮窗服务）
+ */
 class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
@@ -177,6 +180,7 @@ class PvpFloatService : LifecycleService() {
                     ACTION_FINISH -> {
                         ActivityHelper.instance.currentActivity?.finish()
                     }
+
                     else -> {}
                 }
             }

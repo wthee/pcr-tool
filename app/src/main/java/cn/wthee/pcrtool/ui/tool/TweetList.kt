@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -88,7 +89,7 @@ fun TweetList(
     val keywordFlow = remember {
         commonAPIViewModel.getKeywords(KeywordType.TWEET)
     }
-    val keywordList = keywordFlow.collectAsState(initial = arrayListOf()).value
+    val keywordList by keywordFlow.collectAsState(initial = arrayListOf())
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = scrollState) {

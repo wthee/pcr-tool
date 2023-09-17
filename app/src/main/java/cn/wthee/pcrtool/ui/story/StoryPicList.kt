@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -54,6 +55,8 @@ val permissions = arrayOf(
 
 /**
  * 角色/活动剧情图片
+ *
+ * @param id 角色或剧情id
  */
 @Composable
 fun StoryPicList(
@@ -63,7 +66,10 @@ fun StoryPicList(
 ) {
     //角色卡面
     val basicUrls = if (allPicsType == AllPicsType.CHARACTER) {
-        picsViewModel.getUniCardList(id).collectAsState(initial = arrayListOf()).value
+        val basicUrlsFlow = remember {
+            picsViewModel.getUniCardList(id)
+        }
+        basicUrlsFlow.collectAsState(initial = arrayListOf()).value
     } else {
         arrayListOf()
     }
@@ -71,7 +77,7 @@ fun StoryPicList(
     val flow = remember(id, allPicsType.type) {
         picsViewModel.getStoryList(id, allPicsType.type)
     }
-    val responseData = flow.collectAsState(initial = null).value
+    val responseData by flow.collectAsState(initial = null)
     val hasStory = responseData?.data?.isNotEmpty() == true
 
 

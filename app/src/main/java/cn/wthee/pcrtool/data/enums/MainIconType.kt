@@ -20,7 +20,6 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContactSupport
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.CreditCard
 import androidx.compose.material.icons.rounded.DataObject
 import androidx.compose.material.icons.rounded.DataUsage
@@ -30,7 +29,6 @@ import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.DesktopWindows
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.EditCalendar
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.EventAvailable
 import androidx.compose.material.icons.rounded.EventNote
@@ -41,7 +39,6 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FitnessCenter
-import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Handyman
 import androidx.compose.material.icons.rounded.Help
@@ -72,7 +69,6 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Signpost
-import androidx.compose.material.icons.rounded.SmartDisplay
 import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
@@ -382,16 +378,6 @@ enum class MainIconType(val icon: ImageVector) {
     COMIC_NAV(Icons.Rounded.Toc),
 
     /**
-     * youtube
-     */
-    YOUTUBE(Icons.Rounded.SmartDisplay),
-
-    /**
-     * 推特信息
-     */
-    HIBIKI(Icons.Rounded.GraphicEq),
-
-    /**
      * 帮助
      */
     HELP(Icons.Rounded.Help),
@@ -405,16 +391,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 随机掉落地区
      */
     RANDOM_AREA(Icons.Rounded.TrackChanges),
-
-    /**
-     * 复制
-     */
-    COPY(Icons.Rounded.ContentCopy),
-
-    /**
-     * 添加日历
-     */
-    ADD_CALENDAR(Icons.Rounded.EditCalendar),
 
     /**
      * 项目详情
@@ -530,11 +506,6 @@ enum class MainIconType(val icon: ImageVector) {
      * box
      */
     BOX(Icons.Rounded.Archive),
-
-    /**
-     * 关注
-     */
-    VERIFIED(Icons.Rounded.Verified),
 
     /**
      * 专用装备

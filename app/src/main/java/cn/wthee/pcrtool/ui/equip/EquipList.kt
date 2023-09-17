@@ -35,10 +35,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -85,7 +85,7 @@ import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
-import cn.wthee.pcrtool.ui.theme.defaultTween
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
@@ -111,7 +111,7 @@ private const val MAX_SEARCH_COUNT = 5
 @Composable
 fun EquipList(
     scrollState: LazyListState,
-    viewModel: EquipmentViewModel = hiltViewModel(),
+    equipmentViewModel: EquipmentViewModel = hiltViewModel(),
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
     toSearchEquipQuest: (String) -> Unit,
@@ -120,11 +120,14 @@ fun EquipList(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //筛选状态
-    val filter = navViewModel.filterEquip.observeAsState()
+    val filter = navViewModel.filterEquip.observeAsState().value ?: FilterEquipment()
+    filter.starIds = FilterEquipment.getStarIdList()
+
     //合成类型
     val craftIndex = remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
+
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden,
@@ -136,7 +139,7 @@ fun EquipList(
     //搜索模式
     val searchEquipMode = navViewModel.searchEquipMode.observeAsState().value ?: false
     if (searchEquipMode) {
-        craftIndex.value = 0
+        craftIndex.intValue = 0
     }
 
     //关闭时监听
@@ -146,124 +149,130 @@ fun EquipList(
         keyboardController?.hide()
     }
 
+    //颜色种类
+    val colorNumFlow = remember {
+        equipmentViewModel.getEquipColorNum()
+    }
+    val colorNum by colorNumFlow.collectAsState(initial = 0)
 
-    val colorNum by viewModel.getEquipColorNum().collectAsState(initial = 0)
+    //装备列表
+    val equipsFlow = remember(craftIndex.intValue, filter.hashCode()) {
+        equipmentViewModel.getEquips(filter)
+    }
+    val equips by equipsFlow.collectAsState(initial = arrayListOf())
 
-    filter.value?.let { filterValue ->
-        filterValue.starIds = FilterEquipment.getStarIdList()
-        val equips by viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf())
-        //分组
-        val equipGroupList = arrayListOf<EquipGroupData>()
-        equips.forEach { equip ->
-            var group = equipGroupList.find {
-                it.promotionLevel == equip.promotionLevel && it.requireLevel == equip.requireLevel
-            }
-            if (group == null) {
-                group = EquipGroupData(equip.promotionLevel, equip.requireLevel)
-                equipGroupList.add(group)
-            }
-            group.equipIdList.add(equip)
+    //分组
+    val equipGroupList = arrayListOf<EquipGroupData>()
+    equips.forEach { equip ->
+        var group = equipGroupList.find {
+            it.promotionLevel == equip.promotionLevel && it.requireLevel == equip.requireLevel
         }
+        if (group == null) {
+            group = EquipGroupData(equip.promotionLevel, equip.requireLevel)
+            equipGroupList.add(group)
+        }
+        group.equipIdList.add(equip)
+    }
 
-        ModalBottomSheetLayout(
-            sheetState = state,
-            scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-            sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-            sheetShape = shapeTop(),
-            sheetContent = {
-                FilterEquipSheet(colorNum, state, craftIndex)
+
+    ModalBottomSheetLayout(
+        sheetState = state,
+        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+        sheetShape = shapeTop(),
+        sheetContent = {
+            FilterEquipSheet(colorNum, state, craftIndex)
+        }
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (equips.isNotEmpty()) {
+                LazyColumn(state = scrollState) {
+                    items(items = equipGroupList,
+                        key = {
+                            "${it.requireLevel}-${it.promotionLevel}"
+                        }) { equipGroupData ->
+                        EquipGroup(
+                            equipGroupData,
+                            filter,
+                            toEquipDetail,
+                            toEquipMaterial,
+                            searchEquipMode,
+                            searchEquipIdList
+                        )
+                    }
+                    items(2) {
+                        CommonSpacer()
+                    }
+                }
+            } else {
+                CenterTipText(
+                    stringResource(id = R.string.no_data)
+                )
             }
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                if (equips.isNotEmpty()) {
-                    LazyColumn(state = scrollState) {
-                        items(items = equipGroupList,
-                            key = {
-                                "${it.requireLevel}-${it.promotionLevel}"
-                            }) { equipGroupData ->
-                            EquipGroup(
-                                equipGroupData,
-                                filterValue,
-                                toEquipDetail,
-                                toEquipMaterial,
-                                searchEquipMode,
-                                searchEquipIdList
-                            )
-                        }
-                        items(2) {
-                            CommonSpacer()
-                        }
-                    }
-                } else {
-                    CenterTipText(
-                        stringResource(id = R.string.no_data)
-                    )
-                }
 
-                //搜索装备掉落
-                if (searchEquipMode) {
-                    SearchEquip(
-                        searchEquipIdList = searchEquipIdList,
-                        toSearchEquipQuest = toSearchEquipQuest
-                    )
-                } else {
-                    //切换至选择模式
-                    MainSmallFab(
-                        iconType = MainIconType.SEARCH,
-                        text = stringResource(id = R.string.equip_search_mode),
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(
-                                end = Dimen.fabMargin,
-                                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                            ),
-                    ) {
-                        navViewModel.searchEquipMode.postValue(true)
-                    }
-                }
-
-
-                Row(
+            //搜索装备掉落
+            if (searchEquipMode) {
+                SearchEquip(
+                    searchEquipIdList = searchEquipIdList,
+                    toSearchEquipQuest = toSearchEquipQuest
+                )
+            } else {
+                //切换至选择模式
+                MainSmallFab(
+                    iconType = MainIconType.SEARCH,
+                    text = stringResource(id = R.string.equip_search_mode),
                     modifier = Modifier
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                        .align(Alignment.BottomEnd),
-                    horizontalArrangement = Arrangement.End
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                        ),
                 ) {
-                    //回到顶部
-                    MainSmallFab(
-                        iconType = MainIconType.TOP
-                    ) {
-                        coroutineScope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    }
-                    //重置筛选
-                    if (filter.value != null && filter.value!!.isFilter()) {
-                        MainSmallFab(
-                            iconType = MainIconType.RESET
-                        ) {
-                            coroutineScope.launch {
-                                state.hide()
-                            }
-                            navViewModel.resetClick.postValue(true)
-                        }
-                    }
-                    val count = equips.size
-                    // 数量显示&筛选按钮
-                    MainSmallFab(
-                        iconType = MainIconType.EQUIP,
-                        text = "$count"
-                    ) {
-                        coroutineScope.launch {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
-                        }
+                    navViewModel.searchEquipMode.postValue(true)
+                }
+            }
+
+
+            Row(
+                modifier = Modifier
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                    .align(Alignment.BottomEnd),
+                horizontalArrangement = Arrangement.End
+            ) {
+                //回到顶部
+                MainSmallFab(
+                    iconType = MainIconType.TOP
+                ) {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
                     }
                 }
-
+                //重置筛选
+                if (filter.isFilter()) {
+                    MainSmallFab(
+                        iconType = MainIconType.RESET
+                    ) {
+                        coroutineScope.launch {
+                            state.hide()
+                        }
+                        navViewModel.resetClick.postValue(true)
+                    }
+                }
+                val count = equips.size
+                // 数量显示&筛选按钮
+                MainSmallFab(
+                    iconType = MainIconType.EQUIP,
+                    text = "$count"
+                ) {
+                    coroutineScope.launch {
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                        state.show()
+                    }
+                }
             }
 
         }
+
     }
 
 }
@@ -461,43 +470,6 @@ private fun EquipItem(
 ) {
     val context = LocalContext.current
 
-    var equipState by remember { mutableStateOf(equip) }
-    if (equipState != equip) {
-        equipState = equip
-    }
-    var filterState by remember { mutableStateOf(filter) }
-    if (filterState != filter) {
-        filterState = filter
-    }
-
-
-    val equipIcon: @Composable () -> Unit by remember {
-        mutableStateOf(
-            {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance().getEquipPic(equipState.equipmentId)
-                )
-            }
-        )
-    }
-    val equipName: @Composable () -> Unit by remember {
-        mutableStateOf(
-            {
-                Subtitle2(
-                    text = equipState.equipmentName,
-                    textAlign = TextAlign.Start,
-                    maxLines = 2,
-                    selectable = true,
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    color = if (filterState.starIds.contains(equipState.equipmentId)) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
-                )
-            }
-        )
-    }
 
     Row(
         modifier = Modifier
@@ -507,7 +479,7 @@ private fun EquipItem(
                 bottom = Dimen.mediumPadding
             )
             .fillMaxWidth()
-            .animateContentSize(defaultTween())
+            .animateContentSize(defaultSpring())
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
@@ -516,16 +488,18 @@ private fun EquipItem(
                 } else {
                     //点击跳转
                     if (equip.craftFlg == 1) {
-                        toEquipDetail(equipState.equipmentId)
+                        toEquipDetail(equip.equipmentId)
                     } else {
-                        toEquipMaterial(equipState.equipmentId)
+                        toEquipMaterial(equip.equipmentId)
                     }
                 }
             }
             .padding(Dimen.smallPadding)
     ) {
         Box(contentAlignment = Alignment.Center) {
-            equipIcon()
+            MainIcon(
+                data = ImageRequestHelper.getInstance().getEquipPic(equip.equipmentId)
+            )
             if (searchEquipMode && searchEquipIdList.contains(equip.equipmentId)) {
                 SelectText(
                     selected = true,
@@ -535,7 +509,18 @@ private fun EquipItem(
             }
         }
         if (!searchEquipMode) {
-            equipName()
+            Subtitle2(
+                text = equip.equipmentName,
+                textAlign = TextAlign.Start,
+                maxLines = 2,
+                selectable = true,
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                color = if (filter.starIds.contains(equip.equipmentId)) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+            )
         }
     }
 }
@@ -588,14 +573,14 @@ private fun FilterEquipSheet(
     filter.craft = craftIndex.value
     //收藏筛选
     val loveIndex = remember {
-        mutableStateOf(if (filter.all) 0 else 1)
+        mutableIntStateOf(if (filter.all) 0 else 1)
     }
-    filter.all = loveIndex.value == 0
+    filter.all = loveIndex.intValue == 0
     //装备类型
     val typeIndex = remember {
-        mutableStateOf(filter.colorType)
+        mutableIntStateOf(filter.colorType)
     }
-    filter.colorType = typeIndex.value
+    filter.colorType = typeIndex.intValue
 
     //确认操作
     val ok = navViewModel.fabOKClick.observeAsState().value ?: false
@@ -605,12 +590,12 @@ private fun FilterEquipSheet(
     LaunchedEffect(sheetState.isVisible, reset, ok) {
         if (reset) {
             textState.value = ""
-            loveIndex.value = 0
-            typeIndex.value = 0
+            loveIndex.intValue = 0
+            typeIndex.intValue = 0
             craftIndex.value = 1
             filter.craft = 1
             navViewModel.resetClick.postValue(false)
-            navViewModel.filterEquip.postValue(FilterEquipment())
+            navViewModel.filterEquip.postValue(null)
             navViewModel.searchEquipMode.postValue(false)
             navViewModel.searchEquipIdList.postValue(arrayListOf())
         }

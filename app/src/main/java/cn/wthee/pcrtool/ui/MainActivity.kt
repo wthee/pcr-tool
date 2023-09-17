@@ -154,6 +154,7 @@ class MainActivity : ComponentActivity() {
                 AppBasicDatabase.close()
                 //重启应用
                 val intent = Intent(this, MainActivity::class.java)
+                intent.action = Intent.ACTION_MAIN
                 finish()
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

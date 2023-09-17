@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +59,10 @@ fun BirthdayList(
     birthdayViewModel: BirthdayViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val dataList = birthdayViewModel.getBirthDayList().collectAsState(initial = arrayListOf()).value
+    val dataListFlow = remember {
+        birthdayViewModel.getBirthDayList()
+    }
+    val dataList by dataListFlow.collectAsState(initial = arrayListOf())
 
 
     //日程列表

@@ -10,6 +10,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,12 +34,23 @@ fun AllSkillList(
     enemyViewModel: EnemyViewModel = hiltViewModel(),
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
-    val allCharacter =
-        characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
-    val bossIds = enemyViewModel.getAllBossIds().collectAsState(initial = arrayListOf()).value
-    val exEquipSkillIds = extraEquipmentViewModel.getAllEquipSkillIdList()
-        .collectAsState(initial = arrayListOf()).value
+    //所有角色
+    val allCharacterFlow = remember {
+        characterViewModel.getAllCharacter()
+    }
+    val allCharacter by allCharacterFlow.collectAsState(initial = arrayListOf())
 
+    //所有boss
+    val bossIdsFlow = remember {
+        enemyViewModel.getAllBossIds()
+    }
+    val bossIds by bossIdsFlow.collectAsState(initial = arrayListOf())
+
+    //所有ex装备
+    val exEquipSkillIdsFlow = remember {
+        extraEquipmentViewModel.getAllEquipSkillIdList()
+    }
+    val exEquipSkillIds by exEquipSkillIdsFlow.collectAsState(initial = arrayListOf())
 
     val ids = arrayListOf<Int>()
     allCharacter.forEach {
@@ -45,11 +58,17 @@ fun AllSkillList(
     }
     ids.addAll(bossIds)
 
-    val skills = skillViewModel.getCharacterSkills(201, 1000, ids.distinct())
-        .collectAsState(initial = arrayListOf()).value
-    val equipSkills = skillViewModel.getExtraEquipPassiveSkills(exEquipSkillIds).collectAsState(
-        initial = arrayListOf()
-    ).value
+    //技能
+    val skillsFlow = remember(ids) {
+        skillViewModel.getCharacterSkills(201, 1000, ids.distinct())
+    }
+    val skills = skillsFlow.collectAsState(initial = arrayListOf()).value
+
+    //装备技能
+    val equipSkillsFlow = remember(exEquipSkillIds) {
+        skillViewModel.getExtraEquipPassiveSkills(exEquipSkillIds)
+    }
+    val equipSkills by equipSkillsFlow.collectAsState(initial = arrayListOf())
 
 
     Column(
@@ -71,7 +90,7 @@ fun AllSkillList(
                 ) { skillDetail ->
                     var error = false
                     skillDetail.getActionInfo().forEach { action ->
-                        if (action.action.contains("敌人和己方")) {
+                        if (action.action.contains("?")) {
                             error = true
                             return@forEach
                         }

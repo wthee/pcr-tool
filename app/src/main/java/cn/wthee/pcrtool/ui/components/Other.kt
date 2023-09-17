@@ -671,7 +671,7 @@ fun CharacterTagRow(
 
         } else {
             Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                if (unknown && tipText != null) {
+                if (tipText != null) {
                     //提示
                     CharacterTag(
                         modifier = Modifier.padding(start = Dimen.smallPadding),

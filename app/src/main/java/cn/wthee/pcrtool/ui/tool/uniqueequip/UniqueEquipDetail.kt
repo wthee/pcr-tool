@@ -81,6 +81,7 @@ fun UniqueEquip(
     val context = LocalContext.current
     val minLv = if (slot == 1) 1 else 0
 
+
     uniqueEquipmentMaxData?.let {
         Column(
             modifier = Modifier.padding(top = Dimen.largePadding),

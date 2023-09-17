@@ -121,12 +121,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData> {
         val data = (try {
             val data = equipmentDao.getUniqueEquipListV2(name, slot)
-            if (data.isEmpty()) {
-                equipmentDao.getUniqueEquipList(name)
-            }
             data
         } catch (_: Exception) {
-            equipmentDao.getUniqueEquipList(name)
+            equipmentDao.getUniqueEquipList(name, slot)
         }).reversed()
 
         //处理台服排序

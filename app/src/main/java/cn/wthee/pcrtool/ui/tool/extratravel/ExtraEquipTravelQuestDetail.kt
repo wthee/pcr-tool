@@ -9,13 +9,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CommonGroupTitle
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -33,8 +39,10 @@ fun ExtraEquipTravelQuestDetail(
     toExtraEquipDetail: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val questData =
-        extraEquipmentViewModel.getTravelQuest(questId).collectAsState(initial = null).value
+    val questDataFlow = remember {
+        extraEquipmentViewModel.getTravelQuest(questId)
+    }
+    val questData by questDataFlow.collectAsState(initial = null)
 
     Column(
         modifier = Modifier
@@ -43,7 +51,7 @@ fun ExtraEquipTravelQuestDetail(
         questData?.let {
             TravelQuestItem(
                 selectedId = 0,
-                questData = questData,
+                questData = it,
                 toExtraEquipDetail = toExtraEquipDetail
             )
         }
@@ -62,10 +70,10 @@ fun TravelQuestItem(
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
     toExtraEquipDetail: ((Int) -> Unit)? = null
 ) {
-    val subRewardList =
-        extraEquipmentViewModel.getSubRewardList(questData.travelQuestId).collectAsState(
-            initial = arrayListOf()
-        ).value
+    val subRewardListFlow = remember(questData.travelQuestId) {
+        extraEquipmentViewModel.getSubRewardList(questData.travelQuestId)
+    }
+    val subRewardList by subRewardListFlow.collectAsState(initial = arrayListOf())
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),

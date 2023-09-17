@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.08.00"
+val composeBom = "2023.09.00"
 val composeCompilerVersion = "1.5.2"
 val appVersionCode = 372
 val appVersionName = "3.7.2"
@@ -156,10 +156,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
 
     //Paging3
-    val pagingVersion = "3.2.0"
+    val pagingVersion = "3.2.1"
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:$pagingVersion")
 

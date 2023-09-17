@@ -1,10 +1,16 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -13,7 +19,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -25,7 +37,11 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  */
 @Composable
 fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
-    val coeValue = attrViewModel.getCoefficient().collectAsState(initial = null).value
+    val coeValueFlow = remember {
+        attrViewModel.getCoefficient()
+    }
+    val coeValue by coeValueFlow.collectAsState(initial = null)
+
     Box(modifier = Modifier.fillMaxSize()) {
         coeValue?.let { coe ->
             val coeList = arrayListOf<AttrValue>()

@@ -39,16 +39,28 @@ fun EquipMainInfo(
     toEquipUnit: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val equipMaxData =
-        equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
-    val materialList =
-        equipmentViewModel.getEquipInfos(equipMaxData).collectAsState(initial = arrayListOf()).value
+    //装备属性
+    val equipMaxDataFlow = remember {
+        equipmentViewModel.getEquip(equipId)
+    }
+    val equipMaxData by equipMaxDataFlow.collectAsState(initial = EquipmentMaxData())
+    //素材列表
+    val materialListFlow = remember(equipMaxData) {
+        equipmentViewModel.getEquipInfos(equipMaxData)
+    }
+    val materialList by materialListFlow.collectAsState(initial = arrayListOf())
+
+    //收藏信息
     val starIds = FilterEquipment.getStarIdList()
     val loved = remember {
         mutableStateOf(starIds.contains(equipId))
     }
-    val unitIds = equipmentViewModel.getEquipUnitList(equipId)
-        .collectAsState(initial = arrayListOf()).value
+
+    //适用角色列表
+    val unitIdsFlow = remember {
+        equipmentViewModel.getEquipUnitList(equipId)
+    }
+    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
 
 
     EquipDetail(equipId, unitIds, equipMaxData, materialList, loved, toEquipMaterial, toEquipUnit)
@@ -124,7 +136,7 @@ private fun EquipDetail(
             }
 
             //关联角色
-            if(unitIds.isNotEmpty()){
+            if (unitIds.isNotEmpty()) {
                 MainSmallFab(
                     iconType = MainIconType.CHARACTER,
                     text = unitIds.size.toString()
@@ -202,8 +214,11 @@ fun EquipUnitList(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val unitIds = equipmentViewModel.getEquipUnitList(equipId)
-        .collectAsState(initial = arrayListOf()).value
+    //适用角色列表
+    val unitIdsFlow = remember {
+        equipmentViewModel.getEquipUnitList(equipId)
+    }
+    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
 
     UnitList(unitIds)
 }

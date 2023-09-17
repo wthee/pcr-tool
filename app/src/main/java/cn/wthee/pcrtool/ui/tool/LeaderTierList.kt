@@ -16,7 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
@@ -71,9 +72,9 @@ fun LeaderTier(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val type = remember {
-        mutableStateOf(navViewModel.leaderTierType.value?.type ?: 0)
+        mutableIntStateOf(navViewModel.leaderTierType.value?.type ?: 0)
     }
-    type.value = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
+    type.intValue = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -81,10 +82,10 @@ fun LeaderTier(
         stringResource(id = R.string.clan),
     )
 
-    val flow = remember(type.value) {
-        leaderViewModel.getLeaderTier(type.value)
+    val leaderDataFlow = remember(type.intValue) {
+        leaderViewModel.getLeaderTier(type.intValue)
     }
-    val leaderData = flow.collectAsState(initial = null).value
+    val leaderData by leaderDataFlow.collectAsState(initial = null)
 
     val url = stringResource(id = R.string.leader_source_url)
 
@@ -139,7 +140,7 @@ fun LeaderTier(
                         bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                     )
                 ) {
-                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.value))
+                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
                 }
 
                 //回到顶部
@@ -204,7 +205,13 @@ fun LeaderTier(
                                 contentPadding = Dimen.largePadding,
                             ) {
                                 it.leaderList.forEach { leader ->
-                                    LeaderItem(leader, toCharacterDetail, characterViewModel)
+                                    //获取角色名
+                                    val flow = remember(leader.unitId) {
+                                        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
+                                    }
+                                    val basicInfo by flow.collectAsState(initial = null)
+
+                                    LeaderItem(leader, basicInfo, toCharacterDetail)
                                 }
                             }
                         }
@@ -227,14 +234,9 @@ fun LeaderTier(
 @Composable
 private fun LeaderItem(
     leader: LeaderTierItem,
+    basicInfo: CharacterInfo?,
     toCharacterDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel?
 ) {
-    //获取角色名
-    val flow = remember(leader.unitId) {
-        characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
-    }
-    val basicInfo = flow?.collectAsState(initial = null)?.value
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -314,8 +316,7 @@ private fun LeaderItemPreview() {
     PreviewLayout {
         LeaderItem(
             LeaderTierItem(),
-            {},
             null
-        )
+        ) {}
     }
 }

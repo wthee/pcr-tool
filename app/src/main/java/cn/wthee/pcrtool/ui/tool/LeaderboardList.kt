@@ -18,6 +18,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity
@@ -81,14 +83,16 @@ data class FilterLeaderboard(
 fun LeaderboardList(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
-    leaderViewModel: LeaderViewModel = hiltViewModel()
+    leaderViewModel: LeaderViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
-    val filter = leaderViewModel.filterLeader.value ?: FilterLeaderboard()
+    val coroutineScope = rememberCoroutineScope()
 
+    val filter = leaderViewModel.filterLeader.value ?: FilterLeaderboard()
     val sort = remember {
-        mutableStateOf(filter.sort)
+        mutableIntStateOf(filter.sort)
     }
-    filter.sort = sort.value
+    filter.sort = sort.intValue
     val asc = remember {
         mutableStateOf(filter.asc)
     }
@@ -98,14 +102,17 @@ fun LeaderboardList(
     }
     filter.onlyLast = onlyLast.value
 
-    val responseData =
-        leaderViewModel.getLeader(filter).collectAsState(initial = null).value
+    //获取排行榜数据
+    val responseDataFlow = remember(filter.hashCode()) {
+        leaderViewModel.getLeader(filter)
+    }
+    val responseData by responseDataFlow.collectAsState(initial = null)
     val leaderList = responseData?.data
 
-    val coroutineScope = rememberCoroutineScope()
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
     val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -163,11 +170,11 @@ fun LeaderboardList(
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
                     //重置
-                    if (sort.value != 0 || asc.value || onlyLast.value) {
+                    if (sort.intValue != 0 || asc.value || onlyLast.value) {
                         MainSmallFab(
                             iconType = MainIconType.RESET
                         ) {
-                            sort.value = 0
+                            sort.intValue = 0
                             asc.value = false
                             onlyLast.value = false
                         }
@@ -197,7 +204,12 @@ fun LeaderboardList(
                         it.name
                     }
                 ) { index, it ->
-                    LeaderboardItem(it, index, toCharacterDetail)
+                    //获取角色名
+                    val flow = remember(it.unitId) {
+                        characterViewModel.getCharacterBasicInfo(it.unitId ?: 0)
+                    }
+                    val basicInfo by flow.collectAsState(initial = null)
+                    LeaderboardItem(it, index, basicInfo, toCharacterDetail)
                 }
                 items(count = 2) {
                     CommonSpacer()
@@ -304,14 +316,10 @@ private fun SortTitleButton(
 private fun LeaderboardItem(
     leader: LeaderboardData,
     index: Int,
-    toCharacterDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel? = hiltViewModel()
+    basicInfo: CharacterInfo?,
+    toCharacterDetail: (Int) -> Unit
 ) {
-    //获取角色名
-    val flow = remember(leader.unitId) {
-        characterViewModel?.getCharacterBasicInfo(leader.unitId ?: 0)
-    }
-    val basicInfo = flow?.collectAsState(initial = null)?.value
+
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -500,7 +508,9 @@ private fun LeaderboardItemPreview() {
                 quest = "SS+",
                 pvp = "S",
                 clan = "A"
-            ), 1, {}, null
-        )
+            ),
+            1,
+            null,
+        ) {}
     }
 }

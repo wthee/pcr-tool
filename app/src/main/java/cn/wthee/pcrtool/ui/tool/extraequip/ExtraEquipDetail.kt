@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,17 +64,22 @@ fun ExtraEquipDetail(
     toExtraEquipDrop: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val extraEquipmentData =
+    //装备信息
+    val extraEquipmentDataFlow = remember {
         extraEquipmentViewModel.getExtraEquip(equipId)
-            .collectAsState(initial = ExtraEquipmentData()).value
-
-    val unitIds = extraEquipmentViewModel.getExtraEquipUnitList(extraEquipmentData.category)
-        .collectAsState(initial = arrayListOf()).value
+    }
+    val extraEquipmentData by extraEquipmentDataFlow.collectAsState(initial = ExtraEquipmentData())
+    //适用角色
+    val unitIdsFlow = remember(extraEquipmentData.category) {
+        extraEquipmentViewModel.getExtraEquipUnitList(extraEquipmentData.category)
+    }
+    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
     //收藏状态
     val starIds = FilterExtraEquipment.getStarIdList()
     val loved = remember {
         mutableStateOf(starIds.contains(equipId))
     }
+
 
     Box(
         modifier = Modifier
@@ -213,8 +219,10 @@ private fun ExtraEquipSkill(
     skillIds: List<Int>,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val skills = skillViewModel.getExtraEquipPassiveSkills(skillIds)
-        .collectAsState(initial = arrayListOf()).value
+    val skillsFlow = remember {
+        skillViewModel.getExtraEquipPassiveSkills(skillIds)
+    }
+    val skills by skillsFlow.collectAsState(initial = arrayListOf())
 
     if (skills.isNotEmpty()) {
         Column(
@@ -252,8 +260,10 @@ fun ExtraEquipUnitList(
     category: Int,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val unitIds = extraEquipmentViewModel.getExtraEquipUnitList(category)
-        .collectAsState(initial = arrayListOf()).value
+    val unitIdsFlow = remember(category) {
+        extraEquipmentViewModel.getExtraEquipUnitList(category)
+    }
+    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
 
     UnitList(unitIds)
 }

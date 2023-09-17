@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,12 +53,15 @@ fun CalendarEventList(
     scrollState: LazyStaggeredGridState,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    //日期选择
     val dateRange = remember {
         mutableStateOf(DateRange())
     }
-    val coroutineScope = rememberCoroutineScope()
-    val dataList =
-        eventViewModel.getCalendarEventList(dateRange.value).collectAsState(initial = arrayListOf()).value
+    val dataListFlow = remember {
+        eventViewModel.getCalendarEventList(dateRange.value)
+    }
+    val dataList by dataListFlow.collectAsState(initial = arrayListOf())
 
     //日程列表
     Box(modifier = Modifier.fillMaxSize()) {

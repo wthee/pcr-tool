@@ -1,12 +1,19 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +24,12 @@ import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -37,33 +49,35 @@ fun PvpSearchHistory(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val historyDataList = pvpViewModel.getHistory().collectAsState(initial = null).value
+    val historyDataListFlow = remember {
+        pvpViewModel.getHistory()
+    }
+    val historyDataList by historyDataListFlow.collectAsState(initial = arrayListOf())
     val itemWidth = getItemWidth(floatWindow)
 
+
     Box(modifier = Modifier.fillMaxSize()) {
-        if (historyDataList != null) {
-            if (historyDataList.isNotEmpty()) {
-                LazyVerticalGrid(
-                    state = historyListState,
-                    columns = GridCells.Adaptive(itemWidth)
-                ) {
-                    items(historyDataList) { data ->
-                        PvpHistoryItem(
-                            data,
-                            floatWindow,
-                            toCharacter,
-                            pvpViewModel
-                        )
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        if (historyDataList.isNotEmpty()) {
+            LazyVerticalGrid(
+                state = historyListState,
+                columns = GridCells.Adaptive(itemWidth)
+            ) {
+                items(historyDataList) { data ->
+                    PvpHistoryItem(
+                        data,
+                        floatWindow,
+                        toCharacter,
+                        pvpViewModel
+                    )
                 }
-            } else {
-                CenterTipText(
-                    text = stringResource(id = R.string.pvp_no_history)
-                )
+                item {
+                    CommonSpacer()
+                }
             }
+        } else {
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_history)
+            )
         }
     }
 }

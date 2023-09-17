@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -84,19 +85,19 @@ fun SkillCompose(
     val normalSkillFlow = remember(property.level, atk) {
         skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
     }
-    val normalSkillData = normalSkillFlow.collectAsState(initial = arrayListOf()).value
+    val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
 
     //sp技能
     val spSkillFlow = remember(property.level, atk) {
         skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP)
     }
-    val spSkillData = spSkillFlow.collectAsState(initial = arrayListOf()).value
+    val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
 
     // sp技能标签
     val spLabelFlow = remember(unitId) {
         skillViewModel.getSpSkillLabel(unitId)
     }
-    val spLabel = spLabelFlow.collectAsState(initial = null).value
+    val spLabel by spLabelFlow.collectAsState(initial = null)
 
 
     SkillLayout(
@@ -111,6 +112,9 @@ fun SkillCompose(
     )
 }
 
+/**
+ * 技能列表布局
+ */
 @Composable
 fun SkillLayout(
     normalSkillData: MutableList<SkillDetail>,
@@ -136,6 +140,7 @@ fun SkillLayout(
         }
         //普通技能
         (if (isFilterSkill) {
+            //过滤专用装备影响的技能
             normalSkillData.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
@@ -169,6 +174,7 @@ fun SkillLayout(
             }
         }
         (if (isFilterSkill) {
+            //过滤专用装备影响的技能
             spSkillData.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1

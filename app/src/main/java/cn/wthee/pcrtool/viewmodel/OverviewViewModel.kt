@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
@@ -13,7 +11,6 @@ import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -39,7 +36,6 @@ class OverviewViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
-    val newOverview = MutableLiveData<ResponseData<List<NewsTable>>>()
 
     /**
      * 获取角色数量
@@ -199,14 +195,11 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    fun getNewsOverview() {
-        viewModelScope.launch {
-            try {
-                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
-                newOverview.postValue(data)
-            } catch (e: Exception) {
-                LogReportUtil.upload(e, "getNewsOverview")
-            }
+    fun getNewsOverview() = flow {
+        try {
+            emit(apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getNewsOverview")
         }
     }
 

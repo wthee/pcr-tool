@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.R
  */
 fun joinQQGroup(context: Context) {
     val intent = Intent()
+    intent.action = Intent.ACTION_MAIN
     intent.data =
         Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3DZd7PrbHQ2vKCf2NQsoGWuqHrl54MJErV")
     try {

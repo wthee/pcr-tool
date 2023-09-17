@@ -84,8 +84,14 @@ fun TopBarCompose(
     isEditMode: MutableState<Boolean>,
     noticeViewModel: NoticeViewModel = MainActivity.noticeViewModel
 ) {
-    val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
+    //应用更新通知
+    val updateAppFlow = remember {
+        noticeViewModel.updateApp
+    }
+    val updateApp by updateAppFlow.observeAsState(initial = AppNotice())
+    //应用安装包下载状态
     val downloadState = MainActivity.navViewModel.apkDownloadProgress.observeAsState().value ?: -2
+    //展开布局
     var isExpanded by remember {
         mutableStateOf(false)
     }
@@ -517,7 +523,7 @@ private fun AppUpdateContentPreview() {
             AppNotice(
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- [BUG] BUGBUG\n- [测试] 测试",
+                message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
             22
@@ -527,7 +533,7 @@ private fun AppUpdateContentPreview() {
                 id = 0,
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- [BUG] BUGBUG\n- [测试] 测试",
+                message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
             -2

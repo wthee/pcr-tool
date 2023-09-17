@@ -43,16 +43,16 @@ fun RankEquipCount(
     val scrollState = rememberLazyGridState()
 
     val rank0 = remember {
-        mutableStateOf(maxRank)
+        mutableIntStateOf(maxRank)
     }
     val rank1 = remember {
-        mutableStateOf(maxRank)
+        mutableIntStateOf(maxRank)
     }
 
-    val rankEquipMaterials =
-        equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value).collectAsState(
-            initial = arrayListOf()
-        ).value
+    val rankEquipMaterialsFlow = remember(unitId, rank0.intValue, rank1.intValue) {
+        equipmentViewModel.getEquipByRank(unitId, rank0.intValue, rank1.intValue)
+    }
+    val rankEquipMaterials by rankEquipMaterialsFlow.collectAsState(initial = arrayListOf())
 
 
     val starIds = remember {
@@ -76,7 +76,7 @@ fun RankEquipCount(
             ) {
                 MainTitleText(text = stringResource(id = if (isAllUnit) R.string.all_unit_calc_equip else R.string.calc_equip_count))
                 RankText(
-                    rank = rank0.value,
+                    rank = rank0.intValue,
                     modifier = Modifier.padding(start = Dimen.mediumPadding)
                 )
                 MainContentText(
@@ -84,7 +84,7 @@ fun RankEquipCount(
                     modifier = Modifier.padding(horizontal = Dimen.smallPadding)
                 )
                 RankText(
-                    rank = rank1.value
+                    rank = rank1.intValue
                 )
             }
 
@@ -162,44 +162,21 @@ private fun EquipCountItem(
     toEquipMaterial: (Int) -> Unit
 ) {
     val placeholder = item.id == ImageRequestHelper.UNKNOWN_EQUIP_ID
-    var dataState by remember {
-        mutableStateOf(item)
-    }
-    if (dataState != item) {
-        dataState = item
-    }
-
-    var lovedState by remember { mutableStateOf(loved) }
-    if (lovedState != loved) {
-        lovedState = loved
-    }
-
-    val equipIcon: @Composable () -> Unit by remember {
-        mutableStateOf({
-            MainIcon(
-                data = ImageRequestHelper.getInstance().getEquipPic(dataState.id),
-                modifier = Modifier.commonPlaceholder(placeholder)
-            ) {
-                toEquipMaterial(dataState.id)
-            }
-        })
-    }
-    val count: @Composable () -> Unit by remember {
-        mutableStateOf({
-            SelectText(
-                selected = lovedState,
-                text = dataState.count.toString(),
-            )
-        })
-    }
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(Dimen.mediumPadding)
     ) {
-        equipIcon()
-        count()
+        MainIcon(
+            data = ImageRequestHelper.getInstance().getEquipPic(item.id),
+            modifier = Modifier.commonPlaceholder(placeholder)
+        ) {
+            toEquipMaterial(item.id)
+        }
+        SelectText(
+            selected = loved,
+            text = item.count.toString(),
+        )
     }
 }
 

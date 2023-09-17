@@ -13,7 +13,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -46,17 +48,21 @@ fun CharacterSection(
 ) {
     val id = OverviewType.CHARACTER.id
     //角色总数
-    val characterCount =
-        overviewViewModel.getCharacterCount().collectAsState(initial = "0").value
+    val characterCountFlow = remember {
+        overviewViewModel.getCharacterCount()
+    }
+    val characterCount by characterCountFlow.collectAsState(initial = 0)
     //角色列表
-    val characterList =
-        overviewViewModel.getCharacterInfoList().collectAsState(initial = arrayListOf()).value
+    val characterListFlow = remember {
+        overviewViewModel.getCharacterInfoList()
+    }
+    val characterList by characterListFlow.collectAsState(initial = arrayListOf())
 
     Section(
         id = id,
         titleId = R.string.character,
         iconType = MainIconType.CHARACTER,
-        hintText = characterCount,
+        hintText = characterCount.toString(),
         contentVisible = characterList.isNotEmpty(),
         isEditMode = isEditMode,
         orderStr = navViewModel.overviewOrderData.observeAsState().value ?: "",

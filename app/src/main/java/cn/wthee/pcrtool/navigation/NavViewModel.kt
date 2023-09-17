@@ -72,17 +72,17 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 角色筛选
      */
-    var filterCharacter = MutableLiveData(FilterCharacter())
+    var filterCharacter = MutableLiveData<FilterCharacter?>()
 
     /**
      * 装备筛选
      */
-    var filterEquip = MutableLiveData(FilterEquipment())
+    var filterEquip = MutableLiveData<FilterEquipment?>()
 
     /**
      * ex装备筛选
      */
-    var filterExtraEquip = MutableLiveData(FilterExtraEquipment())
+    var filterExtraEquip = MutableLiveData<FilterExtraEquipment?>()
 
     /**
      * 竞技场查询角色
@@ -185,5 +185,5 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 数据文件异常
      */
-    val dbError = MutableLiveData<Boolean>(false)
+    val dbError = MutableLiveData(false)
 }

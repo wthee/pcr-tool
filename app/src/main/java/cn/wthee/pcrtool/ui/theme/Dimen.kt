@@ -31,8 +31,6 @@ object Dimen {
 
     val commonItemPadding = 6.dp
 
-    val exSmallIconSize = 14.dp
-
     val smallIconSize = 18.dp
 
     val textIconSize = 20.dp
@@ -70,8 +68,6 @@ object Dimen {
     val rankTextWidth = 48.dp
 
     val strokeWidth = 2.dp
-
-    val linearProgressWidth = 32.dp
 
     val linearProgressHeight = 6.dp
 

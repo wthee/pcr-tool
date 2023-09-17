@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,14 +64,21 @@ fun EnemyDetail(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     enemyViewModel: EnemyViewModel = hiltViewModel()
 ) {
-    val enemyData = enemyViewModel.getEnemyAttr(enemyId).collectAsState(initial = null).value
-    val partEnemyList =
-        enemyViewModel.getMutiTargetEnemyInfo(enemyId).collectAsState(initial = null).value
+    //怪物信息
+    val enemyDataFlow = remember(enemyId) {
+        enemyViewModel.getEnemyAttr(enemyId)
+    }
+    val enemyData by enemyDataFlow.collectAsState(initial = null)
+    //部位信息
+    val partEnemyListFlow = remember(enemyId) {
+        enemyViewModel.getMutiTargetEnemyInfo(enemyId)
+    }
+    val partEnemyList by partEnemyListFlow.collectAsState(initial = null)
 
     Box(modifier = Modifier.fillMaxSize()) {
         enemyData?.let {
             EnemyAllInfo(
-                enemyData,
+                it,
                 partEnemyList != null,
                 partEnemyList,
                 toSummonDetail
@@ -229,17 +237,25 @@ fun EnemySkillList(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val allSkillList =
-        skillViewModel.getAllEnemySkill(enemyData).collectAsState(initial = null).value
-    val allLoopData =
-        skillViewModel.getAllSkillLoops(enemyData).collectAsState(initial = null).value
+    //技能信息
+    val allSkillListFlow = remember(enemyData) {
+        skillViewModel.getAllEnemySkill(enemyData)
+    }
+    val allSkillList by allSkillListFlow.collectAsState(initial = null)
+    //技能循环信息
+    val allLoopDataFlow = remember(enemyData) {
+        skillViewModel.getAllSkillLoops(enemyData)
+    }
+    val allLoopData by allLoopDataFlow.collectAsState(initial = null)
+
 
     Column(
         modifier = Modifier
             .padding(Dimen.largePadding)
             .fillMaxSize()
     ) {
-        if (allLoopData != null) {
+        //技能循环
+        allLoopData?.let {
             MainText(
                 text = stringResource(R.string.skill_loop),
                 modifier = Modifier
@@ -247,13 +263,14 @@ fun EnemySkillList(
                     .align(Alignment.CenterHorizontally)
             )
             SkillLoopList(
-                allLoopData,
+                loopData = it,
                 unitType = unitType,
                 modifier = Modifier
                     .padding(top = Dimen.mediumPadding)
             )
         }
 
+        //技能信息
         if (allSkillList?.isNotEmpty() == true || allLoopData?.isNotEmpty() == true) {
             MainText(
                 text = stringResource(R.string.skill),

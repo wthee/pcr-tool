@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -124,13 +125,16 @@ fun CharacterDetail(
     characterViewModel: CharacterViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
+    val sp = mainSP()
+
+    //是否显示全部信息
     val showDetail = showDetailState == null || showDetailState.value
 
     //特殊形态角色id（吉塔）
     val cutinIdFlow = remember {
         attrViewModel.getCutinId(unitId)
     }
-    val cutinId = cutinIdFlow.collectAsState(initial = 0).value
+    val cutinId by cutinIdFlow.collectAsState(initial = 0)
     //形态切换
     val isCutinSkill = remember {
         mutableStateOf(true)
@@ -149,11 +153,17 @@ fun CharacterDetail(
     val maxValueFlow = remember {
         attrViewModel.getMaxRankAndRarity(unitId)
     }
-    val maxValue = maxValueFlow.collectAsState(initial = CharacterProperty()).value
+    val maxValue by maxValueFlow.collectAsState(initial = CharacterProperty())
     //当前选择的数值信息
     val currentValueState = remember {
         mutableStateOf(CharacterProperty())
     }
+    //数值信息
+    if (currentValueState.value.level == 0 && maxValue.isInit()) {
+        //初始为最大值
+        currentValueState.value = maxValue
+    }
+
     //rank 装备选择监听
     val rankEquipSelected = navViewModel.rankEquipSelected.observeAsState().value ?: 0
     LaunchedEffect(rankEquipSelected) {
@@ -162,24 +172,17 @@ fun CharacterDetail(
         }
     }
 
-    //数值信息
-    if (currentValueState.value.level == 0 && maxValue.isInit()) {
-        //初始为最大值
-        currentValueState.value = maxValue
-    }
-
     //角色属性
-    val characterAttrFlow = remember(currentValueState.value.toString()) {
+    val characterAttrFlow = remember(currentValueState.value.hashCode()) {
         attrViewModel.getCharacterInfo(unitId, currentValueState.value)
     }
-    val characterAttrData = characterAttrFlow.collectAsState(initial = AllAttrData()).value
+    val characterAttrData by characterAttrFlow.collectAsState(initial = AllAttrData())
 
     //基本信息
     val basicInfoFlow = remember {
         characterViewModel.getCharacterBasicInfo(unitId)
     }
-    val basicInfo = basicInfoFlow
-        .collectAsState(initial = CharacterInfo()).value ?: CharacterInfo()
+    val basicInfo by basicInfoFlow.collectAsState(initial = CharacterInfo())
 
     //角色攻击力
     val atk = max(
@@ -196,19 +199,19 @@ fun CharacterDetail(
             SkillType.NORMAL
         )
     }
-    val normalSkillData = normalSkillFlow.collectAsState(initial = arrayListOf()).value
+    val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
 
     //sp技能
     val spSkillFlow = remember(currentValueState.value.level, atk) {
         skillViewModel.getCharacterSkills(currentValueState.value.level, atk, unitId, SkillType.SP)
     }
-    val spSkillData = spSkillFlow.collectAsState(initial = arrayListOf()).value
+    val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
 
     // sp技能标签
-    val spLabelFlow = remember(unitId) {
+    val spLabelFlow = remember {
         skillViewModel.getSpSkillLabel(unitId)
     }
-    val spLabel = spLabelFlow.collectAsState(initial = null).value
+    val spLabel by spLabelFlow.collectAsState(initial = null)
 
     //数据加载后，展示页面
     val visible = characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
@@ -225,8 +228,6 @@ fun CharacterDetail(
     val isEditMode = remember {
         mutableStateOf(false)
     }
-
-    val sp = mainSP()
 
     //自定义显示顺序
     val localData = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, defaultOrder) ?: ""
@@ -263,7 +264,6 @@ fun CharacterDetail(
     val pagerState = rememberPagerState { pageCount }
     val scrollState0 = rememberScrollState()
     val scrollState1 = rememberScrollState()
-
 
     //确认时监听
     val ok = navViewModel.fabOKClick.observeAsState().value ?: false
@@ -326,14 +326,14 @@ fun CharacterDetail(
                 }
 
             } else {
-                HorizontalPager(state = pagerState) {
+                HorizontalPager(state = pagerState) { index ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(if (it == 0) scrollState0 else scrollState1),
+                            .verticalScroll(if (index == 0) scrollState0 else scrollState1),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val list = if (it == 0) {
+                        val list = if (index == 0) {
                             mainList
                         } else {
                             subList
@@ -343,6 +343,7 @@ fun CharacterDetail(
 
                                 //角色卡面
                                 CharacterDetailModuleType.CARD -> CharacterCard(
+                                    unitId = unitId,
                                     basicInfo = basicInfo,
                                     loved = loved.value,
                                     actions
@@ -359,7 +360,7 @@ fun CharacterDetail(
                                 //资料
                                 CharacterDetailModuleType.TOOLS ->
                                     CharacterTools(
-                                        basicInfo = basicInfo,
+                                        unitId = unitId,
                                         actions = actions
                                     )
 
@@ -385,7 +386,7 @@ fun CharacterDetail(
 
                                 //其他功能
                                 CharacterDetailModuleType.OTHER_TOOLS -> CharacterOtherTools(
-                                    basicInfo = basicInfo,
+                                    unitId = unitId,
                                     actions = actions,
                                     currentValueState = currentValueState,
                                     maxRank = maxValue.rank
@@ -550,11 +551,11 @@ fun CharacterDetail(
  */
 @Composable
 private fun CharacterCard(
-    basicInfo: CharacterInfo,
+    unitId: Int,
+    basicInfo: CharacterInfo?,
     loved: Boolean,
     actions: NavActions,
 ) {
-    val unitId = basicInfo.id
 
     Column(
         modifier = Modifier
@@ -587,11 +588,10 @@ private fun CharacterCard(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CharacterTools(
-    basicInfo: CharacterInfo,
+    unitId: Int,
     cutinId: Int = 0,
     actions: NavActions,
 ) {
-    val unitId = basicInfo.id
 
     FlowRow(
         modifier = Modifier
@@ -632,12 +632,11 @@ private fun CharacterTools(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CharacterOtherTools(
-    basicInfo: CharacterInfo,
+    unitId: Int,
     currentValueState: MutableState<CharacterProperty>,
     maxRank: Int,
     actions: NavActions,
 ) {
-    val unitId = basicInfo.id
 
     //RANK相关功能
     FlowRow(
@@ -695,7 +694,10 @@ private fun CharacterCoe(
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     //战力系数
-    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+    val coeValueFlow = remember {
+        attrViewModel.getCoefficient()
+    }
+    val coeValue by coeValueFlow.collectAsState(initial = null)
     val context = LocalContext.current
 
     Row(
@@ -709,9 +711,9 @@ private fun CharacterCoe(
             .padding(horizontal = Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val value = if (coe == null) {
-            ""
-        } else {
+        var value = ""
+
+        coeValue?.let { coe ->
             val basicAttr = characterAttrData.sumAttr.copy().sub(characterAttrData.exSkillAttr)
             val basic =
                 basicAttr.hp * coe.hp_coefficient + basicAttr.atk * coe.atk_coefficient + basicAttr.magicStr * coe.magic_str_coefficient + basicAttr.def * coe.def_coefficient + basicAttr.magicDef * coe.magic_def_coefficient + basicAttr.physicalCritical * coe.physical_critical_coefficient + basicAttr.magicCritical * coe.magic_critical_coefficient + basicAttr.waveHpRecovery * coe.wave_hp_recovery_coefficient + basicAttr.waveEnergyRecovery * coe.wave_energy_recovery_coefficient + basicAttr.dodge * coe.dodge_coefficient + basicAttr.physicalPenetrate * coe.physical_penetrate_coefficient + basicAttr.magicPenetrate * coe.magic_penetrate_coefficient + basicAttr.lifeSteal * coe.life_steal_coefficient + basicAttr.hpRecoveryRate * coe.hp_recovery_rate_coefficient + basicAttr.energyRecoveryRate * coe.energy_recovery_rate_coefficient + basicAttr.energyReduceRate * coe.energy_reduce_rate_coefficient + basicAttr.accuracy * coe.accuracy_coefficient
@@ -741,7 +743,7 @@ private fun CharacterCoe(
                 //ub、ex
                 skill += currentValue.level * coe.skill_lv_coefficient * 2
             }
-            (basic + skill).int.toString()
+            value = (basic + skill).int.toString()
         }
         //战力数值
         MainText(

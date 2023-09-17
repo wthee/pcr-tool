@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -77,13 +79,21 @@ fun SkillLoopList(
     }
 
     //获取循环对应的图标
-    val skillLoopList = skillViewModel.getSkillIconTypes(loopList, unitId)
-        .collectAsState(initial = hashMapOf()).value
+    val skillLoopListFlow = remember(loopList, unitId) {
+        skillViewModel.getSkillIconTypes(loopList, unitId)
+    }
+    val skillLoopList by skillLoopListFlow.collectAsState(initial = hashMapOf())
     //获取普攻时间
     val atkCastTime = if (unitType == UnitType.CHARACTER || unitType == UnitType.CHARACTER_SUMMON) {
-        characterViewModel.getAtkCastTime(unitId).collectAsState(initial = 0.0).value ?: 0.0
+        val unitAtkCastTimeFlow = remember(unitId) {
+            characterViewModel.getAtkCastTime(unitId)
+        }
+        unitAtkCastTimeFlow.collectAsState(initial = 0.0).value ?: 0.0
     } else {
-        enemyViewModel.getAtkCastTime(unitId).collectAsState(initial = 0.0).value ?: 0.0
+        val enemyAtkCastTimeFlow = remember(unitId) {
+            enemyViewModel.getAtkCastTime(unitId)
+        }
+        enemyAtkCastTimeFlow.collectAsState(initial = 0.0).value ?: 0.0
     }
 
 

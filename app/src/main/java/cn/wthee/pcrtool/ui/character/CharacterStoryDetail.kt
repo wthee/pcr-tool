@@ -8,6 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -16,7 +18,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.getAttr
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -28,9 +34,10 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
  */
 @Composable
 fun CharacterStoryDetail(unitId: Int, attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
-
-    val list =
-        attrViewModel.getStoryAttrDetail(unitId).collectAsState(initial = arrayListOf()).value
+    val attrDetailFlow = remember(unitId) {
+        attrViewModel.getStoryAttrDetail(unitId)
+    }
+    val list by attrDetailFlow.collectAsState(initial = arrayListOf())
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(

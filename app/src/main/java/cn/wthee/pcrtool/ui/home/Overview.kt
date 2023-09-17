@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -30,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -84,11 +82,6 @@ import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlinx.coroutines.launch
 
-//权限
-val permissions = arrayOf(
-    Manifest.permission.READ_CALENDAR,
-    Manifest.permission.WRITE_CALENDAR,
-)
 
 private const val defaultOrder = "0-1-6-2-3-4-5-"
 
@@ -102,13 +95,9 @@ fun Overview(
     scrollState: ScrollState,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    //初始化加载六星数据
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
-    }
-
-    //添加日历确认弹窗
-    val confirmState = remember {
-        mutableIntStateOf(0)
     }
 
     //编辑模式
@@ -233,7 +222,6 @@ private fun ChangeDbCompose(
         navViewModel.fabCloseClick.postValue(false)
     }
 
-
     //展开边距修正
     val mFabModifier = if (openDialog) {
         modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
@@ -248,6 +236,7 @@ private fun ChangeDbCompose(
     } else {
         MaterialTheme.colorScheme.primary
     }
+
 
     Box(modifier = Modifier.clickClose(openDialog)) {
         Row(

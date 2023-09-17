@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.icu.text.DecimalFormat
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -14,6 +15,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
+import java.math.RoundingMode
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -117,7 +119,13 @@ val Double.int: Int
 val Double.intStr: String
     get() {
         return if (this < 1) {
-            this.toString()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val format = DecimalFormat("0.########")
+                format.roundingMode = RoundingMode.FLOOR.ordinal
+                format.format(this)
+            } else {
+                this.toString()
+            }
         } else {
             (if (this * 10 % 10 > 1) ceil(this).toInt() else floor(this).toInt()).toString()
         }

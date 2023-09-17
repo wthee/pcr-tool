@@ -501,10 +501,10 @@ interface EquipmentDao {
             unit_unique_equip AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
-        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
         """
     )
-    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData>
 
     /**
      * 获取专用装备列表

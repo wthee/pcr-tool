@@ -24,7 +24,6 @@ class ImageRequestHelper {
 
         //图片格式
         const val WEBP = ".webp"
-        const val PNG = ".png"
 
         //角色卡面
         const val CARD_PROFILE = "card/profile/"
@@ -60,9 +59,6 @@ class ImageRequestHelper {
 
         //图片资源地址
         private var OTHER_RESOURCE_URL = "https://${URL_DOMAIN}/resource/"
-
-        //漫画地址
-        var COMIC4 = OTHER_RESOURCE_URL + "comic/"
 
     }
 
