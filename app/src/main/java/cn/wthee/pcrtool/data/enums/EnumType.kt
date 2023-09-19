@@ -84,7 +84,7 @@ enum class ToolMenuType(val id: Int) {
     CLAN(203),
     RANDOM_AREA(204),
     GACHA(205),
-    EVENT(206),
+    STORY_EVENT(206),
     NEWS(207),
     FREE_GACHA(208),
     PVP_SEARCH(209),

@@ -93,9 +93,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class MainIconType(val icon: ImageVector) {
     /**
-     * 向下折叠
+     * 向下
      */
-    DOWN(Icons.Rounded.Remove),
+    DOWN(Icons.Rounded.KeyboardArrowDown),
+
+    /**
+     * 向上
+     */
+    UP(Icons.Rounded.KeyboardArrowUp),
 
     /**
      * 主菜单

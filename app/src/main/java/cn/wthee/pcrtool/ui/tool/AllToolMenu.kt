@@ -112,7 +112,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
     //活动信息
     val infoList = arrayListOf<ToolMenuData>()
     infoList.addItem(ToolMenuType.GACHA)
-    infoList.addItem(ToolMenuType.EVENT)
+    infoList.addItem(ToolMenuType.STORY_EVENT)
     infoList.addItem(ToolMenuType.FREE_GACHA)
     infoList.addItem(ToolMenuType.BIRTHDAY)
     infoList.addItem(ToolMenuType.CALENDAR_EVENT)

@@ -738,7 +738,6 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberScrollState()
                 val showDetail = remember {
                     mutableStateOf(false)
                 }
@@ -897,7 +896,7 @@ class NavActions(navController: NavHostController) {
     /**
      * 剧情活动
      */
-    val toEvent = {
+    val toStoryEvent = {
         navController.navigate(NavRoute.TOOL_STORY_EVENT)
     }
 

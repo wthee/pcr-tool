@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -100,6 +101,11 @@ fun Overview(
         overviewViewModel.getR6Ids()
     }
 
+    //日程点击展开状态
+    val confirmState = remember {
+        mutableIntStateOf(0)
+    }
+
     //编辑模式
     val isEditMode = remember {
         mutableStateOf(false)
@@ -143,11 +149,11 @@ fun Overview(
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
-                            actions = actions, isEditMode = false
+                            confirmState = confirmState, actions = actions, isEditMode = false
                         )
 
                         OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
-                            actions = actions, isEditMode = false
+                            confirmState = confirmState, actions = actions, isEditMode = false
                         )
 
                         OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
@@ -182,10 +188,10 @@ fun Overview(
                 NewsSection(actions, isEditMode = true)
 
                 //进行中
-                InProgressEventSection(actions, isEditMode = true)
+                InProgressEventSection(confirmState = confirmState, actions, isEditMode = true)
 
                 //活动预告
-                ComingSoonEventSection(actions, isEditMode = true)
+                ComingSoonEventSection(confirmState = confirmState, actions, isEditMode = true)
 
             }
 

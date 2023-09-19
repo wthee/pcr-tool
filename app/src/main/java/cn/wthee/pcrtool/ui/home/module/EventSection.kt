@@ -1,12 +1,18 @@
 package cn.wthee.pcrtool.ui.home.module
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
@@ -18,13 +24,17 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
@@ -40,6 +50,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
  */
 @Composable
 fun InProgressEventSection(
+    confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel()
@@ -79,6 +90,7 @@ fun InProgressEventSection(
     CalendarEventLayout(
         isEditMode,
         EventType.IN_PROGRESS,
+        confirmState,
         actions,
         inProgressEventList,
         inProgressStoryEventList,
@@ -95,6 +107,7 @@ fun InProgressEventSection(
  */
 @Composable
 fun ComingSoonEventSection(
+    confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
@@ -133,6 +146,7 @@ fun ComingSoonEventSection(
     CalendarEventLayout(
         isEditMode,
         EventType.COMING_SOON,
+        confirmState,
         actions,
         comingSoonEventList,
         comingSoonStoryEventList,
@@ -151,6 +165,7 @@ fun ComingSoonEventSection(
 private fun CalendarEventLayout(
     isEditMode: Boolean,
     calendarType: EventType,
+    confirmState: MutableState<Int>,
     actions: NavActions,
     eventList: List<CalendarEvent>,
     storyEventList: List<EventData>,
@@ -187,17 +202,25 @@ private fun CalendarEventLayout(
             id = id,
             titleId = titleId,
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
+            rightIconType = if (confirmState.value == calendarType.type) MainIconType.UP else MainIconType.DOWN,
             isEditMode = isEditMode,
             orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
             onClick = {
                 if (isEditMode) {
                     editOverviewMenuOrder(id)
                 } else {
-                    actions.toCalendarEventList()
+                    //弹窗确认
+                    if (confirmState.value == calendarType.type) {
+                        confirmState.value = 0
+                    } else {
+                        confirmState.value = calendarType.type
+                    }
                 }
             }
         ) {
-
+            ExpandAnimation(visible = confirmState.value == calendarType.type) {
+                CalendarEventOperation(actions)
+            }
             VerticalGrid(
                 itemWidth = getItemWidth(),
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
@@ -232,6 +255,52 @@ private fun CalendarEventLayout(
                 }
                 birthdayList.forEach {
                     BirthdayItem(it, actions.toCharacterDetail)
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * 添加日历确认
+ */
+@Composable
+private fun CalendarEventOperation(
+    actions: NavActions
+) {
+    val context = LocalContext.current
+    //日程相关工具
+    val toolList = arrayListOf<ToolMenuData>()
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.STORY_EVENT))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.CALENDAR_EVENT))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
+
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        VerticalGrid(
+            itemWidth = Dimen.menuItemSize,
+            contentPadding = Dimen.largePadding + Dimen.mediumPadding,
+            modifier = Modifier.animateContentSize(defaultSpring())
+        ) {
+            toolList.forEach {
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediumPadding,
+                            bottom = Dimen.largePadding
+                        )
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MenuItem(context, actions, it, false)
                 }
             }
         }

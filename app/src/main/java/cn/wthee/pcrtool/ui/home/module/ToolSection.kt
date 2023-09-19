@@ -140,7 +140,7 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
 }
 
 @Composable
-private fun MenuItem(
+fun MenuItem(
     context: Context,
     actions: NavActions,
     toolMenuData: ToolMenuData,
@@ -184,7 +184,7 @@ fun getAction(
             ToolMenuType.CHARACTER -> actions.toCharacterList()
             ToolMenuType.GACHA -> actions.toGacha()
             ToolMenuType.CLAN -> actions.toClan()
-            ToolMenuType.EVENT -> actions.toEvent()
+            ToolMenuType.STORY_EVENT -> actions.toStoryEvent()
             ToolMenuType.GUILD -> actions.toGuild()
             ToolMenuType.PVP_SEARCH -> actions.toPvp()
             ToolMenuType.LEADER -> actions.toLeader()
@@ -221,7 +221,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.CLAN -> ToolMenuData(R.string.tool_clan, MainIconType.CLAN)
         ToolMenuType.RANDOM_AREA -> ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA)
         ToolMenuType.GACHA -> ToolMenuData(R.string.tool_gacha, MainIconType.GACHA)
-        ToolMenuType.EVENT -> ToolMenuData(R.string.tool_event, MainIconType.EVENT)
+        ToolMenuType.STORY_EVENT -> ToolMenuData(R.string.tool_event, MainIconType.EVENT)
         ToolMenuType.NEWS -> ToolMenuData(R.string.tool_news, MainIconType.NEWS)
         ToolMenuType.FREE_GACHA -> ToolMenuData(R.string.tool_free_gacha, MainIconType.FREE_GACHA)
         ToolMenuType.PVP_SEARCH -> ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH)
