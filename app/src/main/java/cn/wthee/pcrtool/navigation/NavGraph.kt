@@ -122,8 +122,10 @@ fun NavGraph(
             composable(
                 route = NavRoute.HOME
             ) {
-                //从其它页面返回时，主按钮初始
-                if (navController.currentDestination?.route == NavRoute.HOME) {
+                //从其它页面返回时（非展开设置时），主按钮初始
+                if (navController.currentDestination?.route == NavRoute.HOME
+                    && viewModel.fabMainIcon.value != MainIconType.DOWN
+                ) {
                     viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                 }
                 val scrollState = rememberScrollState()

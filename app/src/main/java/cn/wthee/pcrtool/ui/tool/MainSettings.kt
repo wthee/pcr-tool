@@ -2,7 +2,16 @@ package cn.wthee.pcrtool.ui.tool
 
 import android.os.Build
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -10,7 +19,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,12 +43,22 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.HeaderText
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.joinQQGroup
 
 /**
  * 设置页面
@@ -272,8 +295,10 @@ fun MainSettings() {
  */
 @Composable
 fun SettingSwitchCompose(
+    modifier: Modifier = Modifier,
     type: SettingSwitchType,
-    showSummary: Boolean
+    showSummary: Boolean,
+    wrapWidth: Boolean = false,
 ) {
     val context = LocalContext.current
     val sp = settingSP(context)
@@ -366,9 +391,11 @@ fun SettingSwitchCompose(
     }
 
     SettingCommonItem(
+        modifier = modifier,
         iconType = iconType,
         title = title,
         summary = summary,
+        wrapWidth = wrapWidth,
         onClick = {
             onChange()
         }
@@ -397,9 +424,11 @@ fun SettingSwitchCompose(
  * @param summaryColor  摘要颜色
  * @param onClick       点击事件
  * @param extraContent  右侧额外内容
+ * @param wrapWidth     自适应宽度
  */
 @Composable
 fun SettingCommonItem(
+    modifier: Modifier = Modifier,
     iconType: Any,
     iconSize: Dp = Dimen.settingIconSize,
     title: String,
@@ -408,6 +437,7 @@ fun SettingCommonItem(
     summaryColor: Color = MaterialTheme.colorScheme.outline,
     padding: Dp = Dimen.largePadding,
     tintColor: Color = MaterialTheme.colorScheme.primary,
+    wrapWidth: Boolean = false,
     onClick: () -> Unit,
     extraContent: (@Composable RowScope.() -> Unit)? = null
 ) {
@@ -415,7 +445,7 @@ fun SettingCommonItem(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = {
                 VibrateUtil(context).single()
@@ -429,9 +459,13 @@ fun SettingCommonItem(
             colorFilter = ColorFilter.tint(tintColor)
         )
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(padding),
+            modifier = if (wrapWidth) {
+                Modifier.padding(padding)
+            } else {
+                Modifier
+                    .weight(1f)
+                    .padding(padding)
+            },
             verticalArrangement = Arrangement.Center
         ) {
             Subtitle1(text = title, color = titleColor)
@@ -467,7 +501,7 @@ private fun SwitchThumbIcon(checked: Boolean) {
 @Composable
 private fun SettingPreview() {
     PreviewLayout {
-        SettingSwitchCompose(SettingSwitchType.VIBRATE, true)
+        SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = true)
         SettingCommonItem(
             iconType = MainIconType.SUPPORT,
             title = stringResource(id = R.string.qq_group),

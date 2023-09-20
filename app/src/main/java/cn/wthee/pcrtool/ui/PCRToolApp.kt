@@ -1,18 +1,18 @@
 package cn.wthee.pcrtool.ui
 
 import android.os.Build
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,10 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.BuildConfig
@@ -36,13 +33,15 @@ import cn.wthee.pcrtool.navigation.NavGraph
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
+import cn.wthee.pcrtool.ui.theme.ScaleBottomEndAnimation
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
-import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -51,7 +50,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
  * 应用
  */
 @Composable
-fun PCRToolApp(){
+fun PCRToolApp() {
     PCRToolComposeTheme {
         //状态栏、导航栏适配
         val ui = rememberSystemUiController()
@@ -102,23 +101,27 @@ private fun Home(
         }
     }
 
+
     Box(
         modifier = Modifier
             .navigationBarsPadding()
             .fillMaxSize()
     ) {
         //页面导航
-        NavGraph(bottomSheetNavigator, MainActivity.navController, MainActivity.navViewModel, actions)
-        Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            //菜单
-            SettingDropMenu(actions)
-            //Home 按钮
-            FabMain(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(Dimen.fabMargin)
-            )
-        }
+        NavGraph(
+            bottomSheetNavigator,
+            MainActivity.navController,
+            MainActivity.navViewModel,
+            actions
+        )
+        //菜单
+        SettingDropMenu(actions)
+        //Home 按钮
+        FabMain(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(Dimen.fabMargin)
+        )
         if (loading) {
             CircularProgressCompose(Modifier.align(Alignment.Center))
         }
@@ -128,6 +131,7 @@ private fun Home(
 @Composable
 fun FabMain(modifier: Modifier = Modifier) {
     val icon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
+
 
     MainSmallFab(
         if (icon == MainIconType.MAIN) {
@@ -154,70 +158,71 @@ fun FabMain(modifier: Modifier = Modifier) {
  */
 @Composable
 private fun SettingDropMenu(actions: NavActions) {
-    val fabMainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
-    val context = LocalContext.current
+    val fabMainIcon =
+        MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
 
-    //调整圆角
-    PCRToolComposeTheme(
-        shapes = MaterialTheme.shapes.copy(
-            extraSmall = MaterialTheme.shapes.medium
-        )
+
+    ScaleBottomEndAnimation(
+        visible = fabMainIcon == MainIconType.DOWN
     ) {
-        DropdownMenu(
-            expanded = fabMainIcon == MainIconType.DOWN,
-            onDismissRequest = {
-                VibrateUtil(context).single()
-                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-            },
+        Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            offset = DpOffset(Dimen.fabMargin, 0.dp),
-        ) {
-            DropdownMenuItem(
-                text = {
-                    SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = false)
-                },
-                onClick = {}
-            )
-            DropdownMenuItem(
-                text = {
-                    SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = false)
-                },
-                onClick = {}
-            )
-            //- 动态色彩，仅 Android 12 及以上可用
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
-                DropdownMenuItem(
-                    text = {
-                        SettingSwitchCompose(
-                            type = SettingSwitchType.DYNAMIC_COLOR,
-                            showSummary = false
-                        )
-                    },
-                    onClick = {}
+                .clickClose(
+                    fabMainIcon == MainIconType.DOWN,
+                    isSettingPop = true
                 )
-            }
-            //应用信息
-            DropdownMenuItem(
-                text = {
-                    SettingCommonItem(
-                        iconType = R.drawable.ic_logo_large,
-                        iconSize = Dimen.mediumIconSize,
-                        title = "v" + BuildConfig.VERSION_NAME,
-                        summary = stringResource(id = R.string.app_name),
-                        titleColor = MaterialTheme.colorScheme.primary,
-                        summaryColor = MaterialTheme.colorScheme.onSurface,
-                        padding = Dimen.smallPadding,
-                        tintColor = MaterialTheme.colorScheme.primary,
-                        onClick = {
-                            actions.toSetting()
-                        }
-                    ) {
-                        MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                .padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            MainCard(
+                fillMaxWidth = false,
+                modifier = Modifier
+                    .padding(
+                        end = Dimen.fabMargin + Dimen.smallPadding
+                    )
+                    .width(IntrinsicSize.Max),
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
+                SettingSwitchCompose(
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                    type = SettingSwitchType.VIBRATE,
+                    showSummary = false,
+                    wrapWidth = true
+                )
+                SettingSwitchCompose(
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                    type = SettingSwitchType.ANIMATION,
+                    showSummary = false,
+                    wrapWidth = true
+                )
+                //- 动态色彩，仅 Android 12 及以上可用
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
+                    SettingSwitchCompose(
+                        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                        type = SettingSwitchType.DYNAMIC_COLOR,
+                        showSummary = false,
+                        wrapWidth = true
+                    )
+                }
+                SettingCommonItem(
+                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                    iconType = R.drawable.ic_logo_large,
+                    iconSize = Dimen.mediumIconSize,
+                    title = "v" + BuildConfig.VERSION_NAME,
+                    summary = stringResource(id = R.string.app_name),
+                    titleColor = MaterialTheme.colorScheme.primary,
+                    summaryColor = MaterialTheme.colorScheme.onSurface,
+                    padding = Dimen.smallPadding,
+                    tintColor = MaterialTheme.colorScheme.primary,
+                    onClick = {
+                        actions.toSetting()
                     }
-                },
-                onClick = {}
-            )
+                ) {
+                    MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
+                }
+                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
+            }
         }
     }
 }

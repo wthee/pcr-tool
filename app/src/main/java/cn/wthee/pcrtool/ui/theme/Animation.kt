@@ -1,10 +1,25 @@
 package cn.wthee.pcrtool.ui.theme
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 
 /**
@@ -30,6 +45,12 @@ fun <T> defaultTween(durationMillis: Int = 400): TweenSpec<T> {
 val myExit = fadeOut(animationSpec = defaultTween(180))
 val myPopExit = fadeOut(animationSpec = defaultTween(180))
 
+
+/**
+ * 页面进入动画：渐入
+ */
+val myFadeIn = fadeIn(animationSpec = defaultTween())
+
 /**
  * 页面退出动画
  */
@@ -39,14 +60,17 @@ val myFadeOut = fadeOut(animationSpec = defaultTween())
  * 页面进入动画：从下向上滚动
  */
 val mySlideIn = slideInVertically(
-    initialOffsetY = { it },
+    initialOffsetY = { 100 },
     animationSpec = defaultSpring()
 )
 
 /**
- * 页面进入动画：渐入
+ * 页面退出动画：从上向下滚动
  */
-val myFadeIn = fadeIn(animationSpec = defaultTween())
+val mySlideOut = slideOutVertically(
+    targetOffsetY = { 100 },
+    animationSpec = defaultTween()
+) + fadeOut(defaultTween(200))
 
 /**
  * 展开
@@ -54,7 +78,7 @@ val myFadeIn = fadeIn(animationSpec = defaultTween())
 val myExpandIn = expandVertically(
     expandFrom = Alignment.Top,
     animationSpec = defaultSpring()
-) + fadeIn(animationSpec = defaultSpring())
+) + myFadeIn
 
 /**
  * 折叠
@@ -62,7 +86,8 @@ val myExpandIn = expandVertically(
 val myShrinkIn = shrinkVertically(
     shrinkTowards = Alignment.Top,
     animationSpec = defaultSpring()
-) + fadeOut(animationSpec = defaultSpring())
+) + myFadeOut
+
 
 /**
  * 页面进入动画
@@ -77,7 +102,7 @@ fun SlideAnimation(
         visible = visible,
         modifier = modifier,
         enter = if (animOnFlag) mySlideIn else noAnimIn(),
-        exit = if (animOnFlag) myFadeOut else noAnimOut(),
+        exit = if (animOnFlag) mySlideOut else noAnimOut(),
         content = content,
     )
 }
@@ -114,6 +139,40 @@ fun ExpandAnimation(
         modifier = modifier,
         enter = if (animOnFlag) myExpandIn else noAnimIn(),
         exit = if (animOnFlag) myShrinkIn else noAnimOut(),
+        content = content,
+    )
+}
+
+
+/**
+ * 缩放动画
+ */
+@Composable
+fun ScaleBottomEndAnimation(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = if (animOnFlag) {
+            scaleIn(
+                animationSpec = defaultTween(300),
+                transformOrigin = TransformOrigin(1f, 1f)
+            ) + myFadeIn
+        } else {
+            noAnimIn()
+        },
+        exit = if (animOnFlag) {
+            scaleOut(
+                animationSpec = defaultTween(180),
+                transformOrigin = TransformOrigin(1f, 1f),
+                targetScale = 0.6f
+            ) + fadeOut(defaultTween(180))
+        } else {
+            noAnimOut()
+        },
         content = content,
     )
 }
