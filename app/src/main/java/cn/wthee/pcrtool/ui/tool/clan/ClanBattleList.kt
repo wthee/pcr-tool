@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClanBattleList(
     scrollState: LazyGridState,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -142,7 +142,7 @@ fun ClanBattleList(
 @Composable
 fun ClanBattleOverview(
     clanBattleEvent: ClanBattleEvent,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
     //会战列表
@@ -213,7 +213,7 @@ fun ClanBattleOverview(
 private fun ClanBattleItem(
     clanBattleEvent: ClanBattleEvent? = null,
     clanBattleInfo: ClanBattleInfo,
-    toClanBossInfo: (Int, Int, Int) -> Unit
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit
 ) {
     val placeholder = clanBattleInfo.clanBattleId == -1
     val bossUnitIdList = try {
@@ -243,9 +243,9 @@ private fun ClanBattleItem(
                 MainTitleText(
                     text = stringResource(
                         id = R.string.phase,
-                        getZhNumberText(clanBattleInfo.phase)
+                        getZhNumberText(clanBattleInfo.maxPhase)
                     ),
-                    backgroundColor = getSectionTextColor(clanBattleInfo.phase),
+                    backgroundColor = getSectionTextColor(clanBattleInfo.maxPhase),
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding)
                         .commonPlaceholder(visible = placeholder)
@@ -289,7 +289,8 @@ private fun ClanBattleItem(
                                     toClanBossInfo(
                                         clanBattleInfo.clanBattleId,
                                         index,
-                                        clanBattleInfo.phase
+                                        clanBattleInfo.minPhase,
+                                        clanBattleInfo.maxPhase,
                                     )
                                 }
                             }
@@ -367,6 +368,6 @@ private fun ClanBattleItemPreview() {
     PreviewLayout {
         ClanBattleItem(
             clanBattleInfo = ClanBattleInfo(1001),
-            toClanBossInfo = { _, _, _ -> })
+            toClanBossInfo = { _, _, _, _ -> })
     }
 }

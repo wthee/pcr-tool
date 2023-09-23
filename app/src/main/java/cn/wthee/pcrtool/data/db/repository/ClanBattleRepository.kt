@@ -12,7 +12,7 @@ class ClanBattleRepository @Inject constructor(private val clanBattleDao: ClanBa
 
     suspend fun getAllClanBattleData(clanId: Int) = clanBattleDao.getAllClanBattleData(clanId)
 
-    suspend fun getAllClanBattleTargetCount(phase: Int) =
-        clanBattleDao.getAllClanBattleTargetCount(phase)
+    suspend fun getAllClanBattleTargetCount(phase: Int, clanId: Int) =
+        clanBattleDao.getAllClanBattleTargetCount(phase, clanId)
 
 }

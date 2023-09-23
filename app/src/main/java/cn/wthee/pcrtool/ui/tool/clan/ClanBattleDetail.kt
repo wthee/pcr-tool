@@ -40,6 +40,7 @@ import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 fun ClanBattleDetail(
     clanBattleId: Int,
     index: Int,
+    minPhase: Int,
     maxPhase: Int,
     toSummonDetail: (Int, Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel(),
@@ -47,11 +48,11 @@ fun ClanBattleDetail(
 ) {
     //阶段选择状态
     val phaseIndex = remember {
-        mutableIntStateOf(maxPhase - 1)
+        mutableIntStateOf(maxPhase - minPhase)
     }
     //公会战基本信息
     val clanBattleInfoFlow = remember(clanBattleId, phaseIndex.intValue) {
-        clanBattleViewModel.getAllClanBattleData(clanBattleId, phaseIndex.intValue + 1)
+        clanBattleViewModel.getAllClanBattleData(clanBattleId, phaseIndex.intValue + minPhase)
     }
     val clanBattleInfo by clanBattleInfoFlow.collectAsState(initial = null)
 
@@ -113,7 +114,7 @@ fun ClanBattleDetail(
 
             //阶段选择
             val tabs = arrayListOf<String>()
-            for (i in 1..maxPhase) {
+            for (i in minPhase..maxPhase) {
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
             val sectionColor = getSectionTextColor(section = phaseIndex.intValue + 1)

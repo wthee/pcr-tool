@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.enemy
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -75,7 +77,11 @@ fun EnemyDetail(
     }
     val partEnemyList by partEnemyListFlow.collectAsState(initial = null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         enemyData?.let {
             EnemyAllInfo(
                 it,
@@ -107,6 +113,11 @@ fun EnemyAllInfo(
     } else {
         enemyData.attr.enemy(isPreview = LocalInspectionMode.current)
     }
+    var partAtk = 0
+    partEnemyList?.forEach {
+        partAtk = maxOf(partAtk, maxOf(it.attr.atk, it.attr.magicStr))
+    }
+    enemyData.partAtk = partAtk
 
     Column(
         modifier = Modifier

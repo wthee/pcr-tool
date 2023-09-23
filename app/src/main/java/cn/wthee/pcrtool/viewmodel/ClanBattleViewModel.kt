@@ -21,13 +21,13 @@ class ClanBattleViewModel @Inject constructor(
     /**
      * 获取公会战记录
      */
-    fun getAllClanBattleData(clanBattleId: Int = 0, pharse: Int = 1) = flow {
+    fun getAllClanBattleData(clanBattleId: Int = 0, phase: Int = 2) = flow {
         try {
-            val targetList = clanBattleRepository.getAllClanBattleTargetCount(pharse)
+            val targetList = clanBattleRepository.getAllClanBattleTargetCount(phase, clanBattleId)
             val clanList = clanBattleRepository.getAllClanBattleData(clanBattleId)
             //设置多目标数
             clanList.forEach { info ->
-                val subIndex = (pharse - 1) * 5
+                val subIndex = (phase - info.minPhase) * 5
                 info.enemyIdList = info.enemyIds.intArrayList.subList(subIndex, subIndex + 5)
                 info.unitIdList = info.unitIds.intArrayList.subList(subIndex, subIndex + 5)
 
@@ -45,7 +45,7 @@ class ClanBattleViewModel @Inject constructor(
         } catch (e: Exception) {
             LogReportUtil.upload(
                 e,
-                "getAllClanBattleData#clanBattleId:$clanBattleId,pharse:$pharse"
+                "getAllClanBattleData#clanBattleId:$clanBattleId,phase:$phase"
             )
             emit(arrayListOf())
         }
