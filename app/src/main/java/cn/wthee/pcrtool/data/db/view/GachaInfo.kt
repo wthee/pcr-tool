@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.utils.stringArrayList
  * 卡池记录
  */
 data class GachaInfo(
-    @ColumnInfo(name = "gacha_id") val gachaId: Int = 1,
+    @ColumnInfo(name = "gacha_id") val gachaId: Int = -1,
     @ColumnInfo(name = "gacha_name") val gachaName: String = "???",
     @ColumnInfo(name = "description") val description: String = "???",
     @ColumnInfo(name = "start_time") val startTime: String = "2020/01/01 00:00:00",

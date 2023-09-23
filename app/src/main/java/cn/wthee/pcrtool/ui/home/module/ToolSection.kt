@@ -52,6 +52,7 @@ data class ToolMenuData(
 fun ToolSection(
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
 ) {
     val id = OverviewType.TOOL.id
     Section(
@@ -59,7 +60,7 @@ fun ToolSection(
         titleId = R.string.function,
         iconType = MainIconType.FUNCTION,
         isEditMode = isEditMode,
-        orderStr = navViewModel.overviewOrderData.observeAsState().value ?: "",
+        orderStr = orderStr,
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)

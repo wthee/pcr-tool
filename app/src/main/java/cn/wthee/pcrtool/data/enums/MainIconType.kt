@@ -73,6 +73,7 @@ import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
 import androidx.compose.material.icons.rounded.Sync
+import androidx.compose.material.icons.rounded.SyncProblem
 import androidx.compose.material.icons.rounded.Timeline
 import androidx.compose.material.icons.rounded.Toc
 import androidx.compose.material.icons.rounded.Token
@@ -293,9 +294,14 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
-     * 接口请求一场
+     * 接口请求异常
      */
     REQUEST_ERROR(Icons.Rounded.Warning),
+
+    /**
+     * 数据异常
+     */
+    DB_ERROR(Icons.Rounded.SyncProblem),
 
     /**
      * 反馈交流群

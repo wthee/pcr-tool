@@ -191,25 +191,30 @@ fun CharacterDetail(
     )
 
     //普通技能
-    val normalSkillFlow = remember(currentValueState.value.level, atk) {
+    val normalSkillFlow = remember(isCutinSkill.value, currentValueState.value.level, atk) {
         skillViewModel.getCharacterSkills(
             currentValueState.value.level,
             atk,
-            unitId,
+            currentIdState.intValue,
             SkillType.NORMAL
         )
     }
     val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
 
     //sp技能
-    val spSkillFlow = remember(currentValueState.value.level, atk) {
-        skillViewModel.getCharacterSkills(currentValueState.value.level, atk, unitId, SkillType.SP)
+    val spSkillFlow = remember(isCutinSkill.value, currentValueState.value.level, atk) {
+        skillViewModel.getCharacterSkills(
+            currentValueState.value.level,
+            atk,
+            currentIdState.intValue,
+            SkillType.SP
+        )
     }
     val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
 
     // sp技能标签
-    val spLabelFlow = remember {
-        skillViewModel.getSpSkillLabel(unitId)
+    val spLabelFlow = remember(isCutinSkill.value) {
+        skillViewModel.getSpSkillLabel(currentIdState.intValue)
     }
     val spLabel by spLabelFlow.collectAsState(initial = null)
 

@@ -2,8 +2,8 @@ package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
-import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.db.view.endTime
 import cn.wthee.pcrtool.data.db.view.startTime
 
@@ -32,11 +32,11 @@ fun <T> compareAllTypeEvent(today: String? = null) = Comparator<T> { o1, o2 ->
             ed2 = (o2 as GachaInfo).endTime.formatTime
         }
 
-        is EventData -> {
+        is StoryEventData -> {
             sd1 = o1.startTime.formatTime
             ed1 = o1.endTime.formatTime
-            sd2 = (o2 as EventData).startTime.formatTime
-            ed2 = (o2 as EventData).endTime.formatTime
+            sd2 = (o2 as StoryEventData).startTime.formatTime
+            ed2 = (o2 as StoryEventData).endTime.formatTime
         }
 
         is BirthdayData -> {

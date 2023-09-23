@@ -44,7 +44,6 @@ import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_CATEGORY
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
@@ -96,9 +95,7 @@ fun ExtraEquipDetail(
                 ExtraEquipBasicInfo(extraEquipmentData, loved)
             }
             //被动技能
-            SlideAnimation(visible = extraEquipmentData.getPassiveSkillIds().isNotEmpty()) {
-                ExtraEquipSkill(extraEquipmentData.getPassiveSkillIds())
-            }
+            ExtraEquipSkill(extraEquipmentData.getPassiveSkillIds())
 
             CommonSpacer()
         }

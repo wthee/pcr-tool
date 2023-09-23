@@ -156,7 +156,7 @@ fun NewsList(
 fun NewsItem(
     news: NewsTable
 ) {
-    val placeholder = news.title == ""
+    val placeholder = news.id == -1
     val tag = news.getTag()
     val color = when (tag) {
         NewsType.NEWS, NewsType.UPDATE -> colorRed

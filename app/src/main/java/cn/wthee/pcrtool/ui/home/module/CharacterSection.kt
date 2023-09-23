@@ -14,18 +14,18 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
@@ -44,6 +44,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 fun CharacterSection(
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.CHARACTER.id
@@ -51,21 +52,22 @@ fun CharacterSection(
     val characterCountFlow = remember {
         overviewViewModel.getCharacterCount()
     }
-    val characterCount by characterCountFlow.collectAsState(initial = 0)
+    val characterCount by characterCountFlow.collectAsState(initial = "0")
     //角色列表
     val characterListFlow = remember {
         overviewViewModel.getCharacterInfoList()
     }
-    val characterList by characterListFlow.collectAsState(initial = arrayListOf())
+    val characterList by characterListFlow.collectAsState(initial = arrayListOf(CharacterInfo()))
+
 
     Section(
         id = id,
         titleId = R.string.character,
         iconType = MainIconType.CHARACTER,
-        hintText = characterCount.toString(),
-        contentVisible = characterList.isNotEmpty(),
+        hintText = characterCount,
+        contentVisible = characterCount != "0",
         isEditMode = isEditMode,
-        orderStr = navViewModel.overviewOrderData.observeAsState().value ?: "",
+        orderStr = orderStr,
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)
@@ -127,10 +129,14 @@ private fun CharacterImageItem(
     unitId: Int,
     toCharacterDetail: (Int) -> Unit
 ) {
+    val placeholder = unitId == -1
     MainCard(
-        modifier = modifier,
+        modifier = modifier
+            .commonPlaceholder(placeholder),
         onClick = {
-            toCharacterDetail(unitId)
+            if (!placeholder) {
+                toCharacterDetail(unitId)
+            }
         }
     ) {
         MainImage(

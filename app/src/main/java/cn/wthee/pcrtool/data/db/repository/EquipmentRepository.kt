@@ -33,9 +33,20 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getCount() = equipmentDao.getCount()
 
     suspend fun getUniqueEquipCount() = try {
-        equipmentDao.getUniqueEquipCountV2()
+        val uniqueEquipCount = equipmentDao.getUniqueEquipCountV2()
+        if (uniqueEquipCount.size > 1) {
+            "${uniqueEquipCount[0].count} · ${uniqueEquipCount[1].count}"
+        } else {
+            uniqueEquipCount[0].count.toString()
+        }
+
     } catch (_: Exception) {
-        equipmentDao.getUniqueEquipCount()
+        val uniqueEquipCount = equipmentDao.getUniqueEquipCount()
+        if (uniqueEquipCount.isNotEmpty()) {
+            uniqueEquipCount[0].count.toString()
+        } else {
+            "0"
+        }
     }
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)

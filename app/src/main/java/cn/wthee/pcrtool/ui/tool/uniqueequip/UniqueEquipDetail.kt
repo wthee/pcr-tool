@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.getIndex
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.components.AttrList
@@ -199,7 +200,7 @@ fun UniqueEquip(
                     data = ImageRequestHelper.getInstance().getEquipPic(it.equipmentId)
                 )
                 Subtitle2(
-                    text = "(${it.equipmentId % 10}) ${it.description.deleteSpace}",
+                    text = getIndex(it.equipmentId % 10) + it.description.deleteSpace,
                     modifier = Modifier.padding(start = Dimen.mediumPadding),
                     selectable = true
                 )

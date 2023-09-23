@@ -7,9 +7,9 @@ import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
-import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.EventStoryDetail
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 
 /**
  * 活动记录 DAO
@@ -62,7 +62,7 @@ interface EventDao {
             LIMIT 0,:limit
         """
     )
-    suspend fun getAllEvents(limit: Int): List<EventData>
+    suspend fun getAllEvents(limit: Int): List<StoryEventData>
 
     /**
      * 获取活动剧情列表

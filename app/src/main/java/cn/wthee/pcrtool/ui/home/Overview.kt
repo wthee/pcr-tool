@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -130,35 +131,46 @@ fun Overview(
                     when (OverviewType.getByValue(it)) {
                         OverviewType.CHARACTER -> CharacterSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.EQUIP -> EquipSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.TOOL -> ToolSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.NEWS -> NewsSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
-                            confirmState = confirmState, actions = actions, isEditMode = false
+                            confirmState = confirmState,
+                            actions = actions,
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
-                            confirmState = confirmState, actions = actions, isEditMode = false
+                            confirmState = confirmState,
+                            actions = actions,
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
                     }
                 }
@@ -173,25 +185,55 @@ fun Overview(
                 )
 
                 //角色
-                CharacterSection(actions, isEditMode = true)
+                CharacterSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //装备
-                EquipSection(actions, isEditMode = true)
+                EquipSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //专用装备
-                UniqueEquipSection(actions, isEditMode = true)
+                UniqueEquipSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //更多功能
-                ToolSection(actions, isEditMode = true)
+                ToolSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //新闻
-                NewsSection(actions, isEditMode = true)
+                NewsSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //进行中
-                InProgressEventSection(confirmState = confirmState, actions, isEditMode = true)
+                InProgressEventSection(
+                    confirmState = confirmState,
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //活动预告
-                ComingSoonEventSection(confirmState = confirmState, actions, isEditMode = true)
+                ComingSoonEventSection(
+                    confirmState = confirmState,
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
             }
 
@@ -289,13 +331,37 @@ private fun ChangeDbCompose(
                     DbVersionList(tintColor)
                 } else {
                     //加载相关
+
                     when (downloadState) {
                         -2 -> {
-                            MainIcon(
-                                data = MainIconType.CHANGE_DATA,
-                                tint = tintColor,
-                                size = Dimen.fabIconSize
-                            )
+                            if (dbError) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(start = Dimen.largePadding)
+                                ) {
+                                    MainIcon(
+                                        data = MainIconType.DB_ERROR,
+                                        tint = tintColor,
+                                        size = Dimen.fabIconSize
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.db_error),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        textAlign = TextAlign.Center,
+                                        color = colorRed,
+                                        modifier = Modifier.padding(
+                                            start = Dimen.mediumPadding,
+                                            end = Dimen.largePadding
+                                        )
+                                    )
+                                }
+                            } else {
+                                MainIcon(
+                                    data = MainIconType.CHANGE_DATA,
+                                    tint = tintColor,
+                                    size = Dimen.fabIconSize
+                                )
+                            }
                         }
 
                         in 1..99 -> {
@@ -308,7 +374,6 @@ private fun ChangeDbCompose(
                     }
                 }
             }
-
         }
     }
 
@@ -630,7 +695,7 @@ fun Section(
             }
         }
 
-        if (contentVisible && !isEditMode) {
+        if (!isEditMode) {
             content()
         }
     }

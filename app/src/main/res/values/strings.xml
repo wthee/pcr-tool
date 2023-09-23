@@ -808,5 +808,6 @@
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
+    <string name="db_error">数据异常</string>
 
 </resources>

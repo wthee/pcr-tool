@@ -194,7 +194,11 @@ fun MainHorizontalPagerIndicator(modifier: Modifier, pagerState: PagerState, pag
         modifier = modifier,
         pagerState = pagerState,
         pageCount = pageCount,
-        activeColor = MaterialTheme.colorScheme.primary
+        activeColor = MaterialTheme.colorScheme.primary,
+        indicatorWidth = 32.dp,
+        indicatorHeight = Dimen.strokeWidth,
+        spacing = Dimen.mediumPadding,
+//        indicatorShape = CutCornerShape(topStartPercent = 0)
     )
 }
 
@@ -210,7 +214,7 @@ fun CircularProgressCompose(
     CircularProgressIndicator(
         modifier = modifier
             .size(size)
-            .padding(Dimen.smallPadding),
+            .padding(Dimen.exSmallPadding),
         color = color,
         strokeWidth = Dimen.strokeWidth
     )
@@ -232,7 +236,7 @@ fun CircularProgressCompose(
             progress = progress,
             modifier = modifier
                 .size(size)
-                .padding(Dimen.smallPadding),
+                .padding(Dimen.exSmallPadding),
             color = color,
             strokeWidth = Dimen.strokeWidth,
         )

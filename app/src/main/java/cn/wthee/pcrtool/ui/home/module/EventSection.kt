@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,15 +17,14 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
-import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -52,6 +50,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 fun InProgressEventSection(
     confirmState: MutableState<Int>,
     actions: NavActions,
+    orderStr: String,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
@@ -92,6 +91,7 @@ fun InProgressEventSection(
         EventType.IN_PROGRESS,
         confirmState,
         actions,
+        orderStr,
         inProgressEventList,
         inProgressStoryEventList,
         inProgressGachaList,
@@ -110,6 +110,7 @@ fun ComingSoonEventSection(
     confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
 ) {
     //预告掉落活动
@@ -148,6 +149,7 @@ fun ComingSoonEventSection(
         EventType.COMING_SOON,
         confirmState,
         actions,
+        orderStr,
         comingSoonEventList,
         comingSoonStoryEventList,
         comingSoonGachaList,
@@ -162,13 +164,14 @@ fun ComingSoonEventSection(
  * 活动
  */
 @Composable
-private fun CalendarEventLayout(
+fun CalendarEventLayout(
     isEditMode: Boolean,
     calendarType: EventType,
     confirmState: MutableState<Int>,
     actions: NavActions,
+    orderStr: String,
     eventList: List<CalendarEvent>,
-    storyEventList: List<EventData>,
+    storyEventList: List<StoryEventData>,
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
@@ -204,7 +207,7 @@ private fun CalendarEventLayout(
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
             rightIconType = if (confirmState.value == calendarType.type) MainIconType.UP else MainIconType.DOWN,
             isEditMode = isEditMode,
-            orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
+            orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
                     editOverviewMenuOrder(id)

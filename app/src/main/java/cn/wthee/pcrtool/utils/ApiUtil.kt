@@ -23,7 +23,7 @@ import javax.net.ssl.X509TrustManager
 object ApiUtil {
 
     private const val TIMEOUT_NORMAL_SECOND = 10L
-    private const val TIMEOUT_DOWNLOAD_SECOND = 60L
+    private const val TIMEOUT_DOWNLOAD_SECOND = 30L
     private const val MAX_RETRY = 3
 
     @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")

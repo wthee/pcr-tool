@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
 import cn.wthee.pcrtool.utils.Constants.mediaType
+import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope

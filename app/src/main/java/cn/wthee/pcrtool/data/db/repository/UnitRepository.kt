@@ -81,6 +81,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         return unitDao.getCount().toString() + if (unknownCount > 0) " (${unknownCount})" else ""
     }
 
+    suspend fun getCountInt() = unitDao.getCount()
+
     suspend fun getCharacterBasicInfo(unitId: Int): CharacterInfo? {
         //额外角色编号
         val exUnitIdList = try {

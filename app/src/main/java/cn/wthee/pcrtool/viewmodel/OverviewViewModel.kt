@@ -87,6 +87,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getUniqueEquipCount() = flow {
         try {
+
             emit(equipmentRepository.getUniqueEquipCount())
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getEquipCount")
@@ -210,7 +211,7 @@ class OverviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val r6Ids = unitRepository.getR6Ids()
-                navViewModel.dbError.postValue(r6Ids.isEmpty())
+                navViewModel.dbError.postValue(unitRepository.getCountInt() == 0)
                 navViewModel.r6Ids.postValue(r6Ids)
             } catch (e: Exception) {
                 LogReportUtil.upload(e, "getR6Ids")

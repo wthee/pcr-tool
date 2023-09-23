@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
@@ -146,7 +146,7 @@ fun StoryEventList(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StoryEventItem(
-    event: EventData,
+    event: StoryEventData,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
@@ -332,7 +332,7 @@ private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
 private fun StoryEventItemPreview() {
     PreviewLayout {
         StoryEventItem(
-            event = EventData(unitIds = "100101-100101-100102"),
+            event = StoryEventData(unitIds = "100101-100101-100102"),
             toCharacterDetail = {},
             toEventEnemyDetail = {},
             toAllPics = { _, _ -> })

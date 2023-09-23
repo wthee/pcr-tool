@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.data.db.view.getIndex
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.BottomSearchBar
@@ -108,8 +109,8 @@ fun UniqueEquipList(
                     MainTabRow(
                         pagerState = pagerState,
                         tabs = arrayListOf(
-                            "(1) ${uniqueEquips1.size}",
-                            "(2) ${uniqueEquips2.size}"
+                            getIndex(1) + uniqueEquips1.size,
+                            getIndex(2) + uniqueEquips2.size
                         ),
                         gridStateList = arrayListOf(gridState1, gridState2),
                         modifier = Modifier
@@ -218,7 +219,7 @@ private fun UniqueEquipItem(
                 }
             ) {
                 Subtitle2(
-                    text = "(${equip.equipId % 10}) ${equip.description.deleteSpace}",
+                    text = getIndex(equip.equipId % 10) + equip.description.deleteSpace,
                     modifier = Modifier.padding(Dimen.mediumPadding),
                     selectable = true
                 )

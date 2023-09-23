@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentCraft
 import cn.wthee.pcrtool.data.db.view.EquipmentEnhanceRate
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipCount
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 
@@ -536,12 +537,16 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-           COUNT(*)
+            equip_slot,
+            COUNT( equip_slot ) AS count 
         FROM
-            unit_unique_equip
+            unit_unique_equip 
+        GROUP BY
+            equip_slot
+        ORDER BY equip_slot
         """
     )
-    suspend fun getUniqueEquipCount(): Int
+    suspend fun getUniqueEquipCount(): List<UniqueEquipCount>
 
 
     /**
@@ -551,10 +556,14 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-           COUNT(*)
+            equip_slot,
+            COUNT( equip_slot ) AS count 
         FROM
-            unit_unique_equipment
+            unit_unique_equipment 
+        GROUP BY
+            equip_slot
+        ORDER BY equip_slot
         """
     )
-    suspend fun getUniqueEquipCountV2(): Int
+    suspend fun getUniqueEquipCountV2(): List<UniqueEquipCount>
 }

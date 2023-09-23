@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +12,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
@@ -28,6 +26,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 fun NewsSection(
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.NEWS.id
@@ -43,7 +42,7 @@ fun NewsSection(
         titleId = R.string.tool_news,
         iconType = MainIconType.NEWS,
         isEditMode = isEditMode,
-        orderStr = MainActivity.navViewModel.overviewOrderData.observeAsState().value ?: "",
+        orderStr = orderStr,
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.utils
+package cn.wthee.pcrtool.workers
 
 import android.app.NotificationManager
 import android.content.Context
@@ -16,7 +16,14 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.FileService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.utils.ApiUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_APK_WORK
+import cn.wthee.pcrtool.utils.DownloadListener
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.NotificationUtil
+import cn.wthee.pcrtool.utils.getString
 import kotlinx.coroutines.coroutineScope
 import okhttp3.ResponseBody
 import retrofit2.Call
