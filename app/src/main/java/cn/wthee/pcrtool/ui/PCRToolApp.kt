@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui
 
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -56,10 +57,14 @@ fun PCRToolApp() {
         val ui = rememberSystemUiController()
         val isLight = !isSystemInDarkTheme()
         ui.setNavigationBarColor(
-            MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surface,
             darkIcons = isLight
         )
-        ui.setStatusBarColor(Color.Transparent, darkIcons = isLight)
+        ui.setStatusBarColor(
+            color = Color.Transparent,
+            darkIcons = isLight
+        )
+
         Home()
     }
 }
@@ -95,7 +100,7 @@ private fun Home(
     }
 
     //首页使用bottom sheet时，关闭时主按钮初始
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
+    LaunchedEffect(bottomSheetNavigator.navigatorSheetState.isVisible) {
         if (MainActivity.navController.currentDestination?.route == NavRoute.HOME) {
             MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
@@ -104,6 +109,7 @@ private fun Home(
 
     Box(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
             .fillMaxSize()
     ) {

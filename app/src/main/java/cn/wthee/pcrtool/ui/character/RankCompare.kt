@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -86,6 +87,7 @@ fun RankCompare(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = Dimen.largePadding)
     ) {
         Column {

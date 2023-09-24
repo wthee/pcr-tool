@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -89,6 +90,7 @@ fun MainSettings() {
 
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = Dimen.mediumPadding)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),

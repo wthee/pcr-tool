@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -146,7 +147,11 @@ fun ExtraEquipList(
                 FilterExtraEquipSheet(colorNum, state, extraEquipmentViewModel)
             }
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
                 if (equips?.isNotEmpty() == true) {
                     LazyColumn(state = scrollState) {
                         items(

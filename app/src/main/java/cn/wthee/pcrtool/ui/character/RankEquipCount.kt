@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.ui.character
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +64,11 @@ fun RankEquipCount(
         starIds.value = FilterEquipment.getStarIdList()
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,11 @@ fun AllQuestList(
     val questList by questListFlow.collectAsState(initial = null)
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         questList?.let {
             QuestPager(
                 it,

@@ -52,7 +52,7 @@ fun EquipSection(
         overviewViewModel.getEquipList(equipSpanCount * 2)
     }
     val initList = arrayListOf<EquipmentBasicInfo>()
-    for (i in 1..equipSpanCount * 2) {
+    for (i in 1..equipSpanCount) {
         initList.add(EquipmentBasicInfo())
     }
     val equipList by equipListFlow.collectAsState(initial = initList)

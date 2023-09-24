@@ -522,7 +522,7 @@ private fun RankSelectItem(
                         selectIndex.value = index
                     },
                     colors = FilterChipDefaults.elevatedFilterChipColors(
-                        containerColor = MaterialTheme.colorScheme.background,
+                        containerColor = MaterialTheme.colorScheme.surface,
                         selectedContainerColor = rankColor
                     ),
                     label = {

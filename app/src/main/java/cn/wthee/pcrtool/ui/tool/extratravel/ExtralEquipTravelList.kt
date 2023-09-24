@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,7 +55,11 @@ fun ExtraEquipTravelList(
     }
     val areaList by areaListFlow.collectAsState(initial = null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         if (areaList?.isNotEmpty() == true) {
             LazyColumn(state = scrollState) {
                 items(areaList!!) {

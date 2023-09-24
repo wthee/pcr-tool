@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -91,7 +92,11 @@ fun TweetList(
     }
     val keywordList by keywordFlow.collectAsState(initial = arrayListOf())
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         LazyColumn(state = scrollState) {
             //头部加载中提示
             item {

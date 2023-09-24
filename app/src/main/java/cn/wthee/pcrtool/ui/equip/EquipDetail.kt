@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.equip
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +81,7 @@ private fun EquipDetail(
 
     Box(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = Dimen.largePadding)
             .fillMaxSize()
     ) {

@@ -3,7 +3,11 @@ package cn.wthee.pcrtool.ui.components
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.ElevatedSuggestionChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -95,7 +99,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         },
         modifier = Modifier.padding(horizontal = Dimen.smallPadding),
         colors = FilterChipDefaults.elevatedFilterChipColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.surface,
             selectedContainerColor = MaterialTheme.colorScheme.primary
         ),
         label = {

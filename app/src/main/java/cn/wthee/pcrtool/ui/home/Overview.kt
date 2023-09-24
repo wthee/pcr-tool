@@ -123,7 +123,11 @@ fun Overview(
     }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             TopBarCompose(isEditMode)
             if (!isEditMode.value) {

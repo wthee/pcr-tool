@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +48,7 @@ fun ExtraEquipTravelQuestDetail(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         questData?.let {
             TravelQuestItem(

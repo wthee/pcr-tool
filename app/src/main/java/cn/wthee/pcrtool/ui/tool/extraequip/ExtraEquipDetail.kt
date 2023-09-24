@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -82,6 +83,7 @@ fun ExtraEquipDetail(
 
     Box(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = Dimen.largePadding)
             .fillMaxSize()
     ) {

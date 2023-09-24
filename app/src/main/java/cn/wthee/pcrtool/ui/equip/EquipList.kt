@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -184,7 +185,11 @@ fun EquipList(
             FilterEquipSheet(colorNum, state, craftIndex)
         }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
             if (equips.isNotEmpty()) {
                 LazyColumn(state = scrollState) {
                     items(items = equipGroupList,

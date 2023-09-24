@@ -152,6 +152,7 @@ fun CharacterList(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(

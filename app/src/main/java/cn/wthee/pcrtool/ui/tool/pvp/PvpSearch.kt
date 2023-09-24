@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -125,7 +126,11 @@ fun PvpSearchCompose(
 
 
 
-    Box {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             //标题
             if (!floatWindow) {
@@ -209,6 +214,7 @@ fun PvpSearchCompose(
                             floatWindow = floatWindow,
                             characterDataList = characterDataList
                         )
+
                         1 -> PvpRecentlyUsedList(
                             spanCount = spanCount,
                             usedListState = usedListState,
@@ -217,6 +223,7 @@ fun PvpSearchCompose(
                             characterDataList = characterDataList,
                             pvpViewModel = pvpViewModel
                         )
+
                         2 -> {
                             PvpFavorites(
                                 favoritesListState = favoritesListState,
@@ -225,6 +232,7 @@ fun PvpSearchCompose(
                                 floatWindow = floatWindow
                             )
                         }
+
                         else -> {
                             PvpSearchHistory(
                                 historyListState = historyListState,
@@ -349,9 +357,11 @@ private fun PvpToSelectList(
                         0 -> {
                             R.drawable.ic_position_0
                         }
+
                         1 -> {
                             R.drawable.ic_position_1
                         }
+
                         else -> {
                             R.drawable.ic_position_2
                         }
@@ -371,7 +381,7 @@ private fun PvpToSelectList(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(if(floatWindow) 5 else 10) {
+            items(if (floatWindow) 5 else 10) {
                 CommonSpacer()
             }
         }

@@ -1,13 +1,23 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,15 +31,27 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.SubButton
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 import kotlin.math.round
 
 
@@ -91,7 +113,11 @@ fun PvpSearchResult(
     val itemWidth = getItemWidth(floatWindow)
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         if (!placeholder) {
             if (result!!.status == 0) {
                 //振动提醒

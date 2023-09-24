@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,7 +84,11 @@ fun GachaList(
     val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         if (gachaList.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,

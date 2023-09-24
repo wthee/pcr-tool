@@ -138,7 +138,11 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         )
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             //预览
             ExpandAnimation(visible = isEditMode) {
@@ -169,7 +173,7 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
                     )
                     .background(
                         shape = if (isEditMode) shapeTop() else RoundedCornerShape(0.dp),
-                        color = if (isEditMode) MaterialTheme.colorScheme.background else Color.Transparent
+                        color = if (isEditMode) MaterialTheme.colorScheme.surface else Color.Transparent
                     ),
                 state = scrollState
             ) {

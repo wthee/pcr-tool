@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -65,8 +67,12 @@ fun BirthdayList(
     val dataList by dataListFlow.collectAsState(initial = arrayListOf())
 
 
-    //日程列表
-    Box(modifier = Modifier.fillMaxSize()) {
+    //生日列表
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         if (dataList.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())

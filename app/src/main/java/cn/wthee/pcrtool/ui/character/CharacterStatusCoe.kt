@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +44,11 @@ fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewMo
     }
     val coeValue by coeValueFlow.collectAsState(initial = null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         coeValue?.let { coe ->
             val coeList = arrayListOf<AttrValue>()
             for (i in 0..16) {

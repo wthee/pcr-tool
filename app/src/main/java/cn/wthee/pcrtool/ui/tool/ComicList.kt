@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -116,7 +117,11 @@ fun ComicList(
     }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         HorizontalPager(
             modifier = Modifier.align(Alignment.Center),
             state = pagerState

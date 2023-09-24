@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,7 +68,11 @@ fun CharacterBasicInfo(
     }
     val homePageCommentList by homePageCommentListFlow.collectAsState(initial = arrayListOf())
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         basicInfo?.let { info ->
             Column(
                 modifier = Modifier
