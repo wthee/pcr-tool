@@ -31,7 +31,7 @@ fun MainTabRow(
     tabs: List<String>,
     scrollable: Boolean = false,
     colorList: ArrayList<Color> = arrayListOf(),
-    gridStateList: ArrayList<LazyGridState> = arrayListOf()
+    gridStateList: ArrayList<LazyGridState>? = null
 ) {
     val contentColor = if (colorList.isNotEmpty()) {
         colorList[pagerState.currentPage]
@@ -82,7 +82,7 @@ private fun MainTabList(
     pagerState: PagerState,
     tabs: List<String>,
     colorList: ArrayList<Color>,
-    gridStateList: ArrayList<LazyGridState> = arrayListOf()
+    gridStateList: ArrayList<LazyGridState>? = null
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -93,7 +93,7 @@ private fun MainTabList(
             onClick = {
                 scope.launch {
                     VibrateUtil(context).single()
-                    if (pagerState.currentPage == index) {
+                    if (pagerState.currentPage == index && gridStateList != null) {
                         gridStateList[index].scrollToItem(0)
                     } else {
                         pagerState.scrollToPage(index)
