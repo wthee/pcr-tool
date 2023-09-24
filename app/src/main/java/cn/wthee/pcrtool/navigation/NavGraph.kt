@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,9 +43,8 @@ import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.story.StoryPicList
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
-import cn.wthee.pcrtool.ui.theme.myExit
-import cn.wthee.pcrtool.ui.theme.myFadeIn
-import cn.wthee.pcrtool.ui.theme.myPopExit
+import cn.wthee.pcrtool.ui.theme.enterTransition
+import cn.wthee.pcrtool.ui.theme.exitTransition
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.ui.tool.AllCharacterRankEquipCount
 import cn.wthee.pcrtool.ui.tool.AllSkillList
@@ -102,8 +100,9 @@ fun NavGraph(
 
 
     ModalBottomSheetLayout(
-        modifier = Modifier.padding(top = statusBarHeight),
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = statusBarHeight),
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator
@@ -112,10 +111,8 @@ fun NavGraph(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             startDestination = NavRoute.HOME,
-            enterTransition = { myFadeIn },
-            exitTransition = { myExit },
-            popEnterTransition = { myFadeIn },
-            popExitTransition = { myPopExit }
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
         ) {
 
             //首页
@@ -469,12 +466,14 @@ fun NavGraph(
 
             //公会战详情
             composable(
-                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.TOOL_CLAN_Battle_ID}}/{${NavRoute.TOOL_CLAN_BOSS_INDEX}}/{${NavRoute.TOOL_CLAN_BOSS_PHASE}}",
+                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.TOOL_CLAN_Battle_ID}}/{${NavRoute.TOOL_CLAN_BOSS_INDEX}}/{${NavRoute.TOOL_CLAN_BOSS_MIN_PHASE}}/{${NavRoute.TOOL_CLAN_BOSS_MAX_PHASE}}",
                 arguments = listOf(navArgument(NavRoute.TOOL_CLAN_Battle_ID) {
                     type = NavType.IntType
                 }, navArgument(NavRoute.TOOL_CLAN_BOSS_INDEX) {
                     type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_PHASE) {
+                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE) {
                     type = NavType.IntType
                 }),
             ) {
@@ -483,7 +482,8 @@ fun NavGraph(
                 ClanBattleDetail(
                     arguments.getInt(NavRoute.TOOL_CLAN_Battle_ID),
                     arguments.getInt(NavRoute.TOOL_CLAN_BOSS_INDEX),
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_PHASE),
+                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE),
+                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE),
                     actions.toSummonDetail
                 )
             }
@@ -870,9 +870,10 @@ class NavActions(navController: NavHostController) {
     /**
      * 公会战 BOSS
      */
-    val toClanBossInfo: (Int, Int, Int) -> Unit = { clanId: Int, index: Int, phase: Int ->
-        navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${phase}")
-    }
+    val toClanBossInfo: (Int, Int, Int, Int) -> Unit =
+        { clanId: Int, index: Int, minPhase: Int, maxPhase: Int ->
+            navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${minPhase}/${maxPhase}")
+        }
 
     /**
      * 卡池

@@ -14,8 +14,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,13 +38,6 @@ fun <T> defaultTween(durationMillis: Int = 400): TweenSpec<T> {
 }
 
 /**
- * 导航返回跳转动画
- */
-val myExit = fadeOut(animationSpec = defaultTween(180))
-val myPopExit = fadeOut(animationSpec = defaultTween(180))
-
-
-/**
  * 页面进入动画：渐入
  */
 val myFadeIn = fadeIn(animationSpec = defaultTween())
@@ -55,22 +46,6 @@ val myFadeIn = fadeIn(animationSpec = defaultTween())
  * 页面退出动画
  */
 val myFadeOut = fadeOut(animationSpec = defaultTween())
-
-/**
- * 页面进入动画：从下向上滚动
- */
-val mySlideIn = slideInVertically(
-    initialOffsetY = { 100 },
-    animationSpec = defaultSpring()
-)
-
-/**
- * 页面退出动画：从上向下滚动
- */
-val mySlideOut = slideOutVertically(
-    targetOffsetY = { 100 },
-    animationSpec = defaultTween()
-) + fadeOut(defaultTween(200))
 
 /**
  * 展开
@@ -88,24 +63,6 @@ val myShrinkIn = shrinkVertically(
     animationSpec = defaultSpring()
 ) + myFadeOut
 
-
-/**
- * 页面进入动画
- */
-@Composable
-fun SlideAnimation(
-    visible: Boolean,
-    modifier: Modifier = Modifier,
-    content: @Composable AnimatedVisibilityScope.() -> Unit
-) {
-    AnimatedVisibility(
-        visible = visible,
-        modifier = modifier,
-        enter = if (animOnFlag) mySlideIn else noAnimIn(),
-        exit = if (animOnFlag) mySlideOut else noAnimOut(),
-        content = content,
-    )
-}
 
 /**
  * 页面淡入动画
@@ -186,3 +143,23 @@ private fun noAnimIn() = fadeIn(animationSpec = defaultTween(80))
  * 减弱退出动画效果
  */
 private fun noAnimOut() = fadeOut(animationSpec = defaultTween(80))
+
+
+/**
+ * 导航动画
+ */
+fun enterTransition() = if (animOnFlag) {
+    scaleIn(
+        initialScale = 0.95f,
+        animationSpec = defaultTween()
+    ) + myFadeIn
+} else {
+    noAnimIn()
+}
+
+
+fun exitTransition() = if (animOnFlag) {
+    myFadeOut
+} else {
+    noAnimOut()
+}
