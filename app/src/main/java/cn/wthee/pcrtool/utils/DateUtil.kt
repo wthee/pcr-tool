@@ -5,7 +5,10 @@ import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
@@ -218,18 +221,6 @@ fun isComingSoon(today: String, startTime: String, fixJpTime: Boolean = true): B
     val sd = if (fixJpTime) startTime.formatTime.fixJpTime else startTime.formatTime
     return today.second(sd) < 0
 }
-
-/**
- * 获取时间戳
- */
-val String.toTimestamp: Long
-    get() {
-        return try {
-            df1.parse(this)!!.time
-        } catch (e: Exception) {
-            0L
-        }
-    }
 
 /**
  * 计算 n 天前的日期

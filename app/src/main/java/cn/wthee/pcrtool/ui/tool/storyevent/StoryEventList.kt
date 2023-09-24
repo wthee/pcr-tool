@@ -85,7 +85,7 @@ fun StoryEventList(
         mutableStateOf(DateRange())
     }
     //剧情活动列表
-    val eventsFlow = remember(dateRange.value.toString()) {
+    val eventsFlow = remember(dateRange.value) {
         eventViewModel.getStoryEventHistory(dateRange.value)
     }
     val events by eventsFlow.collectAsState(initial = arrayListOf())

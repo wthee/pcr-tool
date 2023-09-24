@@ -60,7 +60,7 @@ fun CalendarEventList(
     val dateRange = remember {
         mutableStateOf(DateRange())
     }
-    val dataListFlow = remember {
+    val dataListFlow = remember(dateRange.value) {
         eventViewModel.getCalendarEventList(dateRange.value)
     }
     val dataList by dataListFlow.collectAsState(initial = arrayListOf())

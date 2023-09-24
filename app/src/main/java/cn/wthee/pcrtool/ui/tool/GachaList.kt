@@ -73,7 +73,7 @@ fun GachaList(
         mutableStateOf(DateRange())
     }
     //卡池信息
-    val gachaListFlow = remember {
+    val gachaListFlow = remember(dateRange.value) {
         gachaViewModel.getGachaHistory(dateRange.value)
     }
     val gachaList by gachaListFlow.collectAsState(initial = arrayListOf())
