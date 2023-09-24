@@ -286,13 +286,19 @@ private fun getMatchCount(
     it: QuestDetail,
     searchEquipIdList: List<Int>
 ): Int {
+    //按掉落数量
     var searchMatchCount = 0
+    //掉落概率
+    var searchMatchOdd = 0
+
     it.getAllOdd().forEach { oddData ->
         if (searchEquipIdList.contains(oddData.equipId)) {
             searchMatchCount++
+            searchMatchOdd += oddData.odd
         }
     }
-    return searchMatchCount
+
+    return searchMatchCount * 1000 + searchMatchOdd
 }
 
 /**
