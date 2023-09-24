@@ -242,7 +242,10 @@ class SkillViewModel @Inject constructor(
                 val infoList = getSkills(
                     data.getEnemySkillId(),
                     enemyParameterPro.getSkillLv(),
-                    maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr),
+                    maxOf(
+                        maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr),
+                        enemyParameterPro.partAtk
+                    ),
                     enemyParameterPro.unitId
                 )
                 emit(infoList)
