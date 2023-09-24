@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -11,6 +12,7 @@ import cn.wthee.pcrtool.R
 /**
  * 发起添加群流程
  */
+@SuppressLint("IntentWithNullActionLaunch")
 fun joinQQGroup(context: Context) {
     val intent = Intent()
     intent.data =

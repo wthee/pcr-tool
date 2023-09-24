@@ -1,10 +1,23 @@
 package cn.wthee.pcrtool.ui.theme
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 
 /**
@@ -25,10 +38,9 @@ fun <T> defaultTween(durationMillis: Int = 400): TweenSpec<T> {
 }
 
 /**
- * 导航返回跳转动画
+ * 页面进入动画：渐入
  */
-val myExit = fadeOut(animationSpec = defaultTween(180))
-val myPopExit = fadeOut(animationSpec = defaultTween(180))
+val myFadeIn = fadeIn(animationSpec = defaultTween())
 
 /**
  * 页面退出动画
@@ -36,25 +48,12 @@ val myPopExit = fadeOut(animationSpec = defaultTween(180))
 val myFadeOut = fadeOut(animationSpec = defaultTween())
 
 /**
- * 页面进入动画：从下向上滚动
- */
-val mySlideIn = slideInVertically(
-    initialOffsetY = { it },
-    animationSpec = defaultSpring()
-)
-
-/**
- * 页面进入动画：渐入
- */
-val myFadeIn = fadeIn(animationSpec = defaultTween())
-
-/**
  * 展开
  */
 val myExpandIn = expandVertically(
     expandFrom = Alignment.Top,
     animationSpec = defaultSpring()
-) + fadeIn(animationSpec = defaultSpring())
+) + myFadeIn
 
 /**
  * 折叠
@@ -62,25 +61,8 @@ val myExpandIn = expandVertically(
 val myShrinkIn = shrinkVertically(
     shrinkTowards = Alignment.Top,
     animationSpec = defaultSpring()
-) + fadeOut(animationSpec = defaultSpring())
+) + myFadeOut
 
-/**
- * 页面进入动画
- */
-@Composable
-fun SlideAnimation(
-    visible: Boolean,
-    modifier: Modifier = Modifier,
-    content: @Composable AnimatedVisibilityScope.() -> Unit
-) {
-    AnimatedVisibility(
-        visible = visible,
-        modifier = modifier,
-        enter = if (animOnFlag) mySlideIn else noAnimIn(),
-        exit = if (animOnFlag) myFadeOut else noAnimOut(),
-        content = content,
-    )
-}
 
 /**
  * 页面淡入动画
@@ -118,6 +100,40 @@ fun ExpandAnimation(
     )
 }
 
+
+/**
+ * 缩放动画
+ */
+@Composable
+fun ScaleBottomEndAnimation(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = if (animOnFlag) {
+            scaleIn(
+                animationSpec = defaultTween(300),
+                transformOrigin = TransformOrigin(1f, 1f)
+            ) + myFadeIn
+        } else {
+            noAnimIn()
+        },
+        exit = if (animOnFlag) {
+            scaleOut(
+                animationSpec = defaultTween(180),
+                transformOrigin = TransformOrigin(1f, 1f),
+                targetScale = 0.6f
+            ) + fadeOut(defaultTween(180))
+        } else {
+            noAnimOut()
+        },
+        content = content,
+    )
+}
+
 /**
  * 减弱进入动画效果
  */
@@ -127,3 +143,23 @@ private fun noAnimIn() = fadeIn(animationSpec = defaultTween(80))
  * 减弱退出动画效果
  */
 private fun noAnimOut() = fadeOut(animationSpec = defaultTween(80))
+
+
+/**
+ * 导航动画
+ */
+fun enterTransition() = if (animOnFlag) {
+    scaleIn(
+        initialScale = 0.95f,
+        animationSpec = defaultTween()
+    ) + myFadeIn
+} else {
+    noAnimIn()
+}
+
+
+fun exitTransition() = if (animOnFlag) {
+    myFadeOut
+} else {
+    noAnimOut()
+}

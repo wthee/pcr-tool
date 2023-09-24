@@ -18,8 +18,6 @@
     <string name="title_position">位置</string>
     <string name="skill_cooltime">冷却时间：%s秒</string>
     <string name="skill_cast_time">准备时间：%s秒</string>
-    <string name="show_skill_cast_time">显示准备时间</string>
-    <string name="hide_skill_cast_time">隐藏准备时间</string>
     <string name="cast_time">%s秒</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
@@ -40,8 +38,8 @@
     <string name="skill_loop">技能循环</string>
     <string name="title_unlock_6">★6解放</string>
     <string name="rank_select">RANK选择</string>
-    <string name="rank_compare">对比</string>
-    <string name="calc_equip_count">统计</string>
+    <string name="rank_compare">RANK对比</string>
+    <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_basic_info">资料</string>
     <string name="basic_info">基本信息</string>
@@ -61,8 +59,11 @@
     <string name="title_unit_level">等级</string>
     <string name="order_character_detail">未选中模块显示在次要页面（退出编辑后滑动切换）</string>
     <string name="character_card">角色卡片</string>
-    <string name="character_tool">功能（资料、模型等）</string>
+    <string name="character_other_tool">其他功能（装备统计等）</string>
+    <string name="character_tool">功能（资料、立绘、模型）</string>
     <string name="character_power">战力</string>
+    <string name="tip_skill_loop">技能循环（未选中时显示悬浮按钮）</string>
+    <string name="character_icon_info">角色图标</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>
@@ -100,8 +101,6 @@
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
-    <!--模糊查询日历日程信息-->
-    <string name="query_calendar_event">服：</string>
 
 
     <!-- 筛选  -->
@@ -156,7 +155,7 @@
     <string name="tool_calendar_event">活动记录</string>
     <string name="tool_website">收藏夹</string>
     <string name="tool_clan">公会战</string>
-    <string name="tool_clan_no_boss">公会战（BOSS 信息暂未实装）</string>
+    <string name="tool_clan_no_boss">BOSS 信息暂未实装</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>
     <string name="tool_gacha">卡池</string>
@@ -164,7 +163,6 @@
     <string name="tool_birthday">生日</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
-    <string name="read_news">查看公告</string>
     <string name="news_title">公告标题</string>
     <string name="quest">主线</string>
     <string name="jjc">竞技场</string>
@@ -172,6 +170,7 @@
     <string name="tower">露娜塔</string>
     <string name="sp_dungeon">特殊地下城</string>
     <string name="fault">次元断层</string>
+    <string name="colosseum">斗技场</string>
     <string name="result">数值变化</string>
     <string name="character_name">角色名</string>
     <string name="twitter">查看原文</string>
@@ -180,8 +179,6 @@
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
     <string name="comic_input_hint">输入跳转，如：382</string>
-    <string name="youtube">YouTube</string>
-    <string name="hibiki">HiBiKi</string>
     <string name="other">其他</string>
     <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
@@ -254,10 +251,7 @@
     <!--操作-->
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
-    <string name="close">关闭</string>
     <string name="reset">重置</string>
-    <string name="add_to_calendar">添加至系统日历</string>
-    <string name="copy_event">复制活动信息</string>
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
@@ -280,17 +274,12 @@
     <string name="drop">掉落量</string>
     <string name="mana">玛那掉落量</string>
     <string name="multiple">%s倍</string>
-    <string name="title_drop_event">▶ 掉落活动%s</string>
-    <string name="title_story_event">▶ 剧情活动%s</string>
-    <string name="title_gacha_event">▶ 卡池信息%s</string>
-    <string name="title_free_gacha_event">▶ 免费十连%s</string>
-    <string name="title_character_birthday_event">▶ 角色生日%s</string>
+
     <string name="free_gacha_content">「免费十连」%d 次</string>
     <string name="story_event_sub">支线</string>
     <string name="story_event_re">复刻</string>
     <string name="story_event_preview">预告</string>
     <string name="story_event_new">活动</string>
-    <string name="title_clan_battle_event">▶ 公会战%s</string>
     <string name="clan_battle_month">%d月公会战</string>
 
     <!--战力系数-->
@@ -401,11 +390,6 @@
     <string name="color_orange">橙</string>
     <string name="color_cyan">青</string>
 
-    <!--日历操作相关-->
-    <string name="calendar_update_success">已更新%d项日程~</string>
-    <string name="calendar_exist">日程已存在~</string>
-    <string name="calendar_not_found">无法添加日程，未找到日历程序~</string>
-    <string name="calendar_add_failure">日程添加失败~</string>
 
     <!--中文数字-->
     <string name="no1">一</string>
@@ -591,7 +575,7 @@
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
     <string name="skill_action_type_desc_7">锁定%s</string>
     <string name="skill_action_speed_change">速度额外%s初始值的 %s 倍</string>
-    <string name="skill_action_speed_multipl">速度变更为初始值的 %s 倍</string>
+    <string name="skill_action_speed_multiple">速度变更为初始值的 %s 倍</string>
     <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>
@@ -820,10 +804,10 @@
     <string name="install_apk_error">安装失败</string>
     <string name="title_download_apk">正在下载最新安装包</string>
     <string name="download_apk">立即更新</string>
-    <string name="download_apk_from_coolapk">从酷安下载</string>
     <string name="download_apk_from_github">从Github更新</string>
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
+    <string name="db_error">数据异常</string>
 
 </resources>

@@ -2,13 +2,18 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +31,6 @@ import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanBattleViewModel
 import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 
-
 /**
  * 公会战 BOSS 详情
  * @see [cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail]
@@ -36,6 +40,7 @@ import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 fun ClanBattleDetail(
     clanBattleId: Int,
     index: Int,
+    minPhase: Int,
     maxPhase: Int,
     toSummonDetail: (Int, Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel(),
@@ -43,11 +48,14 @@ fun ClanBattleDetail(
 ) {
     //阶段选择状态
     val phaseIndex = remember {
-        mutableStateOf(maxPhase - 1)
+        mutableIntStateOf(maxPhase - minPhase)
     }
-    val clanBattleInfo =
-        clanBattleViewModel.getAllClanBattleData(clanBattleId, phaseIndex.value + 1)
-            .collectAsState(initial = null).value
+    //公会战基本信息
+    val clanBattleInfoFlow = remember(clanBattleId, phaseIndex.intValue) {
+        clanBattleViewModel.getAllClanBattleData(clanBattleId, phaseIndex.intValue + minPhase)
+    }
+    val clanBattleInfo by clanBattleInfoFlow.collectAsState(initial = null)
+
     val pagerState =
         rememberPagerState(initialPage = index) { 5 }
 
@@ -61,15 +69,18 @@ fun ClanBattleDetail(
         clanBattleInfo?.let { clanBattleList ->
             //该期公会战数据
             val clanBattleValue = clanBattleList[0]
-
             //五个Boss信息
-            val bossDataList =
-                enemyViewModel.getAllBossAttr(clanBattleValue.enemyIdList).collectAsState(
-                    initial = arrayListOf()
-                ).value
+            val bossDataListFlow = remember(clanBattleValue) {
+                enemyViewModel.getAllBossAttr(clanBattleValue.enemyIdList)
+            }
+            val bossDataList by bossDataListFlow.collectAsState(initial = arrayListOf())
             //所有部位信息
-            val partEnemyMap = enemyViewModel.getMultiEnemyAttr(clanBattleValue.targetCountDataList)
-                .collectAsState(initial = hashMapOf()).value
+            val partEnemyMapFlow = remember(clanBattleValue) {
+                enemyViewModel.getMultiEnemyAttr(clanBattleValue.targetCountDataList)
+            }
+            val partEnemyMap by partEnemyMapFlow.collectAsState(initial = hashMapOf())
+
+
             //图标列表
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -103,10 +114,10 @@ fun ClanBattleDetail(
 
             //阶段选择
             val tabs = arrayListOf<String>()
-            for (i in 1..maxPhase) {
+            for (i in minPhase..maxPhase) {
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
-            val sectionColor = getSectionTextColor(section = phaseIndex.value + 1)
+            val sectionColor = getSectionTextColor(section = phaseIndex.intValue + 1)
             SelectTypeFab(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,

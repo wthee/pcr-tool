@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -77,14 +79,20 @@ private fun CharacterSummonDetail(
 ) {
     val property = CharacterProperty(level = level, rank = rank, rarity = rarity)
     //基本信息
-    val basicInfo = summonViewModel.getSummonData(unitId).collectAsState(initial = null).value
+    val basicInfoFlow = remember {
+        summonViewModel.getSummonData(unitId)
+    }
+    val basicInfo by basicInfoFlow.collectAsState(initial = null)
     //数值信息
-    val attrs =
-        attrViewModel.getCharacterInfo(unitId, property).collectAsState(initial = null).value
+    val attrsFlow = remember {
+        attrViewModel.getCharacterInfo(unitId, property)
+    }
+    val attrs by attrsFlow.collectAsState(initial = null)
     //技能信息
-    val loopData =
+    val loopDataFlow = remember {
         skillViewModel.getCharacterSkillLoops(unitId)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val loopData by loopDataFlow.collectAsState(initial = arrayListOf())
 
 
     Column(

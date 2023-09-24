@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.WEIGHT_DIALOG
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.*
@@ -141,9 +140,10 @@ fun DateRangePickerCompose(
                 .padding(
                     start = Dimen.fabMargin,
                     end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
+                    top = Dimen.largePadding
                 )
-                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 //点击展开布局
@@ -169,7 +169,6 @@ fun DateRangePickerCompose(
                             horizontal = Dimen.mediumPadding,
                             vertical = Dimen.largePadding
                         )
-                        .fillMaxHeight(WEIGHT_DIALOG)
                         .imePadding(),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.End
@@ -177,7 +176,7 @@ fun DateRangePickerCompose(
                     //日期选择
                     DateRangePicker(
                         state = dateRangePickerState,
-                        showModeToggle = false,
+                        showModeToggle = true,
                         title = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 //标题
@@ -269,14 +268,14 @@ fun RankRangePickerCompose(
 
     //选择
     val selectIndex0 = remember {
-        mutableStateOf(maxRank - rank0.value)
+        mutableIntStateOf(maxRank - rank0.value)
     }
     val selectIndex1 = remember {
-        mutableStateOf(maxRank - rank1.value)
+        mutableIntStateOf(maxRank - rank1.value)
     }
 
-    rank0.value = maxRank - selectIndex0.value
-    rank1.value = maxRank - selectIndex1.value
+    rank0.value = maxRank - selectIndex0.intValue
+    rank1.value = maxRank - selectIndex1.intValue
 
 
     //关闭监听
@@ -303,7 +302,7 @@ fun RankRangePickerCompose(
                     end = Dimen.fabMargin,
                     bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                 )
-                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 //点击展开布局
@@ -337,7 +336,7 @@ fun RankRangePickerCompose(
                         selectIndex = selectIndex0,
                         rankList = rankList,
                         targetType = RankSelectType.DEFAULT,
-                        currentRank = maxRank - selectIndex0.value
+                        currentRank = maxRank - selectIndex0.intValue
                     )
                     //目标
                     MainText(
@@ -348,7 +347,7 @@ fun RankRangePickerCompose(
                         selectIndex = selectIndex1,
                         rankList = rankList,
                         targetType = type,
-                        currentRank = maxRank - selectIndex0.value
+                        currentRank = maxRank - selectIndex0.intValue
                     )
                 }
             } else {
@@ -481,7 +480,7 @@ data class DateRange(
  * 获取日期选择年份范围
  */
 private fun getDatePickerYearRange(): IntRange {
-    val maxYear = getYear() + 1
+    val maxYear = getYear()
     return IntRange(2018, maxYear)
 }
 
@@ -522,7 +521,7 @@ private fun RankSelectItem(
                         selectIndex.value = index
                     },
                     colors = FilterChipDefaults.elevatedFilterChipColors(
-                        containerColor = MaterialTheme.colorScheme.background,
+                        containerColor = MaterialTheme.colorScheme.surface,
                         selectedContainerColor = rankColor
                     ),
                     label = {

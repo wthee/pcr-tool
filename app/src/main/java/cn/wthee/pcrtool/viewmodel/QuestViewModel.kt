@@ -23,8 +23,8 @@ class QuestViewModel @Inject constructor(
      */
     fun getQuestList() = flow {
         try {
-            val infos = questRepository.getEquipDropQuestList(0)
-            emit(infos)
+            val info = questRepository.getEquipDropQuestList(0)
+            emit(info)
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getQuestList")
         }

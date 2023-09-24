@@ -4,7 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.BirthdayData
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
+import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
+import cn.wthee.pcrtool.data.db.view.EventStoryDetail
+import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 
 /**
  * 活动记录 DAO
@@ -57,7 +62,7 @@ interface EventDao {
             LIMIT 0,:limit
         """
     )
-    suspend fun getAllEvents(limit: Int): List<EventData>
+    suspend fun getAllEvents(limit: Int): List<StoryEventData>
 
     /**
      * 获取活动剧情列表
@@ -273,6 +278,27 @@ interface EventDao {
     """
     )
     suspend fun getClanBattleEvent(limit: Int): List<ClanBattleEvent>
+
+    /**
+     * 获取斗技场最新日程
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            -3 AS type,
+            0 AS value,
+            start_time,
+            end_time
+        FROM
+            colosseum_schedule_data 
+        ORDER BY
+            colosseum_schedule_data.schedule_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getColosseumEvent(limit: Int): List<CalendarEvent>
 
     /**
      * 获取生日信息

@@ -332,7 +332,7 @@ data class SkillActionDetail(
                                 )
                                 getString(R.string.skill_action_speed_change, type, value)
                             } else {
-                                getString(R.string.skill_action_speed_multipl, value)
+                                getString(R.string.skill_action_speed_multiple, value)
                             }
                         if (actionType == SkillActionType.SPEED_FIELD.type) {
                             getString(
@@ -1073,7 +1073,7 @@ data class SkillActionDetail(
                 }
             }
             // 34、102：伤害递增
-            SkillActionType.ACCUMULATIVE_DAMAGE, SkillActionType.ACCUMULATIVE_DAMAGE_v2 -> {
+            SkillActionType.ACCUMULATIVE_DAMAGE, SkillActionType.ACCUMULATIVE_DAMAGE_V2 -> {
                 val value = getValueText(2, actionValue2, actionValue3)
                 val limit =
                     getString(R.string.skill_action_limit_int, actionValue4.toInt())
@@ -1096,7 +1096,7 @@ data class SkillActionDetail(
                 }
             }
             // 101：特殊标记v2
-            SkillActionType.SEAL_v2 -> {
+            SkillActionType.SEAL_V2 -> {
                 val count = abs(actionDetail2)
                 if (actionDetail2 >= 0) {
                     val time = getTimeText(3, actionValue3, hideIndex = true)

@@ -1,12 +1,27 @@
 package cn.wthee.pcrtool.ui.tool.storyevent
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,23 +30,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.EventData
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.DateRange
+import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
+import cn.wthee.pcrtool.ui.components.EventTitleCountdown
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.RATIO_BANNER
+import cn.wthee.pcrtool.ui.components.RATIO_TEASER
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_TEASER
+import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.second
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 剧情活动
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StoryEventList(
     scrollState: LazyStaggeredGridState,
@@ -40,15 +79,23 @@ fun StoryEventList(
     toAllPics: (Int, Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    //日期选择
     val dateRange = remember {
         mutableStateOf(DateRange())
     }
-    val events = eventViewModel.getStoryEventHistory(dateRange.value)
-        .collectAsState(initial = arrayListOf()).value
-    val coroutineScope = rememberCoroutineScope()
+    //剧情活动列表
+    val eventsFlow = remember(dateRange.value) {
+        eventViewModel.getStoryEventHistory(dateRange.value)
+    }
+    val events by eventsFlow.collectAsState(initial = arrayListOf())
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         if (events.isNotEmpty()) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
@@ -100,12 +147,12 @@ fun StoryEventList(
 }
 
 /**
- * 剧情活动
+ * 剧情活动item
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StoryEventItem(
-    event: EventData,
+    event: StoryEventData,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit
@@ -291,7 +338,7 @@ private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
 private fun StoryEventItemPreview() {
     PreviewLayout {
         StoryEventItem(
-            event = EventData(unitIds = "100101-100101-100102"),
+            event = StoryEventData(unitIds = "100101-100101-100102"),
             toCharacterDetail = {},
             toEventEnemyDetail = {},
             toAllPics = { _, _ -> })

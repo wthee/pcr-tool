@@ -11,7 +11,8 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "clan_battle_id") var clanBattleId: Int = -1,
     @ColumnInfo(name = "release_month") var releaseMonth: Int = 12,
     @ColumnInfo(name = "start_time") var startTime: String = "2021-01-01",
-    @ColumnInfo(name = "max_phase") var phase: Int = 1,
+    @ColumnInfo(name = "min_phase") var minPhase: Int = 1,
+    @ColumnInfo(name = "max_phase") var maxPhase: Int = 1,
     @ColumnInfo(name = "enemy_ids") var enemyIds: String = "",
     @ColumnInfo(name = "unit_ids") var unitIds: String = "",
     @Ignore

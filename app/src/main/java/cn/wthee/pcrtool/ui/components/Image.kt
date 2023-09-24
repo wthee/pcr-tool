@@ -43,7 +43,6 @@ const val RATIO = 16 / 9f
 
 // 741 * 1200
 const val RATIO_COMIC = 0.64f
-const val RATIO_COMMON = 371 / 208f
 const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
 

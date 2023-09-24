@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,8 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,13 +35,18 @@ fun CharacterExtraEquip(
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
 
-    val equipList = extraEquipmentViewModel.getCharacterExtraEquipList(unitId).collectAsState(
-        initial = null
-    ).value
+    val equipListFlow = remember(unitId) {
+        extraEquipmentViewModel.getCharacterExtraEquipList(unitId)
+    }
+    val equipList by equipListFlow.collectAsState(initial = null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if(equipList != null){
-            if (equipList.isEmpty()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        equipList?.let { list ->
+            if (list.isEmpty()) {
                 CenterTipText(
                     stringResource(
                         id = R.string.no_data,
@@ -55,7 +64,7 @@ fun CharacterExtraEquip(
                                 .fillMaxWidth()
                         )
                     }
-                    items(equipList) {
+                    items(list) {
                         ExtraEquipGroup(
                             it.category,
                             it.categoryName,
@@ -69,7 +78,9 @@ fun CharacterExtraEquip(
                     }
                 }
             }
-        }else {
+        }
+
+        if (equipList == null) {
             //功能未实装
             CenterTipText(
                 stringResource(

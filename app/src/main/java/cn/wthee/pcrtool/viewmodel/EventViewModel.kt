@@ -60,6 +60,7 @@ class EventViewModel @Inject constructor(
             data += eventRepository.getTowerEvent(Int.MAX_VALUE)
             data += eventRepository.getSpDungeonEvent(Int.MAX_VALUE)
             data += eventRepository.getFaultEvent(Int.MAX_VALUE)
+            data += eventRepository.getColosseumEvent(Int.MAX_VALUE)
 
             var list = data.toList()
             if (dateRange.hasFilter()) {

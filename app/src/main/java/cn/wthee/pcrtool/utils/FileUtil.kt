@@ -92,14 +92,6 @@ object FileUtil {
     }
 
     /**
-     * 数据库是否需要判断
-     */
-    fun dbSizeError(type: RegionType): Boolean {
-        val dbFile = File(getDatabasePath(type))
-        return dbFile.exists() && dbFile.length() < 1 * 1024 * 1024
-    }
-
-    /**
      * 删除数据库文件
      */
     fun deleteBr(type: Int) {

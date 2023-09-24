@@ -1,25 +1,51 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.components.CommonGroupTitle
+import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainTabRow
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
@@ -35,18 +61,25 @@ fun AllQuestList(
     searchEquipIds: String = "",
     questViewModel: QuestViewModel = hiltViewModel(),
 ) {
-    val questList = questViewModel.getQuestList().collectAsState(initial = null).value
+    val questListFlow = remember {
+        questViewModel.getQuestList()
+    }
+    val questList by questListFlow.collectAsState(initial = null)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (questList != null) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        questList?.let {
             QuestPager(
-                questList,
+                it,
                 0,
                 searchEquipIds.intArrayList
             )
         }
     }
-
 }
 
 
@@ -64,7 +97,7 @@ fun QuestPager(
     val flow = remember(equipId) {
         randomEquipAreaViewModel.getEquipArea(equipId)
     }
-    val randomDropResponseData = flow.collectAsState(initial = null).value
+    val randomDropResponseData by flow.collectAsState(initial = null)
 
     var pagerCount = 0
     //tab文本
@@ -253,13 +286,19 @@ private fun getMatchCount(
     it: QuestDetail,
     searchEquipIdList: List<Int>
 ): Int {
+    //按掉落数量
     var searchMatchCount = 0
+    //掉落概率
+    var searchMatchOdd = 0
+
     it.getAllOdd().forEach { oddData ->
         if (searchEquipIdList.contains(oddData.equipId)) {
             searchMatchCount++
+            searchMatchOdd += oddData.odd
         }
     }
-    return searchMatchCount
+
+    return searchMatchCount * 1000 + searchMatchOdd
 }
 
 /**
@@ -366,20 +405,6 @@ private fun EquipWithOddCompose(
     oddData: EquipmentIdWithOdds,
     searchEquipIdList: List<Int>
 ) {
-    var dataState by remember { mutableStateOf(oddData) }
-    if (dataState != oddData) {
-        dataState = oddData
-    }
-    val equipIcon: @Composable () -> Unit by remember {
-        mutableStateOf(
-            {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance()
-                        .getEquipPic(dataState.equipId)
-                )
-            }
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -388,10 +413,13 @@ private fun EquipWithOddCompose(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val selected =
-            selectedId == dataState.equipId || searchEquipIdList.contains(dataState.equipId)
+            selectedId == oddData.equipId || searchEquipIdList.contains(oddData.equipId)
         Box(contentAlignment = Alignment.Center) {
-            equipIcon()
-            if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && dataState.odd == 0) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getEquipPic(oddData.equipId)
+            )
+            if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd == 0) {
                 SelectText(
                     selected = selected,
                     text = if (selected) stringResource(id = R.string.selected_mark) else "",
@@ -399,11 +427,15 @@ private fun EquipWithOddCompose(
                 )
             }
         }
-        if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && dataState.odd > 0) {
+        if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd > 0) {
             SelectText(
                 selected = selected,
-                text = "${dataState.odd}%"
+                text = "${oddData.odd}%"
             )
+        }
+
+        if (BuildConfig.DEBUG) {
+            CaptionText(text = oddData.equipId.toString())
         }
     }
 }

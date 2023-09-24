@@ -51,6 +51,7 @@ fun MainSmallFab(
     text: String = "",
     hasNavBarPadding: Boolean = true,
     extraContent: (@Composable () -> Unit)? = null,
+    vibrate: Boolean = true,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -62,12 +63,14 @@ fun MainSmallFab(
     val isTextFab = text != "" && extraContent == null
 
     if (isTextFab) {
-        mModifier = mModifier.padding(horizontal = Dimen.textfabMargin)
+        mModifier = mModifier.padding(horizontal = Dimen.textFabMargin)
     }
 
     SmallFloatingActionButton(
         onClick = {
-            VibrateUtil(context).single()
+            if (vibrate) {
+                VibrateUtil(context).single()
+            }
             onClick()
         },
         shape = CircleShape,
@@ -156,7 +159,7 @@ fun SelectTypeFab(
                 .padding(paddingValues)
                 .padding(
                     start = Dimen.mediumPadding,
-                    end = Dimen.textfabMargin,
+                    end = Dimen.textFabMargin,
                     top = Dimen.mediumPadding,
                 ),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,

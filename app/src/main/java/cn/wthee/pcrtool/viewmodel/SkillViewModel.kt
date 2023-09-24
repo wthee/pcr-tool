@@ -124,7 +124,7 @@ class SkillViewModel @Inject constructor(
         atk: Int,
         unitId: Int
     ): MutableList<SkillDetail> {
-        val infos = mutableListOf<SkillDetail>()
+        val infoList = mutableListOf<SkillDetail>()
         //技能编号信息
         val unitSkillData = skillRepository.getUnitSkill(unitId)
 
@@ -162,11 +162,11 @@ class SkillViewModel @Inject constructor(
                     if(unitSkillData != null){
                         info.skillIndexType = unitSkillData.getSkillIndexType(skillId)
                     }
-                    infos.add(info)
+                    infoList.add(info)
                 }
             }
         }
-        return infos
+        return infoList
     }
 
     /**
@@ -242,7 +242,10 @@ class SkillViewModel @Inject constructor(
                 val infoList = getSkills(
                     data.getEnemySkillId(),
                     enemyParameterPro.getSkillLv(),
-                    maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr),
+                    maxOf(
+                        maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr),
+                        enemyParameterPro.partAtk
+                    ),
                     enemyParameterPro.unitId
                 )
                 emit(infoList)

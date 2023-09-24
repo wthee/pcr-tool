@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -111,13 +112,13 @@ import kotlinx.coroutines.launch
 fun CharacterList(
     scrollState: LazyGridState,
     toDetail: (Int) -> Unit,
-    viewModel: CharacterViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //筛选状态
-    val filter = navViewModel.filterCharacter.observeAsState()
+    val filter = navViewModel.filterCharacter.observeAsState().value ?: FilterCharacter()
     // sheet 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -131,11 +132,13 @@ fun CharacterList(
         keyboardController?.hide()
     }
 
-    filter.value?.let { filterValue ->
-        filterValue.starIds = FilterCharacter.getStarIdList()
+    filter.starIds = FilterCharacter.getStarIdList()
+
+    //角色列表
+    val characterListFlow = remember(filter.hashCode()) {
+        characterViewModel.getCharacterInfoList(filter)
     }
-    val characterList =
-        viewModel.getCharacterInfoList(filter.value).collectAsState(initial = arrayListOf()).value
+    val characterList by characterListFlow.collectAsState(initial = arrayListOf())
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -149,6 +152,7 @@ fun CharacterList(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             if (characterList.isNotEmpty()) {
                 LazyVerticalGrid(
@@ -164,7 +168,7 @@ fun CharacterList(
                         CharacterItem(
                             unitId = it.id,
                             character = it,
-                            loved = filter.value!!.starIds.contains(it.id),
+                            loved = filter.starIds.contains(it.id),
                             modifier = Modifier.padding(Dimen.mediumPadding),
                         ) {
                             toDetail(it.id)
@@ -195,7 +199,7 @@ fun CharacterList(
                     }
                 }
                 //重置筛选
-                if (filter.value != null && filter.value!!.isFilter()) {
+                if (filter.isFilter()) {
                     MainSmallFab(
                         iconType = MainIconType.RESET
                     ) {
@@ -545,59 +549,65 @@ private fun FilterCharacterSheet(
     filter.name = textState.value
     //排序类型筛选
     val sortTypeIndex = remember {
-        mutableStateOf(filter.sortType.type)
+        mutableIntStateOf(filter.sortType.type)
     }
-    filter.sortType = getSortType(sortTypeIndex.value)
+    filter.sortType = getSortType(sortTypeIndex.intValue)
 
     //排序方式筛选
     val sortAscIndex = remember {
-        mutableStateOf(if (filter.asc) 0 else 1)
+        mutableIntStateOf(if (filter.asc) 0 else 1)
     }
-    filter.asc = sortAscIndex.value == 0
+    filter.asc = sortAscIndex.intValue == 0
 
     //收藏筛选
     val loveIndex = remember {
-        mutableStateOf(if (filter.all) 0 else 1)
+        mutableIntStateOf(if (filter.all) 0 else 1)
     }
-    filter.all = loveIndex.value == 0
+    filter.all = loveIndex.intValue == 0
 
     //六星筛选
     val r6Index = remember {
-        mutableStateOf(filter.r6)
+        mutableIntStateOf(filter.r6)
     }
-    filter.r6 = r6Index.value
+    filter.r6 = r6Index.intValue
 
     //位置筛选
     val positionIndex = remember {
-        mutableStateOf(filter.position)
+        mutableIntStateOf(filter.position)
     }
-    filter.position = positionIndex.value
+    filter.position = positionIndex.intValue
 
     //攻击类型
     val atkIndex = remember {
-        mutableStateOf(filter.atk)
+        mutableIntStateOf(filter.atk)
     }
-    filter.atk = atkIndex.value
+    filter.atk = atkIndex.intValue
 
     //公会
-    val guildList = characterViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
-    val guildIndex = remember {
-        mutableStateOf(filter.guild)
+    val guildListFlow = remember {
+        characterViewModel.getGuilds()
     }
-    filter.guild = guildIndex.value
+    val guildList by guildListFlow.collectAsState(initial = arrayListOf())
+    val guildIndex = remember {
+        mutableIntStateOf(filter.guild)
+    }
+    filter.guild = guildIndex.intValue
 
     //种族
-    val raceList = characterViewModel.getRaces().collectAsState(initial = arrayListOf()).value
-    val raceIndex = remember {
-        mutableStateOf(filter.race)
+    val raceListFlow = remember {
+        characterViewModel.getRaces()
     }
-    filter.race = raceIndex.value
+    val raceList by raceListFlow.collectAsState(initial = arrayListOf())
+    val raceIndex = remember {
+        mutableIntStateOf(filter.race)
+    }
+    filter.race = raceIndex.intValue
 
     //限定类型
     val typeIndex = remember {
-        mutableStateOf(filter.type)
+        mutableIntStateOf(filter.type)
     }
-    filter.type = typeIndex.value
+    filter.type = typeIndex.intValue
 
     //确认操作
     val ok = navViewModel.fabOKClick.observeAsState().value ?: false
@@ -608,22 +618,23 @@ private fun FilterCharacterSheet(
         //点击重置
         if (reset) {
             textState.value = ""
-            sortTypeIndex.value = 0
-            sortAscIndex.value = 1
-            loveIndex.value = 0
-            r6Index.value = 0
-            positionIndex.value = 0
-            atkIndex.value = 0
-            guildIndex.value = 0
-            typeIndex.value = 0
-            raceIndex.value = 0
+            sortTypeIndex.intValue = 0
+            sortAscIndex.intValue = 1
+            loveIndex.intValue = 0
+            r6Index.intValue = 0
+            positionIndex.intValue = 0
+            atkIndex.intValue = 0
+            guildIndex.intValue = 0
+            typeIndex.intValue = 0
+            raceIndex.intValue = 0
             navViewModel.resetClick.postValue(false)
-            navViewModel.filterCharacter.postValue(FilterCharacter())
+            navViewModel.filterCharacter.postValue(null)
+        } else {
+            navViewModel.filterCharacter.postValue(filter)
         }
         //点击确认
         if (ok) {
             sheetState.hide()
-            navViewModel.filterCharacter.postValue(filter)
             navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
@@ -747,7 +758,7 @@ private fun FilterCharacterSheet(
             ChipData(2, stringResource(id = R.string.six_locked)),
         )
         //是否选择了六星解放排序
-        val isUnlock6SortType = sortTypeIndex.value == CharacterSortType.SORT_UNLOCK_6.type
+        val isUnlock6SortType = sortTypeIndex.intValue == CharacterSortType.SORT_UNLOCK_6.type
         //未选择六星解放排序是显示
         ExpandAnimation(visible = !isUnlock6SortType) {
             Column {

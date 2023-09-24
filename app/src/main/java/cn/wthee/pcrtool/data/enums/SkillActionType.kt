@@ -187,7 +187,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 102：伤害递增v2
      */
-    ACCUMULATIVE_DAMAGE_v2(102, R.string.skill_type_34),
+    ACCUMULATIVE_DAMAGE_V2(102, R.string.skill_type_34),
 
     /**
      * 35：特殊标记
@@ -197,7 +197,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 101：特殊标记v2
      */
-    SEAL_v2(101, R.string.skill_type_35_43_60_77),
+    SEAL_V2(101, R.string.skill_type_35_43_60_77),
 
     /**
      * 36：攻击领域展开
@@ -475,7 +475,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
  * 获取描述
  */
 fun getAilment(value: Int): String {
-    for (item in SkillActionType.values()) {
+    for (item in SkillActionType.entries) {
         if (item.type == value) {
             return getString(item.descId)
         }
@@ -487,7 +487,7 @@ fun getAilment(value: Int): String {
  * 获取技能类型枚举对象
  */
 fun toSkillActionType(value: Int): SkillActionType {
-    for (item in SkillActionType.values()) {
+    for (item in SkillActionType.entries) {
         if (item.type == value) return item
     }
     return SkillActionType.UNKNOWN

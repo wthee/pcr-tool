@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.data.enums.NewsType
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey
-    val id: Int = 0,
+    val id: Int = -1,
     val sourceId: String = "0",
     val title: String = "",
     val tags: String = "???",

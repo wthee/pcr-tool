@@ -4,7 +4,14 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipCategoryData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipSubRewardData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
+import cn.wthee.pcrtool.data.db.view.ExtraEquipmentData
 
 /**
  * ex装备数据DAO
@@ -70,7 +77,7 @@ interface ExtraEquipmentDao {
         WHERE a.ex_equipment_id = :equipId
     """
     )
-    suspend fun getEquipInfos(equipId: Int): ExtraEquipmentData
+    suspend fun getEquipInfo(equipId: Int): ExtraEquipmentData
 
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]

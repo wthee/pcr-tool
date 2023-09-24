@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.database
+package cn.wthee.pcrtool.workers
 
 import android.app.NotificationManager
 import android.content.Context
@@ -13,6 +13,8 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.network.FileService
+import cn.wthee.pcrtool.database.AppBasicDatabase
+import cn.wthee.pcrtool.database.updateLocalDataBaseVersion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.ApiUtil

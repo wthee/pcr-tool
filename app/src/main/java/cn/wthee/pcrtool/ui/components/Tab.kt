@@ -2,8 +2,13 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,7 +30,8 @@ fun MainTabRow(
     pagerState: PagerState,
     tabs: List<String>,
     scrollable: Boolean = false,
-    colorList: ArrayList<Color> = arrayListOf()
+    colorList: ArrayList<Color> = arrayListOf(),
+    gridStateList: ArrayList<LazyGridState>? = null
 ) {
     val contentColor = if (colorList.isNotEmpty()) {
         colorList[pagerState.currentPage]
@@ -46,7 +52,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList)
+            MainTabList(pagerState, tabs, colorList, gridStateList)
         }
     } else {
         TabRow(
@@ -61,7 +67,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList)
+            MainTabList(pagerState, tabs, colorList, gridStateList)
         }
     }
 
@@ -75,7 +81,8 @@ fun MainTabRow(
 private fun MainTabList(
     pagerState: PagerState,
     tabs: List<String>,
-    colorList: ArrayList<Color>
+    colorList: ArrayList<Color>,
+    gridStateList: ArrayList<LazyGridState>? = null
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -86,7 +93,11 @@ private fun MainTabList(
             onClick = {
                 scope.launch {
                     VibrateUtil(context).single()
-                    pagerState.scrollToPage(index)
+                    if (pagerState.currentPage == index && gridStateList != null) {
+                        gridStateList[index].scrollToItem(0)
+                    } else {
+                        pagerState.scrollToPage(index)
+                    }
                 }
             }) {
             Subtitle1(

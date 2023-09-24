@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
 
-    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
+    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfo(equipId)
 
     suspend fun getEquipBasicInfo(equipId: Int) = equipmentDao.getEquipBasicInfo(equipId)
 
@@ -33,9 +33,20 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getCount() = equipmentDao.getCount()
 
     suspend fun getUniqueEquipCount() = try {
-        equipmentDao.getUniqueEquipCountV2()
+        val uniqueEquipCount = equipmentDao.getUniqueEquipCountV2()
+        if (uniqueEquipCount.size > 1) {
+            "${uniqueEquipCount[0].count} · ${uniqueEquipCount[1].count}"
+        } else {
+            uniqueEquipCount[0].count.toString()
+        }
+
     } catch (_: Exception) {
-        equipmentDao.getUniqueEquipCount()
+        val uniqueEquipCount = equipmentDao.getUniqueEquipCount()
+        if (uniqueEquipCount.isNotEmpty()) {
+            uniqueEquipCount[0].count.toString()
+        } else {
+            "0"
+        }
     }
 
     suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
@@ -72,14 +83,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     ): List<UniqueEquipmentMaxData> {
         val list = arrayListOf<UniqueEquipmentMaxData>()
         try {
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv, 1)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId, lv, 1)?.let {
                 list.add(it)
             }
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv2 + 1, 2)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId, lv2 + 1, 2)?.let {
                 list.add(it)
             }
         } catch (e: Exception) {
-            equipmentDao.getUniqueEquipInfos(unitId, lv)?.let {
+            equipmentDao.getUniqueEquipInfo(unitId, lv)?.let {
                 list.add(it)
             }
         }
@@ -118,15 +129,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
-    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData> {
+    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData> {
         val data = (try {
-            val data = equipmentDao.getUniqueEquipListV2(name)
-            if (data.isEmpty()) {
-                equipmentDao.getUniqueEquipList(name)
-            }
+            val data = equipmentDao.getUniqueEquipListV2(name, slot)
             data
         } catch (_: Exception) {
-            equipmentDao.getUniqueEquipList(name)
+            equipmentDao.getUniqueEquipList(name, slot)
         }).reversed()
 
         //处理台服排序

@@ -4,7 +4,16 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.Attr
+import cn.wthee.pcrtool.data.db.view.CharacterPromotionEquipCount
+import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentCraft
+import cn.wthee.pcrtool.data.db.view.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipCount
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UnitPromotion
 
 //装备满属性视图
 private const val viewEquipmentMaxData = """
@@ -154,7 +163,7 @@ interface EquipmentDao {
     @SkipQueryVerification
     @Transaction
     @Query("$viewEquipmentMaxData WHERE a.equipment_id =:equipId")
-    suspend fun getEquipInfos(equipId: Int): EquipmentMaxData
+    suspend fun getEquipInfo(equipId: Int): EquipmentMaxData
 
     /**
      * 获取专武信息
@@ -196,7 +205,7 @@ interface EquipmentDao {
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
     )
-    suspend fun getUniqueEquipInfos(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int): UniqueEquipmentMaxData?
 
     /**
      * 获取专武信息V2，日服专武提升表已更新：unique_equipment_enhance_rate -> unique_equip_enhance_rate
@@ -238,7 +247,7 @@ interface EquipmentDao {
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv <= 2 AND a.equipment_id % 10 = :slot
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfoV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
 
     /**
      * 获取专武信息（等级大于260）
@@ -454,7 +463,7 @@ interface EquipmentDao {
 
     /**
      * 装备适用角色
-     * @param unitId 角色编号
+     * @param equipId 装备编号
      */
     @SkipQueryVerification
     @Query(
@@ -493,10 +502,10 @@ interface EquipmentDao {
             unit_unique_equip AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
-        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
         """
     )
-    suspend fun getUniqueEquipList(name: String): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData>
 
     /**
      * 获取专用装备列表
@@ -515,10 +524,10 @@ interface EquipmentDao {
             unit_unique_equipment AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
-        WHERE equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%'
+        WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
         """
     )
-    suspend fun getUniqueEquipListV2(name: String): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipListV2(name: String, slot: Int): List<UniqueEquipBasicData>
 
 
     /**
@@ -528,12 +537,16 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-           COUNT(*)
+            equip_slot,
+            COUNT( equip_slot ) AS count 
         FROM
-            unit_unique_equip
+            unit_unique_equip 
+        GROUP BY
+            equip_slot
+        ORDER BY equip_slot
         """
     )
-    suspend fun getUniqueEquipCount(): Int
+    suspend fun getUniqueEquipCount(): List<UniqueEquipCount>
 
 
     /**
@@ -543,10 +556,14 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-           COUNT(*)
+            equip_slot,
+            COUNT( equip_slot ) AS count 
         FROM
-            unit_unique_equipment
+            unit_unique_equipment 
+        GROUP BY
+            equip_slot
+        ORDER BY equip_slot
         """
     )
-    suspend fun getUniqueEquipCountV2(): Int
+    suspend fun getUniqueEquipCountV2(): List<UniqueEquipCount>
 }

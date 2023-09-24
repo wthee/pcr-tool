@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
 
-class FilterExtraEquipment(
+data class FilterExtraEquipment(
     var all: Boolean = true,
     var flag: Int = 0,
     var rarity: Int = 0,
@@ -44,6 +44,7 @@ class FilterExtraEquipment(
             }
         }
     }
+
 }
 
 fun FilterExtraEquipment.isFilter(): Boolean {

@@ -1,40 +1,46 @@
 package cn.wthee.pcrtool.ui.home.module
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.BirthdayData
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
+import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
+import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
+import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
-import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import com.google.accompanist.flowlayout.FlowColumn
 
 
 /**
@@ -44,40 +50,48 @@ import com.google.accompanist.flowlayout.FlowColumn
 fun InProgressEventSection(
     confirmState: MutableState<Int>,
     actions: NavActions,
+    orderStr: String,
     isEditMode: Boolean,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
 
     //进行中掉落活动
-    val inProgressEventList =
+    val inProgressEventListFlow = remember {
         overviewViewModel.getCalendarEventList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressEventList by inProgressEventListFlow.collectAsState(initial = arrayListOf())
     //进行中剧情活动
-    val inProgressStoryEventList =
+    val inProgressStoryEventListFlow = remember {
         overviewViewModel.getStoryEventList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressStoryEventList by inProgressStoryEventListFlow.collectAsState(initial = arrayListOf())
     //进行中卡池
-    val inProgressGachaList =
+    val inProgressGachaListFlow = remember {
         overviewViewModel.getGachaList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressGachaList by inProgressGachaListFlow.collectAsState(initial = arrayListOf())
     //进行中免费十连
-    val inProgressFreeGachaList =
+    val inProgressFreeGachaListFlow = remember {
         overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressFreeGachaList by inProgressFreeGachaListFlow.collectAsState(initial = arrayListOf())
     //进行中生日日程
-    val inProgressBirthdayList =
+    val inProgressBirthdayListFlow = remember {
         overviewViewModel.getBirthdayList(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressBirthdayList by inProgressBirthdayListFlow.collectAsState(initial = arrayListOf())
     //进行中公会战
-    val inProgressClanBattleList =
+    val inProgressClanBattleListFlow = remember {
         overviewViewModel.getClanBattleEvent(EventType.IN_PROGRESS)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val inProgressClanBattleList by inProgressClanBattleListFlow.collectAsState(initial = arrayListOf())
 
     CalendarEventLayout(
         isEditMode,
         EventType.IN_PROGRESS,
         confirmState,
         actions,
+        orderStr,
         inProgressEventList,
         inProgressStoryEventList,
         inProgressGachaList,
@@ -96,38 +110,46 @@ fun ComingSoonEventSection(
     confirmState: MutableState<Int>,
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel(),
 ) {
     //预告掉落活动
-    val comingSoonEventList =
+    val comingSoonEventListFlow = remember {
         overviewViewModel.getCalendarEventList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonEventList by comingSoonEventListFlow.collectAsState(initial = arrayListOf())
     //预告剧情活动
-    val comingSoonStoryEventList =
+    val comingSoonStoryEventListFlow = remember {
         overviewViewModel.getStoryEventList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonStoryEventList by comingSoonStoryEventListFlow.collectAsState(initial = arrayListOf())
     //预告卡池
-    val comingSoonGachaList =
+    val comingSoonGachaListFlow = remember {
         overviewViewModel.getGachaList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonGachaList by comingSoonGachaListFlow.collectAsState(initial = arrayListOf())
     //预告免费十连
-    val comingSoonFreeGachaList =
+    val comingSoonFreeGachaFlow = remember {
         overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonFreeGachaList by comingSoonFreeGachaFlow.collectAsState(initial = arrayListOf())
     //生日
-    val comingSoonBirthdayList =
+    val comingSoonBirthdayListFlow = remember {
         overviewViewModel.getBirthdayList(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonBirthdayList by comingSoonBirthdayListFlow.collectAsState(initial = arrayListOf())
     //公会战
-    val comingSoonClanBattleList =
+    val comingSoonClanBattleListFlow = remember {
         overviewViewModel.getClanBattleEvent(EventType.COMING_SOON)
-            .collectAsState(initial = arrayListOf()).value
+    }
+    val comingSoonClanBattleList by comingSoonClanBattleListFlow.collectAsState(initial = arrayListOf())
 
     CalendarEventLayout(
         isEditMode,
         EventType.COMING_SOON,
         confirmState,
         actions,
+        orderStr,
         comingSoonEventList,
         comingSoonStoryEventList,
         comingSoonGachaList,
@@ -142,13 +164,14 @@ fun ComingSoonEventSection(
  * 活动
  */
 @Composable
-private fun CalendarEventLayout(
+fun CalendarEventLayout(
     isEditMode: Boolean,
     calendarType: EventType,
     confirmState: MutableState<Int>,
     actions: NavActions,
+    orderStr: String,
     eventList: List<CalendarEvent>,
-    storyEventList: List<EventData>,
+    storyEventList: List<StoryEventData>,
     gachaList: List<GachaInfo>,
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
@@ -156,8 +179,10 @@ private fun CalendarEventLayout(
     gachaViewModel: GachaViewModel = hiltViewModel(),
 ) {
     //fes 角色id
-    val fesUnitIds =
-        gachaViewModel.getGachaFesUnitList().collectAsState(initial = arrayListOf()).value
+    val fesUnitIdsFlow = remember {
+        gachaViewModel.getGachaFesUnitList()
+    }
+    val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
 
     val id = if (calendarType == EventType.IN_PROGRESS) {
         OverviewType.IN_PROGRESS_EVENT.id
@@ -180,8 +205,9 @@ private fun CalendarEventLayout(
             id = id,
             titleId = titleId,
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-            rightIconType = if (confirmState.value == calendarType.type) MainIconType.CLOSE else MainIconType.MAIN,
+            rightIconType = if (confirmState.value == calendarType.type) MainIconType.UP else MainIconType.DOWN,
             isEditMode = isEditMode,
+            orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
                     editOverviewMenuOrder(id)
@@ -196,15 +222,7 @@ private fun CalendarEventLayout(
             }
         ) {
             ExpandAnimation(visible = confirmState.value == calendarType.type) {
-                CalendarEventOperation(
-                    confirmState,
-                    eventList,
-                    storyEventList,
-                    gachaList,
-                    freeGachaList,
-                    birthdayList,
-                    clanBattleList
-                )
+                CalendarEventOperation(actions)
             }
             VerticalGrid(
                 itemWidth = getItemWidth(),
@@ -252,223 +270,42 @@ private fun CalendarEventLayout(
  */
 @Composable
 private fun CalendarEventOperation(
-    confirmState: MutableState<Int>,
-    eventList: List<CalendarEvent>,
-    storyEventList: List<EventData>,
-    gachaList: List<GachaInfo>,
-    freeGachaList: List<FreeGachaInfo>,
-    birthdayList: List<BirthdayData>,
-    clanBattleList: List<ClanBattleEvent>,
+    actions: NavActions
 ) {
     val context = LocalContext.current
-    val regionName = getRegionName(MainActivity.regionType)
+    //日程相关工具
+    val toolList = arrayListOf<ToolMenuData>()
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.GACHA))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.FREE_GACHA))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.STORY_EVENT))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.CALENDAR_EVENT))
+    toolList.add(getToolMenuData(toolMenuType = ToolMenuType.BIRTHDAY))
 
-    // 添加日历确认
     MainCard(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
             vertical = Dimen.mediumPadding
         )
     ) {
-        FlowColumn {
-            //添加日历
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        checkPermissions(context, cn.wthee.pcrtool.ui.home.permissions, false) {
-                            val allEvents = arrayListOf<SystemCalendarEventData>()
-                            //掉落活动
-                            eventList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.toString()
-                                    )
-                                )
-                            }
-                            //剧情活动
-                            storyEventList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getEventTitle()
-                                    )
-                                )
-                            }
-                            //卡池
-                            gachaList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //免费十连
-                            freeGachaList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //生日日程
-                            birthdayList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.endTime,
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //公会战
-                            clanBattleList.forEach {
-                                allEvents.add(
-                                    SystemCalendarEventData(
-                                        it.startTime,
-                                        it.getFixedEndTime(),
-                                        it.getDesc()
-                                    )
-                                )
-                            }
-                            //添加至系统日历
-                            SystemCalendarHelper().insertEvents(allEvents)
-
-                            confirmState.value = 0
-                        }
-                    }
-                    .padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainIcon(data = MainIconType.ADD_CALENDAR, size = Dimen.fabIconSize)
-                MainText(
-                    text = stringResource(R.string.add_to_calendar),
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
-                )
-            }
-
-            //复制至剪贴板
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        var allText = ""
-                        //掉落活动
-                        var eventText = ""
-                        eventList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            eventText += "• $date\n${it}\n"
-                        }
-                        if (eventText != "") {
-                            allText += getString(
-                                R.string.title_drop_event,
-                                "\n$eventText\n"
-                            )
-                        }
-
-                        //剧情活动
-                        var storyText = ""
-                        storyEventList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            storyText += "• $date\n${it.getEventTitle()}"
-                        }
-                        if (storyText != "") {
-                            allText += getString(
-                                R.string.title_story_event,
-                                "\n$storyText\n\n"
-                            )
-                        }
-
-                        //卡池
-                        var gachaText = ""
-                        gachaList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            gachaText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (gachaText != "") {
-                            allText += getString(
-                                R.string.title_gacha_event,
-                                "\n$gachaText\n\n"
-                            )
-                        }
-
-                        //免费十连
-                        var freeGachaText = ""
-                        freeGachaList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.endTime)
-                            freeGachaText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (freeGachaText != "") {
-                            allText += getString(
-                                R.string.title_free_gacha_event,
-                                "\n$freeGachaText\n\n"
-                            )
-                        }
-
-                        //生日
-                        var birthdayText = ""
-                        birthdayList.forEach {
-                            val date = it
-                                .startTime
-                                .substring(0, 10)
-                            birthdayText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (birthdayText != "") {
-                            allText += getString(
-                                R.string.title_character_birthday_event,
-                                "\n$birthdayText\n\n"
-                            )
-                        }
-
-                        //公会战
-                        var clanBattleText = ""
-                        clanBattleList.forEach {
-                            val date = getCalendarEventDateText(it.startTime, it.getFixedEndTime())
-                            clanBattleText += "• $date\n${it.getDesc()}"
-
-                        }
-                        if (clanBattleText != "") {
-                            allText += getString(
-                                R.string.title_clan_battle_event,
-                                "\n$clanBattleText\n"
-                            )
-                        }
-                        //复制
-                        copyText(context, "——$regionName——\n\n$allText")
-                        confirmState.value = 0
-                    }
-                    .padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainIcon(data = MainIconType.COPY, size = Dimen.fabIconSize)
-                MainText(
-                    text = stringResource(R.string.copy_event),
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
-                )
+        VerticalGrid(
+            itemWidth = Dimen.menuItemSize,
+            contentPadding = Dimen.largePadding + Dimen.mediumPadding,
+            modifier = Modifier.animateContentSize(defaultSpring())
+        ) {
+            toolList.forEach {
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediumPadding,
+                            bottom = Dimen.largePadding
+                        )
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MenuItem(context, actions, it, false)
+                }
             }
         }
-
     }
 }
-
-/**
- * 日历日程时间范围文本
- */
-private fun getCalendarEventDateText(
-    startTime: String,
-    endTime: String
-) = startTime.formatTime.fixJpTime + " ~ " + endTime.formatTime.fixJpTime

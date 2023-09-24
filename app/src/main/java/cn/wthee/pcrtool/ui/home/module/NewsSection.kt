@@ -2,8 +2,9 @@ package cn.wthee.pcrtool.ui.home.module
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -25,20 +26,23 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 fun NewsSection(
     actions: NavActions,
     isEditMode: Boolean,
+    orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.NEWS.id
     //公告列表
-    val newsList = overviewViewModel.newOverview.observeAsState().value
-    LaunchedEffect(null) {
+    val newsListFlow = remember {
         overviewViewModel.getNewsOverview()
     }
+    val newsList by newsListFlow.collectAsState(initial = null)
+
 
     Section(
         id = id,
         titleId = R.string.tool_news,
         iconType = MainIconType.NEWS,
         isEditMode = isEditMode,
+        orderStr = orderStr,
         onClick = {
             if (isEditMode)
                 editOverviewMenuOrder(id)
@@ -49,18 +53,19 @@ fun NewsSection(
         Column {
             if (newsList == null) {
                 for (i in 0 until 3) {
-                    NewsItem(
-                        news = NewsTable()
-                    )
-                }
-            } else if (newsList.data?.isNotEmpty() == true) {
-                newsList.data?.forEach {
-                    NewsItem(
-                        news = it
-                    )
+                    NewsItem(news = NewsTable())
                 }
             } else {
-                CenterTipText(stringResource(id = R.string.no_data))
+                newsList?.let { list ->
+                    if (list.data?.isNotEmpty() == true) {
+                        list.data!!.forEach {
+                            NewsItem(news = it)
+                        }
+                    } else {
+                        CenterTipText(stringResource(id = R.string.no_data))
+                    }
+                }
+
             }
         }
     }

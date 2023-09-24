@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.Manifest
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -9,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,8 +25,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,17 +79,14 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlinx.coroutines.launch
 
-//权限
-val permissions = arrayOf(
-    Manifest.permission.READ_CALENDAR,
-    Manifest.permission.WRITE_CALENDAR,
-)
+
+private const val defaultOrder = "0-1-6-2-3-4-5-"
+
 
 /**
  * 首页纵览
@@ -98,11 +97,12 @@ fun Overview(
     scrollState: ScrollState,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    //初始化加载六星数据
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
     }
 
-    //添加日历确认弹窗
+    //日程点击展开状态
     val confirmState = remember {
         mutableIntStateOf(0)
     }
@@ -115,7 +115,7 @@ fun Overview(
     val sp = mainSP()
 
     //自定义显示
-    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, "0-1-6-2-3-4-5") ?: ""
+    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
     var overviewOrderData = navViewModel.overviewOrderData.observeAsState().value
     if (overviewOrderData.isNullOrEmpty()) {
         overviewOrderData = localData
@@ -123,7 +123,11 @@ fun Overview(
     }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             TopBarCompose(isEditMode)
             if (!isEditMode.value) {
@@ -131,37 +135,46 @@ fun Overview(
                     when (OverviewType.getByValue(it)) {
                         OverviewType.CHARACTER -> CharacterSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.EQUIP -> EquipSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.TOOL -> ToolSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.NEWS -> NewsSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
-                            confirmState,
-                            actions = actions, isEditMode = false
+                            confirmState = confirmState,
+                            actions = actions,
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
-                            confirmState,
-                            actions = actions, isEditMode = false
+                            confirmState = confirmState,
+                            actions = actions,
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
 
                         OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
                             actions = actions,
-                            isEditMode = false
+                            isEditMode = false,
+                            orderStr = overviewOrderData
                         )
                     }
                 }
@@ -176,25 +189,55 @@ fun Overview(
                 )
 
                 //角色
-                CharacterSection(actions, isEditMode = true)
+                CharacterSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //装备
-                EquipSection(actions, isEditMode = true)
+                EquipSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //专用装备
-                UniqueEquipSection(actions, isEditMode = true)
+                UniqueEquipSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //更多功能
-                ToolSection(actions, isEditMode = true)
+                ToolSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //新闻
-                NewsSection(actions, isEditMode = true)
+                NewsSection(
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //进行中
-                InProgressEventSection(confirmState, actions, isEditMode = true)
+                InProgressEventSection(
+                    confirmState = confirmState,
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
                 //活动预告
-                ComingSoonEventSection(confirmState, actions, isEditMode = true)
+                ComingSoonEventSection(
+                    confirmState = confirmState,
+                    actions,
+                    isEditMode = true,
+                    orderStr = overviewOrderData
+                )
 
             }
 
@@ -220,7 +263,6 @@ private fun ChangeDbCompose(
     modifier: Modifier,
 ) {
     val context = LocalContext.current
-    val region = MainActivity.regionType
 
     val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
@@ -232,21 +274,21 @@ private fun ChangeDbCompose(
         navViewModel.fabCloseClick.postValue(false)
     }
 
-
     //展开边距修正
     val mFabModifier = if (openDialog) {
-        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+        modifier.padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
     } else {
         modifier
     }
     //校验数据文件是否异常
-    val dbError = FileUtil.dbSizeError(region)
+    val dbError by navViewModel.dbError.observeAsState(initial = false)
     //颜色
     val tintColor = if (dbError) {
         colorRed
     } else {
         MaterialTheme.colorScheme.primary
     }
+
 
     Box(modifier = Modifier.clickClose(openDialog)) {
         Row(
@@ -293,13 +335,37 @@ private fun ChangeDbCompose(
                     DbVersionList(tintColor)
                 } else {
                     //加载相关
+
                     when (downloadState) {
                         -2 -> {
-                            MainIcon(
-                                data = MainIconType.CHANGE_DATA,
-                                tint = tintColor,
-                                size = Dimen.fabIconSize
-                            )
+                            if (dbError) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(start = Dimen.largePadding)
+                                ) {
+                                    MainIcon(
+                                        data = MainIconType.DB_ERROR,
+                                        tint = tintColor,
+                                        size = Dimen.fabIconSize
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.db_error),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        textAlign = TextAlign.Center,
+                                        color = colorRed,
+                                        modifier = Modifier.padding(
+                                            start = Dimen.mediumPadding,
+                                            end = Dimen.largePadding
+                                        )
+                                    )
+                                }
+                            } else {
+                                MainIcon(
+                                    data = MainIconType.CHANGE_DATA,
+                                    tint = tintColor,
+                                    size = Dimen.fabIconSize
+                                )
+                            }
                         }
 
                         in 1..99 -> {
@@ -312,7 +378,6 @@ private fun ChangeDbCompose(
                     }
                 }
             }
-
         }
     }
 
@@ -533,16 +598,16 @@ private fun DbVersionContentItem(
 fun Section(
     id: Int,
     @StringRes titleId: Int,
-    iconType: MainIconType,
+    iconType: MainIconType? = null,
     hintText: String = "",
     contentVisible: Boolean = true,
     isEditMode: Boolean,
     rightIconType: MainIconType? = null,
+    orderStr: String,
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
-    val orderStr = navViewModel.overviewOrderData.observeAsState().value ?: ""
     //是否已显示到首页
     val hasAdded = orderStr.intArrayList.contains(id) && isEditMode
     //首页排序
@@ -592,11 +657,13 @@ fun Section(
                     color = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
                 )
             }
-            MainIcon(
-                data = iconType,
-                size = Dimen.fabIconSize,
-                tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
-            )
+            if (iconType != null) {
+                MainIcon(
+                    data = iconType,
+                    size = Dimen.fabIconSize,
+                    tint = if (hasAdded) colorWhite else MaterialTheme.colorScheme.onSurface
+                )
+            }
             MainText(
                 text = stringResource(id = titleId),
                 modifier = Modifier
@@ -632,10 +699,8 @@ fun Section(
             }
         }
 
-        if (contentVisible && !isEditMode) {
-            Column {
-                content()
-            }
+        if (!isEditMode) {
+            content()
         }
     }
 

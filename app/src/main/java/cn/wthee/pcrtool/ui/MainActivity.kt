@@ -1,10 +1,12 @@
 package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -116,18 +118,22 @@ class MainActivity : ComponentActivity() {
                 MainIconType.MAIN -> {
                     return super.onKeyDown(keyCode, event)
                 }
+
                 MainIconType.DOWN -> {
                     navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                     return true
                 }
+
                 MainIconType.CLOSE -> {
                     navViewModel.fabCloseClick.postValue(true)
                     return true
                 }
+
                 MainIconType.OK -> {
                     navViewModel.fabOKClick.postValue(true)
                     return true
                 }
+
                 else -> {
                     navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                 }
@@ -154,9 +160,19 @@ class MainActivity : ComponentActivity() {
                 AppBasicDatabase.close()
                 //重启应用
                 val intent = Intent(this, MainActivity::class.java)
+                intent.action = Intent.ACTION_MAIN
                 finish()
                 startActivity(intent)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    overrideActivityTransition(
+                        Activity.OVERRIDE_TRANSITION_CLOSE,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
                 //数据下载完成，振动提示
                 if (it.what > 1) {
                     VibrateUtil(this).done()

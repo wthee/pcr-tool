@@ -24,6 +24,9 @@ import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * 竞技场查询（悬浮窗）
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
@@ -47,7 +50,8 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         R.drawable.ic_logo_large
                     } else {
                         MainIconType.FLOAT_MIN
-                    }
+                    },
+                    vibrate = !showResult || !min
                 ) {
                     navViewModel.floatSearchMin.postValue(!min)
                 }

@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.utils.intArrayList
 /**
  *  剧情活动视图
  */
-data class EventData(
+data class StoryEventData(
     @ColumnInfo(name = "event_id") val eventId: Int = -1,
     @ColumnInfo(name = "story_id") val storyId: Int = -1,
     @ColumnInfo(name = "original_event_id") val originalEventId: Int = -1,

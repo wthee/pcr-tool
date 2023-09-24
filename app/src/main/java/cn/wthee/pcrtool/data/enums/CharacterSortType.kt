@@ -14,7 +14,7 @@ enum class CharacterSortType(val type: Int) {
 }
 
 fun getSortType(value: Int): CharacterSortType {
-    for (item in CharacterSortType.values()) {
+    for (item in CharacterSortType.entries) {
         if (item.type == value) return item
     }
     return CharacterSortType.SORT_DATE

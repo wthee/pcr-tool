@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.utils.simpleDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -84,7 +84,7 @@ class MockGachaViewModel @Inject constructor(
         viewModelScope.launch {
             val nowTime = getToday()
             //处理不同顺序相同角色
-            val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
+            val sorted = sortGachaUnitInfo(mockGachaType, pickUpList)
             val data = MockGachaData(
                 gachaId,
                 MainActivity.regionType.value,
@@ -102,7 +102,7 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 处理不同顺序相同角色
      */
-    private fun sortGachaUnitInfos(
+    private fun sortGachaUnitInfo(
         mockGachaType: MockGachaType,
         pickUpList: List<GachaUnitInfo>
     ): List<GachaUnitInfo> {
@@ -163,7 +163,7 @@ class MockGachaViewModel @Inject constructor(
         pickUpList: List<GachaUnitInfo>
     ): MockGachaData? {
         //处理不同顺序相同角色
-        val sorted = sortGachaUnitInfos(mockGachaType, pickUpList)
+        val sorted = sortGachaUnitInfo(mockGachaType, pickUpList)
         return mockGachaRepository.getGachaByPickUpIds(
             MainActivity.regionType.value,
             mockGachaType.type,

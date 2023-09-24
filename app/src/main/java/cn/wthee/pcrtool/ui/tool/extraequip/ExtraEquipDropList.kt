@@ -1,11 +1,18 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,11 +33,19 @@ fun ExtraEquipDropList(
     equipId: Int,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
-    val dropList = extraEquipmentViewModel.getExtraDropQuestList(equipId)
-        .collectAsState(initial = arrayListOf()).value
+    //掉落区域信息
+    val dropListFlow = remember {
+        extraEquipmentViewModel.getExtraDropQuestList(equipId)
+    }
+    val dropList by dropListFlow.collectAsState(initial = arrayListOf())
     val pagerState = rememberPagerState { dropList.size }
 
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (dropList.isNotEmpty()) {
             val tabs = arrayListOf<String>()
             dropList.forEach {

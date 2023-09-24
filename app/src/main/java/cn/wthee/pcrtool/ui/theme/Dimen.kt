@@ -4,13 +4,13 @@ import androidx.compose.ui.unit.dp
 
 object Dimen {
 
-    val cardElevation = 3.dp
+    val cardElevation = 4.dp
 
     val fabElevation = 6.dp
 
     val popupMenuElevation = 8.dp
 
-    val textElevation = 1.5.dp
+    val textElevation = 2.dp
 
     val fabSize = 40.dp
 
@@ -18,10 +18,12 @@ object Dimen {
 
     val fabMargin = 16.dp
 
-    //endPadding 16 + fabsize + 6
+    //endPadding 16 + fabSize + 6
     val fabMarginEnd = 64.dp
 
-    val textfabMargin = 3.dp
+    val textFabMargin = 3.dp
+
+    val exSmallPadding = 3.dp
 
     val smallPadding = 4.dp
 
@@ -30,8 +32,6 @@ object Dimen {
     val largePadding = 14.dp
 
     val commonItemPadding = 6.dp
-
-    val exSmallIconSize = 14.dp
 
     val smallIconSize = 18.dp
 
@@ -69,9 +69,7 @@ object Dimen {
 
     val rankTextWidth = 48.dp
 
-    val strokeWidth = 2.dp
-
-    val linearProgressWidth = 32.dp
+    val strokeWidth = 3.dp
 
     val linearProgressHeight = 6.dp
 

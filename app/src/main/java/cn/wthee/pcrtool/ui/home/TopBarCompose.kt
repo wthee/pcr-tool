@@ -34,7 +34,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -53,6 +52,7 @@ import cn.wthee.pcrtool.ui.components.MainButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -65,7 +65,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
-import cn.wthee.pcrtool.utils.ApkDownloadWorker
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -73,6 +72,7 @@ import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import cn.wthee.pcrtool.workers.ApkDownloadWorker
 
 
 /**
@@ -84,8 +84,14 @@ fun TopBarCompose(
     isEditMode: MutableState<Boolean>,
     noticeViewModel: NoticeViewModel = MainActivity.noticeViewModel
 ) {
-    val updateApp = noticeViewModel.updateApp.observeAsState().value ?: AppNotice()
+    //应用更新通知
+    val updateAppFlow = remember {
+        noticeViewModel.updateApp
+    }
+    val updateApp by updateAppFlow.observeAsState(initial = AppNotice())
+    //应用安装包下载状态
     val downloadState = MainActivity.navViewModel.apkDownloadProgress.observeAsState().value ?: -2
+    //展开布局
     var isExpanded by remember {
         mutableStateOf(false)
     }
@@ -126,7 +132,7 @@ fun TopBarCompose(
                                 .size(Dimen.fabIconSize)
                                 .padding(Dimen.smallPadding),
                             color = MaterialTheme.colorScheme.onSurface,
-                            strokeWidth = 3.dp
+                            strokeWidth = Dimen.strokeWidth
                         )
                     }
 
@@ -345,18 +351,22 @@ private fun UpdateContent(
 
         //前往更新
         if (appNotice.id == 0) {
-            Column(
+            //github下载链接
+            val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
+
+            Row(
                 modifier = Modifier
-                    .padding(top = Dimen.largePadding)
+                    .padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //github下载链接
-                val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
                 //从GitHub下载
-                IconTextButton(
+                SubButton(
                     text = stringResource(id = R.string.download_apk_from_github),
-                    contentColor = MaterialTheme.colorScheme.outline
+                    modifier = Modifier.weight(1f)
                 ) {
                     downloadApk(githubReleaseUrl, context)
                 }
@@ -364,7 +374,7 @@ private fun UpdateContent(
                 MainButton(
                     text = stringResource(id = R.string.download_apk),
                     containerColor = colorGreen,
-                    modifier = Modifier.fillMaxWidth(RATIO_GOLDEN)
+                    modifier = Modifier.weight(1f)
                 ) {
                     if (appNotice.url.contains("coolapk")) {
                         //从酷安下载
@@ -517,7 +527,7 @@ private fun AppUpdateContentPreview() {
             AppNotice(
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- [BUG] BUGBUG\n- [测试] 测试",
+                message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
             22
@@ -527,7 +537,7 @@ private fun AppUpdateContentPreview() {
                 id = 0,
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
-                message = "- [BUG] BUGBUG\n- [测试] 测试",
+                message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
             -2

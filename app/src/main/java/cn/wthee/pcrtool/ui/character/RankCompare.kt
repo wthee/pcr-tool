@@ -1,10 +1,17 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +23,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AttrCompareData
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrCompare
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.RankRangePickerCompose
+import cn.wthee.pcrtool.ui.components.RankText
+import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -45,26 +56,38 @@ fun RankCompare(
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val rank0 = remember {
-        mutableStateOf(maxRank)
+        mutableIntStateOf(maxRank)
     }
     val rank1 = remember {
-        mutableStateOf(maxRank)
+        mutableIntStateOf(maxRank)
     }
 
-    val attrCompareData = attrViewModel.getUnitAttrCompare(
+    val attrCompareDataFlow = remember(
         unitId,
         level,
         rarity,
         uniqueEquipLevel,
         uniqueEquipLevel2,
-        rank0.value,
-        rank1.value
-    ).collectAsState(initial = arrayListOf()).value
+        rank0.intValue,
+        rank1.intValue
+    ) {
+        attrViewModel.getUnitAttrCompare(
+            unitId,
+            level,
+            rarity,
+            uniqueEquipLevel,
+            uniqueEquipLevel2,
+            rank0.intValue,
+            rank1.intValue
+        )
+    }
+    val attrCompareData by attrCompareDataFlow.collectAsState(initial = arrayListOf())
 
 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = Dimen.largePadding)
     ) {
         Column {
@@ -76,14 +99,14 @@ fun RankCompare(
             ) {
                 Spacer(modifier = Modifier.weight(0.3f))
                 RankText(
-                    rank = rank0.value,
+                    rank = rank0.intValue,
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .weight(0.2f)
                         .padding(0.dp)
                 )
                 RankText(
-                    rank = rank1.value,
+                    rank = rank1.intValue,
                     textAlign = TextAlign.End,
                     modifier = Modifier.weight(0.2f)
                 )
@@ -103,7 +126,7 @@ fun RankCompare(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ){
+        ) {
 
         }
 

@@ -129,24 +129,24 @@ data class Attr(
     /**
      * 属性乘积
      */
-    fun multiply(mult: Double): Attr {
-        this.hp *= mult
-        this.atk *= mult
-        this.magicStr *= mult
-        this.def *= mult
-        this.magicDef *= mult
-        this.physicalCritical *= mult
-        this.magicCritical *= mult
-        this.waveHpRecovery *= mult
-        this.waveEnergyRecovery *= mult
-        this.dodge *= mult
-        this.physicalPenetrate *= mult
-        this.magicPenetrate *= mult
-        this.lifeSteal *= mult
-        this.hpRecoveryRate *= mult
-        this.energyRecoveryRate *= mult
-        this.energyReduceRate *= mult
-        this.accuracy *= mult
+    fun multiply(multi: Double): Attr {
+        this.hp *= multi
+        this.atk *= multi
+        this.magicStr *= multi
+        this.def *= multi
+        this.magicDef *= multi
+        this.physicalCritical *= multi
+        this.magicCritical *= multi
+        this.waveHpRecovery *= multi
+        this.waveEnergyRecovery *= multi
+        this.dodge *= multi
+        this.physicalPenetrate *= multi
+        this.magicPenetrate *= multi
+        this.lifeSteal *= multi
+        this.hpRecoveryRate *= multi
+        this.energyRecoveryRate *= multi
+        this.energyReduceRate *= multi
+        this.accuracy *= multi
         return this
     }
 
@@ -238,12 +238,12 @@ data class Attr(
      * 角色属性 [Attr] ，转 [AttrCompareData] 角色 Rank 对比列表
      */
     fun compareWith(attr1: Attr): List<AttrCompareData> {
-        val datas = arrayListOf<AttrCompareData>()
+        val data = arrayListOf<AttrCompareData>()
         val list0 = this.all()
         val list1 = attr1.all()
         val list2 = attr1.compare(this)
         list0.forEachIndexed { index, attrValue ->
-            datas.add(
+            data.add(
                 AttrCompareData(
                     attrValue.title,
                     attrValue.value,
@@ -252,7 +252,7 @@ data class Attr(
                 )
             )
         }
-        return datas
+        return data
     }
 
 }

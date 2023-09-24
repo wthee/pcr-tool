@@ -104,34 +104,6 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 查询公告信息
-     * @param id
-     */
-    suspend fun getNewsDetail(id: String): ResponseData<NewsTable> {
-        //接口参数
-        val json = JsonObject()
-        json.addProperty("id", id)
-        val body =
-            json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-
-        //请求
-        try {
-            val response = service.getNewsDetail(body)
-            if (isError(response)) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getNewsDetail" + id)
-            }
-        }
-        return error()
-    }
-
-    /**
      * 最新公告
      */
     suspend fun getNewsOverviewByRegion(region: Int): ResponseData<List<NewsTable>> {
@@ -215,7 +187,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getTweet" + "$after")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComic" + "$after")
             }
         }
         return error()

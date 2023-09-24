@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
@@ -13,7 +11,6 @@ import cn.wthee.pcrtool.data.db.view.startTime
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -26,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.min
 
 /**
  * 首页纵览
@@ -38,7 +36,6 @@ class OverviewViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
-    val newOverview = MutableLiveData<ResponseData<List<NewsTable>>>()
 
     /**
      * 获取角色数量
@@ -90,6 +87,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getUniqueEquipCount() = flow {
         try {
+
             emit(equipmentRepository.getUniqueEquipCount())
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getEquipCount")
@@ -99,9 +97,10 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取专用装备列表
      */
-    fun getUniqueEquipList(limit: Int) = flow {
+    fun getUniqueEquipList(limit: Int, slot: Int) = flow {
         try {
-            emit(equipmentRepository.getUniqueEquipList("").subList(0, limit))
+            val list = equipmentRepository.getUniqueEquipList("", slot)
+            emit(list.subList(0, min(limit, list.size)))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getEquipList")
         }
@@ -147,6 +146,7 @@ class OverviewViewModel @Inject constructor(
             data += eventRepository.getTowerEvent(1)
             data += eventRepository.getSpDungeonEvent(1)
             data += eventRepository.getFaultEvent(1)
+            data += eventRepository.getColosseumEvent(1)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(
@@ -196,14 +196,11 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    fun getNewsOverview() {
-        viewModelScope.launch {
-            try {
-                val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
-                newOverview.postValue(data)
-            } catch (e: Exception) {
-                LogReportUtil.upload(e, "getNewsOverview")
-            }
+    fun getNewsOverview() = flow {
+        try {
+            emit(apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getNewsOverview")
         }
     }
 
@@ -213,7 +210,9 @@ class OverviewViewModel @Inject constructor(
     fun getR6Ids() {
         viewModelScope.launch {
             try {
-                navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
+                val r6Ids = unitRepository.getR6Ids()
+                navViewModel.dbError.postValue(unitRepository.getCountInt() == 0)
+                navViewModel.r6Ids.postValue(r6Ids)
             } catch (e: Exception) {
                 LogReportUtil.upload(e, "getR6Ids")
             }

@@ -5,8 +5,19 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,7 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +46,20 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainTabRow
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.getPositionColor
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
@@ -66,8 +90,10 @@ fun PvpSearchCompose(
     val tip = stringResource(id = R.string.tip_select_5)
 
     //获取数据
-    val characterDataList =
-        characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
+    val characterDataListFlow = remember {
+        characterViewModel.getAllCharacter()
+    }
+    val characterDataList by characterDataListFlow.collectAsState(initial = arrayListOf())
     //显示类型
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
@@ -100,7 +126,11 @@ fun PvpSearchCompose(
 
 
 
-    Box {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             //标题
             if (!floatWindow) {
@@ -184,6 +214,7 @@ fun PvpSearchCompose(
                             floatWindow = floatWindow,
                             characterDataList = characterDataList
                         )
+
                         1 -> PvpRecentlyUsedList(
                             spanCount = spanCount,
                             usedListState = usedListState,
@@ -192,6 +223,7 @@ fun PvpSearchCompose(
                             characterDataList = characterDataList,
                             pvpViewModel = pvpViewModel
                         )
+
                         2 -> {
                             PvpFavorites(
                                 favoritesListState = favoritesListState,
@@ -200,6 +232,7 @@ fun PvpSearchCompose(
                                 floatWindow = floatWindow
                             )
                         }
+
                         else -> {
                             PvpSearchHistory(
                                 historyListState = historyListState,
@@ -324,9 +357,11 @@ private fun PvpToSelectList(
                         0 -> {
                             R.drawable.ic_position_0
                         }
+
                         1 -> {
                             R.drawable.ic_position_1
                         }
+
                         else -> {
                             R.drawable.ic_position_2
                         }
@@ -346,7 +381,7 @@ private fun PvpToSelectList(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(if(floatWindow) 5 else 10) {
+            items(if (floatWindow) 5 else 10) {
                 CommonSpacer()
             }
         }

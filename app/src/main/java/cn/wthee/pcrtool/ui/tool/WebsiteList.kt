@@ -14,7 +14,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -60,10 +61,10 @@ fun WebsiteList(
     val flow = remember {
         websiteViewModel.getWebsiteList()
     }
-    val responseData = flow.collectAsState(initial = null).value
+    val responseData by flow.collectAsState(initial = null)
 
     val type = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     val tabs = arrayListOf(
         stringResource(id = R.string.all),
@@ -110,7 +111,7 @@ fun WebsiteList(
             items(items = data, key = {
                 it.type
             }) {
-                WebsiteGroup(it, type.value)
+                WebsiteGroup(it, type.intValue)
             }
             item {
                 CommonSpacer()

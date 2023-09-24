@@ -2,6 +2,8 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.ui.character.RankEquipCount
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -14,7 +16,10 @@ fun AllCharacterRankEquipCount(
     toEquipMaterial: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val maxRank = equipmentViewModel.getMaxRank().collectAsState(initial = 0).value
+    val maxRankFlow = remember {
+        equipmentViewModel.getMaxRank()
+    }
+    val maxRank by maxRankFlow.collectAsState(initial = 0)
 
     if (maxRank != 0) {
         RankEquipCount(

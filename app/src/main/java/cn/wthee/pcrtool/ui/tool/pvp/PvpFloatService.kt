@@ -30,6 +30,9 @@ import kotlin.math.max
 
 private const val ACTION_FINISH = "pvp_service_finish"
 
+/**
+ * 竞技场查询（悬浮窗服务）
+ */
 class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
@@ -92,6 +95,7 @@ class PvpFloatService : LifecycleService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(STOP_FOREGROUND_REMOVE)
         } else {
+            @Suppress("DEPRECATION")
             stopForeground(true)
         }
         super.onDestroy()
@@ -136,6 +140,7 @@ class PvpFloatService : LifecycleService() {
         type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
+            @Suppress("DEPRECATION")
             WindowManager.LayoutParams.TYPE_PHONE
         }
         format = PixelFormat.RGBA_8888
@@ -177,6 +182,7 @@ class PvpFloatService : LifecycleService() {
                     ACTION_FINISH -> {
                         ActivityHelper.instance.currentActivity?.finish()
                     }
+
                     else -> {}
                 }
             }

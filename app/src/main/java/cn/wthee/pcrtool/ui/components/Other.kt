@@ -24,11 +24,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
@@ -95,6 +95,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
+import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.launch
 
 
@@ -185,6 +186,27 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 }
 
 /**
+ * 指示器
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MainHorizontalPagerIndicator(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    pageCount: Int
+) {
+    HorizontalPagerIndicator(
+        modifier = modifier,
+        pagerState = pagerState,
+        pageCount = pageCount,
+        indicatorWidth = 6.dp,
+        activeColor = MaterialTheme.colorScheme.primary,
+        indicatorShape = CutCornerShape(50),
+        spacing = 0.dp
+    )
+}
+
+/**
  * 加载中-圆形
  */
 @Composable
@@ -196,7 +218,7 @@ fun CircularProgressCompose(
     CircularProgressIndicator(
         modifier = modifier
             .size(size)
-            .padding(Dimen.smallPadding),
+            .padding(Dimen.exSmallPadding),
         color = color,
         strokeWidth = Dimen.strokeWidth
     )
@@ -218,7 +240,7 @@ fun CircularProgressCompose(
             progress = progress,
             modifier = modifier
                 .size(size)
-                .padding(Dimen.smallPadding),
+                .padding(Dimen.exSmallPadding),
             color = color,
             strokeWidth = Dimen.strokeWidth,
         )
@@ -285,7 +307,6 @@ fun BottomSearchBar(
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     scrollState: LazyListState? = null,
-    gridScrollState: LazyGridState? = null,
     defaultKeywordList: List<KeywordData>? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -308,14 +329,16 @@ fun BottomSearchBar(
             horizontalArrangement = Arrangement.End
         ) {
             //回到顶部
-            MainSmallFab(
-                iconType = MainIconType.TOP
-            ) {
-                coroutineScope.launch {
-                    scrollState?.scrollToItem(0)
-                    gridScrollState?.scrollToItem(0)
+            scrollState?.let {
+                MainSmallFab(
+                    iconType = MainIconType.TOP
+                ) {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
                 }
             }
+
             //重置
             if (keywordState.value != "") {
                 MainSmallFab(
@@ -440,7 +463,11 @@ fun <T> CommonResponseBox(
     fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
     content: @Composable (BoxScope.(T) -> Unit),
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         FadeAnimation(visible = isResultError(responseData)) {
             CenterTipText(text = stringResource(id = R.string.response_error))
         }
@@ -656,7 +683,7 @@ fun CharacterTagRow(
 
         } else {
             Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                if (unknown && tipText != null) {
+                if (tipText != null) {
                     //提示
                     CharacterTag(
                         modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -721,7 +748,7 @@ private fun getPositionText(position: Int): String {
         PositionType.UNKNOWN -> Constants.UNKNOWN
     }
     if (pos != Constants.UNKNOWN) {
-        positionText = "$pos ${position}"
+        positionText = "$pos $position"
     }
     return positionText
 }

@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,13 +66,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClanBattleList(
     scrollState: LazyGridState,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
-
-    val clanList =
-        clanBattleViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
+    //会战列表
+    val clanListFlow = remember {
+        clanBattleViewModel.getAllClanBattleData()
+    }
+    val clanList by clanListFlow.collectAsState(initial = arrayListOf())
+
 
     Box(
         modifier = Modifier
@@ -137,14 +142,19 @@ fun ClanBattleList(
 @Composable
 fun ClanBattleOverview(
     clanBattleEvent: ClanBattleEvent,
-    toClanBossInfo: (Int, Int, Int) -> Unit,
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit,
     clanBattleViewModel: ClanBattleViewModel = hiltViewModel()
 ) {
-    val info = clanBattleViewModel.getAllClanBattleData(clanBattleEvent.id)
-        .collectAsState(initial = arrayListOf(ClanBattleInfo())).value
-    if(info.isNotEmpty()){
-        ClanBattleItem(clanBattleEvent, info[0], toClanBossInfo)
-    }else{
+    //会战列表
+    val clanListFlow = remember {
+        clanBattleViewModel.getAllClanBattleData(clanBattleEvent.id)
+    }
+    val clanList by clanListFlow.collectAsState(initial = arrayListOf())
+
+
+    if (clanList.isNotEmpty()) {
+        ClanBattleItem(clanBattleEvent, clanList[0], toClanBossInfo)
+    } else {
         Column(
             modifier = Modifier.padding(
                 horizontal = Dimen.largePadding,
@@ -169,7 +179,7 @@ fun ClanBattleOverview(
                 )
             }
 
-            MainCard() {
+            MainCard {
                 Column(Modifier.padding(bottom = Dimen.mediumPadding)) {
                     Row(
                         modifier = Modifier
@@ -203,7 +213,7 @@ fun ClanBattleOverview(
 private fun ClanBattleItem(
     clanBattleEvent: ClanBattleEvent? = null,
     clanBattleInfo: ClanBattleInfo,
-    toClanBossInfo: (Int, Int, Int) -> Unit
+    toClanBossInfo: (Int, Int, Int, Int) -> Unit
 ) {
     val placeholder = clanBattleInfo.clanBattleId == -1
     val bossUnitIdList = try {
@@ -233,9 +243,9 @@ private fun ClanBattleItem(
                 MainTitleText(
                     text = stringResource(
                         id = R.string.phase,
-                        getZhNumberText(clanBattleInfo.phase)
+                        getZhNumberText(clanBattleInfo.maxPhase)
                     ),
-                    backgroundColor = getSectionTextColor(clanBattleInfo.phase),
+                    backgroundColor = getSectionTextColor(clanBattleInfo.maxPhase),
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding)
                         .commonPlaceholder(visible = placeholder)
@@ -279,7 +289,8 @@ private fun ClanBattleItem(
                                     toClanBossInfo(
                                         clanBattleInfo.clanBattleId,
                                         index,
-                                        clanBattleInfo.phase
+                                        clanBattleInfo.minPhase,
+                                        clanBattleInfo.maxPhase,
                                     )
                                 }
                             }
@@ -357,6 +368,6 @@ private fun ClanBattleItemPreview() {
     PreviewLayout {
         ClanBattleItem(
             clanBattleInfo = ClanBattleInfo(1001),
-            toClanBossInfo = { _, _, _ -> })
+            toClanBossInfo = { _, _, _, _ -> })
     }
 }

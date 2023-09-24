@@ -197,7 +197,7 @@ interface UnitDao {
             AND (unit_data.start_time = '2088/01/01 0:00:00' OR unit_data.start_time = "2015/4/1 15:00") 
         """
     )
-    suspend fun getUnknowCount(): Int
+    suspend fun getUnknownCount(): Int
 
     /**
      * 角色信息

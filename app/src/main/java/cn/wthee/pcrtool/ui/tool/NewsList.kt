@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -87,7 +88,11 @@ fun NewsList(
     }
     val keywordList = keywordFlow.collectAsState(initial = arrayListOf()).value
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         LazyColumn(state = scrollState) {
             //头部加载中提示
             item {
@@ -156,7 +161,7 @@ fun NewsList(
 fun NewsItem(
     news: NewsTable
 ) {
-    val placeholder = news.title == ""
+    val placeholder = news.id == -1
     val tag = news.getTag()
     val color = when (tag) {
         NewsType.NEWS, NewsType.UPDATE -> colorRed

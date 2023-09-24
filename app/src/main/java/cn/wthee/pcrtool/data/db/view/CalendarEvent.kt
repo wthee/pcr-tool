@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.utils.intArrayList
  * 活动信息
  */
 data class CalendarEvent(
-    @ColumnInfo(name = "type") val type: String = "31",
+    @ColumnInfo(name = "type") val type: String = "",
     @ColumnInfo(name = "value") val value: Int = 1500,
     @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",
     @ColumnInfo(name = "end_time") val endTime: String = "2021-01-07 00:00:00",
@@ -69,6 +69,17 @@ data class CalendarEvent(
                 events.add(
                     CalendarEventData(
                         stringResource(id = R.string.fault),
+                        "",
+                        ""
+                    )
+                )
+            }
+
+            CalendarEventType.COLOSSEUM -> {
+                //次元断层
+                events.add(
+                    CalendarEventData(
+                        stringResource(id = R.string.colosseum),
                         "",
                         ""
                     )
@@ -138,75 +149,6 @@ data class CalendarEvent(
         return events
     }
 
-    override fun toString(): String {
-        var eventTitle = ""
-        when (CalendarEventType.getByValue(getTypeInt())) {
-            CalendarEventType.TOWER -> {
-                //露娜塔
-                eventTitle = getString(R.string.tower)
-            }
-
-            CalendarEventType.SP_DUNGEON -> {
-                //特殊地下城
-                eventTitle = getString(R.string.sp_dungeon)
-            }
-
-            CalendarEventType.TDF -> {
-                //次元断层
-                eventTitle = getString(R.string.fault)
-            }
-
-            else -> {
-                //正常活动
-                val list = type.intArrayList
-                list.forEachIndexed { index, type ->
-                    val title = when (CalendarEventType.getByValue(type)) {
-                        CalendarEventType.DAILY -> getString(R.string.daily_mission)
-                        CalendarEventType.LOGIN -> getString(R.string.daily_login)
-                        CalendarEventType.FORTUNE -> getString(R.string.fortune_event)
-                        CalendarEventType.N_DROP, CalendarEventType.N_MANA -> getString(R.string.normal)
-                        CalendarEventType.H_DROP, CalendarEventType.H_MANA -> getString(R.string.hard)
-                        CalendarEventType.VH_DROP, CalendarEventType.VH_MANA -> getString(R.string.very_hard)
-                        CalendarEventType.EXPLORE -> getString(R.string.explore)
-                        CalendarEventType.SHRINE -> getString(R.string.shrine)
-                        CalendarEventType.TEMPLE -> getString(R.string.temple)
-                        CalendarEventType.DUNGEON -> getString(R.string.dungeon)
-                        else -> ""
-                    }
-                    val multiple = getFixedValue()
-                    val typeName = when (CalendarEventType.getByValue(type)) {
-                        CalendarEventType.DAILY, CalendarEventType.LOGIN, CalendarEventType.FORTUNE -> ""
-                        else -> getString(if (type > 40) R.string.mana else R.string.drop)
-                    }
-                    val multipleText = getString(
-                        R.string.multiple,
-                        if ((multiple * 10).toInt() % 10 == 0) {
-                            multiple.toInt().toString()
-                        } else {
-                            multiple.toString()
-                        }
-                    )
-                    eventTitle += when (CalendarEventType.getByValue(type)) {
-                        CalendarEventType.LOGIN -> {
-                            //登录宝石
-                            title + value
-                        }
-
-                        CalendarEventType.FORTUNE -> {
-                            //兰德索尔杯
-                            title
-                        }
-
-                        else -> title + typeName + multipleText
-                    }
-                    if (index != list.size - 1) {
-                        eventTitle += "\n"
-                    }
-                }
-            }
-        }
-        return eventTitle
-    }
 }
 
 data class CalendarEventData(

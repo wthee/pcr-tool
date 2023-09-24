@@ -3,11 +3,19 @@ package cn.wthee.pcrtool.ui.skill
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.db.view.SpSkillLabelData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.SkillType
@@ -32,8 +41,21 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -60,21 +82,50 @@ fun SkillCompose(
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     //普通技能
-    val normalSkillData =
+    val normalSkillFlow = remember(property.level, atk) {
         skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
-            .collectAsState(
-                initial = arrayListOf()
-            ).value
+    }
+    val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
 
     //sp技能
-    val spSkillData =
-        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP).collectAsState(
-            initial = arrayListOf()
-        ).value
+    val spSkillFlow = remember(property.level, atk) {
+        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP)
+    }
+    val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
+
     // sp技能标签
-    val spLabel = skillViewModel.getSpSkillLabel(unitId).collectAsState(initial = null).value
+    val spLabelFlow = remember(unitId) {
+        skillViewModel.getSpSkillLabel(unitId)
+    }
+    val spLabel by spLabelFlow.collectAsState(initial = null)
 
 
+    SkillLayout(
+        normalSkillData,
+        spSkillData,
+        spLabel,
+        isFilterSkill,
+        filterSkillCount,
+        unitType,
+        property,
+        toSummonDetail
+    )
+}
+
+/**
+ * 技能列表布局
+ */
+@Composable
+fun SkillLayout(
+    normalSkillData: MutableList<SkillDetail>,
+    spSkillData: MutableList<SkillDetail>,
+    spLabel: SpSkillLabelData?,
+    isFilterSkill: Boolean,
+    filterSkillCount: Int,
+    unitType: UnitType,
+    property: CharacterProperty,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,24 +133,19 @@ fun SkillCompose(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //技能信息标题
-        if (normalSkillData.isNotEmpty() or spSkillData.isNotEmpty()) {
+        if (normalSkillData.isNotEmpty() || spSkillData.isNotEmpty()) {
             MainText(
-                text = stringResource(R.string.skill),
-                modifier = Modifier
-                    .padding(top = Dimen.largePadding)
+                text = stringResource(R.string.skill)
             )
         }
         //普通技能
         (if (isFilterSkill) {
+            //过滤专用装备影响的技能
             normalSkillData.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.MAIN_SKILL_2_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_2
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_2
                 if (filterSkillCount == 1) {
                     skill1
                 } else {
@@ -128,11 +174,17 @@ fun SkillCompose(
             }
         }
         (if (isFilterSkill) {
+            //过滤专用装备影响的技能
             spSkillData.filter {
-                it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
-                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
+                val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1
+                val skill2 = it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_2
+                if (filterSkillCount == 1) {
+                    skill1
+                } else {
+                    skill1 || skill2
+                }
             }
         } else {
             spSkillData
@@ -163,7 +215,10 @@ fun SkillItem(
     isExtraEquipSKill: Boolean = false
 ) {
     //是否显示参数判断
-    val actionData = skillDetail.getActionInfo()
+    val actionData = remember(skillDetail.skillId, skillDetail.level, skillDetail.atk) {
+        skillDetail.getActionInfo()
+    }
+
     try {
         val showCoeIndex = skillDetail.getActionIndexWithCoe()
         actionData.mapIndexed { index, skillActionText ->
