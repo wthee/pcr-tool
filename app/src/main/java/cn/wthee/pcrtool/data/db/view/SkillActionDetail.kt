@@ -332,7 +332,7 @@ data class SkillActionDetail(
                                 )
                                 getString(R.string.skill_action_speed_change, type, value)
                             } else {
-                                getString(R.string.skill_action_speed_multipl, value)
+                                getString(R.string.skill_action_speed_multiple, value)
                             }
                         if (actionType == SkillActionType.SPEED_FIELD.type) {
                             getString(

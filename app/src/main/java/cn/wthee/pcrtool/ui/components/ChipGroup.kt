@@ -10,7 +10,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -117,7 +117,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
 private fun ChipGroupPreview() {
     val mockData = arrayListOf<ChipData>()
     val selectIndex = remember {
-        mutableStateOf(3)
+        mutableIntStateOf(3)
     }
     for (i in 0..10) {
         mockData.add(ChipData(i, "chip $i"))

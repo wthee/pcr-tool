@@ -276,7 +276,7 @@ private fun ChangeDbCompose(
 
     //展开边距修正
     val mFabModifier = if (openDialog) {
-        modifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+        modifier.padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
     } else {
         modifier
     }

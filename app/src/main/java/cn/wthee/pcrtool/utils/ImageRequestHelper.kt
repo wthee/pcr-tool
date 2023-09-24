@@ -57,9 +57,6 @@ class ImageRequestHelper {
         //剧情活动剧情
         const val EVENT_STORY = "event/story/"
 
-        //图片资源地址
-        private var OTHER_RESOURCE_URL = "https://${URL_DOMAIN}/resource/"
-
     }
 
     /**

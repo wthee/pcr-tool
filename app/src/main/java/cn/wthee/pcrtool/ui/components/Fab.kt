@@ -63,7 +63,7 @@ fun MainSmallFab(
     val isTextFab = text != "" && extraContent == null
 
     if (isTextFab) {
-        mModifier = mModifier.padding(horizontal = Dimen.textfabMargin)
+        mModifier = mModifier.padding(horizontal = Dimen.textFabMargin)
     }
 
     SmallFloatingActionButton(
@@ -159,7 +159,7 @@ fun SelectTypeFab(
                 .padding(paddingValues)
                 .padding(
                     start = Dimen.mediumPadding,
-                    end = Dimen.textfabMargin,
+                    end = Dimen.textFabMargin,
                     top = Dimen.mediumPadding,
                 ),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,

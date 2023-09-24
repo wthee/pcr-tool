@@ -44,6 +44,7 @@ fun Modifier.clickClose(
 /**
  * 通用 placeholder
  */
+@Suppress("DEPRECATION")
 fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
     Modifier.placeholder(
         visible = visible,

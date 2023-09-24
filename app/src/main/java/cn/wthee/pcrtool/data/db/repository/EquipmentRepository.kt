@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
 
-    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
+    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfo(equipId)
 
     suspend fun getEquipBasicInfo(equipId: Int) = equipmentDao.getEquipBasicInfo(equipId)
 
@@ -83,14 +83,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     ): List<UniqueEquipmentMaxData> {
         val list = arrayListOf<UniqueEquipmentMaxData>()
         try {
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv, 1)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId, lv, 1)?.let {
                 list.add(it)
             }
-            equipmentDao.getUniqueEquipInfosV2(unitId, lv2 + 1, 2)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId, lv2 + 1, 2)?.let {
                 list.add(it)
             }
         } catch (e: Exception) {
-            equipmentDao.getUniqueEquipInfos(unitId, lv)?.let {
+            equipmentDao.getUniqueEquipInfo(unitId, lv)?.let {
                 list.add(it)
             }
         }

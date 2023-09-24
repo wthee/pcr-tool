@@ -318,7 +318,7 @@ enum class CalendarEventType(val type: Int) {
  * 角色详情模块
  */
 enum class CharacterDetailModuleType(val id: Int, val titleId: Int) {
-    UNKNOW(299, R.string.unknown),
+    UNKNOWN(299, R.string.unknown),
     CARD(300, R.string.character_card),
     COE(301, R.string.character_power),
     TOOLS(302, R.string.character_tool),
@@ -335,6 +335,6 @@ enum class CharacterDetailModuleType(val id: Int, val titleId: Int) {
 
     companion object {
         fun getByValue(value: Int) = entries
-            .find { it.id == value } ?: UNKNOW
+            .find { it.id == value } ?: UNKNOWN
     }
 }

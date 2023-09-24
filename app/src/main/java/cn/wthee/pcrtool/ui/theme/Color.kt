@@ -10,13 +10,9 @@ val colorPrimaryDark = Color(0xFF3F6BB3)
 val colorWhite = Color(0xFFFFFCFE)
 val colorBlack = Color(0xFF0D0F0F)
 
-//surface
-val colorSurface = Color(0XFFFFFBFE)
-val colorSurfaceDark = Color(0XFF1C1B1F)
 
 //outline
 val colorGray = Color(0xFF9C9C9C)
-val colorGrayDark = Color(0xFF5C5B5B)
 
 //遮罩颜色
 val colorAlphaBlack = Color(0, 0, 0, 128)

@@ -163,7 +163,7 @@ interface EquipmentDao {
     @SkipQueryVerification
     @Transaction
     @Query("$viewEquipmentMaxData WHERE a.equipment_id =:equipId")
-    suspend fun getEquipInfos(equipId: Int): EquipmentMaxData
+    suspend fun getEquipInfo(equipId: Int): EquipmentMaxData
 
     /**
      * 获取专武信息
@@ -205,7 +205,7 @@ interface EquipmentDao {
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
     )
-    suspend fun getUniqueEquipInfos(unitId: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int): UniqueEquipmentMaxData?
 
     /**
      * 获取专武信息V2，日服专武提升表已更新：unique_equipment_enhance_rate -> unique_equip_enhance_rate
@@ -247,7 +247,7 @@ interface EquipmentDao {
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv <= 2 AND a.equipment_id % 10 = :slot
     """
     )
-    suspend fun getUniqueEquipInfosV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfoV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
 
     /**
      * 获取专武信息（等级大于260）

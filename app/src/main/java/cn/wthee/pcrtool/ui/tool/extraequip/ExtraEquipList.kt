@@ -375,10 +375,11 @@ private fun FilterExtraEquipSheet(
             categoryIndex.intValue = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterExtraEquip.postValue(null)
+        } else {
+            navViewModel.filterExtraEquip.postValue(filter)
         }
         if (ok) {
             sheetState.hide()
-            navViewModel.filterExtraEquip.postValue(filter)
             navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }

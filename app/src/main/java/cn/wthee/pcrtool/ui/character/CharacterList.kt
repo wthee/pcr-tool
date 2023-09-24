@@ -629,11 +629,12 @@ private fun FilterCharacterSheet(
             raceIndex.intValue = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterCharacter.postValue(null)
+        } else {
+            navViewModel.filterCharacter.postValue(filter)
         }
         //点击确认
         if (ok) {
             sheetState.hide()
-            navViewModel.filterCharacter.postValue(filter)
             navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }

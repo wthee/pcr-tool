@@ -43,7 +43,7 @@ fun EquipMaterialDetail(
 ) {
     //掉落列表
     val dropInfoListFlow = remember {
-        equipmentViewModel.getDropInfos(equipId)
+        equipmentViewModel.getDropInfo(equipId)
     }
     val dropInfoList by dropInfoListFlow.collectAsState(initial = null)
 

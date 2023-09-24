@@ -73,7 +73,7 @@ fun EnemyDetail(
     val enemyData by enemyDataFlow.collectAsState(initial = null)
     //部位信息
     val partEnemyListFlow = remember(enemyId) {
-        enemyViewModel.getMutiTargetEnemyInfo(enemyId)
+        enemyViewModel.getMultiTargetEnemyInfo(enemyId)
     }
     val partEnemyList by partEnemyListFlow.collectAsState(initial = null)
 

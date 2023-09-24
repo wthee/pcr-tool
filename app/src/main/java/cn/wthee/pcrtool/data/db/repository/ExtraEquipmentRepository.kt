@@ -11,7 +11,7 @@ import javax.inject.Inject
  */
 class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: ExtraEquipmentDao) {
 
-    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
+    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfo(equipId)
 
     suspend fun getEquipments(filter: FilterExtraEquipment, limit: Int) = try {
         equipmentDao.getEquipments(

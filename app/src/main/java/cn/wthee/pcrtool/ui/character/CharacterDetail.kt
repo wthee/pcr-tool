@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -37,6 +37,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -230,7 +231,7 @@ fun CharacterDetail(
     }
 
     //编辑模式
-    val isEditMode = remember {
+    var isEditMode by remember {
         mutableStateOf(false)
     }
 
@@ -272,17 +273,21 @@ fun CharacterDetail(
 
     //确认时监听
     val ok = navViewModel.fabOKClick.observeAsState().value ?: false
-    if (ok && isEditMode.value) {
+    if (ok && isEditMode) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKClick.postValue(false)
-        isEditMode.value = false
+        isEditMode = false
     }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         //页面
         if (visible) {
-            if (isEditMode.value) {
+            if (isEditMode) {
                 val typeList = arrayListOf(
                     CharacterDetailModuleType.CARD,
                     CharacterDetailModuleType.COE,
@@ -439,7 +444,7 @@ fun CharacterDetail(
                                     scrollable = false
                                 )
 
-                                CharacterDetailModuleType.UNKNOW -> {
+                                CharacterDetailModuleType.UNKNOWN -> {
                                     CenterTipText(stringResource(id = R.string.unknown))
                                 }
                             }
@@ -448,17 +453,6 @@ fun CharacterDetail(
                         CommonSpacer()
                         Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
                     }
-                }
-
-                if (pageCount == 2) {
-                    MainHorizontalPagerIndicator(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .navigationBarsPadding()
-                            .padding(bottom = Dimen.smallPadding),
-                        pagerState = pagerState,
-                        pageCount = 2
-                    )
                 }
             }
         }
@@ -497,53 +491,68 @@ fun CharacterDetail(
                         }
                     }
                 }
-                Row(
+                Box(
                     modifier = Modifier.padding(
-                        end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin
-                    )
+                        bottom = Dimen.fabMargin
+                    ),
+                    contentAlignment = Alignment.CenterEnd
                 ) {
-                    if (showDetail) {
-                        if (!isEditMode.value) {
-                            //编辑
-                            MainSmallFab(
-                                iconType = MainIconType.EDIT_TOOL,
-                            ) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                isEditMode.value = true
+                    Row(
+                        modifier = Modifier.padding(end = Dimen.fabMarginEnd)
+                    ) {
+                        if (showDetail) {
+                            if (!isEditMode) {
+                                //编辑
+                                MainSmallFab(
+                                    iconType = MainIconType.EDIT_TOOL,
+                                ) {
+                                    navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                    isEditMode = true
+                                }
+
+                                //收藏
+                                MainSmallFab(
+                                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                                ) {
+                                    FilterCharacter.addOrRemove(unitId)
+                                    loved.value = !loved.value
+                                }
                             }
 
-                            //收藏
-                            MainSmallFab(
-                                iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                            ) {
-                                FilterCharacter.addOrRemove(unitId)
-                                loved.value = !loved.value
+                            //技能循环
+                            if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
+                                MainSmallFab(
+                                    iconType = MainIconType.SKILL_LOOP,
+                                ) {
+                                    if (!isEditMode) {
+                                        actions.toCharacterSkillLoop(currentIdState.intValue)
+                                    }
+                                }
                             }
-                        }
 
-                        //技能循环
-                        if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
+                        } else {
+                            //切换详情，专用装备跳转过来时，显示该按钮
                             MainSmallFab(
-                                iconType = MainIconType.SKILL_LOOP,
+                                iconType = MainIconType.CHARACTER,
+                                text = stringResource(id = R.string.character_detail)
                             ) {
-                                if (!isEditMode.value) {
-                                    actions.toCharacterSkillLoop(currentIdState.intValue)
+                                showDetailState?.let {
+                                    it.value = !showDetailState.value
                                 }
                             }
                         }
+                    }
 
-                    } else {
-                        //切换详情，专用装备跳转过来时，显示该按钮
-                        MainSmallFab(
-                            iconType = MainIconType.CHARACTER,
-                            text = stringResource(id = R.string.character_detail)
-                        ) {
-                            showDetailState?.let {
-                                it.value = !showDetailState.value
-                            }
-                        }
+                    //页面指示器
+                    if (pageCount == 2 && !isEditMode) {
+                        MainHorizontalPagerIndicator(
+                            modifier = Modifier.padding(end = Dimen.smallPadding),
+                            pagerState = pagerState,
+                            pageCount = 2
+                        )
                     }
                 }
+
             }
         }
     }

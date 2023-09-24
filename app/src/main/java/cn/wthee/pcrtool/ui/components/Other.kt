@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
@@ -189,16 +190,19 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainHorizontalPagerIndicator(modifier: Modifier, pagerState: PagerState, pageCount: Int) {
+fun MainHorizontalPagerIndicator(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    pageCount: Int
+) {
     HorizontalPagerIndicator(
         modifier = modifier,
         pagerState = pagerState,
         pageCount = pageCount,
+        indicatorWidth = 6.dp,
         activeColor = MaterialTheme.colorScheme.primary,
-        indicatorWidth = 32.dp,
-        indicatorHeight = Dimen.strokeWidth,
-        spacing = Dimen.mediumPadding,
-//        indicatorShape = CutCornerShape(topStartPercent = 0)
+        indicatorShape = CutCornerShape(50),
+        spacing = 0.dp
     )
 }
 
@@ -459,7 +463,11 @@ fun <T> CommonResponseBox(
     fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
     content: @Composable (BoxScope.(T) -> Unit),
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
         FadeAnimation(visible = isResultError(responseData)) {
             CenterTipText(text = stringResource(id = R.string.response_error))
         }

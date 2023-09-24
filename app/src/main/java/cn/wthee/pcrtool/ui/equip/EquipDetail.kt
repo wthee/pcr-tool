@@ -47,7 +47,7 @@ fun EquipMainInfo(
     val equipMaxData by equipMaxDataFlow.collectAsState(initial = EquipmentMaxData())
     //素材列表
     val materialListFlow = remember(equipMaxData) {
-        equipmentViewModel.getEquipInfos(equipMaxData)
+        equipmentViewModel.getEquipInfo(equipMaxData)
     }
     val materialList by materialListFlow.collectAsState(initial = arrayListOf())
 

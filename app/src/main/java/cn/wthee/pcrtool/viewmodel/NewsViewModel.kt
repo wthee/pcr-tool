@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -42,14 +41,6 @@ class NewsViewModel @Inject constructor(
         )
     ) {
         newsDao.pagingSource(region, keyword)
-    }
-
-    /**
-     * 获取公告详情
-     */
-    fun getNewsDetail(id: String) = flow {
-        val data = apiRepository.getNewsDetail(id)
-        emit(data)
     }
 
 }

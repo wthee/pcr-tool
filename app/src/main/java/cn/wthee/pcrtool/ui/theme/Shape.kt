@@ -24,11 +24,6 @@ fun shapeTop() = RoundedCornerShape(
 const val RATIO_GOLDEN = 0.618f
 
 /**
- * dialog 高度
- */
-const val WEIGHT_DIALOG = 0.85f
-
-/**
  * 梯形
  */
 val TrapezoidShape = GenericShape { size, _ ->

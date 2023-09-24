@@ -575,7 +575,7 @@
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
     <string name="skill_action_type_desc_7">锁定%s</string>
     <string name="skill_action_speed_change">速度额外%s初始值的 %s 倍</string>
-    <string name="skill_action_speed_multipl">速度变更为初始值的 %s 倍</string>
+    <string name="skill_action_speed_multiple">速度变更为初始值的 %s 倍</string>
     <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>

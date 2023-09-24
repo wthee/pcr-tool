@@ -321,7 +321,7 @@ private fun SearchEquip(
                     modifier = Modifier
                         .padding(
                             start = Dimen.fabMargin,
-                            end = Dimen.textfabMargin
+                            end = Dimen.textFabMargin
                         ),
                     shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
                     onClick = {
@@ -603,10 +603,11 @@ private fun FilterEquipSheet(
             navViewModel.filterEquip.postValue(null)
             navViewModel.searchEquipMode.postValue(false)
             navViewModel.searchEquipIdList.postValue(arrayListOf())
+        } else {
+            navViewModel.filterEquip.postValue(filter)
         }
         if (ok) {
             sheetState.hide()
-            navViewModel.filterEquip.postValue(filter)
             navViewModel.fabOKClick.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }

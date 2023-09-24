@@ -102,7 +102,7 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equip 装备信息
      */
-    fun getEquipInfos(equip: EquipmentMaxData) = flow {
+    fun getEquipInfo(equip: EquipmentMaxData) = flow {
         try {
             emit(
                 getEquipCraft(
@@ -114,7 +114,7 @@ class EquipmentViewModel @Inject constructor(
                 )
             )
         } catch (e: Exception) {
-            LogReportUtil.upload(e, "getEquipInfos#equip:${equip.equipmentId}")
+            LogReportUtil.upload(e, "getEquipInfo#equip:${equip.equipmentId}")
         }
     }
 
@@ -210,7 +210,7 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equipId 装备编号
      */
-    fun getDropInfos(equipId: Int) = flow {
+    fun getDropInfo(equipId: Int) = flow {
         try {
             if (equipId != UNKNOWN_EQUIP_ID) {
                 val equip = equipmentRepository.getEquipBasicInfo(equipId)
@@ -219,12 +219,12 @@ class EquipmentViewModel @Inject constructor(
                 } else
                     equipId
                 //获取装备掉落信息
-                val infos =
+                val info =
                     questRepository.getEquipDropQuestList(fixedId).sortedWith(getSort(equipId))
-                emit(infos)
+                emit(info)
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, "getDropInfos#equipId:$equipId")
+            LogReportUtil.upload(e, "getDropInfo#equipId:$equipId")
         }
     }
 

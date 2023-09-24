@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -76,7 +76,6 @@ import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.WEIGHT_DIALOG
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -262,7 +261,7 @@ private fun ComicIndexChange(
                     bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
                     top = Dimen.fabMargin
                 )
-                .padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin),
+                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
             shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 VibrateUtil(context).single()
@@ -359,10 +358,46 @@ private fun ComicTocList(
 
 
     Column {
+        //目录
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(Dimen.smallPadding),
+            state = gridState,
+            columns = GridCells.Adaptive(getItemWidth())
+        ) {
+            itemsIndexed(tabs) { index, tab ->
+                val mModifier = if (pagerState.currentPage == index) {
+                    Modifier.fillMaxWidth()
+                } else {
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                            MainActivity.navViewModel.fabCloseClick.postValue(true)
+                            tocSelectedIndex.value = index
+                            changeListener()
+                        }
+                }
+                SelectText(
+                    selected = pagerState.currentPage == index,
+                    text = tab,
+                    textStyle = MaterialTheme.typography.titleMedium,
+                    modifier = mModifier.padding(Dimen.mediumPadding),
+                    textAlign = TextAlign.Start
+                )
+            }
+        }
+
+        //输入
         OutlinedTextField(
             modifier = Modifier
                 .padding(Dimen.smallPadding)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .imePadding(),
             value = input.value,
             placeholder = {
                 MainContentText(
@@ -419,39 +454,6 @@ private fun ComicTocList(
                 }
             )
         )
-
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimen.smallPadding)
-                .fillMaxHeight(WEIGHT_DIALOG),
-            state = gridState,
-            columns = GridCells.Adaptive(getItemWidth())
-        ) {
-            itemsIndexed(tabs) { index, tab ->
-                val mModifier = if (pagerState.currentPage == index) {
-                    Modifier.fillMaxWidth()
-                } else {
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            MainActivity.navViewModel.openChangeDataDialog.postValue(false)
-                            MainActivity.navViewModel.fabCloseClick.postValue(true)
-                            tocSelectedIndex.value = index
-                            changeListener()
-                        }
-                }
-                SelectText(
-                    selected = pagerState.currentPage == index,
-                    text = tab,
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    modifier = mModifier.padding(Dimen.mediumPadding),
-                    textAlign = TextAlign.Start
-                )
-            }
-        }
     }
 
 }
