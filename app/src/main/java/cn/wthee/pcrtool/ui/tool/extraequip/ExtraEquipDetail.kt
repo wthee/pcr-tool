@@ -218,7 +218,7 @@ private fun ExtraEquipSkill(
     skillIds: List<Int>,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val skillsFlow = remember {
+    val skillsFlow = remember(skillIds) {
         skillViewModel.getExtraEquipPassiveSkills(skillIds)
     }
     val skills by skillsFlow.collectAsState(initial = arrayListOf())
