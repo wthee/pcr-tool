@@ -118,7 +118,7 @@ val Double.int: Int
  */
 val Double.intStr: String
     get() {
-        return if (this < 1) {
+        return if (this < 100) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val format = DecimalFormat("0.########")
                 format.roundingMode = RoundingMode.FLOOR.ordinal
