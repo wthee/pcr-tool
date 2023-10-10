@@ -211,10 +211,16 @@ class OverviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val r6Ids = unitRepository.getR6Ids()
-                navViewModel.dbError.postValue(unitRepository.getCountInt() == 0)
                 navViewModel.r6Ids.postValue(r6Ids)
             } catch (e: Exception) {
+                navViewModel.dbError.postValue(true)
                 LogReportUtil.upload(e, "getR6Ids")
+            }
+            try {
+                navViewModel.dbError.postValue(unitRepository.getCountInt() == 0)
+            } catch (e: Exception) {
+                navViewModel.dbError.postValue(true)
+                LogReportUtil.upload(e, "dbError")
             }
         }
     }

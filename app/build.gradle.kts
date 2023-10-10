@@ -1,23 +1,20 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
-kapt {
-    correctErrorTypes = true
-}
 
 hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.09.00"
-val composeCompilerVersion = "1.5.2"
-val appVersionCode = 373
-val appVersionName = "3.7.3"
+val composeBom = "2023.10.00"
+val composeCompilerVersion = "1.5.3"
+val appVersionCode = 374
+val appVersionName = "3.7.4"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -114,7 +111,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
-    //compose bom
+    //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -136,7 +133,7 @@ dependencies {
     implementation("androidx.browser:browser:1.6.0")
 
     //Bugly
-    implementation("com.tencent.bugly:crashreport:4.1.9")
+    implementation("com.tencent.bugly:crashreport:4.1.9.2")
 
     //Coil
     val coilVersion = "2.4.0"
@@ -144,8 +141,8 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-beta01")
 
     //Lifecycle
     val lifecycleVersion = "2.6.2"
@@ -169,11 +166,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.6.0-alpha03"
+    val roomVersion = "2.6.0-rc01"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")

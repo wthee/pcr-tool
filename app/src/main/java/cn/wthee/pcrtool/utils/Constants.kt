@@ -13,7 +13,7 @@ object Constants {
     const val TP_LIMIT_LEVEL = 260
 
     //本地数据库版本
-    const val SQLITE_VERSION = 351
+    const val SQLITE_VERSION = 374
 
     //本地储存
     const val COIL_DIR = "coil_image_cache"
