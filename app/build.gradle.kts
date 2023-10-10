@@ -13,8 +13,8 @@ hilt {
 
 val composeBom = "2023.10.00"
 val composeCompilerVersion = "1.5.3"
-val appVersionCode = 373
-val appVersionName = "3.7.3"
+val appVersionCode = 374
+val appVersionName = "3.7.4"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -111,7 +111,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.preference:preference-ktx:1.2.0")
 
-    //compose bom
+    //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
