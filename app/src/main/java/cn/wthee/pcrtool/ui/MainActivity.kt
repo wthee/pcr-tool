@@ -49,13 +49,12 @@ fun settingSP(mContext: Context = context): SharedPreferences =
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val mNoticeViewModel: NoticeViewModel by viewModels()
+    private val noticeViewModel: NoticeViewModel by viewModels()
 
     companion object {
         lateinit var handler: Handler
 
         lateinit var navViewModel: NavViewModel
-        lateinit var noticeViewModel: NoticeViewModel
 
         @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
@@ -97,7 +96,6 @@ class MainActivity : ComponentActivity() {
             DatabaseUpdater.checkDBVersion()
         }
         //更新通知
-        noticeViewModel = mNoticeViewModel
         noticeViewModel.check()
     }
 
