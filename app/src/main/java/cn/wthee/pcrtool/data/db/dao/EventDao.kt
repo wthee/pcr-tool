@@ -58,7 +58,9 @@ interface EventDao {
             LEFT JOIN wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
             LEFT JOIN enemy_parameter ON wave.enemy_id_1 = enemy_parameter.enemy_id
         ORDER BY
-            event.start_time DESC  
+            substr(event.start_time, 0, instr(event.start_time,'/')) DESC,
+            CAST(replace(substr(event.start_time, 6, 2), '/', '') AS decimal) DESC,
+            CAST(replace(substr(event.start_time,instr(event.start_time,' ') - 2, 2), '/', '') AS decimal) DESC
             LIMIT 0,:limit
         """
     )
