@@ -139,7 +139,7 @@ class OverviewViewModel @Inject constructor(
     fun getCalendarEventList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getDropEvent().toMutableList()
+            val data = eventRepository.getDropEvent(50).toMutableList()
             data += eventRepository.getMissionEvent(1)
             data += eventRepository.getLoginEvent(1)
             data += eventRepository.getFortuneEvent(1)

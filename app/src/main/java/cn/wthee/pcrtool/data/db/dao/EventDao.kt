@@ -97,10 +97,10 @@ interface EventDao {
             value 
         ORDER BY
             campaign_schedule.id DESC 
-            LIMIT 0, 100
+         LIMIT 0,:limit
     """
     )
-    suspend fun getDropEvent(): List<CalendarEvent>
+    suspend fun getDropEvent(limit: Int): List<CalendarEvent>
 
     /**
      * 获取每日体力加倍活动信息
