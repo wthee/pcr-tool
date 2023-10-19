@@ -45,7 +45,9 @@ fun NewsSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode)
-                editOverviewMenuOrder(id)
+                editOverviewMenuOrder(id){
+                    overviewViewModel.overviewOrderData.postValue(it)
+                }
             else
                 actions.toNews()
         }

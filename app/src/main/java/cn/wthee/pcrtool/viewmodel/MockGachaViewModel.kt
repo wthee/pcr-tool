@@ -37,8 +37,35 @@ class MockGachaViewModel @Inject constructor(
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
 
+    /**
+     * 查询历史
+     */
     val historyList = MutableLiveData<List<MockGachaProData>>()
+
+    /**
+     * 抽卡结果
+     */
     val resultRecordList = MutableLiveData<List<MockGachaResultRecordData>>()
+
+    /**
+     * 模拟卡池结果显示
+     */
+    val showMockGachaResult = MutableLiveData(false)
+
+    /**
+     * 模拟卡池数据
+     */
+    val gachaId = MutableLiveData<String>()
+
+    /**
+     * 模拟卡池类型
+     */
+    val mockGachaType = MutableLiveData<MockGachaType>()
+
+    /**
+     * 模拟卡池 pickUp 角色
+     */
+    val pickUpList = MutableLiveData<List<GachaUnitInfo>>()
 
     /**
      * 获取卡池角色

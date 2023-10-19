@@ -237,14 +237,14 @@ fun CharacterDetail(
 
     //自定义显示顺序
     val localData = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, defaultOrder) ?: ""
-    var orderData = navViewModel.characterDetailOrderData.observeAsState().value ?: ""
+    var orderData = characterViewModel.characterDetailOrderData.observeAsState().value ?: ""
     LaunchedEffect(orderData, showDetail) {
         orderData = if (showDetail) {
             localData
         } else {
             "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
         }
-        navViewModel.characterDetailOrderData.postValue(orderData)
+        characterViewModel.characterDetailOrderData.postValue(orderData)
     }
     //选中的
     val mainList = orderData.intArrayList
@@ -325,7 +325,9 @@ fun CharacterDetail(
                             isEditMode = true,
                             orderStr = orderData,
                             onClick = {
-                                editOrder(it.id)
+                                editOrder(it.id){
+                                    characterViewModel.characterDetailOrderData.postValue(it)
+                                }
                             }
                         ) {}
                     }
@@ -1096,7 +1098,7 @@ private fun StarSelect(
 /**
  * 编辑排序
  */
-private fun editOrder(id: Int) {
+private fun editOrder(id: Int, onSuccess: (String) -> Unit) {
     val sp = mainSP()
     val orderStr = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, "") ?: ""
     val idStr = "$id-"
@@ -1111,7 +1113,7 @@ private fun editOrder(id: Int) {
     sp.edit {
         putString(Constants.SP_CHARACTER_DETAIL_ORDER, edited)
         //更新
-        navViewModel.characterDetailOrderData.postValue(edited)
+        onSuccess(edited)
     }
 }
 

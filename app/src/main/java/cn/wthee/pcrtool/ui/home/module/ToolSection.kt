@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.home.module
 
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -19,12 +20,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.edit
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -37,6 +38,7 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -53,6 +55,7 @@ fun ToolSection(
     actions: NavActions,
     isEditMode: Boolean,
     orderStr: String,
+    overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val id = OverviewType.TOOL.id
     Section(
@@ -63,7 +66,9 @@ fun ToolSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode)
-                editOverviewMenuOrder(id)
+                editOverviewMenuOrder(id){
+                    overviewViewModel.overviewOrderData.postValue(it)
+                }
             else
                 actions.toToolMore(false)
         }
@@ -78,7 +83,12 @@ fun ToolSection(
  * @param isEditMode 是否为编辑模式
  */
 @Composable
-fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean = true) {
+fun ToolMenu(
+    actions: NavActions,
+    isEditMode: Boolean = false,
+    isHome: Boolean = true,
+    overviewViewModel: OverviewViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+) {
 
     val context = LocalContext.current
     val sp = mainSP()
@@ -92,16 +102,16 @@ fun ToolMenu(actions: NavActions, isEditMode: Boolean = false, isHome: Boolean =
                 putString(Constants.SP_TOOL_ORDER, "")
                 //更新
                 localData = ""
-                navViewModel.toolOrderData.postValue("")
+                overviewViewModel.toolOrderData.postValue("")
             }
             return@forEach
         }
     }
 
-    var toolOrderData = navViewModel.toolOrderData.observeAsState().value
+    var toolOrderData = overviewViewModel.toolOrderData.observeAsState().value
     if (toolOrderData.isNullOrEmpty()) {
         toolOrderData = localData
-        navViewModel.toolOrderData.postValue(toolOrderData)
+        overviewViewModel.toolOrderData.postValue(toolOrderData)
     }
 
     val toolList = arrayListOf<ToolMenuData>()
@@ -145,7 +155,8 @@ fun MenuItem(
     context: Context,
     actions: NavActions,
     toolMenuData: ToolMenuData,
-    isEditMode: Boolean
+    isEditMode: Boolean,
+    overviewViewModel: OverviewViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     Column(
         modifier = Modifier
@@ -154,7 +165,9 @@ fun MenuItem(
                 VibrateUtil(context).single()
                 if (isEditMode) {
                     // 点击移除
-                    editToolMenuOrder(toolMenuData.type.id)
+                    editToolMenuOrder(toolMenuData.type.id){
+                        overviewViewModel.toolOrderData.postValue(it)
+                    }
                 } else {
                     getAction(actions, toolMenuData)()
                 }
@@ -237,10 +250,12 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_calendar_event,
             MainIconType.CALENDAR
         )
+
         ToolMenuType.EXTRA_EQUIP -> ToolMenuData(
             R.string.tool_extra_equip,
             MainIconType.EXTRA_EQUIP
         )
+
         ToolMenuType.TRAVEL_AREA -> ToolMenuData(
             R.string.tool_travel,
             MainIconType.EXTRA_EQUIP_DROP
@@ -270,7 +285,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
 /**
  * 编辑模块排序
  */
-fun editToolMenuOrder(id: Int) {
+fun editToolMenuOrder(id: Int, onSuccess: (String) -> Unit) {
     val sp = mainSP()
     val orderStr = sp.getString(Constants.SP_TOOL_ORDER, "") ?: ""
     val idStr = "$id-"
@@ -285,6 +300,6 @@ fun editToolMenuOrder(id: Int) {
     sp.edit {
         putString(Constants.SP_TOOL_ORDER, edited)
         //更新
-        navViewModel.toolOrderData.postValue(edited)
+        onSuccess(edited)
     }
 }

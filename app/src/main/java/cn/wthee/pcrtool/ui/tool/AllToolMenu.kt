@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,16 +25,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -54,6 +56,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -250,12 +253,13 @@ private fun MenuGroup(
 private fun MenuItem(
     actions: NavActions,
     toolMenuData: ToolMenuData,
-    isEditMode: Boolean
+    isEditMode: Boolean,
+    overviewViewModel: OverviewViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val orderStr = if (LocalInspectionMode.current) {
         ""
     } else {
-        navViewModel.toolOrderData.observeAsState().value ?: ""
+        overviewViewModel.toolOrderData.observeAsState().value ?: ""
 
     }
     val hasAdded = orderStr.intArrayList.contains(toolMenuData.type.id)
@@ -265,7 +269,9 @@ private fun MenuItem(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = if (isEditMode) {
             {
-                editToolMenuOrder(toolMenuData.type.id)
+                editToolMenuOrder(toolMenuData.type.id){
+                    overviewViewModel.toolOrderData.postValue(it)
+                }
             }
         } else {
             getAction(actions, toolMenuData)

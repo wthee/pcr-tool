@@ -59,9 +59,9 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UniqueEquipList(
-    viewModel: EquipmentViewModel = hiltViewModel(),
-    toUniqueEquipDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
+    toUniqueEquipDetail: (Int) -> Unit
 ) {
     val defaultName = navViewModel.uniqueEquipName.value ?: ""
     //关键词输入
@@ -78,13 +78,13 @@ fun UniqueEquipList(
     }
     //专用装备1
     val uniqueEquips1Flow = remember(keywordState.value) {
-        viewModel.getUniqueEquips(keywordState.value, 1)
+        equipmentViewModel.getUniqueEquips(keywordState.value, 1)
     }
     val uniqueEquips1 by uniqueEquips1Flow.collectAsState(initial = arrayListOf())
 
     //专用装备2
     val uniqueEquips2Flow = remember(keywordState.value) {
-        viewModel.getUniqueEquips(keywordState.value, 2)
+        equipmentViewModel.getUniqueEquips(keywordState.value, 2)
     }
     val uniqueEquips2 by uniqueEquips2Flow.collectAsState(initial = arrayListOf())
 

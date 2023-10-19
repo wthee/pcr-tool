@@ -40,6 +40,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -291,17 +292,15 @@ private fun SearchEquip(
     toSearchEquipQuest: (String) -> Unit,
 ) {
     val context = LocalContext.current
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     //切换关闭监听
     if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.BACK) {
-        navViewModel.openChangeDataDialog.postValue(false)
     }
 
 
@@ -328,7 +327,7 @@ private fun SearchEquip(
                         VibrateUtil(context).single()
                         if (!openDialog) {
                             navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            navViewModel.openChangeDataDialog.postValue(true)
+                            openDialog = true
                         }
                     },
                     elevation = FloatingActionButtonDefaults.elevation(

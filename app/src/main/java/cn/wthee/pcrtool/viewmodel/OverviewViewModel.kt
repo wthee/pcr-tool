@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
@@ -36,6 +37,17 @@ class OverviewViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
+
+    /**
+     * 首页显示
+     */
+    val overviewOrderData = MutableLiveData<String>()
+
+    /**
+     * 菜单顺序
+     */
+    val toolOrderData = MutableLiveData<String>()
+
 
     /**
      * 获取角色数量

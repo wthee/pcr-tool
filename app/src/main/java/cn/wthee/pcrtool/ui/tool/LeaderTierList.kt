@@ -34,7 +34,6 @@ import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
@@ -74,9 +73,9 @@ fun LeaderTier(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val type = remember {
-        mutableIntStateOf(navViewModel.leaderTierType.value?.type ?: 0)
+        mutableIntStateOf(leaderViewModel.leaderTierType.value?.type ?: 0)
     }
-    type.intValue = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
+    type.intValue = leaderViewModel.leaderTierType.observeAsState().value?.type ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -144,7 +143,7 @@ fun LeaderTier(
                         bottom = Dimen.fabMargin * 2 + Dimen.fabSize
                     )
                 ) {
-                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
+                    leaderViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
                 }
 
                 //回到顶部

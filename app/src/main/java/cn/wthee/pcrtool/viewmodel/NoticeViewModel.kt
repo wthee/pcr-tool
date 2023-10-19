@@ -15,8 +15,9 @@ import javax.inject.Inject
  * @param apiRepository
  */
 @HiltViewModel
-class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIRepository) :
-    ViewModel() {
+class NoticeViewModel @Inject constructor(
+    private val apiRepository: MyAPIRepository
+) : ViewModel() {
 
     /**
      * 应用更新

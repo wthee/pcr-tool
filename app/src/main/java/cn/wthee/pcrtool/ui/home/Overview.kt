@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -34,6 +35,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,9 +52,9 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -85,7 +87,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlinx.coroutines.launch
 
 
-private const val defaultOrder = "0-1-6-2-3-4-5-"
+private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
 
 
 /**
@@ -115,11 +117,11 @@ fun Overview(
     val sp = mainSP()
 
     //自定义显示
-    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
-    var overviewOrderData = navViewModel.overviewOrderData.observeAsState().value
+    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, DEFAULT_ORDER) ?: ""
+    var overviewOrderData = overviewViewModel.overviewOrderData.observeAsState().value
     if (overviewOrderData.isNullOrEmpty()) {
         overviewOrderData = localData
-        navViewModel.overviewOrderData.postValue(overviewOrderData)
+        overviewViewModel.overviewOrderData.postValue(overviewOrderData)
     }
 
 
@@ -261,15 +263,18 @@ fun Overview(
 @Composable
 private fun ChangeDbCompose(
     modifier: Modifier,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
 
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     //切换数据关闭监听
     if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabCloseClick.postValue(false)
     }
@@ -316,7 +321,7 @@ private fun ChangeDbCompose(
                     if (downloadState == -2) {
                         if (!openDialog) {
                             navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            navViewModel.openChangeDataDialog.postValue(true)
+                            openDialog = true
                         } else {
                             navViewModel.fabCloseClick.postValue(true)
                         }
@@ -388,7 +393,8 @@ private fun ChangeDbCompose(
  */
 @Composable
 private fun DbVersionList(
-    color: Color
+    color: Color,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -419,7 +425,6 @@ private fun DbVersionList(
                     .fillMaxWidth()
                     .clickable {
                         VibrateUtil(context).single()
-                        navViewModel.openChangeDataDialog.postValue(false)
                         navViewModel.fabCloseClick.postValue(true)
                         coroutineScope.launch {
                             //正常切换
@@ -448,7 +453,8 @@ private fun DbVersionList(
 private fun DbVersionContent(
     openDialog: Boolean,
     dbError: Boolean,
-    color: Color
+    color: Color,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val region = MainActivity.regionType
     val context = LocalContext.current
@@ -495,7 +501,6 @@ private fun DbVersionContent(
                     fillMaxWidth = false
                 ) {
                     VibrateUtil(context).single()
-                    navViewModel.openChangeDataDialog.postValue(false)
                     navViewModel.fabCloseClick.postValue(true)
                     coroutineScope.launch {
                         //数据库文件异常时，重新下载
@@ -521,7 +526,6 @@ private fun DbVersionContent(
                         text = stringResource(id = R.string.none),
                         modifier = Modifier.padding(end = Dimen.smallPadding)
                     ) {
-                        navViewModel.openChangeDataDialog.postValue(false)
                         navViewModel.fabCloseClick.postValue(true)
                         coroutineScope.launch {
                             //数据库文件异常时，重新下载
@@ -710,7 +714,7 @@ fun Section(
 /**
  * 编辑排序
  */
-fun editOverviewMenuOrder(id: Int) {
+fun editOverviewMenuOrder(id: Int, onSuccess: (String) -> Unit) {
     val sp = mainSP()
     val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, "") ?: ""
     val idStr = "$id-"
@@ -725,7 +729,7 @@ fun editOverviewMenuOrder(id: Int) {
     sp.edit {
         putString(Constants.SP_OVERVIEW_ORDER, edited)
         //更新
-        navViewModel.overviewOrderData.postValue(edited)
+        onSuccess(edited)
     }
 }
 

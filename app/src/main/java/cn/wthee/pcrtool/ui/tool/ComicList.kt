@@ -37,11 +37,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -233,17 +235,15 @@ private fun ComicIndexChange(
 ) {
     val context = LocalContext.current
 
-    val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     //切换关闭监听
     if (close) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         MainActivity.navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.BACK) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
     }
 
 
@@ -267,7 +267,7 @@ private fun ComicIndexChange(
                 VibrateUtil(context).single()
                 if (!openDialog) {
                     MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                    openDialog = true
                 } else {
                     MainActivity.navViewModel.fabCloseClick.postValue(true)
                 }
@@ -376,7 +376,6 @@ private fun ComicTocList(
                         .clip(MaterialTheme.shapes.medium)
                         .clickable {
                             VibrateUtil(context).single()
-                            MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                             MainActivity.navViewModel.fabCloseClick.postValue(true)
                             tocSelectedIndex.value = index
                             changeListener()
@@ -427,7 +426,6 @@ private fun ComicTocList(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (input.value != "") {
-                            MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                             MainActivity.navViewModel.fabCloseClick.postValue(true)
                             tocSelectedIndex.value = pageCount - input.value.toInt()
                             changeListener()
@@ -446,7 +444,6 @@ private fun ComicTocList(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                     if (input.value != "") {
-                        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                         MainActivity.navViewModel.fabCloseClick.postValue(true)
                         tocSelectedIndex.value = pageCount - input.value.toInt()
                         changeListener()

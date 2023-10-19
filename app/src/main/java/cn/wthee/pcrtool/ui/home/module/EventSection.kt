@@ -177,6 +177,7 @@ fun CalendarEventLayout(
     birthdayList: List<BirthdayData>,
     clanBattleList: List<ClanBattleEvent>,
     gachaViewModel: GachaViewModel = hiltViewModel(),
+    overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     //fes 角色id
     val fesUnitIdsFlow = remember {
@@ -210,7 +211,9 @@ fun CalendarEventLayout(
             orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
-                    editOverviewMenuOrder(id)
+                    editOverviewMenuOrder(id){
+                        overviewViewModel.overviewOrderData.postValue(it)
+                    }
                 } else {
                     //弹窗确认
                     if (confirmState.value == calendarType.type) {
