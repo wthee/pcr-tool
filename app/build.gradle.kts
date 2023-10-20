@@ -139,6 +139,9 @@ dependencies {
     val coilVersion = "2.4.0"
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha05")
+
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")

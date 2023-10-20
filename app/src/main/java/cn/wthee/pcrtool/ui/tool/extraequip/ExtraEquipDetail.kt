@@ -13,13 +13,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,7 +32,8 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.data.model.getStarExEquipIdList
+import cn.wthee.pcrtool.data.model.updateStarExEquipId
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -50,6 +51,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import kotlinx.coroutines.launch
 
 
 /**
@@ -64,6 +66,8 @@ fun ExtraEquipDetail(
     toExtraEquipDrop: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     //装备信息
     val extraEquipmentDataFlow = remember {
         extraEquipmentViewModel.getExtraEquip(equipId)
@@ -75,10 +79,7 @@ fun ExtraEquipDetail(
     }
     val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
     //收藏状态
-    val starIds = FilterExtraEquipment.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(equipId))
-    }
+    val loved = getStarExEquipIdList().contains(equipId)
 
 
     Box(
@@ -110,10 +111,11 @@ fun ExtraEquipDetail(
         ) {
             //装备收藏
             MainSmallFab(
-                iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             ) {
-                FilterExtraEquipment.addOrRemove(equipId)
-                loved.value = !loved.value
+                scope.launch {
+                    updateStarExEquipId(context, equipId)
+                }
             }
             //关联角色
             MainSmallFab(
@@ -139,7 +141,7 @@ fun ExtraEquipDetail(
 @Composable
 private fun ExtraEquipBasicInfo(
     extraEquipmentData: ExtraEquipmentData,
-    loved: MutableState<Boolean>
+    loved: Boolean
 ) {
     if (BuildConfig.DEBUG) {
         Subtitle1(
@@ -148,7 +150,7 @@ private fun ExtraEquipBasicInfo(
     }
     MainText(
         text = extraEquipmentData.equipmentName,
-        color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+        color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
         selectable = true
     )
     Row(
@@ -271,10 +273,6 @@ fun ExtraEquipUnitList(
 @CombinedPreviews
 @Composable
 private fun ExtraEquipBasicInfoPreview() {
-    val loved = remember {
-        mutableStateOf(true)
-    }
-
     PreviewLayout {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             ExtraEquipBasicInfo(
@@ -283,7 +281,7 @@ private fun ExtraEquipBasicInfoPreview() {
                     equipmentName = stringResource(id = R.string.debug_short_text),
                     description = stringResource(id = R.string.debug_long_text),
                 ),
-                loved
+                true
             )
         }
     }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +40,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.launch
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -57,7 +59,10 @@ fun ToolSection(
     orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val id = OverviewType.TOOL.id
+
     Section(
         id = id,
         titleId = R.string.function,
@@ -65,12 +70,14 @@ fun ToolSection(
         isEditMode = isEditMode,
         orderStr = orderStr,
         onClick = {
-            if (isEditMode)
-                editOverviewMenuOrder(id){
-                    overviewViewModel.overviewOrderData.postValue(it)
+            if (isEditMode) {
+                scope.launch {
+                    editOverviewMenuOrder(context, id)
                 }
-            else
+            }
+            else{
                 actions.toToolMore(false)
+            }
         }
     ) {
         ToolMenu(actions = actions)

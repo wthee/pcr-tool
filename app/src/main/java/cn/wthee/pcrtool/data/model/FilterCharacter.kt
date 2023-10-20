@@ -1,12 +1,17 @@
 package cn.wthee.pcrtool.data.model
 
-import androidx.core.content.edit
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.edit
 import cn.wthee.pcrtool.data.enums.CharacterSortType
-import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
-import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.map
 
 /**
  * 角色信息筛选
@@ -67,36 +72,35 @@ data class FilterCharacter(
         else -> arrayListOf(0, 9999)
     }
 
-    companion object {
+}
 
-        /**
-         * 获取收藏列表
-         */
-        fun getStarIdList() =
-            (GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
-                ?: arrayListOf<Double>())
-                .toIntList()
-
-        /**
-         * 新增或删除
-         */
-        fun addOrRemove(vararg id: Int) {
-            val sp = mainSP()
-            val list = getStarIdList()
-            id.forEach {
-                if (list.contains(it)) {
-                    list.remove(it)
-                } else {
-                    list.add(it)
-                }
-            }
-            //保存
-            sp.edit {
-                putString(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
-            }
+/**
+ * 获取角色收藏列表
+ */
+@Composable
+fun getStarCharacterIdList() : ArrayList<Int>{
+    val context = LocalContext.current
+    val data = remember {
+        context.dataStoreMain.data.map {
+            it[MainPreferencesKeys.SP_STAR_CHARACTER]
         }
-    }
+    }.collectAsState(initial = null).value
+    return GsonUtil.toIntList(data)
+}
 
+/**
+ * 更新收藏的角色id
+ */
+suspend fun updateStarCharacterId(context: Context, id: Int) {
+    context.dataStoreMain.edit { preferences ->
+        val list = GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
+        if (list.contains(id)) {
+            list.remove(id)
+        } else {
+            list.add(id)
+        }
+        preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
+    }
 }
 
 /**

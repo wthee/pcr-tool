@@ -10,17 +10,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
-import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.getStarEquipIdList
+import cn.wthee.pcrtool.data.model.updateStarEquipId
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
@@ -29,6 +31,7 @@ import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.tool.quest.AreaItem
 import cn.wthee.pcrtool.ui.tool.quest.QuestPager
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import kotlinx.coroutines.launch
 
 
 /**
@@ -41,6 +44,8 @@ fun EquipMaterialDetail(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     //掉落列表
     val dropInfoListFlow = remember {
         equipmentViewModel.getDropInfo(equipId)
@@ -54,11 +59,8 @@ fun EquipMaterialDetail(
     val basicInfo by basicInfoFlow.collectAsState(initial = EquipmentMaxData())
 
     //收藏信息
-    val starIds = FilterEquipment.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(equipId))
-    }
-    val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
+    val loved = getStarEquipIdList().contains(equipId)
+    val text = if (loved) "" else stringResource(id = R.string.love_equip_material)
 
 
     Box(
@@ -75,7 +77,7 @@ fun EquipMaterialDetail(
                 text = basicInfo.equipmentName,
                 modifier = Modifier
                     .padding(top = Dimen.largePadding),
-                color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 selectable = true
             )
             //掉落信息
@@ -113,7 +115,7 @@ fun EquipMaterialDetail(
 
         //装备素材收藏
         MainSmallFab(
-            iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+            iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
             modifier = Modifier
                 .padding(
                     end = Dimen.fabMarginEnd,
@@ -124,8 +126,9 @@ fun EquipMaterialDetail(
                 .align(Alignment.BottomEnd),
             text = text
         ) {
-            FilterEquipment.addOrRemove(equipId)
-            loved.value = !loved.value
+            scope.launch {
+                updateStarEquipId(context, equipId)
+            }
         }
     }
 

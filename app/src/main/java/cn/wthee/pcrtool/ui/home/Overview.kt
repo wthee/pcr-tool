@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
@@ -29,6 +30,7 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,12 +46,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.edit
+import androidx.datastore.preferences.core.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavViewModel
@@ -65,6 +68,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.clickClose
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
@@ -72,7 +76,6 @@ import cn.wthee.pcrtool.ui.home.module.InProgressEventSection
 import cn.wthee.pcrtool.ui.home.module.NewsSection
 import cn.wthee.pcrtool.ui.home.module.ToolSection
 import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -84,6 +87,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -99,6 +103,7 @@ fun Overview(
     scrollState: ScrollState,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     //初始化加载六星数据
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
@@ -114,15 +119,12 @@ fun Overview(
         mutableStateOf(false)
     }
 
-    val sp = mainSP()
-
     //自定义显示
-    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, DEFAULT_ORDER) ?: ""
-    var overviewOrderData = overviewViewModel.overviewOrderData.observeAsState().value
-    if (overviewOrderData.isNullOrEmpty()) {
-        overviewOrderData = localData
-        overviewViewModel.overviewOrderData.postValue(overviewOrderData)
-    }
+    val overviewOrderData = remember {
+        context.dataStoreMain.data.map {
+            it[MainPreferencesKeys.SP_OVERVIEW_ORDER] ?: DEFAULT_ORDER
+        }
+    }.collectAsState(initial = DEFAULT_ORDER).value
 
 
     Box(
@@ -714,22 +716,19 @@ fun Section(
 /**
  * 编辑排序
  */
-fun editOverviewMenuOrder(id: Int, onSuccess: (String) -> Unit) {
-    val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, "") ?: ""
-    val idStr = "$id-"
-    val hasAdded = orderStr.intArrayList.contains(id)
+suspend fun editOverviewMenuOrder(context: Context, id: Int) {
+    context.dataStoreMain.edit {preferences ->
+        val orderStr = preferences[MainPreferencesKeys.SP_OVERVIEW_ORDER]?:""
+        val idStr = "$id-"
+        val hasAdded = orderStr.intArrayList.contains(id)
 
-    //新增或移除
-    val edited = if (!hasAdded) {
-        orderStr + idStr
-    } else {
-        orderStr.replace(idStr, "")
-    }
-    sp.edit {
-        putString(Constants.SP_OVERVIEW_ORDER, edited)
-        //更新
-        onSuccess(edited)
+        //新增或移除
+        val edited = if (!hasAdded) {
+            orderStr + idStr
+        } else {
+            orderStr.replace(idStr, "")
+        }
+        preferences[MainPreferencesKeys.SP_OVERVIEW_ORDER] = edited
     }
 }
 

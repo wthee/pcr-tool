@@ -9,6 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +42,7 @@ import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.launch
 
 
 /**
@@ -179,6 +181,8 @@ fun CalendarEventLayout(
     gachaViewModel: GachaViewModel = hiltViewModel(),
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     //fes 角色id
     val fesUnitIdsFlow = remember {
         gachaViewModel.getGachaFesUnitList()
@@ -211,10 +215,11 @@ fun CalendarEventLayout(
             orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
-                    editOverviewMenuOrder(id){
-                        overviewViewModel.overviewOrderData.postValue(it)
+                    scope.launch {
+                        editOverviewMenuOrder(context, id)
                     }
-                } else {
+                }
+                else{
                     //弹窗确认
                     if (confirmState.value == calendarType.type) {
                         confirmState.value = 0

@@ -18,6 +18,10 @@ import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
@@ -39,11 +43,25 @@ import kotlinx.coroutines.launch
 fun mainSP(): SharedPreferences =
     context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
 
+private const val MAIN_PREFERENCES_NAME = "main"
+val Context.dataStoreMain: DataStore<Preferences> by preferencesDataStore(
+    name = MAIN_PREFERENCES_NAME,
+    produceMigrations = {
+        listOf(SharedPreferencesMigration(context, MAIN_PREFERENCES_NAME))
+    })
+
 /**
  * 本地存储：版本、设置信息
  */
 fun settingSP(mContext: Context = context): SharedPreferences =
     mContext.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+
+private const val SETTING_PREFERENCES_NAME = "setting"
+val Context.dataStoreSetting: DataStore<Preferences> by preferencesDataStore(
+    name = SETTING_PREFERENCES_NAME,
+    produceMigrations = {
+        listOf(SharedPreferencesMigration(context, SETTING_PREFERENCES_NAME))
+    })
 
 
 @AndroidEntryPoint

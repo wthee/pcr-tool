@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
 import androidx.core.content.edit
+import androidx.datastore.preferences.core.edit
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -12,9 +13,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -169,14 +172,16 @@ object DatabaseUpdater {
  * 更新本地数据库版本、哈希值
  */
 fun updateLocalDataBaseVersion(ver: String) {
-    val sp = settingSP()
     val key = when (MainActivity.regionType) {
-        RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-        RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-        RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
+        RegionType.CN -> MainPreferencesKeys.SP_DATABASE_VERSION_CN
+        RegionType.TW -> MainPreferencesKeys.SP_DATABASE_VERSION_TW
+        RegionType.JP -> MainPreferencesKeys.SP_DATABASE_VERSION_JP
     }
-    sp.edit {
-        putString(key, ver)
+
+    MainScope().launch {
+        MyApplication.context.dataStoreMain.edit {
+            it[key] = ver
+        }
     }
 }
 

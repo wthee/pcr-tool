@@ -3,11 +3,11 @@ package cn.wthee.pcrtool.ui.equip
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,8 +17,8 @@ import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.data.model.getStarEquipIdList
+import cn.wthee.pcrtool.data.model.updateStarEquipId
 import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -26,6 +26,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import kotlinx.coroutines.launch
 
 
 /**
@@ -52,10 +53,7 @@ fun EquipMainInfo(
     val materialList by materialListFlow.collectAsState(initial = arrayListOf())
 
     //收藏信息
-    val starIds = FilterEquipment.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(equipId))
-    }
+    val loved = getStarEquipIdList().contains(equipId)
 
     //适用角色列表
     val unitIdsFlow = remember {
@@ -73,11 +71,13 @@ private fun EquipDetail(
     unitIds: List<Int>,
     equipMaxData: EquipmentMaxData,
     materialList: ArrayList<EquipmentMaterial>,
-    loved: MutableState<Boolean>,
+    loved: Boolean,
     toEquipMaterial: (Int) -> Unit,
     toEquipUnit: (Int) -> Unit,
 ) {
-    val text = if (loved.value) "" else stringResource(id = R.string.love_equip)
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val text = if (loved) "" else stringResource(id = R.string.love_equip)
 
     Box(
         modifier = Modifier
@@ -96,7 +96,7 @@ private fun EquipDetail(
                 }
                 MainText(
                     text = equipMaxData.equipmentName,
-                    color = if (loved.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     selectable = true
                 )
@@ -130,11 +130,12 @@ private fun EquipDetail(
         ) {
             //装备收藏
             MainSmallFab(
-                iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                 text = text
             ) {
-                FilterEquipment.addOrRemove(equipId)
-                loved.value = !loved.value
+                scope.launch {
+                    updateStarEquipId(context, equipId)
+                }
             }
 
             //关联角色
@@ -158,21 +159,12 @@ private fun EquipDetail(
  * @param materialList 装备素材信息
  */
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun EquipMaterialList(
     materialList: ArrayList<EquipmentMaterial>,
     toEquipMaterial: (Int) -> Unit
 ) {
-    val starIds = remember {
-        mutableStateOf(arrayListOf<Int>())
-    }
-    if (!LocalInspectionMode.current) {
-        LaunchedEffect(MainActivity.navSheetState.isVisible) {
-            starIds.value = FilterEquipment.getStarIdList()
-        }
-    }
-
+    val starIds = getStarEquipIdList()
 
     Column(modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)) {
         MainText(
@@ -184,7 +176,7 @@ private fun EquipMaterialList(
         //装备合成素材
         VerticalGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.largePadding) {
             materialList.forEach { material ->
-                val loved = starIds.value.contains(material.id)
+                val loved = starIds.contains(material.id)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -228,16 +220,13 @@ fun EquipUnitList(
 @CombinedPreviews
 @Composable
 private fun EquipDetailPreview() {
-    val loved = remember {
-        mutableStateOf(true)
-    }
     PreviewLayout {
         EquipDetail(
             equipId = 0,
             arrayListOf(),
             equipMaxData = EquipmentMaxData(1001, "?", "", "?", 1, attr = Attr().random()),
             materialList = arrayListOf(EquipmentMaterial()),
-            loved = loved,
+            loved = true,
             toEquipMaterial = {},
             {})
     }

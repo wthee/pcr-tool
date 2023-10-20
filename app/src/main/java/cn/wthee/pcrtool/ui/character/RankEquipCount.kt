@@ -15,8 +15,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.data.model.getStarEquipIdList
 import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -55,14 +54,9 @@ fun RankEquipCount(
         equipmentViewModel.getEquipByRank(unitId, rank0.intValue, rank1.intValue)
     }
     val rankEquipMaterials by rankEquipMaterialsFlow.collectAsState(initial = arrayListOf())
+    //收藏装备列表
+    val starIds = getStarEquipIdList()
 
-
-    val starIds = remember {
-        mutableStateOf(arrayListOf<Int>())
-    }
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        starIds.value = FilterEquipment.getStarIdList()
-    }
 
     Box(
         modifier = Modifier
@@ -109,7 +103,7 @@ fun RankEquipCount(
                     ) { item ->
                         EquipCountItem(
                             item,
-                            starIds.value.contains(item.id),
+                            starIds.contains(item.id),
                             toEquipMaterial
                         )
                     }

@@ -1,11 +1,16 @@
 package cn.wthee.pcrtool.data.model
 
-import androidx.core.content.edit
-import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.utils.Constants
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.edit
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
-import cn.wthee.pcrtool.utils.toIntList
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.map
 
 data class FilterEquipment(
     var all: Boolean = true,
@@ -13,37 +18,35 @@ data class FilterEquipment(
     var colorType: Int = 0,
     var name: String = "",
     var starIds: ArrayList<Int> = arrayListOf()
-) {
+)
 
-    companion object {
-        /**
-         * 获取收藏列表
-         */
-        fun getStarIdList() =
-            (GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
-                ?: arrayListOf<Double>())
-                .toIntList()
-
-        /**
-         * 新增或删除
-         */
-        fun addOrRemove(vararg id: Int) {
-            val sp = mainSP()
-            val list = getStarIdList()
-            id.forEach {
-                if (list.contains(it)) {
-                    list.remove(it)
-                } else {
-                    list.add(it)
-                }
-            }
-            //保存
-            sp.edit {
-                putString(Constants.SP_STAR_EQUIP, Gson().toJson(list))
-            }
+/**
+ * 获取装备收藏列表
+ */
+@Composable
+fun getStarEquipIdList() : ArrayList<Int>{
+    val context = LocalContext.current
+    val data = remember {
+        context.dataStoreMain.data.map {
+            it[MainPreferencesKeys.SP_STAR_EQUIP]
         }
-    }
+    }.collectAsState(initial = null).value
+    return GsonUtil.toIntList(data)
+}
 
+/**
+ * 更新收藏的装备id
+ */
+suspend fun updateStarEquipId(context: Context, id: Int) {
+    context.dataStoreMain.edit { preferences ->
+        val list = GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_EQUIP])
+        if (list.contains(id)) {
+            list.remove(id)
+        } else {
+            list.add(id)
+        }
+        preferences[MainPreferencesKeys.SP_STAR_EQUIP] = Gson().toJson(list)
+    }
 }
 
 fun FilterEquipment.isFilter(): Boolean {

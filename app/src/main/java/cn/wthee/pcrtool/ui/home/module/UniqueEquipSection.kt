@@ -7,8 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
@@ -24,6 +26,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
@@ -37,6 +40,8 @@ fun UniqueEquipSection(
     orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val id = OverviewType.UNIQUE_EQUIP.id
     val uniqueEquipSpanCount = max(
         1,
@@ -74,12 +79,14 @@ fun UniqueEquipSection(
         isEditMode = isEditMode,
         orderStr = orderStr,
         onClick = {
-            if (isEditMode)
-                editOverviewMenuOrder(id){
-                    overviewViewModel.overviewOrderData.postValue(it)
+            if (isEditMode) {
+                scope.launch {
+                    editOverviewMenuOrder(context, id)
                 }
-            else
+            }
+            else{
                 actions.toUniqueEquipList()
+            }
         }
     ) {
         VerticalGrid(

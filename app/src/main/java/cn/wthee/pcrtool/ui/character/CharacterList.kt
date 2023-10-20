@@ -62,6 +62,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -132,7 +133,7 @@ fun CharacterList(
         keyboardController?.hide()
     }
 
-    filter.starIds = FilterCharacter.getStarIdList()
+    filter.starIds = getStarCharacterIdList()
 
     //角色列表
     val characterListFlow = remember(filter.hashCode()) {

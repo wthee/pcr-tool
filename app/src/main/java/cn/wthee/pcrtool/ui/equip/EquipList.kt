@@ -59,6 +59,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.getStarEquipIdList
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CenterTipText
@@ -123,7 +124,7 @@ fun EquipList(
 
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState().value ?: FilterEquipment()
-    filter.starIds = FilterEquipment.getStarIdList()
+    filter.starIds = getStarEquipIdList()
 
     //合成类型
     val craftIndex = remember {

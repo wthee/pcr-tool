@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -55,7 +57,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
+import androidx.datastore.preferences.core.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
@@ -69,7 +71,9 @@ import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
+import cn.wthee.pcrtool.data.model.updateStarCharacterId
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.AttrList
@@ -84,8 +88,8 @@ import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getRankColor
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.skill.SkillLayout
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -105,10 +109,12 @@ import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
-private const val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
+private const val DEFAULT_ORDER = "300-301-302-303-304-305-306-307-308-310-"
 
 /**
  * 角色信息
@@ -126,7 +132,8 @@ fun CharacterDetail(
     characterViewModel: CharacterViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val sp = mainSP()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     //是否显示全部信息
     val showDetail = showDetailState == null || showDetailState.value
@@ -225,10 +232,7 @@ fun CharacterDetail(
     val unknown = maxValue.level == -1
 
     //收藏状态
-    val starIds = FilterCharacter.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(unitId))
-    }
+    val loved  = getStarCharacterIdList().contains(unitId)
 
     //编辑模式
     var isEditMode by remember {
@@ -236,16 +240,16 @@ fun CharacterDetail(
     }
 
     //自定义显示顺序
-    val localData = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, defaultOrder) ?: ""
-    var orderData = characterViewModel.characterDetailOrderData.observeAsState().value ?: ""
-    LaunchedEffect(orderData, showDetail) {
-        orderData = if (showDetail) {
-            localData
-        } else {
-            "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
-        }
-        characterViewModel.characterDetailOrderData.postValue(orderData)
+    val orderData = if (showDetail) {
+        remember {
+            context.dataStoreMain.data.map {
+                it[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] ?: DEFAULT_ORDER
+            }
+        }.collectAsState(initial = DEFAULT_ORDER).value
+    } else {
+        "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
     }
+
     //选中的
     val mainList = orderData.intArrayList
     //未选中的
@@ -325,8 +329,8 @@ fun CharacterDetail(
                             isEditMode = true,
                             orderStr = orderData,
                             onClick = {
-                                editOrder(it.id){
-                                    characterViewModel.characterDetailOrderData.postValue(it)
+                                scope.launch {
+                                    editOrder(context, it.id)
                                 }
                             }
                         ) {}
@@ -357,7 +361,7 @@ fun CharacterDetail(
                                 CharacterDetailModuleType.CARD -> CharacterCard(
                                     unitId = unitId,
                                     basicInfo = basicInfo,
-                                    loved = loved.value,
+                                    loved = loved,
                                     actions
                                 )
 
@@ -514,10 +518,11 @@ fun CharacterDetail(
 
                                 //收藏
                                 MainSmallFab(
-                                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                                    iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                                 ) {
-                                    FilterCharacter.addOrRemove(unitId)
-                                    loved.value = !loved.value
+                                    scope.launch {
+                                        updateStarCharacterId(context, unitId)
+                                    }
                                 }
                             }
 
@@ -1098,22 +1103,20 @@ private fun StarSelect(
 /**
  * 编辑排序
  */
-private fun editOrder(id: Int, onSuccess: (String) -> Unit) {
-    val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, "") ?: ""
-    val idStr = "$id-"
-    val hasAdded = orderStr.intArrayList.contains(id)
+private suspend fun editOrder(context: Context, id: Int) {
+    //更新
+    context.dataStoreMain.edit {preferences ->
+        val orderStr = preferences[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER]?:""
+        val idStr = "$id-"
+        val hasAdded = orderStr.intArrayList.contains(id)
 
-    //新增或移除
-    val edited = if (!hasAdded) {
-        orderStr + idStr
-    } else {
-        orderStr.replace(idStr, "")
-    }
-    sp.edit {
-        putString(Constants.SP_CHARACTER_DETAIL_ORDER, edited)
-        //更新
-        onSuccess(edited)
+        //新增或移除
+        val edited = if (!hasAdded) {
+            orderStr + idStr
+        } else {
+            orderStr.replace(idStr, "")
+        }
+        preferences[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] = edited
     }
 }
 
