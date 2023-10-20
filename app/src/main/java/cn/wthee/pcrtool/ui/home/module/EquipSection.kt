@@ -16,17 +16,17 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
@@ -73,11 +73,13 @@ fun EquipSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                scope.launch {
-                    editOverviewMenuOrder(context, id)
-                }
-            }
-            else{
+                editOrder(
+                    context,
+                    scope,
+                    id,
+                    MainPreferencesKeys.SP_OVERVIEW_ORDER
+                )
+            } else {
                 actions.toEquipList()
             }
         }

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
@@ -46,13 +45,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.datastore.preferences.core.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
+import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavViewModel
@@ -69,6 +68,7 @@ import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.dataStoreMain
+import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
@@ -76,19 +76,19 @@ import cn.wthee.pcrtool.ui.home.module.InProgressEventSection
 import cn.wthee.pcrtool.ui.home.module.NewsSection
 import cn.wthee.pcrtool.ui.home.module.ToolSection
 import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
-import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
@@ -463,19 +463,13 @@ private fun DbVersionContent(
     val coroutineScope = rememberCoroutineScope()
 
     //数据库版本
-    val sp = settingSP()
-    val localVersion = sp.getString(
-        when (region) {
-            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
-        },
-        ""
-    )
-    val dbVersionCode = if (localVersion != null) {
-        localVersion.split("/")[0]
-    } else {
-        ""
+    val key = when (region) {
+        RegionType.CN -> SettingPreferencesKeys.SP_DATABASE_VERSION_CN
+        RegionType.TW -> SettingPreferencesKeys.SP_DATABASE_VERSION_TW
+        RegionType.JP -> SettingPreferencesKeys.SP_DATABASE_VERSION_JP
+    }
+    val dbVersionCode = runBlocking {
+        (context.dataStoreSetting.data.first()[key] ?: "").split("/")[0]
     }
     val updateDb = navViewModel.updateDb.observeAsState().value ?: ""
 
@@ -710,26 +704,6 @@ fun Section(
         }
     }
 
-}
-
-
-/**
- * 编辑排序
- */
-suspend fun editOverviewMenuOrder(context: Context, id: Int) {
-    context.dataStoreMain.edit {preferences ->
-        val orderStr = preferences[MainPreferencesKeys.SP_OVERVIEW_ORDER]?:""
-        val idStr = "$id-"
-        val hasAdded = orderStr.intArrayList.contains(id)
-
-        //新增或移除
-        val edited = if (!hasAdded) {
-            orderStr + idStr
-        } else {
-            orderStr.replace(idStr, "")
-        }
-        preferences[MainPreferencesKeys.SP_OVERVIEW_ORDER] = edited
-    }
 }
 
 

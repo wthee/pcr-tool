@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
@@ -20,12 +19,6 @@ import javax.inject.Inject
 class CharacterViewModel @Inject constructor(
     private val unitRepository: UnitRepository
 ) : ViewModel() {
-
-    /**
-     * 角色详情显示
-     */
-    val characterDetailOrderData = MutableLiveData<String>()
-
 
     /**
      * 获取角色基本信息列表

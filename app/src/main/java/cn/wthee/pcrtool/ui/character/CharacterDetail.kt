@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -57,7 +56,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
@@ -103,6 +101,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.intArrayList
@@ -330,7 +329,12 @@ fun CharacterDetail(
                             orderStr = orderData,
                             onClick = {
                                 scope.launch {
-                                    editOrder(context, it.id)
+                                    editOrder(
+                                        context,
+                                        scope,
+                                        it.id,
+                                        MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER
+                                    )
                                 }
                             }
                         ) {}
@@ -1100,25 +1104,6 @@ private fun StarSelect(
     }
 }
 
-/**
- * 编辑排序
- */
-private suspend fun editOrder(context: Context, id: Int) {
-    //更新
-    context.dataStoreMain.edit {preferences ->
-        val orderStr = preferences[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER]?:""
-        val idStr = "$id-"
-        val hasAdded = orderStr.intArrayList.contains(id)
-
-        //新增或移除
-        val edited = if (!hasAdded) {
-            orderStr + idStr
-        } else {
-            orderStr.replace(idStr, "")
-        }
-        preferences[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] = edited
-    }
-}
 
 @CombinedPreviews
 @Composable

@@ -23,6 +23,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainImage
@@ -30,13 +31,12 @@ import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.launch
 
 
 /**
@@ -62,7 +62,13 @@ fun CharacterSection(
     val characterListFlow = remember {
         overviewViewModel.getCharacterInfoList()
     }
-    val characterList by characterListFlow.collectAsState(initial = arrayListOf(CharacterInfo()))
+    val characterList by characterListFlow.collectAsState(
+        initial = arrayListOf(
+            CharacterInfo(),
+            CharacterInfo(),
+            CharacterInfo()
+        )
+    )
 
 
     Section(
@@ -75,11 +81,13 @@ fun CharacterSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                scope.launch {
-                    editOverviewMenuOrder(context, id)
-                }
-            }
-            else{
+                editOrder(
+                    context,
+                    scope,
+                    id,
+                    MainPreferencesKeys.SP_OVERVIEW_ORDER
+                )
+            } else {
                 actions.toCharacterList()
             }
         }

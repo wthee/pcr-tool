@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import kotlinx.coroutines.launch
  * @param maxRank 角色最大rank
  */
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RankEquipCount(
     unitId: Int,

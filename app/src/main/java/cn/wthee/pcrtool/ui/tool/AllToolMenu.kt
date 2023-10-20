@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,15 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -44,9 +42,9 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.module.ToolMenu
 import cn.wthee.pcrtool.ui.home.module.ToolMenuData
-import cn.wthee.pcrtool.ui.home.module.editToolMenuOrder
 import cn.wthee.pcrtool.ui.home.module.getAction
 import cn.wthee.pcrtool.ui.home.module.getToolMenuData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -55,8 +53,9 @@ import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.shapeTop
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -224,6 +223,12 @@ private fun MenuGroup(
     group: ToolMenuGroup,
     isEditMode: Boolean
 ) {
+    val context = LocalContext.current
+    val toolOrderData = remember {
+        context.dataStoreMain.data.map {
+            it[MainPreferencesKeys.SP_TOOL_ORDER] ?: ""
+        }
+    }.collectAsState(initial = "").value
 
     Column(
         modifier = Modifier
@@ -243,7 +248,7 @@ private fun MenuGroup(
             modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
         ) {
             group.toolList.forEach {
-                MenuItem(actions, it, isEditMode)
+                MenuItem(actions, it, toolOrderData, isEditMode)
             }
         }
     }
@@ -253,15 +258,11 @@ private fun MenuGroup(
 private fun MenuItem(
     actions: NavActions,
     toolMenuData: ToolMenuData,
-    isEditMode: Boolean,
-    overviewViewModel: OverviewViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    orderStr: String,
+    isEditMode: Boolean
 ) {
-    val orderStr = if (LocalInspectionMode.current) {
-        ""
-    } else {
-        overviewViewModel.toolOrderData.observeAsState().value ?: ""
-
-    }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val hasAdded = orderStr.intArrayList.contains(toolMenuData.type.id)
 
 
@@ -269,9 +270,12 @@ private fun MenuItem(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = if (isEditMode) {
             {
-                editToolMenuOrder(toolMenuData.type.id){
-                    overviewViewModel.toolOrderData.postValue(it)
-                }
+                editOrder(
+                    context,
+                    scope,
+                    toolMenuData.type.id,
+                    MainPreferencesKeys.SP_TOOL_ORDER
+                )
             }
         } else {
             getAction(actions, toolMenuData)

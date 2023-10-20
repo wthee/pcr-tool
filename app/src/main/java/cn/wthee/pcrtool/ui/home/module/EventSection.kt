@@ -25,12 +25,12 @@ import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -40,9 +40,9 @@ import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.launch
 
 
 /**
@@ -178,8 +178,7 @@ fun CalendarEventLayout(
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
     clanBattleList: List<ClanBattleEvent>,
-    gachaViewModel: GachaViewModel = hiltViewModel(),
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -215,11 +214,13 @@ fun CalendarEventLayout(
             orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
-                    scope.launch {
-                        editOverviewMenuOrder(context, id)
-                    }
-                }
-                else{
+                    editOrder(
+                        context,
+                        scope,
+                        id,
+                        MainPreferencesKeys.SP_OVERVIEW_ORDER
+                    )
+                } else {
                     //弹窗确认
                     if (confirmState.value == calendarType.type) {
                         confirmState.value = 0
