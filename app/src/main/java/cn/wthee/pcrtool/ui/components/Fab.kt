@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,6 +48,7 @@ import kotlinx.coroutines.launch
  *
  * @param hasNavBarPadding 适配导航栏
  * @param extraContent 不为空时，将替换text内容
+ * @param iconScale 图标缩放，非ImageVector才生效
  */
 @Composable
 fun MainSmallFab(
@@ -55,6 +57,7 @@ fun MainSmallFab(
     text: String = "",
     hasNavBarPadding: Boolean = true,
     extraContent: (@Composable () -> Unit)? = null,
+    iconScale: ContentScale = ContentScale.FillWidth,
     vibrate: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -93,7 +96,8 @@ fun MainSmallFab(
                 MainIcon(
                     data = iconType,
                     size = Dimen.fabIconSize,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    contentScale = iconScale
                 )
 
                 Text(

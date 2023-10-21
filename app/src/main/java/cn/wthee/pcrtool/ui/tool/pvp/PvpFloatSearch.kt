@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.FixedScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -19,6 +20,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.SCALE_LOGO
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -47,11 +49,12 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //最大/小化
                 MainSmallFab(
                     iconType = if (min) {
-                        R.drawable.ic_logo_large
+                        R.drawable.ic_launcher_foreground
                     } else {
                         MainIconType.FLOAT_MIN
                     },
-                    vibrate = !showResult || !min
+                    vibrate = !showResult || !min,
+                    iconScale = FixedScale(SCALE_LOGO)
                 ) {
                     navViewModel.floatSearchMin.postValue(!min)
                 }

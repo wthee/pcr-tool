@@ -29,7 +29,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Pcrtoolcompose"
+        android:theme="@style/Theme.App.Starting"
         tools:targetApi="q">
         <service
             android:name=".ui.tool.pvp.PvpFloatService"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--图标avd绘制线条宽度-->
+    <integer name="strokeWidth">12</integer>
+    <!--图标avd动画时间ms-->
+    <integer name="strokeAnimTime">500</integer>
+</resources>

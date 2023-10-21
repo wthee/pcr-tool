@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.FixedScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -54,6 +55,7 @@ import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SCALE_LOGO
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.dataStoreSetting
@@ -114,10 +116,11 @@ fun MainSettings() {
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             )
             MainIcon(
-                data = R.drawable.ic_logo_large,
+                data = R.drawable.ic_launcher_foreground,
                 size = Dimen.largeIconSize,
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                contentScale = FixedScale(SCALE_LOGO)
             )
         }
 
@@ -471,7 +474,8 @@ fun SettingCommonItem(
         MainIcon(
             data = iconType,
             size = iconSize,
-            colorFilter = ColorFilter.tint(tintColor)
+            colorFilter = ColorFilter.tint(tintColor),
+            contentScale = FixedScale(SCALE_LOGO)
         )
         Column(
             modifier = if (wrapWidth) {

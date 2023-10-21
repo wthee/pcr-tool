@@ -3,8 +3,8 @@
     <aapt:attr name="android:drawable">
         <vector
             android:name="vector"
-            android:width="256dp"
-            android:height="256dp"
+            android:width="200dp"
+            android:height="200dp"
             android:viewportWidth="256"
             android:viewportHeight="256">
             <group
@@ -14,89 +14,65 @@
                 android:scaleY="0.55">
                 <path
                     android:name="path0"
-                    android:fillType="evenOdd"
                     android:pathData="M 142.719 67.974 L 176.081 67.974 L 213.368 7.974 L 201.593 107.324 L 169.212 107.324 L 139.775 153.556 Q 141.247 110.763 142.719 67.974 Z"
+                    android:fillAlpha="0"
                     android:strokeColor="@color/colorPrimary"
-                    android:strokeLineCap="square"
+                    android:strokeWidth="@integer/strokeWidth"
+                    android:strokeLineCap="round"
                     android:strokeLineJoin="round"
-                    android:strokeMiterLimit="5" />
+                    android:fillType="evenOdd" />
                 <path
                     android:name="path1"
-                    android:fillType="evenOdd"
                     android:pathData="M 112.3 89.614 C 111.12 133.671 110.629 155.407 110.514 155.523 C 110.399 155.639 102.107 137.371 94.638 121.091 L 60.295 120.108 L 42.632 41.415 L 43.613 41.415 L 82.863 89.615 L 112.3 89.615 Z"
+                    android:fillAlpha="0"
                     android:strokeColor="@color/colorPrimary"
-                    android:strokeLineCap="square"
+                    android:strokeWidth="@integer/strokeWidth"
+                    android:strokeLineCap="round"
                     android:strokeLineJoin="round"
-                    android:strokeMiterLimit="5" />
+                    android:fillType="evenOdd" />
                 <path
                     android:name="path2"
-                    android:fillType="evenOdd"
-                    android:pathData="M 122.113 167.323 C 145.699 166.78 159.757 175.798 166.268 191.915 C 176.243 216.605 158.254 239.678 141.737 245.033 C 111.037 254.987 81.224 225.263 90.713 194.866 C 94.152 183.85 104.029 173.503 114.263 169.291 C 116.917 168.2 120.02 168.663 122.113 167.323 Z"
+                    android:pathData="M 90.85 208.85 C 90.85 218.699 94.767 228.155 101.731 235.119 C 108.695 242.083 118.151 246 128 246 C 137.849 246 147.305 242.083 154.269 235.119 C 161.233 228.155 165.15 218.699 165.15 208.85 C 165.15 199.001 161.233 189.545 154.269 182.581 C 147.305 175.617 137.849 171.7 128 171.7 C 118.151 171.7 108.695 175.617 101.731 182.581 C 94.767 189.545 90.85 199.001 90.85 208.85 Z"
+                    android:fillAlpha="0"
                     android:strokeColor="@color/colorPrimary"
-                    android:strokeLineCap="square"
+                    android:strokeWidth="@integer/strokeWidth"
+                    android:strokeLineCap="round"
                     android:strokeLineJoin="round"
-                    android:strokeMiterLimit="5" />
+                    android:fillType="evenOdd" />
             </group>
         </vector>
     </aapt:attr>
     <target android:name="path0">
         <aapt:attr name="android:animation">
-            <set>
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="strokeWidth"
-                    android:valueFrom="5"
-                    android:valueTo="10"
-                    android:valueType="floatType" />
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="trimPathEnd"
-                    android:valueFrom="0"
-                    android:valueTo="1"
-                    android:valueType="floatType" />
-            </set>
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:duration="@integer/strokeAnimTime"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/decelerate_interpolator" />
         </aapt:attr>
     </target>
     <target android:name="path1">
         <aapt:attr name="android:animation">
-            <set>
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="strokeWidth"
-                    android:valueFrom="5"
-                    android:valueTo="10"
-                    android:valueType="floatType" />
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="trimPathEnd"
-                    android:valueFrom="0"
-                    android:valueTo="1"
-                    android:valueType="floatType" />
-            </set>
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:duration="@integer/strokeAnimTime"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/decelerate_interpolator" />
         </aapt:attr>
     </target>
     <target android:name="path2">
         <aapt:attr name="android:animation">
-            <set>
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="strokeWidth"
-                    android:valueFrom="5"
-                    android:valueTo="10"
-                    android:valueType="floatType" />
-                <objectAnimator
-                    android:duration="600"
-                    android:interpolator="@android:interpolator/linear_out_slow_in"
-                    android:propertyName="trimPathEnd"
-                    android:valueFrom="0"
-                    android:valueTo="1"
-                    android:valueType="floatType" />
-            </set>
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:duration="@integer/strokeAnimTime"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/decelerate_interpolator" />
         </aapt:attr>
     </target>
 </animated-vector>
