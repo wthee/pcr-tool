@@ -322,6 +322,7 @@ fun BottomSearchBar(
         mutableStateOf(false)
     }
 
+
     if (!isImeVisible) {
         Row(
             modifier = modifier
@@ -368,9 +369,10 @@ fun BottomSearchBar(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .clickClose(isImeVisible)
             .padding(Dimen.mediumPadding)
-            .imePadding()
+            .imePadding(),
+        verticalArrangement = Arrangement.Bottom,
     ) {
         //关键词列表，搜索时显示
         ExpandAnimation(
