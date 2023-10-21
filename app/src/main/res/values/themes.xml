@@ -7,4 +7,10 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_avd</item>
+        <item name="postSplashScreenTheme">@style/Theme.Pcrtoolcompose</item>
+        <item name="windowSplashScreenAnimationDuration">@android:integer/config_longAnimTime</item>
+    </style>
 </resources>

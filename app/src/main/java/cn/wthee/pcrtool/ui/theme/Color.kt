@@ -1,10 +1,10 @@
 package cn.wthee.pcrtool.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import cn.wthee.pcrtool.BuildConfig
 
-
-val colorPrimary = Color(0xFF5690EF)
-val colorPrimaryDark = Color(0xFF3F6BB3)
+val colorPrimary = if (!BuildConfig.DEBUG) Color(0xFF5690EF) else Color(0xFFD85280)
+val colorPrimaryDark = if (!BuildConfig.DEBUG) Color(0xFF3F6BB3) else Color(0xFFB93E69)
 
 //黑白
 val colorWhite = Color(0xFFFFFCFE)

@@ -11,7 +11,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.10.00"
+val composeBom = "2023.10.01"
 val composeCompilerVersion = "1.5.3"
 val appVersionCode = 374
 val appVersionName = "3.7.4"
@@ -76,6 +76,8 @@ android {
             applicationId = "cn.wthee.pcrtool"
             dimension = "version"
             resValue("string", "app_name", "PCR Tool")
+            resValue("color", "colorPrimary", "#5690EF")
+            resValue("color", "colorPrimaryDark", "#3F6BB3")
             buildConfigField("boolean", "DEBUG", "false")
         }
 
@@ -83,6 +85,8 @@ android {
             applicationId = "cn.wthee.pcrtoolbeta"
             dimension = "version"
             resValue("string", "app_name", "PCR Tool *")
+            resValue("color", "colorPrimary", "#D85280")
+            resValue("color", "colorPrimaryDark", "#B93E69")
             buildConfigField("boolean", "DEBUG", "true")
         }
     }
@@ -145,7 +149,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-rc01")
 
     //Lifecycle
     val lifecycleVersion = "2.6.2"
@@ -156,7 +160,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 
     //Paging3
     val pagingVersion = "3.2.1"
@@ -169,11 +173,14 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.6.0-rc01"
+    val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    //splashscreen
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     //startup
     implementation("androidx.startup:startup-runtime:1.1.1")
