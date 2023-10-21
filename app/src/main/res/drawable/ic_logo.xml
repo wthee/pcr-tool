@@ -6,8 +6,8 @@
     <group
         android:pivotX="128"
         android:pivotY="128"
-        android:scaleX="0.55"
-        android:scaleY="0.55">
+        android:scaleX="0.50"
+        android:scaleY="0.50">
         <path
             android:fillColor="@color/colorPrimary"
             android:fillType="evenOdd"
