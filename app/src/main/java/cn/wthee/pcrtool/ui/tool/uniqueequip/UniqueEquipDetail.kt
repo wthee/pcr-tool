@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +34,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
@@ -53,12 +53,13 @@ import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
 
 /**
  * 专武信息
  * @param slot 装备槽 1、 2
- * @param currentValueState 当前属性
+ * @param currentValue 当前属性
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
  */
@@ -68,9 +69,10 @@ import cn.wthee.pcrtool.utils.deleteSpace
 @Composable
 fun UniqueEquip(
     slot: Int,
-    currentValueState: MutableState<CharacterProperty>,
+    currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val inputLevel = remember(uniqueEquipLevelMax) {
         mutableStateOf("")
@@ -96,9 +98,9 @@ fun UniqueEquip(
             //专武等级
             Text(
                 text = if (slot == 1) {
-                    currentValueState.value.uniqueEquipmentLevel.toString()
+                    currentValue.uniqueEquipmentLevel.toString()
                 } else {
-                    currentValueState.value.uniqueEquipmentLevel2.toString()
+                    currentValue.uniqueEquipmentLevel2.toString()
                 },
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.titleLarge,
@@ -143,13 +145,17 @@ fun UniqueEquip(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (inputLevel.value != "") {
-                            currentValueState.value = if (slot == 1) {
-                                currentValueState.value.update(
-                                    uniqueEquipmentLevel = inputLevel.value.toInt()
+                            if (slot == 1) {
+                                attrViewModel.currentValue.postValue(
+                                    currentValue.update(
+                                        uniqueEquipmentLevel = inputLevel.value.toInt()
+                                    )
                                 )
                             } else {
-                                currentValueState.value.update(
-                                    uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                                attrViewModel.currentValue.postValue(
+                                    currentValue.update(
+                                        uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                                    )
                                 )
                             }
                         }
@@ -162,13 +168,17 @@ fun UniqueEquip(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                     if (inputLevel.value != "") {
-                        currentValueState.value = if (slot == 1) {
-                            currentValueState.value.update(
-                                uniqueEquipmentLevel = inputLevel.value.toInt()
+                        if (slot == 1) {
+                            attrViewModel.currentValue.postValue(
+                                currentValue.update(
+                                    uniqueEquipmentLevel = inputLevel.value.toInt()
+                                )
                             )
                         } else {
-                            currentValueState.value.update(
-                                uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                            attrViewModel.currentValue.postValue(
+                                currentValue.update(
+                                    uniqueEquipmentLevel2 = inputLevel.value.toInt()
+                                )
                             )
                         }
                     }
@@ -223,13 +233,10 @@ fun UniqueEquip(
 @CombinedPreviews
 @Composable
 private fun UniqueEquipPreview() {
-    val currentValueState = remember {
-        mutableStateOf(CharacterProperty())
-    }
     PreviewLayout {
         UniqueEquip(
             1,
-            currentValueState = currentValueState,
+            currentValue = CharacterProperty(),
             uniqueEquipLevelMax = 100,
             uniqueEquipmentMaxData = UniqueEquipmentMaxData(
                 equipmentName = stringResource(id = R.string.debug_short_text),

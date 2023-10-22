@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
@@ -31,6 +32,11 @@ class CharacterAttrViewModel @Inject constructor(
     private val skillRepository: SkillRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
+
+    /**
+     * 当前属性
+     */
+    val currentValue = MutableLiveData(CharacterProperty())
 
     /**
      * 根据角色 id  星级 等级 专武等级
@@ -237,7 +243,14 @@ class CharacterAttrViewModel @Inject constructor(
             val level = unitRepository.getMaxLevel()
             val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv(1) ?: 0
             val uniqueEquipLevel2 = equipmentRepository.getUniqueEquipMaxLv(2) ?: 0
-            emit(CharacterProperty(level, rank, rarity, uniqueEquipLevel, uniqueEquipLevel2))
+            val maxValue =
+                CharacterProperty(level, rank, rarity, uniqueEquipLevel, uniqueEquipLevel2)
+            //数值信息
+            if (currentValue.value?.isInit() != true) {
+                //初始为最大值
+                currentValue.postValue(maxValue)
+            }
+            emit(maxValue)
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getMaxRankAndRarity:$unitId")
             emit(CharacterProperty(level = -1))
