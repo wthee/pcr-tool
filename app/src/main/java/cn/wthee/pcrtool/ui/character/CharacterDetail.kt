@@ -30,7 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -119,14 +118,14 @@ private const val DEFAULT_ORDER = "300-301-302-303-304-305-306-307-308-310-"
  * 角色信息
  *
  * @param unitId 角色编号
- * @param showDetailState 非空时从专用装备跳转
+ * @param showAllInfo true：显示全部信息，false：仅显示专用装备相关信息,
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterDetail(
     unitId: Int,
     actions: NavActions,
-    showDetailState: MutableState<Boolean>? = null,
+    showAllInfo: Boolean = true,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
@@ -134,8 +133,6 @@ fun CharacterDetail(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    //是否显示全部信息
-    val showDetail = showDetailState == null || showDetailState.value
 
     //特殊形态角色id（吉塔）
     val cutinIdFlow = remember {
@@ -232,7 +229,7 @@ fun CharacterDetail(
     }
 
     //自定义显示顺序
-    val orderData = if (showDetail) {
+    val orderData = if (showAllInfo) {
         remember {
             context.dataStoreMain.data.map {
                 it[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] ?: DEFAULT_ORDER
@@ -262,7 +259,7 @@ fun CharacterDetail(
     }
 
     //水平分页相关
-    val pageCount = if (showDetail && subList.isNotEmpty()) 2 else 1
+    val pageCount = if (showAllInfo && subList.isNotEmpty()) 2 else 1
     val pagerState = rememberPagerState { pageCount }
     val scrollState0 = rememberScrollState()
     val scrollState1 = rememberScrollState()
@@ -433,7 +430,7 @@ fun CharacterDetail(
                                     spLabel = spLabel,
                                     unitType = UnitType.CHARACTER,
                                     toSummonDetail = actions.toSummonDetail,
-                                    isFilterSkill = !showDetail,
+                                    isFilterSkill = !showAllInfo,
                                     filterSkillCount = characterAttrData.uniqueEquipList.size,
                                     property = currentValue
                                 )
@@ -471,7 +468,7 @@ fun CharacterDetail(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 horizontalAlignment = Alignment.End
             ) {
-                if (cutinId != 0 && showDetail) {
+                if (cutinId != 0 && showAllInfo) {
                     Row(
                         modifier = Modifier.padding(
                             end = Dimen.fabMargin
@@ -503,7 +500,7 @@ fun CharacterDetail(
                     Row(
                         modifier = Modifier.padding(end = Dimen.fabMarginEnd)
                     ) {
-                        if (showDetail) {
+                        if (showAllInfo) {
                             if (!isEditMode) {
                                 //编辑
                                 MainSmallFab(
@@ -540,9 +537,7 @@ fun CharacterDetail(
                                 iconType = MainIconType.CHARACTER,
                                 text = stringResource(id = R.string.character_detail)
                             ) {
-                                showDetailState?.let {
-                                    it.value = !showDetailState.value
-                                }
+                                actions.toCharacterDetail(unitId)
                             }
                         }
                     }

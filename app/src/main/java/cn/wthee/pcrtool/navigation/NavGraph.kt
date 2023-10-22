@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -740,13 +738,10 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val showDetail = remember {
-                    mutableStateOf(false)
-                }
                 CharacterDetail(
                     unitId = arguments.getInt(NavRoute.UNIT_ID),
                     actions,
-                    showDetailState = showDetail
+                    showAllInfo = false
                 )
             }
         }
