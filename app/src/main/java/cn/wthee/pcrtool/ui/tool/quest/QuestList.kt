@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -94,6 +96,7 @@ fun QuestPager(
     searchEquipIdList: List<Int> = arrayListOf(),
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
+    //额外掉落
     val flow = remember(equipId) {
         randomEquipAreaViewModel.getEquipArea(equipId)
     }
@@ -106,29 +109,35 @@ fun QuestPager(
     val colorList = arrayListOf<Color>()
 
     //普通
+    val normal = stringResource(id = R.string.normal)
     val normalList = questList.filterAndSortSearch(type = 1, searchEquipIdList = searchEquipIdList)
     if (normalList.isNotEmpty()) {
         pagerCount++
-        tabs.add("Normal")
+        tabs.add(normal)
         colorList.add(colorCyan)
     }
+    val normalListScrollState = rememberLazyListState()
 
     //困难
+    val hard = stringResource(id = R.string.hard)
     val hardList = questList.filterAndSortSearch(type = 2, searchEquipIdList = searchEquipIdList)
     if (hardList.isNotEmpty()) {
         pagerCount++
-        tabs.add("Hard")
+        tabs.add(hard)
         colorList.add(colorRed)
     }
+    val hardListScrollState = rememberLazyListState()
 
     //非常困难
+    val veryHard = stringResource(id = R.string.very_hard)
     val veryHardList =
         questList.filterAndSortSearch(type = 3, searchEquipIdList = searchEquipIdList)
     if (veryHardList.isNotEmpty()) {
         pagerCount++
-        tabs.add("Very Hard")
+        tabs.add(veryHard)
         colorList.add(colorPurple)
     }
+    val veryHardListScrollState = rememberLazyListState()
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
@@ -147,6 +156,8 @@ fun QuestPager(
         tabs.add(randomDrop)
         colorList.add(colorGreen)
     }
+    val randomListScrollState = rememberLazyListState()
+
 
     val pagerState = rememberPagerState { pagerCount }
 
@@ -194,7 +205,14 @@ fun QuestPager(
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(tabs.size * 0.25f)
-                )
+                ) {
+                    when (tabs[it]) {
+                        normal -> normalListScrollState.scrollToItem(0)
+                        hard -> hardListScrollState.scrollToItem(0)
+                        veryHard -> veryHardListScrollState.scrollToItem(0)
+                        randomDrop -> randomListScrollState.scrollToItem(0)
+                    }
+                }
                 if (randomDropResponseData == null) {
                     CircularProgressCompose(
                         size = Dimen.smallIconSize
@@ -214,21 +232,36 @@ fun QuestPager(
                         RandomDropAreaList(
                             selectId = equipId,
                             areaList = randomList!!,
-                            searchEquipIdList = searchEquipIdList
+                            searchEquipIdList = searchEquipIdList,
+                            scrollState = randomListScrollState
                         )
                     }
                 } else {
                     //主线掉落
-                    val list = when (tabs[pagerIndex]) {
-                        "Normal" -> normalList
-                        "Hard" -> hardList
-                        else -> veryHardList
+                    val list: List<QuestDetail>
+                    val scrollState: LazyListState
+                    when (tabs[pagerIndex]) {
+                        normal -> {
+                            list = normalList
+                            scrollState = normalListScrollState
+                        }
+
+                        hard -> {
+                            list = hardList
+                            scrollState = hardListScrollState
+                        }
+
+                        else -> {
+                            list = veryHardList
+                            scrollState = veryHardListScrollState
+                        }
                     }
                     QuestList(
                         selectedId = equipId,
                         type = list[0].questType,
                         questList = list,
-                        searchEquipIdList = searchEquipIdList
+                        searchEquipIdList = searchEquipIdList,
+                        scrollState = scrollState
                     )
                 }
             }
@@ -310,14 +343,15 @@ fun QuestList(
     selectedId: Int,
     type: Int,
     questList: List<QuestDetail>,
-    searchEquipIdList: List<Int> = arrayListOf()
+    searchEquipIdList: List<Int> = arrayListOf(),
+    scrollState: LazyListState = rememberLazyListState()
 ) {
     val color = when (type) {
         1 -> colorCyan
         2 -> colorRed
         else -> colorPurple
     }
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(modifier = Modifier.fillMaxSize(), state = scrollState) {
         items(
             items = questList,
             key = {

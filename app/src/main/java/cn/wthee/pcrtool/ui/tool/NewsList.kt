@@ -144,8 +144,10 @@ fun NewsList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.NEWS,
-            scrollState = scrollState,
             defaultKeywordList = keywordList,
+            onTopClick = {
+                scrollState.scrollToItem(0)
+            },
             onResetClick = {
                 //同时重置时间筛选
                 dateRange.value = DateRange()

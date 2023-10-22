@@ -497,7 +497,8 @@ interface EquipmentDao {
             ued.equipment_name,
             ued.description,
             ud.unit_id,
-            ud.unit_name
+            ud.unit_name,
+            uue.equip_slot
         FROM
             unit_unique_equip AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
@@ -519,7 +520,8 @@ interface EquipmentDao {
             ued.equipment_name,
             ued.description,
             ud.unit_id,
-            ud.unit_name
+            ud.unit_name,
+            uue.equip_slot
         FROM
             unit_unique_equipment AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id

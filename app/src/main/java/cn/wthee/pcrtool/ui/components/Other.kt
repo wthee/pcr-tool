@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -96,6 +95,7 @@ import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -199,10 +199,10 @@ fun MainHorizontalPagerIndicator(
         modifier = modifier,
         pagerState = pagerState,
         pageCount = pageCount,
-        indicatorWidth = 6.dp,
+        indicatorWidth = 7.dp,
         activeColor = MaterialTheme.colorScheme.primary,
         indicatorShape = CutCornerShape(50),
-        spacing = 0.dp
+        spacing = 1.dp
     )
 }
 
@@ -306,8 +306,8 @@ fun BottomSearchBar(
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState? = null,
     defaultKeywordList: List<KeywordData>? = null,
+    onTopClick: (suspend CoroutineScope.() -> Unit)? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -330,12 +330,12 @@ fun BottomSearchBar(
             horizontalArrangement = Arrangement.End
         ) {
             //回到顶部
-            scrollState?.let {
+            onTopClick?.let {
                 MainSmallFab(
                     iconType = MainIconType.TOP
                 ) {
                     coroutineScope.launch {
-                        scrollState.scrollToItem(0)
+                        onTopClick()
                     }
                 }
             }

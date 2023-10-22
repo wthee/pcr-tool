@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
@@ -29,6 +31,7 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.CommonTitleContentText
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -40,6 +43,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_
 import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
+import kotlinx.coroutines.launch
 
 /**
  * ex冒险区域
@@ -50,10 +54,13 @@ fun ExtraEquipTravelList(
     toExtraEquipTravelAreaDetail: (Int) -> Unit,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     val areaListFlow = remember {
         extraEquipmentViewModel.getTravelAreaList()
     }
     val areaList by areaListFlow.collectAsState(initial = null)
+
 
     Box(
         modifier = Modifier
@@ -87,6 +94,21 @@ fun ExtraEquipTravelList(
             }
         }
 
+        //回到顶部
+        MainSmallFab(
+            iconType = MainIconType.EXTRA_EQUIP_DROP,
+            text = stringResource(id = R.string.tool_travel),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            scope.launch {
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (_: Exception) {
+                }
+            }
+        }
     }
 }
 

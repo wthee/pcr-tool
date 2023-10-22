@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.tool.mockgacha
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -123,6 +125,9 @@ fun MockGacha(
         navViewModel.fabCloseClick.postValue(false)
     }
 
+    //滚动状态
+    val unitScrollState = rememberScrollState()
+    val historyScrollState = rememberLazyGridState()
 
     Box(
         modifier = Modifier
@@ -190,7 +195,13 @@ fun MockGacha(
                     modifier = Modifier
                         .fillMaxWidth(RATIO_GOLDEN)
                         .align(Alignment.CenterHorizontally)
-                )
+                ) {
+                    if (pagerState.currentPage == 0) {
+                        unitScrollState.scrollTo(0)
+                    } else {
+                        historyScrollState.scrollToItem(0)
+                    }
+                }
 
                 HorizontalPager(
                     state = pagerState,
@@ -203,6 +214,7 @@ fun MockGacha(
                         0 -> //角色选择
                             allUnits?.let {
                                 ToSelectMockGachaUnitList(
+                                    unitScrollState,
                                     MockGachaType.getByValue(mockGachaType.intValue),
                                     it
                                 )
@@ -210,7 +222,7 @@ fun MockGacha(
 
                         else -> {
                             //历史记录展示
-                            MockGachaHistory()
+                            MockGachaHistory(historyScrollState)
                         }
                     }
                 }
@@ -308,13 +320,14 @@ fun MockGacha(
  */
 @Composable
 private fun ToSelectMockGachaUnitList(
+    scrollState: ScrollState,
     mockGachaType: MockGachaType,
     allUnits: UnitsInGacha
 ) {
     Column(
         modifier = Modifier
             .padding(Dimen.mediumPadding)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ) {
         if (mockGachaType == MockGachaType.FES) {
             // Fes

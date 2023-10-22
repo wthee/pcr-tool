@@ -68,6 +68,14 @@ import kotlin.math.max
 
 /**
  * 竞技场查询
+ *
+ * @param floatWindow 是否为悬浮窗
+ * @param initSpanCount 列数
+ * @param selectListState 角色列表滚动状态
+ * @param usedListState 常用列表滚动状态
+ * @param resultListState 查询结果列表滚动状态
+ * @param favoritesListState 收藏列表滚动状态
+ * @param historyListState 历史查询列表滚动状态
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -200,7 +208,14 @@ fun PvpSearchCompose(
                         .padding(horizontal = mediumPadding)
                         .fillMaxWidth(1f)
                         .align(Alignment.CenterHorizontally)
-                )
+                ) {
+                    when (pagerState.currentPage) {
+                        0 -> selectListState.scrollToItem(0)
+                        1 -> usedListState.scrollToItem(0)
+                        2 -> favoritesListState.scrollToItem(0)
+                        3 -> historyListState.scrollToItem(0)
+                    }
+                }
 
                 HorizontalPager(
                     state = pagerState,
