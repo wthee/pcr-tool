@@ -285,7 +285,7 @@ class OverviewViewModel @Inject constructor(
     fun getClanBattleEvent(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getClanBattleEvent(1)
+            val data = eventRepository.getClanBattleEvent(2)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {
