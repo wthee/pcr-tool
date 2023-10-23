@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +32,7 @@ import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -39,6 +43,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -74,19 +79,56 @@ fun WebsiteList(
     )
 
 
-    //列表
-    CommonResponseBox(responseData = responseData, fabContent = {
-        //切换类型
-        SelectTypeFab(
-            modifier = Modifier.align(Alignment.BottomEnd),
-            icon = MainIconType.FILTER,
-            tabs = tabs,
-            type = type,
-            paddingValues = PaddingValues(
-                end = Dimen.fabMargin,
-                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-            )
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        //列表
+        CommonResponseBox(
+            responseData = responseData,
+            placeholder = {
+                VerticalGrid(
+                    itemWidth = getItemWidth(),
+                    contentPadding = Dimen.mediumPadding,
+                    modifier = Modifier.animateContentSize(defaultSpring())
+                ) {
+                    for (i in 0..10) {
+                        WebsiteItem(data = WebsiteData())
+                    }
+                }
+            },
+            fabContent = {
+                //切换类型
+                SelectTypeFab(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    icon = MainIconType.FILTER,
+                    tabs = tabs,
+                    type = type,
+                    paddingValues = PaddingValues(
+                        end = Dimen.fabMargin,
+                        bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                    )
+                )
+
+            }) { data ->
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(), state = scrollState
+            ) {
+                items(items = data, key = {
+                    it.type
+                }) {
+                    WebsiteGroup(it, type.intValue)
+                }
+                item {
+                    CommonSpacer()
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
 
         //回到顶部
         MainSmallFab(
@@ -94,30 +136,21 @@ fun WebsiteList(
             text = stringResource(id = R.string.tool_website),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+            extraContent = if (responseData == null) {
+                //加载提示
+                {
+                    CircularProgressCompose()
+                }
+            } else {
+                null
+            }
         ) {
             coroutineScope.launch {
                 try {
                     scrollState.scrollToItem(0)
                 } catch (_: Exception) {
                 }
-            }
-        }
-    }) { data ->
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(), state = scrollState
-        ) {
-            items(items = data, key = {
-                it.type
-            }) {
-                WebsiteGroup(it, type.intValue)
-            }
-            item {
-                CommonSpacer()
-            }
-            item {
-                CommonSpacer()
             }
         }
     }
@@ -163,6 +196,8 @@ private fun WebsiteGroup(
 
 @Composable
 private fun WebsiteItem(data: WebsiteData) {
+    val placeholder = data.id == 0
+
     val regionName = if (LocalInspectionMode.current) {
         //预览模式
         stringResource(id = R.string.unknown)
@@ -184,7 +219,8 @@ private fun WebsiteItem(data: WebsiteData) {
         ) {
             //区服
             MainTitleText(
-                text = regionName
+                text = regionName,
+                modifier = Modifier.commonPlaceholder(placeholder)
             )
             //摘要
             if (data.summary != "") {
@@ -199,9 +235,12 @@ private fun WebsiteItem(data: WebsiteData) {
         MainCard(
             modifier = Modifier
                 .padding(top = Dimen.mediumPadding)
-                .heightIn(min = Dimen.cardHeight),
+                .heightIn(min = Dimen.cardHeight)
+                .commonPlaceholder(placeholder),
             onClick = {
-                BrowserUtil.open(data.url)
+                if (!placeholder) {
+                    BrowserUtil.open(data.url)
+                }
             }
         ) {
             Row(

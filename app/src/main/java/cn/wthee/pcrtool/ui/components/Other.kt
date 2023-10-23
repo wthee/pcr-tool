@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -458,12 +459,19 @@ fun BottomSearchBar(
 
 }
 
-
+/**
+ * 通用布局（涉及网络请求）
+ *
+ * @param fabContent 右下fab内容，加载成功后显示
+ * @param placeholder 占位布局
+ * @param content 内容
+ */
 @Composable
 fun <T> CommonResponseBox(
     responseData: ResponseData<T>?,
     fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
-    content: @Composable (BoxScope.(T) -> Unit),
+    placeholder: @Composable (ColumnScope.() -> Unit)? = null,
+    content: @Composable (BoxScope.(T) -> Unit)
 ) {
     Box(
         modifier = Modifier
@@ -477,11 +485,20 @@ fun <T> CommonResponseBox(
             content(responseData!!.data!!)
         }
         if (responseData == null) {
-            CircularProgressCompose(
-                modifier = Modifier
-                    .padding(vertical = Dimen.largePadding)
-                    .align(Alignment.Center)
-            )
+            FadeAnimation(placeholder == null) {
+                CircularProgressCompose(
+                    modifier = Modifier
+                        .padding(vertical = Dimen.largePadding)
+                        .align(Alignment.Center)
+                )
+            }
+            FadeAnimation(placeholder != null) {
+                if (placeholder != null) {
+                    Column {
+                        placeholder()
+                    }
+                }
+            }
         }
 
         if (responseData?.data != null && fabContent != null) {
