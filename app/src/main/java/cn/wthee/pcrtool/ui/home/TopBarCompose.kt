@@ -40,6 +40,7 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -119,6 +120,11 @@ fun TopBarCompose(
             HeaderText(
                 text = stringResource(id = R.string.app_name)
             )
+
+            //数据版本，测试用
+            if(BuildConfig.DEBUG){
+                CaptionText(text = MainActivity.regionType.name)
+            }
 
             Row(
                 modifier = Modifier.weight(1f),

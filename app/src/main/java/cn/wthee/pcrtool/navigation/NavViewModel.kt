@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-
 
 /**
  * 导航 ViewModel
@@ -116,9 +116,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val rankEquipSelected = MutableLiveData(0)
 
     /**
-     * 数据库更新描述
+     * 数据库更新信息
      */
-    val updateDb = MutableLiveData<String>()
+    val dbVersion = MutableLiveData<DatabaseVersion>()
 
     /**
      * 搜索装备编号

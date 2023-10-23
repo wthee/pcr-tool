@@ -55,6 +55,8 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
+    val homeDataChangeWidth = 100.dp
+
     val mockGachaTypeChangeWidth = 160.dp
 
     val skillActionMinHeight = 16.dp

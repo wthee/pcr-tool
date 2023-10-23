@@ -45,13 +45,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavViewModel
@@ -60,7 +60,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
@@ -68,7 +67,6 @@ import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
@@ -85,10 +83,8 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
@@ -342,7 +338,6 @@ private fun ChangeDbCompose(
                     DbVersionList(tintColor)
                 } else {
                     //加载相关
-
                     when (downloadState) {
                         -2 -> {
                             if (dbError) {
@@ -409,7 +404,7 @@ private fun DbVersionList(
 
     Column(
         modifier = Modifier
-            .width(Dimen.dataChangeWidth),
+            .width(Dimen.homeDataChangeWidth),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -427,12 +422,12 @@ private fun DbVersionList(
                     .fillMaxWidth()
                     .clickable {
                         VibrateUtil(context).single()
-                        navViewModel.fabCloseClick.postValue(true)
                         coroutineScope.launch {
                             //正常切换
                             DatabaseUpdater.changeDatabase(regionType)
+                            navViewModel.fabCloseClick.postValue(true)
                         }
-                    }
+                    } .padding(vertical = Dimen.mediumPadding)
             }
 
             SelectText(
@@ -440,7 +435,7 @@ private fun DbVersionList(
                 text = menuTexts[i],
                 textStyle = MaterialTheme.typography.titleLarge,
                 modifier = mModifier
-                    .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding),
+                    .padding(horizontal = Dimen.smallPadding),
                 selectedColor = color
             )
 
@@ -458,20 +453,8 @@ private fun DbVersionContent(
     color: Color,
     navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
-    val region = MainActivity.regionType
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    //数据库版本
-    val key = when (region) {
-        RegionType.CN -> SettingPreferencesKeys.SP_DATABASE_VERSION_CN
-        RegionType.TW -> SettingPreferencesKeys.SP_DATABASE_VERSION_TW
-        RegionType.JP -> SettingPreferencesKeys.SP_DATABASE_VERSION_JP
-    }
-    val dbVersionCode = runBlocking {
-        (context.dataStoreSetting.data.first()[key] ?: "").split("/")[0]
-    }
-    val updateDb = navViewModel.updateDb.observeAsState().value ?: ""
+    val dbVersion = navViewModel.dbVersion.observeAsState().value
 
 
     if (openDialog) {
@@ -487,49 +470,81 @@ private fun DbVersionContent(
                     bottom = Dimen.fabMargin,
                 )
         ) {
-            //数据异常时显示
-            if (dbError) {
-                DbVersionContentItem(
-                    modifier = Modifier.width(IntrinsicSize.Max),
-                    title = stringResource(id = R.string.data_file_error),
-                    content = stringResource(id = R.string.data_file_error_desc),
-                    color = colorRed,
-                    fillMaxWidth = false
-                ) {
-                    VibrateUtil(context).single()
-                    navViewModel.fabCloseClick.postValue(true)
+            //重新数据下载
+            MainCard(
+                modifier = Modifier.height(IntrinsicSize.Min),
+                fillMaxWidth = false,
+                elevation = Dimen.popupMenuElevation,
+                onClick = {
                     coroutineScope.launch {
-                        //数据库文件异常时，重新下载
+                        //重新下载
                         DatabaseUpdater.checkDBVersion(fixDb = true)
+                        navViewModel.fabCloseClick.postValue(true)
                     }
+                },
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Row(
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainIcon(
+                        data = MainIconType.SYNC,
+                        size = Dimen.smallIconSize,
+                        tint = color
+                    )
+
+                    Text(
+                        text = (if (dbError) {
+                            stringResource(id = R.string.data_file_error)
+                        } else {
+                            stringResource(id = R.string.none)
+                        }) + stringResource(id = R.string.data_file_error_desc),
+                        color = color,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Start
+                    )
                 }
-            } else {
-                //数据更新内容
+            }
+
+            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
+
+            //数据更新内容
+            DbVersionContentItem(
+                title = stringResource(id = R.string.db_diff_content),
+                content = if (dbVersion == null || dbVersion.desc == "") {
+                    stringResource(R.string.db_diff_content_none)
+                } else {
+                    dbVersion.desc
+                },
+            )
+
+            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
+
+            Row(
+                modifier = Modifier.widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
+            ) {
+                //数据版本
                 DbVersionContentItem(
-                    title = stringResource(id = R.string.db_diff_content),
-                    content = updateDb,
+                    title = stringResource(id = R.string.db_diff_version),
+                    content = dbVersion?.truthVersion ?: "",
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
+
+                //数据更新时间
+                DbVersionContentItem(
+                    title = stringResource(id = R.string.db_diff_time),
+                    content = if (dbVersion != null && dbVersion.time != "") {
+                        dbVersion.time.substring(5, 10).replace("-", "/")
+                    } else {
+                        stringResource(id = R.string.unknown)
+                    },
+                    modifier = Modifier.width(60.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
-            //数据版本
-            DbVersionContentItem(
-                title = stringResource(id = R.string.db_diff_version),
-                content = dbVersionCode,
-                color = color,
-                extraContent = {
-                    IconTextButton(
-                        icon = MainIconType.SYNC,
-                        text = stringResource(id = R.string.none),
-                        modifier = Modifier.padding(end = Dimen.smallPadding)
-                    ) {
-                        navViewModel.fabCloseClick.postValue(true)
-                        coroutineScope.launch {
-                            //数据库文件异常时，重新下载
-                            DatabaseUpdater.checkDBVersion(fixDb = true)
-                        }
-                    }
-                }
-            )
+
         }
     }
 
@@ -545,40 +560,32 @@ private fun DbVersionContentItem(
     content: String,
     color: Color = MaterialTheme.colorScheme.primary,
     fillMaxWidth: Boolean = true,
-    extraContent: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
     MainCard(
         modifier = modifier
-            .widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
             .height(IntrinsicSize.Min),
         fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
         onClick = onClick,
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MainText(
-                text = title,
-                modifier = Modifier.padding(
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding,
-                    top = Dimen.mediumPadding,
-                    bottom = Dimen.smallPadding,
-                ),
-                color = color,
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            extraContent?.let {
-                extraContent()
-            }
-        }
+        MainText(
+            text = title,
+            modifier = Modifier.padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.mediumPadding,
+                bottom = Dimen.smallPadding,
+            ),
+            color = color,
+            style = MaterialTheme.typography.bodyMedium,
+        )
 
         CaptionText(
             text = content,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .weight(1f)
                 .padding(
