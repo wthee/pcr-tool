@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -10,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
+import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -31,6 +35,7 @@ fun Modifier.clickClose(
     if (openDialog) {
         Modifier
             .fillMaxSize()
+            .background(if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
