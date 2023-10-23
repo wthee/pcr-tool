@@ -18,6 +18,7 @@ import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Celebration
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloseFullscreen
+import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContactSupport
 import androidx.compose.material.icons.rounded.CreditCard
@@ -523,4 +524,8 @@ enum class MainIconType(val icon: ImageVector) {
      */
     UNIQUE_EQUIP(Icons.Rounded.Handyman),
 
+    /**
+     * 下载
+     */
+    DOWNLOAD(Icons.Rounded.CloudDownload)
 }

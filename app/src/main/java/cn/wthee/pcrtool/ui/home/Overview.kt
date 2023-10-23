@@ -76,6 +76,7 @@ import cn.wthee.pcrtool.ui.home.module.ToolSection
 import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
@@ -340,28 +341,14 @@ private fun ChangeDbCompose(
                     //加载相关
                     when (downloadState) {
                         -2 -> {
-                            if (dbError) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(start = Dimen.largePadding)
-                                ) {
-                                    MainIcon(
-                                        data = MainIconType.DB_ERROR,
-                                        tint = tintColor,
-                                        size = Dimen.fabIconSize
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.db_error),
-                                        style = MaterialTheme.typography.titleSmall,
-                                        textAlign = TextAlign.Center,
-                                        color = colorRed,
-                                        modifier = Modifier.padding(
-                                            start = Dimen.mediumPadding,
-                                            end = Dimen.largePadding
-                                        )
-                                    )
-                                }
-                            } else {
+                            FadeAnimation(visible = dbError) {
+                                MainIcon(
+                                    data = MainIconType.DB_ERROR,
+                                    tint = tintColor,
+                                    size = Dimen.fabIconSize
+                                )
+                            }
+                            FadeAnimation(visible = !dbError) {
                                 MainIcon(
                                     data = MainIconType.CHANGE_DATA,
                                     tint = tintColor,
@@ -404,7 +391,8 @@ private fun DbVersionList(
 
     Column(
         modifier = Modifier
-            .width(Dimen.homeDataChangeWidth),
+            .width(Dimen.homeDataChangeWidth)
+            .padding(bottom = Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -423,11 +411,12 @@ private fun DbVersionList(
                     .clickable {
                         VibrateUtil(context).single()
                         coroutineScope.launch {
+                            navViewModel.fabCloseClick.postValue(true)
                             //正常切换
                             DatabaseUpdater.changeDatabase(regionType)
-                            navViewModel.fabCloseClick.postValue(true)
                         }
-                    } .padding(vertical = Dimen.mediumPadding)
+                    }
+                    .padding(vertical = Dimen.mediumPadding)
             }
 
             SelectText(
@@ -470,44 +459,6 @@ private fun DbVersionContent(
                     bottom = Dimen.fabMargin,
                 )
         ) {
-            //重新数据下载
-            MainCard(
-                modifier = Modifier.height(IntrinsicSize.Min),
-                fillMaxWidth = false,
-                elevation = Dimen.popupMenuElevation,
-                onClick = {
-                    coroutineScope.launch {
-                        //重新下载
-                        DatabaseUpdater.checkDBVersion(fixDb = true)
-                        navViewModel.fabCloseClick.postValue(true)
-                    }
-                },
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Row(
-                    modifier = Modifier.padding(Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainIcon(
-                        data = MainIconType.SYNC,
-                        size = Dimen.smallIconSize,
-                        tint = color
-                    )
-
-                    Text(
-                        text = (if (dbError) {
-                            stringResource(id = R.string.data_file_error)
-                        } else {
-                            stringResource(id = R.string.none)
-                        }) + stringResource(id = R.string.data_file_error_desc),
-                        color = color,
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
 
             //数据更新内容
             DbVersionContentItem(
@@ -524,14 +475,6 @@ private fun DbVersionContent(
             Row(
                 modifier = Modifier.widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
             ) {
-                //数据版本
-                DbVersionContentItem(
-                    title = stringResource(id = R.string.db_diff_version),
-                    content = dbVersion?.truthVersion ?: "",
-                    modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
 
                 //数据更新时间
                 DbVersionContentItem(
@@ -543,6 +486,55 @@ private fun DbVersionContent(
                     },
                     modifier = Modifier.width(60.dp)
                 )
+
+                Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
+
+                //数据版本
+                DbVersionContentItem(
+                    title = stringResource(id = R.string.db_diff_version),
+                    content = dbVersion?.truthVersion ?: stringResource(id = R.string.unknown),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
+
+            //重新数据下载
+            MainCard(
+                modifier = Modifier.height(IntrinsicSize.Min),
+                fillMaxWidth = false,
+                elevation = Dimen.popupMenuElevation,
+                onClick = {
+                    coroutineScope.launch {
+                        navViewModel.fabCloseClick.postValue(true)
+                        //重新下载
+                        DatabaseUpdater.checkDBVersion(fixDb = true)
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Row(
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainIcon(
+                        data = MainIconType.DOWNLOAD,
+                        size = Dimen.smallIconSize,
+                        tint = color
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        text = if (dbError) {
+                            stringResource(id = R.string.data_file_error)
+                        } else {
+                            stringResource(id = R.string.data_file_error_desc)
+                        },
+                        color = color,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
 
         }
