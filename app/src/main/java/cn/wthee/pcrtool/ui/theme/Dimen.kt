@@ -61,7 +61,7 @@ object Dimen {
 
     val skillActionMinHeight = 16.dp
 
-    val border = 3.dp
+    val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
 

@@ -161,4 +161,9 @@ fun enterTransition() = if (animOnFlag) {
     noAnimIn()
 }
 
-fun exitTransition() = noAnimOut()
+
+fun exitTransition() = if (animOnFlag) {
+    myFadeOut
+} else {
+    noAnimOut()
+}

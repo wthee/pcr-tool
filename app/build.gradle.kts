@@ -13,8 +13,8 @@ hilt {
 
 val composeBom = "2023.10.01"
 val composeCompilerVersion = "1.5.3"
-val appVersionCode = 374
-val appVersionName = "3.7.4"
+val appVersionCode = 375
+val appVersionName = "3.7.5"
 val appId = "cn.wthee.pcrtool"
 
 android {
