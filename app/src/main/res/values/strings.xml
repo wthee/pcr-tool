@@ -296,7 +296,7 @@
     <!--提示相关-->
     <string name="no_more">暂无更多</string>
     <string name="no_data">暂无数据</string>
-    <string name="not_installed">暂未实装的功能（%s）</string>
+    <string name="not_installed">暂未实装</string>
     <string name="tip_click_to_add">点击下列功能，添加至首页</string>
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>

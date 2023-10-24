@@ -53,7 +53,6 @@ import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.getStarExEquipIdList
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.ChipGroup
@@ -79,7 +78,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -221,10 +219,7 @@ fun ExtraEquipList(
     } else {
         //功能未实装
         CenterTipText(
-            stringResource(
-                id = R.string.not_installed,
-                getRegionName(MainActivity.regionType)
-            )
+            stringResource(id = R.string.not_installed)
         )
     }
 }

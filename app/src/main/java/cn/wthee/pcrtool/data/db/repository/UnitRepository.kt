@@ -4,8 +4,10 @@ import cn.wthee.pcrtool.data.db.dao.SkillDao
 import cn.wthee.pcrtool.data.db.dao.UnitDao
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.getAttr
@@ -27,67 +29,75 @@ import javax.inject.Inject
 class UnitRepository @Inject constructor(
     private val unitDao: UnitDao,
     private val skillDao: SkillDao,
-    private val equipmentRepository:EquipmentRepository
+    private val equipmentRepository: EquipmentRepository
 ) {
 
-    suspend fun getCharacterInfoList(filter: FilterCharacter, limit: Int): List<CharacterInfo> {
-        //额外角色编号
-        val exUnitIdList = try {
-            unitDao.getExUnitIdList()
-        } catch (_: Exception) {
-            arrayListOf()
-        }
-
-        var filterList = unitDao.getCharacterInfoList(
-            filter.sortType.type,
-            if (filter.asc) "asc" else "desc",
-            filter.name,
-            filter.position()[0],
-            filter.position()[1],
-            filter.atk,
-            when {
-                //公会
-                filter.guild > 1 -> getGuilds()[filter.guild - 2].guildId
-                //无公会
-                filter.guild == 1 -> -1
-                //全部
-                else -> 0
-            },
-            if (filter.all) 1 else 0,
-            //六星排序时，仅显示六星角色
-            if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
-            filter.starIds,
-            filter.type,
-            limit,
-            exUnitIdList,
-            when {
-                //种族
-                filter.race > 1 -> getRaces()[filter.race - 2]
-                //多人卡
-                filter.race == 1 -> "-"
-                //全部
-                else -> ""
-            },
-        )
-
-        //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
-        if (filter.sortType == CharacterSortType.SORT_DATE) {
-            filterList = filterList.sortedWith { o1, o2 ->
-                val sd1 = o1.startTime.formatTime
-                val sd2 = o2.startTime.formatTime
-                when {
-                    sd1.second(sd2) > 0 -> 1
-                    sd1.second(sd2) == 0L -> {
-                        o1.id.compareTo(o2.id)
-                    }
-
-                    else -> -1
-                } * (if (filter.asc) 1 else -1)
+    suspend fun getCharacterInfoList(filter: FilterCharacter, limit: Int): List<CharacterInfo>? {
+        try {
+            //额外角色编号
+            val exUnitIdList = try {
+                unitDao.getExUnitIdList()
+            } catch (_: Exception) {
+                emptyList()
             }
+
+            var filterList = unitDao.getCharacterInfoList(
+                filter.sortType.type,
+                if (filter.asc) "asc" else "desc",
+                filter.name,
+                filter.position()[0],
+                filter.position()[1],
+                filter.atk,
+                when {
+                    //公会
+                    filter.guild > 1 -> getGuilds()[filter.guild - 2].guildId
+                    //无公会
+                    filter.guild == 1 -> -1
+                    //全部
+                    else -> 0
+                },
+                if (filter.all) 1 else 0,
+                //六星排序时，仅显示六星角色
+                if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
+                filter.starIds,
+                filter.type,
+                limit,
+                exUnitIdList,
+                when {
+                    //种族
+                    filter.race > 1 -> getRaces()[filter.race - 2]
+                    //多人卡
+                    filter.race == 1 -> "-"
+                    //全部
+                    else -> ""
+                },
+            )
+
+            //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
+            if (filter.sortType == CharacterSortType.SORT_DATE) {
+                filterList = filterList.sortedWith { o1, o2 ->
+                    val sd1 = o1.startTime.formatTime
+                    val sd2 = o2.startTime.formatTime
+                    when {
+                        sd1.second(sd2) > 0 -> 1
+                        sd1.second(sd2) == 0L -> {
+                            o1.id.compareTo(o2.id)
+                        }
+
+                        else -> -1
+                    } * (if (filter.asc) 1 else -1)
+                }
+            }
+
+
+            return filterList
+        } catch (e: Exception) {
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList#params:${filter}"
+            )
+            return null
         }
-
-
-        return filterList
     }
 
     suspend fun getCount(): String {
@@ -113,9 +123,17 @@ class UnitRepository @Inject constructor(
         null
     }
 
-    suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
-
-    suspend fun getRoomComments(unitId: Int) = unitDao.getRoomComments(unitId)
+    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? {
+        //校验是否未多角色卡
+        val data = unitDao.getProfileInfo(unitId)
+        if (data == null) {
+            LogReportUtil.upload(
+                NullPointerException(),
+                Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
+            )
+        }
+        return data
+    }
 
     suspend fun getMultiIds(unitId: Int) = unitDao.getMultiIds(unitId)
 
@@ -152,7 +170,7 @@ class UnitRepository @Inject constructor(
     suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
 
     suspend fun getCoefficient() = try {
-       unitDao.getCoefficient()
+        unitDao.getCoefficient()
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getCoefficient")
         null
@@ -333,5 +351,32 @@ class UnitRepository @Inject constructor(
         } else {
             SkillActionDetail()
         }
+    }
+
+    /**
+     * 获取角色小屋对话
+     *
+     * @param unitId 角色编号
+     */
+    suspend fun getRoomComments(unitId: Int): ArrayList<RoomCommentData> {
+        //校验是否为多角色卡
+        val ids = arrayListOf(unitId)
+        try {
+            val multiIds = unitDao.getMultiIds(unitId)
+            if (multiIds.isNotEmpty()) {
+                ids.addAll(multiIds)
+            }
+        } catch (_: Exception) {
+
+        }
+        val commentList = arrayListOf<RoomCommentData>()
+        ids.forEach {
+            val data = unitDao.getRoomComments(it)
+            if (data != null) {
+                commentList.add(data)
+            }
+        }
+
+        return commentList
     }
 }

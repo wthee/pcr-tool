@@ -81,7 +81,7 @@ fun SkillCompose(
 ) {
     val uiState by skillListViewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(property.level, atk){
-        skillListViewModel.loadSkillInfo(property.level, atk, unitId)
+        skillListViewModel.loadData(property.level, atk, unitId)
     }
 
     //普通技能

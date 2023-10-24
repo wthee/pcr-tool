@@ -16,9 +16,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
-import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
+import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainContentText
@@ -44,7 +45,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixedStr
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 /**
  * 角色基本信息
@@ -54,35 +54,33 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 @Composable
 fun CharacterBasicInfo(
     unitId: Int,
-    viewModel: CharacterViewModel = hiltViewModel()
+    characterProfileViewModel: CharacterProfileViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
+    val uiState by characterProfileViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(unitId) {
+        characterProfileViewModel.loadData(unitId)
+    }
     //角色基本信息
-    val basicInfoFlow = remember(unitId) {
-        viewModel.getCharacter(unitId)
-    }
-    val basicInfo by basicInfoFlow.collectAsState(initial = null)
+    val profile = uiState.profile
     //主页交流文本
-    val homePageCommentListFlow = remember(unitId) {
-        viewModel.getHomePageComments(unitId)
-    }
-    val homePageCommentList by homePageCommentListFlow.collectAsState(initial = arrayListOf())
+    val homePageCommentList = uiState.homePageCommentList
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        basicInfo?.let { info ->
+        profile?.let {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                BasicInfo(info = info)
-                HomePageCommentInfo(info.getSelf(), homePageCommentList)
-                RoomComment(unitId = unitId, viewModel = viewModel)
+                ProfileInfoContent(info = it)
+                HomePageCommentContent(it.getSelf(), homePageCommentList)
+                RoomCommentContent(uiState.roomCommentList)
             }
         }
     }
@@ -93,7 +91,7 @@ fun CharacterBasicInfo(
  * 角色基本信息
  */
 @Composable
-private fun BasicInfo(info: CharacterInfoPro) {
+private fun ProfileInfoContent(info: CharacterProfileInfo) {
     Column(
         modifier = Modifier
             .padding(start = Dimen.largePadding, end = Dimen.largePadding)
@@ -156,7 +154,7 @@ private fun BasicInfo(info: CharacterInfoPro) {
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun HomePageCommentInfo(
+private fun HomePageCommentContent(
     selfText: String?,
     homePageCommentList: List<CharacterHomePageComment>
 ) {
@@ -234,13 +232,7 @@ private fun HomePageCommentInfo(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
-    val roomCommentsFlow = remember(unitId) {
-        viewModel.getRoomComments(unitId)
-    }
-    val roomComments by roomCommentsFlow.collectAsState(initial = null)
-
-
+private fun RoomCommentContent(roomCommentList: List<RoomCommentData>) {
     Row(
         modifier = Modifier.padding(
             start = Dimen.largePadding,
@@ -260,7 +252,7 @@ private fun RoomComment(unitId: Int, viewModel: CharacterViewModel) {
         )
         Spacer(modifier = Modifier.weight(0.7f))
     }
-    roomComments?.let { list ->
+    roomCommentList.let { list ->
         val pagerState = rememberPagerState { list.size }
 
         //多角色时，显示角色图标
@@ -396,6 +388,6 @@ private fun CommentText(index: Int? = null, text: String) {
 @Composable
 private fun BasicInfoPreview() {
     PreviewLayout {
-        BasicInfo(info = CharacterInfoPro())
+        ProfileInfoContent(info = CharacterProfileInfo())
     }
 }

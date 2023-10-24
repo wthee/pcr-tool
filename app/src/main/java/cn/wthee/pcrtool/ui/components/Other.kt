@@ -66,6 +66,7 @@ import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
@@ -99,6 +100,51 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * 通用加载数据 box
+ *
+ * @param stateType 状态
+ * @param loadingContent 加载中布局
+ * @param errorContent 异常布局
+ * @param noDataContent 无数据布局
+ * @param successContent 加载成功后的布局
+ * @param content 常驻显示的布局
+ */
+@Composable
+fun StateBox(
+    stateType: LoadingState,
+    loadingContent: @Composable () -> Unit = {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressCompose(
+                modifier = Modifier
+                    .padding(vertical = Dimen.largePadding)
+                    .align(Alignment.Center)
+            )
+        }
+    },
+    errorContent: @Composable () -> Unit = {
+        CenterTipText(stringResource(id = R.string.not_installed))
+    },
+    noDataContent: @Composable () -> Unit = {
+        CenterTipText(stringResource(id = R.string.no_data))
+    },
+    successContent: @Composable BoxScope.() -> Unit,
+    content: @Composable BoxScope.() -> Unit = {}
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        when (stateType) {
+            LoadingState.Loading -> loadingContent()
+            LoadingState.NoData -> noDataContent()
+            LoadingState.Error -> errorContent()
+            LoadingState.Success -> content()
+        }
+        content()
+    }
+}
 
 /**
  * 底部空白占位

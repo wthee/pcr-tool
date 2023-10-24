@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * 页面状态：角色详情
+ * 页面状态：角色战力系数
  */
 @Immutable
 data class CharacterCoeUiState(

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,6 +53,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -67,7 +67,6 @@ import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
-import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -77,6 +76,7 @@ import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
@@ -113,7 +113,7 @@ import kotlinx.coroutines.launch
 fun CharacterList(
     scrollState: LazyGridState,
     toDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel(),
+    characterListViewModel: CharacterListViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -135,11 +135,13 @@ fun CharacterList(
 
     filter.starIds = getStarCharacterIdList()
 
-    //角色列表
-    val characterListFlow = remember(filter.hashCode()) {
-        characterViewModel.getCharacterInfoList(filter)
+    val uiState by characterListViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = filter.hashCode()) {
+        characterListViewModel.loadData(filter)
     }
-    val characterList by characterListFlow.collectAsState(initial = arrayListOf())
+    //角色列表
+    val characterList = uiState.characterList
+
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -150,41 +152,37 @@ fun CharacterList(
             FilterCharacterSheet(navViewModel, state)
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            if (characterList.isNotEmpty()) {
+        StateBox(
+            stateType = uiState.loadingState,
+            successContent = {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(getItemWidth()),
                     state = scrollState
                 ) {
-                    items(
-                        items = characterList,
-                        key = {
-                            it.id
-                        }
-                    ) {
-                        CharacterItem(
-                            unitId = it.id,
-                            character = it,
-                            loved = filter.starIds.contains(it.id),
-                            modifier = Modifier.padding(Dimen.mediumPadding),
+                    characterList?.let {
+                        items(
+                            items = characterList,
+                            key = {
+                                it.id
+                            }
                         ) {
-                            toDetail(it.id)
+                            CharacterItem(
+                                unitId = it.id,
+                                character = it,
+                                loved = filter.starIds.contains(it.id),
+                                modifier = Modifier.padding(Dimen.mediumPadding),
+                            ) {
+                                toDetail(it.id)
+                            }
                         }
                     }
+
                     items(2) {
                         CommonSpacer()
                     }
                 }
-            } else {
-                CenterTipText(
-                    stringResource(id = R.string.no_data)
-                )
             }
-
+        ) {
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -210,7 +208,7 @@ fun CharacterList(
                         navViewModel.resetClick.postValue(true)
                     }
                 }
-                val count = characterList.size
+                val count = characterList?.size ?: 0
                 // 数量显示&筛选按钮
                 MainSmallFab(
                     iconType = MainIconType.CHARACTER,

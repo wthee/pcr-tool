@@ -27,7 +27,7 @@ import cn.wthee.pcrtool.utils.int
  * 战力计算
  */
 @Composable
-fun CharacterCoe(
+fun CharacterCoeScreen(
     characterAttrData: AllAttrData,
     currentValue: CharacterProperty,
     toCoe: () -> Unit,

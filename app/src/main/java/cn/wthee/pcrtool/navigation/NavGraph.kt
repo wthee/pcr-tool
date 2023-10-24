@@ -22,8 +22,8 @@ import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterDetail
-import cn.wthee.pcrtool.ui.character.CharacterExtraEquip
+import cn.wthee.pcrtool.ui.character.CharacterDetailScreen
+import cn.wthee.pcrtool.ui.character.CharacterExtraEquipScreen
 import cn.wthee.pcrtool.ui.character.CharacterList
 import cn.wthee.pcrtool.ui.character.CharacterSkillLoop
 import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
@@ -144,7 +144,7 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetail(unitId = arguments.getInt(NavRoute.UNIT_ID), actions)
+                CharacterDetailScreen(unitId = arguments.getInt(NavRoute.UNIT_ID), actions)
             }
 
             //角色图片详情
@@ -363,10 +363,8 @@ fun NavGraph(
                 })
             ) {
                 val scrollState = rememberLazyListState()
-                val arguments = requireNotNull(it.arguments)
-                CharacterExtraEquip(
+                CharacterExtraEquipScreen(
                     scrollState = scrollState,
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
                     toExtraEquipDetail = actions.toExtraEquipDetail
                 )
             }
@@ -732,7 +730,7 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetail(
+                CharacterDetailScreen(
                     unitId = arguments.getInt(NavRoute.UNIT_ID),
                     actions,
                     showAllInfo = false

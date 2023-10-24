@@ -42,7 +42,7 @@ class SkillListViewModel @Inject constructor(
     /**
      * 加载技能信息
      */
-    fun loadSkillInfo(lv: Int, atk: Int, unitId: Int) {
+    fun loadData(lv: Int, atk: Int, unitId: Int) {
         //普通技能
         loadCharacterSkills(
             lv,

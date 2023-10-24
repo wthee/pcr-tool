@@ -54,7 +54,7 @@ class OverviewViewModel @Inject constructor(
     fun getCharacterInfoList() = flow {
         try {
             val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
-            emit(filterList.subList(0, 10))
+            emit(filterList?.subList(0, 10))
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getCharacterInfoList")
         }

@@ -116,7 +116,7 @@ private const val DEFAULT_ORDER = "300-301-302-303-304-305-306-307-308-310-"
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CharacterDetail(
+fun CharacterDetailScreen(
     unitId: Int,
     actions: NavActions,
     showAllInfo: Boolean = true,
@@ -289,7 +289,7 @@ fun CharacterDetail(
 
                                 //战力
                                 CharacterDetailModuleType.COE ->
-                                    CharacterCoe(
+                                    CharacterCoeScreen(
                                         characterAttrData = characterAttrData,
                                         currentValue = currentValue,
                                         toCoe = actions.toCoe

@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -40,7 +39,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
-import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toTimeText
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import kotlinx.coroutines.launch
@@ -81,10 +79,7 @@ fun ExtraEquipTravelList(
                 //功能未实装
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CenterTipText(
-                        stringResource(
-                            id = R.string.not_installed,
-                            getRegionName(MainActivity.regionType)
-                        )
+                        stringResource(id = R.string.not_installed)
                     )
                 }
             } else {

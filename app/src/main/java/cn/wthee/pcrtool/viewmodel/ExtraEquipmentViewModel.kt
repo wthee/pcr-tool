@@ -94,12 +94,6 @@ class ExtraEquipmentViewModel @Inject constructor(
         emit(equipmentRepository.getTravelAreaList())
     }
 
-    /**
-     * 获取角色可使用的ex装备列表
-     */
-    fun getCharacterExtraEquipList(unitId: Int) = flow {
-        emit(equipmentRepository.getCharacterExtraEquipList(unitId))
-    }
 
     /**
      * 获取装所有备技能id

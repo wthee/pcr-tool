@@ -92,18 +92,18 @@ fun CharacterSection(
             }
         }
     ) {
-        if (characterList.isNotEmpty()) {
+        if (characterList?.isNotEmpty() == true) {
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
-                    state = rememberPagerState { characterList.size },
+                    state = rememberPagerState { characterList!!.size },
                     modifier = Modifier
                         .padding(vertical = Dimen.mediumPadding)
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = Dimen.largePadding),
                     pageSpacing = Dimen.mediumPadding
                 ) { index ->
-                    val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
+                    val unitId = if (characterList!!.isEmpty()) 0 else characterList!![index].id
                     CharacterImageItem(
                         modifier = Modifier.fillMaxWidth(),
                         unitId = unitId,
@@ -116,7 +116,7 @@ fun CharacterSection(
                         .padding(vertical = Dimen.mediumPadding)
                         .fillMaxWidth()
                 ) {
-                    items(characterList) {
+                    items(characterList!!) {
                         Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
                             CharacterImageItem(
                                 modifier = Modifier

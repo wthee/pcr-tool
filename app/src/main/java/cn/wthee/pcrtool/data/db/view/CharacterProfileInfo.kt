@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 /**
  * 角色详情信息视图
  */
-data class CharacterInfoPro(
+data class CharacterProfileInfo(
     @ColumnInfo(name = "unit_id") val unitId: Int = 100101,
     @ColumnInfo(name = "unit_name") val unitName: String = "",
     @ColumnInfo(name = "kana") val kana: String = "",

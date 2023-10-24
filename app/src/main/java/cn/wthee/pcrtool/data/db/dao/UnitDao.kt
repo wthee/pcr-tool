@@ -6,7 +6,7 @@ import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
@@ -274,7 +274,7 @@ interface UnitDao {
             unit_profile.unit_id = :unitId 
         GROUP BY unit_profile.unit_id """
     )
-    suspend fun getInfoPro(unitId: Int): CharacterInfoPro?
+    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo?
 
     /**
      * 获取角色小屋对话
