@@ -1,10 +1,19 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.compose.foundation.layout.*
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -19,9 +29,19 @@ import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
-import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.*
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.GridIconList
+import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
+import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
@@ -31,14 +51,17 @@ import kotlinx.coroutines.launch
  * 历史卡池
  */
 @Composable
-fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
+fun MockGachaHistory(
+    scrollState: LazyGridState,
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+) {
     //历史记录
     mockGachaViewModel.getHistory()
     val historyData = mockGachaViewModel.historyList.observeAsState().value ?: arrayListOf()
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
-        state = rememberLazyGridState(),
+        state = scrollState,
         columns = GridCells.Adaptive(getItemWidth())
     ) {
         items(
@@ -65,7 +88,7 @@ fun MockGachaHistory(mockGachaViewModel: MockGachaViewModel = hiltViewModel()) {
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
-    mockGachaViewModel: MockGachaViewModel? = hiltViewModel()
+    mockGachaViewModel: MockGachaViewModel? = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val scope = rememberCoroutineScope()
     val openDialog = remember {
@@ -124,7 +147,7 @@ private fun MockGachaHistoryItem(
                 text = stringResource(id = R.string.go_to_mock)
             ) {
                 scope.launch {
-                    MainActivity.navViewModel.gachaId.postValue(gachaData.gachaId)
+                    mockGachaViewModel?.gachaId?.postValue(gachaData.gachaId)
                     //卡池详情
                     val newPickUpList = arrayListOf<GachaUnitInfo>()
                     gachaData.pickUpIds.intArrayList.forEach {
@@ -137,14 +160,14 @@ private fun MockGachaHistoryItem(
                             )
                         )
                     }
-                    MainActivity.navViewModel.pickUpList.postValue(newPickUpList)
-                    MainActivity.navViewModel.mockGachaType.postValue(
+                    mockGachaViewModel?.pickUpList?.postValue(newPickUpList)
+                    mockGachaViewModel?.mockGachaType?.postValue(
                         MockGachaType.getByValue(
                             gachaData.gachaType
                         )
                     )
                     //显示卡池结果
-                    MainActivity.navViewModel.showMockGachaResult.postValue(true)
+                    mockGachaViewModel?.showMockGachaResult?.postValue(true)
                 }
             }
         }

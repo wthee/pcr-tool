@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -17,13 +16,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.*
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
@@ -31,31 +36,40 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * 本地存储：收藏信息
  */
-fun mainSP(): SharedPreferences =
-    context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
+private const val MAIN_PREFERENCES_NAME = "main"
+val Context.dataStoreMain: DataStore<Preferences> by preferencesDataStore(
+    name = MAIN_PREFERENCES_NAME,
+    produceMigrations = {
+        listOf(SharedPreferencesMigration(context, MAIN_PREFERENCES_NAME))
+    })
 
 /**
  * 本地存储：版本、设置信息
  */
-fun settingSP(mContext: Context = context): SharedPreferences =
-    mContext.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+private const val SETTING_PREFERENCES_NAME = "setting"
+val Context.dataStoreSetting: DataStore<Preferences> by preferencesDataStore(
+    name = SETTING_PREFERENCES_NAME,
+    produceMigrations = {
+        listOf(SharedPreferencesMigration(context, SETTING_PREFERENCES_NAME))
+    })
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val mNoticeViewModel: NoticeViewModel by viewModels()
+    private val noticeViewModel: NoticeViewModel by viewModels()
 
     companion object {
         lateinit var handler: Handler
 
         lateinit var navViewModel: NavViewModel
-        lateinit var noticeViewModel: NoticeViewModel
 
         @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
@@ -71,23 +85,27 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //加载开屏页面
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent {
-            PCRToolApp()
+        //用户设置信息
+        runBlocking {
+            val preferences = dataStoreSetting.data.first()
+            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
+            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
+            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
+            regionType = RegionType.getByValue(
+                preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
+            )
         }
-
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
-        //用户设置信息
-        val sp = settingSP()
-        vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
-        animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
-        dynamicColorOnFlag = sp.getBoolean(Constants.SP_COLOR_STATE, true)
-        regionType =
-            RegionType.getByValue(sp.getInt(Constants.SP_DATABASE_TYPE, RegionType.CN.value))
 
+        setContent {
+            PCRToolApp()
+        }
     }
 
     override fun onResume() {
@@ -97,7 +115,6 @@ class MainActivity : ComponentActivity() {
             DatabaseUpdater.checkDBVersion()
         }
         //更新通知
-        noticeViewModel = mNoticeViewModel
         noticeViewModel.check()
     }
 

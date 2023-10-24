@@ -59,9 +59,9 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UniqueEquipList(
-    viewModel: EquipmentViewModel = hiltViewModel(),
-    toUniqueEquipDetail: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
+    toUniqueEquipDetail: (Int) -> Unit
 ) {
     val defaultName = navViewModel.uniqueEquipName.value ?: ""
     //关键词输入
@@ -77,52 +77,63 @@ fun UniqueEquipList(
         navViewModel.uniqueEquipName.value = keywordState.value
     }
     //专用装备1
-    val uniqueEquips1Flow = remember(keywordState.value) {
-        viewModel.getUniqueEquips(keywordState.value, 1)
+    val uniqueEquipsFlow = remember(keywordState.value) {
+        equipmentViewModel.getUniqueEquips(keywordState.value, 0)
     }
-    val uniqueEquips1 by uniqueEquips1Flow.collectAsState(initial = arrayListOf())
+    val uniqueEquips by uniqueEquipsFlow.collectAsState(initial = null)
 
+    //专用装备1
+    val uniqueEquips1 = uniqueEquips?.filter {
+        it.equipSlot == 1
+    }
     //专用装备2
-    val uniqueEquips2Flow = remember(keywordState.value) {
-        viewModel.getUniqueEquips(keywordState.value, 2)
+    val uniqueEquips2 = uniqueEquips?.filter {
+        it.equipSlot == 2
     }
-    val uniqueEquips2 by uniqueEquips2Flow.collectAsState(initial = arrayListOf())
 
-    //总列表
-    val uniqueEquips = uniqueEquips1 + uniqueEquips2
-
+    //列表状态
     val gridState1 = rememberLazyGridState()
     val gridState2 = rememberLazyGridState()
+
+    //计算页数
     var pagerCount = 0
-    if (uniqueEquips1.isNotEmpty()) {
-        pagerCount++
+    if (uniqueEquips1?.isNotEmpty() == true) {
+        pagerCount = 1
     }
-    if (uniqueEquips2.isNotEmpty()) {
-        pagerCount++
+    if (uniqueEquips2?.isNotEmpty() == true) {
+        pagerCount = 2
     }
+
+    //页面状态
     val pagerState = rememberPagerState {
         pagerCount
     }
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (uniqueEquips.isNotEmpty()) {
+        if (uniqueEquips != null) {
             Column {
                 if (pagerCount == 2) {
                     MainTabRow(
                         pagerState = pagerState,
                         tabs = arrayListOf(
-                            getIndex(1) + uniqueEquips1.size,
-                            getIndex(2) + uniqueEquips2.size
+                            getIndex(1) + uniqueEquips1!!.size,
+                            getIndex(2) + uniqueEquips2!!.size
                         ),
-                        gridStateList = arrayListOf(gridState1, gridState2),
                         modifier = Modifier
                             .fillMaxWidth(RATIO_GOLDEN)
                             .align(Alignment.CenterHorizontally)
-                    )
+                    ) {
+                        if (it == 0) {
+                            gridState1.scrollToItem(0)
+                        } else {
+                            gridState2.scrollToItem(0)
+                        }
+                    }
                 }
 
                 HorizontalPager(state = pagerState) { index ->
@@ -132,7 +143,7 @@ fun UniqueEquipList(
                         state = if (index == 0) gridState1 else gridState2
                     ) {
                         items(
-                            if (index == 0) uniqueEquips1 else uniqueEquips2,
+                            if (index == 0) uniqueEquips1!! else uniqueEquips2!!,
                             key = {
                                 it.equipId
                             }
@@ -166,7 +177,7 @@ fun UniqueEquipList(
 
 
         //搜索栏
-        val count = uniqueEquips.size
+        val count = uniqueEquips?.size ?: 0
 
         BottomSearchBar(
             modifier = Modifier
@@ -175,7 +186,15 @@ fun UniqueEquipList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.UNIQUE_EQUIP,
-            fabText = count.toString()
+            fabText = count.toString(),
+            onTopClick = {
+                if (uniqueEquips1?.isNotEmpty() == true) {
+                    gridState1.scrollToItem(0)
+                }
+                if (uniqueEquips2?.isNotEmpty() == true) {
+                    gridState2.scrollToItem(0)
+                }
+            }
         )
     }
 

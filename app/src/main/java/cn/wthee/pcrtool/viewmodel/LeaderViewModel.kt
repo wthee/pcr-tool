@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -23,10 +24,16 @@ class LeaderViewModel @Inject constructor(
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
     private val day = 30
+    //筛选
     val filterLeader = MutableLiveData(FilterLeaderboard())
 
     private var leaderData: ResponseData<List<LeaderboardData>>? = null
     private var leaderTierMap: HashMap<Int, ResponseData<LeaderTierData>> = hashMapOf()
+
+    /**
+     * 角色评级类型
+     */
+    val leaderTierType = MutableLiveData(LeaderTierType.ALL)
 
     /**
      * 获取排行

@@ -53,7 +53,7 @@ class EventViewModel @Inject constructor(
      */
     fun getCalendarEventList(dateRange: DateRange) = flow {
         try {
-            val data = eventRepository.getDropEvent().toMutableList()
+            val data = eventRepository.getDropEvent(Int.MAX_VALUE).toMutableList()
             data += eventRepository.getMissionEvent(Int.MAX_VALUE)
             data += eventRepository.getLoginEvent(Int.MAX_VALUE)
             data += eventRepository.getFortuneEvent(Int.MAX_VALUE)

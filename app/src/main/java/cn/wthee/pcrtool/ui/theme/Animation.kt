@@ -14,6 +14,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -149,10 +150,13 @@ private fun noAnimOut() = fadeOut(animationSpec = defaultTween(80))
  * 导航动画
  */
 fun enterTransition() = if (animOnFlag) {
+
     scaleIn(
-        initialScale = 0.95f,
-        animationSpec = defaultTween()
-    ) + myFadeIn
+        initialScale = 0.86f,
+        animationSpec = defaultTween(300)
+    ) + slideInVertically(defaultTween(600)) {
+        75
+    } + myFadeIn
 } else {
     noAnimIn()
 }

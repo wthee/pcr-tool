@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
@@ -17,11 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 /**
  * 通用 TabRow
+ *
+ * @param onClickCurrentTab 在当前页面再次点击 tab
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -31,7 +33,7 @@ fun MainTabRow(
     tabs: List<String>,
     scrollable: Boolean = false,
     colorList: ArrayList<Color> = arrayListOf(),
-    gridStateList: ArrayList<LazyGridState>? = null
+    onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
     val contentColor = if (colorList.isNotEmpty()) {
         colorList[pagerState.currentPage]
@@ -52,7 +54,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, gridStateList)
+            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
         }
     } else {
         TabRow(
@@ -67,7 +69,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, gridStateList)
+            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
         }
     }
 
@@ -82,7 +84,7 @@ private fun MainTabList(
     pagerState: PagerState,
     tabs: List<String>,
     colorList: ArrayList<Color>,
-    gridStateList: ArrayList<LazyGridState>? = null
+    onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -93,8 +95,8 @@ private fun MainTabList(
             onClick = {
                 scope.launch {
                     VibrateUtil(context).single()
-                    if (pagerState.currentPage == index && gridStateList != null) {
-                        gridStateList[index].scrollToItem(0)
+                    if (pagerState.currentPage == index && onClickCurrentTab != null) {
+                        onClickCurrentTab(index)
                     } else {
                         pagerState.scrollToPage(index)
                     }

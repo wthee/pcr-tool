@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -23,7 +24,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -96,6 +96,7 @@ import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -199,10 +200,10 @@ fun MainHorizontalPagerIndicator(
         modifier = modifier,
         pagerState = pagerState,
         pageCount = pageCount,
-        indicatorWidth = 6.dp,
+        indicatorWidth = 7.dp,
         activeColor = MaterialTheme.colorScheme.primary,
         indicatorShape = CutCornerShape(50),
-        spacing = 0.dp
+        spacing = 1.dp
     )
 }
 
@@ -306,8 +307,8 @@ fun BottomSearchBar(
     keywordInputState: MutableState<String>,
     keywordState: MutableState<String>,
     leadingIcon: MainIconType,
-    scrollState: LazyListState? = null,
     defaultKeywordList: List<KeywordData>? = null,
+    onTopClick: (suspend CoroutineScope.() -> Unit)? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -322,6 +323,7 @@ fun BottomSearchBar(
         mutableStateOf(false)
     }
 
+
     if (!isImeVisible) {
         Row(
             modifier = modifier
@@ -329,12 +331,12 @@ fun BottomSearchBar(
             horizontalArrangement = Arrangement.End
         ) {
             //回到顶部
-            scrollState?.let {
+            onTopClick?.let {
                 MainSmallFab(
                     iconType = MainIconType.TOP
                 ) {
                     coroutineScope.launch {
-                        scrollState.scrollToItem(0)
+                        onTopClick()
                     }
                 }
             }
@@ -368,9 +370,10 @@ fun BottomSearchBar(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .clickClose(isImeVisible)
             .padding(Dimen.mediumPadding)
-            .imePadding()
+            .imePadding(),
+        verticalArrangement = Arrangement.Bottom,
     ) {
         //关键词列表，搜索时显示
         ExpandAnimation(
@@ -456,12 +459,19 @@ fun BottomSearchBar(
 
 }
 
-
+/**
+ * 通用布局（涉及网络请求）
+ *
+ * @param fabContent 右下fab内容，加载成功后显示
+ * @param placeholder 占位布局
+ * @param content 内容
+ */
 @Composable
 fun <T> CommonResponseBox(
     responseData: ResponseData<T>?,
     fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
-    content: @Composable (BoxScope.(T) -> Unit),
+    placeholder: @Composable (ColumnScope.() -> Unit)? = null,
+    content: @Composable (BoxScope.(T) -> Unit)
 ) {
     Box(
         modifier = Modifier
@@ -475,11 +485,20 @@ fun <T> CommonResponseBox(
             content(responseData!!.data!!)
         }
         if (responseData == null) {
-            CircularProgressCompose(
-                modifier = Modifier
-                    .padding(vertical = Dimen.largePadding)
-                    .align(Alignment.Center)
-            )
+            FadeAnimation(placeholder == null) {
+                CircularProgressCompose(
+                    modifier = Modifier
+                        .padding(vertical = Dimen.largePadding)
+                        .align(Alignment.Center)
+                )
+            }
+            FadeAnimation(placeholder != null) {
+                if (placeholder != null) {
+                    Column {
+                        placeholder()
+                    }
+                }
+            }
         }
 
         if (responseData?.data != null && fabContent != null) {

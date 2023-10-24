@@ -45,6 +45,7 @@ const val RATIO = 16 / 9f
 const val RATIO_COMIC = 0.64f
 const val RATIO_BANNER = 1024 / 587f
 const val RATIO_TEASER = 1024 / 430f
+const val SCALE_LOGO = 2.2f
 
 
 /**
@@ -120,6 +121,7 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
  * 图标
  * @param tint [MainIconType]类型适用
  * @param colorFilter 其他类型图标中适用
+ * @param contentScale 图标缩放，非ImageVector才生效
  */
 @Composable
 fun MainIcon(
@@ -129,6 +131,7 @@ fun MainIcon(
     tint: Color = MaterialTheme.colorScheme.primary,
     colorFilter: ColorFilter? = null,
     wrapSize: Boolean = false,
+    contentScale: ContentScale = ContentScale.Crop,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -170,7 +173,6 @@ fun MainIcon(
         }
 
         else -> {
-            val contentScale = ContentScale.Crop
             val loading = remember {
                 mutableStateOf(true)
             }

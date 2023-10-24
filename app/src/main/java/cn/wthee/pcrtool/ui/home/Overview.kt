@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -28,12 +29,14 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,27 +45,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.edit
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.clickClose
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
@@ -70,22 +74,21 @@ import cn.wthee.pcrtool.ui.home.module.InProgressEventSection
 import cn.wthee.pcrtool.ui.home.module.NewsSection
 import cn.wthee.pcrtool.ui.home.module.ToolSection
 import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
-import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
-private const val defaultOrder = "0-1-6-2-3-4-5-"
+private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
 
 
 /**
@@ -97,6 +100,7 @@ fun Overview(
     scrollState: ScrollState,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     //初始化加载六星数据
     LaunchedEffect(null) {
         overviewViewModel.getR6Ids()
@@ -112,15 +116,12 @@ fun Overview(
         mutableStateOf(false)
     }
 
-    val sp = mainSP()
-
     //自定义显示
-    val localData = sp.getString(Constants.SP_OVERVIEW_ORDER, defaultOrder) ?: ""
-    var overviewOrderData = navViewModel.overviewOrderData.observeAsState().value
-    if (overviewOrderData.isNullOrEmpty()) {
-        overviewOrderData = localData
-        navViewModel.overviewOrderData.postValue(overviewOrderData)
-    }
+    val overviewOrderData = remember {
+        context.dataStoreMain.data.map {
+            it[MainPreferencesKeys.SP_OVERVIEW_ORDER] ?: DEFAULT_ORDER
+        }
+    }.collectAsState(initial = DEFAULT_ORDER).value
 
 
     Box(
@@ -261,15 +262,18 @@ fun Overview(
 @Composable
 private fun ChangeDbCompose(
     modifier: Modifier,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
 
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     //切换数据关闭监听
     if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabCloseClick.postValue(false)
     }
@@ -316,7 +320,7 @@ private fun ChangeDbCompose(
                     if (downloadState == -2) {
                         if (!openDialog) {
                             navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            navViewModel.openChangeDataDialog.postValue(true)
+                            openDialog = true
                         } else {
                             navViewModel.fabCloseClick.postValue(true)
                         }
@@ -335,31 +339,16 @@ private fun ChangeDbCompose(
                     DbVersionList(tintColor)
                 } else {
                     //加载相关
-
                     when (downloadState) {
                         -2 -> {
-                            if (dbError) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(start = Dimen.largePadding)
-                                ) {
-                                    MainIcon(
-                                        data = MainIconType.DB_ERROR,
-                                        tint = tintColor,
-                                        size = Dimen.fabIconSize
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.db_error),
-                                        style = MaterialTheme.typography.titleSmall,
-                                        textAlign = TextAlign.Center,
-                                        color = colorRed,
-                                        modifier = Modifier.padding(
-                                            start = Dimen.mediumPadding,
-                                            end = Dimen.largePadding
-                                        )
-                                    )
-                                }
-                            } else {
+                            FadeAnimation(visible = dbError) {
+                                MainIcon(
+                                    data = MainIconType.DB_ERROR,
+                                    tint = tintColor,
+                                    size = Dimen.fabIconSize
+                                )
+                            }
+                            FadeAnimation(visible = !dbError) {
                                 MainIcon(
                                     data = MainIconType.CHANGE_DATA,
                                     tint = tintColor,
@@ -388,7 +377,8 @@ private fun ChangeDbCompose(
  */
 @Composable
 private fun DbVersionList(
-    color: Color
+    color: Color,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -401,7 +391,8 @@ private fun DbVersionList(
 
     Column(
         modifier = Modifier
-            .width(Dimen.dataChangeWidth),
+            .width(Dimen.homeDataChangeWidth)
+            .padding(bottom = Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -419,13 +410,13 @@ private fun DbVersionList(
                     .fillMaxWidth()
                     .clickable {
                         VibrateUtil(context).single()
-                        navViewModel.openChangeDataDialog.postValue(false)
-                        navViewModel.fabCloseClick.postValue(true)
                         coroutineScope.launch {
+                            navViewModel.fabCloseClick.postValue(true)
                             //正常切换
                             DatabaseUpdater.changeDatabase(regionType)
                         }
                     }
+                    .padding(vertical = Dimen.mediumPadding)
             }
 
             SelectText(
@@ -433,7 +424,7 @@ private fun DbVersionList(
                 text = menuTexts[i],
                 textStyle = MaterialTheme.typography.titleLarge,
                 modifier = mModifier
-                    .padding(horizontal = Dimen.smallPadding, vertical = Dimen.mediumPadding),
+                    .padding(horizontal = Dimen.smallPadding),
                 selectedColor = color
             )
 
@@ -448,28 +439,11 @@ private fun DbVersionList(
 private fun DbVersionContent(
     openDialog: Boolean,
     dbError: Boolean,
-    color: Color
+    color: Color,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
-    val region = MainActivity.regionType
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    //数据库版本
-    val sp = settingSP()
-    val localVersion = sp.getString(
-        when (region) {
-            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
-        },
-        ""
-    )
-    val dbVersionCode = if (localVersion != null) {
-        localVersion.split("/")[0]
-    } else {
-        ""
-    }
-    val updateDb = navViewModel.updateDb.observeAsState().value ?: ""
+    val dbVersion = navViewModel.dbVersion.observeAsState().value
 
 
     if (openDialog) {
@@ -485,51 +459,84 @@ private fun DbVersionContent(
                     bottom = Dimen.fabMargin,
                 )
         ) {
-            //数据异常时显示
-            if (dbError) {
+
+            //数据更新内容
+            DbVersionContentItem(
+                title = stringResource(id = R.string.db_diff_content),
+                content = if (dbVersion == null || dbVersion.desc == "") {
+                    stringResource(R.string.db_diff_content_none)
+                } else {
+                    dbVersion.desc
+                },
+            )
+
+            Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
+
+            Row(
+                modifier = Modifier.widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
+            ) {
+
+                //数据更新时间
                 DbVersionContentItem(
-                    modifier = Modifier.width(IntrinsicSize.Max),
-                    title = stringResource(id = R.string.data_file_error),
-                    content = stringResource(id = R.string.data_file_error_desc),
-                    color = colorRed,
-                    fillMaxWidth = false
-                ) {
-                    VibrateUtil(context).single()
-                    navViewModel.openChangeDataDialog.postValue(false)
-                    navViewModel.fabCloseClick.postValue(true)
-                    coroutineScope.launch {
-                        //数据库文件异常时，重新下载
-                        DatabaseUpdater.checkDBVersion(fixDb = true)
-                    }
-                }
-            } else {
-                //数据更新内容
+                    title = stringResource(id = R.string.db_diff_time),
+                    content = if (dbVersion != null && dbVersion.time != "") {
+                        dbVersion.time.substring(5, 10).replace("-", "/")
+                    } else {
+                        stringResource(id = R.string.unknown)
+                    },
+                    modifier = Modifier.width(60.dp)
+                )
+
+                Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
+
+                //数据版本
                 DbVersionContentItem(
-                    title = stringResource(id = R.string.db_diff_content),
-                    content = updateDb,
+                    title = stringResource(id = R.string.db_diff_version),
+                    content = dbVersion?.truthVersion ?: stringResource(id = R.string.unknown),
+                    modifier = Modifier.weight(1f)
                 )
             }
+
             Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
-            //数据版本
-            DbVersionContentItem(
-                title = stringResource(id = R.string.db_diff_version),
-                content = dbVersionCode,
-                color = color,
-                extraContent = {
-                    IconTextButton(
-                        icon = MainIconType.SYNC,
-                        text = stringResource(id = R.string.none),
-                        modifier = Modifier.padding(end = Dimen.smallPadding)
-                    ) {
-                        navViewModel.openChangeDataDialog.postValue(false)
+
+            //重新数据下载
+            MainCard(
+                modifier = Modifier.height(IntrinsicSize.Min),
+                fillMaxWidth = false,
+                elevation = Dimen.popupMenuElevation,
+                onClick = {
+                    coroutineScope.launch {
                         navViewModel.fabCloseClick.postValue(true)
-                        coroutineScope.launch {
-                            //数据库文件异常时，重新下载
-                            DatabaseUpdater.checkDBVersion(fixDb = true)
-                        }
+                        //重新下载
+                        DatabaseUpdater.checkDBVersion(fixDb = true)
                     }
+                },
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Row(
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainIcon(
+                        data = MainIconType.DOWNLOAD,
+                        size = Dimen.smallIconSize,
+                        tint = color
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        text = if (dbError) {
+                            stringResource(id = R.string.data_file_error)
+                        } else {
+                            stringResource(id = R.string.data_file_error_desc)
+                        },
+                        color = color,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Start
+                    )
                 }
-            )
+            }
+
         }
     }
 
@@ -545,40 +552,32 @@ private fun DbVersionContentItem(
     content: String,
     color: Color = MaterialTheme.colorScheme.primary,
     fillMaxWidth: Boolean = true,
-    extraContent: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
     MainCard(
         modifier = modifier
-            .widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
             .height(IntrinsicSize.Min),
         fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
         onClick = onClick,
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MainText(
-                text = title,
-                modifier = Modifier.padding(
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding,
-                    top = Dimen.mediumPadding,
-                    bottom = Dimen.smallPadding,
-                ),
-                color = color,
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            extraContent?.let {
-                extraContent()
-            }
-        }
+        MainText(
+            text = title,
+            modifier = Modifier.padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding,
+                top = Dimen.mediumPadding,
+                bottom = Dimen.smallPadding,
+            ),
+            color = color,
+            style = MaterialTheme.typography.bodyMedium,
+        )
 
         CaptionText(
             text = content,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .weight(1f)
                 .padding(
@@ -704,29 +703,6 @@ fun Section(
         }
     }
 
-}
-
-
-/**
- * 编辑排序
- */
-fun editOverviewMenuOrder(id: Int) {
-    val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_OVERVIEW_ORDER, "") ?: ""
-    val idStr = "$id-"
-    val hasAdded = orderStr.intArrayList.contains(id)
-
-    //新增或移除
-    val edited = if (!hasAdded) {
-        orderStr + idStr
-    } else {
-        orderStr.replace(idStr, "")
-    }
-    sp.edit {
-        putString(Constants.SP_OVERVIEW_ORDER, edited)
-        //更新
-        navViewModel.overviewOrderData.postValue(edited)
-    }
 }
 
 

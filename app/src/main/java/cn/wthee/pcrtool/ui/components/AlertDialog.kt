@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.components
 
 import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -92,25 +94,23 @@ fun MainAlertDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangePickerCompose(
-    dateRange: MutableState<DateRange>
+    dateRange: MutableState<DateRange>,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val yearRange = getDatePickerYearRange()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = yearRange)
 
     //关闭监听
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }
-    if (mainIcon == MainIconType.BACK) {
-        navViewModel.openChangeDataDialog.postValue(false)
-    }
-
 
     //更新日期
     LaunchedEffect(
@@ -150,7 +150,7 @@ fun DateRangePickerCompose(
                 if (!openDialog) {
                     VibrateUtil(context).single()
                     navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    navViewModel.openChangeDataDialog.postValue(true)
+                    openDialog = true
                 }
             },
             elevation = FloatingActionButtonDefaults.elevation(
@@ -256,10 +256,13 @@ fun RankRangePickerCompose(
     rank0: MutableState<Int>,
     rank1: MutableState<Int>,
     maxRank: Int,
-    type: RankSelectType = RankSelectType.DEFAULT
+    type: RankSelectType = RankSelectType.DEFAULT,
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val context = LocalContext.current
-    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
 
     val rankList = arrayListOf<Int>()
     for (i in maxRank downTo 1) {
@@ -280,16 +283,11 @@ fun RankRangePickerCompose(
 
     //关闭监听
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     if (close) {
-        navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }
-    if (mainIcon == MainIconType.BACK) {
-        navViewModel.openChangeDataDialog.postValue(false)
-    }
-
 
     Box(modifier = Modifier.clickClose(openDialog)) {
         //选择布局
@@ -309,7 +307,7 @@ fun RankRangePickerCompose(
                 if (!openDialog) {
                     VibrateUtil(context).single()
                     navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    navViewModel.openChangeDataDialog.postValue(true)
+                    openDialog = true
                 }
             },
             elevation = FloatingActionButtonDefaults.elevation(

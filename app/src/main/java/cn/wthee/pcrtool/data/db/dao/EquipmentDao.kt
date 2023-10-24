@@ -200,7 +200,7 @@ interface EquipmentDao {
         FROM
             unit_unique_equip AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
-            LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
+            LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
             a.equipment_id IS NOT NULL AND r.unit_id = :unitId
     """
@@ -497,7 +497,8 @@ interface EquipmentDao {
             ued.equipment_name,
             ued.description,
             ud.unit_id,
-            ud.unit_name
+            ud.unit_name,
+            uue.equip_slot
         FROM
             unit_unique_equip AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
@@ -519,7 +520,8 @@ interface EquipmentDao {
             ued.equipment_name,
             ued.description,
             ud.unit_id,
-            ud.unit_name
+            ud.unit_name,
+            uue.equip_slot
         FROM
             unit_unique_equipment AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id

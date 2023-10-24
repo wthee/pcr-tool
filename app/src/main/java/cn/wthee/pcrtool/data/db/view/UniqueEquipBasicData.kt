@@ -12,10 +12,11 @@ data class UniqueEquipBasicData(
     @ColumnInfo(name = "description") val description: String = "",
     @ColumnInfo(name = "unit_id") val unitId: Int = 0,
     @ColumnInfo(name = "unit_name") val unitName: String = "",
+    @ColumnInfo(name = "equip_slot") val equipSlot: Int = 1,
 )
 
 /**
- * 获取标识
+ * 获取专用装备标识
  */
 fun getIndex(index: Int) = if (index == 1) "①" else "②"
 

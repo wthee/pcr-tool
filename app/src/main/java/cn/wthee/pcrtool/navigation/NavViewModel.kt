@@ -2,20 +2,18 @@ package cn.wthee.pcrtool.navigation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
-import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.MockGachaType
+import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
 /**
  * 导航 ViewModel
+ * 在应用整个生命周期使用的数据，或者需要在不同页面共享的数据
  */
 @HiltViewModel
 class NavViewModel @Inject constructor() : ViewModel() {
@@ -113,59 +111,14 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val showResult = MutableLiveData(false)
 
     /**
-     * 数据切换弹窗显示
-     */
-    val openChangeDataDialog = MutableLiveData(false)
-
-    /**
-     * 模拟卡池结果显示
-     */
-    val showMockGachaResult = MutableLiveData(false)
-
-    /**
-     * 模拟卡池数据
-     */
-    val gachaId = MutableLiveData<String>()
-
-    /**
-     * 模拟卡池类型
-     */
-    val mockGachaType = MutableLiveData<MockGachaType>()
-
-    /**
-     * 模拟卡池 pickUp 角色
-     */
-    val pickUpList = MutableLiveData<List<GachaUnitInfo>>()
-
-    /**
-     * 菜单顺序
-     */
-    val toolOrderData = MutableLiveData<String>()
-
-    /**
-     * 首页显示
-     */
-    val overviewOrderData = MutableLiveData<String>()
-
-    /**
-     * 角色详情显示
-     */
-    val characterDetailOrderData = MutableLiveData<String>()
-
-    /**
-     * 角色评级类型
-     */
-    val leaderTierType = MutableLiveData(LeaderTierType.ALL)
-
-    /**
      * 选中的rank
      */
     val rankEquipSelected = MutableLiveData(0)
 
     /**
-     * 数据库更新描述
+     * 数据库更新信息
      */
-    val updateDb = MutableLiveData<String>()
+    val dbVersion = MutableLiveData<DatabaseVersion>()
 
     /**
      * 搜索装备编号

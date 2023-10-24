@@ -3,11 +3,13 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,10 +36,10 @@ import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -47,6 +49,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -74,9 +77,9 @@ fun LeaderTier(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val type = remember {
-        mutableIntStateOf(navViewModel.leaderTierType.value?.type ?: 0)
+        mutableIntStateOf(leaderViewModel.leaderTierType.value?.type ?: 0)
     }
-    type.intValue = navViewModel.leaderTierType.observeAsState().value?.type ?: 0
+    type.intValue = leaderViewModel.leaderTierType.observeAsState().value?.type ?: 0
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -94,74 +97,23 @@ fun LeaderTier(
     val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        //更新
-        ExpandAnimation(visible = showTitle) {
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = stringResource(id = R.string.leader_source),
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(url)
-                        }
-                )
-
-                CaptionText(
-                    text = stringResource(id = R.string.only_jp),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-                CaptionText(
-                    text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-
 
         CommonResponseBox(
             responseData = leaderData,
-            fabContent = { data ->
-                //切换类型
-                SelectTypeFab(
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    icon = MainIconType.CHANGE_FILTER_TYPE,
-                    tabs = tabs,
-                    type = type,
-                    width = Dimen.dataChangeWidth + Dimen.fabSize,
-                    paddingValues = PaddingValues(
-                        end = Dimen.fabMargin,
-                        bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                    )
+            placeholder = {
+                Spacer(modifier = Modifier.height(Dimen.fabSize))
+                //分组内容
+                VerticalGrid(
+                    itemWidth = Dimen.iconSize * 4,
+                    contentPadding = Dimen.largePadding,
                 ) {
-                    navViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
-                }
-
-                //回到顶部
-                MainSmallFab(
-                    iconType = MainIconType.LEADER_TIER,
-                    text = data.leader.size.toString(),
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                ) {
-                    scope.launch {
-                        scope.launch {
-                            try {
-                                scrollState.scrollToItem(0)
-                            } catch (_: Exception) {
-                            }
-                        }
+                    for (i in 0..10) {
+                        LeaderItem(LeaderTierItem(), null, toCharacterDetail)
                     }
                 }
             }
@@ -184,7 +136,14 @@ fun LeaderTier(
             }
 
             if (groupList.isNotEmpty()) {
-                LazyColumn(state = scrollState) {
+                LazyColumn(
+                    state = scrollState,
+                    modifier = if (showTitle) {
+                        Modifier.padding(top = Dimen.fabSize)
+                    } else {
+                        Modifier
+                    }
+                ) {
                     groupList.forEach {
                         stickyHeader {
                             //分组标题
@@ -228,6 +187,76 @@ fun LeaderTier(
                 CenterTipText(text = stringResource(id = R.string.no_data))
             }
         }
+
+        //标题
+        ExpandAnimation(visible = showTitle) {
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = stringResource(id = R.string.leader_source),
+                    modifier = Modifier
+                        .clickable {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(url)
+                        }
+                )
+
+                CaptionText(
+                    text = stringResource(id = R.string.only_jp),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                CaptionText(
+                    text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        //回到顶部
+        MainSmallFab(
+            iconType = MainIconType.LEADER_TIER,
+            text = leaderData?.data?.leader?.size.toString(),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+            extraContent = if (leaderData == null) {
+                //加载提示
+                {
+                    CircularProgressCompose()
+                }
+            } else {
+                null
+            }
+        ) {
+            scope.launch {
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (_: Exception) {
+                }
+            }
+        }
+
+        //切换类型
+        if (leaderData != null) {
+            SelectTypeFab(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                icon = MainIconType.CHANGE_FILTER_TYPE,
+                tabs = tabs,
+                type = type,
+                width = Dimen.dataChangeWidth + Dimen.fabSize,
+                paddingValues = PaddingValues(
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                )
+            ) {
+                leaderViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
+            }
+        }
     }
 }
 
@@ -241,6 +270,7 @@ private fun LeaderItem(
     basicInfo: CharacterInfo?,
     toCharacterDetail: (Int) -> Unit,
 ) {
+    val placeholder = leader.name == ""
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -264,6 +294,7 @@ private fun LeaderItem(
         //图标
         LeaderCharacterIcon(
             hasUnitId,
+            placeholder,
             leader.unitId!!,
             leader.url,
             unknown,
@@ -274,6 +305,7 @@ private fun LeaderItem(
         MainCard(
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
+                .commonPlaceholder(placeholder)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
                 if (!unknown) {

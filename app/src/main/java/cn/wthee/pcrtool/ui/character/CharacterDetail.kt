@@ -30,13 +30,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -55,7 +55,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
@@ -69,7 +68,9 @@ import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
+import cn.wthee.pcrtool.data.model.updateStarCharacterId
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.AttrList
@@ -84,8 +85,8 @@ import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getRankColor
+import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.skill.SkillLayout
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -99,37 +100,39 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 
-private const val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
+private const val DEFAULT_ORDER = "300-301-302-303-304-305-306-307-308-310-"
 
 /**
  * 角色信息
  *
  * @param unitId 角色编号
- * @param showDetailState 非空时从专用装备跳转
+ * @param showAllInfo true：显示全部信息，false：仅显示专用装备相关信息,
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterDetail(
     unitId: Int,
     actions: NavActions,
-    showDetailState: MutableState<Boolean>? = null,
+    showAllInfo: Boolean = true,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val sp = mainSP()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    //是否显示全部信息
-    val showDetail = showDetailState == null || showDetailState.value
 
     //特殊形态角色id（吉塔）
     val cutinIdFlow = remember {
@@ -156,26 +159,19 @@ fun CharacterDetail(
     }
     val maxValue by maxValueFlow.collectAsState(initial = CharacterProperty())
     //当前选择的数值信息
-    val currentValueState = remember {
-        mutableStateOf(CharacterProperty())
-    }
-    //数值信息
-    if (currentValueState.value.level == 0 && maxValue.isInit()) {
-        //初始为最大值
-        currentValueState.value = maxValue
-    }
+    val currentValue = attrViewModel.currentValue.observeAsState().value ?: CharacterProperty()
 
     //rank 装备选择监听
     val rankEquipSelected = navViewModel.rankEquipSelected.observeAsState().value ?: 0
     LaunchedEffect(rankEquipSelected) {
-        if (rankEquipSelected != 0 && currentValueState.value.rank != rankEquipSelected) {
-            currentValueState.value = currentValueState.value.update(rank = rankEquipSelected)
+        if (rankEquipSelected != 0 && currentValue.rank != rankEquipSelected) {
+            attrViewModel.currentValue.postValue(currentValue.update(rank = rankEquipSelected))
         }
     }
 
     //角色属性
-    val characterAttrFlow = remember(currentValueState.value.hashCode()) {
-        attrViewModel.getCharacterInfo(unitId, currentValueState.value)
+    val characterAttrFlow = remember(currentValue.hashCode()) {
+        attrViewModel.getCharacterInfo(unitId, currentValue)
     }
     val characterAttrData by characterAttrFlow.collectAsState(initial = AllAttrData())
 
@@ -192,9 +188,9 @@ fun CharacterDetail(
     )
 
     //普通技能
-    val normalSkillFlow = remember(isCutinSkill.value, currentValueState.value.level, atk) {
+    val normalSkillFlow = remember(isCutinSkill.value, currentValue.level, atk) {
         skillViewModel.getCharacterSkills(
-            currentValueState.value.level,
+            currentValue.level,
             atk,
             currentIdState.intValue,
             SkillType.NORMAL
@@ -203,9 +199,9 @@ fun CharacterDetail(
     val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
 
     //sp技能
-    val spSkillFlow = remember(isCutinSkill.value, currentValueState.value.level, atk) {
+    val spSkillFlow = remember(isCutinSkill.value, currentValue.level, atk) {
         skillViewModel.getCharacterSkills(
-            currentValueState.value.level,
+            currentValue.level,
             atk,
             currentIdState.intValue,
             SkillType.SP
@@ -225,10 +221,7 @@ fun CharacterDetail(
     val unknown = maxValue.level == -1
 
     //收藏状态
-    val starIds = FilterCharacter.getStarIdList()
-    val loved = remember {
-        mutableStateOf(starIds.contains(unitId))
-    }
+    val loved = getStarCharacterIdList().contains(unitId)
 
     //编辑模式
     var isEditMode by remember {
@@ -236,16 +229,16 @@ fun CharacterDetail(
     }
 
     //自定义显示顺序
-    val localData = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, defaultOrder) ?: ""
-    var orderData = navViewModel.characterDetailOrderData.observeAsState().value ?: ""
-    LaunchedEffect(orderData, showDetail) {
-        orderData = if (showDetail) {
-            localData
-        } else {
-            "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
-        }
-        navViewModel.characterDetailOrderData.postValue(orderData)
+    val orderData = if (showAllInfo) {
+        remember {
+            context.dataStoreMain.data.map {
+                it[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] ?: DEFAULT_ORDER
+            }
+        }.collectAsState(initial = DEFAULT_ORDER).value
+    } else {
+        "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
     }
+
     //选中的
     val mainList = orderData.intArrayList
     //未选中的
@@ -266,7 +259,7 @@ fun CharacterDetail(
     }
 
     //水平分页相关
-    val pageCount = if (showDetail && subList.isNotEmpty()) 2 else 1
+    val pageCount = if (showAllInfo && subList.isNotEmpty()) 2 else 1
     val pagerState = rememberPagerState { pageCount }
     val scrollState0 = rememberScrollState()
     val scrollState1 = rememberScrollState()
@@ -325,7 +318,14 @@ fun CharacterDetail(
                             isEditMode = true,
                             orderStr = orderData,
                             onClick = {
-                                editOrder(it.id)
+                                scope.launch {
+                                    editOrder(
+                                        context,
+                                        scope,
+                                        it.id,
+                                        MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER
+                                    )
+                                }
                             }
                         ) {}
                     }
@@ -355,7 +355,7 @@ fun CharacterDetail(
                                 CharacterDetailModuleType.CARD -> CharacterCard(
                                     unitId = unitId,
                                     basicInfo = basicInfo,
-                                    loved = loved.value,
+                                    loved = loved,
                                     actions
                                 )
 
@@ -363,7 +363,7 @@ fun CharacterDetail(
                                 CharacterDetailModuleType.COE ->
                                     CharacterCoe(
                                         characterAttrData = characterAttrData,
-                                        currentValue = currentValueState.value,
+                                        currentValue = currentValue,
                                         toCoe = actions.toCoe
                                     )
 
@@ -376,13 +376,13 @@ fun CharacterDetail(
 
                                 //星级
                                 CharacterDetailModuleType.STAR -> StarSelect(
-                                    currentValueState = currentValueState,
+                                    currentValue = currentValue,
                                     max = maxValue.rarity
                                 )
 
                                 //等级
                                 CharacterDetailModuleType.LEVEL -> CharacterLevel(
-                                    currentValueState = currentValueState,
+                                    currentValue = currentValue,
                                     maxValue.level
                                 )
 
@@ -398,14 +398,14 @@ fun CharacterDetail(
                                 CharacterDetailModuleType.OTHER_TOOLS -> CharacterOtherTools(
                                     unitId = unitId,
                                     actions = actions,
-                                    currentValueState = currentValueState,
+                                    currentValue = currentValue,
                                     maxRank = maxValue.rank
                                 )
 
                                 //装备
                                 CharacterDetailModuleType.EQUIP -> CharacterEquip(
                                     unitId = unitId,
-                                    currentValueState = currentValueState,
+                                    currentValue = currentValue,
                                     maxRank = maxValue.rank,
                                     equips = characterAttrData.equips,
                                     toEquipDetail = actions.toEquipDetail,
@@ -417,7 +417,7 @@ fun CharacterDetail(
                                     .forEachIndexed { index, uniqueEquipmentMaxData ->
                                         UniqueEquip(
                                             slot = index + 1,
-                                            currentValueState = currentValueState,
+                                            currentValue = currentValue,
                                             uniqueEquipLevelMax = if (index == 0) maxValue.uniqueEquipmentLevel else 5,
                                             uniqueEquipmentMaxData = uniqueEquipmentMaxData,
                                         )
@@ -430,9 +430,9 @@ fun CharacterDetail(
                                     spLabel = spLabel,
                                     unitType = UnitType.CHARACTER,
                                     toSummonDetail = actions.toSummonDetail,
-                                    isFilterSkill = !showDetail,
+                                    isFilterSkill = !showAllInfo,
                                     filterSkillCount = characterAttrData.uniqueEquipList.size,
-                                    property = currentValueState.value
+                                    property = currentValue
                                 )
 
                                 //图标
@@ -468,7 +468,7 @@ fun CharacterDetail(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 horizontalAlignment = Alignment.End
             ) {
-                if (cutinId != 0 && showDetail) {
+                if (cutinId != 0 && showAllInfo) {
                     Row(
                         modifier = Modifier.padding(
                             end = Dimen.fabMargin
@@ -500,7 +500,7 @@ fun CharacterDetail(
                     Row(
                         modifier = Modifier.padding(end = Dimen.fabMarginEnd)
                     ) {
-                        if (showDetail) {
+                        if (showAllInfo) {
                             if (!isEditMode) {
                                 //编辑
                                 MainSmallFab(
@@ -512,10 +512,11 @@ fun CharacterDetail(
 
                                 //收藏
                                 MainSmallFab(
-                                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                                    iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
                                 ) {
-                                    FilterCharacter.addOrRemove(unitId)
-                                    loved.value = !loved.value
+                                    scope.launch {
+                                        updateStarCharacterId(context, unitId)
+                                    }
                                 }
                             }
 
@@ -536,9 +537,7 @@ fun CharacterDetail(
                                 iconType = MainIconType.CHARACTER,
                                 text = stringResource(id = R.string.character_detail)
                             ) {
-                                showDetailState?.let {
-                                    it.value = !showDetailState.value
-                                }
+                                actions.toCharacterDetail(unitId)
                             }
                         }
                     }
@@ -546,9 +545,9 @@ fun CharacterDetail(
                     //页面指示器
                     if (pageCount == 2 && !isEditMode) {
                         MainHorizontalPagerIndicator(
-                            modifier = Modifier.padding(end = Dimen.smallPadding),
+                            modifier = Modifier.padding(end = Dimen.exSmallPadding),
                             pagerState = pagerState,
-                            pageCount = 2
+                            pageCount = pageCount
                         )
                     }
                 }
@@ -647,9 +646,9 @@ private fun CharacterTools(
 @Composable
 private fun CharacterOtherTools(
     unitId: Int,
-    currentValueState: MutableState<CharacterProperty>,
+    currentValue: CharacterProperty,
     maxRank: Int,
-    actions: NavActions,
+    actions: NavActions
 ) {
 
     //RANK相关功能
@@ -668,10 +667,10 @@ private fun CharacterOtherTools(
             actions.toCharacterRankCompare(
                 unitId,
                 maxRank,
-                currentValueState.value.level,
-                currentValueState.value.rarity,
-                currentValueState.value.uniqueEquipmentLevel,
-                currentValueState.value.uniqueEquipmentLevel2,
+                currentValue.level,
+                currentValue.rarity,
+                currentValue.uniqueEquipmentLevel,
+                currentValue.uniqueEquipmentLevel2,
             )
         }
         //装备统计
@@ -777,7 +776,9 @@ private fun CharacterCoe(
 )
 @Composable
 private fun CharacterLevel(
-    currentValueState: MutableState<CharacterProperty>, maxLevel: Int
+    currentValue: CharacterProperty,
+    maxLevel: Int,
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -793,7 +794,7 @@ private fun CharacterLevel(
 
     //等级
     Text(
-        text = currentValueState.value.level.toString(),
+        text = currentValue.level.toString(),
         color = MaterialTheme.colorScheme.primary,
         style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.Center,
@@ -836,9 +837,8 @@ private fun CharacterLevel(
                 keyboardController?.hide()
                 focusManager.clearFocus()
                 if (inputLevel.value != "") {
-                    currentValueState.value = currentValueState.value.update(
-                        level = inputLevel.value.toInt()
-                    )
+                    attrViewModel.currentValue.postValue(currentValue.update(level = inputLevel.value.toInt()))
+
                 }
             }
         },
@@ -851,9 +851,7 @@ private fun CharacterLevel(
                 keyboardController?.hide()
                 focusManager.clearFocus()
                 if (inputLevel.value != "") {
-                    currentValueState.value = currentValueState.value.update(
-                        level = inputLevel.value.toInt()
-                    )
+                    attrViewModel.currentValue.postValue(currentValue.update(level = inputLevel.value.toInt()))
                 }
             }
         ),
@@ -937,13 +935,14 @@ private fun AttrLists(
 @Composable
 private fun CharacterEquip(
     unitId: Int,
-    currentValueState: MutableState<CharacterProperty>,
+    currentValue: CharacterProperty,
     maxRank: Int,
     equips: List<EquipmentMaxData>,
+    attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     toEquipDetail: (Int) -> Unit,
     toCharacterRankEquip: (Int, Int) -> Unit
 ) {
-    val rank = currentValueState.value.rank
+    val rank = currentValue.rank
 
     Column(
         modifier = Modifier
@@ -986,16 +985,14 @@ private fun CharacterEquip(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 MainIcon(data = MainIconType.BACK,
-                    tint = if (currentValueState.value.rank < maxRank) {
+                    tint = if (currentValue.rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
                         Color.Transparent
                     },
                     onClick = if (rank < maxRank) {
                         {
-                            currentValueState.value = currentValueState.value.update(
-                                rank = rank + 1
-                            )
+                            attrViewModel.currentValue.postValue(currentValue.update(rank = rank + 1))
                         }
                     } else {
                         null
@@ -1020,9 +1017,7 @@ private fun CharacterEquip(
                     },
                     onClick = if (rank > 1) {
                         {
-                            currentValueState.value = currentValueState.value.update(
-                                rank = rank - 1
-                            )
+                            attrViewModel.currentValue.postValue(currentValue.update(rank = rank - 1))
                         }
                     } else {
                         null
@@ -1068,14 +1063,15 @@ private fun CharacterEquip(
  */
 @Composable
 private fun StarSelect(
-    currentValueState: MutableState<CharacterProperty>,
-    max: Int
+    currentValue: CharacterProperty,
+    max: Int,
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
 
     Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
         for (i in 1..max) {
             val iconId = when {
-                i > currentValueState.value.rarity -> R.drawable.ic_star_dark
+                i > currentValue.rarity -> R.drawable.ic_star_dark
                 i == 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
@@ -1084,36 +1080,13 @@ private fun StarSelect(
                 size = Dimen.fabIconSize,
                 modifier = Modifier.padding(Dimen.smallPadding)
             ) {
-                currentValueState.value = currentValueState.value.update(
-                    rarity = i
-                )
+                attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
             }
 
         }
     }
 }
 
-/**
- * 编辑排序
- */
-private fun editOrder(id: Int) {
-    val sp = mainSP()
-    val orderStr = sp.getString(Constants.SP_CHARACTER_DETAIL_ORDER, "") ?: ""
-    val idStr = "$id-"
-    val hasAdded = orderStr.intArrayList.contains(id)
-
-    //新增或移除
-    val edited = if (!hasAdded) {
-        orderStr + idStr
-    } else {
-        orderStr.replace(idStr, "")
-    }
-    sp.edit {
-        putString(Constants.SP_CHARACTER_DETAIL_ORDER, edited)
-        //更新
-        navViewModel.characterDetailOrderData.postValue(edited)
-    }
-}
 
 @CombinedPreviews
 @Composable
@@ -1134,13 +1107,10 @@ private fun AttrListsPreview() {
 @CombinedPreviews
 @Composable
 private fun CharacterEquipPreview() {
-    val currentValueState = remember {
-        mutableStateOf(CharacterProperty())
-    }
     PreviewLayout {
         CharacterEquip(
             unitId = 100101,
-            currentValueState = currentValueState,
+            currentValue = CharacterProperty(),
             maxRank = 20,
             equips = arrayListOf(
                 EquipmentMaxData(),

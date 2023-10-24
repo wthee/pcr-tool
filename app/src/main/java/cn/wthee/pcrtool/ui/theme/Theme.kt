@@ -108,6 +108,9 @@ annotation class CombinedPreviews
  */
 @Composable
 fun PreviewLayout(content: @Composable () -> Unit) {
+    val dynamicColor =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
+
     Column {
         //正常主题
         MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
@@ -117,10 +120,12 @@ fun PreviewLayout(content: @Composable () -> Unit) {
         }
         //动态色彩主题
         MaterialTheme(
-            if (isSystemInDarkTheme()) {
+            if (dynamicColor && isSystemInDarkTheme()) {
                 dynamicDarkColorScheme(LocalContext.current)
-            } else {
+            } else if (dynamicColor) {
                 dynamicLightColorScheme(LocalContext.current)
+            } else {
+                LightColorPalette
             }
         ) {
             Column {

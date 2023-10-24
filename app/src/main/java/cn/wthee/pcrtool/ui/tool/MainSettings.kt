@@ -23,22 +23,28 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.FixedScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.core.content.edit
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication.Companion.useIpOnFlag
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
+import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
@@ -49,9 +55,10 @@ import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SCALE_LOGO
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.settingSP
+import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -60,6 +67,9 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.joinQQGroup
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * 设置页面
@@ -106,10 +116,11 @@ fun MainSettings() {
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             )
             MainIcon(
-                data = R.drawable.ic_logo_large,
+                data = R.drawable.ic_launcher_foreground,
                 size = Dimen.largeIconSize,
                 modifier = Modifier.padding(Dimen.mediumPadding),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                contentScale = FixedScale(SCALE_LOGO)
             )
         }
 
@@ -303,11 +314,11 @@ fun SettingSwitchCompose(
     wrapWidth: Boolean = false,
 ) {
     val context = LocalContext.current
-    val sp = settingSP(context)
+    val scope = rememberCoroutineScope()
 
     val title: String
     val iconType: MainIconType
-    val spKey: String
+    val spKey: Preferences.Key<Boolean>
     val summaryOn: String
     val summaryOff: String
 
@@ -318,7 +329,7 @@ fun SettingSwitchCompose(
             iconType = MainIconType.VIBRATE
             summaryOn = if (showSummary) stringResource(R.string.vibrate_on) else ""
             summaryOff = if (showSummary) stringResource(R.string.vibrate_off) else ""
-            spKey = Constants.SP_VIBRATE_STATE
+            spKey = SettingPreferencesKeys.SP_VIBRATE_STATE
         }
 
         SettingSwitchType.ANIMATION -> {
@@ -326,7 +337,7 @@ fun SettingSwitchCompose(
             iconType = MainIconType.ANIMATION
             summaryOn = if (showSummary) stringResource(R.string.animation_on) else ""
             summaryOff = if (showSummary) stringResource(R.string.animation_off) else ""
-            spKey = Constants.SP_ANIM_STATE
+            spKey = SettingPreferencesKeys.SP_ANIM_STATE
         }
 
         SettingSwitchType.DYNAMIC_COLOR -> {
@@ -334,7 +345,7 @@ fun SettingSwitchCompose(
             iconType = MainIconType.COLOR
             summaryOn = if (showSummary) stringResource(R.string.color_on) else ""
             summaryOff = if (showSummary) stringResource(R.string.color_off) else ""
-            spKey = Constants.SP_COLOR_STATE
+            spKey = SettingPreferencesKeys.SP_COLOR_STATE
         }
 
         SettingSwitchType.USE_IP -> {
@@ -342,11 +353,14 @@ fun SettingSwitchCompose(
             iconType = MainIconType.REQUEST_ERROR
             summaryOn = if (showSummary) stringResource(R.string.use_ip_tip_on) else ""
             summaryOff = if (showSummary) stringResource(R.string.use_ip_tip_off) else ""
-            spKey = Constants.SP_USE_IP
+            spKey = SettingPreferencesKeys.SP_USE_IP
         }
     }
-    val spValue = sp.getBoolean(spKey, spKey != Constants.SP_USE_IP)
-    val checkedState = remember {
+
+    val spValue = runBlocking {
+        context.dataStoreSetting.data.first()[spKey] ?: (spKey != SettingPreferencesKeys.SP_USE_IP)
+    }
+    var checkedState by remember {
         mutableStateOf(spValue)
     }
 
@@ -354,41 +368,43 @@ fun SettingSwitchCompose(
     SideEffect {
         when (type) {
             SettingSwitchType.VIBRATE -> {
-                vibrateOnFlag = checkedState.value
+                vibrateOnFlag = checkedState
             }
 
             SettingSwitchType.ANIMATION -> {
-                animOnFlag = checkedState.value
+                animOnFlag = checkedState
 
             }
 
             SettingSwitchType.DYNAMIC_COLOR -> {
-                dynamicColorOnFlag = checkedState.value
+                dynamicColorOnFlag = checkedState
             }
 
             SettingSwitchType.USE_IP -> {
-                useIpOnFlag = checkedState.value
+                useIpOnFlag = checkedState
             }
         }
     }
 
     //摘要
-    val summary = if (checkedState.value) summaryOn else summaryOff
+    val summary = if (checkedState) summaryOn else summaryOff
 
     val onChange = {
-        checkedState.value = !checkedState.value
-        sp.edit {
-            putBoolean(spKey, checkedState.value)
-        }
+        checkedState = !checkedState
+        scope.launch {
+            //保存设置信息
+            context.dataStoreSetting.edit {
+                it[spKey] = checkedState
 
-        //动态色彩变更后，重启应用
-        if (type == SettingSwitchType.DYNAMIC_COLOR) {
-            MainActivity.handler.sendEmptyMessage(1)
-        }
-        //ip变更，结束应用
-        if (type == SettingSwitchType.USE_IP) {
-            Thread.sleep(600)
-            MainActivity.handler.sendEmptyMessage(404)
+                //动态色彩变更后，重启应用
+                if (type == SettingSwitchType.DYNAMIC_COLOR) {
+                    MainActivity.handler.sendEmptyMessage(1)
+                }
+                //ip变更，结束应用
+                if (type == SettingSwitchType.USE_IP) {
+                    MainActivity.handler.sendEmptyMessage(404)
+                }
+            }
         }
     }
 
@@ -403,9 +419,9 @@ fun SettingSwitchCompose(
         }
     ) {
         Switch(
-            checked = checkedState.value,
+            checked = checkedState,
             thumbContent = {
-                SwitchThumbIcon(checkedState.value)
+                SwitchThumbIcon(checkedState)
             },
             onCheckedChange = {
                 VibrateUtil(context).single()
@@ -458,7 +474,8 @@ fun SettingCommonItem(
         MainIcon(
             data = iconType,
             size = iconSize,
-            colorFilter = ColorFilter.tint(tintColor)
+            colorFilter = ColorFilter.tint(tintColor),
+            contentScale = FixedScale(SCALE_LOGO)
         )
         Column(
             modifier = if (wrapWidth) {

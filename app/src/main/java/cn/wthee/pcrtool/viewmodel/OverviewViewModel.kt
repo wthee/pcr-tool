@@ -139,7 +139,7 @@ class OverviewViewModel @Inject constructor(
     fun getCalendarEventList(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getDropEvent().toMutableList()
+            val data = eventRepository.getDropEvent(50).toMutableList()
             data += eventRepository.getMissionEvent(1)
             data += eventRepository.getLoginEvent(1)
             data += eventRepository.getFortuneEvent(1)
@@ -285,7 +285,7 @@ class OverviewViewModel @Inject constructor(
     fun getClanBattleEvent(type: EventType) = flow {
         try {
             val today = getToday()
-            val data = eventRepository.getClanBattleEvent(1)
+            val data = eventRepository.getClanBattleEvent(2)
 
             if (type == EventType.IN_PROGRESS) {
                 emit(data.filter {

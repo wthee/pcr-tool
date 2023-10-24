@@ -7,21 +7,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.spanCount
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlin.math.max
@@ -37,6 +40,8 @@ fun EquipSection(
     orderStr: String,
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val id = OverviewType.EQUIP.id
     val equipSpanCount = max(
         1,
@@ -67,10 +72,16 @@ fun EquipSection(
         isEditMode = isEditMode,
         orderStr = orderStr,
         onClick = {
-            if (isEditMode)
-                editOverviewMenuOrder(id)
-            else
+            if (isEditMode) {
+                editOrder(
+                    context,
+                    scope,
+                    id,
+                    MainPreferencesKeys.SP_OVERVIEW_ORDER
+                )
+            } else {
                 actions.toEquipList()
+            }
         }
     ) {
         VerticalGrid(

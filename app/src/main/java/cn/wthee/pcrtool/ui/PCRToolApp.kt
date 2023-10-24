@@ -169,15 +169,15 @@ private fun SettingDropMenu(actions: NavActions) {
 
 
     ScaleBottomEndAnimation(
-        visible = fabMainIcon == MainIconType.DOWN
+        visible = fabMainIcon == MainIconType.DOWN,
+        modifier = Modifier
+            .clickClose(
+                fabMainIcon == MainIconType.DOWN,
+                isSettingPop = true
+            )
     ) {
         Box(
-            modifier = Modifier
-                .clickClose(
-                    fabMainIcon == MainIconType.DOWN,
-                    isSettingPop = true
-                )
-                .padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
+            modifier = Modifier.padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
             contentAlignment = Alignment.BottomEnd
         ) {
             MainCard(
@@ -213,7 +213,7 @@ private fun SettingDropMenu(actions: NavActions) {
                 }
                 SettingCommonItem(
                     modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    iconType = R.drawable.ic_logo_large,
+                    iconType = R.drawable.ic_launcher_foreground,
                     iconSize = Dimen.mediumIconSize,
                     title = "v" + BuildConfig.VERSION_NAME,
                     summary = stringResource(id = R.string.app_name),

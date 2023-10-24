@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "layers": {
+    "vectorLayer": {
+      "id": "17250",
+      "name": "vector",
+      "type": "vector",
+      "width": 256,
+      "height": 256,
+      "children": [
+        {
+          "id": "17251",
+          "name": "path0",
+          "type": "path",
+          "pathData": "M 142.719 67.974 L 176.081 67.974 L 213.368 7.974 L 201.593 107.324 L 169.212 107.324 L 139.775 153.556 Q 141.247 110.763 142.719 67.974 Z",
+          "fillAlpha": 0,
+          "strokeColor": "#5690ef",
+          "strokeWidth": 10,
+          "strokeLinecap": "round",
+          "strokeLinejoin": "round",
+          "fillType": "evenOdd"
+        },
+        {
+          "id": "17252",
+          "name": "path1",
+          "type": "path",
+          "pathData": "M 112.3 89.614 C 111.12 133.671 110.629 155.407 110.514 155.523 C 110.399 155.639 102.107 137.371 94.638 121.091 L 60.295 120.108 L 42.632 41.415 L 43.613 41.415 L 82.863 89.615 L 112.3 89.615 Z",
+          "fillAlpha": 0,
+          "strokeColor": "#5690ef",
+          "strokeWidth": 10,
+          "strokeLinecap": "round",
+          "strokeLinejoin": "round",
+          "fillType": "evenOdd"
+        },
+        {
+          "id": "17253",
+          "name": "path2",
+          "type": "path",
+          "pathData": "M 90.85 208.85 C 90.85 218.699 94.767 228.155 101.731 235.119 C 108.695 242.083 118.151 246 128 246 C 137.849 246 147.305 242.083 154.269 235.119 C 161.233 228.155 165.15 218.699 165.15 208.85 C 165.15 199.001 161.233 189.545 154.269 182.581 C 147.305 175.617 137.849 171.7 128 171.7 C 118.151 171.7 108.695 175.617 101.731 182.581 C 94.767 189.545 90.85 199.001 90.85 208.85 Z",
+          "fillAlpha": 0,
+          "strokeColor": "#5690ef",
+          "strokeWidth": 10,
+          "strokeLinecap": "round",
+          "strokeLinejoin": "round",
+          "fillType": "evenOdd"
+        }
+      ]
+    },
+    "hiddenLayerIds": []
+  },
+  "timeline": {
+    "animation": {
+      "id": "17254",
+      "name": "anim",
+      "duration": 500,
+      "blocks": [
+        {
+          "id": "17255",
+          "layerId": "17251",
+          "propertyName": "trimPathEnd",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "DECELERATE",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        },
+        {
+          "id": "17256",
+          "layerId": "17252",
+          "propertyName": "trimPathEnd",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "DECELERATE",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        },
+        {
+          "id": "17257",
+          "layerId": "17253",
+          "propertyName": "trimPathEnd",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "DECELERATE",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        }
+      ]
+    }
+  }
+}

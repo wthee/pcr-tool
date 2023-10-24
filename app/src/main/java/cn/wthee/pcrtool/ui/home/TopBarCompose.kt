@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,10 +35,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -82,7 +85,7 @@ import cn.wthee.pcrtool.workers.ApkDownloadWorker
 @Composable
 fun TopBarCompose(
     isEditMode: MutableState<Boolean>,
-    noticeViewModel: NoticeViewModel = MainActivity.noticeViewModel
+    noticeViewModel: NoticeViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     //应用更新通知
     val updateAppFlow = remember {
@@ -117,6 +120,11 @@ fun TopBarCompose(
             HeaderText(
                 text = stringResource(id = R.string.app_name)
             )
+
+            //数据版本，测试用
+            if(BuildConfig.DEBUG){
+                CaptionText(text = MainActivity.regionType.name)
+            }
 
             Row(
                 modifier = Modifier.weight(1f),

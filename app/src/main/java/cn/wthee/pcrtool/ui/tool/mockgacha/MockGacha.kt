@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -72,7 +76,7 @@ private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 @Composable
 fun MockGacha(
     pagerState: PagerState = rememberPagerState { 2 },
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
     val scope = rememberCoroutineScope()
 
@@ -95,16 +99,18 @@ fun MockGacha(
     val allUnits by allUnitsFlow.collectAsState(initial = null)
 
     //页面
-    val showResult = navViewModel.showMockGachaResult.observeAsState().value ?: false
+    val showResult = mockGachaViewModel.showMockGachaResult.observeAsState().value ?: false
     //卡池信息
-    val gachaId = navViewModel.gachaId.observeAsState().value ?: ""
-    val pickUpList = navViewModel.pickUpList.observeAsState().value ?: arrayListOf()
+    val gachaId = mockGachaViewModel.gachaId.observeAsState().value ?: ""
+    val pickUpList = mockGachaViewModel.pickUpList.observeAsState().value ?: arrayListOf()
     // 类型
     val mockGachaType = remember {
-        mutableIntStateOf(navViewModel.mockGachaType.value?.type ?: MockGachaType.PICK_UP.type)
+        mutableIntStateOf(
+            mockGachaViewModel.mockGachaType.value?.type ?: MockGachaType.PICK_UP.type
+        )
     }
     mockGachaType.intValue =
-        navViewModel.mockGachaType.observeAsState().value?.type ?: MockGachaType.PICK_UP.type
+        mockGachaViewModel.mockGachaType.observeAsState().value?.type ?: MockGachaType.PICK_UP.type
 
     //关闭
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
@@ -115,10 +121,13 @@ fun MockGacha(
     }
     //返回选择
     if (close) {
-        navViewModel.showMockGachaResult.postValue(false)
+        mockGachaViewModel.showMockGachaResult.postValue(false)
         navViewModel.fabCloseClick.postValue(false)
     }
 
+    //滚动状态
+    val unitScrollState = rememberScrollState()
+    val historyScrollState = rememberLazyGridState()
 
     Box(
         modifier = Modifier
@@ -158,7 +167,7 @@ fun MockGacha(
                                 ) {
                                     //更新选中
                                     if (!showResult) {
-                                        updatePickUpList(gachaUnitInfo)
+                                        updatePickUpList(gachaUnitInfo, mockGachaViewModel)
                                     }
                                 }
                                 if (mockGachaType.intValue == MockGachaType.PICK_UP_SINGLE.type && index == pickUpList.size - 1) {
@@ -186,7 +195,13 @@ fun MockGacha(
                     modifier = Modifier
                         .fillMaxWidth(RATIO_GOLDEN)
                         .align(Alignment.CenterHorizontally)
-                )
+                ) {
+                    if (pagerState.currentPage == 0) {
+                        unitScrollState.scrollTo(0)
+                    } else {
+                        historyScrollState.scrollToItem(0)
+                    }
+                }
 
                 HorizontalPager(
                     state = pagerState,
@@ -199,6 +214,7 @@ fun MockGacha(
                         0 -> //角色选择
                             allUnits?.let {
                                 ToSelectMockGachaUnitList(
+                                    unitScrollState,
                                     MockGachaType.getByValue(mockGachaType.intValue),
                                     it
                                 )
@@ -206,7 +222,7 @@ fun MockGacha(
 
                         else -> {
                             //历史记录展示
-                            MockGachaHistory()
+                            MockGachaHistory(historyScrollState)
                         }
                     }
                 }
@@ -242,7 +258,7 @@ fun MockGacha(
                             ToastUtil.short(tipSingleError)
                             return@MainSmallFab
                         }
-                        navViewModel.showMockGachaResult.postValue(true)
+                        mockGachaViewModel.showMockGachaResult.postValue(true)
                         //创建卡池，若存在相同卡池，则不重新创建
                         scope.launch {
                             var id = UUID.randomUUID().toString()
@@ -254,7 +270,7 @@ fun MockGacha(
                                 id = oldGacha.gachaId
                                 mockGachaType.intValue = oldGacha.gachaType
                             }
-                            navViewModel.gachaId.postValue(id)
+                            mockGachaViewModel.gachaId.postValue(id)
                             mockGachaViewModel.createMockGacha(
                                 id,
                                 MockGachaType.getByValue(mockGachaType.intValue),
@@ -281,8 +297,8 @@ fun MockGacha(
                     .navigationBarsPadding()
             ) {
                 //切换时清空
-                navViewModel.pickUpList.postValue(arrayListOf())
-                navViewModel.mockGachaType.postValue(MockGachaType.getByValue(mockGachaType.intValue))
+                mockGachaViewModel.pickUpList.postValue(arrayListOf())
+                mockGachaViewModel.mockGachaType.postValue(MockGachaType.getByValue(mockGachaType.intValue))
             }
         } else {
             MainSmallFab(
@@ -304,13 +320,14 @@ fun MockGacha(
  */
 @Composable
 private fun ToSelectMockGachaUnitList(
+    scrollState: ScrollState,
     mockGachaType: MockGachaType,
     allUnits: UnitsInGacha
 ) {
     Column(
         modifier = Modifier
             .padding(Dimen.mediumPadding)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ) {
         if (mockGachaType == MockGachaType.FES) {
             // Fes
@@ -333,6 +350,7 @@ private fun ToSelectMockGachaUnitList(
 private fun ToSelectMockGachaUnitGroup(
     data: List<GachaUnitInfo>,
     title: String,
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -347,7 +365,7 @@ private fun ToSelectMockGachaUnitGroup(
         MainText(text = data.size.toString())
     }
     MockGachaUnitIconListCompose(icons = data, onClickItem = {
-        updatePickUpList(it)
+        updatePickUpList(it, mockGachaViewModel)
     })
 }
 
@@ -390,9 +408,9 @@ private fun MockGachaUnitIconListCompose(
 /**
  * 更新选中列表
  */
-private fun updatePickUpList(data: GachaUnitInfo) {
-    val pickUpList = navViewModel.pickUpList.value ?: arrayListOf()
-    val gachaType = navViewModel.mockGachaType.value ?: 0
+private fun updatePickUpList(data: GachaUnitInfo, mockGachaViewModel: MockGachaViewModel) {
+    val pickUpList = mockGachaViewModel.pickUpList.value ?: arrayListOf()
+    val gachaType = mockGachaViewModel.mockGachaType.value ?: 0
     val maxPick =
         if (gachaType == MockGachaType.FES) MOCK_GACHA_FES_MAX_UP_COUNT else MOCK_GACHA_MAX_UP_COUNT
 
@@ -408,5 +426,5 @@ private fun updatePickUpList(data: GachaUnitInfo) {
             newList.add(data)
         }
     }
-    navViewModel.pickUpList.postValue(newList)
+    mockGachaViewModel.pickUpList.postValue(newList)
 }

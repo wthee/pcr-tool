@@ -15,22 +15,8 @@ object Constants {
     //本地数据库版本
     const val SQLITE_VERSION = 374
 
-    //本地储存
+    //图片缓存
     const val COIL_DIR = "coil_image_cache"
-    const val SP_DATABASE_TYPE = "database_type"
-    const val SP_DATABASE_VERSION_CN = "database_version_cn"
-    const val SP_DATABASE_VERSION_TW = "database_version_tw"
-    const val SP_DATABASE_VERSION_JP = "database_version_jp"
-    const val SP_STAR_CHARACTER = "star_character"
-    const val SP_STAR_EQUIP = "star_equip"
-    const val SP_STAR_EXTRA_EQUIP = "star_extra_equip"
-    const val SP_VIBRATE_STATE = "vibrate_state"
-    const val SP_ANIM_STATE = "animation_state"
-    const val SP_COLOR_STATE = "dynamic_color_state"
-    const val SP_USE_IP = "use_ip"
-    const val SP_TOOL_ORDER = "tool_order"
-    const val SP_OVERVIEW_ORDER = "overview_order"
-    const val SP_CHARACTER_DETAIL_ORDER = "character_detail_order"
 
     const val mediaType = "application/json; charset=utf-8"
 

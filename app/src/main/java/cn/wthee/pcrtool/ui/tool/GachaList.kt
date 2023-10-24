@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,7 +33,6 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.DateRange
@@ -55,6 +56,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -147,6 +149,7 @@ fun GachaList(
 fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIds: List<Int>,
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
@@ -223,8 +226,8 @@ fun GachaItem(
                             icon = MainIconType.MOCK_GACHA,
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
-                            navViewModel.mockGachaType.postValue(mockGachaType)
-                            navViewModel.pickUpList.postValue(gachaInfo.getMockGachaPickUpUnitList())
+                            mockGachaViewModel.mockGachaType.postValue(mockGachaType)
+                            mockGachaViewModel.pickUpList.postValue(gachaInfo.getMockGachaPickUpUnitList())
                             //跳转
                             toMockGacha()
                         }

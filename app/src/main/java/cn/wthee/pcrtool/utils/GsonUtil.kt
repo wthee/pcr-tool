@@ -10,10 +10,14 @@ object GsonUtil {
     /**
      * Gson 转化
      */
-    inline fun <reified T : Any> fromJson(json: String?): T? {
+    private inline fun <reified T : Any> fromJson(json: String?): T? {
         return Gson().fromJson(json, T::class.java)
     }
 
+    /**
+     * 转换为数据
+     */
+    fun toIntList(str: String?) = (fromJson(str) ?: arrayListOf<Double>()).toIntList()
 }
 
 /**

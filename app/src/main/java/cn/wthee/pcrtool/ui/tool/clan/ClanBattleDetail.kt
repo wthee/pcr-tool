@@ -117,7 +117,7 @@ fun ClanBattleDetail(
             for (i in minPhase..maxPhase) {
                 tabs.add(stringResource(id = R.string.phase, getZhNumberText(i)))
             }
-            val sectionColor = getSectionTextColor(section = phaseIndex.intValue + 1)
+            val sectionColor = getSectionTextColor(section = phaseIndex.intValue + minPhase)
             SelectTypeFab(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,

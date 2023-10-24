@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
-import androidx.core.content.edit
+import androidx.datastore.preferences.core.edit
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -12,10 +12,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
+import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.settingSP
+import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
@@ -24,7 +25,9 @@ import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -34,17 +37,16 @@ import java.io.File
  */
 object DatabaseUpdater {
 
-    val sp = settingSP()
 
     /**
      * 切换版本
      */
-    fun changeDatabase(region: RegionType) {
-        sp.edit {
-            putInt(Constants.SP_DATABASE_TYPE, region.value)
+    suspend fun changeDatabase(region: RegionType) {
+        MyApplication.context.dataStoreSetting.edit {
+            it[SettingPreferencesKeys.SP_DATABASE_TYPE] = region.value
+            MainActivity.regionType = region
+            handler.sendEmptyMessage(0)
         }
-        MainActivity.regionType = region
-        handler.sendEmptyMessage(0)
     }
 
     /**
@@ -69,11 +71,7 @@ object DatabaseUpdater {
 
             val version = service.getDbVersion(body)
             //更新判断
-            var desc = version.data!!.desc
-            if (desc == "") {
-                desc = getString(R.string.db_diff_content_none)
-            }
-            navViewModel.updateDb.postValue(desc)
+            navViewModel.dbVersion.postValue(version.data)
             downloadDB(version.data!!, fixDb)
         } catch (e: Exception) {
             if (e !is CancellationException) {
@@ -88,14 +86,16 @@ object DatabaseUpdater {
      * @param versionData 版本信息
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private fun downloadDB(versionData: DatabaseVersion, fixDb: Boolean) {
+    private suspend fun downloadDB(versionData: DatabaseVersion, fixDb: Boolean) {
         val region = MainActivity.regionType
         val localVersionKey = when (region) {
-            RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-            RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-            RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
+            RegionType.CN -> SettingPreferencesKeys.SP_DATABASE_VERSION_CN
+            RegionType.TW -> SettingPreferencesKeys.SP_DATABASE_VERSION_TW
+            RegionType.JP -> SettingPreferencesKeys.SP_DATABASE_VERSION_JP
         }
-        val localVersion = sp.getString(localVersionKey, "")
+        val localVersion = runBlocking {
+            MyApplication.context.dataStoreSetting.data.first()[localVersionKey] ?: ""
+        }
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
@@ -169,14 +169,16 @@ object DatabaseUpdater {
  * 更新本地数据库版本、哈希值
  */
 fun updateLocalDataBaseVersion(ver: String) {
-    val sp = settingSP()
     val key = when (MainActivity.regionType) {
-        RegionType.CN -> Constants.SP_DATABASE_VERSION_CN
-        RegionType.TW -> Constants.SP_DATABASE_VERSION_TW
-        RegionType.JP -> Constants.SP_DATABASE_VERSION_JP
+        RegionType.CN -> SettingPreferencesKeys.SP_DATABASE_VERSION_CN
+        RegionType.TW -> SettingPreferencesKeys.SP_DATABASE_VERSION_TW
+        RegionType.JP -> SettingPreferencesKeys.SP_DATABASE_VERSION_JP
     }
-    sp.edit {
-        putString(key, ver)
+
+    MainScope().launch {
+        MyApplication.context.dataStoreSetting.edit {
+            it[key] = ver
+        }
     }
 }
 

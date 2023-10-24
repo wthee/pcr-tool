@@ -146,8 +146,10 @@ fun TweetList(
             keywordInputState = keywordInputState,
             keywordState = keywordState,
             leadingIcon = MainIconType.TWEET,
-            scrollState = scrollState,
             defaultKeywordList = keywordList,
+            onTopClick = {
+                scrollState.scrollToItem(0)
+            },
             onResetClick = {
                 //同时重置时间筛选
                 dateRange.value = DateRange()

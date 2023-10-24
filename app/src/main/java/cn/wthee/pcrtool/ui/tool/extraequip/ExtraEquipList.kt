@@ -51,6 +51,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.data.model.getStarExEquipIdList
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -99,7 +100,7 @@ fun ExtraEquipList(
 
     //筛选状态
     val filter = navViewModel.filterExtraEquip.observeAsState().value ?: FilterExtraEquipment()
-    filter.starIds = FilterExtraEquipment.getStarIdList()
+    filter.starIds = getStarExEquipIdList()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden

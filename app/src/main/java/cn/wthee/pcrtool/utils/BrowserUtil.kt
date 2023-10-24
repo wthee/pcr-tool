@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 
@@ -18,13 +19,13 @@ object BrowserUtil {
         try {
             val builder = CustomTabsIntent.Builder()
                 .setStartAnimations(mContext, R.anim.slide_in, android.R.anim.fade_out)
-                .setExitAnimations(mContext, android.R.anim.fade_in, R.anim.slide_out)
+                .setExitAnimations(mContext, android.R.anim.fade_in, android.R.anim.fade_out)
                 .setInitialActivityHeightPx(500, CustomTabsIntent.ACTIVITY_HEIGHT_ADJUSTABLE)
                 .setShowTitle(true)
 
             val customTabsIntent = builder.build()
             customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            customTabsIntent.launchUrl(mContext, Uri.parse(url))
+            customTabsIntent.launchUrl(mContext, url.toUri())
         } catch (e: Exception) {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW

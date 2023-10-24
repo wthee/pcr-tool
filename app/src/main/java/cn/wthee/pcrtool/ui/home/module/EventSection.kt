@@ -9,6 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,12 +25,12 @@ import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.home.editOverviewMenuOrder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -39,6 +40,7 @@ import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
@@ -176,8 +178,10 @@ fun CalendarEventLayout(
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
     clanBattleList: List<ClanBattleEvent>,
-    gachaViewModel: GachaViewModel = hiltViewModel(),
+    gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     //fes 角色id
     val fesUnitIdsFlow = remember {
         gachaViewModel.getGachaFesUnitList()
@@ -210,7 +214,12 @@ fun CalendarEventLayout(
             orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
-                    editOverviewMenuOrder(id)
+                    editOrder(
+                        context,
+                        scope,
+                        id,
+                        MainPreferencesKeys.SP_OVERVIEW_ORDER
+                    )
                 } else {
                     //弹窗确认
                     if (confirmState.value == calendarType.type) {

@@ -22,7 +22,7 @@ interface MyAPIService {
     /**
      * 获取数据库版本
      */
-    @POST("db/info")
+    @POST("db/info/v2")
     suspend fun getDbVersion(@Body body: RequestBody): ResponseData<DatabaseVersion>
 
     /**

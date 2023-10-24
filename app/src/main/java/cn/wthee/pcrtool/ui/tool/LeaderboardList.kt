@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,7 @@ import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
@@ -48,6 +50,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -146,79 +149,96 @@ fun LeaderboardList(
         }
         //标题
         SortTitleGroup(sort, asc)
-        CommonResponseBox(
-            responseData = responseData,
-            fabContent = {
-                //切换显示
-                MainSmallFab(
-                    iconType = MainIconType.FILTER,
-                    text = if (onlyLast.value) {
-                        stringResource(id = R.string.last_update)
-                    } else {
-                        stringResource(id = R.string.all)
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(
-                            end = Dimen.fabMargin,
-                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                        )
-                ) {
-                    onlyLast.value = !onlyLast.value
-                }
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                ) {
-                    //重置
-                    if (sort.intValue != 0 || asc.value || onlyLast.value) {
-                        MainSmallFab(
-                            iconType = MainIconType.RESET
-                        ) {
-                            sort.intValue = 0
-                            asc.value = false
-                            onlyLast.value = false
-                        }
+        Box {
+            CommonResponseBox(
+                responseData = responseData,
+                placeholder = {
+                    for (i in 0..10) {
+                        LeaderboardItem(LeaderboardData(), i, null, toCharacterDetail)
                     }
-
-                    //回到顶部
+                },
+                fabContent = {
+                    //切换显示
                     MainSmallFab(
-                        iconType = MainIconType.LEADER,
-                        text = (leaderList?.size ?: 0).toString()
+                        iconType = MainIconType.FILTER,
+                        text = if (onlyLast.value) {
+                            stringResource(id = R.string.last_update)
+                        } else {
+                            stringResource(id = R.string.all)
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(
+                                end = Dimen.fabMargin,
+                                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                            )
                     ) {
-                        coroutineScope.launch {
-                            try {
-                                scrollState.scrollToItem(0)
-                            } catch (_: Exception) {
-                            }
+                        onlyLast.value = !onlyLast.value
+                    }
+                }
+            ) {
+                LazyColumn(
+                    state = scrollState
+                ) {
+                    itemsIndexed(
+                        items = leaderList!!,
+                        key = { _, it ->
+                            it.name
                         }
+                    ) { index, it ->
+                        //获取角色名
+                        val flow = remember(it.unitId) {
+                            characterViewModel.getCharacterBasicInfo(it.unitId ?: 0)
+                        }
+                        val basicInfo by flow.collectAsState(initial = null)
+                        LeaderboardItem(it, index, basicInfo, toCharacterDetail)
+                    }
+                    items(count = 2) {
+                        CommonSpacer()
                     }
                 }
             }
-        ) {
-            LazyColumn(
-                state = scrollState
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
-                itemsIndexed(
-                    items = leaderList!!,
-                    key = { _, it ->
-                        it.name
+                //重置
+                if (sort.intValue != 0 || asc.value || onlyLast.value) {
+                    MainSmallFab(
+                        iconType = MainIconType.RESET
+                    ) {
+                        sort.intValue = 0
+                        asc.value = false
+                        onlyLast.value = false
                     }
-                ) { index, it ->
-                    //获取角色名
-                    val flow = remember(it.unitId) {
-                        characterViewModel.getCharacterBasicInfo(it.unitId ?: 0)
-                    }
-                    val basicInfo by flow.collectAsState(initial = null)
-                    LeaderboardItem(it, index, basicInfo, toCharacterDetail)
                 }
-                items(count = 2) {
-                    CommonSpacer()
+
+                //回到顶部
+                MainSmallFab(
+                    iconType = MainIconType.LEADER,
+                    text = (leaderList?.size ?: 0).toString(),
+                    extraContent = if (responseData == null) {
+                        //加载提示
+                        {
+                            CircularProgressCompose()
+                        }
+                    } else {
+                        null
+                    }
+                ) {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -322,7 +342,7 @@ private fun LeaderboardItem(
     basicInfo: CharacterInfo?,
     toCharacterDetail: (Int) -> Unit
 ) {
-
+    val placeholder = leader.unitId == 0
     val hasUnitId = leader.unitId != null && leader.unitId != 0
     //是否登场角色
     val unknown = basicInfo == null || basicInfo.position == 0
@@ -346,6 +366,7 @@ private fun LeaderboardItem(
         //图标
         LeaderCharacterIcon(
             hasUnitId,
+            placeholder,
             leader.unitId!!,
             leader.url,
             unknown,
@@ -355,9 +376,11 @@ private fun LeaderboardItem(
 
         //信息
         MainCard(
-            modifier = Modifier.padding(
-                start = Dimen.mediumPadding
-            ),
+            modifier = Modifier
+                .padding(
+                    start = Dimen.mediumPadding
+                )
+                .commonPlaceholder(placeholder),
             onClick = {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId)
@@ -421,6 +444,7 @@ private fun LeaderboardItem(
 @Composable
 fun LeaderCharacterIcon(
     hasUnitId: Boolean,
+    placeholder: Boolean = false,
     unitId: Int,
     url: String,
     unknown: Boolean,
@@ -435,7 +459,8 @@ fun LeaderCharacterIcon(
                     .getMaxIconUrl(unitId)
             } else {
                 R.drawable.unknown_item
-            }
+            },
+            modifier = Modifier.commonPlaceholder(placeholder)
         ) {
             if (!unknown) {
                 toCharacterDetail(unitId)
@@ -445,12 +470,15 @@ fun LeaderCharacterIcon(
         }
 
         //wiki页面
-        IconTextButton(
-            icon = MainIconType.BROWSER,
-            text = "wiki"
-        ) {
-            BrowserUtil.open(url)
+        if (!placeholder) {
+            IconTextButton(
+                icon = MainIconType.BROWSER,
+                text = "wiki"
+            ) {
+                BrowserUtil.open(url)
+            }
         }
+
     }
 }
 

@@ -28,7 +28,7 @@ object NotificationUtil {
         return NotificationCompat.Builder(context, channelId)
             .setContentTitle(noticeTitle)
             .setTicker(noticeTitle)
-            .setSmallIcon(R.drawable.ic_logo_large)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
     }
 
 }

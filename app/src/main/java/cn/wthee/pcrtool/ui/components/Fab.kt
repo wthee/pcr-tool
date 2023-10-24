@@ -17,12 +17,17 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +48,7 @@ import kotlinx.coroutines.launch
  *
  * @param hasNavBarPadding 适配导航栏
  * @param extraContent 不为空时，将替换text内容
+ * @param iconScale 图标缩放，非ImageVector才生效
  */
 @Composable
 fun MainSmallFab(
@@ -51,6 +57,7 @@ fun MainSmallFab(
     text: String = "",
     hasNavBarPadding: Boolean = true,
     extraContent: (@Composable () -> Unit)? = null,
+    iconScale: ContentScale = ContentScale.FillWidth,
     vibrate: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -89,7 +96,8 @@ fun MainSmallFab(
                 MainIcon(
                     data = iconType,
                     size = Dimen.fabIconSize,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    contentScale = iconScale
                 )
 
                 Text(
@@ -137,17 +145,15 @@ fun SelectTypeFab(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
     val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     //切换关闭监听
     if (close) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+        openDialog = false
         MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         MainActivity.navViewModel.fabCloseClick.postValue(false)
-    }
-    if (mainIcon == MainIconType.BACK) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
     }
 
 
@@ -167,7 +173,7 @@ fun SelectTypeFab(
                 VibrateUtil(context).single()
                 if (!openDialog) {
                     MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                    openDialog = true
                 } else {
                     MainActivity.navViewModel.fabCloseClick.postValue(true)
                 }
@@ -194,7 +200,6 @@ fun SelectTypeFab(
                                 .fillMaxWidth()
                                 .clickable {
                                     VibrateUtil(context).single()
-                                    MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                                     MainActivity.navViewModel.fabCloseClick.postValue(true)
                                     if (type.value != index) {
                                         coroutineScope.launch {

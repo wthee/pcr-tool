@@ -55,11 +55,13 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
+    val homeDataChangeWidth = 100.dp
+
     val mockGachaTypeChangeWidth = 160.dp
 
     val skillActionMinHeight = 16.dp
 
-    val border = 3.dp
+    val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
 

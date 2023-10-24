@@ -124,7 +124,7 @@ class PvpFloatService : LifecycleService() {
             windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
             activity?.let {
                 floatRootView = ComposeView(it).apply {
-                    setViewTreeLifecycleOwner(it)
+                    setViewTreeLifecycleOwner(this@PvpFloatService)
                     setViewTreeSavedStateRegistryOwner(it)
                     setViewTreeViewModelStoreOwner(it)
                     setContent {
