@@ -169,15 +169,15 @@ private fun SettingDropMenu(actions: NavActions) {
 
 
     ScaleBottomEndAnimation(
-        visible = fabMainIcon == MainIconType.DOWN
+        visible = fabMainIcon == MainIconType.DOWN,
+        modifier = Modifier
+            .clickClose(
+                fabMainIcon == MainIconType.DOWN,
+                isSettingPop = true
+            )
     ) {
         Box(
-            modifier = Modifier
-                .clickClose(
-                    fabMainIcon == MainIconType.DOWN,
-                    isSettingPop = true
-                )
-                .padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
+            modifier = Modifier.padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
             contentAlignment = Alignment.BottomEnd
         ) {
             MainCard(
