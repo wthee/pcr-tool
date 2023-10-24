@@ -69,7 +69,7 @@ class CharacterAttrViewModel @Inject constructor(
     /**
      * 获取角色属性信息
      */
-    private suspend fun getAttrs(
+    suspend fun getAttrs(
         unitId: Int,
         level: Int,
         rank: Int,
@@ -232,32 +232,6 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 获取最大Rank和星级等
-     *
-     * @param unitId 角色编号
-     */
-    fun getMaxRankAndRarity(unitId: Int) = flow {
-        try {
-            val rank = unitRepository.getMaxRank(unitId)
-            val rarity = unitRepository.getMaxRarity(unitId)
-            val level = unitRepository.getMaxLevel()
-            val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv(1) ?: 0
-            val uniqueEquipLevel2 = equipmentRepository.getUniqueEquipMaxLv(2) ?: 0
-            val maxValue =
-                CharacterProperty(level, rank, rarity, uniqueEquipLevel, uniqueEquipLevel2)
-            //数值信息
-            if (currentValue.value?.isInit() != true) {
-                //初始为最大值
-                currentValue.postValue(maxValue)
-            }
-            emit(maxValue)
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getMaxRankAndRarity:$unitId")
-            emit(CharacterProperty(level = -1))
-        }
-    }
-
-    /**
      * 获取指定角色属性对比
      *
      * @param rank0 当前rank
@@ -289,19 +263,6 @@ class CharacterAttrViewModel @Inject constructor(
             emit(unitRepository.getCoefficient())
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getCoefficient")
-        }
-    }
-
-    /**
-     * 获取特殊六星 id
-     *
-     * @param unitId 角色编号
-     */
-    fun getCutinId(unitId: Int) = flow {
-        try {
-            emit(unitRepository.getCutinId(unitId) ?: 0)
-        } catch (e: Exception) {
-            emit(0)
         }
     }
 

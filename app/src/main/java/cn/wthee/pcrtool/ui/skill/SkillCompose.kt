@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,13 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
-import cn.wthee.pcrtool.data.db.view.SpSkillLabelData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillIndexType
-import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
@@ -58,7 +57,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
  * 角色技能列表
@@ -79,53 +77,23 @@ fun SkillCompose(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     isFilterSkill: Boolean = false,
     filterSkillCount: Int = 0,
-    skillViewModel: SkillViewModel = hiltViewModel()
+    skillListViewModel: SkillListViewModel = hiltViewModel(),
 ) {
-    //普通技能
-    val normalSkillFlow = remember(property.level, atk) {
-        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.NORMAL)
+    val uiState by skillListViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(property.level, atk){
+        skillListViewModel.loadSkillInfo(property.level, atk, unitId)
     }
-    val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
+
+    //普通技能
+    val normalSkillData  = uiState.normalSkill
 
     //sp技能
-    val spSkillFlow = remember(property.level, atk) {
-        skillViewModel.getCharacterSkills(property.level, atk, unitId, SkillType.SP)
-    }
-    val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
+    val spSkillData = uiState.spSkill
 
     // sp技能标签
-    val spLabelFlow = remember(unitId) {
-        skillViewModel.getSpSkillLabel(unitId)
-    }
-    val spLabel by spLabelFlow.collectAsState(initial = null)
+    val spLabel = uiState.spLabel
 
 
-    SkillLayout(
-        normalSkillData,
-        spSkillData,
-        spLabel,
-        isFilterSkill,
-        filterSkillCount,
-        unitType,
-        property,
-        toSummonDetail
-    )
-}
-
-/**
- * 技能列表布局
- */
-@Composable
-fun SkillLayout(
-    normalSkillData: MutableList<SkillDetail>,
-    spSkillData: MutableList<SkillDetail>,
-    spLabel: SpSkillLabelData?,
-    isFilterSkill: Boolean,
-    filterSkillCount: Int,
-    unitType: UnitType,
-    property: CharacterProperty,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?
-) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,7 +166,6 @@ fun SkillLayout(
         }
     }
 }
-
 
 /**
  * 技能

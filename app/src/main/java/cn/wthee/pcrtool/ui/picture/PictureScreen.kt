@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.story
+package cn.wthee.pcrtool.ui.picture
 
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,12 +25,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.components.CenterTipText
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -46,7 +44,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
-import cn.wthee.pcrtool.viewmodel.AllPicsViewModel
 
 //权限
 val permissions = arrayOf(
@@ -58,30 +55,12 @@ val permissions = arrayOf(
 /**
  * 角色/活动剧情图片
  *
- * @param id 角色或剧情id
  */
 @Composable
-fun StoryPicList(
-    id: Int,
-    allPicsType: AllPicsType,
-    picsViewModel: AllPicsViewModel = hiltViewModel()
+fun PictureScreen(
+    picsViewModel: PictureViewModel = hiltViewModel()
 ) {
-    //角色卡面
-    val basicUrls = if (allPicsType == AllPicsType.CHARACTER) {
-        val basicUrlsFlow = remember {
-            picsViewModel.getUniCardList(id)
-        }
-        basicUrlsFlow.collectAsState(initial = arrayListOf()).value
-    } else {
-        arrayListOf()
-    }
-    //剧情活动
-    val flow = remember(id, allPicsType.type) {
-        picsViewModel.getStoryList(id, allPicsType.type)
-    }
-    val responseData by flow.collectAsState(initial = null)
-    val hasStory = responseData?.data?.isNotEmpty() == true
-
+    val uiState by picsViewModel.uiState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -94,11 +73,11 @@ fun StoryPicList(
                 .verticalScroll(rememberScrollState())
         ) {
             //角色
-            if (allPicsType == AllPicsType.CHARACTER) {
-                CharacterPicList(basicUrls)
+            if (uiState.unitCardList.isNotEmpty()) {
+                CharacterPictureContent(uiState.unitCardList)
             }
             //剧情
-            StoryPicList(hasStory, responseData)
+            StoryPictureContent(uiState.hasStory, uiState.isLoadingStory, uiState.storyCardList)
             CommonSpacer()
         }
     }
@@ -110,9 +89,10 @@ fun StoryPicList(
  * 剧情图片
  */
 @Composable
-private fun StoryPicList(
+private fun StoryPictureContent(
     hasStory: Boolean,
-    responseData: ResponseData<ArrayList<String>>?
+    isLoadingStory: Boolean,
+    storyCardList: ArrayList<String>
 ) {
     Row(
         modifier = Modifier
@@ -128,18 +108,27 @@ private fun StoryPicList(
         )
         Spacer(modifier = Modifier.weight(1f))
         if (hasStory) {
-            MainText(text = responseData!!.data!!.size.toString())
+            MainText(text = storyCardList.size.toString())
         }
     }
-    CommonResponseBox(responseData) { data ->
-        if (data.isNotEmpty()) {
+    if(isLoadingStory){
+        Box(modifier = Modifier.fillMaxSize()){
+            CircularProgressCompose(
+                modifier = Modifier
+                    .padding(vertical = Dimen.largePadding)
+                    .align(Alignment.Center)
+            )
+        }
+    }else{
+        if (storyCardList.isNotEmpty()) {
             CardGridList(
-                urls = data
+                urls = storyCardList
             )
         } else {
             CenterTipText(text = stringResource(id = R.string.no_story_info))
         }
     }
+
 
 }
 
@@ -147,7 +136,7 @@ private fun StoryPicList(
  * 角色图片
  */
 @Composable
-private fun CharacterPicList(
+private fun CharacterPictureContent(
     basicUrls: java.util.ArrayList<String>
 ) {
     Row(
@@ -258,6 +247,6 @@ private fun getFileName(url: String): String {
 @Composable
 private fun CharacterPicListPreview() {
     PreviewLayout {
-        CharacterPicList(arrayListOf("1"))
+        CharacterPictureContent(arrayListOf("1"))
     }
 }

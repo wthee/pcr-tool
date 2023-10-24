@@ -33,7 +33,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,6 +55,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -64,7 +64,6 @@ import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -87,7 +86,7 @@ import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getRankColor
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.skill.SkillLayout
+import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -102,14 +101,9 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 
 private const val DEFAULT_ORDER = "300-301-302-303-304-305-306-307-308-310-"
@@ -126,94 +120,28 @@ fun CharacterDetail(
     unitId: Int,
     actions: NavActions,
     showAllInfo: Boolean = true,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel(),
-    characterViewModel: CharacterViewModel = hiltViewModel(),
-    skillViewModel: SkillViewModel = hiltViewModel()
+    characterDetailViewModel: CharacterDetailViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
-
-    //特殊形态角色id（吉塔）
-    val cutinIdFlow = remember {
-        attrViewModel.getCutinId(unitId)
-    }
-    val cutinId by cutinIdFlow.collectAsState(initial = 0)
-    //形态切换
-    val isCutinSkill = remember {
-        mutableStateOf(true)
-    }
-    //不同技能形态对应的 unitId
-    val currentIdState = remember {
-        mutableIntStateOf(0)
-    }
-    currentIdState.intValue = if (isCutinSkill.value && cutinId != 0) {
-        cutinId
-    } else {
-        unitId
-    }
+    val uiState by characterDetailViewModel.uiState.collectAsStateWithLifecycle()
 
     //最大值
-    val maxValueFlow = remember {
-        attrViewModel.getMaxRankAndRarity(unitId)
-    }
-    val maxValue by maxValueFlow.collectAsState(initial = CharacterProperty())
+    val maxValue = uiState.maxValue
     //当前选择的数值信息
-    val currentValue = attrViewModel.currentValue.observeAsState().value ?: CharacterProperty()
-
+    val currentValue =  uiState.currentValue
     //rank 装备选择监听
     val rankEquipSelected = navViewModel.rankEquipSelected.observeAsState().value ?: 0
     LaunchedEffect(rankEquipSelected) {
         if (rankEquipSelected != 0 && currentValue.rank != rankEquipSelected) {
-            attrViewModel.currentValue.postValue(currentValue.update(rank = rankEquipSelected))
+            characterDetailViewModel.updateCurrentValue(currentValue.copy(rank = rankEquipSelected))
         }
     }
-
     //角色属性
-    val characterAttrFlow = remember(currentValue.hashCode()) {
-        attrViewModel.getCharacterInfo(unitId, currentValue)
-    }
-    val characterAttrData by characterAttrFlow.collectAsState(initial = AllAttrData())
+    val characterAttrData = uiState.allAttr
 
     //基本信息
-    val basicInfoFlow = remember {
-        characterViewModel.getCharacterBasicInfo(unitId)
-    }
-    val basicInfo by basicInfoFlow.collectAsState(initial = CharacterInfo())
-
-    //角色攻击力
-    val atk = max(
-        characterAttrData.sumAttr.atk.int,
-        characterAttrData.sumAttr.magicStr.int
-    )
-
-    //普通技能
-    val normalSkillFlow = remember(isCutinSkill.value, currentValue.level, atk) {
-        skillViewModel.getCharacterSkills(
-            currentValue.level,
-            atk,
-            currentIdState.intValue,
-            SkillType.NORMAL
-        )
-    }
-    val normalSkillData by normalSkillFlow.collectAsState(initial = arrayListOf())
-
-    //sp技能
-    val spSkillFlow = remember(isCutinSkill.value, currentValue.level, atk) {
-        skillViewModel.getCharacterSkills(
-            currentValue.level,
-            atk,
-            currentIdState.intValue,
-            SkillType.SP
-        )
-    }
-    val spSkillData by spSkillFlow.collectAsState(initial = arrayListOf())
-
-    // sp技能标签
-    val spLabelFlow = remember(isCutinSkill.value) {
-        skillViewModel.getSpSkillLabel(currentIdState.intValue)
-    }
-    val spLabel by spLabelFlow.collectAsState(initial = null)
+    val basicInfo = uiState.basicInfo
 
     //数据加载后，展示页面
     val visible = characterAttrData.sumAttr.hp > 1 && characterAttrData.equips.isNotEmpty()
@@ -377,13 +305,15 @@ fun CharacterDetail(
                                 //星级
                                 CharacterDetailModuleType.STAR -> StarSelect(
                                     currentValue = currentValue,
-                                    max = maxValue.rarity
+                                    max = maxValue.rarity,
+                                    updateCurrentValue = characterDetailViewModel::updateCurrentValue
                                 )
 
                                 //等级
                                 CharacterDetailModuleType.LEVEL -> CharacterLevel(
                                     currentValue = currentValue,
-                                    maxValue.level
+                                    maxValue.level,
+                                    updateCurrentValue = characterDetailViewModel::updateCurrentValue
                                 )
 
                                 //属性
@@ -408,6 +338,7 @@ fun CharacterDetail(
                                     currentValue = currentValue,
                                     maxRank = maxValue.rank,
                                     equips = characterAttrData.equips,
+                                    updateCurrentValue = characterDetailViewModel::updateCurrentValue,
                                     toEquipDetail = actions.toEquipDetail,
                                     toCharacterRankEquip = actions.toCharacterRankEquip
                                 )
@@ -424,17 +355,12 @@ fun CharacterDetail(
                                     }
 
                                 //技能列表
-                                CharacterDetailModuleType.SKILL -> SkillLayout(
-                                    normalSkillData = normalSkillData,
-                                    spSkillData = spSkillData,
-                                    spLabel = spLabel,
-                                    unitType = UnitType.CHARACTER,
-                                    toSummonDetail = actions.toSummonDetail,
-                                    isFilterSkill = !showAllInfo,
-                                    filterSkillCount = characterAttrData.uniqueEquipList.size,
-                                    property = currentValue
+                                CharacterDetailModuleType.SKILL -> SkillCompose(
+                                    unitId = uiState.currentId,
+                                    atk = uiState.maxAtk,
+                                    unitType = UnitType.CHARACTER_SUMMON,
+                                    property = uiState.currentValue
                                 )
-
                                 //图标
                                 CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(basicInfo)
 
@@ -468,7 +394,7 @@ fun CharacterDetail(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 horizontalAlignment = Alignment.End
             ) {
-                if (cutinId != 0 && showAllInfo) {
+                if (uiState.cutinId != 0 && showAllInfo) {
                     Row(
                         modifier = Modifier.padding(
                             end = Dimen.fabMargin
@@ -476,18 +402,18 @@ fun CharacterDetail(
                     ) {
                         //角色技能形态
                         MainSmallFab(
-                            iconType = if (isCutinSkill.value) {
+                            iconType = if (uiState.isCutinSkill) {
                                 MainIconType.CHARACTER_CUTIN_SKILL
                             } else {
                                 MainIconType.CHARACTER_NORMAL_SKILL
                             },
-                            text = if (isCutinSkill.value) {
+                            text = if (uiState.isCutinSkill) {
                                 stringResource(id = R.string.cutin_skill)
                             } else {
                                 ""
                             },
                         ) {
-                            isCutinSkill.value = !isCutinSkill.value
+                            characterDetailViewModel.changeCutin()
                         }
                     }
                 }
@@ -526,7 +452,7 @@ fun CharacterDetail(
                                     iconType = MainIconType.SKILL_LOOP,
                                 ) {
                                     if (!isEditMode) {
-                                        actions.toCharacterSkillLoop(currentIdState.intValue)
+                                        actions.toCharacterSkillLoop(uiState.cutinId)
                                     }
                                 }
                             }
@@ -697,78 +623,6 @@ private fun CharacterOtherTools(
 }
 
 /**
- * 战力计算
- */
-@Composable
-private fun CharacterCoe(
-    characterAttrData: AllAttrData,
-    currentValue: CharacterProperty,
-    toCoe: () -> Unit,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel()
-) {
-    //战力系数
-    val coeValueFlow = remember {
-        attrViewModel.getCoefficient()
-    }
-    val coeValue by coeValueFlow.collectAsState(initial = null)
-    val context = LocalContext.current
-
-    Row(
-        modifier = Modifier
-            .padding(start = Dimen.smallPadding)
-            .clip(MaterialTheme.shapes.extraSmall)
-            .clickable {
-                VibrateUtil(context).single()
-                toCoe()
-            }
-            .padding(horizontal = Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        var value = ""
-
-        coeValue?.let { coe ->
-            val basicAttr = characterAttrData.sumAttr.copy().sub(characterAttrData.exSkillAttr)
-            val basic =
-                basicAttr.hp * coe.hp_coefficient + basicAttr.atk * coe.atk_coefficient + basicAttr.magicStr * coe.magic_str_coefficient + basicAttr.def * coe.def_coefficient + basicAttr.magicDef * coe.magic_def_coefficient + basicAttr.physicalCritical * coe.physical_critical_coefficient + basicAttr.magicCritical * coe.magic_critical_coefficient + basicAttr.waveHpRecovery * coe.wave_hp_recovery_coefficient + basicAttr.waveEnergyRecovery * coe.wave_energy_recovery_coefficient + basicAttr.dodge * coe.dodge_coefficient + basicAttr.physicalPenetrate * coe.physical_penetrate_coefficient + basicAttr.magicPenetrate * coe.magic_penetrate_coefficient + basicAttr.lifeSteal * coe.life_steal_coefficient + basicAttr.hpRecoveryRate * coe.hp_recovery_rate_coefficient + basicAttr.energyRecoveryRate * coe.energy_recovery_rate_coefficient + basicAttr.energyReduceRate * coe.energy_reduce_rate_coefficient + basicAttr.accuracy * coe.accuracy_coefficient
-            //技能2：默认加上技能2
-            var skill = currentValue.level * coe.skill_lv_coefficient
-            //技能1：解锁专武，技能1系数提升
-            if (characterAttrData.uniqueEquipList.isNotEmpty()) {
-                skill += coe.skill1_evolution_coefficient * characterAttrData.uniqueEquipList.size
-                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * characterAttrData.uniqueEquipList.size
-            } else {
-                skill += currentValue.level * coe.skill_lv_coefficient
-            }
-            //不同星级处理
-            if (currentValue.rarity >= 5) {
-                //ex+:大于等于五星，技能 ex+
-                skill += coe.exskill_evolution_coefficient
-                skill += currentValue.level * coe.skill_lv_coefficient
-                if (currentValue.rarity == 6) {
-                    //ub+
-                    skill += coe.ub_evolution_coefficient
-                    skill += currentValue.level * coe.skill_lv_coefficient * coe.ub_evolution_slv_coefficient
-                } else {
-                    //ub
-                    skill += currentValue.level * coe.skill_lv_coefficient
-                }
-            } else {
-                //ub、ex
-                skill += currentValue.level * coe.skill_lv_coefficient * 2
-            }
-            value = (basic + skill).int.toString()
-        }
-        //战力数值
-        MainText(
-            text = stringResource(id = R.string.attr_all_value, value),
-        )
-        MainIcon(
-            data = MainIconType.HELP, size = Dimen.smallIconSize
-        )
-    }
-}
-
-/**
  * 角色等级
  */
 @OptIn(
@@ -778,7 +632,7 @@ private fun CharacterCoe(
 private fun CharacterLevel(
     currentValue: CharacterProperty,
     maxLevel: Int,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel()
+    updateCurrentValue:(CharacterProperty)->Unit
 ) {
     val context = LocalContext.current
 
@@ -837,8 +691,7 @@ private fun CharacterLevel(
                 keyboardController?.hide()
                 focusManager.clearFocus()
                 if (inputLevel.value != "") {
-                    attrViewModel.currentValue.postValue(currentValue.update(level = inputLevel.value.toInt()))
-
+                    updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
                 }
             }
         },
@@ -851,7 +704,7 @@ private fun CharacterLevel(
                 keyboardController?.hide()
                 focusManager.clearFocus()
                 if (inputLevel.value != "") {
-                    attrViewModel.currentValue.postValue(currentValue.update(level = inputLevel.value.toInt()))
+                    updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
                 }
             }
         ),
@@ -938,7 +791,7 @@ private fun CharacterEquip(
     currentValue: CharacterProperty,
     maxRank: Int,
     equips: List<EquipmentMaxData>,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel(),
+    updateCurrentValue: (CharacterProperty) -> Unit,
     toEquipDetail: (Int) -> Unit,
     toCharacterRankEquip: (Int, Int) -> Unit
 ) {
@@ -992,7 +845,7 @@ private fun CharacterEquip(
                     },
                     onClick = if (rank < maxRank) {
                         {
-                            attrViewModel.currentValue.postValue(currentValue.update(rank = rank + 1))
+                            updateCurrentValue(currentValue.copy(rank = rank + 1))
                         }
                     } else {
                         null
@@ -1017,7 +870,7 @@ private fun CharacterEquip(
                     },
                     onClick = if (rank > 1) {
                         {
-                            attrViewModel.currentValue.postValue(currentValue.update(rank = rank - 1))
+                            updateCurrentValue(currentValue.copy(rank = rank - 1))
                         }
                     } else {
                         null
@@ -1065,7 +918,7 @@ private fun CharacterEquip(
 private fun StarSelect(
     currentValue: CharacterProperty,
     max: Int,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel()
+    updateCurrentValue: (CharacterProperty) -> Unit
 ) {
 
     Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
@@ -1080,7 +933,7 @@ private fun StarSelect(
                 size = Dimen.fabIconSize,
                 modifier = Modifier.padding(Dimen.smallPadding)
             ) {
-                attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
+                updateCurrentValue(currentValue.copy(rarity =i))
             }
 
         }
@@ -1120,6 +973,7 @@ private fun CharacterEquipPreview() {
                 EquipmentMaxData(),
                 EquipmentMaxData()
             ),
+            updateCurrentValue = {},
             toEquipDetail = { },
             toCharacterRankEquip = { _, _ -> }
         )

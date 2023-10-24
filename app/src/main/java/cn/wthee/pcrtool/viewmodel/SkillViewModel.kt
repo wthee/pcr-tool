@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.db.view.SkillBasicData
-import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -24,28 +23,6 @@ class SkillViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * 获取角色技能信息
-     *
-     * @param lv 技能能级
-     * @param atk 基础攻击力
-     * @param unitId 角色编号
-     */
-    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, skillType: SkillType) = flow {
-        try {
-            val skillList = getSkills(
-                getSkillIds(unitId, skillType),
-                arrayListOf(lv),
-                atk,
-                unitId
-            )
-            emit(skillList)
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getCharacterSkills#unit_id:$unitId")
-        }
-    }
-
-
-    /**
      * 获取ex装备被动技能信息
      *
      * @param skillIds 技能编号列表
@@ -63,26 +40,6 @@ class SkillViewModel @Inject constructor(
             LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getExtraEquipPassiveSkills#skillId:$skillIds")
         }
     }
-
-    /**
-     * 获取角色技能 id
-     */
-    private suspend fun getSkillIds(unitId: Int, skillType: SkillType): List<Int> {
-        try {
-            val data = skillRepository.getUnitSkill(unitId)
-            val normalList = data!!.getNormalSkillId()
-            val spList = data.getSpSkillId()
-            return when (skillType) {
-                SkillType.ALL -> normalList + spList
-                SkillType.NORMAL -> normalList
-                SkillType.SP -> spList
-            }
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillIds#unit_id:$unitId type:${skillType.name}")
-        }
-        return arrayListOf()
-    }
-
 
     /**
      * 测试用，获取所有角色技能

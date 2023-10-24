@@ -19,7 +19,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
@@ -37,8 +36,8 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
 import cn.wthee.pcrtool.ui.equip.EquipUnitList
 import cn.wthee.pcrtool.ui.home.Overview
+import cn.wthee.pcrtool.ui.picture.PictureScreen
 import cn.wthee.pcrtool.ui.skill.SummonDetail
-import cn.wthee.pcrtool.ui.story.StoryPicList
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
@@ -157,13 +156,8 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-
-                StoryPicList(
-                    arguments.getInt(NavRoute.UNIT_ID),
-                    AllPicsType.getByValue(arguments.getInt(NavRoute.ALL_PICS_TYPE))
-                )
+                PictureScreen()
             }
 
             //角色资料
