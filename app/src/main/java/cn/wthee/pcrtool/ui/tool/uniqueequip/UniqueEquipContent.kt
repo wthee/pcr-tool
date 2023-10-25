@@ -67,7 +67,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
     ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
-fun UniqueEquip(
+fun UniqueEquipContent(
     slot: Int,
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
@@ -234,7 +234,7 @@ fun UniqueEquip(
 @Composable
 private fun UniqueEquipPreview() {
     PreviewLayout {
-        UniqueEquip(
+        UniqueEquipContent(
             1,
             currentValue = CharacterProperty(),
             uniqueEquipLevelMax = 100,

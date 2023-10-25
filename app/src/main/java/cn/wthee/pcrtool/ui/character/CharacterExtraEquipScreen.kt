@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
@@ -19,6 +20,9 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipGroup
 import cn.wthee.pcrtool.utils.intArrayList
 
+/**
+ * 角色额外装备
+ */
 @Composable
 fun CharacterExtraEquipScreen(
     scrollState: LazyListState,
@@ -32,31 +36,40 @@ fun CharacterExtraEquipScreen(
     StateBox(
         stateType = uiState.loadingState,
         successContent = {
-            LazyColumn(state = scrollState) {
-                item {
-                    //标题
-                    MainText(
-                        text = stringResource(R.string.unit_extra_equip_slot),
-                        modifier = Modifier
-                            .padding(Dimen.largePadding)
-                            .fillMaxWidth()
-                    )
-                }
-                equipList?.let {
-                    items(equipList) {
-                        ExtraEquipGroup(
-                            it.category,
-                            it.categoryName,
-                            it.exEquipmentIds.intArrayList,
-                            selectedId = 0,
-                            toExtraEquipDetail = toExtraEquipDetail
-                        )
-                    }
-                }
-                item {
-                    CommonSpacer()
-                }
-            }
+            CharacterExtraEquipContent(scrollState, equipList, toExtraEquipDetail)
         }
     )
+}
+
+@Composable
+private fun CharacterExtraEquipContent(
+    scrollState: LazyListState,
+    equipList: List<CharacterExtraEquipData>?,
+    toExtraEquipDetail: (Int) -> Unit,
+) {
+    LazyColumn(state = scrollState) {
+        item {
+            //标题
+            MainText(
+                text = stringResource(R.string.unit_extra_equip_slot),
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .fillMaxWidth()
+            )
+        }
+        equipList?.let {
+            items(equipList) {
+                ExtraEquipGroup(
+                    it.category,
+                    it.categoryName,
+                    it.exEquipmentIds.intArrayList,
+                    selectedId = 0,
+                    toExtraEquipDetail = toExtraEquipDetail
+                )
+            }
+        }
+        item {
+            CommonSpacer()
+        }
+    }
 }

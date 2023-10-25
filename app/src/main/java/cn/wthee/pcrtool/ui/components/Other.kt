@@ -140,7 +140,7 @@ fun StateBox(
             LoadingState.Loading -> loadingContent()
             LoadingState.NoData -> noDataContent()
             LoadingState.Error -> errorContent()
-            LoadingState.Success -> content()
+            LoadingState.Success -> successContent()
         }
         content()
     }

@@ -1,24 +1,36 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.runtime.Immutable
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
+import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.ui.dataStoreMain
+import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.int
+import cn.wthee.pcrtool.utils.intArrayList
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -28,14 +40,40 @@ import kotlin.math.max
  */
 @Immutable
 data class CharacterDetailUiState(
+    //角色信息
     val basicInfo: CharacterInfo? = null,
+    //角色转换id
     val cutinId: Int = 0,
+    //当前角色id
     val currentId: Int = 0,
+    //形态转换
     val isCutinSkill: Boolean = true,
+    //最大值
     val maxValue: CharacterProperty = CharacterProperty(),
+    //当前值
     val currentValue: CharacterProperty = CharacterProperty(),
+    //属性
     val allAttr: AllAttrData = AllAttrData(),
-    val maxAtk:Int = 0
+    //最大攻击力
+    val maxAtk: Int = 0,
+    //编辑模式
+    val isEditMode: Boolean = false,
+    //数据加载后，展示页面
+    val visible: Boolean = false,
+    //未实装角色
+    val unknown: Boolean = false,
+    //收藏角色
+    val loved: Boolean = false,
+    //排序
+    val orderData: String = "",
+    //主页面模块id列表
+    val mainList: List<Int> = emptyList(),
+    //次要页面模块id列表
+    val subList: List<Int> = emptyList(),
+    //展示所有信息
+    val showAllInfo: Boolean = true,
+    //战力系数
+    val coeValue: UnitStatusCoefficient? = null,
 )
 
 
@@ -52,20 +90,27 @@ class CharacterDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val unitId: Int? = savedStateHandle[NavRoute.UNIT_ID]
+    private val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
 
     private val _uiState = MutableStateFlow(CharacterDetailUiState())
     val uiState: StateFlow<CharacterDetailUiState> = _uiState.asStateFlow()
 
-    init {
+    fun loadData(showAllInfo: Boolean) {
         if (unitId != null) {
             _uiState.update {
-                it.copy(currentId = unitId)
+                it.copy(
+                    showAllInfo = showAllInfo
+                )
             }
+            updateOrderList(getOrderData(showAllInfo))
+            getCoefficient()
             getCutinId(unitId)
             getCharacterBasicInfo(unitId)
             getMaxRankAndRarity(unitId)
+            getLoveState(unitId)
         }
     }
+
 
     /**
      * 获取角色基本信息
@@ -90,11 +135,8 @@ class CharacterDetailViewModel @Inject constructor(
             val cutinId = unitRepository.getCutinId(unitId)
             _uiState.update {
                 it.copy(
-                    cutinId = if (_uiState.value.isCutinSkill && cutinId != 0) {
-                        cutinId
-                    } else {
-                        0
-                    }
+                    cutinId = cutinId,
+                    currentId = if(cutinId != 0) cutinId else unitId,
                 )
             }
         }
@@ -128,7 +170,8 @@ class CharacterDetailViewModel @Inject constructor(
                 }
                 _uiState.update {
                     it.copy(
-                        maxValue = maxValue
+                        maxValue = maxValue,
+                        unknown = maxValue.level == -1
                     )
                 }
             } catch (e: Exception) {
@@ -167,7 +210,8 @@ class CharacterDetailViewModel @Inject constructor(
                             maxAtk = max(
                                 allAttr.sumAttr.atk.int,
                                 allAttr.sumAttr.magicStr.int
-                            )
+                            ),
+                            visible = allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty()
                         )
                     }
                 }
@@ -175,6 +219,79 @@ class CharacterDetailViewModel @Inject constructor(
                 LogReportUtil.upload(
                     e,
                     "getCharacterInfo#unitId:$unitId,property:${property ?: ""}"
+                )
+            }
+        }
+    }
+
+    /**
+     * 获取角色收藏列表
+     */
+    private fun getLoveState(unitId: Int) {
+        viewModelScope.launch {
+            val data =  MyApplication.context.dataStoreMain.data.first()
+            val list = GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
+            _uiState.update {
+                it.copy(loved = list.contains(unitId))
+            }
+        }
+    }
+
+    /**
+     * 加载模块排序信息
+     */
+    private fun getOrderData(showAllInfo: Boolean): String {
+        //自定义显示顺序
+        return if (showAllInfo) {
+            runBlocking {
+                val data = MyApplication.context.dataStoreMain.data.first()
+                data[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] ?: defaultOrder
+            }
+        } else {
+            "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
+        }
+    }
+
+    /**
+     * 加载模块排序信息
+     */
+    private fun updateOrderList(orderData: String) {
+        //选中的
+        val mainList = orderData.intArrayList
+        //未选中的
+        val subList = arrayListOf(
+            CharacterDetailModuleType.UNIT_ICON.id,
+            CharacterDetailModuleType.CARD.id,
+            CharacterDetailModuleType.COE.id,
+            CharacterDetailModuleType.TOOLS.id,
+            CharacterDetailModuleType.STAR.id,
+            CharacterDetailModuleType.LEVEL.id,
+            CharacterDetailModuleType.ATTR.id,
+            CharacterDetailModuleType.OTHER_TOOLS.id,
+            CharacterDetailModuleType.EQUIP.id,
+            CharacterDetailModuleType.UNIQUE_EQUIP.id,
+            CharacterDetailModuleType.SKILL.id,
+        ).filter {
+            !orderData.intArrayList.contains(it)
+        }
+
+        _uiState.update {
+            it.copy(
+                mainList = mainList,
+                subList = subList,
+                orderData = orderData
+            )
+        }
+    }
+
+    /**
+     * 获取战力系数
+     */
+    private fun getCoefficient() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    coeValue = unitRepository.getCoefficient()
                 )
             }
         }
@@ -208,5 +325,58 @@ class CharacterDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 编辑模式
+     */
+    fun changeEditMode(isEditMode: Boolean) {
+        _uiState.update {
+            it.copy(
+                isEditMode = isEditMode
+            )
+        }
+    }
+
+    /**
+     * 更新收藏的角色id
+     */
+    fun updateStarCharacterId(id: Int) {
+        viewModelScope.launch {
+            MyApplication.context.dataStoreMain.edit { preferences ->
+                val list = GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
+                if (list.contains(id)) {
+                    list.remove(id)
+                    _uiState.update {
+                        it.copy(
+                            loved = false
+                        )
+                    }
+                } else {
+                    list.add(id)
+                    _uiState.update {
+                        it.copy(
+                            loved = true
+                        )
+                    }
+                }
+                preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
+            }
+        }
+    }
+
+    /**
+     * 编辑排序
+     */
+    fun updateOrderData(id: Int) {
+        viewModelScope.launch {
+            editOrder(
+                MyApplication.context,
+                viewModelScope,
+                id,
+                MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER
+            ) { data ->
+                updateOrderList(data)
+            }
+        }
+    }
 }
 

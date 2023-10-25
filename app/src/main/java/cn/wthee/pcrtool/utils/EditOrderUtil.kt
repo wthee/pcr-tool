@@ -14,7 +14,8 @@ fun editOrder(
     context: Context,
     scope: CoroutineScope,
     id: Int,
-    key: Preferences.Key<String>
+    key: Preferences.Key<String>,
+    onSuccess:((String)->Unit)? = null
 ) {
     //更新
     scope.launch {
@@ -30,6 +31,9 @@ fun editOrder(
                 orderStr.replace(idStr, "")
             }
             preferences[key] = edited
+            onSuccess?.let {
+                onSuccess(edited)
+            }
         }
     }
 }

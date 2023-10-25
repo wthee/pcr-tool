@@ -80,7 +80,7 @@ fun SkillCompose(
     skillListViewModel: SkillListViewModel = hiltViewModel(),
 ) {
     val uiState by skillListViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(property.level, atk){
+    LaunchedEffect(property.level, atk, unitId){
         skillListViewModel.loadData(property.level, atk, unitId)
     }
 
