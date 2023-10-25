@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -40,6 +41,8 @@ import kotlin.math.max
  */
 @Immutable
 data class CharacterDetailUiState(
+    //角色id
+    val unitId: Int = 0,
     //角色信息
     val basicInfo: CharacterInfo? = null,
     //角色转换id
@@ -58,10 +61,6 @@ data class CharacterDetailUiState(
     val maxAtk: Int = 0,
     //编辑模式
     val isEditMode: Boolean = false,
-    //数据加载后，展示页面
-    val visible: Boolean = false,
-    //未实装角色
-    val unknown: Boolean = false,
     //收藏角色
     val loved: Boolean = false,
     //排序
@@ -74,6 +73,10 @@ data class CharacterDetailUiState(
     val showAllInfo: Boolean = true,
     //战力系数
     val coeValue: UnitStatusCoefficient? = null,
+    //加载状态
+    val loadingState: LoadingState = LoadingState.Loading,
+    //页面数量
+    val pageCount: Int = 0
 )
 
 
@@ -99,7 +102,8 @@ class CharacterDetailViewModel @Inject constructor(
         if (unitId != null) {
             _uiState.update {
                 it.copy(
-                    showAllInfo = showAllInfo
+                    showAllInfo = showAllInfo,
+                    unitId = unitId
                 )
             }
             updateOrderList(getOrderData(showAllInfo))
@@ -119,8 +123,12 @@ class CharacterDetailViewModel @Inject constructor(
      */
     private fun getCharacterBasicInfo(unitId: Int) {
         viewModelScope.launch {
+            val data = unitRepository.getCharacterBasicInfo(unitId)
             _uiState.update {
-                it.copy(basicInfo = unitRepository.getCharacterBasicInfo(unitId))
+                it.copy(
+                    basicInfo = data,
+                    loadingState = it.loadingState.isNoData(data == null)
+                )
             }
         }
     }
@@ -136,7 +144,7 @@ class CharacterDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     cutinId = cutinId,
-                    currentId = if(cutinId != 0) cutinId else unitId,
+                    currentId = if (cutinId != 0) cutinId else unitId,
                 )
             }
         }
@@ -171,7 +179,7 @@ class CharacterDetailViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         maxValue = maxValue,
-                        unknown = maxValue.level == -1
+                        loadingState = it.loadingState.isError(maxValue.level == -1)
                     )
                 }
             } catch (e: Exception) {
@@ -211,7 +219,7 @@ class CharacterDetailViewModel @Inject constructor(
                                 allAttr.sumAttr.atk.int,
                                 allAttr.sumAttr.magicStr.int
                             ),
-                            visible = allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty()
+                            loadingState = it.loadingState.isSuccess(allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty())
                         )
                     }
                 }
@@ -229,7 +237,7 @@ class CharacterDetailViewModel @Inject constructor(
      */
     private fun getLoveState(unitId: Int) {
         viewModelScope.launch {
-            val data =  MyApplication.context.dataStoreMain.data.first()
+            val data = MyApplication.context.dataStoreMain.data.first()
             val list = GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
             _uiState.update {
                 it.copy(loved = list.contains(unitId))
@@ -274,12 +282,12 @@ class CharacterDetailViewModel @Inject constructor(
         ).filter {
             !orderData.intArrayList.contains(it)
         }
-
         _uiState.update {
             it.copy(
                 mainList = mainList,
                 subList = subList,
-                orderData = orderData
+                orderData = orderData,
+                pageCount = if (it.showAllInfo && subList.isNotEmpty()) 2 else 1
             )
         }
     }
@@ -339,27 +347,31 @@ class CharacterDetailViewModel @Inject constructor(
     /**
      * 更新收藏的角色id
      */
-    fun updateStarCharacterId(id: Int) {
+    fun updateStarCharacterId() {
         viewModelScope.launch {
-            MyApplication.context.dataStoreMain.edit { preferences ->
-                val list = GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
-                if (list.contains(id)) {
-                    list.remove(id)
-                    _uiState.update {
-                        it.copy(
-                            loved = false
-                        )
+            if (unitId != null) {
+                MyApplication.context.dataStoreMain.edit { preferences ->
+                    val list =
+                        GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
+                    if (list.contains(unitId)) {
+                        list.remove(unitId)
+                        _uiState.update {
+                            it.copy(
+                                loved = false
+                            )
+                        }
+                    } else {
+                        list.add(unitId)
+                        _uiState.update {
+                            it.copy(
+                                loved = true
+                            )
+                        }
                     }
-                } else {
-                    list.add(id)
-                    _uiState.update {
-                        it.copy(
-                            loved = true
-                        )
-                    }
+                    preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
                 }
-                preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
             }
+
         }
     }
 

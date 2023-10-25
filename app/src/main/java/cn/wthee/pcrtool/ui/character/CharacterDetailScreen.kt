@@ -2,11 +2,11 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -20,12 +20,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -42,7 +42,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -55,10 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
@@ -67,6 +64,7 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
@@ -74,8 +72,10 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -126,11 +126,8 @@ fun CharacterDetailScreen(
         }
     }
 
-    //水平分页相关
-    val pageCount = if (showAllInfo && uiState.subList.isNotEmpty()) 2 else 1
-    val pagerState = rememberPagerState { pageCount }
-    val scrollState0 = rememberScrollState()
-    val scrollState1 = rememberScrollState()
+    //页面状态
+    val pagerState = rememberPagerState { uiState.pageCount }
 
     //确认时监听
     val ok = navViewModel.fabOKClick.observeAsState().value ?: false
@@ -140,299 +137,358 @@ fun CharacterDetailScreen(
         characterDetailViewModel.changeEditMode(false)
     }
 
-    Scaffold(
+    MainScaffold(
         floatingActionButton = {
-            if (!uiState.unknown) {
-                //悬浮按钮
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    if (uiState.cutinId != 0 && showAllInfo) {
-                        //角色技能形态
-                        MainSmallFab(
-                            iconType = if (uiState.isCutinSkill) {
-                                MainIconType.CHARACTER_CUTIN_SKILL
-                            } else {
-                                MainIconType.CHARACTER_NORMAL_SKILL
-                            },
-                            text = if (uiState.isCutinSkill) {
-                                stringResource(id = R.string.cutin_skill)
-                            } else {
-                                ""
-                            },
-                        ) {
-                            characterDetailViewModel.changeCutin()
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        if (showAllInfo) {
-                            if (!uiState.isEditMode) {
-                                //编辑
-                                MainSmallFab(
-                                    iconType = MainIconType.EDIT_TOOL,
-                                ) {
-                                    navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                    characterDetailViewModel.changeEditMode(true)
-                                }
-
-                                //收藏
-                                MainSmallFab(
-                                    iconType = if (uiState.loved) {
-                                        MainIconType.LOVE_FILL
-                                    } else {
-                                        MainIconType.LOVE_LINE
-                                    },
-                                ) {
-                                    characterDetailViewModel.updateStarCharacterId(unitId)
-                                }
-                            }
-
-                            //技能循环
-                            if (!uiState.orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
-                                MainSmallFab(
-                                    iconType = MainIconType.SKILL_LOOP,
-                                ) {
-                                    if (!uiState.isEditMode) {
-                                        actions.toCharacterSkillLoop(uiState.currentId)
-                                    }
-                                }
-                            }
-
-                        } else {
-                            //切换详情，专用装备跳转过来时，显示该按钮
-                            MainSmallFab(
-                                iconType = MainIconType.CHARACTER,
-                                text = stringResource(id = R.string.character_detail)
-                            ) {
-                                actions.toCharacterDetail(unitId)
-                            }
-                        }
-                    }
-
-                }
-            }
+            FabContent(
+                uiState = uiState,
+                changeCutin = characterDetailViewModel::changeCutin,
+                changeEditMode = characterDetailViewModel::changeEditMode,
+                updateStarCharacterId = characterDetailViewModel::updateStarCharacterId,
+                toCharacterDetail = actions.toCharacterDetail,
+                toCharacterSkillLoop = actions.toCharacterSkillLoop,
+            )
         }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            //页面
-            if (uiState.visible) {
-                if (uiState.isEditMode) {
-                    val typeList = arrayListOf(
-                        CharacterDetailModuleType.CARD,
-                        CharacterDetailModuleType.COE,
-                        CharacterDetailModuleType.TOOLS,
-                        CharacterDetailModuleType.STAR,
-                        CharacterDetailModuleType.LEVEL,
-                        CharacterDetailModuleType.ATTR,
-                        CharacterDetailModuleType.OTHER_TOOLS,
-                        CharacterDetailModuleType.EQUIP,
-                        CharacterDetailModuleType.UNIQUE_EQUIP,
-                        CharacterDetailModuleType.SKILL_LOOP,
-                        CharacterDetailModuleType.SKILL,
-                        CharacterDetailModuleType.UNIT_ICON,
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        // 编辑模式
-                        Subtitle2(
-                            text = stringResource(R.string.order_character_detail),
-                            modifier = Modifier
-                                .padding(vertical = Dimen.mediumPadding)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-
-                        typeList.forEach {
-                            Section(
-                                id = it.id,
-                                titleId = it.titleId,
-                                isEditMode = true,
-                                orderStr = uiState.orderData,
-                                onClick = {
-                                    characterDetailViewModel.updateOrderData(it.id)
-                                }
-                            ) {}
-                        }
-
-                        CommonSpacer()
-                        Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
-                    }
-
-                } else {
-                    HorizontalPager(state = pagerState) { index ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(if (index == 0) scrollState0 else scrollState1),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            val list = if (index == 0) {
-                                uiState.mainList
-                            } else {
-                                uiState.subList
-                            }
-                            list.forEach {
-                                when (CharacterDetailModuleType.getByValue(it)) {
-
-                                    //角色卡面
-                                    CharacterDetailModuleType.CARD -> CharacterCard(
-                                        unitId = unitId,
-                                        basicInfo = uiState.basicInfo,
-                                        loved = uiState.loved,
-                                        actions
-                                    )
-
-                                    //战力
-                                    CharacterDetailModuleType.COE ->
-                                        CharacterCoeContent(
-                                            coeValue = uiState.coeValue,
-                                            characterAttrData = uiState.allAttr,
-                                            currentValue = uiState.currentValue,
-                                            toCoe = actions.toCoe
-                                        )
-
-                                    //资料
-                                    CharacterDetailModuleType.TOOLS ->
-                                        ToolsContent(
-                                            unitId = unitId,
-                                            cutinId = uiState.cutinId,
-                                            actions = actions
-                                        )
-
-                                    //星级
-                                    CharacterDetailModuleType.STAR -> StarSelectContent(
-                                        currentValue = uiState.currentValue,
-                                        max = uiState.maxValue.rarity,
-                                        updateCurrentValue = characterDetailViewModel::updateCurrentValue
-                                    )
-
-                                    //等级
-                                    CharacterDetailModuleType.LEVEL -> LevelContent(
-                                        currentValue = uiState.currentValue,
-                                        uiState.maxValue.level,
-                                        updateCurrentValue = characterDetailViewModel::updateCurrentValue
-                                    )
-
-                                    //属性
-                                    CharacterDetailModuleType.ATTR ->
-                                        AttrLists(
-                                            unitId,
-                                            uiState.allAttr,
-                                            actions.toCharacterStoryDetail
-                                        )
-
-                                    //其他功能
-                                    CharacterDetailModuleType.OTHER_TOOLS -> OtherToolsContent(
-                                        unitId = unitId,
-                                        actions = actions,
-                                        currentValue = uiState.currentValue,
-                                        maxRank = uiState.maxValue.rank
-                                    )
-
-                                    //装备
-                                    CharacterDetailModuleType.EQUIP -> EquipContent(
-                                        unitId = unitId,
-                                        currentValue = uiState.currentValue,
-                                        maxRank = uiState.maxValue.rank,
-                                        equips = uiState.allAttr.equips,
-                                        updateCurrentValue = characterDetailViewModel::updateCurrentValue,
-                                        toEquipDetail = actions.toEquipDetail,
-                                        toCharacterRankEquip = actions.toCharacterRankEquip
-                                    )
-
-                                    //专武
-                                    CharacterDetailModuleType.UNIQUE_EQUIP -> uiState.allAttr.uniqueEquipList
-                                        .forEachIndexed { index, uniqueEquipmentMaxData ->
-                                            UniqueEquipContent(
-                                                slot = index + 1,
-                                                currentValue = uiState.currentValue,
-                                                uniqueEquipLevelMax = if (index == 0) {
-                                                    uiState.maxValue.uniqueEquipmentLevel
-                                                } else {
-                                                    5
-                                                },
-                                                uniqueEquipmentMaxData = uniqueEquipmentMaxData,
-                                            )
-                                        }
-
-                                    //技能列表
-                                    CharacterDetailModuleType.SKILL -> SkillCompose(
-                                        unitId = uiState.currentId,
-                                        atk = uiState.maxAtk,
-                                        unitType = UnitType.CHARACTER_SUMMON,
-                                        property = uiState.currentValue
-                                    )
-
-                                    //图标
-                                    CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(uiState.basicInfo)
-
-                                    //技能循环
-                                    CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoop(
-                                        unitId = uiState.currentId,
-                                        scrollable = false
-                                    )
-
-                                    CharacterDetailModuleType.UNKNOWN -> {
-                                        CenterTipText(stringResource(id = R.string.unknown))
-                                    }
-                                }
-                            }
-
-                            CommonSpacer()
-                            Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
-                        }
-                    }
-                }
-            }
-
-            //未登场角色
-            if (uiState.unknown) {
+    ) {
+        StateBox(
+            stateType = uiState.loadingState,
+            errorContent = {
+                //未登场角色
                 CenterTipText(text = stringResource(R.string.unknown_character))
             }
+        ) {
+            CharacterDetailContent(
+                uiState = uiState,
+                pagerState = pagerState,
+                updateOrderData = characterDetailViewModel::updateOrderData,
+                updateCurrentValue = characterDetailViewModel::updateCurrentValue,
+                toAllPics = actions.toAllPics,
+                toCoe = actions.toCoe,
+                toCharacterBasicInfo = actions.toCharacterBasicInfo,
+                toCharacterStoryDetail = actions.toCharacterStoryDetail,
+                toCharacterRankCompare = actions.toCharacterRankCompare,
+                toCharacterEquipCount = actions.toCharacterEquipCount,
+                toCharacterExtraEquip = actions.toCharacterExtraEquip,
+                toEquipDetail = actions.toEquipDetail,
+                toCharacterRankEquip = actions.toCharacterRankEquip,
+            )
+        }
 
-            //页面指示器
-            if (pageCount == 2 && !uiState.isEditMode) {
-                MainHorizontalPagerIndicator(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(start = Dimen.exSmallPadding, bottom = Dimen.smallPadding),
-                    pagerState = pagerState,
-                    pageCount = pageCount
-                )
-            }
+        //页面指示器
+        if (uiState.pageCount == 2 && !uiState.isEditMode && uiState.loadingState == LoadingState.Success) {
+            MainHorizontalPagerIndicator(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = Dimen.exSmallPadding,
+                        bottom = Dimen.fabSize / 2 + Dimen.fabMargin
+                    ),
+                pagerState = pagerState,
+                pageCount = uiState.pageCount
+            )
         }
     }
 
+}
 
+/**
+ * 悬浮按钮
+ * 收藏、编辑、技能循环、技能形态、角色详情
+ */
+@Composable
+private fun FabContent(
+    uiState: CharacterDetailUiState,
+    changeCutin: () -> Unit,
+    changeEditMode: (Boolean) -> Unit,
+    updateStarCharacterId: () -> Unit,
+    toCharacterSkillLoop: (Int) -> Unit,
+    toCharacterDetail: (Int) -> Unit,
+) {
+    if (uiState.loadingState == LoadingState.Success) {
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
+            if (uiState.cutinId != 0 && uiState.showAllInfo) {
+                //角色技能形态
+                MainSmallFab(
+                    iconType = if (uiState.isCutinSkill) {
+                        MainIconType.CHARACTER_CUTIN_SKILL
+                    } else {
+                        MainIconType.CHARACTER_NORMAL_SKILL
+                    },
+                    text = if (uiState.isCutinSkill) {
+                        stringResource(id = R.string.cutin_skill)
+                    } else {
+                        ""
+                    },
+                ) {
+                    changeCutin()
+                }
+            }
+
+            Row(
+                modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                if (uiState.showAllInfo) {
+                    if (!uiState.isEditMode) {
+                        //编辑
+                        MainSmallFab(
+                            iconType = MainIconType.EDIT_TOOL,
+                        ) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            changeEditMode(true)
+                        }
+
+                        //收藏
+                        MainSmallFab(
+                            iconType = if (uiState.loved) {
+                                MainIconType.LOVE_FILL
+                            } else {
+                                MainIconType.LOVE_LINE
+                            },
+                        ) {
+                            updateStarCharacterId()
+                        }
+                    }
+
+                    //技能循环
+                    if (!uiState.orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
+                        MainSmallFab(
+                            iconType = MainIconType.SKILL_LOOP,
+                        ) {
+                            if (!uiState.isEditMode) {
+                                toCharacterSkillLoop(uiState.currentId)
+                            }
+                        }
+                    }
+
+                } else {
+                    //切换详情，专用装备跳转过来时，显示该按钮
+                    MainSmallFab(
+                        iconType = MainIconType.CHARACTER,
+                        text = stringResource(id = R.string.character_detail)
+                    ) {
+                        toCharacterDetail(uiState.unitId)
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun CharacterDetailContent(
+    uiState: CharacterDetailUiState,
+    pagerState: PagerState,
+    updateOrderData: (Int) -> Unit,
+    updateCurrentValue: (CharacterProperty) -> Unit,
+    toAllPics: (Int, Int) -> Unit,
+    toCoe: () -> Unit,
+    toCharacterBasicInfo: (Int) -> Unit,
+    toCharacterStoryDetail: (Int) -> Unit,
+    toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit,
+    toCharacterEquipCount: (Int, Int) -> Unit,
+    toCharacterExtraEquip: (Int) -> Unit,
+    toEquipDetail: (Int) -> Unit,
+    toCharacterRankEquip: (Int, Int) -> Unit
+) {
+
+    val scrollState0 = rememberScrollState()
+    val scrollState1 = rememberScrollState()
+
+
+    if (uiState.isEditMode) {
+        val typeList = arrayListOf(
+            CharacterDetailModuleType.CARD,
+            CharacterDetailModuleType.COE,
+            CharacterDetailModuleType.TOOLS,
+            CharacterDetailModuleType.STAR,
+            CharacterDetailModuleType.LEVEL,
+            CharacterDetailModuleType.ATTR,
+            CharacterDetailModuleType.OTHER_TOOLS,
+            CharacterDetailModuleType.EQUIP,
+            CharacterDetailModuleType.UNIQUE_EQUIP,
+            CharacterDetailModuleType.SKILL_LOOP,
+            CharacterDetailModuleType.SKILL,
+            CharacterDetailModuleType.UNIT_ICON,
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            // 编辑模式
+            Subtitle2(
+                text = stringResource(R.string.order_character_detail),
+                modifier = Modifier
+                    .padding(vertical = Dimen.mediumPadding)
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+
+            typeList.forEach {
+                Section(
+                    id = it.id,
+                    titleId = it.titleId,
+                    isEditMode = true,
+                    orderStr = uiState.orderData,
+                    onClick = {
+                        updateOrderData(it.id)
+                    }
+                ) {}
+            }
+
+            CommonSpacer()
+            Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
+        }
+
+    } else {
+        HorizontalPager(state = pagerState) { index ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(if (index == 0) scrollState0 else scrollState1),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val list = if (index == 0) {
+                    uiState.mainList
+                } else {
+                    uiState.subList
+                }
+                list.forEach {
+                    when (CharacterDetailModuleType.getByValue(it)) {
+
+                        //角色卡面
+                        CharacterDetailModuleType.CARD -> CharacterCard(
+                            unitId = uiState.unitId,
+                            basicInfo = uiState.basicInfo,
+                            loved = uiState.loved,
+                            toAllPics = toAllPics
+                        )
+
+                        //战力
+                        CharacterDetailModuleType.COE ->
+                            CharacterCoeContent(
+                                coeValue = uiState.coeValue,
+                                allAttr = uiState.allAttr,
+                                currentValue = uiState.currentValue,
+                                toCoe = toCoe
+                            )
+
+                        //资料
+                        CharacterDetailModuleType.TOOLS ->
+                            ToolsContent(
+                                unitId = uiState.unitId,
+                                cutinId = uiState.cutinId,
+                                toCharacterBasicInfo = toCharacterBasicInfo,
+                                toAllPics = toAllPics
+                            )
+
+                        //星级
+                        CharacterDetailModuleType.STAR -> StarSelectContent(
+                            currentValue = uiState.currentValue,
+                            max = uiState.maxValue.rarity,
+                            updateCurrentValue = updateCurrentValue
+                        )
+
+                        //等级
+                        CharacterDetailModuleType.LEVEL -> LevelContent(
+                            currentValue = uiState.currentValue,
+                            uiState.maxValue.level,
+                            updateCurrentValue = updateCurrentValue
+                        )
+
+                        //属性
+                        CharacterDetailModuleType.ATTR ->
+                            AttrListContent(
+                                unitId = uiState.unitId,
+                                allAttr = uiState.allAttr,
+                                toCharacterStoryDetail = toCharacterStoryDetail
+                            )
+
+                        //其他功能
+                        CharacterDetailModuleType.OTHER_TOOLS -> OtherToolsContent(
+                            unitId = uiState.unitId,
+                            currentValue = uiState.currentValue,
+                            maxRank = uiState.maxValue.rank,
+                            toCharacterRankCompare = toCharacterRankCompare,
+                            toCharacterEquipCount = toCharacterEquipCount,
+                            toCharacterExtraEquip = toCharacterExtraEquip
+                        )
+
+                        //装备
+                        CharacterDetailModuleType.EQUIP -> EquipContent(
+                            rank = uiState.currentValue.rank,
+                            unitId = uiState.unitId,
+                            currentValue = uiState.currentValue,
+                            maxRank = uiState.maxValue.rank,
+                            equips = uiState.allAttr.equips,
+                            updateCurrentValue = updateCurrentValue,
+                            toEquipDetail = toEquipDetail,
+                            toCharacterRankEquip = toCharacterRankEquip
+                        )
+
+                        //专武
+                        CharacterDetailModuleType.UNIQUE_EQUIP -> uiState.allAttr.uniqueEquipList
+                            .forEachIndexed { index, uniqueEquipmentMaxData ->
+                                UniqueEquipContent(
+                                    slot = index + 1,
+                                    currentValue = uiState.currentValue,
+                                    uniqueEquipLevelMax = if (index == 0) {
+                                        uiState.maxValue.uniqueEquipmentLevel
+                                    } else {
+                                        5
+                                    },
+                                    uniqueEquipmentMaxData = uniqueEquipmentMaxData,
+                                )
+                            }
+
+                        //技能列表
+                        CharacterDetailModuleType.SKILL -> SkillCompose(
+                            unitId = uiState.currentId,
+                            atk = uiState.maxAtk,
+                            unitType = UnitType.CHARACTER_SUMMON,
+                            property = uiState.currentValue
+                        )
+
+                        //图标
+                        CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(uiState.basicInfo)
+
+                        //技能循环
+                        CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoop(
+                            unitId = uiState.currentId,
+                            scrollable = false
+                        )
+
+                        CharacterDetailModuleType.UNKNOWN -> {
+                            CenterTipText(stringResource(id = R.string.unknown))
+                        }
+                    }
+                }
+
+                CommonSpacer()
+                Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
+            }
+        }
+    }
 }
 
 
 /**
- * 角色卡
+ * 角色卡面
  */
 @Composable
 private fun CharacterCard(
     unitId: Int,
     basicInfo: CharacterInfo?,
     loved: Boolean,
-    actions: NavActions,
+    toAllPics: (Int, Int) -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .padding(
@@ -450,7 +506,7 @@ private fun CharacterCard(
             CharacterItem(
                 unitId = unitId, character = basicInfo, loved = loved
             ) {
-                actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+                toAllPics(unitId, AllPicsType.CHARACTER.type)
             }
         }
 
@@ -465,8 +521,9 @@ private fun CharacterCard(
 @Composable
 private fun ToolsContent(
     unitId: Int,
-    cutinId: Int = 0,
-    actions: NavActions,
+    cutinId: Int,
+    toCharacterBasicInfo: (Int) -> Unit,
+    toAllPics: (Int, Int) -> Unit,
 ) {
 
     FlowRow(
@@ -480,7 +537,7 @@ private fun ToolsContent(
             icon = MainIconType.CHARACTER_INTRO,
             text = stringResource(id = R.string.character_basic_info)
         ) {
-            actions.toCharacterBasicInfo(unitId)
+            toCharacterBasicInfo(unitId)
         }
         //立绘预览
         IconTextButton(
@@ -488,7 +545,7 @@ private fun ToolsContent(
             text = stringResource(id = R.string.character_pic),
             modifier = Modifier.padding(end = Dimen.smallPadding)
         ) {
-            actions.toAllPics(unitId, AllPicsType.CHARACTER.type)
+            toAllPics(unitId, AllPicsType.CHARACTER.type)
         }
         //模型预览
         IconTextButton(
@@ -511,7 +568,9 @@ private fun OtherToolsContent(
     unitId: Int,
     currentValue: CharacterProperty,
     maxRank: Int,
-    actions: NavActions
+    toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit,
+    toCharacterEquipCount: (Int, Int) -> Unit,
+    toCharacterExtraEquip: (Int) -> Unit
 ) {
 
     //RANK相关功能
@@ -527,7 +586,7 @@ private fun OtherToolsContent(
             iconSize = Dimen.fabIconSize,
             textStyle = MaterialTheme.typography.bodyMedium
         ) {
-            actions.toCharacterRankCompare(
+            toCharacterRankCompare(
                 unitId,
                 maxRank,
                 currentValue.level,
@@ -543,7 +602,7 @@ private fun OtherToolsContent(
             iconSize = Dimen.fabIconSize,
             textStyle = MaterialTheme.typography.bodyMedium
         ) {
-            actions.toCharacterEquipCount(unitId, maxRank)
+            toCharacterEquipCount(unitId, maxRank)
         }
         //ex装备
         IconTextButton(
@@ -552,7 +611,7 @@ private fun OtherToolsContent(
             iconSize = Dimen.fabIconSize,
             textStyle = MaterialTheme.typography.bodyMedium
         ) {
-            actions.toCharacterExtraEquip(unitId)
+            toCharacterExtraEquip(unitId)
         }
 
 
@@ -566,7 +625,7 @@ private fun OtherToolsContent(
     ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
 )
 @Composable
-private fun LevelContent(
+private fun ColumnScope.LevelContent(
     currentValue: CharacterProperty,
     maxLevel: Int,
     updateCurrentValue: (CharacterProperty) -> Unit
@@ -590,6 +649,7 @@ private fun LevelContent(
         style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.Center,
         modifier = Modifier
+            .align(Alignment.CenterHorizontally)
             .fillMaxWidth(0.3f)
             .clip(MaterialTheme.shapes.medium)
             .clickable {
@@ -662,18 +722,19 @@ private fun LevelContent(
  * 属性
  */
 @Composable
-private fun AttrLists(
+private fun ColumnScope.AttrListContent(
     unitId: Int,
-    allData: AllAttrData,
+    allAttr: AllAttrData,
     toCharacterStoryDetail: (Int) -> Unit
 ) {
     val context = LocalContext.current
 
     Spacer(modifier = Modifier.height(Dimen.largePadding))
     //属性
-    AttrList(attrs = allData.sumAttr.all(isPreview = LocalInspectionMode.current))
+    AttrList(attrs = allAttr.sumAttr.all(isPreview = LocalInspectionMode.current))
     //剧情属性
-    val storyAttrList = allData.storyAttr.allNotZero(isPreview = LocalInspectionMode.current)
+    val storyAttrList =
+        allAttr.storyAttr.allNotZero(isPreview = LocalInspectionMode.current)
     if (storyAttrList.isNotEmpty()) {
         Row(
             modifier = Modifier
@@ -685,7 +746,8 @@ private fun AttrLists(
                     VibrateUtil(context).single()
                     toCharacterStoryDetail(unitId)
                 }
-                .padding(horizontal = Dimen.smallPadding),
+                .padding(horizontal = Dimen.smallPadding)
+                .align(Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -698,7 +760,7 @@ private fun AttrLists(
     }
     //Rank 奖励
     val rankBonusList =
-        allData.rankBonus.attr.allNotZero(isPreview = LocalInspectionMode.current)
+        allAttr.rankBonus.attr.allNotZero(isPreview = LocalInspectionMode.current)
     if (rankBonusList.isNotEmpty()) {
         Column(
             modifier = Modifier
@@ -726,7 +788,7 @@ private fun AttrLists(
 @Composable
 private fun CharacterCoeContent(
     coeValue: UnitStatusCoefficient?,
-    characterAttrData: AllAttrData,
+    allAttr: AllAttrData,
     currentValue: CharacterProperty,
     toCoe: () -> Unit
 ) {
@@ -747,15 +809,15 @@ private fun CharacterCoeContent(
         var value = ""
 
         coeValue?.let { coe ->
-            val basicAttr = characterAttrData.sumAttr.copy().sub(characterAttrData.exSkillAttr)
+            val basicAttr = allAttr.sumAttr.copy().sub(allAttr.exSkillAttr)
             val basic =
                 basicAttr.hp * coe.hp_coefficient + basicAttr.atk * coe.atk_coefficient + basicAttr.magicStr * coe.magic_str_coefficient + basicAttr.def * coe.def_coefficient + basicAttr.magicDef * coe.magic_def_coefficient + basicAttr.physicalCritical * coe.physical_critical_coefficient + basicAttr.magicCritical * coe.magic_critical_coefficient + basicAttr.waveHpRecovery * coe.wave_hp_recovery_coefficient + basicAttr.waveEnergyRecovery * coe.wave_energy_recovery_coefficient + basicAttr.dodge * coe.dodge_coefficient + basicAttr.physicalPenetrate * coe.physical_penetrate_coefficient + basicAttr.magicPenetrate * coe.magic_penetrate_coefficient + basicAttr.lifeSteal * coe.life_steal_coefficient + basicAttr.hpRecoveryRate * coe.hp_recovery_rate_coefficient + basicAttr.energyRecoveryRate * coe.energy_recovery_rate_coefficient + basicAttr.energyReduceRate * coe.energy_reduce_rate_coefficient + basicAttr.accuracy * coe.accuracy_coefficient
             //技能2：默认加上技能2
             var skill = currentValue.level * coe.skill_lv_coefficient
             //技能1：解锁专武，技能1系数提升
-            if (characterAttrData.uniqueEquipList.isNotEmpty()) {
-                skill += coe.skill1_evolution_coefficient * characterAttrData.uniqueEquipList.size
-                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * characterAttrData.uniqueEquipList.size
+            if (allAttr.uniqueEquipList.isNotEmpty()) {
+                skill += coe.skill1_evolution_coefficient * allAttr.uniqueEquipList.size
+                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * allAttr.uniqueEquipList.size
             } else {
                 skill += currentValue.level * coe.skill_lv_coefficient
             }
@@ -794,14 +856,14 @@ private fun CharacterCoeContent(
 @Composable
 private fun EquipContent(
     unitId: Int,
-    currentValue: CharacterProperty,
+    rank: Int,
     maxRank: Int,
+    currentValue: CharacterProperty,
     equips: List<EquipmentMaxData>,
     updateCurrentValue: (CharacterProperty) -> Unit,
     toEquipDetail: (Int) -> Unit,
     toCharacterRankEquip: (Int, Int) -> Unit
 ) {
-    val rank = currentValue.rank
 
     Column(
         modifier = Modifier
@@ -843,21 +905,19 @@ private fun EquipContent(
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                MainIcon(data = MainIconType.BACK,
-                    tint = if (currentValue.rank < maxRank) {
-                        getRankColor(rank = rank + 1)
-                    } else {
-                        Color.Transparent
-                    },
-                    onClick = if (rank < maxRank) {
-                        {
+                if (currentValue.rank < maxRank) {
+                    MainIcon(
+                        data = MainIconType.BACK,
+                        tint = getRankColor(rank = rank + 1),
+                        onClick = {
                             updateCurrentValue(currentValue.copy(rank = rank + 1))
-                        }
-                    } else {
-                        null
-                    },
-                    size = Dimen.mediumIconSize,
-                    modifier = Modifier.padding(start = Dimen.mediumPadding))
+                        },
+                        size = Dimen.mediumIconSize,
+                        modifier = Modifier.padding(start = Dimen.mediumPadding)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.width(Dimen.mediumPadding + Dimen.mediumIconSize))
+                }
                 //跳转至所有 RANK 装备列表
                 SubButton(
                     text = getFormatText(rank),
@@ -868,21 +928,19 @@ private fun EquipContent(
                 ) {
                     toCharacterRankEquip(unitId, rank)
                 }
-                MainIcon(data = MainIconType.MORE,
-                    tint = if (rank > 1) {
-                        getRankColor(rank = rank - 1)
-                    } else {
-                        Color.Transparent
-                    },
-                    onClick = if (rank > 1) {
-                        {
+                if (rank > 1) {
+                    MainIcon(
+                        data = MainIconType.MORE,
+                        tint = getRankColor(rank = rank - 1),
+                        onClick = {
                             updateCurrentValue(currentValue.copy(rank = rank - 1))
-                        }
-                    } else {
-                        null
-                    },
-                    size = Dimen.mediumIconSize,
-                    modifier = Modifier.padding(end = Dimen.mediumPadding))
+                        },
+                        size = Dimen.mediumIconSize,
+                        modifier = Modifier.padding(end = Dimen.mediumPadding)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.width(Dimen.mediumPadding + Dimen.mediumIconSize))
+                }
             }
             val id2 = equips[3].equipmentId
             MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id2)) {
@@ -946,18 +1004,83 @@ private fun StarSelectContent(
     }
 }
 
+@CombinedPreviews
+@Composable
+private fun FabContentPreview() {
+    PreviewLayout {
+        FabContent(
+            uiState = CharacterDetailUiState(loadingState = LoadingState.Success),
+            {},
+            {},
+            {},
+            {},
+            {},
+        )
+    }
+}
 
 @CombinedPreviews
 @Composable
-private fun AttrListsPreview() {
+private fun CharacterCardPreview() {
     PreviewLayout {
-        AttrLists(
+        CharacterCard(
             unitId = 100101,
-            allData = AllAttrData(
-                sumAttr = Attr().random(),
-                storyAttr = Attr().random(),
-                rankBonus = UnitPromotionBonus(attr = Attr().random()),
-            ),
+            loved = true,
+            basicInfo = CharacterInfo(
+                id = 100101,
+                position = 100
+            )
+        ) { _, _ -> }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun ToolsContentPreview() {
+    PreviewLayout {
+        ToolsContent(
+            unitId = 100101,
+            cutinId = 0,
+            {},
+            { _, _ -> }
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun OtherToolsContentPreview() {
+    PreviewLayout {
+        OtherToolsContent(
+            unitId = 100101,
+            currentValue = CharacterProperty(),
+            maxRank = 1,
+            { _, _, _, _, _, _ -> },
+            { _, _ -> },
+            {}
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun LevelContentPreview() {
+    PreviewLayout {
+        LevelContent(
+            currentValue = CharacterProperty(),
+            maxLevel = 100,
+            {}
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun AttrListContentPreview() {
+    PreviewLayout {
+        AttrListContent(
+            unitId = 101001,
+            allAttr = AllAttrData(),
             toCharacterStoryDetail = { },
         )
     }
@@ -965,12 +1088,26 @@ private fun AttrListsPreview() {
 
 @CombinedPreviews
 @Composable
-private fun CharacterEquipPreview() {
+private fun CharacterCoeContentPreview() {
+    PreviewLayout {
+        CharacterCoeContent(
+            coeValue = UnitStatusCoefficient(),
+            allAttr = AllAttrData(),
+            currentValue = CharacterProperty(),
+            { },
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun EquipContentPreview() {
     PreviewLayout {
         EquipContent(
-            unitId = 100101,
+            rank = 1,
+            unitId = 101001,
             currentValue = CharacterProperty(),
-            maxRank = 20,
+            maxRank = 22,
             equips = arrayListOf(
                 EquipmentMaxData(),
                 EquipmentMaxData(),
@@ -982,6 +1119,18 @@ private fun CharacterEquipPreview() {
             updateCurrentValue = {},
             toEquipDetail = { },
             toCharacterRankEquip = { _, _ -> }
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun StarSelectContentPreview() {
+    PreviewLayout {
+        StarSelectContent(
+            currentValue = CharacterProperty(rarity = 5),
+            max = 6,
+            { },
         )
     }
 }

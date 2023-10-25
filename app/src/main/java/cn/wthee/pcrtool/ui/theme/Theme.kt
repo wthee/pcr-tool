@@ -5,6 +5,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -92,13 +93,13 @@ fun PCRToolComposeTheme(
  */
 @Preview(
     name = "dark theme",
-    group = "themes",
+    group = "dark",
     uiMode = UI_MODE_NIGHT_YES,
     showBackground = true
 )
 @Preview(
     name = "normal",
-    group = "themes",
+    group = "light",
     showBackground = true
 )
 annotation class CombinedPreviews
@@ -107,7 +108,7 @@ annotation class CombinedPreviews
  * 预览
  */
 @Composable
-fun PreviewLayout(content: @Composable () -> Unit) {
+fun PreviewLayout(content: @Composable ColumnScope.() -> Unit) {
     val dynamicColor =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
 

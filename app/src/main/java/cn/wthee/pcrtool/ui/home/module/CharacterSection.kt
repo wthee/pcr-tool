@@ -96,7 +96,7 @@ fun CharacterSection(
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
-                    state = rememberPagerState { characterList!!.size },
+                    state = rememberPagerState { characterList?.size ?: 0 },
                     modifier = Modifier
                         .padding(vertical = Dimen.mediumPadding)
                         .fillMaxWidth(),

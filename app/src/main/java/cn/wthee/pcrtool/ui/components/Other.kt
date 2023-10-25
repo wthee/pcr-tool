@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Scaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -128,24 +129,42 @@ fun StateBox(
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
     },
-    successContent: @Composable BoxScope.() -> Unit,
-    content: @Composable BoxScope.() -> Unit = {}
+    extraContent: @Composable BoxScope.() -> Unit = {},
+    successContent: @Composable BoxScope.() -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    MainScaffold {
         when (stateType) {
             LoadingState.Loading -> loadingContent()
             LoadingState.NoData -> noDataContent()
             LoadingState.Error -> errorContent()
             LoadingState.Success -> successContent()
         }
-        content()
+        extraContent()
     }
 }
 
+
+@Composable
+fun MainScaffold(
+    modifier: Modifier = Modifier,
+    floatingActionButton: @Composable () -> Unit = {},
+    content: @Composable BoxScope.() -> Unit
+) {
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        floatingActionButton = floatingActionButton,
+        backgroundColor = MaterialTheme.colorScheme.surface
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            content()
+        }
+    }
+}
+/**
+ * 底部空白占位
+ */
 /**
  * 底部空白占位
  */
@@ -162,6 +181,10 @@ fun CommonSpacer() {
  * 位置颜色
  * @param position 角色占位
  */
+/**
+ * 位置颜色
+ * @param position 角色占位
+ */
 @Composable
 fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
     PositionType.POSITION_0_299 -> colorRed
@@ -170,6 +193,10 @@ fun getPositionColor(position: Int) = when (PositionType.getPositionType(positio
     PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
+/**
+ * rank 颜色
+ * @param rank rank数值
+ */
 /**
  * rank 颜色
  * @param rank rank数值
@@ -190,6 +217,10 @@ fun getRankColor(rank: Int): Color {
     }
 }
 
+/**
+ * 带指示器图标
+ * @param urls 最大5个
+ */
 /**
  * 带指示器图标
  * @param urls 最大5个
@@ -235,6 +266,9 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 /**
  * 指示器
  */
+/**
+ * 指示器
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainHorizontalPagerIndicator(
@@ -246,13 +280,16 @@ fun MainHorizontalPagerIndicator(
         modifier = modifier,
         pagerState = pagerState,
         pageCount = pageCount,
-        indicatorWidth = 7.dp,
+        indicatorWidth = Dimen.indicatorSize,
         activeColor = MaterialTheme.colorScheme.primary,
         indicatorShape = CutCornerShape(50),
         spacing = 1.dp
     )
 }
 
+/**
+ * 加载中-圆形
+ */
 /**
  * 加载中-圆形
  */
@@ -271,6 +308,9 @@ fun CircularProgressCompose(
     )
 }
 
+/**
+ * 加载中-圆形
+ */
 /**
  * 加载中-圆形
  */
@@ -303,6 +343,9 @@ fun CircularProgressCompose(
 /**
  * 加载中-直线
  */
+/**
+ * 加载中-直线
+ */
 @Composable
 fun LinearProgressCompose(
     modifier: Modifier = Modifier,
@@ -316,6 +359,9 @@ fun LinearProgressCompose(
     )
 }
 
+/**
+ * 加载中进度-直线
+ */
 /**
  * 加载中进度-直线
  */
@@ -334,6 +380,14 @@ fun LinearProgressCompose(
     )
 }
 
+/**
+ * 底部搜索栏
+ *
+ * @param keywordState 关键词，用于查询
+ * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
+ * @param defaultKeywordList 默认关键词列表
+ * @param fabText 不为空时，fab将显示该文本
+ */
 /**
  * 底部搜索栏
  *
@@ -512,6 +566,13 @@ fun BottomSearchBar(
  * @param placeholder 占位布局
  * @param content 内容
  */
+/**
+ * 通用布局（涉及网络请求）
+ *
+ * @param fabContent 右下fab内容，加载成功后显示
+ * @param placeholder 占位布局
+ * @param content 内容
+ */
 @Composable
 fun <T> CommonResponseBox(
     responseData: ResponseData<T>?,
@@ -553,6 +614,11 @@ fun <T> CommonResponseBox(
     }
 }
 
+/**
+ * 日程标题
+ * @param showDays 显示天数
+ * @param showOverdueColor 过期日程颜色变灰色
+ */
 /**
  * 日程标题
  * @param showDays 显示天数
@@ -611,6 +677,9 @@ fun EventTitle(
 /**
  * 日程倒计时
  */
+/**
+ * 日程倒计时
+ */
 @Composable
 fun EventTitleCountdown(
     today: String,
@@ -653,6 +722,9 @@ fun EventTitleCountdown(
 /**
  * 装备适用角色
  */
+/**
+ * 装备适用角色
+ */
 @Composable
 fun UnitList(unitIds: List<Int>) {
     LazyColumn(
@@ -682,6 +754,10 @@ fun UnitList(unitIds: List<Int>) {
     }
 }
 
+/**
+ * 角色标签行
+ *
+ */
 /**
  * 角色标签行
  *
@@ -779,6 +855,10 @@ fun CharacterTagRow(
  * 位置信息
  *
  */
+/**
+ * 位置信息
+ *
+ */
 @Composable
 fun CharacterPositionTag(
     modifier: Modifier = Modifier,
@@ -803,6 +883,9 @@ fun CharacterPositionTag(
 /**
  * 获取位置描述
  */
+/**
+ * 获取位置描述
+ */
 @Composable
 private fun getPositionText(position: Int): String {
     var positionText = ""
@@ -818,6 +901,11 @@ private fun getPositionText(position: Int): String {
     return positionText
 }
 
+/**
+ * 角色属性标签
+ *
+ * @param leadingContent 开头内容
+ */
 /**
  * 角色属性标签
  *

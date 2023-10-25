@@ -154,73 +154,72 @@ fun CharacterList(
     ) {
         StateBox(
             stateType = uiState.loadingState,
-            successContent = {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(getItemWidth()),
-                    state = scrollState
+            extraContent = {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    characterList?.let {
-                        items(
-                            items = characterList,
-                            key = {
-                                it.id
-                            }
-                        ) {
-                            CharacterItem(
-                                unitId = it.id,
-                                character = it,
-                                loved = filter.starIds.contains(it.id),
-                                modifier = Modifier.padding(Dimen.mediumPadding),
-                            ) {
-                                toDetail(it.id)
-                            }
+                    //回到顶部
+                    MainSmallFab(
+                        iconType = MainIconType.TOP
+                    ) {
+                        coroutineScope.launch {
+                            scrollState.scrollToItem(0)
                         }
                     }
-
-                    items(2) {
-                        CommonSpacer()
+                    //重置筛选
+                    if (filter.isFilter()) {
+                        MainSmallFab(
+                            iconType = MainIconType.RESET
+                        ) {
+                            coroutineScope.launch {
+                                state.hide()
+                            }
+                            navViewModel.resetClick.postValue(true)
+                        }
+                    }
+                    val count = characterList?.size ?: 0
+                    // 数量显示&筛选按钮
+                    MainSmallFab(
+                        iconType = MainIconType.CHARACTER,
+                        text = "$count"
+                    ) {
+                        coroutineScope.launch {
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            state.show()
+                        }
                     }
                 }
             }
         ) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-                horizontalArrangement = Arrangement.End
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(getItemWidth()),
+                state = scrollState
             ) {
-                //回到顶部
-                MainSmallFab(
-                    iconType = MainIconType.TOP
-                ) {
-                    coroutineScope.launch {
-                        scrollState.scrollToItem(0)
-                    }
-                }
-                //重置筛选
-                if (filter.isFilter()) {
-                    MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        coroutineScope.launch {
-                            state.hide()
+                characterList?.let {
+                    items(
+                        items = characterList,
+                        key = {
+                            it.id
                         }
-                        navViewModel.resetClick.postValue(true)
+                    ) {
+                        CharacterItem(
+                            unitId = it.id,
+                            character = it,
+                            loved = filter.starIds.contains(it.id),
+                            modifier = Modifier.padding(Dimen.mediumPadding),
+                        ) {
+                            toDetail(it.id)
+                        }
                     }
                 }
-                val count = characterList?.size ?: 0
-                // 数量显示&筛选按钮
-                MainSmallFab(
-                    iconType = MainIconType.CHARACTER,
-                    text = "$count"
-                ) {
-                    coroutineScope.launch {
-                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        state.show()
-                    }
+
+                items(2) {
+                    CommonSpacer()
                 }
             }
-
         }
 
     }

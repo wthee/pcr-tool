@@ -34,11 +34,10 @@ fun CharacterExtraEquipScreen(
 
 
     StateBox(
-        stateType = uiState.loadingState,
-        successContent = {
-            CharacterExtraEquipContent(scrollState, equipList, toExtraEquipDetail)
-        }
-    )
+        stateType = uiState.loadingState
+    ) {
+        CharacterExtraEquipContent(scrollState, equipList, toExtraEquipDetail)
+    }
 }
 
 @Composable
