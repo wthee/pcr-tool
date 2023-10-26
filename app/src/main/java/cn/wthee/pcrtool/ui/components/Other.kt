@@ -31,7 +31,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Scaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -69,7 +68,6 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
@@ -114,7 +112,7 @@ import kotlinx.coroutines.launch
  * @param content 常驻显示的布局
  */
 @Composable
-fun BoxScope.StateBox(
+fun StateBox(
     stateType: LoadingState,
     loadingContent: @Composable () -> Unit = {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -131,8 +129,8 @@ fun BoxScope.StateBox(
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
     },
-    extraContent: @Composable (BoxScope.() -> Unit)? = null,
-    successContent: @Composable BoxScope.() -> Unit
+    extraContent: @Composable (() -> Unit)? = null,
+    successContent: @Composable () -> Unit
 ) {
     when (stateType) {
         LoadingState.Loading -> loadingContent()
@@ -152,35 +150,75 @@ fun MainScaffold(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     onMainFabClick: (() -> Unit)? = null,
     mainFabIcon: MainIconType = MainIconType.BACK,
-    hideMainFab:Boolean = false,
-    floatingActionButton: @Composable (BoxScope.() -> Unit) = {},
+    hideMainFab: Boolean = false,
+    enableClickClose: Boolean = false,
+    onCloseClick: () -> Unit = {},
+    noPadding: Boolean = false,
+    floatingActionButton: @Composable () -> Unit = {},
+    secondLineFloatingActionButton: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        floatingActionButton = {
-            Box(contentAlignment = Alignment.BottomEnd) {
+    Box(
+        modifier = modifier.background(backgroundColor)
+    ) {
+        //主要内容
+        content()
+
+        //fab内容
+        Box(
+            modifier = Modifier.clickClose(enableClickClose) {
+                onCloseClick()
+            },
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            //fab 第二行
+            Column(
+                modifier = Modifier
+                    .navigationBarsPadding()
+            ) {
+                secondLineFloatingActionButton()
+            }
+
+            //底部 fab
+            if (noPadding) {
                 floatingActionButton()
-                //主按钮
-                if(!hideMainFab){
-                    MainSmallFab(mainFabIcon){
-                        if(onMainFabClick != null){
-                            onMainFabClick()
-                        }else{
-                            //默认返回操作
-                            navigateUp()
-                        }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.fabMarginEnd,
+                            bottom = Dimen.fabMargin
+                        )
+                        .navigationBarsPadding(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    floatingActionButton()
+                }
+            }
+
+
+            //主按钮
+            if (!hideMainFab) {
+                MainSmallFab(
+                    iconType = mainFabIcon,
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin
+                        )
+                ) {
+                    if (onMainFabClick != null) {
+                        onMainFabClick()
+                    } else {
+                        //默认返回操作
+                        navigateUp()
                     }
                 }
             }
-        },
-        backgroundColor = backgroundColor
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
-        ) {
-            content()
         }
+
+
     }
 }
 

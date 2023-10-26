@@ -285,88 +285,80 @@ fun RankRangePickerCompose(
     }
 
 
-    Box(
-        modifier = Modifier.clickClose(openDialog.value) {
-            openDialog.value = false
-        }
-    ) {
-        //选择布局
-        SmallFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.fabMargin + Dimen.largePadding,
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin + Dimen.fabSize
-                )
-                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                //点击展开布局
-                if (!openDialog.value) {
-                    VibrateUtil(context).single()
-                    openDialog.value = true
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog.value) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
+    //选择布局
+    SmallFloatingActionButton(
+        modifier = Modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                start = Dimen.fabMarginSecondLineEnd,
+                end = Dimen.fabMarginSecondLineEnd,
+                bottom = Dimen.fabMarginLargeBottom
             ),
-        ) {
-            if (openDialog.value) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.largePadding
-                        )
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    //当前
-                    MainText(text = stringResource(id = R.string.cur_rank))
-                    RankSelectItem(
-                        selectIndex = selectIndex0,
-                        rankList = rankList,
-                        targetType = RankSelectType.DEFAULT,
-                        currentRank = maxRank - selectIndex0.intValue
-                    )
-                    //目标
-                    MainText(
-                        text = stringResource(id = R.string.target_rank),
-                        modifier = Modifier.padding(top = Dimen.largePadding)
-                    )
-                    RankSelectItem(
-                        selectIndex = selectIndex1,
-                        rankList = rankList,
-                        targetType = type,
-                        currentRank = maxRank - selectIndex0.intValue
-                    )
-                }
+        shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            //点击展开布局
+            if (!openDialog.value) {
+                VibrateUtil(context).single()
+                openDialog.value = true
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog.value) {
+                Dimen.popupMenuElevation
             } else {
-                //fab
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = MainIconType.RANK_SELECT,
-                        size = Dimen.fabIconSize
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog.value) {
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.largePadding
                     )
-                    Text(
-                        text = stringResource(id = R.string.rank_select),
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
-                        )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                //当前
+                MainText(text = stringResource(id = R.string.cur_rank))
+                RankSelectItem(
+                    selectIndex = selectIndex0,
+                    rankList = rankList,
+                    targetType = RankSelectType.DEFAULT,
+                    currentRank = maxRank - selectIndex0.intValue
+                )
+                //目标
+                MainText(
+                    text = stringResource(id = R.string.target_rank),
+                    modifier = Modifier.padding(top = Dimen.largePadding)
+                )
+                RankSelectItem(
+                    selectIndex = selectIndex1,
+                    rankList = rankList,
+                    targetType = type,
+                    currentRank = maxRank - selectIndex0.intValue
+                )
+            }
+        } else {
+            //fab
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = MainIconType.RANK_SELECT,
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = stringResource(id = R.string.rank_select),
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
                     )
-                }
+                )
             }
         }
     }

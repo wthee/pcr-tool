@@ -53,6 +53,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterInfoList() = flow {
         try {
+            //fixme
             val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
             emit(filterList?.subList(0, 10))
         } catch (e: Exception) {

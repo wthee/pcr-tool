@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.LogReportUtil
 import javax.inject.Inject
 
 /**
@@ -108,8 +111,47 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getUniqueEquipMaxLv(slot: Int) = equipmentDao.getUniqueEquipMaxLv(slot)
 
-    suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) =
-        equipmentDao.getEquipByRank(unitId, startRank, endRank)
+    /**
+     * 获取所有角色所需的装备统计
+     */
+    suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = try {
+        val data = equipmentDao.getEquipByRank(unitId, startRank, endRank)
+        //计算倍数
+        val materials = arrayListOf<EquipmentMaterial>()
+        data.forEach { equipCountData ->
+            try {
+                val equip = equipmentDao.getEquipBasicInfo(equipCountData.equipId)
+                val material = getEquipCraft(equip)
+                material.map {
+                    it.count *= equipCountData.equipCount
+                }
+                materials.addAll(material)
+            } catch (_: Exception) {
+            }
+
+        }
+        //合并重复项
+        val map = mutableMapOf<Int, EquipmentMaterial>()
+        materials.forEach {
+            var i = it.count
+            val key = it.id
+            if (map[key] != null) {
+                i = map[key]!!.count + it.count
+            }
+            it.count = i
+            map[key] = it
+        }
+        //转换为列表
+        map.values.sortedByDescending {
+            it.count
+        }
+    } catch (e: Exception) {
+        LogReportUtil.upload(
+            e,
+            "getEquipByRank#unitId:$unitId,startRank:$startRank,endRank:$endRank"
+        )
+        null
+    }
 
     suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
 
@@ -149,6 +191,81 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             }
         } else {
             data
+        }
+    }
+
+    /**
+     * 获取装备制作材料信息
+     *
+     * @param equip 装备信息
+     */
+    private suspend fun getEquipCraft(equip: EquipmentBasicInfo): ArrayList<EquipmentMaterial> {
+        val materials = arrayListOf<EquipmentMaterial>()
+        if (equip.craftFlg == 0) {
+            materials.add(
+                EquipmentMaterial(
+                    equip.equipmentId,
+                    equip.equipmentName,
+                    1
+                )
+            )
+        } else {
+            getAllMaterial(materials, equip.equipmentId, equip.equipmentName, 1, 1)
+        }
+        return materials
+    }
+
+
+    /**
+     * 迭代获取合成材料
+     *
+     * @param materials 合成素材
+     * @param equipmentId 装备编号
+     * @param name 装备名称
+     * @param count 所需数量
+     * @param craftFlg 是否可合成 0：不可，1：可合成
+     */
+    private suspend fun getAllMaterial(
+        materials: ArrayList<EquipmentMaterial>,
+        equipmentId: Int,
+        name: String,
+        count: Int,
+        craftFlg: Int
+    ) {
+        try {
+            if (craftFlg == 1) {
+                val material = equipmentDao.getEquipmentCraft(equipmentId).getAllMaterialId()
+                material.forEach {
+                    val data = equipmentDao.getEquipBasicInfo(it.id)
+                    getAllMaterial(
+                        materials,
+                        data.equipmentId,
+                        data.equipmentName,
+                        it.count,
+                        data.craftFlg
+                    )
+                }
+            } else {
+                val material =
+                    EquipmentMaterial(
+                        equipmentId,
+                        name,
+                        count
+                    )
+                var flag = -1
+                materials.forEachIndexed { index, equipmentMaterial ->
+                    if (equipmentMaterial.id == material.id) {
+                        flag = index
+                    }
+                }
+                if (flag == -1) {
+                    materials.add(material)
+                } else {
+                    materials[flag].count += material.count
+                }
+            }
+        } catch (_: Exception) {
+
         }
     }
 }

@@ -5,16 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +22,6 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.navigation.navigateUpSheet
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -64,22 +59,34 @@ fun RankCompareScreen(
     MainScaffold(
         modifier = Modifier.padding(top = Dimen.largePadding),
         floatingActionButton = {
-            RankCompareFabContent(
+            MainSmallFab(
+                iconType = MainIconType.RANK_COMPARE,
+                text = stringResource(id = R.string.rank_compare)
+            )
+
+        },
+        secondLineFloatingActionButton = {
+            //RANK 选择
+            RankRangePickerCompose(
                 rank0 = uiState.rank0,
                 rank1 = uiState.rank1,
-                uiState.maxRank,
+                maxRank = uiState.maxRank,
                 openDialog = openDialog,
-                rankCompareViewModel::updateRank
+                updateRank = rankCompareViewModel::updateRank
             )
         },
         onMainFabClick = {
             scope.launch {
-                if(openDialog.value){
+                if (openDialog.value) {
                     openDialog.value = false
-                }else{
+                } else {
                     navigateUpSheet()
                 }
             }
+        },
+        enableClickClose = openDialog.value,
+        onCloseClick = {
+            openDialog.value = false
         }
     ) {
         RankCompareContent(
@@ -132,33 +139,6 @@ private fun RankCompareContent(
 }
 
 
-@Composable
-private fun RankCompareFabContent(
-    rank0: Int,
-    rank1: Int,
-    maxRank: Int,
-    openDialog: MutableState<Boolean>,
-    updateRank: (Int, Int) -> Unit
-) {
-
-    MainSmallFab(
-        iconType = MainIconType.RANK_COMPARE,
-        text = stringResource(id = R.string.rank_compare),
-        modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd)
-//            .align(Alignment.BottomEnd)
-    )
-
-    //RANK 选择
-    RankRangePickerCompose(
-        rank0 = rank0,
-        rank1 = rank1,
-        maxRank = maxRank,
-        openDialog= openDialog,
-        updateRank = updateRank
-    )
-}
-
-
 @CombinedPreviews
 @Composable
 private fun RankCompareContentPreview() {
@@ -168,22 +148,6 @@ private fun RankCompareContentPreview() {
             rank0 = 1,
             rank1 = 22,
             attrCompareDataList = data
-        )
-    }
-}
-
-@CombinedPreviews
-@Composable
-private fun RankCompareFabContentPreview() {
-    PreviewLayout {
-        RankCompareFabContent(
-            rank0 = 1,
-            rank1 = 22,
-            maxRank = 22,
-            openDialog = remember {
-                mutableStateOf(false)
-            },
-            updateRank = { _, _ -> }
         )
     }
 }

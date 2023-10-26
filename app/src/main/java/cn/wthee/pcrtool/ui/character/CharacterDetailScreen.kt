@@ -141,17 +141,23 @@ fun CharacterDetailScreen(
             CharacterDetailFabContent(
                 loadingState = uiState.loadingState,
                 currentId = uiState.currentId,
-                cutinId = uiState.cutinId,
                 showAllInfo = uiState.showAllInfo,
-                isCutinSkill = uiState.isCutinSkill,
                 isEditMode = uiState.isEditMode,
                 loved = uiState.loved,
                 orderData = uiState.orderData,
-                changeCutin = characterDetailViewModel::changeCutin,
                 changeEditMode = characterDetailViewModel::changeEditMode,
                 updateStarCharacterId = characterDetailViewModel::updateStarCharacterId,
                 toCharacterDetail = actions.toCharacterDetail,
                 toCharacterSkillLoop = actions.toCharacterSkillLoop,
+            )
+        },
+        secondLineFloatingActionButton = {
+            ChangeCutinFabContent(
+                loadingState = uiState.loadingState,
+                cutinId = uiState.cutinId,
+                showAllInfo = uiState.showAllInfo,
+                isCutinSkill = uiState.isCutinSkill,
+                changeCutin = characterDetailViewModel::changeCutin
             )
         }
     ) {
@@ -204,92 +210,92 @@ fun CharacterDetailScreen(
 private fun CharacterDetailFabContent(
     loadingState: LoadingState,
     currentId: Int,
-    cutinId: Int,
     showAllInfo: Boolean,
-    isCutinSkill: Boolean,
     isEditMode: Boolean,
     loved: Boolean,
     orderData: String,
-    changeCutin: () -> Unit,
     changeEditMode: (Boolean) -> Unit,
     updateStarCharacterId: () -> Unit,
     toCharacterSkillLoop: (Int) -> Unit,
     toCharacterDetail: (Int) -> Unit,
 ) {
     if (loadingState == LoadingState.Success) {
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            if (cutinId != 0 && showAllInfo) {
-                //角色技能形态
+        if (showAllInfo) {
+            if (!isEditMode) {
+                //编辑
                 MainSmallFab(
-                    iconType = if (isCutinSkill) {
-                        MainIconType.CHARACTER_CUTIN_SKILL
+                    iconType = MainIconType.EDIT_TOOL,
+                ) {
+                    navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                    changeEditMode(true)
+                }
+
+                //收藏
+                MainSmallFab(
+                    iconType = if (loved) {
+                        MainIconType.LOVE_FILL
                     } else {
-                        MainIconType.CHARACTER_NORMAL_SKILL
-                    },
-                    text = if (isCutinSkill) {
-                        stringResource(id = R.string.cutin_skill)
-                    } else {
-                        ""
+                        MainIconType.LOVE_LINE
                     },
                 ) {
-                    changeCutin()
+                    updateStarCharacterId()
                 }
             }
 
-            Row(
-                modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                if (showAllInfo) {
+            //技能循环
+            if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
+                MainSmallFab(
+                    iconType = MainIconType.SKILL_LOOP,
+                ) {
                     if (!isEditMode) {
-                        //编辑
-                        MainSmallFab(
-                            iconType = MainIconType.EDIT_TOOL,
-                        ) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            changeEditMode(true)
-                        }
-
-                        //收藏
-                        MainSmallFab(
-                            iconType = if (loved) {
-                                MainIconType.LOVE_FILL
-                            } else {
-                                MainIconType.LOVE_LINE
-                            },
-                        ) {
-                            updateStarCharacterId()
-                        }
-                    }
-
-                    //技能循环
-                    if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
-                        MainSmallFab(
-                            iconType = MainIconType.SKILL_LOOP,
-                        ) {
-                            if (!isEditMode) {
-                                toCharacterSkillLoop(currentId)
-                            }
-                        }
-                    }
-
-                } else {
-                    //切换详情，专用装备跳转过来时，显示该按钮
-                    MainSmallFab(
-                        iconType = MainIconType.CHARACTER,
-                        text = stringResource(id = R.string.character_detail)
-                    ) {
-                        toCharacterDetail(currentId)
+                        toCharacterSkillLoop(currentId)
                     }
                 }
             }
 
+        } else {
+            //切换详情，专用装备跳转过来时，显示该按钮
+            MainSmallFab(
+                iconType = MainIconType.CHARACTER,
+                text = stringResource(id = R.string.character_detail)
+            ) {
+                toCharacterDetail(currentId)
+            }
         }
     }
 }
+
+@Composable
+private fun ChangeCutinFabContent(
+    loadingState: LoadingState,
+    cutinId: Int,
+    showAllInfo: Boolean,
+    isCutinSkill: Boolean,
+    changeCutin: () -> Unit,
+) {
+    if (loadingState == LoadingState.Success && cutinId != 0 && showAllInfo) {
+        //角色技能形态
+        MainSmallFab(
+            modifier = Modifier.padding(
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMarginLargeBottom
+            ),
+            iconType = if (isCutinSkill) {
+                MainIconType.CHARACTER_CUTIN_SKILL
+            } else {
+                MainIconType.CHARACTER_NORMAL_SKILL
+            },
+            text = if (isCutinSkill) {
+                stringResource(id = R.string.cutin_skill)
+            } else {
+                ""
+            },
+        ) {
+            changeCutin()
+        }
+    }
+}
+
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -303,7 +309,7 @@ private fun CharacterDetailContent(
     toCharacterBasicInfo: (Int) -> Unit,
     toCharacterStoryDetail: (Int) -> Unit,
     toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit,
-    toCharacterEquipCount: (Int, Int) -> Unit,
+    toCharacterEquipCount: (Int) -> Unit,
     toCharacterExtraEquip: (Int) -> Unit,
     toEquipDetail: (Int) -> Unit,
     toCharacterRankEquip: (Int, Int) -> Unit
@@ -582,7 +588,7 @@ private fun OtherToolsContent(
     currentValue: CharacterProperty,
     maxRank: Int,
     toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit,
-    toCharacterEquipCount: (Int, Int) -> Unit,
+    toCharacterEquipCount: (Int) -> Unit,
     toCharacterExtraEquip: (Int) -> Unit
 ) {
 
@@ -615,7 +621,7 @@ private fun OtherToolsContent(
             iconSize = Dimen.fabIconSize,
             textStyle = MaterialTheme.typography.bodyMedium
         ) {
-            toCharacterEquipCount(unitId, maxRank)
+            toCharacterEquipCount(unitId)
         }
         //ex装备
         IconTextButton(
@@ -1024,13 +1030,10 @@ private fun FabContentPreview() {
         CharacterDetailFabContent(
             loadingState = LoadingState.Success,
             currentId = 101001,
-            cutinId = 101001,
             showAllInfo = true,
-            isCutinSkill = true,
             isEditMode = false,
             loved = true,
             orderData = "",
-            changeCutin = {},
             changeEditMode = {},
             updateStarCharacterId = {},
             toCharacterSkillLoop = {},
@@ -1077,7 +1080,7 @@ private fun OtherToolsContentPreview() {
             currentValue = CharacterProperty(),
             maxRank = 1,
             toCharacterRankCompare = { _, _, _, _, _, _ -> },
-            toCharacterEquipCount = { _, _ -> },
+            toCharacterEquipCount = {},
             toCharacterExtraEquip = {}
         )
     }

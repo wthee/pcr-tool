@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
-import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -26,7 +25,6 @@ import androidx.navigation.NavHostController
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.*
@@ -125,38 +123,6 @@ class MainActivity : ComponentActivity() {
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll()
-    }
-
-    //返回拦截
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navViewModel.loading.postValue(false)
-            when (navViewModel.fabMainIcon.value ?: MainIconType.MAIN) {
-                MainIconType.MAIN -> {
-                    return super.onKeyDown(keyCode, event)
-                }
-
-                MainIconType.DOWN -> {
-                    navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                    return true
-                }
-
-                MainIconType.CLOSE -> {
-                    navViewModel.fabCloseClick.postValue(true)
-                    return true
-                }
-
-                MainIconType.OK -> {
-                    navViewModel.fabOKClick.postValue(true)
-                    return true
-                }
-
-                else -> {
-                    navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                }
-            }
-        }
-        return super.onKeyDown(keyCode, event)
     }
 
     /**

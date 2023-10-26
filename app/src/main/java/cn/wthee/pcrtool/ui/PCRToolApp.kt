@@ -1,51 +1,27 @@
 package cn.wthee.pcrtool.ui
 
-import android.os.Build
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavGraph
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
-import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
-import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.clickClose
-import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.ui.theme.ScaleBottomEndAnimation
-import cn.wthee.pcrtool.ui.tool.SettingCommonItem
-import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -110,7 +86,6 @@ private fun Home(
     }
 
     MainScaffold(
-        modifier = Modifier.navigationBarsPadding(),
         hideMainFab = true
     ) {
         //页面导航
@@ -125,29 +100,4 @@ private fun Home(
             CircularProgressCompose(Modifier.align(Alignment.Center))
         }
     }
-}
-
-@Composable
-fun FabMain(modifier: Modifier = Modifier) {
-    val icon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
-
-
-//    MainSmallFab(
-//        if (icon == MainIconType.MAIN) {
-//            MainIconType.SETTING
-//        } else {
-//            icon
-//        }, modifier = modifier
-//    ) {
-//        when (icon) {
-//            MainIconType.OK -> MainActivity.navViewModel.fabOKClick.postValue(true)
-//            MainIconType.CLOSE -> MainActivity.navViewModel.fabCloseClick.postValue(true)
-//            MainIconType.MAIN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
-//            MainIconType.DOWN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-//            else -> {
-//                MainActivity.navViewModel.loading.postValue(false)
-//                MainActivity.navController.navigateUp()
-//            }
-//        }
-//    }
 }

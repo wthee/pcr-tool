@@ -199,7 +199,7 @@ fun getAction(
             ToolMenuType.TWEET -> actions.toTweetList()
             ToolMenuType.COMIC -> actions.toComicList()
             ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
-            ToolMenuType.ALL_EQUIP -> actions.toAllEquipList()
+            ToolMenuType.ALL_EQUIP -> actions.toCharacterEquipCount(0)
             ToolMenuType.RANDOM_AREA -> actions.toRandomEquipArea(0)
             ToolMenuType.NEWS -> actions.toNews()
             ToolMenuType.FREE_GACHA -> actions.toFreeGacha()

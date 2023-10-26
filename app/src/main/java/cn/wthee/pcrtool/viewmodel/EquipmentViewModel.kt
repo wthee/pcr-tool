@@ -54,50 +54,6 @@ class EquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 根据角色id [unitId] 获取对应 Rank 范围 所需的装备
-     *
-     * @param unitId    角色编号，传 0 返回所有角色
-     * @param startRank 当前rank
-     * @param endRank   目标rank
-     */
-    fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
-        try {
-            val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
-            //计算倍数
-            val materials = arrayListOf<EquipmentMaterial>()
-            data.forEach { equipCountData ->
-                try {
-                    val equip = equipmentRepository.getEquipBasicInfo(equipCountData.equipId)
-                    val material = getEquipCraft(equip)
-                    material.map {
-                        it.count *= equipCountData.equipCount
-                    }
-                    materials.addAll(material)
-                } catch (_: Exception) {
-                }
-
-            }
-            //合并重复项
-            val map = mutableMapOf<Int, EquipmentMaterial>()
-            materials.forEach {
-                var i = it.count
-                val key = it.id
-                if (map[key] != null) {
-                    i = map[key]!!.count + it.count
-                }
-                it.count = i
-                map[key] = it
-            }
-            //转换为列表
-            emit(map.values.sortedByDescending {
-                it.count
-            })
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getEquipByRank#unitId:$unitId,startRank:$startRank,endRank:$endRank")
-        }
-    }
-
-    /**
      * 获取装备制作材料信息
      *
      * @param equip 装备信息

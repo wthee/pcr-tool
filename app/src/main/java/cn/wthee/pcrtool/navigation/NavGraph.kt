@@ -31,7 +31,7 @@ import cn.wthee.pcrtool.ui.character.CharacterSkillLoopScreen
 import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
 import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.character.RankCompareScreen
-import cn.wthee.pcrtool.ui.character.RankEquipCount
+import cn.wthee.pcrtool.ui.character.RankEquipCountContent
 import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -45,7 +45,6 @@ import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
 import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.ui.tool.AllCharacterRankEquipCount
 import cn.wthee.pcrtool.ui.tool.AllSkillList
 import cn.wthee.pcrtool.ui.tool.AllToolMenu
 import cn.wthee.pcrtool.ui.tool.BirthdayList
@@ -80,7 +79,6 @@ import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
-import kotlinx.coroutines.launch
 
 
 //返回上一级监听
@@ -359,7 +357,7 @@ fun NavGraph(
             }
 
             //角色ex装备列表
-            composable(
+            bottomSheet(
                 route = "${NavRoute.CHARACTER_EXTRA_EQUIP_SLOT}/{${NavRoute.UNIT_ID}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
@@ -374,17 +372,12 @@ fun NavGraph(
 
             //角色装备统计
             composable(
-                route = "${NavRoute.EQUIP_COUNT}/{${NavRoute.UNIT_ID}}/{${NavRoute.MAX_RANK}}",
+                route = "${NavRoute.EQUIP_COUNT}/{${NavRoute.UNIT_ID}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.MAX_RANK) {
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankEquipCount(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    maxRank = arguments.getInt(NavRoute.MAX_RANK),
+                RankEquipCountContent(
                     actions.toEquipMaterial
                 )
             }
@@ -588,14 +581,6 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 CharacterSkillLoopScreen(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
-            }
-
-            //所有角色所需装备统计
-            composable(
-                route = NavRoute.ALL_EQUIP
-            ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                AllCharacterRankEquipCount(actions.toEquipMaterial)
             }
 
             //额外随机装备掉落地区
@@ -852,8 +837,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 角装备统计
      */
-    val toCharacterEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
-        navController.navigate("${NavRoute.EQUIP_COUNT}/${unitId}/${maxRank}")
+    val toCharacterEquipCount: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${NavRoute.EQUIP_COUNT}/${unitId}")
     }
 
 

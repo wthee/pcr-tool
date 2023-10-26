@@ -9,17 +9,14 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -39,7 +36,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,7 +67,6 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
 import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
@@ -156,9 +151,10 @@ fun Overview(
                 showDropMenu.value = !showDropMenu.value
             }
         },
+        noPadding = true,
         floatingActionButton = {
             //数据切换功能
-            ChangeDbCompose(showChangeDb){
+            ChangeDbCompose(showChangeDb) {
                 //避免同时弹出
                 if (showDropMenu.value) {
                     showDropMenu.value = false
@@ -166,6 +162,15 @@ fun Overview(
                     showChangeDb.value = !showChangeDb.value
                 }
             }
+        },
+        secondLineFloatingActionButton = {
+            //菜单
+            SettingDropMenu(showDropMenu, actions)
+        },
+        enableClickClose = showDropMenu.value || showChangeDb.value,
+        onCloseClick = {
+            showDropMenu.value = false
+            showChangeDb.value = false
         }
     ) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
@@ -285,9 +290,6 @@ fun Overview(
 
         }
 
-        //菜单
-        SettingDropMenu(showDropMenu, actions)
-
     }
 }
 
@@ -299,11 +301,10 @@ fun Overview(
 private fun ChangeDbCompose(
     openDialog: MutableState<Boolean>,
     navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
-    onClick: (() -> Unit)
+    onClick: () -> Unit
 ) {
     val context = LocalContext.current
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
-
 
     //展开边距修正
     val mFabModifier = if (openDialog.value) {
@@ -311,6 +312,7 @@ private fun ChangeDbCompose(
     } else {
         Modifier
     }
+
     //校验数据文件是否异常
     val dbError by navViewModel.dbError.observeAsState(initial = false)
     //颜色
@@ -320,83 +322,72 @@ private fun ChangeDbCompose(
         MaterialTheme.colorScheme.primary
     }
 
+    Row(verticalAlignment = Alignment.Bottom) {
+        //数据提示
+        if (openDialog.value) {
+            DbVersionContent(dbError, tintColor)
+        }
 
-    Box(modifier = Modifier.clickClose(openDialog.value) {
-       onClick()
-    }) {
-        Row(
+        //数据切换
+        SmallFloatingActionButton(
             modifier = mFabModifier
-                .align(Alignment.BottomEnd)
-                .height(IntrinsicSize.Max),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.End
-        ) {
-            //数据提示
-            if (openDialog.value) {
-                DbVersionContent(dbError, tintColor)
-            }
-
-            //数据切换
-            SmallFloatingActionButton(
-                modifier = mFabModifier
-                    .animateContentSize(defaultSpring())
-                    .padding(
-                        end = Dimen.fabScaffoldMarginEnd,
-                        start = Dimen.mediumPadding,
-                        top = Dimen.fabMargin,
-                    ),
-                shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
-                onClick = {
-                    //非加载中可点击，加载中禁止点击
-                    VibrateUtil(context).single()
-                    if (downloadState == -2) {
-                        onClick()
-                    }
-                },
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = if (openDialog.value) {
-                        Dimen.popupMenuElevation
-                    } else {
-                        Dimen.fabElevation
-                    }
+                .animateContentSize(defaultSpring())
+                .padding(
+                    start = Dimen.mediumPadding,
+                    end = Dimen.fabMarginEnd,
+                    top = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin
                 ),
-            ) {
-                if (openDialog.value) {
-                    //选择
-                    DbVersionList(tintColor)
+            shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                //非加载中可点击，加载中禁止点击
+                VibrateUtil(context).single()
+                if (downloadState == -2) {
+                    onClick()
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog.value) {
+                    Dimen.popupMenuElevation
                 } else {
-                    //加载相关
-                    when (downloadState) {
-                        -2 -> {
-                            FadeAnimation(visible = dbError) {
-                                MainIcon(
-                                    data = MainIconType.DB_ERROR,
-                                    tint = tintColor,
-                                    size = Dimen.fabIconSize
-                                )
-                            }
-                            FadeAnimation(visible = !dbError) {
-                                MainIcon(
-                                    data = MainIconType.CHANGE_DATA,
-                                    tint = tintColor,
-                                    size = Dimen.fabIconSize
-                                )
-                            }
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog.value) {
+                //选择
+                DbVersionList(tintColor)
+            } else {
+                //加载相关
+                when (downloadState) {
+                    -2 -> {
+                        FadeAnimation(visible = dbError) {
+                            MainIcon(
+                                data = MainIconType.DB_ERROR,
+                                tint = tintColor,
+                                size = Dimen.fabIconSize
+                            )
                         }
+                        FadeAnimation(visible = !dbError) {
+                            MainIcon(
+                                data = MainIconType.CHANGE_DATA,
+                                tint = tintColor,
+                                size = Dimen.fabIconSize
+                            )
+                        }
+                    }
 
-                        in 1..99 -> {
-                            CircularProgressCompose(progress = downloadState / 100f)
-                        }
+                    in 1..99 -> {
+                        CircularProgressCompose(progress = downloadState / 100f)
+                    }
 
-                        else -> {
-                            CircularProgressCompose()
-                        }
+                    else -> {
+                        CircularProgressCompose()
                     }
                 }
             }
         }
     }
-
 }
 
 /**
@@ -738,67 +729,57 @@ private fun SettingDropMenu(showDropMenu: MutableState<Boolean>, actions: NavAct
 
     ScaleBottomEndAnimation(
         visible = showDropMenu.value,
-        modifier = Modifier
-            .clickClose(
-                showDropMenu.value,
-                isSettingPop = true
-            ) {
-                showDropMenu.value = false
-            }
     ) {
-        Box(
-            modifier = Modifier.padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
-            contentAlignment = Alignment.BottomEnd
+        MainCard(
+            fillMaxWidth = false,
+            modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .padding(
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMarginLargeBottom
+                ),
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         ) {
-            MainCard(
-                fillMaxWidth = false,
-                modifier = Modifier
-                    .padding(
-                        end = Dimen.fabMargin + Dimen.smallPadding
-                    )
-                    .width(IntrinsicSize.Max),
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
+            Spacer(modifier = Modifier.height(Dimen.mediumPadding))
+            SettingSwitchCompose(
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                type = SettingSwitchType.VIBRATE,
+                showSummary = false,
+                wrapWidth = true
+            )
+            SettingSwitchCompose(
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                type = SettingSwitchType.ANIMATION,
+                showSummary = false,
+                wrapWidth = true
+            )
+            //- 动态色彩，仅 Android 12 及以上可用
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
                 SettingSwitchCompose(
                     modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    type = SettingSwitchType.VIBRATE,
+                    type = SettingSwitchType.DYNAMIC_COLOR,
                     showSummary = false,
                     wrapWidth = true
                 )
-                SettingSwitchCompose(
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    type = SettingSwitchType.ANIMATION,
-                    showSummary = false,
-                    wrapWidth = true
-                )
-                //- 动态色彩，仅 Android 12 及以上可用
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
-                    SettingSwitchCompose(
-                        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                        type = SettingSwitchType.DYNAMIC_COLOR,
-                        showSummary = false,
-                        wrapWidth = true
-                    )
-                }
-                SettingCommonItem(
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    iconType = R.drawable.ic_launcher_foreground,
-                    iconSize = Dimen.mediumIconSize,
-                    title = "v" + BuildConfig.VERSION_NAME,
-                    summary = stringResource(id = R.string.app_name),
-                    titleColor = MaterialTheme.colorScheme.primary,
-                    summaryColor = MaterialTheme.colorScheme.onSurface,
-                    padding = Dimen.smallPadding,
-                    tintColor = MaterialTheme.colorScheme.primary,
-                    onClick = {
-                        actions.toSetting()
-                    }
-                ) {
-                    MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
-                }
-                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             }
+            SettingCommonItem(
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+                iconType = R.drawable.ic_launcher_foreground,
+                iconSize = Dimen.mediumIconSize,
+                title = "v" + BuildConfig.VERSION_NAME,
+                summary = stringResource(id = R.string.app_name),
+                titleColor = MaterialTheme.colorScheme.primary,
+                summaryColor = MaterialTheme.colorScheme.onSurface,
+                padding = Dimen.smallPadding,
+                tintColor = MaterialTheme.colorScheme.primary,
+                onClick = {
+                    showDropMenu.value = false
+                    actions.toSetting()
+                }
+            ) {
+                MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
+            }
+            Spacer(modifier = Modifier.height(Dimen.mediumPadding))
         }
     }
 }
