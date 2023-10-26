@@ -30,8 +30,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,6 +64,7 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
@@ -124,55 +125,50 @@ fun CharacterListScreen(
     val sheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-
-    //关闭时监听
-    if (!sheetState.isVisible) {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKClick.postValue(false)
-        navViewModel.resetClick.postValue(false)
-        keyboardController?.hide()
+    val fabVisible = remember {
+        mutableStateOf(true)
+    }
+    LaunchedEffect(sheetState.isVisible) {
+        if (!sheetState.isVisible) {
+            fabVisible.value = true
+        }
     }
 
 
-    //确认操作
-    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
-    val reset = navViewModel.resetClick.observeAsState().value ?: false
-
-
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
-        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-        sheetShape = shapeTop(),
-        sheetContent = {
-            FilterCharacterSheet(
+    MainScaffold(
+        floatingActionButton = {
+            CharacterListFabContent(
+                visible = fabVisible,
+                count = uiState.characterList?.size ?: 0,
+                scrollState = scrollState,
                 filter = uiState.filterCharacter,
-                updateFilter = characterListViewModel::updateFilter,
-                okClick = ok,
-                resetClick = reset,
                 sheetState = sheetState,
-                guildList = uiState.guildList,
-                raceList = uiState.raceList,
-                onReset = {
-                    navViewModel.resetClick.postValue(false)
-                },
-                onOk = {
-                    scope.launch {
-                        sheetState.hide()
-                    }
-                    navViewModel.fabOKClick.postValue(false)
-                    navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                }
+                updateFilter = characterListViewModel::updateFilter,
             )
+        },
+        mainFabIcon = if (fabVisible.value) MainIconType.BACK else MainIconType.OK,
+        onMainFabClick = {
+            scope.launch {
+                if (fabVisible.value) {
+                    navigateUp()
+                } else {
+                    sheetState.hide()
+                }
+            }
         }
     ) {
-        MainScaffold(
-            floatingActionButton = {
-                CharacterListFabContent(
-                    count = uiState.characterList?.size ?: 0,
-                    scrollState = scrollState,
+        ModalBottomSheetLayout(
+            sheetState = sheetState,
+            scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+            sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+            sheetShape = shapeTop(),
+            sheetContent = {
+                FilterCharacterSheet(
                     filter = uiState.filterCharacter,
-                    sheetState = sheetState
+                    updateFilter = characterListViewModel::updateFilter,
+                    sheetState = sheetState,
+                    guildList = uiState.guildList,
+                    raceList = uiState.raceList
                 )
             }
         ) {
@@ -228,48 +224,55 @@ private fun CharacterListContent(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CharacterListFabContent(
+    visible: MutableState<Boolean>,
     count: Int,
     scrollState: LazyGridState,
     filter: FilterCharacter,
-    sheetState: ModalBottomSheetState
+    sheetState: ModalBottomSheetState,
+    updateFilter: (FilterCharacter) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    Row(
-        modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
-        horizontalArrangement = Arrangement.End
-    ) {
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.TOP
+
+    if (visible.value) {
+        Row(
+            modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
+            horizontalArrangement = Arrangement.End
         ) {
-            coroutineScope.launch {
-                scrollState.scrollToItem(0)
-            }
-        }
-        //重置筛选
-        if (filter.isFilter()) {
+            //回到顶部
             MainSmallFab(
-                iconType = MainIconType.RESET
+                iconType = MainIconType.TOP
             ) {
                 coroutineScope.launch {
-                    sheetState.hide()
+                    scrollState.scrollToItem(0)
                 }
-                navViewModel.resetClick.postValue(true)
             }
-        }
+            //重置筛选
+            if (filter.isFilter()) {
+                MainSmallFab(
+                    iconType = MainIconType.RESET
+                ) {
+                    updateFilter(FilterCharacter())
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }
+                }
+            }
 
-        // 数量显示&筛选按钮
-        MainSmallFab(
-            iconType = MainIconType.CHARACTER,
-            text = "$count"
-        ) {
-            coroutineScope.launch {
-                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                sheetState.show()
+            // 数量显示&筛选按钮
+            MainSmallFab(
+                iconType = MainIconType.CHARACTER,
+                text = "$count"
+            ) {
+                visible.value = false
+                coroutineScope.launch {
+                    navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                    sheetState.show()
+                }
             }
         }
     }
+
 }
 
 /**
@@ -589,13 +592,9 @@ private fun CharacterName(
 private fun FilterCharacterSheet(
     filter: FilterCharacter,
     updateFilter: (FilterCharacter) -> Unit,
-    okClick: Boolean,
-    resetClick: Boolean,
     sheetState: ModalBottomSheetState,
     guildList: List<GuildData>,
     raceList: List<String>,
-    onReset: () -> Unit,
-    onOk: () -> Unit
 ) {
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
@@ -655,30 +654,8 @@ private fun FilterCharacterSheet(
 
 
     //重置或确认
-    LaunchedEffect(sheetState.isVisible, resetClick, okClick) {
-        //点击重置
-        if (resetClick) {
-            textState.value = ""
-            sortTypeIndex.intValue = 0
-            sortAscIndex.intValue = 1
-            loveIndex.intValue = 0
-            r6Index.intValue = 0
-            positionIndex.intValue = 0
-            atkIndex.intValue = 0
-            guildIndex.intValue = 0
-            typeIndex.intValue = 0
-            raceIndex.intValue = 0
-            onReset()
-            updateFilter(FilterCharacter())
-        } else {
-            updateFilter(filter)
-        }
-
-        //点击确认
-        if (okClick) {
-            onOk()
-            updateFilter(filter)
-        }
+    LaunchedEffect(sheetState.isVisible) {
+        updateFilter(filter)
     }
 
     //选择状态
@@ -895,10 +872,14 @@ private fun FilterCharacterSheet(
 private fun FabContentPreview() {
     PreviewLayout {
         CharacterListFabContent(
+            visible = remember {
+                mutableStateOf(true)
+            },
             count = 100,
             scrollState = rememberLazyGridState(),
             filter = FilterCharacter(),
-            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+            updateFilter = {}
         )
     }
 }
@@ -927,13 +908,9 @@ private fun FilterCharacterSheetPreview() {
         FilterCharacterSheet(
             filter = FilterCharacter(),
             updateFilter = {},
-            okClick = false,
-            resetClick = false,
             sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Expanded),
             guildList = emptyList(),
             raceList = emptyList(),
-            onReset = {},
-            onOk = {}
         )
     }
 }
