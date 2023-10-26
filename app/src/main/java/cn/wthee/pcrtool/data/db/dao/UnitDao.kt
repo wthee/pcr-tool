@@ -99,11 +99,6 @@ interface UnitDao {
             unit_data.unit_name like '%' || :unitName || '%'
         AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
-        AND (
-            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
         AND 1 = CASE
             WHEN  0 = :r6  THEN 1
             WHEN  r6Id != 0 AND 1 = :r6  THEN 1 
@@ -153,7 +148,7 @@ interface UnitDao {
     )
     suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
+        atkType: Int, guildId: Int, r6: Int,
         type: Int, limit: Int, exUnitIdList: List<Int>, raceName: String
     ): List<CharacterInfo>
 
@@ -532,7 +527,7 @@ interface UnitDao {
         WHERE b.unit_id = :unitId
     """
     )
-    suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
+    suspend fun getCharacterStoryAttrList(unitId: Int): List<CharacterStoryAttr>
 
     /**
      * 获取角色最大等级

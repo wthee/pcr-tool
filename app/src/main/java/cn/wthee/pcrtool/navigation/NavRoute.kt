@@ -35,11 +35,17 @@ object NavRoute {
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
+    //最大rank
     const val MAX_RANK = "maxRank"
+    //等级
     const val LEVEL = "level"
+    //星级
     const val RARITY = "rarity"
+    //rank
     const val RANK = "rank"
+    //专用装备等级
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
+    //专用装备2等级
     const val UNIQUE_EQUIP_LEVEL2 = "uniqueEquipLevel2"
     const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"

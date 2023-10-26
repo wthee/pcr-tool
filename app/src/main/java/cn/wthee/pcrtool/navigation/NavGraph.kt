@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -21,14 +22,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.CharacterDetailScreen
 import cn.wthee.pcrtool.ui.character.CharacterExtraEquipScreen
-import cn.wthee.pcrtool.ui.character.CharacterList
-import cn.wthee.pcrtool.ui.character.CharacterSkillLoop
-import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
-import cn.wthee.pcrtool.ui.character.CharacterStoryDetail
-import cn.wthee.pcrtool.ui.character.RankCompare
+import cn.wthee.pcrtool.ui.character.CharacterListScreen
+import cn.wthee.pcrtool.ui.character.CharacterSkillLoopScreen
+import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
+import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
+import cn.wthee.pcrtool.ui.character.RankCompareScreen
 import cn.wthee.pcrtool.ui.character.RankEquipCount
 import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -78,6 +80,17 @@ import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
+import kotlinx.coroutines.launch
+
+
+//返回上一级监听
+@OptIn(ExperimentalMaterialApi::class)
+suspend  fun navigateUpSheet(){
+    MainActivity.navSheetState.hide()
+}
+ fun navigateUp(){
+    MainActivity.navController.navigateUp()
+}
 
 /**
  * 导航内容
@@ -132,7 +145,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyGridState()
-                CharacterList(scrollState, actions.toCharacterDetail)
+                CharacterListScreen(scrollState, actions.toCharacterDetail)
             }
 
             //角色属性详情
@@ -167,8 +180,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                CharacterBasicInfo(unitId = arguments.getInt(NavRoute.UNIT_ID))
+                CharacterBasicInfo()
             }
 
             //角色剧情属性详情
@@ -178,8 +190,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                CharacterStoryDetail(unitId = arguments.getInt(NavRoute.UNIT_ID))
+                CharacterStoryAttrScreen()
             }
 
             //装备列表
@@ -344,15 +355,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankCompare(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    maxRank = arguments.getInt(NavRoute.MAX_RANK),
-                    level = arguments.getInt(NavRoute.LEVEL),
-                    rarity = arguments.getInt(NavRoute.RARITY),
-                    uniqueEquipLevel = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL),
-                    uniqueEquipLevel2 = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL2)
-                )
+                RankCompareScreen()
             }
 
             //角色ex装备列表
@@ -547,7 +550,7 @@ fun NavGraph(
                 route = NavRoute.ATTR_COE
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterStatusCoeCompose()
+                CharacterStatusCoeScreen()
             }
 
             //召唤物信息
@@ -584,7 +587,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                CharacterSkillLoop(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
+                CharacterSkillLoopScreen(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
             }
 
             //所有角色所需装备统计

@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,7 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -57,14 +57,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
@@ -73,6 +72,7 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.RATIO
@@ -102,7 +102,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -110,118 +109,166 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun CharacterList(
+fun CharacterListScreen(
     scrollState: LazyGridState,
     toDetail: (Int) -> Unit,
     characterListViewModel: CharacterListViewModel = hiltViewModel(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val uiState by characterListViewModel.uiState.collectAsStateWithLifecycle()
+    //加载收藏id列表
+    characterListViewModel.reloadStarIdList()
 
-    //筛选状态
-    val filter = navViewModel.filterCharacter.observeAsState().value ?: FilterCharacter()
     // sheet 状态
-    val state = rememberModalBottomSheetState(
+    val sheetState = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
 
     //关闭时监听
-    if (!state.isVisible) {
+    if (!sheetState.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKClick.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
     }
 
-    filter.starIds = getStarCharacterIdList()
 
-    val uiState by characterListViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = filter.hashCode()) {
-        characterListViewModel.loadData(filter)
-    }
-    //角色列表
-    val characterList = uiState.characterList
+    //确认操作
+    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
+    val reset = navViewModel.resetClick.observeAsState().value ?: false
 
 
     ModalBottomSheetLayout(
-        sheetState = state,
+        sheetState = sheetState,
         scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = shapeTop(),
         sheetContent = {
-            FilterCharacterSheet(navViewModel, state)
+            FilterCharacterSheet(
+                filter = uiState.filterCharacter,
+                updateFilter = characterListViewModel::updateFilter,
+                okClick = ok,
+                resetClick = reset,
+                sheetState = sheetState,
+                guildList = uiState.guildList,
+                raceList = uiState.raceList,
+                onReset = {
+                    navViewModel.resetClick.postValue(false)
+                },
+                onOk = {
+                    scope.launch {
+                        sheetState.hide()
+                    }
+                    navViewModel.fabOKClick.postValue(false)
+                    navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+                }
+            )
         }
     ) {
-        StateBox(
-            stateType = uiState.loadingState,
-            extraContent = {
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    //回到顶部
-                    MainSmallFab(
-                        iconType = MainIconType.TOP
-                    ) {
-                        coroutineScope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    }
-                    //重置筛选
-                    if (filter.isFilter()) {
-                        MainSmallFab(
-                            iconType = MainIconType.RESET
-                        ) {
-                            coroutineScope.launch {
-                                state.hide()
-                            }
-                            navViewModel.resetClick.postValue(true)
-                        }
-                    }
-                    val count = characterList?.size ?: 0
-                    // 数量显示&筛选按钮
-                    MainSmallFab(
-                        iconType = MainIconType.CHARACTER,
-                        text = "$count"
-                    ) {
-                        coroutineScope.launch {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
-                        }
-                    }
-                }
+        MainScaffold(
+            floatingActionButton = {
+                CharacterListFabContent(
+                    count = uiState.characterList?.size ?: 0,
+                    scrollState = scrollState,
+                    filter = uiState.filterCharacter,
+                    sheetState = sheetState
+                )
             }
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(getItemWidth()),
-                state = scrollState
+            StateBox(
+                stateType = uiState.loadingState,
             ) {
-                characterList?.let {
-                    items(
-                        items = characterList,
-                        key = {
-                            it.id
-                        }
-                    ) {
-                        CharacterItem(
-                            unitId = it.id,
-                            character = it,
-                            loved = filter.starIds.contains(it.id),
-                            modifier = Modifier.padding(Dimen.mediumPadding),
-                        ) {
-                            toDetail(it.id)
-                        }
-                    }
-                }
+                CharacterListContent(
+                    characterList = uiState.characterList,
+                    scrollState = scrollState,
+                    startIdList = uiState.startIdList,
+                    toDetail = toDetail
+                )
+            }
+        }
+    }
+}
 
-                items(2) {
-                    CommonSpacer()
+@Composable
+private fun CharacterListContent(
+    characterList: List<CharacterInfo>?,
+    scrollState: LazyGridState,
+    startIdList: ArrayList<Int>,
+    toDetail: (Int) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(getItemWidth()),
+        state = scrollState
+    ) {
+        characterList?.let {
+            items(
+                items = characterList,
+                key = {
+                    it.id
+                }
+            ) {
+                CharacterItemContent(
+                    unitId = it.id,
+                    character = it,
+                    loved = startIdList.contains(it.id),
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                ) {
+                    toDetail(it.id)
                 }
             }
         }
 
+        items(2) {
+            CommonSpacer()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun CharacterListFabContent(
+    count: Int,
+    scrollState: LazyGridState,
+    filter: FilterCharacter,
+    sheetState: ModalBottomSheetState
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    Row(
+        modifier = Modifier.padding(end = Dimen.fabScaffoldMarginEnd),
+        horizontalArrangement = Arrangement.End
+    ) {
+        //回到顶部
+        MainSmallFab(
+            iconType = MainIconType.TOP
+        ) {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
+        }
+        //重置筛选
+        if (filter.isFilter()) {
+            MainSmallFab(
+                iconType = MainIconType.RESET
+            ) {
+                coroutineScope.launch {
+                    sheetState.hide()
+                }
+                navViewModel.resetClick.postValue(true)
+            }
+        }
+
+        // 数量显示&筛选按钮
+        MainSmallFab(
+            iconType = MainIconType.CHARACTER,
+            text = "$count"
+        ) {
+            coroutineScope.launch {
+                navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                sheetState.show()
+            }
+        }
     }
 }
 
@@ -229,19 +276,22 @@ fun CharacterList(
  * 角色列表项
  */
 @Composable
-fun CharacterItem(
+fun CharacterItemContent(
     unitId: Int,
     character: CharacterInfo?,
     loved: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+
     //图片是否加载成功
-    var loadSuccess by remember {
+    var imageLoadSuccess by remember {
         mutableStateOf(false)
     }
-    var loadError by remember {
-        mutableStateOf(false)
+    //预览时，默认为 true
+    val defaultError = LocalInspectionMode.current
+    var imageLoadError by remember {
+        mutableStateOf(defaultError)
     }
     //主色
     val initColor = colorWhite
@@ -249,7 +299,7 @@ fun CharacterItem(
         mutableStateOf(initColor)
     }
     //主要字体颜色
-    val textColor = if (loadSuccess) {
+    val textColor = if (imageLoadSuccess) {
         MaterialTheme.colorScheme.surface
     } else {
         MaterialTheme.colorScheme.onSurface
@@ -266,9 +316,9 @@ fun CharacterItem(
                 data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
                 ratio = RATIO,
                 contentScale = ContentScale.FillHeight,
-                onError = { loadError = true }
+                onError = { imageLoadError = true }
             ) { result ->
-                loadSuccess = true
+                imageLoadSuccess = true
                 //取色
                 Palette.from(result.drawable.toBitmap()).generate { palette ->
                     palette?.let {
@@ -278,7 +328,7 @@ fun CharacterItem(
             }
             if (character != null) {
                 //名称阴影效果
-                if (loadSuccess) {
+                if (imageLoadSuccess) {
                     CharacterName(
                         color = MaterialTheme.colorScheme.primary,
                         name = character.getNameF(),
@@ -297,7 +347,7 @@ fun CharacterItem(
                 )
             } else {
                 //暂未登场
-                if (loadSuccess) {
+                if (imageLoadSuccess) {
                     CharacterName(
                         color = MaterialTheme.colorScheme.primary,
                         name = stringResource(id = R.string.unknown_character),
@@ -319,7 +369,7 @@ fun CharacterItem(
 
             //其它信息
             FadeAnimation(
-                visible = loadSuccess || loadError || LocalInspectionMode.current,
+                visible = imageLoadSuccess || imageLoadError || LocalInspectionMode.current,
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 //年龄等
@@ -408,7 +458,7 @@ fun CharacterItem(
             }
 
             //收藏标识
-            FadeAnimation(visible = loved && (loadSuccess || loadError)) {
+            FadeAnimation(visible = loved && (imageLoadSuccess || imageLoadError)) {
                 MainIcon(
                     data = MainIconType.LOVE_FILL,
                     size = Dimen.textIconSize,
@@ -537,12 +587,16 @@ private fun CharacterName(
 )
 @Composable
 private fun FilterCharacterSheet(
-    navViewModel: NavViewModel,
+    filter: FilterCharacter,
+    updateFilter: (FilterCharacter) -> Unit,
+    okClick: Boolean,
+    resetClick: Boolean,
     sheetState: ModalBottomSheetState,
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    guildList: List<GuildData>,
+    raceList: List<String>,
+    onReset: () -> Unit,
+    onOk: () -> Unit
 ) {
-    val filter = navViewModel.filterCharacter.value ?: FilterCharacter()
-
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
     //排序类型筛选
@@ -582,20 +636,12 @@ private fun FilterCharacterSheet(
     filter.atk = atkIndex.intValue
 
     //公会
-    val guildListFlow = remember {
-        characterViewModel.getGuilds()
-    }
-    val guildList by guildListFlow.collectAsState(initial = arrayListOf())
     val guildIndex = remember {
         mutableIntStateOf(filter.guild)
     }
     filter.guild = guildIndex.intValue
 
     //种族
-    val raceListFlow = remember {
-        characterViewModel.getRaces()
-    }
-    val raceList by raceListFlow.collectAsState(initial = arrayListOf())
     val raceIndex = remember {
         mutableIntStateOf(filter.race)
     }
@@ -607,14 +653,11 @@ private fun FilterCharacterSheet(
     }
     filter.type = typeIndex.intValue
 
-    //确认操作
-    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
-    val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //重置或确认
-    LaunchedEffect(sheetState.isVisible, reset, ok) {
+    LaunchedEffect(sheetState.isVisible, resetClick, okClick) {
         //点击重置
-        if (reset) {
+        if (resetClick) {
             textState.value = ""
             sortTypeIndex.intValue = 0
             sortAscIndex.intValue = 1
@@ -625,16 +668,16 @@ private fun FilterCharacterSheet(
             guildIndex.intValue = 0
             typeIndex.intValue = 0
             raceIndex.intValue = 0
-            navViewModel.resetClick.postValue(false)
-            navViewModel.filterCharacter.postValue(null)
+            onReset()
+            updateFilter(FilterCharacter())
         } else {
-            navViewModel.filterCharacter.postValue(filter)
+            updateFilter(filter)
         }
+
         //点击确认
-        if (ok) {
-            sheetState.hide()
-            navViewModel.fabOKClick.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        if (okClick) {
+            onOk()
+            updateFilter(filter)
         }
     }
 
@@ -845,14 +888,53 @@ private fun FilterCharacterSheet(
     }
 }
 
+
+@OptIn(ExperimentalMaterialApi::class)
+@CombinedPreviews
+@Composable
+private fun FabContentPreview() {
+    PreviewLayout {
+        CharacterListFabContent(
+            count = 100,
+            scrollState = rememberLazyGridState(),
+            filter = FilterCharacter(),
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        )
+    }
+}
+
 @CombinedPreviews
 @Composable
 private fun CharacterItemPreview() {
     PreviewLayout {
-        CharacterItem(
+        CharacterItemContent(
             unitId = 100101,
-            character = CharacterInfo(),
+            character = CharacterInfo(
+                id = 100101,
+                position = 100,
+                name = stringResource(id = R.string.debug_name)
+            ),
             loved = true,
         ) {}
     }
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@CombinedPreviews
+@Composable
+private fun FilterCharacterSheetPreview() {
+    PreviewLayout {
+        FilterCharacterSheet(
+            filter = FilterCharacter(),
+            updateFilter = {},
+            okClick = false,
+            resetClick = false,
+            sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Expanded),
+            guildList = emptyList(),
+            raceList = emptyList(),
+            onReset = {},
+            onOk = {}
+        )
+    }
+}
+

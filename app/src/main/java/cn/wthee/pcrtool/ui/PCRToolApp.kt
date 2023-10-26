@@ -17,7 +17,9 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +38,7 @@ import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -106,12 +109,9 @@ private fun Home(
         }
     }
 
-
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .navigationBarsPadding()
-            .fillMaxSize()
+    MainScaffold(
+        modifier = Modifier.navigationBarsPadding(),
+        hideMainFab = true
     ) {
         //页面导航
         NavGraph(
@@ -120,14 +120,7 @@ private fun Home(
             MainActivity.navViewModel,
             actions
         )
-        //菜单
-        SettingDropMenu(actions)
-        //Home 按钮
-        FabMain(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(Dimen.fabMargin)
-        )
+
         if (loading) {
             CircularProgressCompose(Modifier.align(Alignment.Center))
         }
@@ -139,96 +132,22 @@ fun FabMain(modifier: Modifier = Modifier) {
     val icon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
 
-    MainSmallFab(
-        if (icon == MainIconType.MAIN) {
-            MainIconType.SETTING
-        } else {
-            icon
-        }, modifier = modifier
-    ) {
-        when (icon) {
-            MainIconType.OK -> MainActivity.navViewModel.fabOKClick.postValue(true)
-            MainIconType.CLOSE -> MainActivity.navViewModel.fabCloseClick.postValue(true)
-            MainIconType.MAIN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
-            MainIconType.DOWN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-            else -> {
-                MainActivity.navViewModel.loading.postValue(false)
-                MainActivity.navController.navigateUp()
-            }
-        }
-    }
-}
-
-/**
- * 设置页面
- */
-@Composable
-private fun SettingDropMenu(actions: NavActions) {
-    val fabMainIcon =
-        MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
-
-
-    ScaleBottomEndAnimation(
-        visible = fabMainIcon == MainIconType.DOWN,
-        modifier = Modifier
-            .clickClose(
-                fabMainIcon == MainIconType.DOWN,
-                isSettingPop = true
-            )
-    ) {
-        Box(
-            modifier = Modifier.padding(bottom = Dimen.fabMargin * 2 + Dimen.fabSize),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            MainCard(
-                fillMaxWidth = false,
-                modifier = Modifier
-                    .padding(
-                        end = Dimen.fabMargin + Dimen.smallPadding
-                    )
-                    .width(IntrinsicSize.Max),
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
-                SettingSwitchCompose(
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    type = SettingSwitchType.VIBRATE,
-                    showSummary = false,
-                    wrapWidth = true
-                )
-                SettingSwitchCompose(
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    type = SettingSwitchType.ANIMATION,
-                    showSummary = false,
-                    wrapWidth = true
-                )
-                //- 动态色彩，仅 Android 12 及以上可用
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
-                    SettingSwitchCompose(
-                        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                        type = SettingSwitchType.DYNAMIC_COLOR,
-                        showSummary = false,
-                        wrapWidth = true
-                    )
-                }
-                SettingCommonItem(
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding),
-                    iconType = R.drawable.ic_launcher_foreground,
-                    iconSize = Dimen.mediumIconSize,
-                    title = "v" + BuildConfig.VERSION_NAME,
-                    summary = stringResource(id = R.string.app_name),
-                    titleColor = MaterialTheme.colorScheme.primary,
-                    summaryColor = MaterialTheme.colorScheme.onSurface,
-                    padding = Dimen.smallPadding,
-                    tintColor = MaterialTheme.colorScheme.primary,
-                    onClick = {
-                        actions.toSetting()
-                    }
-                ) {
-                    MainIcon(data = MainIconType.MORE, size = Dimen.fabIconSize)
-                }
-                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
-            }
-        }
-    }
+//    MainSmallFab(
+//        if (icon == MainIconType.MAIN) {
+//            MainIconType.SETTING
+//        } else {
+//            icon
+//        }, modifier = modifier
+//    ) {
+//        when (icon) {
+//            MainIconType.OK -> MainActivity.navViewModel.fabOKClick.postValue(true)
+//            MainIconType.CLOSE -> MainActivity.navViewModel.fabCloseClick.postValue(true)
+//            MainIconType.MAIN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
+//            MainIconType.DOWN -> MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+//            else -> {
+//                MainActivity.navViewModel.loading.postValue(false)
+//                MainActivity.navController.navigateUp()
+//            }
+//        }
+//    }
 }

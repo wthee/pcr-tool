@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
+import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.ui.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +23,13 @@ import javax.inject.Inject
  */
 @Immutable
 data class CharacterProfileUiState(
+    //角色基本信息
     val profile: CharacterProfileInfo? = null,
+    //主页交流文本
     val homePageCommentList: List<CharacterHomePageComment> = emptyList(),
+    //公会小屋交流文本
     val roomCommentList: List<RoomCommentData> = emptyList(),
+    val loadingState: LoadingState = LoadingState.Loading
 )
 
 /**
@@ -34,16 +41,21 @@ data class CharacterProfileUiState(
 @HiltViewModel
 class CharacterProfileViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val unitId: Int? = savedStateHandle[NavRoute.UNIT_ID]
 
     private val _uiState = MutableStateFlow(CharacterProfileUiState())
     val uiState: StateFlow<CharacterProfileUiState> = _uiState.asStateFlow()
 
 
-    fun loadData(unitId: Int) {
-        getCharacter(unitId)
-        getHomePageComments(unitId)
-        getRoomComments(unitId)
+    init {
+        if(unitId != null){
+            getCharacter(unitId)
+            getHomePageComments(unitId)
+            getRoomComments(unitId)
+        }
     }
 
     /**
@@ -56,7 +68,8 @@ class CharacterProfileViewModel @Inject constructor(
             val data = unitRepository.getProfileInfo(unitId)
             _uiState.update {
                 it.copy(
-                    profile = data
+                    profile = data,
+                    loadingState =  it.loadingState.isSuccess(data != null)
                 )
             }
         }

@@ -59,7 +59,7 @@ fun MainSmallFab(
     extraContent: (@Composable () -> Unit)? = null,
     iconScale: ContentScale = ContentScale.FillWidth,
     vibrate: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit= {}
 ) {
     val context = LocalContext.current
     var mModifier = if (hasNavBarPadding) {

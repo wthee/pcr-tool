@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
@@ -76,7 +77,7 @@ data class CharacterDetailUiState(
     //加载状态
     val loadingState: LoadingState = LoadingState.Loading,
     //页面数量
-    val pageCount: Int = 0
+    val pageCount: Int = 0,
 )
 
 
@@ -237,8 +238,7 @@ class CharacterDetailViewModel @Inject constructor(
      */
     private fun getLoveState(unitId: Int) {
         viewModelScope.launch {
-            val data = MyApplication.context.dataStoreMain.data.first()
-            val list = GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
+            val list = getStarCharacterIdList()
             _uiState.update {
                 it.copy(loved = list.contains(unitId))
             }

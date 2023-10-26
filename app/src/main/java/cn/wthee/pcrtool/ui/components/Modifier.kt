@@ -27,7 +27,8 @@ import com.google.accompanist.placeholder.material.shimmer
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.clickClose(
     openDialog: Boolean,
-    isSettingPop: Boolean = false
+    isSettingPop: Boolean = false,
+    onClose: (()->Unit)? = null
 ): Modifier = composed {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -41,10 +42,13 @@ fun Modifier.clickClose(
                     onTap = {
                         VibrateUtil(context).single()
                         if (isSettingPop) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+//                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                         } else {
                             keyboardController?.hide()
                             navViewModel.fabCloseClick.postValue(true)
+                        }
+                        if (onClose != null) {
+                            onClose()
                         }
                     }
                 )

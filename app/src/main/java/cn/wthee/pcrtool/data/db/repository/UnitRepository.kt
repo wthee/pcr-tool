@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -56,10 +57,8 @@ class UnitRepository @Inject constructor(
                     //全部
                     else -> 0
                 },
-                if (filter.all) 1 else 0,
                 //六星排序时，仅显示六星角色
                 if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
-                filter.starIds,
                 filter.type,
                 limit,
                 exUnitIdList,
@@ -90,7 +89,15 @@ class UnitRepository @Inject constructor(
             }
 
 
-            return filterList
+            return if (filter.all) {
+                filterList
+            } else {
+                //筛选收藏的角色
+                val starIdList = getStarCharacterIdList()
+                filterList.filter {
+                    starIdList.contains(it.id)
+                }
+            }
         } catch (e: Exception) {
             LogReportUtil.upload(
                 e,
@@ -153,9 +160,17 @@ class UnitRepository @Inject constructor(
 
     suspend fun getMaxRarity(unitId: Int) = unitDao.getMaxRarity(unitId)
 
-    suspend fun getGuilds() = unitDao.getGuilds()
+    suspend fun getGuilds() = try {
+        unitDao.getGuilds()
+    } catch (_: Exception) {
+        emptyList()
+    }
 
-    suspend fun getRaces() = unitDao.getRaces()
+    suspend fun getRaces() = try {
+        unitDao.getRaces()
+    } catch (_: Exception) {
+        emptyList()
+    }
 
     suspend fun getAllGuildMembers() = unitDao.getAllGuildMembers()
 
@@ -163,8 +178,12 @@ class UnitRepository @Inject constructor(
 
     suspend fun getR6Ids() = unitDao.getR6Ids()
 
-    suspend fun getCharacterStoryStatus(unitId: Int) = unitDao.getCharacterStoryStatus(unitId)
-
+    suspend fun getCharacterStoryAttrList(unitId: Int) = try {
+       unitDao.getCharacterStoryAttrList(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getStoryAttrDetail:$unitId")
+        null
+    }
     suspend fun getMaxLevel() = unitDao.getMaxLevel()
 
     suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
@@ -324,7 +343,7 @@ class UnitRepository @Inject constructor(
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
         try {
-            val storyInfo = unitDao.getCharacterStoryStatus(unitId)
+            val storyInfo = unitDao.getCharacterStoryAttrList(unitId)
             storyInfo.forEach {
                 storyAttr.add(it.getAttr())
             }

@@ -67,7 +67,9 @@ import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
@@ -112,7 +114,7 @@ import kotlinx.coroutines.launch
  * @param content 常驻显示的布局
  */
 @Composable
-fun StateBox(
+fun BoxScope.StateBox(
     stateType: LoadingState,
     loadingContent: @Composable () -> Unit = {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -129,16 +131,16 @@ fun StateBox(
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
     },
-    extraContent: @Composable BoxScope.() -> Unit = {},
+    extraContent: @Composable (BoxScope.() -> Unit)? = null,
     successContent: @Composable BoxScope.() -> Unit
 ) {
-    MainScaffold {
-        when (stateType) {
-            LoadingState.Loading -> loadingContent()
-            LoadingState.NoData -> noDataContent()
-            LoadingState.Error -> errorContent()
-            LoadingState.Success -> successContent()
-        }
+    when (stateType) {
+        LoadingState.Loading -> loadingContent()
+        LoadingState.NoData -> noDataContent()
+        LoadingState.Error -> errorContent()
+        LoadingState.Success -> successContent()
+    }
+    if (extraContent != null) {
         extraContent()
     }
 }
@@ -147,24 +149,41 @@ fun StateBox(
 @Composable
 fun MainScaffold(
     modifier: Modifier = Modifier,
-    floatingActionButton: @Composable () -> Unit = {},
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    onMainFabClick: (() -> Unit)? = null,
+    mainFabIcon: MainIconType = MainIconType.BACK,
+    hideMainFab:Boolean = false,
+    floatingActionButton: @Composable (BoxScope.() -> Unit) = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        floatingActionButton = floatingActionButton,
-        backgroundColor = MaterialTheme.colorScheme.surface
+        floatingActionButton = {
+            Box(contentAlignment = Alignment.BottomEnd) {
+                floatingActionButton()
+                //主按钮
+                if(!hideMainFab){
+                    MainSmallFab(mainFabIcon){
+                        if(onMainFabClick != null){
+                            onMainFabClick()
+                        }else{
+                            //默认返回操作
+                            navigateUp()
+                        }
+                    }
+                }
+            }
+        },
+        backgroundColor = backgroundColor
     ) { paddingValues ->
         Box(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             content()
         }
     }
 }
-/**
- * 底部空白占位
- */
+
 /**
  * 底部空白占位
  */

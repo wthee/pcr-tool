@@ -1,22 +1,18 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AttrValueType
@@ -25,63 +21,59 @@ import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
 /**
  * 属性说明
  */
 @Composable
-fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
-    val coeValueFlow = remember {
-        attrViewModel.getCoefficient()
-    }
-    val coeValue by coeValueFlow.collectAsState(initial = null)
+fun CharacterStatusCoeScreen(characterStatusCoeViewModel: CharacterStatusCoeViewModel = hiltViewModel()) {
+    val uiState by characterStatusCoeViewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        coeValue?.let { coe ->
-            val coeList = arrayListOf<AttrValue>()
-            for (i in 0..16) {
-                val value = when (i) {
-                    0 -> coe.hp_coefficient
-                    1 -> coe.life_steal_coefficient
-                    2 -> coe.atk_coefficient
-                    3 -> coe.magic_str_coefficient
-                    4 -> coe.def_coefficient
-                    5 -> coe.magic_def_coefficient
-                    6 -> coe.physical_critical_coefficient
-                    7 -> coe.magic_critical_coefficient
-                    8 -> coe.physical_penetrate_coefficient
-                    9 -> coe.magic_penetrate_coefficient
-                    10 -> coe.accuracy_coefficient
-                    11 -> coe.dodge_coefficient
-                    12 -> coe.wave_hp_recovery_coefficient
-                    13 -> coe.hp_recovery_rate_coefficient
-                    14 -> coe.wave_energy_recovery_coefficient
-                    15 -> coe.energy_recovery_rate_coefficient
-                    16 -> coe.energy_reduce_rate_coefficient
-                    else -> 0.0
-                }
-                coeList.add(AttrValue(Constants.ATTR[i], value))
+    MainScaffold {
+        StateBox(stateType = uiState.loadingState) {
+            uiState.coeValue?.let { coe ->
+                CharacterStatusCoeContent(coe)
             }
-
-            StatusDesc(coeList, coe)
         }
     }
 }
 
 @Composable
-private fun StatusDesc(coeList: ArrayList<AttrValue>, coe: UnitStatusCoefficient) {
+private fun CharacterStatusCoeContent(coe: UnitStatusCoefficient) {
+    val coeList = arrayListOf<AttrValue>()
+    for (i in 0..16) {
+        val value = when (i) {
+            0 -> coe.hp_coefficient
+            1 -> coe.life_steal_coefficient
+            2 -> coe.atk_coefficient
+            3 -> coe.magic_str_coefficient
+            4 -> coe.def_coefficient
+            5 -> coe.magic_def_coefficient
+            6 -> coe.physical_critical_coefficient
+            7 -> coe.magic_critical_coefficient
+            8 -> coe.physical_penetrate_coefficient
+            9 -> coe.magic_penetrate_coefficient
+            10 -> coe.accuracy_coefficient
+            11 -> coe.dodge_coefficient
+            12 -> coe.wave_hp_recovery_coefficient
+            13 -> coe.hp_recovery_rate_coefficient
+            14 -> coe.wave_energy_recovery_coefficient
+            15 -> coe.energy_recovery_rate_coefficient
+            16 -> coe.energy_reduce_rate_coefficient
+            else -> 0.0
+        }
+        coeList.add(AttrValue(Constants.ATTR[i], value))
+    }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -184,8 +176,8 @@ private fun CoeItem(title: String, value: Double) {
 
 @CombinedPreviews
 @Composable
-private fun StatusDescPreview() {
+private fun CharacterStatusCoeContentPreview() {
     PreviewLayout {
-        StatusDesc(arrayListOf(AttrValue()), UnitStatusCoefficient())
+        CharacterStatusCoeContent(UnitStatusCoefficient())
     }
 }

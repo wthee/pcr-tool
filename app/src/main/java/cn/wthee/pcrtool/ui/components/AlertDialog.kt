@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.components
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -253,16 +254,14 @@ fun DateRangePickerCompose(
  */
 @Composable
 fun RankRangePickerCompose(
-    rank0: MutableState<Int>,
-    rank1: MutableState<Int>,
+    rank0: Int,
+    rank1: Int,
     maxRank: Int,
+    openDialog: MutableState<Boolean>,
     type: RankSelectType = RankSelectType.DEFAULT,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    updateRank: (Int, Int) -> Unit
 ) {
     val context = LocalContext.current
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
 
     val rankList = arrayListOf<Int>()
     for (i in maxRank downTo 1) {
@@ -271,54 +270,54 @@ fun RankRangePickerCompose(
 
     //选择
     val selectIndex0 = remember {
-        mutableIntStateOf(maxRank - rank0.value)
+        mutableIntStateOf(maxRank - rank0)
     }
     val selectIndex1 = remember {
-        mutableIntStateOf(maxRank - rank1.value)
+        mutableIntStateOf(maxRank - rank1)
     }
-
-    rank0.value = maxRank - selectIndex0.intValue
-    rank1.value = maxRank - selectIndex1.intValue
-
+    LaunchedEffect(selectIndex0.intValue, selectIndex1.intValue) {
+        updateRank(maxRank - selectIndex0.intValue, maxRank - selectIndex1.intValue)
+    }
 
     //关闭监听
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    if (close) {
-        openDialog = false
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
+    BackHandler(openDialog.value) {
+        openDialog.value = false
     }
 
-    Box(modifier = Modifier.clickClose(openDialog)) {
+
+    Box(
+        modifier = Modifier.clickClose(openDialog.value) {
+            openDialog.value = false
+        }
+    ) {
         //选择布局
         SmallFloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .animateContentSize(defaultSpring())
                 .padding(
-                    start = Dimen.fabMargin,
+                    start = Dimen.fabMargin + Dimen.largePadding,
                     end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                    bottom = Dimen.fabMargin + Dimen.fabSize
                 )
                 .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 //点击展开布局
-                if (!openDialog) {
+                if (!openDialog.value) {
                     VibrateUtil(context).single()
-                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    openDialog = true
+                    openDialog.value = true
                 }
             },
             elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
+                defaultElevation = if (openDialog.value) {
                     Dimen.popupMenuElevation
                 } else {
                     Dimen.fabElevation
                 }
             ),
         ) {
-            if (openDialog) {
+            if (openDialog.value) {
                 Column(
                     modifier = Modifier
                         .padding(

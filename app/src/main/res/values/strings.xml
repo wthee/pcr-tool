@@ -793,12 +793,15 @@
     <string name="leader_tier_0">综合评级</string>
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
+    <string name="leader_tier_d">T%s</string>
 
     <!--测试用-->
     <string name="debug_short_text">测试文本测试文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
-    <string name="leader_tier_d">T%s</string>
+    <string name="debug_name">测试名称（类型）</string>
+
     <string name="to_zh">（汉化）</string>
+
 
     <!-- 应用更新 -->
     <string name="download_apk_error">无法获取安装包，请确保网络正常或尝试其他方式下载更新</string>

@@ -143,12 +143,12 @@ fun RankEquipCount(
         }
 
         //RANK 选择
-        RankRangePickerCompose(
-            rank0,
-            rank1,
-            maxRank,
-            type = RankSelectType.LIMIT
-        )
+//        RankRangePickerCompose(
+//            rank0,
+//            rank1,
+//            maxRank,
+//            type = RankSelectType.LIMIT
+//        )
     }
 
 }

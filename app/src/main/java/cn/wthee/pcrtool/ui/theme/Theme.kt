@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.MainActivity
 
@@ -102,17 +104,26 @@ fun PCRToolComposeTheme(
     group = "light",
     showBackground = true
 )
+@Preview(
+    name = "tablet",
+    group = "tablet",
+    device = Devices.TABLET,
+    showBackground = true
+)
 annotation class CombinedPreviews
 
 /**
  * 预览
  */
 @Composable
-fun PreviewLayout(content: @Composable ColumnScope.() -> Unit) {
+fun PreviewLayout(
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit
+) {
     val dynamicColor =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
 
-    Column {
+    Column(horizontalAlignment = horizontalAlignment) {
         //正常主题
         MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
             Column {
@@ -120,19 +131,19 @@ fun PreviewLayout(content: @Composable ColumnScope.() -> Unit) {
             }
         }
         //动态色彩主题
-        MaterialTheme(
-            if (dynamicColor && isSystemInDarkTheme()) {
-                dynamicDarkColorScheme(LocalContext.current)
-            } else if (dynamicColor) {
-                dynamicLightColorScheme(LocalContext.current)
-            } else {
-                LightColorPalette
-            }
-        ) {
-            Column {
-                content()
-            }
-        }
+//        MaterialTheme(
+//            if (dynamicColor && isSystemInDarkTheme()) {
+//                dynamicDarkColorScheme(LocalContext.current)
+//            } else if (dynamicColor) {
+//                dynamicLightColorScheme(LocalContext.current)
+//            } else {
+//                LightColorPalette
+//            }
+//        ) {
+//            Column {
+//                content()
+//            }
+//        }
     }
 
 }

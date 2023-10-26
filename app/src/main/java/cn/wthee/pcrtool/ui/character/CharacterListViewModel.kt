@@ -4,10 +4,10 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.RoomCommentData
+import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +24,11 @@ import javax.inject.Inject
 @Immutable
 data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
-    val homePageCommentList: List<CharacterHomePageComment> = emptyList(),
-    val roomCommentList: List<RoomCommentData> = emptyList(),
+    val guildList: List<GuildData> = emptyList(),
+    val raceList: List<String> = emptyList(),
+    val filterCharacter: FilterCharacter = FilterCharacter(),
+    //收藏的角色编号
+    val startIdList: ArrayList<Int> = arrayListOf(),
     val loadingState: LoadingState = LoadingState.Loading
 )
 
@@ -42,8 +45,10 @@ class CharacterListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(CharacterListUiState())
     val uiState: StateFlow<CharacterListUiState> = _uiState.asStateFlow()
 
-    fun loadData(filter: FilterCharacter) {
-        getCharacterInfoList(filter)
+    init {
+        getGuilds()
+        getRaces()
+        initFilter()
     }
 
 
@@ -65,5 +70,76 @@ class CharacterListViewModel @Inject constructor(
     }
 
 
+    /**
+     * 公会信息
+     */
+    private fun getGuilds() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    guildList = unitRepository.getGuilds()
+                )
+            }
+        }
+    }
+
+    /**
+     * 种族信息
+     */
+    private fun getRaces() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    raceList = unitRepository.getRaces()
+                )
+            }
+        }
+    }
+
+    /**
+     * 获取筛选信息
+     */
+    private fun initFilter() {
+        viewModelScope.launch {
+            val startIdList = getStarCharacterIdList()
+            val filter = FilterCharacter()
+            _uiState.update {
+                it.copy(
+                    filterCharacter = filter,
+                    startIdList = startIdList
+                )
+            }
+            //初始加载
+            getCharacterInfoList(filter)
+        }
+    }
+
+    /**
+     * 更新筛选条件
+     */
+    fun updateFilter(filter: FilterCharacter) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    filterCharacter = filter
+                )
+            }
+            //重新加载
+            getCharacterInfoList(filter)
+        }
+    }
+
+    /**
+     * 更新收藏id
+     */
+    fun reloadStarIdList() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    startIdList = getStarCharacterIdList()
+                )
+            }
+        }
+    }
 }
 

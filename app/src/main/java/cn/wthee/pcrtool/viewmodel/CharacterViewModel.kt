@@ -48,28 +48,6 @@ class CharacterViewModel @Inject constructor(
     }
 
     /**
-     * 公会信息
-     */
-    fun getGuilds() = flow {
-        try {
-            emit(unitRepository.getGuilds())
-        } catch (_: Exception) {
-
-        }
-    }
-
-    /**
-     * 种族信息
-     */
-    fun getRaces() = flow {
-        try {
-            emit(unitRepository.getRaces())
-        } catch (_: Exception) {
-
-        }
-    }
-
-    /**
      * 角色站位
      */
     suspend fun getPvpCharacterByIds(ids: List<Int>) =

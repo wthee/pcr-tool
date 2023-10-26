@@ -33,9 +33,11 @@ import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -53,37 +55,29 @@ import cn.wthee.pcrtool.utils.fixedStr
  */
 @Composable
 fun CharacterBasicInfo(
-    unitId: Int,
     characterProfileViewModel: CharacterProfileViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
     val uiState by characterProfileViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(unitId) {
-        characterProfileViewModel.loadData(unitId)
-    }
-    //角色基本信息
-    val profile = uiState.profile
-    //主页交流文本
-    val homePageCommentList = uiState.homePageCommentList
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        profile?.let {
+
+    MainScaffold {
+        StateBox(stateType = uiState.loadingState) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProfileInfoContent(info = it)
-                HomePageCommentContent(it.getSelf(), homePageCommentList)
+                uiState.profile?.let {
+                    ProfileInfoContent(info = it)
+                    HomePageCommentContent(it.getSelf(), uiState.homePageCommentList)
+                }
                 RoomCommentContent(uiState.roomCommentList)
             }
         }
     }
+
 
 }
 
@@ -386,8 +380,35 @@ private fun CommentText(index: Int? = null, text: String) {
  */
 @CombinedPreviews
 @Composable
-private fun BasicInfoPreview() {
+private fun ProfileInfoPreview() {
     PreviewLayout {
         ProfileInfoContent(info = CharacterProfileInfo())
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun HomePageCommentContentPreview() {
+    PreviewLayout(horizontalAlignment = Alignment.CenterHorizontally) {
+        val text = stringResource(id = R.string.debug_long_text)
+        HomePageCommentContent(
+            selfText = text,
+            homePageCommentList = arrayListOf(CharacterHomePageComment(comments = text))
+        )
+    }
+
+}
+
+@CombinedPreviews
+@Composable
+private fun RoomCommentContentPreview() {
+    PreviewLayout() {
+        val text = stringResource(id = R.string.debug_long_text)
+        RoomCommentContent(
+            roomCommentList = arrayListOf(
+                RoomCommentData(roomComment = text),
+                RoomCommentData(roomComment = text)
+            )
+        )
     }
 }

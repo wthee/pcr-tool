@@ -189,8 +189,8 @@ class CharacterAttrViewModel @Inject constructor(
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
         try {
-            val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
-            storyInfo.forEach {
+            val storyInfo = unitRepository.getCharacterStoryAttrList(unitId)
+            storyInfo?.forEach {
                 storyAttr.add(it.getAttr())
             }
         } catch (e: Exception) {
@@ -206,7 +206,7 @@ class CharacterAttrViewModel @Inject constructor(
      */
     fun getStoryAttrDetail(unitId: Int) = flow {
         try {
-            val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
+            val storyInfo = unitRepository.getCharacterStoryAttrList(unitId)
             emit(storyInfo)
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getStoryAttrDetail:$unitId")

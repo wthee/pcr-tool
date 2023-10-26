@@ -204,12 +204,5 @@ private fun ExtraEquipSubGroupPreview() {
             arrayListOf(1000, 20000, 3333, 444444),
             2
         ) { }
-        ExtraEquipGroup(
-            1,
-            "normal",
-            arrayListOf(1, 2, 3, 4),
-            arrayListOf(1000, 20000, 3333, 444444),
-            5
-        ) { }
     }
 }

@@ -112,7 +112,6 @@ fun CharacterDetailScreen(
     showAllInfo: Boolean = true,
     characterDetailViewModel: CharacterDetailViewModel = hiltViewModel()
 ) {
-
     val uiState by characterDetailViewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(unitId) {
         characterDetailViewModel.loadData(showAllInfo)
@@ -139,8 +138,15 @@ fun CharacterDetailScreen(
 
     MainScaffold(
         floatingActionButton = {
-            FabContent(
-                uiState = uiState,
+            CharacterDetailFabContent(
+                loadingState = uiState.loadingState,
+                currentId = uiState.currentId,
+                cutinId = uiState.cutinId,
+                showAllInfo = uiState.showAllInfo,
+                isCutinSkill = uiState.isCutinSkill,
+                isEditMode = uiState.isEditMode,
+                loved = uiState.loved,
+                orderData = uiState.orderData,
                 changeCutin = characterDetailViewModel::changeCutin,
                 changeEditMode = characterDetailViewModel::changeEditMode,
                 updateStarCharacterId = characterDetailViewModel::updateStarCharacterId,
@@ -195,27 +201,34 @@ fun CharacterDetailScreen(
  * 收藏、编辑、技能循环、技能形态、角色详情
  */
 @Composable
-private fun FabContent(
-    uiState: CharacterDetailUiState,
+private fun CharacterDetailFabContent(
+    loadingState: LoadingState,
+    currentId: Int,
+    cutinId: Int,
+    showAllInfo: Boolean,
+    isCutinSkill: Boolean,
+    isEditMode: Boolean,
+    loved: Boolean,
+    orderData: String,
     changeCutin: () -> Unit,
     changeEditMode: (Boolean) -> Unit,
     updateStarCharacterId: () -> Unit,
     toCharacterSkillLoop: (Int) -> Unit,
     toCharacterDetail: (Int) -> Unit,
 ) {
-    if (uiState.loadingState == LoadingState.Success) {
+    if (loadingState == LoadingState.Success) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
-            if (uiState.cutinId != 0 && uiState.showAllInfo) {
+            if (cutinId != 0 && showAllInfo) {
                 //角色技能形态
                 MainSmallFab(
-                    iconType = if (uiState.isCutinSkill) {
+                    iconType = if (isCutinSkill) {
                         MainIconType.CHARACTER_CUTIN_SKILL
                     } else {
                         MainIconType.CHARACTER_NORMAL_SKILL
                     },
-                    text = if (uiState.isCutinSkill) {
+                    text = if (isCutinSkill) {
                         stringResource(id = R.string.cutin_skill)
                     } else {
                         ""
@@ -230,8 +243,8 @@ private fun FabContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                if (uiState.showAllInfo) {
-                    if (!uiState.isEditMode) {
+                if (showAllInfo) {
+                    if (!isEditMode) {
                         //编辑
                         MainSmallFab(
                             iconType = MainIconType.EDIT_TOOL,
@@ -242,7 +255,7 @@ private fun FabContent(
 
                         //收藏
                         MainSmallFab(
-                            iconType = if (uiState.loved) {
+                            iconType = if (loved) {
                                 MainIconType.LOVE_FILL
                             } else {
                                 MainIconType.LOVE_LINE
@@ -253,12 +266,12 @@ private fun FabContent(
                     }
 
                     //技能循环
-                    if (!uiState.orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
+                    if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
                         MainSmallFab(
                             iconType = MainIconType.SKILL_LOOP,
                         ) {
-                            if (!uiState.isEditMode) {
-                                toCharacterSkillLoop(uiState.currentId)
+                            if (!isEditMode) {
+                                toCharacterSkillLoop(currentId)
                             }
                         }
                     }
@@ -269,7 +282,7 @@ private fun FabContent(
                         iconType = MainIconType.CHARACTER,
                         text = stringResource(id = R.string.character_detail)
                     ) {
-                        toCharacterDetail(uiState.unitId)
+                        toCharacterDetail(currentId)
                     }
                 }
             }
@@ -460,7 +473,7 @@ private fun CharacterDetailContent(
                         CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(uiState.basicInfo)
 
                         //技能循环
-                        CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoop(
+                        CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoopScreen(
                             unitId = uiState.currentId,
                             scrollable = false
                         )
@@ -503,7 +516,7 @@ private fun CharacterCard(
     ) {
         //卡面信息
         Box {
-            CharacterItem(
+            CharacterItemContent(
                 unitId = unitId, character = basicInfo, loved = loved
             ) {
                 toAllPics(unitId, AllPicsType.CHARACTER.type)
@@ -1008,13 +1021,20 @@ private fun StarSelectContent(
 @Composable
 private fun FabContentPreview() {
     PreviewLayout {
-        FabContent(
-            uiState = CharacterDetailUiState(loadingState = LoadingState.Success),
-            {},
-            {},
-            {},
-            {},
-            {},
+        CharacterDetailFabContent(
+            loadingState = LoadingState.Success,
+            currentId = 101001,
+            cutinId = 101001,
+            showAllInfo = true,
+            isCutinSkill = true,
+            isEditMode = false,
+            loved = true,
+            orderData = "",
+            changeCutin = {},
+            changeEditMode = {},
+            updateStarCharacterId = {},
+            toCharacterSkillLoop = {},
+            toCharacterDetail = {},
         )
     }
 }
@@ -1029,8 +1049,9 @@ private fun CharacterCardPreview() {
             basicInfo = CharacterInfo(
                 id = 100101,
                 position = 100
-            )
-        ) { _, _ -> }
+            ),
+            toAllPics = { _, _ -> }
+        )
     }
 }
 
@@ -1055,9 +1076,9 @@ private fun OtherToolsContentPreview() {
             unitId = 100101,
             currentValue = CharacterProperty(),
             maxRank = 1,
-            { _, _, _, _, _, _ -> },
-            { _, _ -> },
-            {}
+            toCharacterRankCompare = { _, _, _, _, _, _ -> },
+            toCharacterEquipCount = { _, _ -> },
+            toCharacterExtraEquip = {}
         )
     }
 }
@@ -1069,7 +1090,7 @@ private fun LevelContentPreview() {
         LevelContent(
             currentValue = CharacterProperty(),
             maxLevel = 100,
-            {}
+            updateCurrentValue = {}
         )
     }
 }
@@ -1094,7 +1115,7 @@ private fun CharacterCoeContentPreview() {
             coeValue = UnitStatusCoefficient(),
             allAttr = AllAttrData(),
             currentValue = CharacterProperty(),
-            { },
+            toCoe = { },
         )
     }
 }
@@ -1130,7 +1151,7 @@ private fun StarSelectContentPreview() {
         StarSelectContent(
             currentValue = CharacterProperty(rarity = 5),
             max = 6,
-            { },
+            updateCurrentValue = { }
         )
     }
 }

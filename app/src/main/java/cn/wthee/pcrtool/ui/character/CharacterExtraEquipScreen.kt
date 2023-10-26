@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -14,9 +15,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipGroup
 import cn.wthee.pcrtool.utils.intArrayList
 
@@ -30,14 +34,15 @@ fun CharacterExtraEquipScreen(
     characterExtraEquipViewModel: CharacterExtraEquipViewModel = hiltViewModel()
 ) {
     val uiState by characterExtraEquipViewModel.uiState.collectAsStateWithLifecycle()
-    val equipList = uiState.extraEquipList
 
-
-    StateBox(
-        stateType = uiState.loadingState
-    ) {
-        CharacterExtraEquipContent(scrollState, equipList, toExtraEquipDetail)
+    MainScaffold {
+        StateBox(
+            stateType = uiState.loadingState
+        ) {
+            CharacterExtraEquipContent(scrollState, uiState.extraEquipList, toExtraEquipDetail)
+        }
     }
+
 }
 
 @Composable
@@ -70,5 +75,21 @@ private fun CharacterExtraEquipContent(
         item {
             CommonSpacer()
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun CharacterExtraEquipContentPreview() {
+    PreviewLayout {
+        CharacterExtraEquipContent(
+            scrollState = rememberLazyListState(),
+            equipList = arrayListOf(
+                CharacterExtraEquipData(exEquipmentIds = "1-2"),
+                CharacterExtraEquipData(exEquipmentIds = "1-2")
+            ),
+            toExtraEquipDetail = {},
+        )
     }
 }
