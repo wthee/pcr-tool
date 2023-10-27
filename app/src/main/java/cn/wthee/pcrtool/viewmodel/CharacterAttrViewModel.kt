@@ -200,20 +200,6 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 获取角色剧情属性详情
-     *
-     * @param unitId 角色编号
-     */
-    fun getStoryAttrDetail(unitId: Int) = flow {
-        try {
-            val storyInfo = unitRepository.getCharacterStoryAttrList(unitId)
-            emit(storyInfo)
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getStoryAttrDetail:$unitId")
-        }
-    }
-
-    /**
      * 获取被动技能数据
      */
     private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionDetail {
@@ -230,40 +216,4 @@ class CharacterAttrViewModel @Inject constructor(
             SkillActionDetail()
         }
     }
-
-    /**
-     * 获取指定角色属性对比
-     *
-     * @param rank0 当前rank
-     * @param rank1 目标rank
-     */
-    fun getUnitAttrCompare(
-        unitId: Int,
-        level: Int,
-        rarity: Int,
-        uniqueEquipLevel: Int,
-        uniqueEquipLevel2: Int,
-        rank0: Int,
-        rank1: Int
-    ) = flow {
-        try {
-            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel, uniqueEquipLevel2)
-            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel, uniqueEquipLevel2)
-            emit(attr0.sumAttr.compareWith(attr1.sumAttr))
-        } catch (_: Exception) {
-
-        }
-    }
-
-    /**
-     * 获取战力系数
-     */
-    fun getCoefficient() = flow {
-        try {
-            emit(unitRepository.getCoefficient())
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getCoefficient")
-        }
-    }
-
 }

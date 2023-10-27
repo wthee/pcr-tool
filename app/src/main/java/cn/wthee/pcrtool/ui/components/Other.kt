@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -144,6 +145,21 @@ fun StateBox(
 }
 
 
+/**
+ * 通用布局
+ * 已默认设置：背景色、最大尺寸、主悬浮按钮
+ *
+ * @param backgroundColor 背景色
+ * @param onMainFabClick 主悬浮按钮点击事件，null时为返回
+ * @param mainFabIcon 主悬浮按钮图标
+ * @param hideMainFab 是否隐藏主悬浮按钮
+ * @param enableClickClose 是否启用点击背景关闭功能
+ * @param onCloseClick 点击关闭回调
+ * @param fabWithPadding 需自定义 padding 的悬浮按钮
+ * @param fab 正常悬浮按钮
+ * @param secondLineFab 第二行显示的悬浮按钮
+ * @param content 内容
+ */
 @Composable
 fun MainScaffold(
     modifier: Modifier = Modifier,
@@ -153,9 +169,9 @@ fun MainScaffold(
     hideMainFab: Boolean = false,
     enableClickClose: Boolean = false,
     onCloseClick: () -> Unit = {},
-    noPadding: Boolean = false,
-    floatingActionButton: @Composable () -> Unit = {},
-    secondLineFloatingActionButton: @Composable () -> Unit = {},
+    fabWithPadding: @Composable BoxScope.() -> Unit = {},
+    fab: @Composable RowScope.() -> Unit = {},
+    secondLineFab: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
@@ -176,25 +192,23 @@ fun MainScaffold(
                 modifier = Modifier
                     .navigationBarsPadding()
             ) {
-                secondLineFloatingActionButton()
+                secondLineFab()
             }
 
             //底部 fab
-            if (noPadding) {
-                floatingActionButton()
-            } else {
-                Row(
-                    modifier = Modifier
-                        .padding(
-                            end = Dimen.fabMarginEnd,
-                            bottom = Dimen.fabMargin
-                        )
-                        .navigationBarsPadding(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    floatingActionButton()
-                }
+            fabWithPadding()
+            //底部 fab 行
+            Row(
+                modifier = Modifier
+                    .padding(
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
+                    .navigationBarsPadding(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                fab()
             }
 
 

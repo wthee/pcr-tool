@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.ui.LoadingState
@@ -21,12 +19,9 @@ import javax.inject.Inject
 /**
  * 页面状态：角色列表
  */
-@Immutable
 data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
-    val guildList: List<GuildData> = emptyList(),
-    val raceList: List<String> = emptyList(),
-    val filterCharacter: FilterCharacter = FilterCharacter(),
+    val filter: FilterCharacter? = null,
     //收藏的角色编号
     val startIdList: ArrayList<Int> = arrayListOf(),
     val loadingState: LoadingState = LoadingState.Loading
@@ -44,12 +39,6 @@ class CharacterListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(CharacterListUiState())
     val uiState: StateFlow<CharacterListUiState> = _uiState.asStateFlow()
-
-    init {
-        getGuilds()
-        getRaces()
-        initFilter()
-    }
 
 
     /**
@@ -69,63 +58,38 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
-
-    /**
-     * 公会信息
-     */
-    private fun getGuilds() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    guildList = unitRepository.getGuilds()
-                )
-            }
-        }
-    }
-
-    /**
-     * 种族信息
-     */
-    private fun getRaces() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    raceList = unitRepository.getRaces()
-                )
-            }
-        }
-    }
-
     /**
      * 获取筛选信息
      */
-    private fun initFilter() {
+    fun initFilter(filter: FilterCharacter?) {
         viewModelScope.launch {
             val startIdList = getStarCharacterIdList()
-            val filter = FilterCharacter()
+            val initFilter= filter?: FilterCharacter()
             _uiState.update {
                 it.copy(
-                    filterCharacter = filter,
+                    filter =initFilter,
                     startIdList = startIdList
                 )
             }
+
             //初始加载
-            getCharacterInfoList(filter)
+            getCharacterInfoList(initFilter)
         }
     }
 
     /**
-     * 更新筛选条件
+     * 重置筛选
      */
-    fun updateFilter(filter: FilterCharacter) {
+    fun resetFilter() {
         viewModelScope.launch {
+            val filter = FilterCharacter()
+            val list = unitRepository.getCharacterInfoList(filter, Int.MAX_VALUE)
             _uiState.update {
                 it.copy(
-                    filterCharacter = filter
+                    filter = filter,
+                    characterList = list
                 )
             }
-            //重新加载
-            getCharacterInfoList(filter)
         }
     }
 
@@ -134,9 +98,10 @@ class CharacterListViewModel @Inject constructor(
      */
     fun reloadStarIdList() {
         viewModelScope.launch {
+            val data = getStarCharacterIdList()
             _uiState.update {
                 it.copy(
-                    startIdList = getStarCharacterIdList()
+                    startIdList = data
                 )
             }
         }

@@ -205,15 +205,6 @@ class EquipmentViewModel @Inject constructor(
         emit(equipmentRepository.getEquipColorNum())
     }
 
-
-    /**
-     * 获取 RANK 最大值
-     */
-    fun getMaxRank() = flow {
-        emit(equipmentRepository.getMaxRank())
-    }
-
-
     /**
      * 获取装备适用角色
      */

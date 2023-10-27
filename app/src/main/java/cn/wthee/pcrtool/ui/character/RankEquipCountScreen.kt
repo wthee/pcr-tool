@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  */
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun RankEquipCountContent(
+fun RankEquipCountScreen(
     toEquipMaterial: (Int) -> Unit,
     rankEquipCountViewModel: RankEquipCountViewModel = hiltViewModel()
 ) {
@@ -59,7 +59,7 @@ fun RankEquipCountContent(
 
     MainScaffold(
         modifier = Modifier.padding(top = Dimen.largePadding),
-        floatingActionButton = {
+        fab = {
             //回到顶部
             var allCount = 0
             uiState.equipmentMaterialList?.forEach {
@@ -74,7 +74,7 @@ fun RankEquipCountContent(
                 }
             }
         },
-        secondLineFloatingActionButton = {
+        secondLineFab = {
             //RANK 选择
             RankRangePickerCompose(
                 rank0 = uiState.rank0,
@@ -99,75 +99,99 @@ fun RankEquipCountContent(
             openDialog.value = false
         }
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            //标题
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(text = stringResource(id = if (uiState.isAllUnit) R.string.all_unit_calc_equip else R.string.calc_equip_count))
-                RankText(
-                    rank = uiState.rank0,
-                    modifier = Modifier.padding(start = Dimen.mediumPadding)
-                )
-                MainContentText(
-                    text = stringResource(id = R.string.to),
-                    modifier = Modifier.padding(horizontal = Dimen.smallPadding)
-                )
-                RankText(
-                    rank = uiState.rank1
-                )
-            }
-
-
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding),
-                contentPadding = PaddingValues(horizontal = Dimen.mediumPadding),
-                state = scrollState
-            ) {
-                when (uiState.loadingState) {
-                    LoadingState.Success -> {
-                        items(
-                            items = uiState.equipmentMaterialList!!,
-                            key = {
-                                it.id
-                            }
-                        ) { item ->
-                            EquipCountItem(
-                                item,
-                                starIds.contains(item.id),
-                                toEquipMaterial
-                            )
-                        }
-                    }
-
-                    LoadingState.Loading -> {
-                        items(count = 10) {
-                            EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
-                        }
-                    }
-
-                    LoadingState.Error -> {
-                        items(count = 10) {
-                            EquipCountItem(EquipmentMaterial(-1), false, toEquipMaterial)
-                        }
-                    }
-
-                    LoadingState.NoData -> {}
-                }
-                items(10) {
-                    CommonSpacer()
-                }
-            }
+        uiState.equipmentMaterialList?.let {
+            RankEquipCountContent(
+                rank0 = uiState.rank0,
+                rank1 = uiState.rank1,
+                isAllUnit = uiState.isAllUnit,
+                loadingState = uiState.loadingState,
+                equipmentMaterialList = it,
+                scrollState = scrollState,
+                starIds = starIds,
+                toEquipMaterial = toEquipMaterial
+            )
         }
-
     }
 
+}
+
+@Composable
+private fun RankEquipCountContent(
+    rank0: Int,
+    rank1: Int,
+    isAllUnit: Boolean,
+    loadingState: LoadingState,
+    equipmentMaterialList: List<EquipmentMaterial>,
+    scrollState: LazyGridState,
+    starIds: ArrayList<Int>,
+    toEquipMaterial: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        //标题
+        Row(
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(text = stringResource(id = if (isAllUnit) R.string.all_unit_calc_equip else R.string.calc_equip_count))
+            RankText(
+                rank = rank0,
+                modifier = Modifier.padding(start = Dimen.mediumPadding)
+            )
+            MainContentText(
+                text = stringResource(id = R.string.to),
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+            )
+            RankText(
+                rank = rank1
+            )
+        }
+
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding),
+            contentPadding = PaddingValues(horizontal = Dimen.mediumPadding),
+            state = scrollState
+        ) {
+            when (loadingState) {
+                LoadingState.Success -> {
+                    items(
+                        items = equipmentMaterialList,
+                        key = {
+                            it.id
+                        }
+                    ) { item ->
+                        EquipCountItem(
+                            item,
+                            starIds.contains(item.id),
+                            toEquipMaterial
+                        )
+                    }
+                }
+
+                LoadingState.Loading -> {
+                    items(count = 10) {
+                        EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
+                    }
+                }
+
+                LoadingState.Error -> {
+                    items(count = 10) {
+                        EquipCountItem(EquipmentMaterial(-1), false, toEquipMaterial)
+                    }
+                }
+
+                LoadingState.NoData -> {}
+            }
+            items(10) {
+                CommonSpacer()
+            }
+        }
+    }
 }
 
 @Composable
@@ -191,6 +215,24 @@ private fun EquipCountItem(
         SelectText(
             selected = loved,
             text = item.count.toString(),
+        )
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun RankEquipCountContentPreview() {
+    PreviewLayout {
+        RankEquipCountContent(
+            rank0 = 1,
+            rank1 = 22,
+            isAllUnit = false,
+            loadingState = LoadingState.Success,
+            equipmentMaterialList = arrayListOf(EquipmentMaterial(1), EquipmentMaterial(2)),
+            scrollState = rememberLazyGridState(),
+            starIds = arrayListOf(1),
+            toEquipMaterial = {}
         )
     }
 }

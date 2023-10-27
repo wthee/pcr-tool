@@ -10,7 +10,7 @@ object GsonUtil {
     /**
      * Gson 转化
      */
-    private inline fun <reified T : Any> fromJson(json: String?): T? {
+    inline fun <reified T : Any> fromJson(json: String?): T? {
         return Gson().fromJson(json, T::class.java)
     }
 

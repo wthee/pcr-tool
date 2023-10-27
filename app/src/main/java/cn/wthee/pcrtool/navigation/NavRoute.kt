@@ -77,5 +77,8 @@ object NavRoute {
     const val SEARCH_EQUIP_IDS = "searchEquipIds"
     const val UNIQUE_EQUIP_LIST = "uniqueEquipList"
     const val UNIQUE_EQUIP_DETAIL = "UniqueEquipDetail"
+    //角色过滤
+    const val FILTER_CHARACTER = "filterCharacter"
+    const val FILTER_DATA = "filterData"
 
 }

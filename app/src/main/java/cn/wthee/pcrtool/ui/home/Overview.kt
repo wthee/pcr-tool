@@ -151,8 +151,7 @@ fun Overview(
                 showDropMenu.value = !showDropMenu.value
             }
         },
-        noPadding = true,
-        floatingActionButton = {
+        fabWithPadding = {
             //数据切换功能
             ChangeDbCompose(showChangeDb) {
                 //避免同时弹出
@@ -163,7 +162,7 @@ fun Overview(
                 }
             }
         },
-        secondLineFloatingActionButton = {
+        secondLineFab = {
             //菜单
             SettingDropMenu(showDropMenu, actions)
         },

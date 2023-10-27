@@ -26,12 +26,13 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.CharacterDetailScreen
 import cn.wthee.pcrtool.ui.character.CharacterExtraEquipScreen
+import cn.wthee.pcrtool.ui.character.CharacterListFilterScreen
 import cn.wthee.pcrtool.ui.character.CharacterListScreen
 import cn.wthee.pcrtool.ui.character.CharacterSkillLoopScreen
 import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
 import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.character.RankCompareScreen
-import cn.wthee.pcrtool.ui.character.RankEquipCountContent
+import cn.wthee.pcrtool.ui.character.RankEquipCountScreen
 import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -83,10 +84,11 @@ import com.google.accompanist.navigation.material.bottomSheet
 
 //返回上一级监听
 @OptIn(ExperimentalMaterialApi::class)
-suspend  fun navigateUpSheet(){
+suspend fun navigateUpSheet() {
     MainActivity.navSheetState.hide()
 }
- fun navigateUp(){
+
+fun navigateUp() {
     MainActivity.navController.navigateUp()
 }
 
@@ -143,7 +145,20 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyGridState()
-                CharacterListScreen(scrollState, actions.toCharacterDetail)
+                CharacterListScreen(
+                    scrollState = scrollState,
+                    toCharacterDetail =  actions.toCharacterDetail,
+                    toFilterCharacter = actions.toFilterCharacter
+                )
+            }
+            //角色列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_CHARACTER}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                CharacterListFilterScreen()
             }
 
             //角色属性详情
@@ -377,7 +392,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                RankEquipCountContent(
+                RankEquipCountScreen(
                     actions.toEquipMaterial
                 )
             }
@@ -580,7 +595,10 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                CharacterSkillLoopScreen(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
+                CharacterSkillLoopScreen(
+                    unitId = arguments.getInt(NavRoute.UNIT_ID),
+                    scrollable = true
+                )
             }
 
             //额外随机装备掉落地区
@@ -1076,4 +1094,10 @@ class NavActions(navController: NavHostController) {
         navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}")
     }
 
+    /**
+     * 角色筛选
+     */
+    val toFilterCharacter: (String ) -> Unit = {filter ->
+        navController.navigate("${NavRoute.FILTER_CHARACTER}/${filter}")
+    }
 }

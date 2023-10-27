@@ -137,7 +137,7 @@ fun CharacterDetailScreen(
     }
 
     MainScaffold(
-        floatingActionButton = {
+        fab = {
             CharacterDetailFabContent(
                 loadingState = uiState.loadingState,
                 currentId = uiState.currentId,
@@ -151,7 +151,7 @@ fun CharacterDetailScreen(
                 toCharacterSkillLoop = actions.toCharacterSkillLoop,
             )
         },
-        secondLineFloatingActionButton = {
+        secondLineFab = {
             ChangeCutinFabContent(
                 loadingState = uiState.loadingState,
                 cutinId = uiState.cutinId,

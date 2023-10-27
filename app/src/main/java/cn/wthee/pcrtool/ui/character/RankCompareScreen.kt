@@ -58,14 +58,14 @@ fun RankCompareScreen(
 
     MainScaffold(
         modifier = Modifier.padding(top = Dimen.largePadding),
-        floatingActionButton = {
+        fab = {
             MainSmallFab(
                 iconType = MainIconType.RANK_COMPARE,
                 text = stringResource(id = R.string.rank_compare)
             )
 
         },
-        secondLineFloatingActionButton = {
+        secondLineFab = {
             //RANK 选择
             RankRangePickerCompose(
                 rank0 = uiState.rank0,

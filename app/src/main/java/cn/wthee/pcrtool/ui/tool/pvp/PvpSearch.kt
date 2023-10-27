@@ -136,7 +136,7 @@ fun PvpSearchCompose(
                 navigateUp()
             }
         },
-        floatingActionButton = {
+        fab = {
             //底部悬浮按钮
             if (!showResult && !floatWindow) {
                 //悬浮窗
