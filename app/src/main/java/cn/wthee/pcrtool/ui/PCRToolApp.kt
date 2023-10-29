@@ -6,7 +6,6 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -14,10 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavGraph
-import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -72,18 +69,8 @@ private fun Home(
     MainActivity.navViewModel = mNavViewModel
 
     val loading = MainActivity.navViewModel.loading.observeAsState().value ?: false
-    val r6IdList = MainActivity.navViewModel.r6Ids.observeAsState()
 
-    if (r6IdList.value != null) {
-        MainActivity.r6Ids = r6IdList.value!!
-    }
 
-    //首页使用bottom sheet时，关闭时主按钮初始
-    LaunchedEffect(bottomSheetNavigator.navigatorSheetState.isVisible) {
-        if (MainActivity.navController.currentDestination?.route == NavRoute.HOME) {
-            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-        }
-    }
 
     MainScaffold(
         hideMainFab = true

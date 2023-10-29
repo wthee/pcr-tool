@@ -67,9 +67,9 @@ fun CharacterListFilterScreen(
     ) {
         CharacterListFilterContent(
             filter = uiState.filter,
-            uiState.raceList,
-            uiState.guildList,
-            characterListFilterViewModel::updateFilter
+            raceList = uiState.raceList,
+            guildList = uiState.guildList,
+            updateFilter = characterListFilterViewModel::updateFilter
         )
     }
 }

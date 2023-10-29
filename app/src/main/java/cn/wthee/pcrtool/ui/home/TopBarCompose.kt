@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -84,7 +83,8 @@ import cn.wthee.pcrtool.workers.ApkDownloadWorker
  */
 @Composable
 fun TopBarCompose(
-    isEditMode: MutableState<Boolean>,
+    isEditMode: Boolean,
+    changeEditMode: () -> Unit,
     noticeViewModel: NoticeViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     //应用更新通知
@@ -183,11 +183,11 @@ fun TopBarCompose(
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
                 //编辑
                 MainIcon(
-                    data = if (isEditMode.value) MainIconType.OK else MainIconType.EDIT_TOOL,
+                    data = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
                     tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 ) {
-                    isEditMode.value = !isEditMode.value
+                    changeEditMode()
                 }
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
@@ -370,11 +370,11 @@ private fun UpdateContent(
                         end = Dimen.largePadding
                     )
                     .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 //从GitHub下载
                 SubButton(
                     text = stringResource(id = R.string.download_apk_from_github),
-                    modifier = Modifier.weight(1f)
                 ) {
                     downloadApk(githubReleaseUrl, context)
                 }
@@ -382,7 +382,6 @@ private fun UpdateContent(
                 MainButton(
                     text = stringResource(id = R.string.download_apk),
                     containerColor = colorGreen,
-                    modifier = Modifier.weight(1f)
                 ) {
                     if (appNotice.url.contains("coolapk")) {
                         //从酷安下载

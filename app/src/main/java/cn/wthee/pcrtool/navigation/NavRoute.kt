@@ -35,6 +35,8 @@ object NavRoute {
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
+    const val EQUIP_NAME = "equipName"
+
     //最大rank
     const val MAX_RANK = "maxRank"
     //等级
@@ -77,8 +79,14 @@ object NavRoute {
     const val SEARCH_EQUIP_IDS = "searchEquipIds"
     const val UNIQUE_EQUIP_LIST = "uniqueEquipList"
     const val UNIQUE_EQUIP_DETAIL = "UniqueEquipDetail"
+
     //角色过滤
     const val FILTER_CHARACTER = "filterCharacter"
+
+    //装备筛选
+    const val FILTER_EQUIP = "filterEquip"
     const val FILTER_DATA = "filterData"
 
+    //角色详情是否显示所有信息
+    const val SHOW_ALL_INFO = "showAllInfo"
 }

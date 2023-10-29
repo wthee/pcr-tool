@@ -61,13 +61,13 @@ fun FreeGachaList(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (gachaList.isNotEmpty()) {
+        if (gachaList?.isNotEmpty() == true) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Adaptive(getItemWidth()),
             ) {
                 items(
-                    items = gachaList,
+                    items = gachaList!!,
                     key = {
                         it.id
                     }

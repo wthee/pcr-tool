@@ -138,7 +138,7 @@ private fun CharacterSummonDetail(
                         .padding(top = Dimen.largePadding * 2)
                         .align(Alignment.CenterHorizontally)
                 )
-                SkillLoopList(
+                SkillLoopScreen(
                     loopData,
                     unitType = UnitType.CHARACTER_SUMMON,
                     modifier = Modifier.padding(
@@ -149,7 +149,7 @@ private fun CharacterSummonDetail(
                 )
 
                 //技能信息
-                SkillCompose(
+                SkillListScreen(
                     unitId = unitId,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
                     unitType = UnitType.CHARACTER_SUMMON,

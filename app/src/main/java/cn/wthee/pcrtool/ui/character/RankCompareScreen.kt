@@ -84,6 +84,7 @@ fun RankCompareScreen(
                 }
             }
         },
+        mainFabIcon = if (openDialog.value) MainIconType.CLOSE else MainIconType.BACK,
         enableClickClose = openDialog.value,
         onCloseClick = {
             openDialog.value = false

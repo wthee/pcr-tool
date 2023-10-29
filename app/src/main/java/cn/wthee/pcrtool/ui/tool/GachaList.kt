@@ -104,7 +104,7 @@ fun GachaList(
                 ) {
                     GachaItem(
                         gachaInfo = it,
-                        fesUnitIds = fesUnitIds,
+                        fesUnitIdList = fesUnitIds,
                         toCharacterDetail = toCharacterDetail,
                         toMockGacha = toMockGacha
                     )
@@ -148,7 +148,7 @@ fun GachaList(
 @Composable
 fun GachaItem(
     gachaInfo: GachaInfo,
-    fesUnitIds: List<Int>,
+    fesUnitIdList: List<Int>,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
@@ -164,7 +164,7 @@ fun GachaItem(
     }
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
-        icons.find { !fesUnitIds.contains(it) } != null && icons.find { fesUnitIds.contains(it) } != null
+        icons.find { !fesUnitIdList.contains(it) } != null && icons.find { fesUnitIdList.contains(it) } != null
     val mockGachaType = when (type) {
         GachaType.FES -> MockGachaType.FES
         GachaType.RE_LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
@@ -252,7 +252,7 @@ private fun GachaItemPreview() {
             gachaInfo = GachaInfo(),
             toCharacterDetail = {},
             toMockGacha = {},
-            fesUnitIds = arrayListOf()
+            fesUnitIdList = arrayListOf()
         )
     }
 }

@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -58,11 +58,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val loading = MutableLiveData(false)
 
     /**
-     * 已六星的角色ID
-     */
-    val r6Ids = MutableLiveData(listOf<Int>())
-
-    /**
      * 重置
      */
     val resetClick = MutableLiveData(false)
@@ -75,7 +70,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 装备筛选
      */
-    var filterEquip = MutableLiveData<FilterEquipment?>()
+    var filterEquip = MutableLiveData<FilterEquip?>()
 
     /**
      * ex装备筛选

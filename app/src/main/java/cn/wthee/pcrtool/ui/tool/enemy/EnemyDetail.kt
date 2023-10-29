@@ -41,7 +41,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItem
-import cn.wthee.pcrtool.ui.skill.SkillLoopList
+import cn.wthee.pcrtool.ui.skill.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -273,7 +273,7 @@ fun EnemySkillList(
                     .padding(top = Dimen.largePadding)
                     .align(Alignment.CenterHorizontally)
             )
-            SkillLoopList(
+            SkillLoopScreen(
                 loopData = it,
                 unitType = unitType,
                 modifier = Modifier

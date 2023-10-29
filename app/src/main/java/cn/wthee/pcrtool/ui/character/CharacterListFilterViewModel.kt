@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +8,7 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.utils.GsonUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 /**
  * 页面状态：角色列表
  */
+@Immutable
 data class CharacterListFilterUiState(
     val guildList: List<GuildData> = emptyList(),
     val raceList: List<String> = emptyList(),
@@ -92,10 +94,16 @@ class CharacterListFilterViewModel @Inject constructor(
      * 更新筛选条件
      */
     fun updateFilter(filter: FilterCharacter) {
-        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.set(
+        setData(
             NavRoute.FILTER_DATA,
-            Gson().toJson(filter)
+            Gson().toJson(filter),
+            prev = true
         )
+        _uiState.update {
+            it.copy(
+                filter = filter
+            )
+        }
     }
 
 }

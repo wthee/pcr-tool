@@ -33,11 +33,12 @@ import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
 import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.character.RankCompareScreen
 import cn.wthee.pcrtool.ui.character.RankEquipCountScreen
-import cn.wthee.pcrtool.ui.character.RankEquipList
-import cn.wthee.pcrtool.ui.equip.EquipList
-import cn.wthee.pcrtool.ui.equip.EquipMainInfo
-import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
-import cn.wthee.pcrtool.ui.equip.EquipUnitList
+import cn.wthee.pcrtool.ui.character.RankEquipListScreen
+import cn.wthee.pcrtool.ui.equip.EquipDetailScreen
+import cn.wthee.pcrtool.ui.equip.EquipListFilterScreen
+import cn.wthee.pcrtool.ui.equip.EquipListScreen
+import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
+import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.picture.PictureScreen
 import cn.wthee.pcrtool.ui.skill.SummonDetail
@@ -82,14 +83,41 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
 
 
-//返回上一级监听
+//返回上一级
 @OptIn(ExperimentalMaterialApi::class)
 suspend fun navigateUpSheet() {
     MainActivity.navSheetState.hide()
 }
 
+//返回上一级
 fun navigateUp() {
     MainActivity.navController.navigateUp()
+}
+
+/**
+ * 设置当前页面数据
+ *
+ * @param prev 设置上一页面数据
+ */
+fun <T> setData(key: String, value: T?, prev: Boolean = false) {
+    if (prev) {
+        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.set(
+            key,
+            value
+        )
+    } else {
+        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.set(
+            key,
+            value
+        )
+    }
+}
+
+/**
+ * 获取当前页面数据
+ */
+fun <T> getData(key: String): T? {
+    return MainActivity.navController.currentBackStackEntry?.savedStateHandle?.get<T>(key)
 }
 
 /**
@@ -168,9 +196,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetailScreen(unitId = arguments.getInt(NavRoute.UNIT_ID), actions)
+                CharacterDetailScreen(actions)
             }
 
             //角色图片详情
@@ -212,12 +238,23 @@ fun NavGraph(
             ) {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                EquipList(
+                EquipListScreen(
                     scrollState = scrollState,
                     toEquipDetail = actions.toEquipDetail,
                     toEquipMaterial = actions.toEquipMaterial,
-                    toSearchEquipQuest = actions.toSearchEquipQuest
+                    toSearchEquipQuest = actions.toSearchEquipQuest,
+                    toFilterEquip = actions.toFilterEquip,
                 )
+            }
+
+            //装备列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_EQUIP}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                EquipListFilterScreen()
             }
 
             //ex装备列表
@@ -268,7 +305,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                EquipMainInfo(
+                EquipDetailScreen(
                     arguments.getInt(NavRoute.EQUIP_ID),
                     toEquipMaterial = actions.toEquipMaterial,
                     toEquipUnit = actions.toEquipUnit
@@ -282,8 +319,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                EquipUnitList(equipId = arguments.getInt(NavRoute.EQUIP_ID))
+                EquipUnitListScreen()
             }
 
             //ex装备详情
@@ -326,13 +362,14 @@ fun NavGraph(
 
             //装备素材详情
             bottomSheet(
-                route = "${NavRoute.EQUIP_MATERIAL}/{${NavRoute.EQUIP_ID}}",
+                route = "${NavRoute.EQUIP_MATERIAL}/{${NavRoute.EQUIP_ID}}/{${NavRoute.EQUIP_NAME}}",
                 arguments = listOf(navArgument(NavRoute.EQUIP_ID) {
                     type = NavType.IntType
+                }, navArgument(NavRoute.EQUIP_NAME) {
+                    type = NavType.StringType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                EquipMaterialDetail(arguments.getInt(NavRoute.EQUIP_ID))
+                EquipMaterialDropInfoScreen()
             }
 
             //角色 RANK 装备
@@ -344,11 +381,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankEquipList(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    currentRank = arguments.getInt(NavRoute.RANK)
-                )
+                RankEquipListScreen()
             }
 
             //角色 RANK 对比
@@ -391,6 +424,15 @@ fun NavGraph(
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
                 })
+            ) {
+                RankEquipCountScreen(
+                    actions.toEquipMaterial
+                )
+            }
+
+            //全角色装备统计
+            composable(
+                route = NavRoute.ALL_EQUIP
             ) {
                 RankEquipCountScreen(
                     actions.toEquipMaterial
@@ -729,18 +771,14 @@ fun NavGraph(
 
             //专用装备属性详情
             composable(
-                route = "${NavRoute.UNIQUE_EQUIP_DETAIL}/{${NavRoute.UNIT_ID}}",
+                route = "${NavRoute.UNIQUE_EQUIP_DETAIL}/{${NavRoute.UNIT_ID}}/{${NavRoute.SHOW_ALL_INFO}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
+                }, navArgument(NavRoute.SHOW_ALL_INFO) {
+                    type = NavType.BoolType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetailScreen(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    actions,
-                    showAllInfo = false
-                )
+                CharacterDetailScreen(actions)
             }
         }
     }
@@ -810,8 +848,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 装备素材详情
      */
-    val toEquipMaterial: (Int) -> Unit = { equipId: Int ->
-        navController.navigate("${NavRoute.EQUIP_MATERIAL}/${equipId}")
+    val toEquipMaterial: (Int, String) -> Unit = { equipId, equipName ->
+        navController.navigate("${NavRoute.EQUIP_MATERIAL}/${equipId}/${equipName}")
     }
 
     /**
@@ -1091,13 +1129,20 @@ class NavActions(navController: NavHostController) {
      * 专用装备详情
      */
     val toUniqueEquipDetail: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}")
+        navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}/${false}")
     }
 
     /**
      * 角色筛选
      */
-    val toFilterCharacter: (String ) -> Unit = {filter ->
+    val toFilterCharacter: (String) -> Unit = { filter ->
         navController.navigate("${NavRoute.FILTER_CHARACTER}/${filter}")
+    }
+
+    /**
+     * 装备筛选
+     */
+    val toFilterEquip: (String) -> Unit = { filter ->
+        navController.navigate("${NavRoute.FILTER_EQUIP}/${filter}")
     }
 }

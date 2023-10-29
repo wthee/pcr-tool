@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.picture
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -33,6 +31,7 @@ import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainCard
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SubImage
@@ -62,11 +61,7 @@ fun PictureScreen(
 ) {
     val uiState by picsViewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    MainScaffold {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,8 +76,6 @@ fun PictureScreen(
             CommonSpacer()
         }
     }
-
-
 }
 
 /**

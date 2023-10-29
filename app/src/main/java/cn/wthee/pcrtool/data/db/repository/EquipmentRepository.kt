@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -19,12 +19,17 @@ import javax.inject.Inject
  */
 class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
 
-    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfo(equipId)
+    suspend fun getEquipmentData(equipId: Int) = try {
+        equipmentDao.getEquipInfo(equipId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipmentData#equipId:$equipId")
+        null
+    }
 
     suspend fun getEquipBasicInfo(equipId: Int) = equipmentDao.getEquipBasicInfo(equipId)
 
-    suspend fun getEquipments(filter: FilterEquipment, limit: Int) =
-        equipmentDao.getEquipments(
+    suspend fun getEquipmentList(filter: FilterEquip, limit: Int) = try {
+        equipmentDao.getEquipmentList(
             filter.craft,
             filter.colorType,
             filter.name,
@@ -32,6 +37,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             filter.starIds,
             limit
         )
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipmentList#filter:$filter")
+        null
+    }
+
 
     suspend fun getCount() = equipmentDao.getCount()
 
@@ -153,7 +163,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         null
     }
 
-    suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
+    suspend fun getRankEquipList(unitId: Int) = try {
+        equipmentDao.getRankEquipList(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAllRankEquipList#unitId:$unitId")
+        null
+    }
 
     suspend fun getMaxArea() = equipmentDao.getMaxArea()
 
@@ -172,25 +187,30 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     }
 
     suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData> {
-        val data = (try {
-            val data = equipmentDao.getUniqueEquipListV2(name, slot)
-            data
-        } catch (_: Exception) {
-            equipmentDao.getUniqueEquipList(name, slot)
-        }).reversed()
+        try {
+            val data = (try {
+                val data = equipmentDao.getUniqueEquipListV2(name, slot)
+                data
+            } catch (_: Exception) {
+                equipmentDao.getUniqueEquipList(name, slot)
+            }).reversed()
 
-        //处理台服排序
-        return if (MainActivity.regionType == RegionType.TW) {
-            data.sortedBy {
-                arrayListOf(
-                    138011,
-                    138021,
-                    138041,
-                    138061
-                ).contains(it.equipId)
+            //处理台服排序
+            return if (MainActivity.regionType == RegionType.TW) {
+                data.sortedBy {
+                    arrayListOf(
+                        138011,
+                        138021,
+                        138041,
+                        138061
+                    ).contains(it.equipId)
+                }
+            } else {
+                data
             }
-        } else {
-            data
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getUniqueEquipInfoList")
+            return emptyList()
         }
     }
 
@@ -199,7 +219,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      *
      * @param equip 装备信息
      */
-    private suspend fun getEquipCraft(equip: EquipmentBasicInfo): ArrayList<EquipmentMaterial> {
+    suspend fun getEquipCraft(equip: EquipmentBasicInfo) = try {
         val materials = arrayListOf<EquipmentMaterial>()
         if (equip.craftFlg == 0) {
             materials.add(
@@ -212,9 +232,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         } else {
             getAllMaterial(materials, equip.equipmentId, equip.equipmentName, 1, 1)
         }
-        return materials
+        materials
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipCraft#equip:${equip.equipmentId}")
+        emptyList()
     }
-
 
     /**
      * 迭代获取合成材料

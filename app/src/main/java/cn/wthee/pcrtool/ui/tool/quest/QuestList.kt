@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +36,7 @@ import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
@@ -69,11 +69,7 @@ fun AllQuestList(
     val questList by questListFlow.collectAsState(initial = null)
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    MainScaffold {
         questList?.let {
             QuestPager(
                 it,

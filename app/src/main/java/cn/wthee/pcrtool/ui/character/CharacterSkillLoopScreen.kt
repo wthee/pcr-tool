@@ -9,14 +9,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.AttackPattern
-import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.skill.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PreviewLayout
 
 /**
  * 角色技能循环（嵌入或使用bottomSheet跳转）
@@ -44,11 +41,17 @@ fun CharacterSkillLoopScreen(
         )
     }
 
-    SkillLoopList(
-        loopData = uiState.attackPatternList,
-        modifier = Modifier
-            .padding(Dimen.largePadding),
-        unitType = UnitType.CHARACTER,
-        scrollable = scrollable
-    )
+    MainScaffold(
+        hideMainFab = !scrollable,
+        fillMaxSize = false
+    ) {
+        SkillLoopScreen(
+            loopData = uiState.attackPatternList,
+            modifier = Modifier
+                .padding(Dimen.largePadding),
+            unitType = UnitType.CHARACTER,
+            scrollable = scrollable
+        )
+    }
+
 }

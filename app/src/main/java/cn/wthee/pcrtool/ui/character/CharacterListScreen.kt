@@ -42,8 +42,6 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
@@ -73,7 +71,6 @@ import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
@@ -92,15 +89,11 @@ fun CharacterListScreen(
     characterListViewModel: CharacterListViewModel = hiltViewModel(),
 ) {
     val uiState by characterListViewModel.uiState.collectAsStateWithLifecycle()
-    //加载收藏id列表
-    characterListViewModel.reloadStarIdList()
 
     //初始筛选信息
     LaunchedEffect(navSheetState.isVisible){
         if(!navSheetState.isVisible){
-            val filterData = navController.currentBackStackEntry?.savedStateHandle?.get<String>(NavRoute.FILTER_DATA)
-            val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
-            characterListViewModel.initFilter(filter)
+            characterListViewModel.initFilter()
         }
     }
     

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.picture
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,7 @@ import javax.inject.Inject
 /**
  * 页面状态：立绘列表
  */
+@Immutable
 data class PictureUiState(
     val unitCardList: ArrayList<String> = arrayListOf(),
     val storyCardList: ArrayList<String> = arrayListOf(),

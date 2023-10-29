@@ -69,7 +69,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
  * @param filterSkillCount 显示专武技能数量
  */
 @Composable
-fun SkillCompose(
+fun SkillListScreen(
     unitId: Int,
     atk: Int,
     property: CharacterProperty,

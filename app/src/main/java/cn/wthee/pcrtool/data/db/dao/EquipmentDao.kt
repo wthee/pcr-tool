@@ -93,7 +93,7 @@ interface EquipmentDao {
         LIMIT :limit
     """
     )
-    suspend fun getEquipments(
+    suspend fun getEquipmentList(
         craft: Int,
         colorType: Int,
         name: String,
@@ -420,7 +420,7 @@ interface EquipmentDao {
      */
     @SkipQueryVerification
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
-    suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
+    suspend fun getRankEquipList(unitId: Int): List<UnitPromotion>
 
     /**
      * 获取已开放的最新区域

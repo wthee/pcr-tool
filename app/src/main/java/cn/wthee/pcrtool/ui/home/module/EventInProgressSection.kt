@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
@@ -25,7 +24,6 @@ import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.VerticalGrid
@@ -40,124 +38,40 @@ import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
-import cn.wthee.pcrtool.utils.editOrder
-import cn.wthee.pcrtool.viewmodel.GachaViewModel
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 
 /**
  * 进行中活动
  */
 @Composable
-fun InProgressEventSection(
+fun EventInProgressSection(
+    updateOrderData: (Int) -> Unit,
     confirmState: MutableState<Int>,
     actions: NavActions,
     orderStr: String,
     isEditMode: Boolean,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    eventSectionViewModel: EventSectionViewModel = hiltViewModel(),
 ) {
+    val uiState by eventSectionViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(EventType.IN_PROGRESS) {
+        eventSectionViewModel.loadData(EventType.IN_PROGRESS)
+    }
 
-    //进行中掉落活动
-    val inProgressEventListFlow = remember {
-        overviewViewModel.getCalendarEventList(EventType.IN_PROGRESS)
-    }
-    val inProgressEventList by inProgressEventListFlow.collectAsState(initial = arrayListOf())
-    //进行中剧情活动
-    val inProgressStoryEventListFlow = remember {
-        overviewViewModel.getStoryEventList(EventType.IN_PROGRESS)
-    }
-    val inProgressStoryEventList by inProgressStoryEventListFlow.collectAsState(initial = arrayListOf())
-    //进行中卡池
-    val inProgressGachaListFlow = remember {
-        overviewViewModel.getGachaList(EventType.IN_PROGRESS)
-    }
-    val inProgressGachaList by inProgressGachaListFlow.collectAsState(initial = arrayListOf())
-    //进行中免费十连
-    val inProgressFreeGachaListFlow = remember {
-        overviewViewModel.getFreeGachaList(EventType.IN_PROGRESS)
-    }
-    val inProgressFreeGachaList by inProgressFreeGachaListFlow.collectAsState(initial = arrayListOf())
-    //进行中生日日程
-    val inProgressBirthdayListFlow = remember {
-        overviewViewModel.getBirthdayList(EventType.IN_PROGRESS)
-    }
-    val inProgressBirthdayList by inProgressBirthdayListFlow.collectAsState(initial = arrayListOf())
-    //进行中公会战
-    val inProgressClanBattleListFlow = remember {
-        overviewViewModel.getClanBattleEvent(EventType.IN_PROGRESS)
-    }
-    val inProgressClanBattleList by inProgressClanBattleListFlow.collectAsState(initial = arrayListOf())
 
     CalendarEventLayout(
-        isEditMode,
-        EventType.IN_PROGRESS,
-        confirmState,
-        actions,
-        orderStr,
-        inProgressEventList,
-        inProgressStoryEventList,
-        inProgressGachaList,
-        inProgressFreeGachaList,
-        inProgressBirthdayList,
-        inProgressClanBattleList
-    )
-}
-
-
-/**
- * 活动预告
- */
-@Composable
-fun ComingSoonEventSection(
-    confirmState: MutableState<Int>,
-    actions: NavActions,
-    isEditMode: Boolean,
-    orderStr: String,
-    overviewViewModel: OverviewViewModel = hiltViewModel(),
-) {
-    //预告掉落活动
-    val comingSoonEventListFlow = remember {
-        overviewViewModel.getCalendarEventList(EventType.COMING_SOON)
-    }
-    val comingSoonEventList by comingSoonEventListFlow.collectAsState(initial = arrayListOf())
-    //预告剧情活动
-    val comingSoonStoryEventListFlow = remember {
-        overviewViewModel.getStoryEventList(EventType.COMING_SOON)
-    }
-    val comingSoonStoryEventList by comingSoonStoryEventListFlow.collectAsState(initial = arrayListOf())
-    //预告卡池
-    val comingSoonGachaListFlow = remember {
-        overviewViewModel.getGachaList(EventType.COMING_SOON)
-    }
-    val comingSoonGachaList by comingSoonGachaListFlow.collectAsState(initial = arrayListOf())
-    //预告免费十连
-    val comingSoonFreeGachaFlow = remember {
-        overviewViewModel.getFreeGachaList(EventType.COMING_SOON)
-    }
-    val comingSoonFreeGachaList by comingSoonFreeGachaFlow.collectAsState(initial = arrayListOf())
-    //生日
-    val comingSoonBirthdayListFlow = remember {
-        overviewViewModel.getBirthdayList(EventType.COMING_SOON)
-    }
-    val comingSoonBirthdayList by comingSoonBirthdayListFlow.collectAsState(initial = arrayListOf())
-    //公会战
-    val comingSoonClanBattleListFlow = remember {
-        overviewViewModel.getClanBattleEvent(EventType.COMING_SOON)
-    }
-    val comingSoonClanBattleList by comingSoonClanBattleListFlow.collectAsState(initial = arrayListOf())
-
-    CalendarEventLayout(
-        isEditMode,
-        EventType.COMING_SOON,
-        confirmState,
-        actions,
-        orderStr,
-        comingSoonEventList,
-        comingSoonStoryEventList,
-        comingSoonGachaList,
-        comingSoonFreeGachaList,
-        comingSoonBirthdayList,
-        comingSoonClanBattleList
+        isEditMode = isEditMode,
+        calendarType = EventType.IN_PROGRESS,
+        confirmState = confirmState,
+        actions = actions,
+        orderStr = orderStr,
+        eventList = uiState.inProgressEventList,
+        storyEventList = uiState.inProgressStoryEventList,
+        gachaList = uiState.inProgressGachaList,
+        freeGachaList = uiState.inProgressFreeGachaList,
+        birthdayList = uiState.inProgressBirthdayList,
+        clanBattleList = uiState.inProgressClanBattleList,
+        fesUnitIdList = uiState.fesUnitIdList,
+        updateOrderData = updateOrderData,
     )
 }
 
@@ -178,15 +92,9 @@ fun CalendarEventLayout(
     freeGachaList: List<FreeGachaInfo>,
     birthdayList: List<BirthdayData>,
     clanBattleList: List<ClanBattleEvent>,
-    gachaViewModel: GachaViewModel = hiltViewModel()
+    fesUnitIdList: List<Int>,
+    updateOrderData: (Int) -> Unit,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    //fes 角色id
-    val fesUnitIdsFlow = remember {
-        gachaViewModel.getGachaFesUnitList()
-    }
-    val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
 
     val id = if (calendarType == EventType.IN_PROGRESS) {
         OverviewType.IN_PROGRESS_EVENT.id
@@ -197,6 +105,7 @@ fun CalendarEventLayout(
         eventList.isNotEmpty() || storyEventList.isNotEmpty() || gachaList.isNotEmpty()
                 || freeGachaList.isNotEmpty() || birthdayList.isNotEmpty()
                 || clanBattleList.isNotEmpty()
+
     val titleId = if (calendarType == EventType.IN_PROGRESS) {
         R.string.tool_calendar_inprogress
     } else {
@@ -214,12 +123,7 @@ fun CalendarEventLayout(
             orderStr = orderStr,
             onClick = {
                 if (isEditMode) {
-                    editOrder(
-                        context,
-                        scope,
-                        id,
-                        MainPreferencesKeys.SP_OVERVIEW_ORDER
-                    )
+                    updateOrderData(id)
                 } else {
                     //弹窗确认
                     if (confirmState.value == calendarType.type) {
@@ -246,7 +150,7 @@ fun CalendarEventLayout(
                 gachaList.forEach {
                     GachaItem(
                         gachaInfo = it,
-                        fesUnitIds = fesUnitIds,
+                        fesUnitIdList = fesUnitIdList,
                         toCharacterDetail = actions.toCharacterDetail,
                         toMockGacha = actions.toMockGacha
                     )

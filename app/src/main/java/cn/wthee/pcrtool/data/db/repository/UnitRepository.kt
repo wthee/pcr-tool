@@ -107,9 +107,12 @@ class UnitRepository @Inject constructor(
         }
     }
 
-    suspend fun getCount(): String {
+    suspend fun getCount() = try {
         val unknownCount = unitDao.getUnknownCount()
-        return unitDao.getCount().toString() + if (unknownCount > 0) " (${unknownCount})" else ""
+        unitDao.getCount().toString() + if (unknownCount > 0) " (${unknownCount})" else ""
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCharacterCount")
+        "0"
     }
 
     suspend fun getCountInt() = unitDao.getCount()
@@ -263,10 +266,13 @@ class UnitRepository @Inject constructor(
                 val equipIds = unitDao.getRankEquipment(unitId, rank).getAllOrderIds()
                 val eqs = arrayListOf<EquipmentMaxData>()
                 equipIds.forEach {
-                    if (it == ImageRequestHelper.UNKNOWN_EQUIP_ID || it == 0)
+                    if (it == ImageRequestHelper.UNKNOWN_EQUIP_ID || it == 0) {
                         eqs.add(EquipmentMaxData.unknown())
-                    else
-                        eqs.add(equipmentRepository.getEquipmentData(it))
+                    } else {
+                        equipmentRepository.getEquipmentData(it)?.let { equip ->
+                            eqs.add(equip)
+                        }
+                    }
                 }
                 allData.equips = eqs
 

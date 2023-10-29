@@ -92,19 +92,20 @@ class CharacterDetailViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
 
     private val unitId: Int? = savedStateHandle[NavRoute.UNIT_ID]
-    private val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
+    private val showAllInfo: Boolean = savedStateHandle[NavRoute.SHOW_ALL_INFO] ?: true
 
     private val _uiState = MutableStateFlow(CharacterDetailUiState())
     val uiState: StateFlow<CharacterDetailUiState> = _uiState.asStateFlow()
 
-    fun loadData(showAllInfo: Boolean) {
+    init {
         if (unitId != null) {
             _uiState.update {
                 it.copy(
                     showAllInfo = showAllInfo,
-                    unitId = unitId
+                    unitId = unitId,
                 )
             }
             updateOrderList(getOrderData(showAllInfo))
@@ -345,9 +346,9 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     /**
-     * 更新收藏的角色id
+     * 更新收藏id
      */
-    fun updateStarCharacterId() {
+    fun updateStarId() {
         viewModelScope.launch {
             if (unitId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->

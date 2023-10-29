@@ -1,13 +1,18 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.getStarCharacterIdList
+import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.navigation.getData
+import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.utils.GsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +24,7 @@ import javax.inject.Inject
 /**
  * 页面状态：角色列表
  */
+@Immutable
 data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
     val filter: FilterCharacter? = null,
@@ -61,13 +67,15 @@ class CharacterListViewModel @Inject constructor(
     /**
      * 获取筛选信息
      */
-    fun initFilter(filter: FilterCharacter?) {
+    fun initFilter() {
         viewModelScope.launch {
+            val filterData = getData<String>(NavRoute.FILTER_DATA)
+            val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
             val startIdList = getStarCharacterIdList()
-            val initFilter= filter?: FilterCharacter()
+            val initFilter = filter ?: FilterCharacter()
             _uiState.update {
                 it.copy(
-                    filter =initFilter,
+                    filter = initFilter,
                     startIdList = startIdList
                 )
             }
@@ -84,27 +92,16 @@ class CharacterListViewModel @Inject constructor(
         viewModelScope.launch {
             val filter = FilterCharacter()
             val list = unitRepository.getCharacterInfoList(filter, Int.MAX_VALUE)
+            setData(NavRoute.FILTER_DATA, null)
             _uiState.update {
                 it.copy(
                     filter = filter,
-                    characterList = list
+                    characterList = list,
+                    loadingState = updateLoadingState(list)
                 )
             }
         }
     }
 
-    /**
-     * 更新收藏id
-     */
-    fun reloadStarIdList() {
-        viewModelScope.launch {
-            val data = getStarCharacterIdList()
-            _uiState.update {
-                it.copy(
-                    startIdList = data
-                )
-            }
-        }
-    }
 }
 

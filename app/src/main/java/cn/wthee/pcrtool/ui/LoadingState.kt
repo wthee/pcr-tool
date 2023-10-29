@@ -10,8 +10,7 @@ enum class LoadingState {
     NoData,
     Error;
 
-
-    fun isSuccess(success: Boolean) = if (success) Success else this
+    fun isSuccess(success: Boolean) = if (success) Success else NoData
 
     fun isError(error: Boolean) = if (error) Error else this
 

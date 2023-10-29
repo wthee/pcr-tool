@@ -73,11 +73,11 @@ fun BirthdayList(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (dataList.isNotEmpty()) {
+        if (dataList?.isNotEmpty() == true) {
             LazyVerticalStaggeredGrid(
                 state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
-                items(items = dataList, key = {
+                items(items = dataList!!, key = {
                     "${it.month}/${it.day}"
                 }) {
                     BirthdayItem(it, toCharacterDetail)

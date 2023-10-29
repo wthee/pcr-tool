@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.getStarEquipIdList
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
@@ -28,6 +29,8 @@ data class RankEquipCountUiState(
     val equipmentMaterialList: List<EquipmentMaterial>? = null,
     val unitId: Int = 0,
     val isAllUnit: Boolean = false,
+    //收藏信息
+    val starIdList: List<Int> = emptyList(),
     val loadingState: LoadingState = LoadingState.Loading
 )
 
@@ -40,25 +43,24 @@ class RankEquipCountViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val unitId: Int? = savedStateHandle[NavRoute.UNIT_ID]
+    private val unitId: Int = savedStateHandle[NavRoute.UNIT_ID] ?: 0
 
     private val _uiState = MutableStateFlow(RankEquipCountUiState())
     val uiState: StateFlow<RankEquipCountUiState> = _uiState.asStateFlow()
 
+
     suspend fun loadData() {
-        if (unitId != null) {
-            val maxRank = equipmentRepository.getMaxRank()
-            _uiState.update {
-                it.copy(
-                    unitId = unitId,
-                    rank0 = maxRank,
-                    rank1 = maxRank,
-                    maxRank = maxRank,
-                    isAllUnit = unitId == 0
-                )
-            }
-            getEquipByRank()
+        val maxRank = equipmentRepository.getMaxRank()
+        _uiState.update {
+            it.copy(
+                unitId = unitId,
+                rank0 = maxRank,
+                rank1 = maxRank,
+                maxRank = maxRank,
+                isAllUnit = unitId == 0
+            )
         }
+        getEquipByRank()
     }
 
     /**
@@ -92,6 +94,18 @@ class RankEquipCountViewModel @Inject constructor(
                     equipmentMaterialList = data,
                     loadingState = updateLoadingState(data)
                 )
+            }
+        }
+    }
+
+    /**
+     * 获取收藏列表
+     */
+    fun reloadStarList() {
+        viewModelScope.launch {
+            val list = getStarEquipIdList()
+            _uiState.update {
+                it.copy(starIdList = list)
             }
         }
     }

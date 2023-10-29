@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillBasicData
@@ -29,24 +29,22 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.EnemyViewModel
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
 /**
  * 技能循环
  */
 @Composable
-fun SkillLoopList(
+fun SkillLoopScreen(
     loopData: List<AttackPattern>,
     modifier: Modifier = Modifier,
     unitType: UnitType,
     scrollable: Boolean = false,
-    skillViewModel: SkillViewModel = hiltViewModel(),
-    characterViewModel: CharacterViewModel = hiltViewModel(),
-    enemyViewModel: EnemyViewModel = hiltViewModel(),
+    skillLoopViewModel: SkillLoopViewModel = hiltViewModel()
 ) {
+    val uiState by skillLoopViewModel.uiState.collectAsStateWithLifecycle()
+
+
     val loops = arrayListOf<SkillLoop>()
     val loopList = arrayListOf<Int>()
     var unitId = 0
@@ -78,22 +76,8 @@ fun SkillLoopList(
         unitId = attackPattern.unitId
     }
 
-    //获取循环对应的图标
-    val skillLoopListFlow = remember(loopList, unitId) {
-        skillViewModel.getSkillIconTypes(loopList, unitId)
-    }
-    val skillLoopList by skillLoopListFlow.collectAsState(initial = hashMapOf())
-    //获取普攻时间
-    val atkCastTime = if (unitType == UnitType.CHARACTER || unitType == UnitType.CHARACTER_SUMMON) {
-        val unitAtkCastTimeFlow = remember(unitId) {
-            characterViewModel.getAtkCastTime(unitId)
-        }
-        unitAtkCastTimeFlow.collectAsState(initial = 0.0).value ?: 0.0
-    } else {
-        val enemyAtkCastTimeFlow = remember(unitId) {
-            enemyViewModel.getAtkCastTime(unitId)
-        }
-        enemyAtkCastTimeFlow.collectAsState(initial = 0.0).value ?: 0.0
+    LaunchedEffect(loopData) {
+        skillLoopViewModel.loadData(loopList, unitId, unitType)
     }
 
 
@@ -107,7 +91,11 @@ fun SkillLoopList(
 
         if (loops.isNotEmpty()) {
             loops.forEach {
-                SkillLoopItem(loop = it, skillLoopList, atkCastTime)
+                SkillLoopItem(
+                    loop = it,
+                    skillMap = uiState.skillMap,
+                    atkCastTime = uiState.atkCastTime
+                )
             }
         }
         if (scrollable) {

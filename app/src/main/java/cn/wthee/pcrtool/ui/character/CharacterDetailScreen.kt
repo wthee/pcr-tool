@@ -26,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -64,7 +65,10 @@ import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
@@ -81,7 +85,7 @@ import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getRankColor
 import cn.wthee.pcrtool.ui.home.Section
-import cn.wthee.pcrtool.ui.skill.SkillCompose
+import cn.wthee.pcrtool.ui.skill.SkillListScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -100,28 +104,22 @@ import cn.wthee.pcrtool.utils.int
 
 /**
  * 角色信息
- *
- * @param unitId 角色编号
- * @param showAllInfo true：显示全部信息，false：仅显示专用装备相关信息,
  */
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun CharacterDetailScreen(
-    unitId: Int,
     actions: NavActions,
-    showAllInfo: Boolean = true,
     characterDetailViewModel: CharacterDetailViewModel = hiltViewModel()
 ) {
     val uiState by characterDetailViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(unitId) {
-        characterDetailViewModel.loadData(showAllInfo)
-    }
 
     //rank 装备选择监听
-    val rankEquipSelected = navViewModel.rankEquipSelected.observeAsState().value ?: 0
-    LaunchedEffect(rankEquipSelected) {
-        if (rankEquipSelected != 0 && uiState.currentValue.rank != rankEquipSelected) {
-            characterDetailViewModel.updateCurrentValue(uiState.currentValue.copy(rank = rankEquipSelected))
+    LaunchedEffect(MainActivity.navSheetState.isVisible) {
+        if (!MainActivity.navSheetState.isVisible) {
+            val currentRank = getData<Int>(NavRoute.RANK)
+            if (currentRank != null) {
+                characterDetailViewModel.updateCurrentValue(uiState.currentValue.copy(rank = currentRank))
+            }
         }
     }
 
@@ -146,7 +144,7 @@ fun CharacterDetailScreen(
                 loved = uiState.loved,
                 orderData = uiState.orderData,
                 changeEditMode = characterDetailViewModel::changeEditMode,
-                updateStarCharacterId = characterDetailViewModel::updateStarCharacterId,
+                updateStarCharacterId = characterDetailViewModel::updateStarId,
                 toCharacterDetail = actions.toCharacterDetail,
                 toCharacterSkillLoop = actions.toCharacterSkillLoop,
             )
@@ -468,7 +466,7 @@ private fun CharacterDetailContent(
                             }
 
                         //技能列表
-                        CharacterDetailModuleType.SKILL -> SkillCompose(
+                        CharacterDetailModuleType.SKILL -> SkillListScreen(
                             unitId = uiState.currentId,
                             atk = uiState.maxAtk,
                             unitType = UnitType.CHARACTER_SUMMON,

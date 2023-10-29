@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,9 +15,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.getStarEquipIdList
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -27,10 +28,11 @@ import kotlinx.coroutines.launch
 /**
  * rank 范围装备素材数量统计
  */
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun RankEquipCountScreen(
-    toEquipMaterial: (Int) -> Unit,
+    toEquipMaterial: (Int, String) -> Unit,
     rankEquipCountViewModel: RankEquipCountViewModel = hiltViewModel()
 ) {
     val uiState by rankEquipCountViewModel.uiState.collectAsStateWithLifecycle()
@@ -52,8 +54,12 @@ fun RankEquipCountScreen(
         }
     }
 
-    //收藏装备列表
-    val starIds = getStarEquipIdList()
+    //初始收藏信息
+    LaunchedEffect(MainActivity.navSheetState.isVisible) {
+        if (!MainActivity.navSheetState.isVisible) {
+            rankEquipCountViewModel.reloadStarList()
+        }
+    }
 
     val scrollState = rememberLazyGridState()
 
@@ -94,6 +100,7 @@ fun RankEquipCountScreen(
                 }
             }
         },
+        mainFabIcon = if (openDialog.value) MainIconType.CLOSE else MainIconType.BACK,
         enableClickClose = openDialog.value,
         onCloseClick = {
             openDialog.value = false
@@ -107,7 +114,7 @@ fun RankEquipCountScreen(
                 loadingState = uiState.loadingState,
                 equipmentMaterialList = it,
                 scrollState = scrollState,
-                starIds = starIds,
+                starIdList = uiState.starIdList,
                 toEquipMaterial = toEquipMaterial
             )
         }
@@ -123,8 +130,8 @@ private fun RankEquipCountContent(
     loadingState: LoadingState,
     equipmentMaterialList: List<EquipmentMaterial>,
     scrollState: LazyGridState,
-    starIds: ArrayList<Int>,
-    toEquipMaterial: (Int) -> Unit
+    starIdList: List<Int>,
+    toEquipMaterial: (Int, String) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -167,7 +174,7 @@ private fun RankEquipCountContent(
                     ) { item ->
                         EquipCountItem(
                             item,
-                            starIds.contains(item.id),
+                            starIdList.contains(item.id),
                             toEquipMaterial
                         )
                     }
@@ -198,7 +205,7 @@ private fun RankEquipCountContent(
 private fun EquipCountItem(
     item: EquipmentMaterial,
     loved: Boolean,
-    toEquipMaterial: (Int) -> Unit
+    toEquipMaterial: (Int, String) -> Unit,
 ) {
     val placeholder = item.id == ImageRequestHelper.UNKNOWN_EQUIP_ID
 
@@ -210,7 +217,7 @@ private fun EquipCountItem(
             data = ImageRequestHelper.getInstance().getEquipPic(item.id),
             modifier = Modifier.commonPlaceholder(placeholder)
         ) {
-            toEquipMaterial(item.id)
+            toEquipMaterial(item.id, item.name)
         }
         SelectText(
             selected = loved,
@@ -231,8 +238,8 @@ private fun RankEquipCountContentPreview() {
             loadingState = LoadingState.Success,
             equipmentMaterialList = arrayListOf(EquipmentMaterial(1), EquipmentMaterial(2)),
             scrollState = rememberLazyGridState(),
-            starIds = arrayListOf(1),
-            toEquipMaterial = {}
+            starIdList = arrayListOf(1),
+            toEquipMaterial = { _, _ -> }
         )
     }
 }
@@ -241,7 +248,7 @@ private fun RankEquipCountContentPreview() {
 @Composable
 private fun EquipCountItemPreview() {
     PreviewLayout {
-        EquipCountItem(EquipmentMaterial(), false) { }
-        EquipCountItem(EquipmentMaterial(), true) { }
+        EquipCountItem(EquipmentMaterial(), false) { _, _ -> }
+        EquipCountItem(EquipmentMaterial(), true) { _, _ -> }
     }
 }

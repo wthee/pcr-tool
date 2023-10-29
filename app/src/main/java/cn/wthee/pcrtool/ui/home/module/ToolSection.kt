@@ -51,12 +51,11 @@ data class ToolMenuData(
  */
 @Composable
 fun ToolSection(
+    updateOrderData: (Int) -> Unit,
     actions: NavActions,
     isEditMode: Boolean,
     orderStr: String
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.TOOL.id
 
     Section(
@@ -67,12 +66,7 @@ fun ToolSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
                 actions.toToolMore(false)
             }
@@ -199,7 +193,7 @@ fun getAction(
             ToolMenuType.TWEET -> actions.toTweetList()
             ToolMenuType.COMIC -> actions.toComicList()
             ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
-            ToolMenuType.ALL_EQUIP -> actions.toCharacterEquipCount(0)
+            ToolMenuType.ALL_EQUIP -> actions.toAllEquipList()
             ToolMenuType.RANDOM_AREA -> actions.toRandomEquipArea(0)
             ToolMenuType.NEWS -> actions.toNews()
             ToolMenuType.FREE_GACHA -> actions.toFreeGacha()

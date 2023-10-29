@@ -72,29 +72,31 @@ class MockGachaViewModel @Inject constructor(
      */
     fun getGachaUnits() = flow {
         try {
-            val fesUnitInfo = gachaRepository.getFesUnitIds()
-            val fesList = arrayListOf<GachaUnitInfo>()
-            fesUnitInfo.getIds().forEachIndexed { index, i ->
-                fesList.add(
-                    GachaUnitInfo(
-                        unitId = i,
-                        unitName = fesUnitInfo.getNames()[index],
-                        isLimited = 1,
-                        rarity = 3
+            val fesUnitInfo = gachaRepository.getFesUnitIdList()
+            if (fesUnitInfo != null) {
+                val fesList = arrayListOf<GachaUnitInfo>()
+                fesUnitInfo.getIds().forEachIndexed { index, i ->
+                    fesList.add(
+                        GachaUnitInfo(
+                            unitId = i,
+                            unitName = fesUnitInfo.getNames()[index],
+                            isLimited = 1,
+                            rarity = 3
+                        )
                     )
-                )
-            }
+                }
 
-            val units = UnitsInGacha(
-                unitRepository.getGachaUnits(1),
-                unitRepository.getGachaUnits(2),
-                unitRepository.getGachaUnits(3),
-                unitRepository.getGachaUnits(4).filter {
-                    !fesUnitInfo.getIds().contains(it.unitId)
-                },
-                fesList
-            )
-            emit(units)
+                val units = UnitsInGacha(
+                    unitRepository.getGachaUnits(1),
+                    unitRepository.getGachaUnits(2),
+                    unitRepository.getGachaUnits(3),
+                    unitRepository.getGachaUnits(4).filter {
+                        !fesUnitInfo.getIds().contains(it.unitId)
+                    },
+                    fesList
+                )
+                emit(units)
+            }
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getGachaUnits")
         }

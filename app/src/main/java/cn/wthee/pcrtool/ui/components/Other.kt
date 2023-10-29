@@ -115,7 +115,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun StateBox(
     stateType: LoadingState,
-    loadingContent: @Composable () -> Unit = {
+    loadingContent: @Composable (() -> Unit)? = {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressCompose(
                 modifier = Modifier
@@ -134,7 +134,10 @@ fun StateBox(
     successContent: @Composable () -> Unit
 ) {
     when (stateType) {
-        LoadingState.Loading -> loadingContent()
+        LoadingState.Loading -> if (loadingContent != null) {
+            loadingContent()
+        }
+
         LoadingState.NoData -> noDataContent()
         LoadingState.Error -> errorContent()
         LoadingState.Success -> successContent()
@@ -147,15 +150,16 @@ fun StateBox(
 
 /**
  * 通用布局
- * 已默认设置：背景色、最大尺寸、主悬浮按钮
+ * 已默认设置：背景色、主悬浮按钮
  *
  * @param backgroundColor 背景色
+ * @param fillMaxSize 最大尺寸布局，默认true
  * @param onMainFabClick 主悬浮按钮点击事件，null时为返回
  * @param mainFabIcon 主悬浮按钮图标
  * @param hideMainFab 是否隐藏主悬浮按钮
  * @param enableClickClose 是否启用点击背景关闭功能
  * @param onCloseClick 点击关闭回调
- * @param fabWithPadding 需自定义 padding 的悬浮按钮
+ * @param fabWithCustomPadding 需自定义 padding 的悬浮按钮
  * @param fab 正常悬浮按钮
  * @param secondLineFab 第二行显示的悬浮按钮
  * @param content 内容
@@ -164,27 +168,35 @@ fun StateBox(
 fun MainScaffold(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    fillMaxSize: Boolean = true,
     onMainFabClick: (() -> Unit)? = null,
     mainFabIcon: MainIconType = MainIconType.BACK,
     hideMainFab: Boolean = false,
     enableClickClose: Boolean = false,
     onCloseClick: () -> Unit = {},
-    fabWithPadding: @Composable BoxScope.() -> Unit = {},
+    fabWithCustomPadding: @Composable BoxScope.() -> Unit = {},
     fab: @Composable RowScope.() -> Unit = {},
     secondLineFab: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
-        modifier = modifier.background(backgroundColor)
+        modifier = (if (fillMaxSize) {
+            modifier.fillMaxSize()
+        } else {
+            modifier
+        }).background(backgroundColor)
     ) {
         //主要内容
         content()
 
         //fab内容
         Box(
-            modifier = Modifier.clickClose(enableClickClose) {
-                onCloseClick()
-            },
+            modifier = Modifier
+                .clickClose(enableClickClose) {
+                    onCloseClick()
+                }
+                .navigationBarsPadding()
+                .align(Alignment.BottomEnd),
             contentAlignment = Alignment.BottomEnd
         ) {
             //fab 第二行
@@ -196,15 +208,14 @@ fun MainScaffold(
             }
 
             //底部 fab
-            fabWithPadding()
+            fabWithCustomPadding()
             //底部 fab 行
             Row(
                 modifier = Modifier
                     .padding(
                         end = Dimen.fabMarginEnd,
                         bottom = Dimen.fabMargin
-                    )
-                    .navigationBarsPadding(),
+                    ),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -348,7 +359,7 @@ fun MainHorizontalPagerIndicator(
     pageCount: Int
 ) {
     HorizontalPagerIndicator(
-        modifier = modifier,
+        modifier = modifier.navigationBarsPadding(),
         pagerState = pagerState,
         pageCount = pageCount,
         indicatorWidth = Dimen.indicatorSize,

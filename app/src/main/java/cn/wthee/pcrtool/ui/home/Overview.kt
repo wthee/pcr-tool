@@ -28,12 +28,9 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -46,13 +43,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavViewModel
@@ -67,11 +64,10 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.module.CharacterSection
-import cn.wthee.pcrtool.ui.home.module.ComingSoonEventSection
 import cn.wthee.pcrtool.ui.home.module.EquipSection
-import cn.wthee.pcrtool.ui.home.module.InProgressEventSection
+import cn.wthee.pcrtool.ui.home.module.EventComingSoonSection
+import cn.wthee.pcrtool.ui.home.module.EventInProgressSection
 import cn.wthee.pcrtool.ui.home.module.NewsSection
 import cn.wthee.pcrtool.ui.home.module.ToolSection
 import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
@@ -87,12 +83,7 @@ import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-
-
-private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
 
 
 /**
@@ -102,12 +93,13 @@ private const val DEFAULT_ORDER = "0-1-6-2-3-4-5-"
 fun Overview(
     actions: NavActions,
     scrollState: ScrollState,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    overviewScreenViewModel: OverviewScreenViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    val uiState by overviewScreenViewModel.uiState.collectAsStateWithLifecycle()
+
     //初始化加载六星数据
     LaunchedEffect(null) {
-        overviewViewModel.getR6Ids()
+        overviewScreenViewModel.getR6Ids()
     }
 
     //日程点击展开状态
@@ -115,110 +107,97 @@ fun Overview(
         mutableIntStateOf(0)
     }
 
-    //编辑模式
-    val isEditMode = remember {
-        mutableStateOf(false)
-    }
 
-    //自定义显示
-    val overviewOrderData = remember {
-        context.dataStoreMain.data.map {
-            it[MainPreferencesKeys.SP_OVERVIEW_ORDER] ?: DEFAULT_ORDER
-        }
-    }.collectAsState(initial = DEFAULT_ORDER).value
-
-    //弹窗
-    val showDropMenu = remember {
-        mutableStateOf(false)
-    }
-    //数据切换弹窗
-    val showChangeDb = remember {
-        mutableStateOf(false)
-    }
     //拦截返回键，关闭弹窗
-    BackHandler(showDropMenu.value || showChangeDb.value) {
-        showDropMenu.value = false
-        showChangeDb.value = false
+    BackHandler(uiState.showDropMenu || uiState.showChangeDb) {
+        overviewScreenViewModel.closeAll()
     }
+
 
     MainScaffold(
-        mainFabIcon = if (showDropMenu.value || showChangeDb.value) MainIconType.CLOSE else MainIconType.SETTING,
+        mainFabIcon = if (uiState.showDropMenu || uiState.showChangeDb) MainIconType.CLOSE else MainIconType.SETTING,
         onMainFabClick = {
-            //避免同时弹出
-            if (showChangeDb.value) {
-                showChangeDb.value = false
-            } else {
-                showDropMenu.value = !showDropMenu.value
-            }
+            overviewScreenViewModel.fabClick()
         },
-        fabWithPadding = {
+        fabWithCustomPadding = {
             //数据切换功能
-            ChangeDbCompose(showChangeDb) {
-                //避免同时弹出
-                if (showDropMenu.value) {
-                    showDropMenu.value = false
-                } else {
-                    showChangeDb.value = !showChangeDb.value
-                }
+            ChangeDbCompose(uiState.showChangeDb) {
+                overviewScreenViewModel.changeDbClick()
             }
         },
         secondLineFab = {
             //菜单
-            SettingDropMenu(showDropMenu, actions)
+            SettingDropMenu(
+                showDropMenu = uiState.showDropMenu,
+                closeAll = overviewScreenViewModel::closeAll,
+                actions = actions
+            )
         },
-        enableClickClose = showDropMenu.value || showChangeDb.value,
+        enableClickClose = uiState.showDropMenu || uiState.showChangeDb,
         onCloseClick = {
-            showDropMenu.value = false
-            showChangeDb.value = false
+            overviewScreenViewModel.closeAll()
         }
     ) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
-            TopBarCompose(isEditMode)
-            if (!isEditMode.value) {
-                overviewOrderData.intArrayList.forEach {
+            TopBarCompose(
+                isEditMode = uiState.isEditMode,
+                changeEditMode = overviewScreenViewModel::changeEditMode,
+            )
+            if (!uiState.isEditMode) {
+                uiState.orderData.intArrayList.forEach {
                     when (OverviewType.getByValue(it)) {
                         OverviewType.CHARACTER -> CharacterSection(
-                            actions = actions,
+                            toCharacterList = actions.toCharacterList,
+                            toCharacterDetail = actions.toCharacterDetail,
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
                         OverviewType.EQUIP -> EquipSection(
-                            actions = actions,
+                            toEquipList = actions.toEquipList,
+                            toEquipDetail = actions.toEquipDetail,
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
                         OverviewType.TOOL -> ToolSection(
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             actions = actions,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
                         OverviewType.NEWS -> NewsSection(
-                            actions = actions,
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
+                            toNews = actions.toNews,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
-                        OverviewType.IN_PROGRESS_EVENT -> InProgressEventSection(
+                        OverviewType.IN_PROGRESS_EVENT -> EventInProgressSection(
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             confirmState = confirmState,
                             actions = actions,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
-                        OverviewType.COMING_SOON_EVENT -> ComingSoonEventSection(
+                        OverviewType.COMING_SOON_EVENT -> EventComingSoonSection(
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             confirmState = confirmState,
                             actions = actions,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
 
                         OverviewType.UNIQUE_EQUIP -> UniqueEquipSection(
-                            actions = actions,
+                            toUniqueEquipList = actions.toUniqueEquipList,
+                            toUniqueEquipDetail = actions.toUniqueEquipDetail,
+                            updateOrderData = overviewScreenViewModel::updateOrderData,
                             isEditMode = false,
-                            orderStr = overviewOrderData
+                            orderStr = uiState.orderData
                         )
                     }
                 }
@@ -234,53 +213,64 @@ fun Overview(
 
                 //角色
                 CharacterSection(
-                    actions,
+                    toCharacterList = actions.toCharacterList,
+                    toCharacterDetail = actions.toCharacterDetail,
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData
                 )
 
                 //装备
                 EquipSection(
-                    actions,
+                    toEquipList = actions.toEquipList,
+                    toEquipDetail = actions.toEquipDetail,
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData
                 )
 
                 //专用装备
                 UniqueEquipSection(
-                    actions,
+                    toUniqueEquipList = actions.toUniqueEquipList,
+                    toUniqueEquipDetail = actions.toUniqueEquipDetail,
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData
                 )
 
                 //更多功能
                 ToolSection(
-                    actions,
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
+                    actions = actions,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData
                 )
 
                 //新闻
                 NewsSection(
-                    actions,
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
+                    toNews = actions.toNews,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData
                 )
 
                 //进行中
-                InProgressEventSection(
+                EventInProgressSection(
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
                     confirmState = confirmState,
-                    actions,
+                    actions = actions,
                     isEditMode = true,
-                    orderStr = overviewOrderData
-                )
+                    orderStr = uiState.orderData,
+
+                    )
 
                 //活动预告
-                ComingSoonEventSection(
+                EventComingSoonSection(
+                    updateOrderData = overviewScreenViewModel::updateOrderData,
                     confirmState = confirmState,
-                    actions,
+                    actions = actions,
                     isEditMode = true,
-                    orderStr = overviewOrderData
+                    orderStr = uiState.orderData,
                 )
 
             }
@@ -298,7 +288,7 @@ fun Overview(
  */
 @Composable
 private fun ChangeDbCompose(
-    openDialog: MutableState<Boolean>,
+    openDialog: Boolean,
     navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
     onClick: () -> Unit
 ) {
@@ -306,7 +296,7 @@ private fun ChangeDbCompose(
     val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
 
     //展开边距修正
-    val mFabModifier = if (openDialog.value) {
+    val mFabModifier = if (openDialog) {
         Modifier.padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
     } else {
         Modifier
@@ -323,8 +313,8 @@ private fun ChangeDbCompose(
 
     Row(verticalAlignment = Alignment.Bottom) {
         //数据提示
-        if (openDialog.value) {
-            DbVersionContent(dbError, tintColor)
+        if (openDialog) {
+            DbVersionOtherContent(dbError, tintColor)
         }
 
         //数据切换
@@ -337,7 +327,7 @@ private fun ChangeDbCompose(
                     top = Dimen.fabMargin,
                     bottom = Dimen.fabMargin
                 ),
-            shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 //非加载中可点击，加载中禁止点击
                 VibrateUtil(context).single()
@@ -346,16 +336,16 @@ private fun ChangeDbCompose(
                 }
             },
             elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog.value) {
+                defaultElevation = if (openDialog) {
                     Dimen.popupMenuElevation
                 } else {
                     Dimen.fabElevation
                 }
             ),
         ) {
-            if (openDialog.value) {
+            if (openDialog) {
                 //选择
-                DbVersionList(tintColor)
+                DbVersionSelectContent(tintColor)
             } else {
                 //加载相关
                 when (downloadState) {
@@ -393,7 +383,7 @@ private fun ChangeDbCompose(
  * 版本选择列表
  */
 @Composable
-private fun DbVersionList(
+private fun DbVersionSelectContent(
     color: Color,
     navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
@@ -453,7 +443,7 @@ private fun DbVersionList(
  * 数据切换其他内容
  */
 @Composable
-private fun DbVersionContent(
+private fun DbVersionOtherContent(
     dbError: Boolean,
     color: Color,
     navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
@@ -724,10 +714,14 @@ fun Section(
  * 设置页面
  */
 @Composable
-private fun SettingDropMenu(showDropMenu: MutableState<Boolean>, actions: NavActions) {
+private fun SettingDropMenu(
+    showDropMenu: Boolean,
+    closeAll: () -> Unit,
+    actions: NavActions
+) {
 
     ScaleBottomEndAnimation(
-        visible = showDropMenu.value,
+        visible = showDropMenu,
     ) {
         MainCard(
             fillMaxWidth = false,
@@ -772,7 +766,7 @@ private fun SettingDropMenu(showDropMenu: MutableState<Boolean>, actions: NavAct
                 padding = Dimen.smallPadding,
                 tintColor = MaterialTheme.colorScheme.primary,
                 onClick = {
-                    showDropMenu.value = false
+                    closeAll()
                     actions.toSetting()
                 }
             ) {
@@ -808,6 +802,6 @@ private fun DbVersionContentItemPreview() {
 @Composable
 private fun DbVersionListPreview() {
     PreviewLayout {
-        DbVersionList(MaterialTheme.colorScheme.primary)
+        DbVersionSelectContent(MaterialTheme.colorScheme.primary)
     }
 }
