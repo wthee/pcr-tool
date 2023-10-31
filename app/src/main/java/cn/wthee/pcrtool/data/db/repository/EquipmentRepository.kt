@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
-import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
@@ -42,8 +41,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         null
     }
 
-
-    suspend fun getCount() = equipmentDao.getCount()
+    suspend fun getCount() = try {
+        equipmentDao.getCount()
+    }catch (_:Exception){
+        0
+    }
 
     suspend fun getUniqueEquipCount() = try {
         val uniqueEquipCount = equipmentDao.getUniqueEquipCountV2()
@@ -54,10 +56,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         }
 
     } catch (_: Exception) {
-        val uniqueEquipCount = equipmentDao.getUniqueEquipCount()
-        if (uniqueEquipCount.isNotEmpty()) {
-            uniqueEquipCount[0].count.toString()
-        } else {
+        try {
+            val uniqueEquipCount = equipmentDao.getUniqueEquipCount()
+            if (uniqueEquipCount.isNotEmpty()) {
+                uniqueEquipCount[0].count.toString()
+            } else {
+                "0"
+            }
+        }catch (_:Exception){
             "0"
         }
     }
@@ -186,8 +192,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
-    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData> {
-        try {
+    suspend fun getUniqueEquipList(name: String, slot: Int) = try {
             val data = (try {
                 val data = equipmentDao.getUniqueEquipListV2(name, slot)
                 data
@@ -196,7 +201,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             }).reversed()
 
             //处理台服排序
-            return if (MainActivity.regionType == RegionType.TW) {
+            if (MainActivity.regionType == RegionType.TW) {
                 data.sortedBy {
                     arrayListOf(
                         138011,
@@ -210,9 +215,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             }
         } catch (e: Exception) {
             LogReportUtil.upload(e, "getUniqueEquipInfoList")
-            return emptyList()
+            null
         }
-    }
+
 
     /**
      * 获取装备制作材料信息

@@ -69,8 +69,8 @@ class UniqueEquipSectionViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    uniqueEquipList1 = filterList1.subList(0, min(limit, filterList1.size)),
-                    uniqueEquipList2 = filterList2.subList(0, min(limit, filterList2.size)),
+                    uniqueEquipList1 = filterList1?.subList(0, min(limit, filterList1.size)),
+                    uniqueEquipList2 = filterList2?.subList(0, min(limit, filterList2.size)),
                 )
             }
         }
