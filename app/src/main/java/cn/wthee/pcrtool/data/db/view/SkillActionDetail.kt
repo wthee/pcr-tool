@@ -412,7 +412,7 @@ data class SkillActionDetail(
                         actionValue3,
                         if (actionValue3.toInt() == 100) 0.0 else 1.0,
                         0.0,
-                        "%"
+                        percent = "%"
                     )
                 val time = getTimeText(1, actionValue1, actionValue2)
                 if (toSkillActionType(actionType) == SkillActionType.CHARM) {
@@ -798,6 +798,7 @@ data class SkillActionDetail(
 
                     12 -> getString(R.string.skill_action_change_coe_12, commonDesc, getTarget())
                     13 -> getString(R.string.skill_action_change_coe_13, commonDesc)
+                    15 -> getString(R.string.skill_action_change_coe_15, commonDesc)
                     102 -> getString(R.string.skill_action_change_coe_102, commonDesc)
                     in 20 until 30 -> getString(
                         R.string.skill_action_change_coe_skill_count,
@@ -1170,7 +1171,7 @@ data class SkillActionDetail(
             SkillActionType.LOOP_TRIGGER -> {
                 when (actionDetail1) {
                     2 -> {
-                        val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
+                        val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
 
                         getString(
                             R.string.skill_action_type_desc_42,
@@ -1226,7 +1227,7 @@ data class SkillActionDetail(
             }
             // 49：移除增益
             SkillActionType.DISPEL -> {
-                val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
+                val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
                 val type = when (actionDetail1) {
                     1, 3 -> getString(R.string.skill_buff)
                     2 -> getString(R.string.skill_debuff)
@@ -1343,13 +1344,13 @@ data class SkillActionDetail(
             }
             // 61：恐慌
             SkillActionType.FEAR -> {
-                val value = getValueText(3, actionValue3, actionValue4, 0.0, "%")
+                val value = getValueText(3, actionValue3, actionValue4, 0.0, percent = "%")
                 val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_61, value, getTarget(), ailmentName, time)
             }
             // 62：畏惧
             SkillActionType.AWE -> {
-                val value = getValueText(1, actionValue1, actionValue2, 0.0, "%")
+                val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
                 val time = getTimeText(3, actionValue3, actionValue4)
                 when (actionDetail1) {
                     0 -> getString(R.string.skill_action_type_desc_62_0, getTarget(), value, time)
@@ -1404,7 +1405,7 @@ data class SkillActionDetail(
                     else -> UNKNOWN
                 }
                 val value =
-                    getValueText(1, actionValue1, actionValue2, percent = getPercent())
+                    getValueText(1, actionValue1, actionValue2, percent = "%")
                 val time = getTimeText(3, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_72, getTarget(), type, value, time)
             }
@@ -1594,6 +1595,19 @@ data class SkillActionDetail(
                 getString(R.string.skill_action_type_desc_105, type, time)
             }
 
+            // 106：守护
+            SkillActionType.GUARD -> {
+                val type = when (actionDetail1) {
+                    141 -> getString(R.string.skill_action_type_desc_106_type_141)
+                    else -> getString(R.string.unknown)
+                }
+                //fixme 待验证是否为承伤比例
+                val value =
+                    getValueText(5, actionValue5, actionValue6, percent = "%", maxValue = 100.0)
+                val time = getTimeText(3, actionValue3, actionValue4)
+                getString(R.string.skill_action_type_desc_106, getTarget(), type, value, time)
+            }
+
             else -> {
                 val value = getValueText(
                     1,
@@ -1665,19 +1679,21 @@ data class SkillActionDetail(
      *
      * @param index v1 传的值 action_value_? -> index = ?
      * @param percent 显示 %
+     * @param maxValue value显示的最大值
      */
     private fun getValueText(
         index: Int,
         v1: Double,
         v2: Double,
         v3: Double = 0.0,
+        v4: Double = 0.0,
         percent: String = "",
         hideIndex: Boolean = false,
-        v4: Double = 0.0
+        maxValue: Double? = null
     ): String {
         val skillLevelText = getString(R.string.skill_level_text)
         val skillAtkStrText = getString(R.string.skill_atk_text)
-        val value = if (v3 == 0.0) {
+        var value = if (v3 == 0.0) {
             if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 * level).intStr}$percent] <{${index + 1}}$v2 * $skillLevelText>"
             } else if (v1 != 0.0 && v2 == 0.0) {
@@ -1699,6 +1715,11 @@ data class SkillActionDetail(
             } else {
                 "{$index}[0]$percent"
             }
+        }
+        value = if (maxValue != null) {
+            value.replace(Regex("\\[.*?\\]"), "[${maxValue.intStr}$percent]")
+        } else {
+            value
         }
         return if (hideIndex) {
             value.replace(Regex("\\{.*?\\}"), "")

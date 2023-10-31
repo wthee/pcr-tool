@@ -453,6 +453,7 @@
     <string name="skill_type_95">隐匿</string>
     <string name="skill_type_100">免疫</string>
     <string name="skill_type_105">环境</string>
+    <string name="skill_type_106">守护</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -643,6 +644,7 @@
     <string name="skill_action_change_coe_7_10">%s * [%s的%s]</string>
     <string name="skill_action_change_coe_12">%s * [后方%s数量]</string>
     <string name="skill_action_change_coe_13">%s * [损失的HP比例]</string>
+    <string name="skill_action_change_coe_15">%s * [自身除外的己方剩余HP]</string>
     <string name="skill_action_change_coe_102">%s * [小眼球数量]</string>
     <string name="skill_action_change_coe_skill_count">%s * [技能计数]</string>
     <string name="skill_action_change_coe_mark_count">%s * [标记层数]</string>
@@ -705,8 +707,8 @@
     <string name="skill_action_type_desc_63_failure">效果被中断后，使用动作(%d)；</string>
     <string name="skill_action_type_desc_63">每 %s 秒使用 1 次动作(%d)，最长持续 [%s] 秒；受到的伤害量超过 [%s] 时中断此效果；</string>
     <string name="skill_action_type_desc_69">使%s变身%s</string>
-    <string name="skill_action_type_desc_71">对%s赋予「受到致死伤害时，回复 %s HP」的效果%s</string>
-    <string name="skill_action_type_desc_72">对%s赋予承受%s伤害减少%s的效果%s</string>
+    <string name="skill_action_type_desc_71">赋予%s「受到致死伤害时，回复 %s HP」的效果%s</string>
+    <string name="skill_action_type_desc_72">赋予%s承受%s伤害减少%s的效果%s</string>
     <string name="skill_action_type_desc_73">为%s展开护盾，在单个动作中受到的伤害超过 [%d] 时，伤害值将衰减%s</string>
     <string name="skill_action_type_desc_75">每造成 [%d] 次伤害时，触发动作(%d) %s</string>
     <string name="skill_action_type_desc_76">%s治疗量变为原来的 %s%s</string>
@@ -730,6 +732,8 @@
     <string name="skill_action_type_desc_103">动作(%d)造成的伤害将依据%s的攻击力</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
     <string name="skill_action_type_desc_105">发动 [%s] 环境效果%s</string>
+    <string name="skill_action_type_desc_106">赋予%s [%s] 状态，并代替其承受 %s 伤害%s</string>
+    <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>
