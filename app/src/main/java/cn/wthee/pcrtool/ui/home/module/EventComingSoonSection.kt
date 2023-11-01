@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.home.module
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,8 +14,9 @@ import cn.wthee.pcrtool.navigation.NavActions
  */
 @Composable
 fun EventComingSoonSection(
+    eventLayoutState: Int,
     updateOrderData: (Int) -> Unit,
-    confirmState: MutableState<Int>,
+    updateEventLayoutState : (Int) -> Unit,
     actions: NavActions,
     isEditMode: Boolean,
     orderStr: String,
@@ -31,7 +31,7 @@ fun EventComingSoonSection(
     CalendarEventLayout(
         isEditMode = isEditMode,
         calendarType = EventType.COMING_SOON,
-        confirmState = confirmState,
+        eventLayoutState = eventLayoutState,
         actions = actions,
         orderStr = orderStr,
         eventList = uiState.comingSoonEventList,
@@ -42,5 +42,6 @@ fun EventComingSoonSection(
         clanBattleList = uiState.comingSoonClanBattleList,
         fesUnitIdList = uiState.fesUnitIdList,
         updateOrderData = updateOrderData,
+        updateEventLayoutState = updateEventLayoutState
     )
 }

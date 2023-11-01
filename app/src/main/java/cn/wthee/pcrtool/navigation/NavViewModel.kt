@@ -4,9 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,25 +31,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val fabCloseClick = MutableLiveData(false)
 
     /**
-     * 下载状态
-     * -2: 隐藏
-     * -1: 显示加载中
-     * >0: 进度
-     */
-    val downloadProgress = MutableLiveData(-1)
-
-    /**
-     * apk下载状态
-     * -4: 安装包安装失败
-     * -3: 下载失败
-     * -2: 隐藏
-     * -1: 显示加载中
-     * >0: 进度
-     * >200: 下载成功
-     */
-    val apkDownloadProgress = MutableLiveData(-2)
-
-    /**
      * 加载中
      */
     val loading = MutableLiveData(false)
@@ -61,16 +39,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 重置
      */
     val resetClick = MutableLiveData(false)
-
-    /**
-     * 角色筛选
-     */
-    var filterCharacter = MutableLiveData<FilterCharacter?>()
-
-    /**
-     * 装备筛选
-     */
-    var filterEquip = MutableLiveData<FilterEquip?>()
 
     /**
      * ex装备筛选
@@ -106,32 +74,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val showResult = MutableLiveData(false)
 
     /**
-     * 选中的rank
-     */
-    val rankEquipSelected = MutableLiveData(0)
-
-    /**
-     * 数据库更新信息
-     */
-    val dbVersion = MutableLiveData<DatabaseVersion>()
-
-    /**
-     * 搜索装备编号
-     */
-    val searchEquipIdList = MutableLiveData<ArrayList<Int>>()
-
-    /**
-     * 搜索装备模式
-     */
-    val searchEquipMode = MutableLiveData<Boolean>()
-
-    /**
      * 专用装备搜索
      */
     val uniqueEquipName = MutableLiveData<String>()
 
-    /**
-     * 数据文件异常
-     */
-    val dbError = MutableLiveData(false)
 }

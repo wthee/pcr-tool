@@ -29,7 +29,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.navigateUpSheet
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -131,14 +130,12 @@ private fun EquipListFilterContent(
                     size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
-                    navViewModel.fabOKClick.postValue(true)
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
-                    navViewModel.fabOKClick.postValue(true)
                 }
             ),
             maxLines = 1,

@@ -37,9 +37,12 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     suspend fun getSkillIconType(skillId: Int) = skillDao.getSkillIconType(skillId)
 
-    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>, isRfSkill: Boolean) =
+    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>, isRfSkill: Boolean) = try {
         skillDao.getSkillActions(lv, atk, actionIds, isRfSkill)
-
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillActions#actionIds:$actionIds")
+        emptyList()
+    }
     suspend fun getAttackPattern(unitId: Int) = skillDao.getAttackPattern(unitId)
 
     suspend fun getSpSkillLabel(unitId: Int) = try {
@@ -83,7 +86,7 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
                         bossUbCooltime = skill.bossUbCoolTime,
                         enemySkillIndex = index,
                     )
-                    val actions = skillDao.getSkillActions(
+                    val actions = getSkillActions(
                         lv,
                         atk,
                         skill.getAllActionId(),

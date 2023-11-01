@@ -12,7 +12,6 @@ import android.os.Looper
 import android.os.Process
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -31,11 +30,8 @@ import cn.wthee.pcrtool.database.*
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -61,8 +57,6 @@ val Context.dataStoreSetting: DataStore<Preferences> by preferencesDataStore(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val noticeViewModel: NoticeViewModel by viewModels()
 
     companion object {
         lateinit var handler: Handler
@@ -104,16 +98,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             PCRToolApp()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //校验数据库版本
-        MainScope().launch {
-            DatabaseUpdater.checkDBVersion()
-        }
-        //更新通知
-        noticeViewModel.check()
     }
 
     override fun onDestroy() {

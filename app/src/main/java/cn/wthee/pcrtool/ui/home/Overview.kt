@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.home
 
 import android.os.Build
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -29,9 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,9 +46,9 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
+import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.components.CaptionText
@@ -83,6 +79,7 @@ import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
@@ -92,25 +89,31 @@ import kotlinx.coroutines.launch
 @Composable
 fun Overview(
     actions: NavActions,
-    scrollState: ScrollState,
     overviewScreenViewModel: OverviewScreenViewModel = hiltViewModel()
 ) {
     val uiState by overviewScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     //初始化加载六星数据
-    LaunchedEffect(null) {
-        overviewScreenViewModel.getR6Ids()
+    LaunchedEffect(uiState.firstLoad) {
+        if (uiState.firstLoad) {
+            //初始化六星id
+            overviewScreenViewModel.getR6Ids()
+            //数据库校验
+            MainScope().launch {
+                DatabaseUpdater.checkDBVersion(
+                    fixDb = false,
+                    updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
+                    updateDbVersionText = overviewScreenViewModel::updateDbVersionText
+                )
+            }
+            //应用更新校验
+            overviewScreenViewModel.checkUpdate()
+        }
     }
-
-    //日程点击展开状态
-    val confirmState = remember {
-        mutableIntStateOf(0)
-    }
-
 
     //拦截返回键，关闭弹窗
     BackHandler(uiState.showDropMenu || uiState.showChangeDb) {
-        overviewScreenViewModel.closeAll()
+        overviewScreenViewModel.closeAllDialog()
     }
 
 
@@ -121,7 +124,15 @@ fun Overview(
         },
         fabWithCustomPadding = {
             //数据切换功能
-            ChangeDbCompose(uiState.showChangeDb) {
+            ChangeDbCompose(
+                dbError = uiState.dbError,
+                dbVersion = uiState.dbVersion,
+                showChangeDb = uiState.showChangeDb,
+                downloadState = uiState.dbDownloadState,
+                closeAllDialog = overviewScreenViewModel::closeAllDialog,
+                updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
+                updateDbVersionText = overviewScreenViewModel::updateDbVersionText
+            ) {
                 overviewScreenViewModel.changeDbClick()
             }
         },
@@ -129,19 +140,24 @@ fun Overview(
             //菜单
             SettingDropMenu(
                 showDropMenu = uiState.showDropMenu,
-                closeAll = overviewScreenViewModel::closeAll,
+                closeAllDialog = overviewScreenViewModel::closeAllDialog,
                 actions = actions
             )
         },
         enableClickClose = uiState.showDropMenu || uiState.showChangeDb,
         onCloseClick = {
-            overviewScreenViewModel.closeAll()
+            overviewScreenViewModel.closeAllDialog()
         }
     ) {
-        Column(modifier = Modifier.verticalScroll(scrollState)) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             TopBarCompose(
                 isEditMode = uiState.isEditMode,
+                updateApp = uiState.updateApp,
+                apkDownloadState = uiState.apkDownloadState,
+                isExpanded = uiState.isAppNoticeExpanded,
+                updateApkDownloadState = overviewScreenViewModel::updateApkDownloadState,
                 changeEditMode = overviewScreenViewModel::changeEditMode,
+                updateAppNoticeLayoutState = overviewScreenViewModel::updateAppNoticeLayoutState,
             )
             if (!uiState.isEditMode) {
                 uiState.orderData.intArrayList.forEach {
@@ -177,16 +193,18 @@ fun Overview(
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> EventInProgressSection(
+                            eventLayoutState = uiState.eventLayoutState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
-                            confirmState = confirmState,
+                            updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
                             isEditMode = false,
                             orderStr = uiState.orderData
                         )
 
                         OverviewType.COMING_SOON_EVENT -> EventComingSoonSection(
+                            eventLayoutState = uiState.eventLayoutState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
-                            confirmState = confirmState,
+                            updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
                             isEditMode = false,
                             orderStr = uiState.orderData
@@ -256,18 +274,19 @@ fun Overview(
 
                 //进行中
                 EventInProgressSection(
+                    eventLayoutState = uiState.eventLayoutState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
-                    confirmState = confirmState,
+                    updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,
                     isEditMode = true,
                     orderStr = uiState.orderData,
-
-                    )
+                )
 
                 //活动预告
                 EventComingSoonSection(
+                    eventLayoutState = uiState.eventLayoutState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
-                    confirmState = confirmState,
+                    updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,
                     isEditMode = true,
                     orderStr = uiState.orderData,
@@ -288,22 +307,24 @@ fun Overview(
  */
 @Composable
 private fun ChangeDbCompose(
-    openDialog: Boolean,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    showChangeDb: Boolean,
+    dbError: Boolean,
+    dbVersion: DatabaseVersion?,
+    downloadState: Int,
+    updateDbDownloadState: (Int) -> Unit,
+    closeAllDialog : () -> Unit,
+    updateDbVersionText: (DatabaseVersion?) -> Unit,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
 
     //展开边距修正
-    val mFabModifier = if (openDialog) {
+    val mFabModifier = if (showChangeDb) {
         Modifier.padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
     } else {
         Modifier
     }
 
-    //校验数据文件是否异常
-    val dbError by navViewModel.dbError.observeAsState(initial = false)
     //颜色
     val tintColor = if (dbError) {
         colorRed
@@ -313,8 +334,15 @@ private fun ChangeDbCompose(
 
     Row(verticalAlignment = Alignment.Bottom) {
         //数据提示
-        if (openDialog) {
-            DbVersionOtherContent(dbError, tintColor)
+        if (showChangeDb) {
+            DbVersionOtherContent(
+                dbError = dbError,
+                dbVersion = dbVersion,
+                color = tintColor,
+                updateDbDownloadState = updateDbDownloadState,
+                closeAllDialog = closeAllDialog,
+                updateDbVersionText = updateDbVersionText
+            )
         }
 
         //数据切换
@@ -327,7 +355,7 @@ private fun ChangeDbCompose(
                     top = Dimen.fabMargin,
                     bottom = Dimen.fabMargin
                 ),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            shape = if (showChangeDb) MaterialTheme.shapes.medium else CircleShape,
             onClick = {
                 //非加载中可点击，加载中禁止点击
                 VibrateUtil(context).single()
@@ -336,14 +364,14 @@ private fun ChangeDbCompose(
                 }
             },
             elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
+                defaultElevation = if (showChangeDb) {
                     Dimen.popupMenuElevation
                 } else {
                     Dimen.fabElevation
                 }
             ),
         ) {
-            if (openDialog) {
+            if (showChangeDb) {
                 //选择
                 DbVersionSelectContent(tintColor)
             } else {
@@ -384,8 +412,7 @@ private fun ChangeDbCompose(
  */
 @Composable
 private fun DbVersionSelectContent(
-    color: Color,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    color: Color
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -418,7 +445,6 @@ private fun DbVersionSelectContent(
                     .clickable {
                         VibrateUtil(context).single()
                         coroutineScope.launch {
-                            navViewModel.fabCloseClick.postValue(true)
                             //正常切换
                             DatabaseUpdater.changeDatabase(regionType)
                         }
@@ -445,12 +471,12 @@ private fun DbVersionSelectContent(
 @Composable
 private fun DbVersionOtherContent(
     dbError: Boolean,
+    dbVersion: DatabaseVersion?,
     color: Color,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    updateDbDownloadState: (Int) -> Unit,
+    closeAllDialog: () -> Unit,
+    updateDbVersionText: (DatabaseVersion?) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val dbVersion = navViewModel.dbVersion.observeAsState().value
-
 
     Column(
         horizontalAlignment = Alignment.End,
@@ -504,17 +530,21 @@ private fun DbVersionOtherContent(
 
         Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
 
-        //重新数据下载
+        //重新下载数据
         MainCard(
             modifier = Modifier.height(IntrinsicSize.Min),
             fillMaxWidth = false,
             elevation = Dimen.popupMenuElevation,
             onClick = {
-                coroutineScope.launch {
-                    navViewModel.fabCloseClick.postValue(true)
+                MainScope().launch {
                     //重新下载
-                    DatabaseUpdater.checkDBVersion(fixDb = true)
+                    DatabaseUpdater.checkDBVersion(
+                        fixDb = true,
+                        updateDbDownloadState = updateDbDownloadState,
+                        updateDbVersionText = updateDbVersionText,
+                    )
                 }
+                closeAllDialog()
             },
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ) {
@@ -716,7 +746,7 @@ fun Section(
 @Composable
 private fun SettingDropMenu(
     showDropMenu: Boolean,
-    closeAll: () -> Unit,
+    closeAllDialog: () -> Unit,
     actions: NavActions
 ) {
 
@@ -766,7 +796,7 @@ private fun SettingDropMenu(
                 padding = Dimen.smallPadding,
                 tintColor = MaterialTheme.colorScheme.primary,
                 onClick = {
-                    closeAll()
+                    closeAllDialog()
                     actions.toSetting()
                 }
             ) {

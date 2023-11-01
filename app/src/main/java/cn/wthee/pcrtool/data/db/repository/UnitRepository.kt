@@ -115,7 +115,12 @@ class UnitRepository @Inject constructor(
         "0"
     }
 
-    suspend fun getCountInt() = unitDao.getCount()
+    suspend fun getCountInt() = try {
+        unitDao.getCount()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCountInt")
+        0
+    }
 
     suspend fun getCharacterBasicInfo(unitId: Int) = try {
         //额外角色编号
@@ -145,51 +150,82 @@ class UnitRepository @Inject constructor(
         return data
     }
 
-    suspend fun getMultiIds(unitId: Int) = unitDao.getMultiIds(unitId)
-
-    suspend fun getCharacterByPosition(start: Int, end: Int) =
+    suspend fun getCharacterByPosition(start: Int, end: Int) = try {
         unitDao.getCharacterByPosition(start, end)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCharacterByPosition$start-$end")
+        0
+    }
 
-    suspend fun getCharacterByIds(unitIds: List<Int>) = unitDao.getCharacterByIds(unitIds)
+    suspend fun getCharacterByIds(unitIds: List<Int>) = try {
+        unitDao.getCharacterByIds(unitIds)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCharacterByIds$unitIds")
+        emptyList()
+    }
 
-    suspend fun getEquipmentIds(unitId: Int, rank: Int) =
-        unitDao.getRankEquipment(unitId, rank)
+    suspend fun getMaxRank(unitId: Int)  = try {
+        unitDao.getMaxRank(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMaxRank$unitId")
+        0
+    }
 
-    suspend fun getRankStatus(unitId: Int, rank: Int) = unitDao.getRankStatus(unitId, rank)
-
-    suspend fun getRarity(unitId: Int, rarity: Int) = unitDao.getRarity(unitId, rarity)
-
-    suspend fun getMaxRank(unitId: Int) = unitDao.getMaxRank(unitId)
-
-    suspend fun getMaxRarity(unitId: Int) = unitDao.getMaxRarity(unitId)
+    suspend fun getMaxRarity(unitId: Int) = try {
+        unitDao.getMaxRarity(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMaxRarity$unitId")
+        0
+    }
 
     suspend fun getGuilds() = try {
         unitDao.getGuilds()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getGuilds")
         emptyList()
     }
 
     suspend fun getRaces() = try {
         unitDao.getRaces()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getRaces")
         emptyList()
     }
 
-    suspend fun getAllGuildMembers() = unitDao.getAllGuildMembers()
-
-    suspend fun getNoGuildMembers() = unitDao.getNoGuildMembers()
-
-    suspend fun getR6Ids() = unitDao.getR6Ids()
-
-    suspend fun getCharacterStoryAttrList(unitId: Int) = try {
-       unitDao.getCharacterStoryAttrList(unitId)
+    suspend fun getAllGuildMembers() = try {
+        unitDao.getAllGuildMembers()
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getStoryAttrDetail:$unitId")
+        LogReportUtil.upload(e, "getAllGuildMembers")
+        emptyList()
+    }
+
+    suspend fun getNoGuildMembers() = try {
+        unitDao.getNoGuildMembers()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getNoGuildMembers")
         null
     }
-    suspend fun getMaxLevel() = unitDao.getMaxLevel()
 
-    suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
+    suspend fun getR6Ids() = try {
+        unitDao.getR6Ids()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getR6Ids")
+        null
+    }
+
+    suspend fun getCharacterStoryAttrList(unitId: Int) = try {
+        unitDao.getCharacterStoryAttrList(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCharacterStoryAttrList:$unitId")
+        emptyList()
+    }
+
+    suspend fun getMaxLevel() = try {
+        unitDao.getMaxLevel()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMaxLevel")
+        null
+    }
 
     suspend fun getCoefficient() = try {
         unitDao.getCoefficient()
@@ -349,7 +385,7 @@ class UnitRepository @Inject constructor(
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
         try {
-            val storyInfo = unitDao.getCharacterStoryAttrList(unitId)
+            val storyInfo = getCharacterStoryAttrList(unitId)
             storyInfo.forEach {
                 storyAttr.add(it.getAttr())
             }
@@ -370,7 +406,12 @@ class UnitRepository @Inject constructor(
         } else {
             unitId / 100 * 1000 + 501
         } * 100 + 1
-        val list = skillDao.getSkillActions(level, 0, arrayListOf(skillActionId), false)
+        val list = try {
+            skillDao.getSkillActions(level, 0, arrayListOf(skillActionId), false)
+        } catch (e: Exception) {
+            emptyList()
+        }
+
         return if (list.isNotEmpty()) {
             list[0]
         } else {

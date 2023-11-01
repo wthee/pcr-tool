@@ -110,7 +110,7 @@ import kotlinx.coroutines.launch
  * @param errorContent 异常布局
  * @param noDataContent 无数据布局
  * @param successContent 加载成功后的布局
- * @param content 常驻显示的布局
+ * @param extraContent 常驻显示的布局
  */
 @Composable
 fun StateBox(
@@ -263,10 +263,6 @@ fun CommonSpacer() {
  * 位置颜色
  * @param position 角色占位
  */
-/**
- * 位置颜色
- * @param position 角色占位
- */
 @Composable
 fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
     PositionType.POSITION_0_299 -> colorRed
@@ -275,10 +271,6 @@ fun getPositionColor(position: Int) = when (PositionType.getPositionType(positio
     PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
-/**
- * rank 颜色
- * @param rank rank数值
- */
 /**
  * rank 颜色
  * @param rank rank数值
@@ -299,10 +291,6 @@ fun getRankColor(rank: Int): Color {
     }
 }
 
-/**
- * 带指示器图标
- * @param urls 最大5个
- */
 /**
  * 带指示器图标
  * @param urls 最大5个
@@ -462,14 +450,6 @@ fun LinearProgressCompose(
     )
 }
 
-/**
- * 底部搜索栏
- *
- * @param keywordState 关键词，用于查询
- * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
- * @param defaultKeywordList 默认关键词列表
- * @param fabText 不为空时，fab将显示该文本
- */
 /**
  * 底部搜索栏
  *
@@ -648,13 +628,6 @@ fun BottomSearchBar(
  * @param placeholder 占位布局
  * @param content 内容
  */
-/**
- * 通用布局（涉及网络请求）
- *
- * @param fabContent 右下fab内容，加载成功后显示
- * @param placeholder 占位布局
- * @param content 内容
- */
 @Composable
 fun <T> CommonResponseBox(
     responseData: ResponseData<T>?,
@@ -696,11 +669,6 @@ fun <T> CommonResponseBox(
     }
 }
 
-/**
- * 日程标题
- * @param showDays 显示天数
- * @param showOverdueColor 过期日程颜色变灰色
- */
 /**
  * 日程标题
  * @param showDays 显示天数
@@ -983,11 +951,6 @@ private fun getPositionText(position: Int): String {
     return positionText
 }
 
-/**
- * 角色属性标签
- *
- * @param leadingContent 开头内容
- */
 /**
  * 角色属性标签
  *

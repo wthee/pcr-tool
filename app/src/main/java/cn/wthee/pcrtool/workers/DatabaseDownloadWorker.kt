@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.data.network.FileService
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.database.updateLocalDataBaseVersion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
@@ -88,7 +87,7 @@ class DatabaseDownloadWorker(
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         try {
                             //更新下载进度
-                            navViewModel.downloadProgress.postValue(progress)
+                            setProgressAsync(Data.Builder().putInt("progress",progress).build())
                         } catch (_: Exception) {
 
                         }
@@ -102,7 +101,7 @@ class DatabaseDownloadWorker(
 
                     override fun onFinish() {
                         //下载完成
-                        navViewModel.downloadProgress.postValue(100)
+                        setProgressAsync(Data.Builder().putInt("progress",100).build())
                         notificationManager.cancelAll()
                     }
                 })
@@ -110,6 +109,7 @@ class DatabaseDownloadWorker(
             //下载文件
             response = service.execute()
         } catch (e: Exception) {
+            setProgressAsync(Data.Builder().putInt("progress",-2).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
         }
         try {
@@ -144,6 +144,7 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
+            setProgressAsync(Data.Builder().putInt("progress",-2).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
             return Result.failure()
         }

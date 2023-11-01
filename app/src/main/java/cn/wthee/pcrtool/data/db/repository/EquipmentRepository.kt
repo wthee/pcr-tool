@@ -25,8 +25,6 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         null
     }
 
-    suspend fun getEquipBasicInfo(equipId: Int) = equipmentDao.getEquipBasicInfo(equipId)
-
     suspend fun getEquipmentList(filter: FilterEquip, limit: Int) = try {
         equipmentDao.getEquipmentList(
             filter.craft,
@@ -67,8 +65,6 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             "0"
         }
     }
-
-    suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int, lv2: Int) =
         if (lv > Constants.TP_LIMIT_LEVEL) {

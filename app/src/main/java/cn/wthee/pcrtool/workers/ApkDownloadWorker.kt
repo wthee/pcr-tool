@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.FileService
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_APK_WORK
@@ -64,7 +63,7 @@ class ApkDownloadWorker(
         if (result == Result.failure()) {
             WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_APK_WORK)
         } else if (result == Result.success()) {
-            navViewModel.apkDownloadProgress.postValue(-2)
+            setProgressAsync(Data.Builder().putInt("progress",-2).build())
         }
         return@coroutineScope result
     }
@@ -86,7 +85,7 @@ class ApkDownloadWorker(
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         try {
                             //更新下载进度
-                            navViewModel.apkDownloadProgress.postValue(progress)
+                            setProgressAsync(Data.Builder().putInt("progress",progress).build())
                         } catch (_: Exception) {
 
                         }
@@ -94,7 +93,7 @@ class ApkDownloadWorker(
 
                     override fun onFinish() {
                         //下载完成
-                        navViewModel.apkDownloadProgress.postValue(100)
+                        setProgressAsync(Data.Builder().putInt("progress",100).build())
                         notificationManager.cancelAll()
                     }
                 })
@@ -117,7 +116,7 @@ class ApkDownloadWorker(
             FileUtil.save(response!!.body()!!.byteStream(), apk)
 
         } catch (e: Exception) {
-            navViewModel.apkDownloadProgress.postValue(-3)
+            setProgressAsync(Data.Builder().putInt("progress",-3).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_APK)
             return Result.failure()
         }
@@ -126,7 +125,7 @@ class ApkDownloadWorker(
             openAPK(apk)
             Result.success()
         } catch (e: Exception) {
-            navViewModel.apkDownloadProgress.postValue(-4)
+            setProgressAsync(Data.Builder().putInt("progress",-4).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_APK)
             Result.failure()
         }

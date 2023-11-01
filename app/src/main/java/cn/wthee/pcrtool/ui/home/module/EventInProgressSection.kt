@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,8 +44,9 @@ import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
  */
 @Composable
 fun EventInProgressSection(
+    eventLayoutState: Int,
     updateOrderData: (Int) -> Unit,
-    confirmState: MutableState<Int>,
+    updateEventLayoutState : (Int) -> Unit,
     actions: NavActions,
     orderStr: String,
     isEditMode: Boolean,
@@ -61,7 +61,7 @@ fun EventInProgressSection(
     CalendarEventLayout(
         isEditMode = isEditMode,
         calendarType = EventType.IN_PROGRESS,
-        confirmState = confirmState,
+        eventLayoutState = eventLayoutState,
         actions = actions,
         orderStr = orderStr,
         eventList = uiState.inProgressEventList,
@@ -72,6 +72,7 @@ fun EventInProgressSection(
         clanBattleList = uiState.inProgressClanBattleList,
         fesUnitIdList = uiState.fesUnitIdList,
         updateOrderData = updateOrderData,
+        updateEventLayoutState = updateEventLayoutState
     )
 }
 
@@ -83,7 +84,7 @@ fun EventInProgressSection(
 fun CalendarEventLayout(
     isEditMode: Boolean,
     calendarType: EventType,
-    confirmState: MutableState<Int>,
+    eventLayoutState: Int,
     actions: NavActions,
     orderStr: String,
     eventList: List<CalendarEvent>,
@@ -94,6 +95,7 @@ fun CalendarEventLayout(
     clanBattleList: List<ClanBattleEvent>,
     fesUnitIdList: List<Int>,
     updateOrderData: (Int) -> Unit,
+    updateEventLayoutState : (Int) -> Unit,
 ) {
 
     val id = if (calendarType == EventType.IN_PROGRESS) {
@@ -118,7 +120,7 @@ fun CalendarEventLayout(
             id = id,
             titleId = titleId,
             iconType = if (calendarType == EventType.IN_PROGRESS) MainIconType.CALENDAR_TODAY else MainIconType.CALENDAR,
-            rightIconType = if (confirmState.value == calendarType.type) MainIconType.UP else MainIconType.DOWN,
+            rightIconType = if (eventLayoutState == calendarType.type) MainIconType.UP else MainIconType.DOWN,
             isEditMode = isEditMode,
             orderStr = orderStr,
             onClick = {
@@ -126,15 +128,15 @@ fun CalendarEventLayout(
                     updateOrderData(id)
                 } else {
                     //弹窗确认
-                    if (confirmState.value == calendarType.type) {
-                        confirmState.value = 0
+                    if (eventLayoutState == calendarType.type) {
+                        updateEventLayoutState(0)
                     } else {
-                        confirmState.value = calendarType.type
+                        updateEventLayoutState(calendarType.type)
                     }
                 }
             }
         ) {
-            ExpandAnimation(visible = confirmState.value == calendarType.type) {
+            ExpandAnimation(visible = eventLayoutState == calendarType.type) {
                 CalendarEventOperation(actions)
             }
             VerticalGrid(

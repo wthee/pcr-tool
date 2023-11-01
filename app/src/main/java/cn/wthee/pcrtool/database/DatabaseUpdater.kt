@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -15,7 +16,6 @@ import cn.wthee.pcrtool.data.network.MyAPIService
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -52,11 +52,17 @@ object DatabaseUpdater {
     /**
      * 检查是否需要更新
      * @param fixDb 修复数据库（强制重新下载）
+     * @param updateDbDownloadState 状态更新
+     * @param updateDbVersionText 版本文本更新
      */
-    suspend fun checkDBVersion(fixDb: Boolean = false) {
+    suspend fun checkDBVersion(
+        fixDb: Boolean = false,
+        updateDbVersionText: (DatabaseVersion?) -> Unit,
+        updateDbDownloadState: (Int) -> Unit
+    ) {
         //获取数据库最新版本
         try {
-            navViewModel.downloadProgress.postValue(-1)
+            updateDbDownloadState(-1)
         } catch (_: Exception) {
         }
         try {
@@ -71,13 +77,13 @@ object DatabaseUpdater {
 
             val version = service.getDbVersion(body)
             //更新判断
-            navViewModel.dbVersion.postValue(version.data)
-            downloadDB(version.data!!, fixDb)
+            updateDbVersionText(version.data)
+            downloadDB(version.data!!, fixDb, updateDbDownloadState)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 ToastUtil.short(getString(R.string.check_db_error))
             }
-            navViewModel.downloadProgress.postValue(-2)
+            updateDbDownloadState(-2)
         }
     }
 
@@ -86,7 +92,11 @@ object DatabaseUpdater {
      * @param versionData 版本信息
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private suspend fun downloadDB(versionData: DatabaseVersion, fixDb: Boolean) {
+    private suspend fun downloadDB(
+        versionData: DatabaseVersion,
+        fixDb: Boolean,
+        updateDbDownloadState: (Int) -> Unit
+    ) {
         val region = MainActivity.regionType
         val localVersionKey = when (region) {
             RegionType.CN -> SettingPreferencesKeys.SP_DATABASE_VERSION_CN
@@ -140,15 +150,39 @@ object DatabaseUpdater {
                     .putString(DatabaseDownloadWorker.KEY_FILE, fileName)
                     .putInt(DatabaseDownloadWorker.KEY_REGION, region.value)
                     .build()
-                val uploadWorkRequest =
+
+                val updateDbRequest =
                     OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
                         .setInputData(data)
                         .build()
-                WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+                val workManager = WorkManager.getInstance(MyApplication.context)
+                workManager.enqueueUniqueWork(
                     DOWNLOAD_DB_WORK,
                     ExistingWorkPolicy.KEEP,
-                    uploadWorkRequest
+                    updateDbRequest
                 )
+
+                //监听下载进度
+                ActivityHelper.instance.currentActivity?.let {
+                    workManager.getWorkInfoByIdLiveData(updateDbRequest.id)
+                        .observe(it) { workInfo: WorkInfo? ->
+                            if (workInfo != null) {
+                                when (workInfo.state) {
+                                    WorkInfo.State.SUCCEEDED -> {
+                                        updateDbDownloadState(-2)
+                                    }
+
+                                    WorkInfo.State.RUNNING -> {
+                                        val value = workInfo.progress.getInt("progress", -1)
+                                        updateDbDownloadState(value)
+                                    }
+
+                                    else -> Unit
+                                }
+                            }
+                        }
+                }
+
             } catch (e: Exception) {
                 WorkManager.getInstance(MyApplication.context).cancelAllWork()
                 LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
@@ -159,7 +193,7 @@ object DatabaseUpdater {
                 updateLocalDataBaseVersion(versionData.toString())
             } catch (_: Exception) {
             }
-            navViewModel.downloadProgress.postValue(-2)
+            updateDbDownloadState(-2)
         }
     }
 

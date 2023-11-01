@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -67,9 +66,9 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -126,14 +125,6 @@ fun CharacterDetailScreen(
     //页面状态
     val pagerState = rememberPagerState { uiState.pageCount }
 
-    //确认时监听
-    val ok = navViewModel.fabOKClick.observeAsState().value ?: false
-    if (ok && uiState.isEditMode) {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOKClick.postValue(false)
-        characterDetailViewModel.changeEditMode(false)
-    }
-
     MainScaffold(
         fab = {
             CharacterDetailFabContent(
@@ -157,6 +148,14 @@ fun CharacterDetailScreen(
                 isCutinSkill = uiState.isCutinSkill,
                 changeCutin = characterDetailViewModel::changeCutin
             )
+        },
+        mainFabIcon = if(uiState.isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
+        onMainFabClick = {
+            if(uiState.isEditMode){
+                characterDetailViewModel.changeEditMode(false)
+            }else{
+                navigateUp()
+            }
         }
     ) {
         StateBox(
@@ -224,7 +223,6 @@ private fun CharacterDetailFabContent(
                 MainSmallFab(
                     iconType = MainIconType.EDIT_TOOL,
                 ) {
-                    navViewModel.fabMainIcon.postValue(MainIconType.OK)
                     changeEditMode(true)
                 }
 

@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -157,14 +156,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.HOME
             ) {
-                //从其它页面返回时（非展开设置时），主按钮初始
-                if (navController.currentDestination?.route == NavRoute.HOME
-                    && viewModel.fabMainIcon.value != MainIconType.DOWN
-                ) {
-                    viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                }
-                val scrollState = rememberScrollState()
-                Overview(actions = actions, scrollState = scrollState)
+                Overview(actions = actions)
             }
 
             //角色列表
