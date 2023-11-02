@@ -467,6 +467,7 @@ private fun DbVersionSelectContent(
 
 /**
  * 数据切换其他内容
+ * 日期、版本、更新内容
  */
 @Composable
 private fun DbVersionOtherContent(

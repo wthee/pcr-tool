@@ -40,7 +40,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
 import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.picture.PictureScreen
-import cn.wthee.pcrtool.ui.skill.SummonDetail
+import cn.wthee.pcrtool.ui.skill.SkillSummonScreen
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
@@ -60,8 +60,8 @@ import cn.wthee.pcrtool.ui.tool.MainSettings
 import cn.wthee.pcrtool.ui.tool.NewsList
 import cn.wthee.pcrtool.ui.tool.TweetList
 import cn.wthee.pcrtool.ui.tool.WebsiteList
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetailScreen
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
@@ -494,9 +494,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_CLAN,
             ) {
-                val scrollState = rememberLazyGridState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ClanBattleList(scrollState, actions.toClanBossInfo)
+                ClanBattleListScreen(actions.toClanBossInfo)
             }
 
             //公会战详情
@@ -514,11 +512,8 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ClanBattleDetail(
-                    arguments.getInt(NavRoute.TOOL_CLAN_Battle_ID),
+                ClanBattleDetailScreen(
                     arguments.getInt(NavRoute.TOOL_CLAN_BOSS_INDEX),
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE),
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE),
                     actions.toSummonDetail
                 )
             }
@@ -612,7 +607,7 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                SummonDetail(
+                SkillSummonScreen(
                     id = arguments.getInt(NavRoute.UNIT_ID),
                     unitType = UnitType.getByValue(arguments.getInt(NavRoute.UNIT_TYPE)),
                     level = arguments.getInt(NavRoute.LEVEL),

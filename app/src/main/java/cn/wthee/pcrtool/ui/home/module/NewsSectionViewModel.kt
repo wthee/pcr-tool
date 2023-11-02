@@ -4,9 +4,10 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.updateLoadingState
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
  */
 @Immutable
 data class NewsSectionUiState(
-    val newsList: ResponseData<List<NewsTable>>? = null
+    val newsList: List<NewsTable>? = null,
+    val loadingState: LoadingState = LoadingState.Loading
 )
 
 /**
@@ -42,13 +44,15 @@ class NewsSectionViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    fun getNewsOverview() {
+    private fun getNewsOverview() {
         viewModelScope.launch {
             try {
                 val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)
+                val list = data.data
                 _uiState.update {
                     it.copy(
-                        newsList = data
+                        newsList = list,
+                        loadingState = updateLoadingState(list)
                     )
                 }
             } catch (e: Exception) {

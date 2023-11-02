@@ -40,7 +40,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.skill.SkillItem
+import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.skill.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -274,7 +274,7 @@ fun EnemySkillList(
                     .align(Alignment.CenterHorizontally)
             )
             SkillLoopScreen(
-                loopData = it,
+                attackPatternList = it,
                 unitType = unitType,
                 modifier = Modifier
                     .padding(top = Dimen.mediumPadding)
@@ -295,7 +295,7 @@ fun EnemySkillList(
 
         allSkillList?.let { skillList ->
             skillList.filter { it.level > 0 }.forEach { skillDetail ->
-                SkillItem(
+                SkillItemContent(
                     skillDetail = skillDetail,
                     unitType = unitType,
                     toSummonDetail = toSummonDetail

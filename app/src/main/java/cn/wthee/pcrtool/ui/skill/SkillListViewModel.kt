@@ -20,9 +20,9 @@ import javax.inject.Inject
  * 页面状态：角色技能
  */
 @Immutable
-data class SkillUiState(
-    val normalSkill: MutableList<SkillDetail> = arrayListOf(),
-    val spSkill: MutableList<SkillDetail> = arrayListOf(),
+data class SkillListUiState(
+    val normalSkillList: MutableList<SkillDetail> = arrayListOf(),
+    val spSkillList: MutableList<SkillDetail> = arrayListOf(),
     val spLabel: SpSkillLabelData? = null
 )
 
@@ -36,8 +36,8 @@ class SkillListViewModel @Inject constructor(
     private val skillRepository: SkillRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SkillUiState())
-    val uiState: StateFlow<SkillUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SkillListUiState())
+    val uiState: StateFlow<SkillListUiState> = _uiState.asStateFlow()
 
     /**
      * 加载技能信息
@@ -79,11 +79,11 @@ class SkillListViewModel @Inject constructor(
             _uiState.update {
                 if (skillType == SkillType.NORMAL) {
                     it.copy(
-                        normalSkill = skillList
+                        normalSkillList = skillList
                     )
                 } else {
                     it.copy(
-                        spSkill = skillList
+                        spSkillList = skillList
                     )
                 }
             }

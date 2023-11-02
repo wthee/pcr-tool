@@ -80,20 +80,30 @@ fun SkillListScreen(
     skillListViewModel: SkillListViewModel = hiltViewModel(),
 ) {
     val uiState by skillListViewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(property.level, atk, unitId){
+    LaunchedEffect(property.level, atk, unitId) {
         skillListViewModel.loadData(property.level, atk, unitId)
     }
 
-    //普通技能
-    val normalSkillData  = uiState.normalSkill
 
-    //sp技能
-    val spSkillData = uiState.spSkill
+    SkillListContent(
+        uiState = uiState,
+        isFilterSkill = isFilterSkill,
+        filterSkillCount = filterSkillCount,
+        unitType = unitType,
+        property = property,
+        toSummonDetail = toSummonDetail
+    )
+}
 
-    // sp技能标签
-    val spLabel = uiState.spLabel
-
-
+@Composable
+private fun SkillListContent(
+    uiState: SkillListUiState,
+    isFilterSkill: Boolean,
+    filterSkillCount: Int,
+    unitType: UnitType,
+    property: CharacterProperty,
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,7 +111,7 @@ fun SkillListScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //技能信息标题
-        if (normalSkillData.isNotEmpty() || spSkillData.isNotEmpty()) {
+        if (uiState.normalSkillList.isNotEmpty() || uiState.spSkillList.isNotEmpty()) {
             MainText(
                 text = stringResource(R.string.skill)
             )
@@ -109,7 +119,7 @@ fun SkillListScreen(
         //普通技能
         (if (isFilterSkill) {
             //过滤专用装备影响的技能
-            normalSkillData.filter {
+            uiState.normalSkillList.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.MAIN_SKILL_2_PLUS
@@ -121,9 +131,9 @@ fun SkillListScreen(
                 }
             }
         } else {
-            normalSkillData
+            uiState.normalSkillList
         }).forEach { skillDetail ->
-            SkillItem(
+            SkillItemContent(
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -131,19 +141,19 @@ fun SkillListScreen(
             )
         }
         //特殊技能
-        if (spSkillData.isNotEmpty()) {
+        if (uiState.spSkillList.isNotEmpty()) {
             MainText(
                 text = stringResource(R.string.sp_skill),
                 modifier = Modifier
                     .padding(top = Dimen.largePadding)
             )
-            spLabel?.spLabelText?.let {
+            uiState.spLabel?.spLabelText?.let {
                 CaptionText(text = it)
             }
         }
         (if (isFilterSkill) {
             //过滤专用装备影响的技能
-            spSkillData.filter {
+            uiState.spSkillList.filter {
                 val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
@@ -155,9 +165,9 @@ fun SkillListScreen(
                 }
             }
         } else {
-            spSkillData
+            uiState.spSkillList
         }).forEach { skillDetail ->
-            SkillItem(
+            SkillItemContent(
                 skillDetail = skillDetail,
                 unitType = unitType,
                 property = property,
@@ -174,7 +184,7 @@ fun SkillListScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Suppress("RegExpRedundantEscape")
 @Composable
-fun SkillItem(
+fun SkillItemContent(
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
@@ -577,17 +587,27 @@ data class ColorTextIndex(
 
 @CombinedPreviews
 @Composable
-private fun SkillItemPreview() {
-    val skill = SkillDetail(
-        name = stringResource(id = R.string.debug_short_text),
-        desc = stringResource(id = R.string.debug_long_text),
-        castTime = 10.0,
-    )
-    skill.actions = arrayListOf(SkillActionDetail(), SkillActionDetail())
-
+private fun SkillListContentPreview() {
     PreviewLayout {
-        SkillItem(
-            skillDetail = skill,
+        val skill = SkillDetail(
+            name = stringResource(id = R.string.debug_short_text),
+            desc = stringResource(id = R.string.debug_long_text),
+            castTime = 10.0,
+        )
+        skill.actions = arrayListOf(SkillActionDetail(), SkillActionDetail())
+
+        SkillListContent(
+            uiState = SkillListUiState(
+                normalSkillList = arrayListOf(
+                    skill
+                ),
+                spSkillList = arrayListOf(
+                    skill
+                ),
+                spLabel = null
+            ),
+            isFilterSkill = false,
+            filterSkillCount = 0,
             unitType = UnitType.CHARACTER,
             property = CharacterProperty(),
             toSummonDetail = { _, _, _, _, _ -> }

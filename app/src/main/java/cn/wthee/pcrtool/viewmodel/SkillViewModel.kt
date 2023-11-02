@@ -177,15 +177,6 @@ class SkillViewModel @Inject constructor(
         }
     }
 
-    /**
-     * 获取角色技能循环
-     *
-     * @param unitId 角色编号
-     */
-    fun getCharacterSkillLoops(unitId: Int) = flow {
-        emit(skillRepository.getAttackPattern(unitId))
-    }
-
 
     /**
      * 获取怪物技能信息

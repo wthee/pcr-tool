@@ -177,6 +177,7 @@ class CharacterDetailViewModel @Inject constructor(
                     }
                     //初始加载
                     getCharacterInfo(unitId, maxValue)
+
                 }
                 _uiState.update {
                     it.copy(
@@ -204,32 +205,24 @@ class CharacterDetailViewModel @Inject constructor(
      */
     private fun getCharacterInfo(unitId: Int, property: CharacterProperty?) {
         viewModelScope.launch {
-            try {
-                if (property != null && property.isInit()) {
-                    val allAttr = unitRepository.getAttrs(
-                        unitId,
-                        property.level,
-                        property.rank,
-                        property.rarity,
-                        property.uniqueEquipmentLevel,
-                        property.uniqueEquipmentLevel2
+            val allAttr = unitRepository.getCharacterInfo(unitId, property)
+            if (allAttr == null) {
+                _uiState.update {
+                    it.copy(
+                        loadingState = LoadingState.Error
                     )
-                    _uiState.update {
-                        it.copy(
-                            allAttr = allAttr,
-                            maxAtk = max(
-                                allAttr.sumAttr.atk.int,
-                                allAttr.sumAttr.magicStr.int
-                            ),
-                            loadingState = it.loadingState.isSuccess(allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty())
-                        )
-                    }
                 }
-            } catch (e: Exception) {
-                LogReportUtil.upload(
-                    e,
-                    "getCharacterInfo#unitId:$unitId,property:${property ?: ""}"
-                )
+            } else {
+                _uiState.update {
+                    it.copy(
+                        allAttr = allAttr,
+                        maxAtk = max(
+                            allAttr.sumAttr.atk.int,
+                            allAttr.sumAttr.magicStr.int
+                        ),
+                        loadingState = it.loadingState.isSuccess(allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty())
+                    )
+                }
             }
         }
     }

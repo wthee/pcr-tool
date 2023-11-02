@@ -170,15 +170,7 @@ fun CharacterDetailScreen(
                 pagerState = pagerState,
                 updateOrderData = characterDetailViewModel::updateOrderData,
                 updateCurrentValue = characterDetailViewModel::updateCurrentValue,
-                toAllPics = actions.toAllPics,
-                toCoe = actions.toCoe,
-                toCharacterBasicInfo = actions.toCharacterBasicInfo,
-                toCharacterStoryDetail = actions.toCharacterStoryDetail,
-                toCharacterRankCompare = actions.toCharacterRankCompare,
-                toCharacterEquipCount = actions.toCharacterEquipCount,
-                toCharacterExtraEquip = actions.toCharacterExtraEquip,
-                toEquipDetail = actions.toEquipDetail,
-                toCharacterRankEquip = actions.toCharacterRankEquip,
+                actions = actions
             )
         }
 
@@ -298,17 +290,9 @@ private fun ChangeCutinFabContent(
 private fun CharacterDetailContent(
     uiState: CharacterDetailUiState,
     pagerState: PagerState,
+    actions: NavActions,
     updateOrderData: (Int) -> Unit,
     updateCurrentValue: (CharacterProperty) -> Unit,
-    toAllPics: (Int, Int) -> Unit,
-    toCoe: () -> Unit,
-    toCharacterBasicInfo: (Int) -> Unit,
-    toCharacterStoryDetail: (Int) -> Unit,
-    toCharacterRankCompare: (Int, Int, Int, Int, Int, Int) -> Unit,
-    toCharacterEquipCount: (Int) -> Unit,
-    toCharacterExtraEquip: (Int) -> Unit,
-    toEquipDetail: (Int) -> Unit,
-    toCharacterRankEquip: (Int, Int) -> Unit
 ) {
 
     val scrollState0 = rememberScrollState()
@@ -383,7 +367,7 @@ private fun CharacterDetailContent(
                             unitId = uiState.unitId,
                             basicInfo = uiState.basicInfo,
                             loved = uiState.loved,
-                            toAllPics = toAllPics
+                            toAllPics = actions.toAllPics
                         )
 
                         //战力
@@ -392,7 +376,7 @@ private fun CharacterDetailContent(
                                 coeValue = uiState.coeValue,
                                 allAttr = uiState.allAttr,
                                 currentValue = uiState.currentValue,
-                                toCoe = toCoe
+                                toCoe = actions.toCoe
                             )
 
                         //资料
@@ -400,8 +384,8 @@ private fun CharacterDetailContent(
                             ToolsContent(
                                 unitId = uiState.unitId,
                                 cutinId = uiState.cutinId,
-                                toCharacterBasicInfo = toCharacterBasicInfo,
-                                toAllPics = toAllPics
+                                toCharacterBasicInfo = actions.toCharacterBasicInfo,
+                                toAllPics = actions.toAllPics
                             )
 
                         //星级
@@ -423,7 +407,7 @@ private fun CharacterDetailContent(
                             AttrListContent(
                                 unitId = uiState.unitId,
                                 allAttr = uiState.allAttr,
-                                toCharacterStoryDetail = toCharacterStoryDetail
+                                toCharacterStoryDetail = actions.toCharacterStoryDetail
                             )
 
                         //其他功能
@@ -431,9 +415,9 @@ private fun CharacterDetailContent(
                             unitId = uiState.unitId,
                             currentValue = uiState.currentValue,
                             maxRank = uiState.maxValue.rank,
-                            toCharacterRankCompare = toCharacterRankCompare,
-                            toCharacterEquipCount = toCharacterEquipCount,
-                            toCharacterExtraEquip = toCharacterExtraEquip
+                            toCharacterRankCompare = actions.toCharacterRankCompare,
+                            toCharacterEquipCount = actions.toCharacterEquipCount,
+                            toCharacterExtraEquip = actions.toCharacterExtraEquip
                         )
 
                         //装备
@@ -444,8 +428,8 @@ private fun CharacterDetailContent(
                             maxRank = uiState.maxValue.rank,
                             equips = uiState.allAttr.equips,
                             updateCurrentValue = updateCurrentValue,
-                            toEquipDetail = toEquipDetail,
-                            toCharacterRankEquip = toCharacterRankEquip
+                            toEquipDetail = actions.toEquipDetail,
+                            toCharacterRankEquip = actions.toCharacterRankEquip
                         )
 
                         //专武
@@ -468,7 +452,10 @@ private fun CharacterDetailContent(
                             unitId = uiState.currentId,
                             atk = uiState.maxAtk,
                             unitType = UnitType.CHARACTER_SUMMON,
-                            property = uiState.currentValue
+                            property = uiState.currentValue,
+                            toSummonDetail = actions.toSummonDetail,
+                            isFilterSkill = !uiState.showAllInfo,
+                            filterSkillCount = uiState.allAttr.uniqueEquipList.size,
                         )
 
                         //图标

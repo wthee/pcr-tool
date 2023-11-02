@@ -42,7 +42,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.UnitList
-import cn.wthee.pcrtool.ui.skill.SkillItem
+import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -240,7 +240,7 @@ private fun ExtraEquipSkill(
             )
 
             skills.forEach { skillDetail ->
-                SkillItem(
+                SkillItemContent(
                     skillDetail = skillDetail,
                     unitType = UnitType.CHARACTER,
                     property = CharacterProperty(),

@@ -35,7 +35,7 @@ import cn.wthee.pcrtool.ui.tool.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverview
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverviewItemContent
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
 
 
@@ -144,7 +144,7 @@ fun CalendarEventLayout(
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
                 clanBattleList.forEach {
-                    ClanBattleOverview(
+                    ClanBattleOverviewItemContent(
                         clanBattleEvent = it,
                         toClanBossInfo = actions.toClanBossInfo
                     )

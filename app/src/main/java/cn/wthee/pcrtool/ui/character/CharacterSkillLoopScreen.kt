@@ -46,7 +46,7 @@ fun CharacterSkillLoopScreen(
         fillMaxSize = false
     ) {
         SkillLoopScreen(
-            loopData = uiState.attackPatternList,
+            attackPatternList = uiState.attackPatternList,
             modifier = Modifier
                 .padding(Dimen.largePadding),
             unitType = UnitType.CHARACTER,

@@ -6,13 +6,13 @@ import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.AllAttrData
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.utils.Constants
@@ -33,6 +33,9 @@ class UnitRepository @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) {
 
+    /**
+     * 获取角色列表
+     */
     suspend fun getCharacterInfoList(filter: FilterCharacter, limit: Int): List<CharacterInfo>? {
         try {
             //额外角色编号
@@ -107,6 +110,9 @@ class UnitRepository @Inject constructor(
         }
     }
 
+    /**
+     * 获取角色数量，总数 (未实装数)
+     */
     suspend fun getCount() = try {
         val unknownCount = unitDao.getUnknownCount()
         unitDao.getCount().toString() + if (unknownCount > 0) " (${unknownCount})" else ""
@@ -115,6 +121,9 @@ class UnitRepository @Inject constructor(
         "0"
     }
 
+    /**
+     * 获取角色数量
+     */
     suspend fun getCountInt() = try {
         unitDao.getCount()
     } catch (e: Exception) {
@@ -122,6 +131,9 @@ class UnitRepository @Inject constructor(
         0
     }
 
+    /**
+     * 获取角色基本信息
+     */
     suspend fun getCharacterBasicInfo(unitId: Int) = try {
         //额外角色编号
         val exUnitIdList = try {
@@ -138,6 +150,9 @@ class UnitRepository @Inject constructor(
         null
     }
 
+    /**
+     * 获取角色资料
+     */
     suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? {
         //校验是否未多角色卡
         val data = unitDao.getProfileInfo(unitId)
@@ -150,13 +165,19 @@ class UnitRepository @Inject constructor(
         return data
     }
 
+    /**
+     * 根据站位获取角色列表
+     */
     suspend fun getCharacterByPosition(start: Int, end: Int) = try {
         unitDao.getCharacterByPosition(start, end)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getCharacterByPosition$start-$end")
-        0
+        emptyList()
     }
 
+    /**
+     * 根据id列表获取角色列表
+     */
     suspend fun getCharacterByIds(unitIds: List<Int>) = try {
         unitDao.getCharacterByIds(unitIds)
     } catch (e: Exception) {
@@ -164,7 +185,7 @@ class UnitRepository @Inject constructor(
         emptyList()
     }
 
-    suspend fun getMaxRank(unitId: Int)  = try {
+    suspend fun getMaxRank(unitId: Int) = try {
         unitDao.getMaxRank(unitId)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getMaxRank$unitId")
@@ -224,7 +245,7 @@ class UnitRepository @Inject constructor(
         unitDao.getMaxLevel()
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getMaxLevel")
-        null
+        0
     }
 
     suspend fun getCoefficient() = try {
@@ -237,27 +258,53 @@ class UnitRepository @Inject constructor(
     suspend fun getCutinId(unitId: Int) = try {
         unitDao.getCutinId(unitId) ?: 0
     } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCutinId;$unitId")
         0
     }
 
-    suspend fun getSummonData(unitId: Int) = unitDao.getSummonData(unitId)
+    suspend fun getSummonData(unitId: Int) = try {
+        unitDao.getSummonData(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getSummonData")
+        null
+    }
 
-    suspend fun getActualId(unitId: Int) = unitDao.getActualId(unitId)
+    suspend fun getActualId(unitId: Int) = try {
+        unitDao.getActualId(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getActualId")
+        null
+    }
 
-    suspend fun getGachaUnits(type: Int): List<GachaUnitInfo> {
+    /**
+     * 获取卡池角色，不包括额外角色
+     */
+    suspend fun getGachaUnits(type: Int) = try {
         //额外角色编号
         val exUnitIdList = try {
             unitDao.getExUnitIdList()
         } catch (_: Exception) {
             arrayListOf()
         }
-        return unitDao.getGachaUnits(type, exUnitIdList)
+        unitDao.getGachaUnits(type, exUnitIdList)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getGachaUnits")
+        emptyList()
     }
 
-    suspend fun getHomePageComments(unitId: Int) = unitDao.getHomePageComments(unitId)
+    suspend fun getHomePageComments(unitId: Int) = try {
+        unitDao.getHomePageComments(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getHomePageComments:$unitId")
+        emptyList()
+    }
 
-    suspend fun getAtkCastTime(unitId: Int) = unitDao.getAtkCastTime(unitId)
-
+    suspend fun getAtkCastTime(unitId: Int) = try {
+        unitDao.getAtkCastTime(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAtkCastTime:$unitId")
+        null
+    }
 
     /**
      * 获取角色属性信息
@@ -444,5 +491,26 @@ class UnitRepository @Inject constructor(
         }
 
         return commentList
+    }
+
+    suspend fun getCharacterInfo(unitId: Int, property: CharacterProperty?) = try {
+        if (property != null && property.isInit()) {
+            getAttrs(
+                unitId,
+                property.level,
+                property.rank,
+                property.rarity,
+                property.uniqueEquipmentLevel,
+                property.uniqueEquipmentLevel2
+            )
+        } else {
+            null
+        }
+    } catch (e: Exception) {
+        LogReportUtil.upload(
+            e,
+            "getCharacterInfo#unitId:$unitId,property:${property ?: ""}"
+        )
+        null
     }
 }

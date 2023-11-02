@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.tool.NewsItem
 
@@ -45,21 +46,20 @@ fun NewsSection(
         }
     ) {
         Column {
-            if (uiState.newsList == null) {
-                for (i in 0 until 3) {
-                    NewsItem(news = NewsTable())
-                }
-            } else {
-                uiState.newsList?.let { list ->
-                    if (list.data?.isNotEmpty() == true) {
-                        list.data!!.forEach {
-                            NewsItem(news = it)
-                        }
-                    } else {
-                        CenterTipText(stringResource(id = R.string.no_data))
+            StateBox(
+                stateType = uiState.loadingState,
+                loadingContent = {
+                    for (i in 0 until 3) {
+                        NewsItem(news = NewsTable())
                     }
+                },
+                errorContent = {
+                    CenterTipText(stringResource(id = R.string.data_get_error))
                 }
-
+            ) {
+                uiState.newsList?.forEach {
+                    NewsItem(news = it)
+                }
             }
         }
     }

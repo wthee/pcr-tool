@@ -36,7 +36,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
  */
 @Composable
 fun SkillLoopScreen(
-    loopData: List<AttackPattern>,
+    attackPatternList: List<AttackPattern>,
     modifier: Modifier = Modifier,
     unitType: UnitType,
     scrollable: Boolean = false,
@@ -50,7 +50,7 @@ fun SkillLoopScreen(
     var unitId = 0
 
     //处理技能循环数据
-    loopData.forEach { attackPattern ->
+    attackPatternList.forEach { attackPattern ->
         if (attackPattern.getBefore().size > 0) {
             loopList.addAll(attackPattern.getBefore())
             loops.add(
@@ -76,7 +76,7 @@ fun SkillLoopScreen(
         unitId = attackPattern.unitId
     }
 
-    LaunchedEffect(loopData) {
+    LaunchedEffect(attackPatternList) {
         skillLoopViewModel.loadData(loopList, unitId, unitType)
     }
 
@@ -91,7 +91,7 @@ fun SkillLoopScreen(
 
         if (loops.isNotEmpty()) {
             loops.forEach {
-                SkillLoopItem(
+                SkillLoopItemContent(
                     loop = it,
                     skillMap = uiState.skillMap,
                     atkCastTime = uiState.atkCastTime
@@ -108,7 +108,7 @@ fun SkillLoopScreen(
  * 技能循环 item
  */
 @Composable
-private fun SkillLoopItem(
+private fun SkillLoopItemContent(
     loop: SkillLoop,
     skillMap: HashMap<Int, SkillBasicData>,
     atkCastTime: Double
@@ -184,9 +184,9 @@ private fun SkillLoopItem(
 
 @CombinedPreviews
 @Composable
-private fun SkillLoopItemPreview() {
+private fun SkillLoopItemContentPreview() {
     PreviewLayout {
-        SkillLoopItem(
+        SkillLoopItemContent(
             loop = SkillLoop(
                 0,
                 1,

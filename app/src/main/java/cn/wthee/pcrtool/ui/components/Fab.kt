@@ -245,6 +245,115 @@ fun SelectTypeFab(
     }
 }
 
+
+/**
+ * 切换
+ * @param width 宽度
+ */
+@Composable
+fun SelectTypeFab(
+    modifier: Modifier = Modifier,
+    icon: MainIconType,
+    tabs: List<String>,
+    type: Int,
+    width: Dp = Dimen.dataChangeWidth,
+    selectedColor: Color = MaterialTheme.colorScheme.primary,
+    paddingValues: PaddingValues = PaddingValues(
+        start = Dimen.fabMargin,
+        end = Dimen.fabMarginEnd,
+        top = Dimen.fabMargin,
+        bottom = Dimen.fabMargin,
+    ),
+    changeSelect: (Int) -> Unit
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
+
+
+    Box(modifier = Modifier.clickClose(openDialog)) {
+        //切换
+        SmallFloatingActionButton(
+            modifier = modifier
+                .animateContentSize(defaultSpring())
+                .padding(paddingValues)
+                .padding(
+                    start = Dimen.mediumPadding,
+                    end = Dimen.textFabMargin,
+                    top = Dimen.mediumPadding,
+                ),
+            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+            onClick = {
+                VibrateUtil(context).single()
+                if (!openDialog) {
+                    openDialog = true
+                }
+            },
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = if (openDialog) {
+                    Dimen.popupMenuElevation
+                } else {
+                    Dimen.fabElevation
+                }
+            ),
+        ) {
+            if (openDialog) {
+                Column(
+                    modifier = Modifier.widthIn(max = width),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    //选择
+                    tabs.forEachIndexed { index, tab ->
+                        val mModifier = if (type == index) {
+                            Modifier.fillMaxWidth()
+                        } else {
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    VibrateUtil(context).single()
+                                    coroutineScope.launch {
+                                        changeSelect(index)
+                                    }
+                                    openDialog = false
+                                }
+                        }
+                        SelectText(
+                            selected = type == index,
+                            text = tab,
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            selectedColor = selectedColor,
+                            modifier = mModifier.padding(Dimen.mediumPadding)
+                        )
+                    }
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    MainIcon(
+                        data = icon, tint = selectedColor,
+                        size = Dimen.fabIconSize
+                    )
+                    Text(
+                        text = tabs[type],
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = selectedColor,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
+                    )
+                }
+
+            }
+        }
+    }
+}
+
+
 @CombinedPreviews
 @Composable
 private fun FabComposePreview() {
