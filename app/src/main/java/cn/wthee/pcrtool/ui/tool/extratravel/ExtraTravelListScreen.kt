@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,26 +9,26 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
-import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
+import cn.wthee.pcrtool.data.db.view.ExtraTravelData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.CommonTitleContentText
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -40,71 +38,50 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_TRAVEL_MAP
 import cn.wthee.pcrtool.utils.toTimeText
-import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import kotlinx.coroutines.launch
 
 /**
  * ex冒险区域
  */
 @Composable
-fun ExtraEquipTravelList(
+fun ExtraTravelListScreen(
     scrollState: LazyListState,
     toExtraEquipTravelAreaDetail: (Int) -> Unit,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
+    extraTravelListViewModel: ExtraTravelListViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
+    val uiState by extraTravelListViewModel.uiState.collectAsStateWithLifecycle()
 
-    val areaListFlow = remember {
-        extraEquipmentViewModel.getTravelAreaList()
-    }
-    val areaList by areaListFlow.collectAsState(initial = null)
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+    MainScaffold(
+        fab = {
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.EXTRA_EQUIP_DROP,
+                text = stringResource(id = R.string.tool_travel),
+            ) {
+                scope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
     ) {
-        if (areaList?.isNotEmpty() == true) {
-            LazyColumn(state = scrollState) {
-                items(areaList!!) {
-                    TravelItem(it, toExtraEquipTravelAreaDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
-            }
-        } else {
-            if (areaList == null) {
-                //功能未实装
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CenterTipText(
-                        stringResource(id = R.string.not_installed)
-                    )
-                }
-            } else {
-                CenterTipText(
-                    stringResource(id = R.string.no_data)
-                )
-            }
-        }
-
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.EXTRA_EQUIP_DROP,
-            text = stringResource(id = R.string.tool_travel),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            scope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
+        StateBox(stateType = uiState.loadingState) {
+            uiState.areaList?.let { areaList ->
+                LazyColumn(state = scrollState) {
+                    items(areaList) {
+                        TravelItem(it, toExtraEquipTravelAreaDetail)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }
     }
+
 }
 
 /**
@@ -112,7 +89,7 @@ fun ExtraEquipTravelList(
  */
 @Composable
 private fun TravelItem(
-    travelData: ExtraEquipTravelData,
+    travelData: ExtraTravelData,
     toExtraEquipTravelAreaDetail: (Int) -> Unit
 ) {
 
@@ -206,12 +183,28 @@ fun TravelQuestHeader(
 
 @CombinedPreviews
 @Composable
-private fun TravelQuestHeaderPreview() {
+private fun TravelItemPreview() {
     PreviewLayout {
-        TravelQuestHeader(
-            questData = ExtraEquipQuestData(
-                0, 0, "?", 10, 10000, 500, 1, 1000, 1
-            )
+        TravelItem(
+            travelData = ExtraTravelData(
+                travelAreaId = 1,
+                travelAreaName = stringResource(id = R.string.debug_short_text),
+                questCount = 1,
+                questList = arrayListOf(
+                    ExtraEquipQuestData(
+                        1,
+                        1,
+                        stringResource(id = R.string.debug_short_text),
+                        10,
+                        1000,
+                        2000,
+                        1,
+                        1,
+                        1
+                    )
+                )
+            ),
+            toExtraEquipTravelAreaDetail = {}
         )
     }
 }

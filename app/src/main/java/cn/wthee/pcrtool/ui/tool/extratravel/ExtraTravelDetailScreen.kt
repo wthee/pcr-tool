@@ -9,18 +9,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
+import cn.wthee.pcrtool.data.db.view.ExtraEquipSubRewardData
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -29,35 +30,33 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 
 /**
  * ex冒险区域详情
  */
 @Composable
-fun ExtraEquipTravelQuestDetail(
-    questId: Int,
+fun ExtraTravelDetailScreen(
     toExtraEquipDetail: (Int) -> Unit,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
+    extraTravelDetailViewModel: ExtraTravelDetailViewModel = hiltViewModel()
 ) {
-    val questDataFlow = remember {
-        extraEquipmentViewModel.getTravelQuest(questId)
-    }
-    val questData by questDataFlow.collectAsState(initial = null)
+    val uiState by extraTravelDetailViewModel.uiState.collectAsStateWithLifecycle()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        questData?.let {
+
+    MainScaffold {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
             TravelQuestItem(
                 selectedId = 0,
-                questData = it,
+                questData = uiState.questData,
+                subRewardList = uiState.subRewardList,
                 toExtraEquipDetail = toExtraEquipDetail
             )
         }
     }
+
 }
 
 
@@ -68,23 +67,19 @@ fun ExtraEquipTravelQuestDetail(
 @Composable
 fun TravelQuestItem(
     selectedId: Int,
-    questData: ExtraEquipQuestData,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
+    questData: ExtraEquipQuestData?,
+    subRewardList: List<ExtraEquipSubRewardData>?,
     toExtraEquipDetail: ((Int) -> Unit)? = null
 ) {
-    val subRewardListFlow = remember(questData.travelQuestId) {
-        extraEquipmentViewModel.getSubRewardList(questData.travelQuestId)
-    }
-    val subRewardList by subRewardListFlow.collectAsState(initial = arrayListOf())
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         //标题
-        TravelQuestHeader(questData, showTitle = selectedId == 0)
+        questData?.let { TravelQuestHeader(it, showTitle = selectedId == 0) }
         //掉落
-        subRewardList.forEach { subRewardData ->
+        subRewardList?.forEach { subRewardData ->
             ExtraEquipGroup(
                 subRewardData.category,
                 subRewardData.categoryName,

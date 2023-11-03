@@ -18,6 +18,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -60,6 +62,7 @@ fun EquipMaterialDropInfoScreen(
             equipName = uiState.equipName,
             dropQuestList = uiState.dropQuestList,
             loved = uiState.loved,
+            randomDropResponseData = uiState.randomDropResponseData
         )
     }
 
@@ -70,7 +73,8 @@ private fun EquipMaterialDropInfoContent(
     equipId: Int?,
     equipName: String,
     dropQuestList: List<QuestDetail>?,
-    loved: Boolean
+    loved: Boolean,
+    randomDropResponseData: ResponseData<List<RandomEquipDropArea>>?
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -88,7 +92,11 @@ private fun EquipMaterialDropInfoContent(
         dropQuestList?.let { questList ->
             if (questList.isNotEmpty()) {
                 equipId?.let {
-                    QuestPager(questList, it)
+                    QuestPager(
+                        questList = questList,
+                        equipId = it,
+                        randomDropResponseData = randomDropResponseData
+                    )
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -131,7 +139,8 @@ private fun EquipMaterialDropInfoContentPreview() {
             equipId = 1,
             equipName = stringResource(id = R.string.debug_long_text),
             dropQuestList = arrayListOf(QuestDetail(questId = 1)),
-            loved = true
+            loved = true,
+            null
         )
     }
 }

@@ -149,9 +149,11 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
             //预览
             ExpandAnimation(visible = isEditMode) {
                 Column(
-                    modifier = Modifier.padding(
-                        vertical = Dimen.mediumPadding
-                    )
+                    modifier = Modifier
+                        .padding(
+                            vertical = Dimen.mediumPadding
+                        )
+                        .fillMaxWidth()
                 ) {
                     ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
                     //编辑提示

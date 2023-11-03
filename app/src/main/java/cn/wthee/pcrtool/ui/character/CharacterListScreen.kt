@@ -115,7 +115,7 @@ fun CharacterListScreen(
             CharacterListContent(
                 characterList = uiState.characterList,
                 scrollState = scrollState,
-                startIdList = uiState.startIdList,
+                starIdList = uiState.starIdList,
                 toDetail = toCharacterDetail
             )
         }
@@ -126,7 +126,7 @@ fun CharacterListScreen(
 private fun CharacterListContent(
     characterList: List<CharacterInfo>?,
     scrollState: LazyGridState,
-    startIdList: ArrayList<Int>,
+    starIdList: ArrayList<Int>,
     toDetail: (Int) -> Unit
 ) {
     LazyVerticalGrid(
@@ -143,7 +143,7 @@ private fun CharacterListContent(
                 CharacterItemContent(
                     unitId = it.id,
                     character = it,
-                    loved = startIdList.contains(it.id),
+                    loved = starIdList.contains(it.id),
                     modifier = Modifier.padding(Dimen.mediumPadding),
                 ) {
                     toDetail(it.id)

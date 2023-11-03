@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.model.FilterEquip
-import cn.wthee.pcrtool.data.model.getStarEquipIdList
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
@@ -33,7 +32,7 @@ data class EquipListUiState(
     val equipList: List<EquipmentBasicInfo>? = null,
     val filter: FilterEquip? = null,
     //收藏的编号
-    val startIdList: List<Int> = emptyList(),
+    val starIdList: List<Int> = emptyList(),
     //搜索模式
     val searchEquipMode: Boolean = false,
     //搜索装备编号
@@ -80,12 +79,12 @@ class EquipListViewModel @Inject constructor(
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
             val filter: FilterEquip? = GsonUtil.fromJson(filterData)
-            val startIdList = getStarEquipIdList()
+            val starIdList = FilterEquip.getStarIdList()
             val initFilter = filter ?: FilterEquip()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    startIdList = startIdList
+                    starIdList = starIdList
                 )
             }
 

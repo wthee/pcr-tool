@@ -1,30 +1,28 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentData
@@ -32,13 +30,14 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.getStarExEquipIdList
-import cn.wthee.pcrtool.data.model.updateStarExEquipId
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.UnitList
@@ -59,80 +58,75 @@ import kotlinx.coroutines.launch
  *
  * @param equipId 装备编号
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExtraEquipDetail(
     equipId: Int,
     toExtraEquipUnit: (Int) -> Unit,
     toExtraEquipDrop: (Int) -> Unit,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
+    extraEquipDetailViewModel: ExtraEquipDetailViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    //装备信息
-    val extraEquipmentDataFlow = remember {
-        extraEquipmentViewModel.getExtraEquip(equipId)
-    }
-    val extraEquipmentData by extraEquipmentDataFlow.collectAsState(initial = ExtraEquipmentData())
-    //适用角色
-    val unitIdsFlow = remember(extraEquipmentData.category) {
-        extraEquipmentViewModel.getExtraEquipUnitList(extraEquipmentData.category)
-    }
-    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
-    //收藏状态
-    val loved = getStarExEquipIdList().contains(equipId)
+    val uiState by extraEquipDetailViewModel.uiState.collectAsStateWithLifecycle()
 
-
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(top = Dimen.largePadding)
-            .fillMaxSize()
-    ) {
-
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            //基本信息
-            if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
-                ExtraEquipBasicInfo(extraEquipmentData, loved)
-            }
-            //被动技能
-            ExtraEquipSkill(extraEquipmentData.getPassiveSkillIds())
-
-            CommonSpacer()
+    //初始收藏信息
+    LaunchedEffect(MainActivity.navSheetState.isVisible) {
+        if (!MainActivity.navSheetState.isVisible) {
+            extraEquipDetailViewModel.reloadStarList()
         }
+    }
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            horizontalArrangement = Arrangement.End
-        ) {
+    MainScaffold(
+        fab = {
             //装备收藏
             MainSmallFab(
-                iconType = if (loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                iconType = if (uiState.loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                text = if (uiState.loved) "" else stringResource(id = R.string.love_equip)
             ) {
                 scope.launch {
-                    updateStarExEquipId(context, equipId)
+                    extraEquipDetailViewModel.updateStarId()
                 }
             }
+
             //关联角色
-            MainSmallFab(
-                iconType = MainIconType.CHARACTER,
-                text = unitIds.size.toString()
-            ) {
-                toExtraEquipUnit(extraEquipmentData.category)
+            if (uiState.unitIdList.isNotEmpty()) {
+                MainSmallFab(
+                    iconType = MainIconType.CHARACTER,
+                    text = uiState.unitIdList.size.toString()
+                ) {
+                    toExtraEquipUnit(equipId)
+                }
             }
+
             //掉落信息
             MainSmallFab(
                 iconType = MainIconType.EXTRA_EQUIP_DROP
             ) {
-                toExtraEquipDrop(extraEquipmentData.equipmentId)
+                toExtraEquipDrop(equipId)
             }
         }
+    ) {
+        Column {
+            StateBox(stateType = uiState.loadingState) {
+                uiState.equipData?.let { extraEquipmentData ->
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        //基本信息
+                        if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
+                            ExtraEquipBasicInfo(extraEquipmentData, uiState.loved)
+                        }
+                        //被动技能
+                        ExtraEquipSkill(extraEquipmentData.getPassiveSkillIds())
 
+                        CommonSpacer()
+                    }
+                }
+            }
+        }
     }
+
 }
 
 /**
@@ -257,7 +251,7 @@ private fun ExtraEquipSkill(
  * 可使用的ex装备角色
  */
 @Composable
-fun ExtraEquipUnitList(
+fun ExtraEquipUnitListScreen(
     category: Int,
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
 ) {

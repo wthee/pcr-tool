@@ -80,11 +80,14 @@ object NavRoute {
     const val UNIQUE_EQUIP_LIST = "uniqueEquipList"
     const val UNIQUE_EQUIP_DETAIL = "UniqueEquipDetail"
 
-    //角色过滤
+    //角色筛选
     const val FILTER_CHARACTER = "filterCharacter"
 
     //装备筛选
     const val FILTER_EQUIP = "filterEquip"
+
+    //ex装备筛选
+    const val FILTER_EXTRA_EQUIP = "filterExtraEquip"
     const val FILTER_DATA = "filterData"
 
     //角色详情是否显示所有信息

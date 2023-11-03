@@ -60,11 +60,8 @@ fun UniqueEquipSection(
     } else {
         uiState.uniqueEquipList1
     }
-    val equipList2 = if (uiState.uniqueEquipList2 == null) {
-        initList
-    } else {
-        uiState.uniqueEquipList2
-    }
+
+    val equipList2 = uiState.uniqueEquipList2
 
 
     Section(

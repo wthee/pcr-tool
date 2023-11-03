@@ -16,20 +16,20 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
@@ -51,30 +51,26 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.QuestViewModel
-import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 
 /**
  * 主线地图信息
  * @param searchEquipIds 搜索的装备编号，-分隔
  */
 @Composable
-fun AllQuestList(
+fun QuestListScreen(
     searchEquipIds: String = "",
-    questViewModel: QuestViewModel = hiltViewModel(),
+    questListViewModel: QuestListViewModel = hiltViewModel(),
 ) {
-    val questListFlow = remember {
-        questViewModel.getQuestList()
-    }
-    val questList by questListFlow.collectAsState(initial = null)
+    val uiState by questListViewModel.uiState.collectAsStateWithLifecycle()
 
 
     MainScaffold {
-        questList?.let {
+        uiState.questList?.let {
             QuestPager(
-                it,
-                0,
-                searchEquipIds.intArrayList
+                questList = it,
+                equipId = 0,
+                searchEquipIdList = searchEquipIds.intArrayList,
+                randomDropResponseData = uiState.randomDropResponseData
             )
         }
     }
@@ -90,14 +86,8 @@ fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
     searchEquipIdList: List<Int> = arrayListOf(),
-    randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
+    randomDropResponseData: ResponseData<List<RandomEquipDropArea>>?
 ) {
-    //额外掉落
-    val flow = remember(equipId) {
-        randomEquipAreaViewModel.getEquipArea(equipId)
-    }
-    val randomDropResponseData by flow.collectAsState(initial = null)
-
     var pagerCount = 0
     //tab文本
     val tabs = arrayListOf<String>()

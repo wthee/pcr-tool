@@ -26,14 +26,22 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     }
 
     suspend fun getEquipmentList(filter: FilterEquip, limit: Int) = try {
-        equipmentDao.getEquipmentList(
+        val filterList = equipmentDao.getEquipmentList(
             filter.craft,
             filter.colorType,
             filter.name,
-            if (filter.all) 1 else 0,
-            filter.starIds,
             limit
         )
+
+        if (filter.all) {
+            filterList
+        } else {
+            //筛选收藏的
+            val starIdList = FilterEquip.getStarIdList()
+            filterList.filter {
+                starIdList.contains(it.equipmentId)
+            }
+        }
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getEquipmentList#filter:$filter")
         null

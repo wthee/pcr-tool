@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.getStarEquipIdList
+import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
@@ -103,7 +103,7 @@ class RankEquipCountViewModel @Inject constructor(
      */
     fun reloadStarList() {
         viewModelScope.launch {
-            val list = getStarEquipIdList()
+            val list = FilterEquip.getStarIdList()
             _uiState.update {
                 it.copy(starIdList = list)
             }

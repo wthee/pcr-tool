@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.data.model.getStarCharacterIdList
+import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
@@ -232,7 +232,7 @@ class CharacterDetailViewModel @Inject constructor(
      */
     private fun getLoveState(unitId: Int) {
         viewModelScope.launch {
-            val list = getStarCharacterIdList()
+            val list = FilterCharacter.getStarIdList()
             _uiState.update {
                 it.copy(loved = list.contains(unitId))
             }

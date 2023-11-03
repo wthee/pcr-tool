@@ -6,10 +6,11 @@ import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
 import kotlinx.coroutines.flow.first
 
-data class FilterEquip(
+data class FilterExtraEquipment(
     var all: Boolean = true,
-    var craft: Int = 1,
-    var colorType: Int = 0,
+    var flag: Int = 0,
+    var rarity: Int = 0,
+    var category: Int = 0,
     var name: String = ""
 ) {
     companion object {
@@ -19,12 +20,12 @@ data class FilterEquip(
          */
         suspend fun getStarIdList(): ArrayList<Int> {
             val data = MyApplication.context.dataStoreMain.data.first()
-            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_EQUIP])
+            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_EXTRA_EQUIP])
         }
     }
 }
 
 
-fun FilterEquip.isFilter(): Boolean {
-    return !(all && colorType == 0 && name == "" && craft == 1)
+fun FilterExtraEquipment.isFilter(): Boolean {
+    return !(all && rarity == 0 && name == "" && flag == 0 && category == 0)
 }

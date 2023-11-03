@@ -9,9 +9,9 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipCategoryData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipSubRewardData
-import cn.wthee.pcrtool.data.db.view.ExtraEquipTravelData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentData
+import cn.wthee.pcrtool.data.db.view.ExtraTravelData
 
 /**
  * ex装备数据DAO
@@ -101,12 +101,7 @@ interface ExtraEquipmentDao {
         FROM
             ex_equipment_data AS a
             LEFT JOIN ex_equipment_category AS b ON a.category = b.category
-        WHERE a.name like '%' || :name || '%' 
-            AND (
-                (a.ex_equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-                OR 
-                (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-            )
+        WHERE a.name like '%' || :name || '%'
             AND 1 = CASE
                 WHEN  0 = :category  THEN 1 
                 WHEN  a.category = :category  THEN 1 
@@ -128,8 +123,6 @@ interface ExtraEquipmentDao {
         rarity: Int,
         name: String,
         category: Int,
-        showAll: Int,
-        starIds: List<Int>,
         limit: Int
     ): List<ExtraEquipmentBasicInfo>
 
@@ -258,7 +251,7 @@ interface ExtraEquipmentDao {
             a.travel_area_id
         """
     )
-    suspend fun getTravelAreaList(): List<ExtraEquipTravelData>
+    suspend fun getTravelAreaList(): List<ExtraTravelData>
 
 
     /**

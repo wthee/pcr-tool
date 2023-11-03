@@ -1,11 +1,11 @@
-package cn.wthee.pcrtool.ui.character
+package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
+import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
+import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
@@ -21,42 +21,40 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * 页面状态：角色列表
+ * 页面状态：ex装备列表
  */
 @Immutable
-data class CharacterListUiState(
-    val characterList: List<CharacterInfo>? = null,
-    val filter: FilterCharacter? = null,
-    //收藏的角色编号
-    val starIdList: ArrayList<Int> = arrayListOf(),
+data class ExtraEquipListUiState(
+    val equipList: List<ExtraEquipmentBasicInfo>? = null,
+    val filter: FilterExtraEquipment? = null,
+    //收藏的编号
+    val starIdList: List<Int> = emptyList(),
     val loadingState: LoadingState = LoadingState.Loading
 )
 
 /**
- * 角色列表 ViewModel
- *
- * @param unitRepository
+ * ex装备列表 ViewModel
  */
 @HiltViewModel
-class CharacterListViewModel @Inject constructor(
-    private val unitRepository: UnitRepository
+class ExtraEquipListViewModel @Inject constructor(
+    private val extraEquipmentRepository: ExtraEquipmentRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CharacterListUiState())
-    val uiState: StateFlow<CharacterListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ExtraEquipListUiState())
+    val uiState: StateFlow<ExtraEquipListUiState> = _uiState.asStateFlow()
 
 
     /**
-     * 获取角色基本信息列表
+     * 获取装备基本信息列表
      *
-     * @param filter 角色筛选
+     * @param filter 装备筛选
      */
-    private fun getCharacterInfoList(filter: FilterCharacter) {
+    private fun getEquipInfoList(filter: FilterExtraEquipment) {
         viewModelScope.launch {
-            val list = unitRepository.getCharacterInfoList(filter, Int.MAX_VALUE)
+            val list = extraEquipmentRepository.getEquipmentList(filter, Int.MAX_VALUE)
             _uiState.update {
                 it.copy(
-                    characterList = list,
+                    equipList = list,
                     loadingState = updateLoadingState(list)
                 )
             }
@@ -69,9 +67,9 @@ class CharacterListViewModel @Inject constructor(
     fun initFilter() {
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
-            val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
-            val starIdList = FilterCharacter.getStarIdList()
-            val initFilter = filter ?: FilterCharacter()
+            val filter: FilterExtraEquipment? = GsonUtil.fromJson(filterData)
+            val starIdList = FilterExtraEquipment.getStarIdList()
+            val initFilter = filter ?: FilterExtraEquipment()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
@@ -80,7 +78,7 @@ class CharacterListViewModel @Inject constructor(
             }
 
             //初始加载
-            getCharacterInfoList(initFilter)
+            getEquipInfoList(initFilter)
         }
     }
 
@@ -89,13 +87,13 @@ class CharacterListViewModel @Inject constructor(
      */
     fun resetFilter() {
         viewModelScope.launch {
-            val filter = FilterCharacter()
-            val list = unitRepository.getCharacterInfoList(filter, Int.MAX_VALUE)
+            val filter = FilterExtraEquipment()
+            val list = extraEquipmentRepository.getEquipmentList(filter, Int.MAX_VALUE)
             setData(NavRoute.FILTER_DATA, null)
             _uiState.update {
                 it.copy(
                     filter = filter,
-                    characterList = list,
+                    equipList = list,
                     loadingState = updateLoadingState(list)
                 )
             }

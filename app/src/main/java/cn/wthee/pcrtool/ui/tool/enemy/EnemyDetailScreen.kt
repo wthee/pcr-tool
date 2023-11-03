@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.enemy
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
@@ -37,6 +36,7 @@ import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainButton
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
@@ -53,7 +53,6 @@ import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.px2dp
-import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
@@ -61,33 +60,24 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  * 怪物信息详情
  */
 @Composable
-fun EnemyDetail(
+fun EnemyDetailScreen(
     enemyId: Int,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
-    enemyViewModel: EnemyViewModel = hiltViewModel()
+    enemyDetailViewModel: EnemyDetailViewModel = hiltViewModel()
 ) {
-    //怪物信息
-    val enemyDataFlow = remember(enemyId) {
-        enemyViewModel.getEnemyAttr(enemyId)
+    val uiState by enemyDetailViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(enemyId) {
+        enemyDetailViewModel.loadData(enemyId)
     }
-    val enemyData by enemyDataFlow.collectAsState(initial = null)
-    //部位信息
-    val partEnemyListFlow = remember(enemyId) {
-        enemyViewModel.getMultiTargetEnemyInfo(enemyId)
-    }
-    val partEnemyList by partEnemyListFlow.collectAsState(initial = null)
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        enemyData?.let {
-            EnemyAllInfo(
-                it,
-                partEnemyList != null,
-                partEnemyList,
-                toSummonDetail
+
+    MainScaffold {
+        uiState.enemyInfo?.let {
+            EnemyDetailContent(
+                enemyData = it,
+                isMultiEnemy = uiState.partInfoList.isNotEmpty(),
+                partEnemyList = uiState.partInfoList,
+                toSummonDetail = toSummonDetail
             )
         }
     }
@@ -98,7 +88,7 @@ fun EnemyDetail(
  * Boss 信息详情
  */
 @Composable
-fun EnemyAllInfo(
+fun EnemyDetailContent(
     enemyData: EnemyParameterPro,
     isMultiEnemy: Boolean,
     partEnemyList: List<EnemyParameterPro>?,
@@ -108,16 +98,19 @@ fun EnemyAllInfo(
     val openDialog = remember {
         mutableStateOf(false)
     }
-    val attr = if (isMultiEnemy) {
+    //基础或部位信息
+    val attrList = if (isMultiEnemy) {
         enemyData.attr.multiplePartEnemy(isPreview = LocalInspectionMode.current)
     } else {
         enemyData.attr.enemy(isPreview = LocalInspectionMode.current)
     }
+    //部位最大攻击力
     var partAtk = 0
     partEnemyList?.forEach {
         partAtk = maxOf(partAtk, maxOf(it.attr.atk, it.attr.magicStr))
     }
     enemyData.partAtk = partAtk
+
 
     Column(
         modifier = Modifier
@@ -179,7 +172,7 @@ fun EnemyAllInfo(
                 }
         )
         //属性
-        AttrList(attrs = attr)
+        AttrList(attrs = attrList)
         //多目标部位属性
         partEnemyList?.forEach {
             //名称
@@ -200,6 +193,7 @@ fun EnemyAllInfo(
         CommonSpacer()
     }
 
+    //描述文本弹窗
     if (openDialog.value) {
         AlertDialog(
             title = {
@@ -308,9 +302,9 @@ fun EnemySkillList(
 
 @CombinedPreviews
 @Composable
-private fun EnemyAllInfoPreview() {
+private fun EnemyDetailContentPreview() {
     PreviewLayout {
-        EnemyAllInfo(
+        EnemyDetailContent(
             EnemyParameterPro(
                 name = stringResource(id = R.string.debug_short_text),
                 comment = stringResource(id = R.string.debug_long_text),

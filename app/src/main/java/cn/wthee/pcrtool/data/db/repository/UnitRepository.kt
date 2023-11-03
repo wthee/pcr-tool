@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.getStarCharacterIdList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -96,7 +95,7 @@ class UnitRepository @Inject constructor(
                 filterList
             } else {
                 //筛选收藏的角色
-                val starIdList = getStarCharacterIdList()
+                val starIdList = FilterCharacter.getStarIdList()
                 filterList.filter {
                     starIdList.contains(it.id)
                 }

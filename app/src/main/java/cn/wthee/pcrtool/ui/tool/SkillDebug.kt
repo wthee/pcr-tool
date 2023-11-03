@@ -22,8 +22,8 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.EnemyViewModel
 import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -33,7 +33,7 @@ fun AllSkillList(
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
-    enemyViewModel: EnemyViewModel = hiltViewModel(),
+    enemyDetailViewModel: EnemyDetailViewModel = hiltViewModel(),
     extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel(),
 ) {
     //所有角色
@@ -44,7 +44,7 @@ fun AllSkillList(
 
     //所有boss
     val bossIdsFlow = remember {
-        enemyViewModel.getAllBossIds()
+        enemyDetailViewModel.getAllBossIds()
     }
     val bossIds by bossIdsFlow.collectAsState(initial = arrayListOf())
 

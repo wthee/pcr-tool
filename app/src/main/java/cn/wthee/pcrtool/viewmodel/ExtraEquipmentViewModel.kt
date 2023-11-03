@@ -2,8 +2,6 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
-import cn.wthee.pcrtool.data.model.FilterExtraEquipment
-import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -19,58 +17,10 @@ class ExtraEquipmentViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * 获取装备列表
-     *
-     * @param params 装备筛选
-     */
-    fun getExtraEquips(params: FilterExtraEquipment) = flow {
-        try {
-            val data = equipmentRepository.getEquipments(params, Int.MAX_VALUE)
-            emit(data)
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getExtraEquips#params:$params")
-        }
-    }
-
-    /**
-     * 获取装备信息
-     *
-     * @param equipId 装备编号
-     */
-    fun getExtraEquip(equipId: Int) = flow {
-        try {
-            emit(equipmentRepository.getEquipmentData(equipId))
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getExtraEquip#equipId:$equipId")
-        }
-    }
-
-    /**
-     * 获取装备颜色种类数
-     */
-    fun getExtraEquipColorNum() = flow {
-        emit(equipmentRepository.getEquipColorNum())
-    }
-
-    /**
-     * 获取装备类别
-     */
-    fun getExtraEquipCategoryList() = flow {
-        emit(equipmentRepository.getEquipCategoryList())
-    }
-
-    /**
      * 获取可使用装备的角色列表
      */
     fun getExtraEquipUnitList(category: Int) = flow {
         emit(equipmentRepository.getEquipUnitList(category))
-    }
-
-    /**
-     * 装备掉落信息
-     */
-    fun getExtraDropQuestList(equipId: Int) = flow {
-        emit(equipmentRepository.getDropQuestList(equipId))
     }
 
     /**

@@ -1,19 +1,11 @@
 package cn.wthee.pcrtool.data.model
 
-import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.datastore.preferences.core.edit
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 /**
  * 角色信息筛选
@@ -70,14 +62,16 @@ data class FilterCharacter(
         else -> arrayListOf(0, 9999)
     }
 
-}
+    companion object {
 
-/**
- * 获取角色收藏列表
- */
-suspend fun getStarCharacterIdList() : ArrayList<Int>{
-    val data = MyApplication.context.dataStoreMain.data.first()
-    return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
+        /**
+         * 获取角色收藏列表
+         */
+        suspend fun getStarIdList(): ArrayList<Int> {
+            val data = MyApplication.context.dataStoreMain.data.first()
+            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
+        }
+    }
 }
 
 /**

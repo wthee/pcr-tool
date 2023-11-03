@@ -74,12 +74,7 @@ interface EquipmentDao {
             a.require_level
         FROM
             equipment_data AS a
-        WHERE a.equipment_name like '%' || :name || '%' 
-            AND (
-                (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-                OR 
-                (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-            )
+        WHERE a.equipment_name like '%' || :name || '%'
             AND a.equipment_id < 140000
             AND 1 = CASE
                 WHEN  0 = :colorType  THEN 1 
@@ -97,8 +92,6 @@ interface EquipmentDao {
         craft: Int,
         colorType: Int,
         name: String,
-        showAll: Int,
-        starIds: List<Int>,
         limit: Int
     ): List<EquipmentBasicInfo>
 

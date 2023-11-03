@@ -62,16 +62,17 @@ import cn.wthee.pcrtool.ui.tool.TweetList
 import cn.wthee.pcrtool.ui.tool.WebsiteList
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetailScreen
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropListScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelQuestDetail
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipListFilterScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitListScreen
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelDetailScreen
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
-import cn.wthee.pcrtool.ui.tool.quest.AllQuestList
+import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
 import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
@@ -257,8 +258,19 @@ fun NavGraph(
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipList(
                     scrollState = scrollState,
-                    toExtraEquipDetail = actions.toExtraEquipDetail
+                    toExtraEquipDetail = actions.toExtraEquipDetail,
+                    toFilterExtraEquip = actions.toFilterExtraEquip,
                 )
+            }
+
+            //ex装备列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_EXTRA_EQUIP}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                ExtraEquipListFilterScreen()
             }
 
             //ex装备冒险区域
@@ -267,7 +279,7 @@ fun NavGraph(
             ) {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ExtraEquipTravelList(
+                ExtraTravelListScreen(
                     scrollState = scrollState,
                     toExtraEquipTravelAreaDetail = actions.toExtraEquipTravelAreaDetail
                 )
@@ -280,10 +292,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val arguments = requireNotNull(it.arguments)
-                ExtraEquipTravelQuestDetail(
-                    arguments.getInt(NavRoute.TRAVEL_QUEST_ID),
+                ExtraTravelDetailScreen(
                     actions.toExtraEquipDetail
                 )
             }
@@ -338,7 +347,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipUnitList(category = arguments.getInt(NavRoute.EXTRA_EQUIP_CATEGORY))
+                ExtraEquipUnitListScreen(category = arguments.getInt(NavRoute.EXTRA_EQUIP_CATEGORY))
             }
 
             //ex装备掉落信息
@@ -349,7 +358,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipDropList(equipId = arguments.getInt(NavRoute.EQUIP_ID))
+                ExtraEquipDropListScreen(equipId = arguments.getInt(NavRoute.EQUIP_ID))
             }
 
             //装备素材详情
@@ -695,7 +704,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                EnemyDetail(
+                EnemyDetailScreen(
                     arguments.getInt(NavRoute.ENEMY_ID),
                     actions.toSummonDetail
                 )
@@ -730,7 +739,7 @@ fun NavGraph(
                 route = NavRoute.TOOL_ALL_QUEST
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                AllQuestList()
+                QuestListScreen()
             }
 
             //装备掉落搜索
@@ -741,7 +750,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                AllQuestList(
+                QuestListScreen(
                     searchEquipIds = arguments.getString(NavRoute.SEARCH_EQUIP_IDS) ?: ""
                 )
             }
@@ -1131,5 +1140,12 @@ class NavActions(navController: NavHostController) {
      */
     val toFilterEquip: (String) -> Unit = { filter ->
         navController.navigate("${NavRoute.FILTER_EQUIP}/${filter}")
+    }
+
+    /**
+     * ex装备筛选
+     */
+    val toFilterExtraEquip: (String) -> Unit = { filter ->
+        navController.navigate("${NavRoute.FILTER_EXTRA_EQUIP}/${filter}")
     }
 }

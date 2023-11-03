@@ -20,13 +20,13 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyAllInfo
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 
 /**
  * 公会战 BOSS 详情
- * @see [cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail]
+ * @see [cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen]
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -86,7 +86,7 @@ fun ClanBattleDetailScreen(
                 //BOSS信息
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     if (uiState.bossDataList.isNotEmpty()) {
-                        EnemyAllInfo(
+                        EnemyDetailContent(
                             enemyData = uiState.bossDataList[pagerIndex],
                             isMultiEnemy = clanBattleValue.getMultiCount(pagerIndex) > 0,
                             partEnemyList = uiState.partEnemyMap[uiState.bossDataList[pagerIndex].enemyId],

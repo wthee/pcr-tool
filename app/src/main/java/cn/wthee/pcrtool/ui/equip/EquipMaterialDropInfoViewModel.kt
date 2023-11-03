@@ -6,10 +6,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.QuestRepository
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.data.model.getStarEquipIdList
+import cn.wthee.pcrtool.data.model.FilterEquip
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
@@ -47,6 +51,8 @@ data class EquipMaterialDetailUiState(
     val loved: Boolean = false,
     val loadingState: LoadingState = LoadingState.Loading,
     val materialLoadingState: LoadingState = LoadingState.Loading,
+    //额外掉落
+    val randomDropResponseData: ResponseData<List<RandomEquipDropArea>>? = null
 )
 
 /**
@@ -55,6 +61,8 @@ data class EquipMaterialDetailUiState(
 @HiltViewModel
 class EquipMaterialDropInfoViewModel @Inject constructor(
     private val questRepository: QuestRepository,
+    private val apiRepository: MyAPIRepository,
+    private val equipmentRepository: EquipmentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val equipId: Int? = savedStateHandle[NavRoute.EQUIP_ID]
@@ -73,6 +81,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
             }
             getDropInfo(equipId)
             getLoveState(equipId)
+            getEquipArea(equipId)
         }
     }
 
@@ -105,7 +114,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
      */
     private fun getLoveState(equipId: Int) {
         viewModelScope.launch {
-            val list = getStarEquipIdList()
+            val list = FilterEquip.getStarIdList()
             _uiState.update {
                 it.copy(
                     loved = list.contains(equipId),
@@ -116,13 +125,25 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
     }
 
     /**
-     * 获取收藏列表
+     * 获取掉落地区信息
      */
-    fun reloadStarList() {
+    private fun getEquipArea(equipId: Int) {
         viewModelScope.launch {
-            val list = getStarEquipIdList()
-            _uiState.update {
-                it.copy(starIdList = list)
+            try {
+                val response = apiRepository.getEquipArea(equipId)
+                response.data?.let {
+                    val maxArea = equipmentRepository.getMaxArea() % 100
+                    val filterList = it.filter { areaData -> areaData.area <= maxArea }
+                    response.data = filterList
+                }
+
+                _uiState.update {
+                    it.copy(
+                        randomDropResponseData = response
+                    )
+                }
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, "getEquipArea#equipId:$equipId")
             }
         }
     }

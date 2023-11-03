@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 
 
 /**
@@ -42,7 +42,7 @@ fun StoryEventBossDetail(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            EnemyDetail(
+            EnemyDetailScreen(
                 enemyId + modeIndex.intValue,
                 toSummonDetail,
             )

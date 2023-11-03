@@ -26,19 +26,26 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
             }
         }
         list
-    } catch (_: Exception) {
-        arrayListOf()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEnemyAttrList#enemyPartIds:$enemyPartIds")
+        emptyList()
     }
 
     suspend fun getEnemyAttr(enemyId: Int) = try {
         enemyDao.getEnemyAttr(enemyId)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEnemyAttr#enemyId:$enemyId")
         null
     }
 
     suspend fun getAllBossIds() = enemyDao.getAllBossIds()
 
-    suspend fun getMultiTargetEnemyInfo(enemyId: Int) = enemyDao.getMultiTargetEnemyInfo(enemyId)
+    suspend fun getMultiTargetEnemyInfo(enemyId: Int) = try {
+        enemyDao.getMultiTargetEnemyInfo(enemyId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMultiTargetEnemyInfo#enemyId:$enemyId")
+        null
+    }
 
     suspend fun getAtkCastTime(unitId: Int) = enemyDao.getAtkCastTime(unitId)
 

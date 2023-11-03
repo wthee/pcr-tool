@@ -28,7 +28,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 import cn.wthee.pcrtool.utils.int
 import kotlin.math.max
 
@@ -49,7 +49,7 @@ fun SkillSummonScreen(
     MainScaffold {
         if (unitType == UnitType.ENEMY || unitType == UnitType.ENEMY_SUMMON) {
             //敌人召唤物
-            EnemyDetail(enemyId = id)
+            EnemyDetailScreen(enemyId = id)
         } else {
             //角色召唤物
             CharacterSummonDetailScreen(

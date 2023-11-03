@@ -139,7 +139,7 @@ fun EquipListScreen(
                 EquipListContent(
                     equipList = uiState.equipList!!,
                     scrollState = scrollState,
-                    filter = uiState.filter!!,
+                    starIdList = uiState.starIdList,
                     toEquipDetail = toEquipDetail,
                     toEquipMaterial = toEquipMaterial,
                     searchEquipMode = uiState.searchEquipMode,
@@ -328,7 +328,7 @@ private fun EquipListFabContent(
 private fun EquipListContent(
     equipList: List<EquipmentBasicInfo>,
     scrollState: LazyListState,
-    filter: FilterEquip,
+    starIdList: List<Int>,
     searchEquipMode: Boolean,
     searchEquipIdList: List<Int>,
     toEquipDetail: (Int) -> Unit,
@@ -377,7 +377,7 @@ private fun EquipListContent(
             ) {
                 equipGroupData.equipIdList.forEach { equip ->
                     EquipItem(
-                        filter = filter,
+                        starIdList = starIdList,
                         equip = equip,
                         toEquipDetail = toEquipDetail,
                         toEquipMaterial = toEquipMaterial,
@@ -401,7 +401,7 @@ private fun EquipListContent(
  */
 @Composable
 private fun EquipItem(
-    filter: FilterEquip,
+    starIdList: List<Int>,
     equip: EquipmentBasicInfo,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int, String) -> Unit,
@@ -456,7 +456,7 @@ private fun EquipItem(
                 maxLines = 2,
                 selectable = true,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
-                color = if (filter.starIds.contains(equip.equipmentId)) {
+                color = if (starIdList.contains(equip.equipmentId)) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.onSurface
@@ -497,7 +497,7 @@ private fun EquipListContentPreview() {
                 EquipmentBasicInfo(equipmentId = 2, equipmentName = name, promotionLevel = 2),
             ),
             scrollState = rememberLazyListState(),
-            filter = FilterEquip(),
+            starIdList = arrayListOf(1),
             toEquipDetail = { },
             toEquipMaterial = { _, _ -> },
             searchEquipMode = false,
@@ -510,7 +510,6 @@ private fun EquipListContentPreview() {
 @CombinedPreviews
 @Composable
 private fun EquipSearchFabContentPreview() {
-    val name = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         EquipSearchFabContent(
             openSearchDialog = true,
