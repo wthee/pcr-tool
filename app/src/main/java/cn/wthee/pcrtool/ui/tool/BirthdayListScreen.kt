@@ -1,23 +1,17 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +19,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.startTime
@@ -34,8 +29,10 @@ import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -47,7 +44,6 @@ import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
-import cn.wthee.pcrtool.viewmodel.BirthdayViewModel
 import kotlinx.coroutines.launch
 
 
@@ -55,29 +51,37 @@ import kotlinx.coroutines.launch
  * 生日日程
  */
 @Composable
-fun BirthdayList(
-    scrollState: LazyStaggeredGridState,
+fun BirthdayListScreen(
     toCharacterDetail: (Int) -> Unit,
-    birthdayViewModel: BirthdayViewModel = hiltViewModel()
+    birthdayListViewModel: BirthdayListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val dataListFlow = remember {
-        birthdayViewModel.getBirthDayList()
-    }
-    val dataList by dataListFlow.collectAsState(initial = arrayListOf())
+    val scrollState = rememberLazyStaggeredGridState()
+    val uiState by birthdayListViewModel.uiState.collectAsStateWithLifecycle()
 
 
     //生日列表
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+    MainScaffold(
+        fab = {
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.BIRTHDAY,
+                text = stringResource(id = R.string.tool_birthday)
+            ) {
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
     ) {
-        if (dataList?.isNotEmpty() == true) {
+        StateBox(stateType = uiState.loadingState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
-                items(items = dataList!!, key = {
+                items(items = uiState.birthdayList, key = {
                     "${it.month}/${it.day}"
                 }) {
                     BirthdayItem(it, toCharacterDetail)
@@ -87,23 +91,7 @@ fun BirthdayList(
                 }
             }
         }
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.BIRTHDAY,
-            text = stringResource(id = R.string.tool_birthday),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
-            }
-        }
     }
-
 }
 
 /**

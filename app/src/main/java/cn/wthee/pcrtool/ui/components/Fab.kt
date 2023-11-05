@@ -253,6 +253,8 @@ fun SelectTypeFab(
 @Composable
 fun SelectTypeFab(
     modifier: Modifier = Modifier,
+    openDialog: Boolean,
+    changeDialog: (Boolean) -> Unit,
     icon: MainIconType,
     tabs: List<String>,
     type: Int,
@@ -268,87 +270,83 @@ fun SelectTypeFab(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
 
 
-    Box(modifier = Modifier.clickClose(openDialog)) {
-        //切换
-        SmallFloatingActionButton(
-            modifier = modifier
-                .animateContentSize(defaultSpring())
-                .padding(paddingValues)
-                .padding(
-                    start = Dimen.mediumPadding,
-                    end = Dimen.textFabMargin,
-                    top = Dimen.mediumPadding,
-                ),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                VibrateUtil(context).single()
-                if (!openDialog) {
-                    openDialog = true
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
-            ),
-        ) {
-            if (openDialog) {
-                Column(
-                    modifier = Modifier.widthIn(max = width),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    //选择
-                    tabs.forEachIndexed { index, tab ->
-                        val mModifier = if (type == index) {
-                            Modifier.fillMaxWidth()
-                        } else {
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    VibrateUtil(context).single()
-                                    coroutineScope.launch {
-                                        changeSelect(index)
-                                    }
-                                    openDialog = false
-                                }
-                        }
-                        SelectText(
-                            selected = type == index,
-                            text = tab,
-                            textStyle = MaterialTheme.typography.titleLarge,
-                            selectedColor = selectedColor,
-                            modifier = mModifier.padding(Dimen.mediumPadding)
-                        )
-                    }
-                }
-            } else {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = icon, tint = selectedColor,
-                        size = Dimen.fabIconSize
-                    )
-                    Text(
-                        text = tabs[type],
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = selectedColor,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
-                        )
-                    )
-                }
-
+    //切换
+    SmallFloatingActionButton(
+        modifier = modifier
+            .animateContentSize(defaultSpring())
+            .padding(paddingValues)
+            .padding(
+                start = Dimen.mediumPadding,
+                end = Dimen.textFabMargin,
+                top = Dimen.mediumPadding,
+            )
+            .navigationBarsPadding(),
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            VibrateUtil(context).single()
+            if (!openDialog) {
+                changeDialog(true)
             }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog) {
+                Dimen.popupMenuElevation
+            } else {
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog) {
+            Column(
+                modifier = Modifier.widthIn(max = width),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //选择
+                tabs.forEachIndexed { index, tab ->
+                    val mModifier = if (type == index) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                VibrateUtil(context).single()
+                                coroutineScope.launch {
+                                    changeSelect(index)
+                                }
+                                changeDialog(false)
+                            }
+                    }
+                    SelectText(
+                        selected = type == index,
+                        text = tab,
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        selectedColor = selectedColor,
+                        modifier = mModifier.padding(Dimen.mediumPadding)
+                    )
+                }
+            }
+        } else {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = icon, tint = selectedColor,
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = tabs[type],
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = selectedColor,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
+                    )
+                )
+            }
+
         }
     }
 }

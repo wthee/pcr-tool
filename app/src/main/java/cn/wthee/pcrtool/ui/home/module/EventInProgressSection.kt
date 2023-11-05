@@ -36,7 +36,7 @@ import cn.wthee.pcrtool.ui.tool.CalendarEventItem
 import cn.wthee.pcrtool.ui.tool.FreeGachaItem
 import cn.wthee.pcrtool.ui.tool.GachaItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverviewItemContent
-import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItem
+import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventItemContent
 
 
 /**
@@ -161,7 +161,7 @@ fun CalendarEventLayout(
                     FreeGachaItem(it)
                 }
                 storyEventList.forEach {
-                    StoryEventItem(
+                    StoryEventItemContent(
                         event = it,
                         toCharacterDetail = actions.toCharacterDetail,
                         toEventEnemyDetail = actions.toEventEnemyDetail,

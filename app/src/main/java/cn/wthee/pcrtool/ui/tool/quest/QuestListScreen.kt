@@ -215,7 +215,7 @@ fun QuestPager(
                 if (tabs[pagerIndex] == randomDrop) {
                     //随机掉落
                     CommonResponseBox(responseData = randomDropResponseData) {
-                        RandomDropAreaList(
+                        RandomDropAreaContent(
                             selectId = equipId,
                             areaList = randomList!!,
                             searchEquipIdList = searchEquipIdList,

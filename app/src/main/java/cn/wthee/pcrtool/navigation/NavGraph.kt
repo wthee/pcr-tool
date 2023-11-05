@@ -47,15 +47,15 @@ import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.ui.tool.AllSkillList
-import cn.wthee.pcrtool.ui.tool.AllToolMenu
-import cn.wthee.pcrtool.ui.tool.BirthdayList
-import cn.wthee.pcrtool.ui.tool.CalendarEventList
-import cn.wthee.pcrtool.ui.tool.ComicList
-import cn.wthee.pcrtool.ui.tool.FreeGachaList
-import cn.wthee.pcrtool.ui.tool.GachaList
-import cn.wthee.pcrtool.ui.tool.GuildList
-import cn.wthee.pcrtool.ui.tool.LeaderTier
-import cn.wthee.pcrtool.ui.tool.LeaderboardList
+import cn.wthee.pcrtool.ui.tool.AllToolMenuScreen
+import cn.wthee.pcrtool.ui.tool.BirthdayListScreen
+import cn.wthee.pcrtool.ui.tool.CalendarEventListScreen
+import cn.wthee.pcrtool.ui.tool.ComicListScreen
+import cn.wthee.pcrtool.ui.tool.FreeGachaListScreen
+import cn.wthee.pcrtool.ui.tool.GachaListScreen
+import cn.wthee.pcrtool.ui.tool.GuildListScreen
+import cn.wthee.pcrtool.ui.tool.LeaderTierScreen
+import cn.wthee.pcrtool.ui.tool.LeaderboardScreen
 import cn.wthee.pcrtool.ui.tool.MainSettings
 import cn.wthee.pcrtool.ui.tool.NewsList
 import cn.wthee.pcrtool.ui.tool.TweetList
@@ -73,9 +73,9 @@ import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
-import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
+import cn.wthee.pcrtool.ui.tool.quest.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
-import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
+import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipList
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -446,7 +446,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
-                LeaderboardList(scrollState, actions.toCharacterDetail)
+                LeaderboardScreen(scrollState, actions.toCharacterDetail)
             }
 
             //角色排行评级
@@ -455,16 +455,14 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyListState()
-                LeaderTier(scrollState, actions.toCharacterDetail)
+                LeaderTierScreen(scrollState, actions.toCharacterDetail)
             }
 
             //角色卡池
             composable(
                 route = NavRoute.TOOL_GACHA
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                GachaList(scrollState, actions.toCharacterDetail, actions.toMockGacha)
+                GachaListScreen(actions.toCharacterDetail, actions.toMockGacha)
             }
 
             //免费十连
@@ -473,7 +471,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyStaggeredGridState()
-                FreeGachaList(scrollState)
+                FreeGachaListScreen(scrollState)
             }
 
             //剧情活动
@@ -482,7 +480,7 @@ fun NavGraph(
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val scrollState = rememberLazyStaggeredGridState()
-                StoryEventList(
+                StoryEventListScreen(
                     scrollState = scrollState,
                     toCharacterDetail = actions.toCharacterDetail,
                     toEventEnemyDetail = actions.toEventEnemyDetail,
@@ -494,9 +492,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_GUILD
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                GuildList(scrollState, actions.toCharacterDetail)
+                GuildListScreen(actions.toCharacterDetail)
             }
 
             //公会战
@@ -579,7 +575,7 @@ fun NavGraph(
                 route = NavRoute.COMIC
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ComicList()
+                ComicListScreen()
             }
 
 
@@ -647,10 +643,9 @@ fun NavGraph(
                 }),
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
                 val arguments = requireNotNull(it.arguments)
-                RandomEquipArea(
-                    arguments.getInt(NavRoute.EQUIP_ID), scrollState
+                RandomDropAreaListScreen(
+                    arguments.getInt(NavRoute.EQUIP_ID)
                 )
             }
 
@@ -662,10 +657,8 @@ fun NavGraph(
                 }),
             ) {
                 val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                AllToolMenu(
-                    arguments.getBoolean(NavRoute.TOOL_MORE_EDIT_MODE), scrollState, actions
+                AllToolMenuScreen(
+                    arguments.getBoolean(NavRoute.TOOL_MORE_EDIT_MODE), actions
                 )
             }
 
@@ -681,9 +674,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_BIRTHDAY
             ) {
-                val scrollState = rememberLazyStaggeredGridState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                BirthdayList(scrollState, actions.toCharacterDetail)
+                BirthdayListScreen(actions.toCharacterDetail)
             }
 
             //日程
@@ -692,7 +683,7 @@ fun NavGraph(
             ) {
                 val scrollState = rememberLazyStaggeredGridState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CalendarEventList(scrollState)
+                CalendarEventListScreen(scrollState)
             }
 
             //怪物详情信息

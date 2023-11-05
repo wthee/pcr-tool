@@ -26,14 +26,15 @@ import javax.inject.Inject
 data class ClanBattleDetailUiState(
     //公会战列表
     val clanBattleList: List<ClanBattleInfo> = emptyList(),
-    //当前接短
+    //当前阶段
     val phaseIndex: Int = 0,
     val minPhase: Int = 0,
     val maxPhase: Int = 0,
     //boss信息
     val bossDataList: List<EnemyParameterPro> = emptyList(),
     //所有部位信息
-    val partEnemyMap: Map<Int, List<EnemyParameterPro>> = hashMapOf()
+    val partEnemyMap: Map<Int, List<EnemyParameterPro>> = hashMapOf(),
+    val openDialog: Boolean = false
 )
 
 /**
@@ -65,9 +66,23 @@ class ClanBattleDetailViewModel @Inject constructor(
         }
     }
 
-    fun reloadData(phaseIndex: Int) {
+    private fun reloadData(phaseIndex: Int) {
         if (clanBattleId != null && minPhase != null) {
             getClanBattleInfo(clanBattleId, phaseIndex + minPhase)
+        }
+    }
+
+
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
         }
     }
 
@@ -111,7 +126,7 @@ class ClanBattleDetailViewModel @Inject constructor(
     /**
      * 获取多目标部位属性
      */
-    fun getMultiEnemyAttr(targetCountDataList: List<ClanBattleTargetCountData>) {
+    private fun getMultiEnemyAttr(targetCountDataList: List<ClanBattleTargetCountData>) {
         viewModelScope.launch {
             val map = enemyRepository.getMultiEnemyAttr(targetCountDataList)
             _uiState.update {

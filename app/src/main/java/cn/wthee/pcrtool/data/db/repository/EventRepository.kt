@@ -16,7 +16,7 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
         eventDao.getAllEvents(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getAllEvents")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getStoryDetails(storyId: Int) = eventDao.getStoryDetails(storyId)
@@ -25,48 +25,48 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
         eventDao.getDropEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getDropEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getMissionEvent(limit: Int) = try {
         eventDao.getMissionEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getMissionEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getLoginEvent(limit: Int) = try {
         eventDao.getLoginEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getLoginEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getFortuneEvent(limit: Int) = try {
         eventDao.getFortuneEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getFortuneEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getTowerEvent(limit: Int) = try {
         eventDao.getTowerEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getTowerEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getSpDungeonEvent(limit: Int) = try {
         eventDao.getSpDungeonEvent(limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getSpDungeonEvent")
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getFaultEvent(limit: Int) = try {
         eventDao.getFaultEvent(limit)
     } catch (_: Exception) {
-        arrayListOf()
+        emptyList()
     }
 
     suspend fun getFreeGachaEvent(limit: Int) = try {
@@ -79,7 +79,7 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
     suspend fun getBirthdayList() = try {
         eventDao.getBirthdayList().sortedWith(compareAllTypeEvent())
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getBirthdayList#type")
+        LogReportUtil.upload(e, "getBirthdayList")
         emptyList()
     }
 

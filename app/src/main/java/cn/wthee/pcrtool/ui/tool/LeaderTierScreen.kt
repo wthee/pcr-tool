@@ -1,26 +1,19 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,24 +23,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
+import cn.wthee.pcrtool.navigation.navigateUp
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
-import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -59,8 +55,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fixedLeaderDate
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -68,18 +62,14 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LeaderTier(
+fun LeaderTierScreen(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
-    leaderViewModel: LeaderViewModel = hiltViewModel(),
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    leaderTierViewModel: LeaderTierViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val type = remember {
-        mutableIntStateOf(leaderViewModel.leaderTierType.value?.type ?: 0)
-    }
-    type.intValue = leaderViewModel.leaderTierType.observeAsState().value?.type ?: 0
+    val uiState by leaderTierViewModel.uiState.collectAsStateWithLifecycle()
+
     val tabs = arrayListOf(
         stringResource(id = R.string.leader_tier_0),
         stringResource(id = R.string.leader_tier_1),
@@ -87,107 +77,180 @@ fun LeaderTier(
         stringResource(id = R.string.clan),
     )
 
-    val leaderDataFlow = remember(type.intValue) {
-        leaderViewModel.getLeaderTier(type.intValue)
-    }
-    val leaderData by leaderDataFlow.collectAsState(initial = null)
 
-    val url = stringResource(id = R.string.leader_source_url)
+    MainScaffold(
+        fab = {
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.LEADER_TIER,
+                text = uiState.currentData?.leader?.size.toString(),
+                extraContent = if (uiState.currentData == null) {
+                    //加载提示
+                    {
+                        CircularProgressCompose()
+                    }
+                } else {
+                    null
+                }
+            ) {
+                scope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
 
-    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
+        },
+        secondLineFab = {
+            if (uiState.loadingState == LoadingState.Success) {
+                //切换类型
+                SelectTypeFab(
+                    icon = MainIconType.CLAN_SECTION,
+                    tabs = tabs,
+                    type = uiState.leaderTierType.type,
+                    openDialog = uiState.openDialog,
+                    changeDialog = leaderTierViewModel::changeDialog,
+                    changeSelect = leaderTierViewModel::changeSelect,
+                    width = Dimen.dataChangeWidth + Dimen.fabSize,
+                    paddingValues = PaddingValues(
+                        end = Dimen.fabMargin,
+                        bottom = Dimen.fabMarginLargeBottom
+                    )
+                )
+            }
+        },
+        fabWithCustomPadding = {
 
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                leaderTierViewModel.changeDialog(false)
+            } else {
+                navigateUp()
+            }
+        },
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            leaderTierViewModel.changeDialog(false)
+        }
     ) {
+        Column {
 
-        CommonResponseBox(
-            responseData = leaderData,
-            placeholder = {
-                Spacer(modifier = Modifier.height(Dimen.fabSize))
+            LeaderTierHeader(scrollState, uiState.currentData?.desc?.fixedLeaderDate ?: "")
+
+            StateBox(
+                stateType = uiState.loadingState,
+                loadingContent = {
+                    VerticalGrid(
+                        itemWidth = Dimen.iconSize * 4,
+                        contentPadding = Dimen.largePadding,
+                    ) {
+                        for (i in 0..10) {
+                            LeaderItem(LeaderTierItem(), null, toCharacterDetail)
+                        }
+                    }
+                }
+            ) {
+                uiState.currentData?.let {
+                    LeaderTierContent(
+                        currentData = it,
+                        scrollState = scrollState,
+                        leaderTierViewModel = leaderTierViewModel,
+                        toCharacterDetail = toCharacterDetail
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun LeaderTierContent(
+    currentData: LeaderTierData,
+    scrollState: LazyListState,
+    leaderTierViewModel: LeaderTierViewModel,
+    toCharacterDetail: (Int) -> Unit
+) {
+    //分组
+    val groupList = arrayListOf<LeaderTierGroup>()
+    currentData.leader.forEach { leaderItem ->
+        var group = groupList.find {
+            it.tier == leaderItem.tier
+        }
+        if (group == null) {
+            val descInfo = currentData.tierSummary.find {
+                it.tier == leaderItem.tier
+            }
+            group =
+                LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
+            groupList.add(group)
+        }
+        group.leaderList.add(leaderItem)
+    }
+
+    LazyColumn(
+        state = scrollState
+    ) {
+        groupList.forEach {
+            stickyHeader {
+                //分组标题
+                CommonGroupTitle(
+                    titleStart = stringResource(
+                        id = R.string.leader_tier_d,
+                        it.tier
+                    ),
+                    titleCenter = it.desc,
+                    titleEnd = it.leaderList.size.toString(),
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
+                        bottom = Dimen.mediumPadding,
+                    )
+                )
+            }
+            item {
                 //分组内容
                 VerticalGrid(
                     itemWidth = Dimen.iconSize * 4,
                     contentPadding = Dimen.largePadding,
                 ) {
-                    for (i in 0..10) {
-                        LeaderItem(LeaderTierItem(), null, toCharacterDetail)
-                    }
-                }
-            }
-        ) { data ->
-            //分组
-            val groupList = arrayListOf<LeaderTierGroup>()
-            data.leader.forEach { leaderItem ->
-                var group = groupList.find {
-                    it.tier == leaderItem.tier
-                }
-                if (group == null) {
-                    val descInfo = data.tierSummary.find {
-                        it.tier == leaderItem.tier
-                    }
-                    group =
-                        LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
-                    groupList.add(group)
-                }
-                group.leaderList.add(leaderItem)
-            }
-
-            if (groupList.isNotEmpty()) {
-                LazyColumn(
-                    state = scrollState,
-                    modifier = if (showTitle) {
-                        Modifier.padding(top = Dimen.fabSize)
-                    } else {
-                        Modifier
-                    }
-                ) {
-                    groupList.forEach {
-                        stickyHeader {
-                            //分组标题
-                            CommonGroupTitle(
-                                titleStart = stringResource(
-                                    id = R.string.leader_tier_d,
-                                    it.tier
-                                ),
-                                titleCenter = it.desc,
-                                titleEnd = it.leaderList.size.toString(),
-                                modifier = Modifier.padding(
-                                    start = Dimen.mediumPadding,
-                                    end = Dimen.mediumPadding,
-                                    bottom = Dimen.mediumPadding,
-                                )
+                    it.leaderList.forEach { leader ->
+                        //获取角色名
+                        val flow = remember(leader.unitId) {
+                            leaderTierViewModel.getCharacterBasicInfo(
+                                leader.unitId ?: 0
                             )
                         }
-                        item {
-                            //分组内容
-                            VerticalGrid(
-                                itemWidth = Dimen.iconSize * 4,
-                                contentPadding = Dimen.largePadding,
-                            ) {
-                                it.leaderList.forEach { leader ->
-                                    //获取角色名
-                                    val flow = remember(leader.unitId) {
-                                        characterViewModel.getCharacterBasicInfo(leader.unitId ?: 0)
-                                    }
-                                    val basicInfo by flow.collectAsState(initial = null)
+                        val basicInfo by flow.collectAsState(initial = null)
 
-                                    LeaderItem(leader, basicInfo, toCharacterDetail)
-                                }
-                            }
-                        }
-                    }
-                    items(count = 2) {
-                        CommonSpacer()
+                        LeaderItem(leader, basicInfo, toCharacterDetail)
                     }
                 }
-            } else {
-                CenterTipText(text = stringResource(id = R.string.no_data))
             }
         }
+        items(count = 2) {
+            CommonSpacer()
+        }
+    }
+}
 
+/**
+ * 头部
+ */
+@Composable
+private fun LeaderTierHeader(
+    scrollState: LazyListState,
+    date: String,
+) {
+    val context = LocalContext.current
+    val url = stringResource(id = R.string.leader_source_url)
+    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
+
+
+    Column {
         //标题
         ExpandAnimation(visible = showTitle) {
             Row(
@@ -211,55 +274,13 @@ fun LeaderTier(
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
                 CaptionText(
-                    text = leaderData?.data?.desc?.fixedLeaderDate ?: "",
+                    text = date,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         }
-
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.LEADER_TIER,
-            text = leaderData?.data?.leader?.size.toString(),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            extraContent = if (leaderData == null) {
-                //加载提示
-                {
-                    CircularProgressCompose()
-                }
-            } else {
-                null
-            }
-        ) {
-            scope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
-            }
-        }
-
-        //切换类型
-        if (leaderData != null) {
-            SelectTypeFab(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                icon = MainIconType.CHANGE_FILTER_TYPE,
-                tabs = tabs,
-                type = type,
-                width = Dimen.dataChangeWidth + Dimen.fabSize,
-                paddingValues = PaddingValues(
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                )
-            ) {
-                leaderViewModel.leaderTierType.postValue(LeaderTierType.getByValue(type.intValue))
-            }
-        }
     }
 }
-
 
 /**
  * 角色

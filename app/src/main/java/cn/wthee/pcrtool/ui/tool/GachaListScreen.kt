@@ -1,26 +1,23 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,11 +25,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.DateRange
@@ -42,8 +41,11 @@ import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -55,90 +57,115 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 角色卡池页面
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GachaList(
-    scrollState: LazyStaggeredGridState,
+fun GachaListScreen(
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit,
-    gachaViewModel: GachaViewModel = hiltViewModel()
+    gachaListViewModel: GachaListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    //日期选择
-    val dateRange = remember {
-        mutableStateOf(DateRange())
-    }
-    //卡池信息
-    val gachaListFlow = remember(dateRange.value) {
-        gachaViewModel.getGachaHistory(dateRange.value)
-    }
-    val gachaList by gachaListFlow.collectAsState(initial = arrayListOf())
-    //fes角色
-    val fesUnitIdsFlow = remember {
-        gachaViewModel.getGachaFesUnitList()
-    }
-    val fesUnitIds by fesUnitIdsFlow.collectAsState(initial = arrayListOf())
+    val uiState by gachaListViewModel.uiState.collectAsStateWithLifecycle()
+    val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
+    val scrollState = rememberLazyStaggeredGridState()
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        if (gachaList.isNotEmpty()) {
-            LazyVerticalStaggeredGrid(
-                state = scrollState,
-                columns = StaggeredGridCells.Adaptive(getItemWidth())
+    MainScaffold(
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            gachaListViewModel.changeDialog(false)
+        },
+        secondLineFab = {
+            //日期选择
+            DateRangePickerCompose(
+                dateRangePickerState = dateRangePickerState,
+                dateRange = uiState.dateRange,
+                openDialog = uiState.openDialog,
+                changeRange = gachaListViewModel::changeRange,
+                changeDialog = gachaListViewModel::changeDialog
+            )
+        },
+        fab = {
+            //重置
+            if (uiState.dateRange.hasFilter()) {
+                MainSmallFab(iconType = MainIconType.RESET) {
+                    gachaListViewModel.changeRange(DateRange())
+                    dateRangePickerState.setSelection(null, null)
+                }
+            }
+
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.GACHA,
+                text = stringResource(id = R.string.tool_gacha),
             ) {
-                items(
-                    items = gachaList,
-                    key = {
-                        it.gachaId
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
                     }
-                ) {
-                    GachaItem(
-                        gachaInfo = it,
-                        fesUnitIdList = fesUnitIds,
-                        toCharacterDetail = toCharacterDetail,
-                        toMockGacha = toMockGacha
-                    )
-                }
-                items(2) {
-                    CommonSpacer()
                 }
             }
-        }
-
-        //日期选择
-        DateRangePickerCompose(dateRange = dateRange)
-
-        //回到顶部
-        MainSmallFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = Dimen.fabMarginEnd,
-                    bottom = Dimen.fabMargin
-                ),
-            iconType = MainIconType.GACHA,
-            text = stringResource(id = R.string.tool_gacha)
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                gachaListViewModel.changeDialog(false)
+            } else {
+                navigateUp()
             }
         }
+    ) {
+        StateBox(stateType = uiState.loadingState) {
+            GachaListContent(
+                scrollState = scrollState,
+                gachaList = uiState.gachaList!!,
+                fesUnitIdList = uiState.fesUnitIdList,
+                toCharacterDetail = toCharacterDetail,
+                toMockGacha = toMockGacha
+            )
+        }
+
     }
 
+}
 
+
+@Composable
+private fun GachaListContent(
+    scrollState: LazyStaggeredGridState,
+    gachaList: List<GachaInfo>,
+    fesUnitIdList: List<Int>,
+    toCharacterDetail: (Int) -> Unit,
+    toMockGacha: () -> Unit,
+) {
+    LazyVerticalStaggeredGrid(
+        state = scrollState,
+        columns = StaggeredGridCells.Adaptive(getItemWidth())
+    ) {
+        items(
+            items = gachaList,
+            key = {
+                it.gachaId
+            }
+        ) {
+            GachaItem(
+                gachaInfo = it,
+                fesUnitIdList = fesUnitIdList,
+                toCharacterDetail = toCharacterDetail,
+                toMockGacha = toMockGacha
+            )
+        }
+        items(2) {
+            CommonSpacer()
+        }
+    }
 }
 
 /**

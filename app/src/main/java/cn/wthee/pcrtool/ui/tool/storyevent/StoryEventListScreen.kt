@@ -1,26 +1,22 @@
 package cn.wthee.pcrtool.ui.tool.storyevent
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,11 +25,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.StoryEventData
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -44,11 +42,14 @@ import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.RATIO_BANNER
 import cn.wthee.pcrtool.ui.components.RATIO_TEASER
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -65,85 +66,113 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
-import cn.wthee.pcrtool.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 剧情活动
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoryEventList(
+fun StoryEventListScreen(
     scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
-    eventViewModel: EventViewModel = hiltViewModel()
+    storyEventListViewModel: StoryEventListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    //日期选择
-    val dateRange = remember {
-        mutableStateOf(DateRange())
-    }
-    //剧情活动列表
-    val eventsFlow = remember(dateRange.value) {
-        eventViewModel.getStoryEventHistory(dateRange.value)
-    }
-    val events by eventsFlow.collectAsState(initial = arrayListOf())
+    val uiState by storyEventListViewModel.uiState.collectAsStateWithLifecycle()
+    val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        if (events.isNotEmpty()) {
-            LazyVerticalStaggeredGrid(
-                state = scrollState,
-                columns = StaggeredGridCells.Adaptive(getItemWidth())
+    MainScaffold(
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            storyEventListViewModel.changeDialog(false)
+        },
+        secondLineFab = {
+            //日期选择
+            DateRangePickerCompose(
+                dateRangePickerState = dateRangePickerState,
+                dateRange = uiState.dateRange,
+                openDialog = uiState.openDialog,
+                changeRange = storyEventListViewModel::changeRange,
+                changeDialog = storyEventListViewModel::changeDialog
+            )
+        },
+        fab = {
+            //重置
+            if (uiState.dateRange.hasFilter()) {
+                MainSmallFab(iconType = MainIconType.RESET) {
+                    storyEventListViewModel.changeRange(DateRange())
+                    dateRangePickerState.setSelection(null, null)
+                }
+            }
+
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.EVENT,
+                text = stringResource(id = R.string.tool_event),
             ) {
-                items(
-                    items = events,
-                    key = {
-                        it.eventId
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
                     }
-                ) {
-                    StoryEventItem(
-                        event = it,
-                        toCharacterDetail = toCharacterDetail,
-                        toEventEnemyDetail = toEventEnemyDetail,
-                        toAllPics = toAllPics
-                    )
                 }
-                items(2) {
-                    CommonSpacer()
-                }
+            }
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                storyEventListViewModel.changeDialog(false)
+            } else {
+                navigateUp()
             }
         }
+    ) {
+        StateBox(stateType = uiState.loadingState) {
+            StoryEventListContent(
+                scrollState = scrollState,
+                storyList = uiState.storyList!!,
+                toCharacterDetail = toCharacterDetail,
+                toEventEnemyDetail = toEventEnemyDetail,
+                toAllPics = toAllPics
+            )
+        }
 
-        //日期选择
-        DateRangePickerCompose(dateRange = dateRange)
+    }
+}
 
-        //回到顶部
-        MainSmallFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = Dimen.fabMarginEnd,
-                    bottom = Dimen.fabMargin
-                ),
-            iconType = MainIconType.EVENT,
-            text = stringResource(id = R.string.tool_event),
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
+@Composable
+private fun StoryEventListContent(
+    scrollState: LazyStaggeredGridState,
+    storyList: List<StoryEventData>,
+    toCharacterDetail: (Int) -> Unit,
+    toEventEnemyDetail: (Int) -> Unit,
+    toAllPics: (Int, Int) -> Unit
+) {
+    LazyVerticalStaggeredGrid(
+        state = scrollState,
+        columns = StaggeredGridCells.Adaptive(getItemWidth())
+    ) {
+        items(
+            items = storyList,
+            key = {
+                it.eventId
             }
+        ) {
+            StoryEventItemContent(
+                event = it,
+                toCharacterDetail = toCharacterDetail,
+                toEventEnemyDetail = toEventEnemyDetail,
+                toAllPics = toAllPics
+            )
+        }
+        items(2) {
+            CommonSpacer()
         }
     }
-
-
 }
 
 /**
@@ -151,7 +180,7 @@ fun StoryEventList(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun StoryEventItem(
+fun StoryEventItemContent(
     event: StoryEventData,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
@@ -333,14 +362,36 @@ private fun hasTeaser(eventId: Int) = when (MainActivity.regionType) {
     RegionType.JP -> eventId >= 10052 && eventId != 10055
 } && eventId / 10000 == 1
 
+
 @CombinedPreviews
 @Composable
-private fun StoryEventItemPreview() {
+private fun StoryEventListContentPreview() {
     PreviewLayout {
-        StoryEventItem(
-            event = StoryEventData(unitIds = "100101-100101-100102"),
-            toCharacterDetail = {},
-            toEventEnemyDetail = {},
-            toAllPics = { _, _ -> })
+        StoryEventListContent(
+            scrollState = rememberLazyStaggeredGridState(),
+            storyList = arrayListOf(
+                StoryEventData(
+                    eventId = 1,
+                    title = stringResource(id = R.string.debug_long_text),
+                    unitIds = "100101-100101-100102",
+                    bossEnemyId = 1
+                ),
+                StoryEventData(
+                    eventId = 10000,
+                    title = stringResource(id = R.string.debug_long_text),
+                    unitIds = "100101-100101-100102",
+                    bossEnemyId = 1
+                ),
+                StoryEventData(
+                    eventId = 20000,
+                    title = stringResource(id = R.string.debug_short_text),
+                    unitIds = "100101-100101-100102",
+                    bossEnemyId = 1
+                ),
+            ),
+            toCharacterDetail = { },
+            toEventEnemyDetail = { },
+            toAllPics = { _, _ -> }
+        )
     }
 }

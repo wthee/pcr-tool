@@ -1601,11 +1601,8 @@ data class SkillActionDetail(
                     141 -> getString(R.string.skill_action_type_desc_106_type_141)
                     else -> getString(R.string.unknown)
                 }
-                //fixme 待验证是否为承伤比例
-                val value =
-                    getValueText(5, actionValue5, actionValue6, percent = "%", maxValue = 100.0)
                 val time = getTimeText(3, actionValue3, actionValue4)
-                getString(R.string.skill_action_type_desc_106, getTarget(), type, value, time)
+                getString(R.string.skill_action_type_desc_106, getTarget(), type, time)
             }
 
             else -> {

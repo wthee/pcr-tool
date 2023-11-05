@@ -110,7 +110,6 @@ import kotlinx.coroutines.launch
  * @param errorContent 异常布局
  * @param noDataContent 无数据布局
  * @param successContent 加载成功后的布局
- * @param extraContent 常驻显示的布局
  */
 @Composable
 fun StateBox(
@@ -130,7 +129,6 @@ fun StateBox(
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
     },
-    extraContent: @Composable (() -> Unit)? = null,
     successContent: @Composable () -> Unit
 ) {
     when (stateType) {
@@ -141,9 +139,6 @@ fun StateBox(
         LoadingState.NoData -> noDataContent()
         LoadingState.Error -> errorContent()
         LoadingState.Success -> successContent()
-    }
-    if (extraContent != null) {
-        extraContent()
     }
 }
 
@@ -158,7 +153,7 @@ fun StateBox(
  * @param mainFabIcon 主悬浮按钮图标
  * @param hideMainFab 是否隐藏主悬浮按钮
  * @param enableClickClose 是否启用点击背景关闭功能
- * @param onCloseClick 点击关闭回调
+ * @param onCloseClick 点击背景关闭回调
  * @param fabWithCustomPadding 需自定义 padding 的悬浮按钮
  * @param fab 正常悬浮按钮
  * @param secondLineFab 第二行显示的悬浮按钮

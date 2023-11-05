@@ -1,25 +1,19 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildMemberInfo
@@ -28,8 +22,10 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -37,37 +33,45 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
+
 
 /**
  * 角色公会
  */
 @Composable
-fun GuildList(
-    scrollState: LazyStaggeredGridState,
+fun GuildListScreen(
     toCharacterDetail: (Int) -> Unit,
-    guildViewModel: GuildViewModel = hiltViewModel()
+    guildListViewModel: GuildListViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val guildsFlow = remember {
-        guildViewModel.getGuilds()
-    }
-    val guilds by guildsFlow.collectAsState(initial = arrayListOf())
+    val scope = rememberCoroutineScope()
+    val uiState by guildListViewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberLazyStaggeredGridState()
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+    MainScaffold(
+        fab = {
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.GUILD,
+                text = stringResource(id = R.string.tool_guild),
+            ) {
+                scope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
     ) {
-        if (guilds.isNotEmpty()) {
+        StateBox(stateType = uiState.loadingState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
                 items(
-                    items = guilds,
+                    items = uiState.guildList,
                     key = {
                         it.guildId
                     }
@@ -82,23 +86,10 @@ fun GuildList(
                 }
             }
         }
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.GUILD,
-            text = stringResource(id = R.string.tool_guild),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
-                }
-            }
-        }
     }
+
 }
+
 
 /**
  * 公会

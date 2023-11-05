@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.theme
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -93,12 +92,12 @@ fun PCRToolComposeTheme(
 /**
  * 预览正常、深色模式
  */
-@Preview(
-    name = "dark theme",
-    group = "dark",
-    uiMode = UI_MODE_NIGHT_YES,
-    showBackground = true
-)
+//@Preview(
+//    name = "dark theme",
+//    group = "dark",
+//    uiMode = UI_MODE_NIGHT_YES,
+//    showBackground = true
+//)
 @Preview(
     name = "normal",
     group = "light",

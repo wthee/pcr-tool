@@ -96,7 +96,7 @@ fun MainAlertDialog(
 @Composable
 fun DateRangePickerCompose(
     dateRange: MutableState<DateRange>,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
     val context = LocalContext.current
     var openDialog by remember {
@@ -248,6 +248,135 @@ fun DateRangePickerCompose(
 
 }
 
+/**
+ * 选择日期范围组件
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateRangePickerCompose(
+    dateRangePickerState: DateRangePickerState,
+    dateRange: DateRange,
+    openDialog: Boolean,
+    changeDialog: (Boolean) -> Unit,
+    changeRange: (DateRange) -> Unit,
+) {
+    val context = LocalContext.current
+
+
+    //更新日期
+    LaunchedEffect(
+        dateRangePickerState.selectedStartDateMillis,
+        dateRangePickerState.selectedEndDateMillis
+    ) {
+        //日期字符串处理
+        val startDate = dateRangePickerState.selectedStartDateMillis?.simpleDateFormatUTC
+        var endDate = dateRangePickerState.selectedEndDateMillis?.simpleDateFormatUTC
+        if (endDate != null) {
+            endDate = endDate.replace("00:00:00", "23:59:59")
+        }
+
+
+        changeRange(
+            DateRange(
+                startDate = startDate ?: "",
+                endDate = endDate ?: ""
+            )
+        )
+    }
+
+    //日期选择布局
+    SmallFloatingActionButton(
+        modifier = Modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                start = Dimen.fabMargin,
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
+                top = Dimen.largePadding
+            )
+            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            //点击展开布局
+            if (!openDialog) {
+                VibrateUtil(context).single()
+                changeDialog(true)
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog) {
+                Dimen.popupMenuElevation
+            } else {
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog) {
+            //日期选择
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.largePadding
+                    )
+                    .imePadding(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
+            ) {
+                //日期选择
+                DateRangePicker(
+                    state = dateRangePickerState,
+                    showModeToggle = true,
+                    title = {
+                        //标题
+                        MainText(
+                            text = stringResource(id = R.string.filter_by_start_date),
+                            modifier = Modifier.padding(start = Dimen.mediumPadding)
+                        )
+                    },
+                    headline = {
+                        DateRangePickerDefaults.DateRangePickerHeadline(
+                            state = dateRangePickerState,
+                            dateFormatter = DatePickerFormatter(
+                                selectedDateSkeleton = "yyyy/MM/dd"
+                            ),
+                            modifier = Modifier.padding(Dimen.smallPadding)
+                        )
+                    }
+                )
+
+            }
+        } else {
+            //fab
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = if (dateRange.hasFilter()) {
+                        MainIconType.DATE_RANGE_PICKED
+                    } else {
+                        MainIconType.DATE_RANGE_NONE
+                    },
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = if (dateRange.hasFilter()) {
+                        stringResource(id = R.string.picked_date)
+                    } else {
+                        stringResource(id = R.string.pick_date)
+                    },
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
+                    )
+                )
+            }
+        }
+    }
+}
 
 /**
  * 选择RANK范围
@@ -468,7 +597,7 @@ data class DateRange(
 /**
  * 获取日期选择年份范围
  */
-private fun getDatePickerYearRange(): IntRange {
+fun getDatePickerYearRange(): IntRange {
     val maxYear = getYear()
     return IntRange(2018, maxYear)
 }

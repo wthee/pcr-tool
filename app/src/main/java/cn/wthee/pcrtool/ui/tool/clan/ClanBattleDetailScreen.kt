@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
@@ -53,12 +54,26 @@ fun ClanBattleDetailScreen(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,
                 type = uiState.phaseIndex,
+                openDialog = uiState.openDialog,
+                changeDialog = clanBattleDetailViewModel::changeDialog,
                 selectedColor = sectionColor,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .navigationBarsPadding(),
                 changeSelect = clanBattleDetailViewModel::changeSelect
             )
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                clanBattleDetailViewModel.changeDialog(false)
+            } else {
+                navigateUp()
+            }
+        },
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            clanBattleDetailViewModel.changeDialog(false)
         }
     ) {
         if (uiState.clanBattleList.isNotEmpty()) {

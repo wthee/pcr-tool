@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -9,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
@@ -71,9 +71,10 @@ private data class ToolMenuGroup(
  * 全部工具
  */
 @Composable
-fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavActions) {
+fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
 
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
 
     //编辑模式
     var isEditMode by remember {
@@ -140,10 +141,18 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
         )
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+    MainScaffold(
+        fab = {
+            //编辑
+            MainSmallFab(
+                iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
+                text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
+            ) {
+                coroutineScope.launch {
+                    isEditMode = !isEditMode
+                }
+            }
+        }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             //预览
@@ -199,18 +208,6 @@ fun AllToolMenu(initEditMode: Boolean, scrollState: LazyListState, actions: NavA
             }
         }
 
-        //编辑
-        MainSmallFab(
-            iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
-            text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                isEditMode = !isEditMode
-            }
-        }
     }
 
 

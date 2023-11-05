@@ -2,10 +2,8 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -36,14 +33,10 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -57,126 +50,127 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainImage
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.RATIO_COMIC
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.clickClose
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 /**
  * 漫画列表
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ComicList(
-    comicViewModel: ComicViewModel = hiltViewModel()
+fun ComicListScreen(
+    comicListViewModel: ComicListViewModel = hiltViewModel()
 ) {
     val gridState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
-
-    //获取分页数据
-    val comicPager = remember {
-        comicViewModel.getComic("")
-    }
-    val lazyPagingItems = comicPager.flow.collectAsLazyPagingItems()
-    val items = lazyPagingItems.itemSnapshotList
-
-    //目录
-    val count = lazyPagingItems.itemCount
-
-    //选中的目录下标
-    val tocSelectedIndex = remember {
-        mutableIntStateOf(max(0, count - 1))
-    }
-    //分页状态
-    val pagerState = rememberPagerState { count }
-    //同步滚动目录位置
-    LaunchedEffect(pagerState.currentPage) {
-        gridState.scrollToItem(pagerState.currentPage)
-    }
+    val uiState by comicListViewModel.uiState.collectAsStateWithLifecycle()
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        HorizontalPager(
-            modifier = Modifier.align(Alignment.Center),
-            state = pagerState
-        ) { pagerIndex ->
-            if (items[pagerIndex] == null) {
-                MainText(text = "$pagerIndex")
-            } else {
-                ComicItem(items[pagerIndex]!!)
-            }
-        }
-
+    uiState.pager?.let { pager ->
+        val lazyPagingItems = pager.flow.collectAsLazyPagingItems()
+        val items = lazyPagingItems.itemSnapshotList
         //目录
-        if (count > 0) {
-            ComicIndexChange(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .navigationBarsPadding(),
-                items = items,
-                pagerState = pagerState,
-                gridState = gridState,
-                tocSelectedIndex = tocSelectedIndex
-            ) {
-                scope.launch {
-                    pagerState.scrollToPage(tocSelectedIndex.intValue)
-                }
-            }
+        val count = lazyPagingItems.itemCount
+
+        //分页状态
+        val pagerState = rememberPagerState { count }
+
+        //同步滚动目录位置
+        LaunchedEffect(uiState.selectedIndex) {
+            pagerState.scrollToPage(uiState.selectedIndex)
+            gridState.scrollToItem(uiState.selectedIndex)
         }
 
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.COMIC,
-            text = count.toString(),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            extraContent = if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
-                //加载提示
-                {
-                    CircularProgressCompose()
+
+        MainScaffold(
+            secondLineFab = {
+                //目录
+                if (count > 0) {
+                    ComicIndexChange(
+                        items = items,
+                        pagerState = pagerState,
+                        gridState = gridState,
+                        openDialog = uiState.openDialog,
+                        changeDialog = comicListViewModel::changeDialog,
+                        changeSelect = comicListViewModel::changeSelect,
+                    )
                 }
-            } else {
-                null
+            },
+            fab = {
+                //回到顶部
+                MainSmallFab(
+                    iconType = MainIconType.COMIC,
+                    text = count.toString(),
+                    extraContent = if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
+                        //加载提示
+                        {
+                            CircularProgressCompose()
+                        }
+                    } else {
+                        null
+                    }
+                ) {
+                    scope.launch {
+                        try {
+                            pagerState.scrollToPage(0)
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+            },
+            mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+            onMainFabClick = {
+                if (uiState.openDialog) {
+                    comicListViewModel.changeDialog(false)
+                } else {
+                    navigateUp()
+                }
+            },
+            enableClickClose = uiState.openDialog,
+            onCloseClick = {
+                comicListViewModel.changeDialog(false)
             }
         ) {
-            scope.launch {
-                try {
-                    pagerState.scrollToPage(0)
-                } catch (_: Exception) {
+            HorizontalPager(
+                modifier = Modifier.align(Alignment.Center),
+                state = pagerState
+            ) { pagerIndex ->
+                if (items[pagerIndex] == null) {
+                    MainText(text = "$pagerIndex")
+                } else {
+                    ComicItem(items[pagerIndex]!!)
                 }
             }
         }
-
-
     }
+
 }
 
 
@@ -230,85 +224,70 @@ private fun ComicIndexChange(
     gridState: LazyGridState,
     items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
-    tocSelectedIndex: MutableState<Int>,
-    changeListener: (() -> Unit)
+    openDialog: Boolean,
+    changeDialog: (Boolean) -> Unit,
+    changeSelect: ((Int) -> Unit)
 ) {
     val context = LocalContext.current
 
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
-    val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
-    //切换关闭监听
-    if (close) {
-        openDialog = false
-        MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        MainActivity.navViewModel.fabCloseClick.postValue(false)
-    }
-
-
-    Box(
-        modifier = Modifier
-            .clickClose(openDialog)
-    ) {
-        //切换
-        SmallFloatingActionButton(
-            modifier = modifier
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.fabMargin,
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
-                    top = Dimen.fabMargin
-                )
-                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                VibrateUtil(context).single()
-                if (!openDialog) {
-                    MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    openDialog = true
-                } else {
-                    MainActivity.navViewModel.fabCloseClick.postValue(true)
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
-            ),
-        ) {
-            if (openDialog) {
-                ComicTocList(
-                    gridState,
-                    items,
-                    pagerState,
-                    tocSelectedIndex,
-                    changeListener,
-                )
+    //切换
+    SmallFloatingActionButton(
+        modifier = modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                start = Dimen.fabMargin,
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
+                top = Dimen.fabMargin
+            )
+            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            VibrateUtil(context).single()
+            if (!openDialog) {
+                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                changeDialog(true)
             } else {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = MainIconType.COMIC_NAV,
-                        size = Dimen.fabIconSize
-                    )
-                    Text(
-                        text = stringResource(id = R.string.comic_toc),
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
-                        )
-                    )
-                }
-
+                MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog) {
+                Dimen.popupMenuElevation
+            } else {
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog) {
+            //展开目录
+            ComicTocList(
+                gridState,
+                items,
+                pagerState,
+                changeSelect,
+            )
+        } else {
+            //fab
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = MainIconType.COMIC_NAV,
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = stringResource(id = R.string.comic_toc),
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
+                    )
+                )
+            }
+
         }
     }
 }
@@ -321,8 +300,7 @@ private fun ComicTocList(
     gridState: LazyGridState,
     items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
-    tocSelectedIndex: MutableState<Int>,
-    changeListener: (() -> Unit)
+    changeSelect: ((Int) -> Unit)
 ) {
     val context = LocalContext.current
 
@@ -376,9 +354,7 @@ private fun ComicTocList(
                         .clip(MaterialTheme.shapes.medium)
                         .clickable {
                             VibrateUtil(context).single()
-                            MainActivity.navViewModel.fabCloseClick.postValue(true)
-                            tocSelectedIndex.value = index
-                            changeListener()
+                            changeSelect(index)
                         }
                 }
                 SelectText(
@@ -426,9 +402,7 @@ private fun ComicTocList(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (input.value != "") {
-                            MainActivity.navViewModel.fabCloseClick.postValue(true)
-                            tocSelectedIndex.value = pageCount - input.value.toInt()
-                            changeListener()
+                            changeSelect(pageCount - input.value.toInt())
                         }
                     }
                 }
@@ -444,13 +418,44 @@ private fun ComicTocList(
                     keyboardController?.hide()
                     focusManager.clearFocus()
                     if (input.value != "") {
-                        MainActivity.navViewModel.fabCloseClick.postValue(true)
-                        tocSelectedIndex.value = pageCount - input.value.toInt()
-                        changeListener()
+                        changeSelect(pageCount - input.value.toInt())
                     }
                 }
             )
         )
     }
 
+}
+
+
+@CombinedPreviews
+@Composable
+private fun ComicItemPreview() {
+    PreviewLayout {
+        ComicItem(ComicData(id = 1, title = stringResource(id = R.string.debug_short_text)))
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@CombinedPreviews
+@Composable
+private fun ComicIndexChangePreview() {
+    PreviewLayout {
+        ComicIndexChange(
+            items = ItemSnapshotList(
+                items = arrayListOf(
+                    ComicData(id = 1, title = stringResource(id = R.string.debug_short_text))
+                ),
+                placeholdersAfter = 10,
+                placeholdersBefore = 1
+            ),
+            pagerState = rememberPagerState {
+                1
+            },
+            gridState = rememberLazyGridState(),
+            openDialog = true,
+            changeDialog = {},
+            changeSelect = {},
+        )
+    }
 }

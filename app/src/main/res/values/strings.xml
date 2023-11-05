@@ -180,7 +180,6 @@
     <string name="comic_toc_index">第%d话</string>
     <string name="comic_input_hint">输入跳转，如：382</string>
     <string name="other">其他</string>
-    <string name="tip_random_drop">暂无信息，区域 37 开始额外掉落装备</string>
     <string name="activity_info">活动日程</string>
     <string name="no_limit">无限制</string>
     <string name="tip_no_equip_get_area">暂无掉落区域</string>
@@ -231,6 +230,7 @@
     <string name="tool_unique_equip">专用装备</string>
     <string name="search_unique_equip">装备名/角色名</string>
     <string name="character_detail">角色详情</string>
+    <string name="filter_by_start_date">按开始日期筛选</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>
@@ -732,7 +732,7 @@
     <string name="skill_action_type_desc_103">动作(%d)造成的伤害将依据%s的攻击力</string>
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
     <string name="skill_action_type_desc_105">发动 [%s] 环境效果%s</string>
-    <string name="skill_action_type_desc_106">赋予%s [%s] 状态，并代替其承受 %s 伤害%s</string>
+    <string name="skill_action_type_desc_106">赋予%s [%s] 状态，并代替其承受伤害%s</string>
     <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
 
     <!--异常状态-->

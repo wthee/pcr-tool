@@ -1,13 +1,10 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -33,23 +32,26 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -66,33 +68,22 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getRegionName
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
-
-/**
- * 角色排行筛选
- */
-data class FilterLeaderboard(
-    var sort: Int = 0,
-    var asc: Boolean = false,
-    var onlyLast: Boolean = false
-)
 
 
 /**
  * 角色排行
  */
 @Composable
-fun LeaderboardList(
+fun LeaderboardScreen(
     scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
-    leaderViewModel: LeaderViewModel = hiltViewModel(),
-    characterViewModel: CharacterViewModel = hiltViewModel()
+    leaderBoardViewModel: LeaderboardViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val uiState by leaderBoardViewModel.uiState.collectAsStateWithLifecycle()
 
-    val filter = leaderViewModel.filterLeader.value ?: FilterLeaderboard()
+    val filter = uiState.filterLeader
     val sort = remember {
         mutableIntStateOf(filter.sort)
     }
@@ -106,23 +97,122 @@ fun LeaderboardList(
     }
     filter.onlyLast = onlyLast.value
 
-    //获取排行榜数据
-    val responseDataFlow = remember(filter.hashCode()) {
-        leaderViewModel.getLeader(filter)
+    LaunchedEffect(sort.intValue, asc.value, onlyLast.value) {
+        leaderBoardViewModel.refreshLeader(filter)
     }
-    val responseData by responseDataFlow.collectAsState(initial = null)
-    val leaderList = responseData?.data
 
+
+
+    MainScaffold(
+        fab = {
+            //重置
+            if (sort.intValue != 0 || asc.value || onlyLast.value) {
+                MainSmallFab(
+                    iconType = MainIconType.RESET
+                ) {
+                    sort.intValue = 0
+                    asc.value = false
+                    onlyLast.value = false
+                }
+            }
+
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.LEADER,
+                text = (uiState.currentList.size).toString(),
+                extraContent = if (uiState.leaderboardResponseData == null) {
+                    //加载提示
+                    {
+                        CircularProgressCompose()
+                    }
+                } else {
+                    null
+                }
+            ) {
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        },
+        secondLineFab = {
+            if (uiState.loadingState == LoadingState.Success) {
+                //切换显示
+                MainSmallFab(
+                    iconType = MainIconType.FILTER,
+                    text = if (onlyLast.value) {
+                        stringResource(id = R.string.last_update)
+                    } else {
+                        stringResource(id = R.string.all)
+                    },
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                        )
+                ) {
+                    onlyLast.value = !onlyLast.value
+                }
+            }
+        }
+    ) {
+        Column {
+
+            LeaderboardHeader(scrollState, sort, asc)
+
+            StateBox(
+                stateType = uiState.loadingState,
+                loadingContent = {
+                    Column {
+                        for (i in 0..10) {
+                            LeaderboardItem(LeaderboardData(), i, null, toCharacterDetail)
+                        }
+                    }
+                }
+            ) {
+                LazyColumn(
+                    state = scrollState
+                ) {
+                    itemsIndexed(
+                        items = uiState.currentList,
+                        key = { _, it ->
+                            it.name
+                        }
+                    ) { index, it ->
+                        //获取角色名
+                        val flow = remember(it.unitId) {
+                            leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
+                        }
+                        val basicInfo by flow.collectAsState(initial = null)
+                        LeaderboardItem(it, index, basicInfo, toCharacterDetail)
+                    }
+                    items(count = 2) {
+                        CommonSpacer()
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+/**
+ * 头部
+ */
+@Composable
+private fun LeaderboardHeader(
+    scrollState: LazyListState,
+    sort: MutableIntState,
+    asc: MutableState<Boolean>
+) {
     val url = stringResource(id = R.string.leader_source_url)
     val context = LocalContext.current
     val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    Column {
         //更新
         ExpandAnimation(visible = showTitle) {
             Row(
@@ -149,96 +239,6 @@ fun LeaderboardList(
         }
         //标题
         SortTitleGroup(sort, asc)
-
-        Box {
-            CommonResponseBox(
-                responseData = responseData,
-                placeholder = {
-                    for (i in 0..10) {
-                        LeaderboardItem(LeaderboardData(), i, null, toCharacterDetail)
-                    }
-                },
-                fabContent = {
-                    //切换显示
-                    MainSmallFab(
-                        iconType = MainIconType.FILTER,
-                        text = if (onlyLast.value) {
-                            stringResource(id = R.string.last_update)
-                        } else {
-                            stringResource(id = R.string.all)
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(
-                                end = Dimen.fabMargin,
-                                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                            )
-                    ) {
-                        onlyLast.value = !onlyLast.value
-                    }
-                }
-            ) {
-                LazyColumn(
-                    state = scrollState
-                ) {
-                    itemsIndexed(
-                        items = leaderList!!,
-                        key = { _, it ->
-                            it.name
-                        }
-                    ) { index, it ->
-                        //获取角色名
-                        val flow = remember(it.unitId) {
-                            characterViewModel.getCharacterBasicInfo(it.unitId ?: 0)
-                        }
-                        val basicInfo by flow.collectAsState(initial = null)
-                        LeaderboardItem(it, index, basicInfo, toCharacterDetail)
-                    }
-                    items(count = 2) {
-                        CommonSpacer()
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                //重置
-                if (sort.intValue != 0 || asc.value || onlyLast.value) {
-                    MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        sort.intValue = 0
-                        asc.value = false
-                        onlyLast.value = false
-                    }
-                }
-
-                //回到顶部
-                MainSmallFab(
-                    iconType = MainIconType.LEADER,
-                    text = (leaderList?.size ?: 0).toString(),
-                    extraContent = if (responseData == null) {
-                        //加载提示
-                        {
-                            CircularProgressCompose()
-                        }
-                    } else {
-                        null
-                    }
-                ) {
-                    coroutineScope.launch {
-                        try {
-                            scrollState.scrollToItem(0)
-                        } catch (_: Exception) {
-                        }
-                    }
-                }
-            }
-        }
-
     }
 }
 
