@@ -444,6 +444,7 @@ private fun CharacterDetailContent(
                                         5
                                     },
                                     uniqueEquipmentMaxData = uniqueEquipmentMaxData,
+                                    updateCurrentValue = updateCurrentValue,
                                 )
                             }
 

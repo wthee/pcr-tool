@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
@@ -53,7 +52,6 @@ import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
 
 /**
@@ -72,7 +70,7 @@ fun UniqueEquipContent(
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
-    attrViewModel: CharacterAttrViewModel = hiltViewModel()
+    updateCurrentValue: ((CharacterProperty) -> Unit)
 ) {
     val inputLevel = remember(uniqueEquipLevelMax) {
         mutableStateOf("")
@@ -146,17 +144,9 @@ fun UniqueEquipContent(
                         focusManager.clearFocus()
                         if (inputLevel.value != "") {
                             if (slot == 1) {
-                                attrViewModel.currentValue.postValue(
-                                    currentValue.update(
-                                        uniqueEquipmentLevel = inputLevel.value.toInt()
-                                    )
-                                )
+                                updateCurrentValue(currentValue.copy(uniqueEquipmentLevel = inputLevel.value.toInt()))
                             } else {
-                                attrViewModel.currentValue.postValue(
-                                    currentValue.update(
-                                        uniqueEquipmentLevel2 = inputLevel.value.toInt()
-                                    )
-                                )
+                                updateCurrentValue(currentValue.copy(uniqueEquipmentLevel2 = inputLevel.value.toInt()))
                             }
                         }
                     }
@@ -169,17 +159,9 @@ fun UniqueEquipContent(
                     focusManager.clearFocus()
                     if (inputLevel.value != "") {
                         if (slot == 1) {
-                            attrViewModel.currentValue.postValue(
-                                currentValue.update(
-                                    uniqueEquipmentLevel = inputLevel.value.toInt()
-                                )
-                            )
+                            updateCurrentValue(currentValue.copy(uniqueEquipmentLevel = inputLevel.value.toInt()))
                         } else {
-                            attrViewModel.currentValue.postValue(
-                                currentValue.update(
-                                    uniqueEquipmentLevel2 = inputLevel.value.toInt()
-                                )
-                            )
+                            updateCurrentValue(currentValue.copy(uniqueEquipmentLevel2 = inputLevel.value.toInt()))
                         }
                     }
                 }),
@@ -242,7 +224,8 @@ private fun UniqueEquipPreview() {
                 equipmentName = stringResource(id = R.string.debug_short_text),
                 description = stringResource(id = R.string.debug_long_text),
                 attr = Attr().random()
-            )
+            ),
+            updateCurrentValue = {}
         )
     }
 }

@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,9 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
@@ -33,14 +30,15 @@ import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
@@ -51,7 +49,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.getRegionName
-import cn.wthee.pcrtool.viewmodel.WebsiteViewModel
 import kotlinx.coroutines.launch
 
 
@@ -59,14 +56,13 @@ import kotlinx.coroutines.launch
  * 网站列表
  */
 @Composable
-fun WebsiteList(
-    scrollState: LazyListState, websiteViewModel: WebsiteViewModel = hiltViewModel()
+fun WebsiteScreen(
+    scrollState: LazyListState,
+    websiteViewModel: WebsiteViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val flow = remember {
-        websiteViewModel.getWebsiteList()
-    }
-    val responseData by flow.collectAsState(initial = null)
+    val uiState by websiteViewModel.uiState.collectAsStateWithLifecycle()
+
 
     val type = remember {
         mutableIntStateOf(0)
@@ -79,15 +75,45 @@ fun WebsiteList(
     )
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+    MainScaffold(
+        secondLineFab = {
+            //切换类型
+            SelectTypeFab(
+                icon = MainIconType.FILTER,
+                tabs = tabs,
+                type = type,
+                paddingValues = PaddingValues(
+                    end = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                )
+            )
+        },
+        fab = {
+            //回到顶部
+            MainSmallFab(
+                iconType = MainIconType.WEBSITE_BOOKMARK,
+                text = stringResource(id = R.string.tool_website),
+                extraContent = if (uiState.websiteResponseData == null) {
+                    //加载提示
+                    {
+                        CircularProgressCompose()
+                    }
+                } else {
+                    null
+                }
+            ) {
+                coroutineScope.launch {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (_: Exception) {
+                    }
+                }
+            }
+        }
     ) {
-        //列表
-        CommonResponseBox(
-            responseData = responseData,
-            placeholder = {
+        StateBox(
+            stateType = uiState.loadingState,
+            loadingContent = {
                 VerticalGrid(
                     itemWidth = getItemWidth(),
                     contentPadding = Dimen.mediumPadding,
@@ -97,28 +123,17 @@ fun WebsiteList(
                         WebsiteItem(data = WebsiteData())
                     }
                 }
-            },
-            fabContent = {
-                //切换类型
-                SelectTypeFab(
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    icon = MainIconType.FILTER,
-                    tabs = tabs,
-                    type = type,
-                    paddingValues = PaddingValues(
-                        end = Dimen.fabMargin,
-                        bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                    )
-                )
-
-            }) { data ->
-
+            }
+        ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(), state = scrollState
             ) {
-                items(items = data, key = {
-                    it.type
-                }) {
+                items(
+                    items = uiState.websiteResponseData?.data ?: emptyList(),
+                    key = {
+                        it.type
+                    }
+                ) {
                     WebsiteGroup(it, type.intValue)
                 }
                 item {
@@ -126,30 +141,6 @@ fun WebsiteList(
                 }
                 item {
                     CommonSpacer()
-                }
-            }
-        }
-
-        //回到顶部
-        MainSmallFab(
-            iconType = MainIconType.WEBSITE_BOOKMARK,
-            text = stringResource(id = R.string.tool_website),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            extraContent = if (responseData == null) {
-                //加载提示
-                {
-                    CircularProgressCompose()
-                }
-            } else {
-                null
-            }
-        ) {
-            coroutineScope.launch {
-                try {
-                    scrollState.scrollToItem(0)
-                } catch (_: Exception) {
                 }
             }
         }

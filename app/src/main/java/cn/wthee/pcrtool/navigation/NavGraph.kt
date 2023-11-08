@@ -59,7 +59,7 @@ import cn.wthee.pcrtool.ui.tool.LeaderboardScreen
 import cn.wthee.pcrtool.ui.tool.MainSettings
 import cn.wthee.pcrtool.ui.tool.NewsList
 import cn.wthee.pcrtool.ui.tool.TweetList
-import cn.wthee.pcrtool.ui.tool.WebsiteList
+import cn.wthee.pcrtool.ui.tool.WebsiteScreen
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetailScreen
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
@@ -76,7 +76,7 @@ import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
 import cn.wthee.pcrtool.ui.tool.quest.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
-import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipList
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -722,7 +722,7 @@ fun NavGraph(
             ) {
                 val scrollState = rememberLazyListState()
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                WebsiteList(scrollState)
+                WebsiteScreen(scrollState)
             }
 
             //主线地图
@@ -751,7 +751,7 @@ fun NavGraph(
                 route = NavRoute.UNIQUE_EQUIP_LIST
             ) {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                UniqueEquipList(
+                UniqueEquipListScreen(
                     toUniqueEquipDetail = actions.toUniqueEquipDetail
                 )
             }
