@@ -84,10 +84,9 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 //返回
                 if (!min && showResult) {
                     MainSmallFab(
-                        iconType = MainIconType.BACK
+                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.BACK
                     ) {
                         navViewModel.showResult.postValue(false)
-                        navViewModel.fabCloseClick.postValue(false)
                         pvpViewModel.requesting = false
                     }
                 }

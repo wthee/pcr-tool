@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,10 +29,11 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
+import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.navigateUp
+import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
 import cn.wthee.pcrtool.ui.components.EventTitle
 import cn.wthee.pcrtool.ui.components.GridIconList
@@ -57,7 +56,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -95,7 +93,7 @@ fun GachaListScreen(
             //重置
             if (uiState.dateRange.hasFilter()) {
                 MainSmallFab(iconType = MainIconType.RESET) {
-                    gachaListViewModel.changeRange(DateRange())
+                    gachaListViewModel.reset()
                     dateRangePickerState.setSelection(null, null)
                 }
             }
@@ -176,7 +174,6 @@ private fun GachaListContent(
 fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIdList: List<Int>,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
@@ -253,8 +250,14 @@ fun GachaItem(
                             icon = MainIconType.MOCK_GACHA,
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
-                            mockGachaViewModel.mockGachaType.postValue(mockGachaType)
-                            mockGachaViewModel.pickUpList.postValue(gachaInfo.getMockGachaPickUpUnitList())
+                            setData(
+                                NavRoute.MOCK_GACHA_TYPE,
+                                mockGachaType.type
+                            )
+                            setData(
+                                NavRoute.PICKUP_LIST,
+                                gachaInfo.getMockGachaPickUpUnitList()
+                            )
                             //跳转
                             toMockGacha()
                         }

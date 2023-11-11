@@ -92,4 +92,7 @@ object NavRoute {
 
     //角色详情是否显示所有信息
     const val SHOW_ALL_INFO = "showAllInfo"
+
+    const val MOCK_GACHA_TYPE = "mockGachaType"
+    const val PICKUP_LIST = "pickUpList"
 }

@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,10 +41,10 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun FreeGachaListScreen(
-    scrollState: LazyStaggeredGridState,
     freeGachaListViewModel: FreeGachaListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyStaggeredGridState()
     val uiState by freeGachaListViewModel.uiState.collectAsStateWithLifecycle()
 
     MainScaffold(

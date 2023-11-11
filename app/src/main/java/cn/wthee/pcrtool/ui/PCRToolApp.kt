@@ -79,7 +79,6 @@ private fun Home(
         NavGraph(
             bottomSheetNavigator,
             MainActivity.navController,
-            MainActivity.navViewModel,
             actions
         )
 

@@ -59,8 +59,6 @@ interface EquipmentDao {
      * @param craft -1：全部，0：素材：1：装备
      * @param colorType 装备品级
      * @param name 装备名称
-     * @param showAll 0: 仅收藏，1：全部
-     * @param starIds 收藏的装备编号
      */
     @SkipQueryVerification
     @Transaction

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -109,11 +108,6 @@ fun Overview(
             //应用更新校验
             overviewScreenViewModel.checkUpdate()
         }
-    }
-
-    //拦截返回键，关闭弹窗
-    BackHandler(uiState.showDropMenu || uiState.showChangeDb) {
-        overviewScreenViewModel.closeAllDialog()
     }
 
 

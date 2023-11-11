@@ -58,7 +58,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainContentText
@@ -245,10 +244,7 @@ private fun ComicIndexChange(
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
-                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
                 changeDialog(true)
-            } else {
-                MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
         elevation = FloatingActionButtonDefaults.elevation(
@@ -262,10 +258,11 @@ private fun ComicIndexChange(
         if (openDialog) {
             //展开目录
             ComicTocList(
-                gridState,
-                items,
-                pagerState,
-                changeSelect,
+                gridState = gridState,
+                items = items,
+                pagerState = pagerState,
+                changeSelect = changeSelect,
+                changeDialog = changeDialog,
             )
         } else {
             //fab
@@ -300,7 +297,8 @@ private fun ComicTocList(
     gridState: LazyGridState,
     items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
-    changeSelect: ((Int) -> Unit)
+    changeSelect: ((Int) -> Unit),
+    changeDialog: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -355,6 +353,7 @@ private fun ComicTocList(
                         .clickable {
                             VibrateUtil(context).single()
                             changeSelect(index)
+                            changeDialog(false)
                         }
                 }
                 SelectText(

@@ -80,7 +80,6 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun EquipListScreen(
-    scrollState: LazyListState,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int, String) -> Unit,
     toSearchEquipQuest: (String) -> Unit,
@@ -88,6 +87,7 @@ fun EquipListScreen(
     equipListViewModel: EquipListViewModel = hiltViewModel(),
 ) {
     val uiState by equipListViewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberLazyListState()
 
     //初始筛选信息
     LaunchedEffect(MainActivity.navSheetState.isVisible) {

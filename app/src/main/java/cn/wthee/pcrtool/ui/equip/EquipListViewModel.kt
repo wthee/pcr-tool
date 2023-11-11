@@ -192,8 +192,9 @@ class EquipListViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openSearchDialog = if (open != null) open else !it.openSearchDialog
-                )
+                    openSearchDialog = open ?: !it.openSearchDialog,
+
+                    )
             }
         }
     }

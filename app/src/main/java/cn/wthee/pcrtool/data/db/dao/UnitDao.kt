@@ -51,9 +51,7 @@ interface UnitDao {
      * @param pos2 站位范围结束
      * @param atkType 0:全部，1：物理，2：魔法
      * @param guildId 角色所属公会id
-     * @param showAll 0：仅收藏，1：全部
      * @param r6 0：全部，1：仅六星解放
-     * @param starIds 收藏的角色编号
      * @param type 获取类型
      * @param exUnitIdList 额外角色编号
      */

@@ -82,7 +82,7 @@ private fun EquipListFilterContent(
 
     //合成类型
     val craftIndex = remember {
-        mutableIntStateOf(1)
+        mutableIntStateOf(filter.craft)
     }
     filter.craft = craftIndex.intValue
 

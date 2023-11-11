@@ -12,14 +12,14 @@ import javax.inject.Inject
  */
 class ClanBattleRepository @Inject constructor(private val clanBattleDao: ClanBattleDao) {
 
-    suspend fun getAllClanBattleData(clanBattleId: Int) = try {
+    private suspend fun getAllClanBattleData(clanBattleId: Int) = try {
         clanBattleDao.getAllClanBattleData(clanBattleId)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getAllClanBattleData#clanBattleId:$clanBattleId")
         emptyList()
     }
 
-    suspend fun getAllClanBattleTargetCount(clanBattleId: Int, phase: Int) = try {
+    private suspend fun getAllClanBattleTargetCount(clanBattleId: Int, phase: Int) = try {
         clanBattleDao.getAllClanBattleTargetCount(clanBattleId, phase)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getAllClanBattleData#clanBattleId:$clanBattleId,phase:$phase")

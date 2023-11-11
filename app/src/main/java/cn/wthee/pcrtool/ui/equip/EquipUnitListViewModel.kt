@@ -26,9 +26,6 @@ data class EquipUnitListUiState(
 
 /**
  * 装备适用角色 ViewModel
- *
- * @param equipmentRepository
- * @param questRepository
  */
 @HiltViewModel
 class EquipUnitListViewModel @Inject constructor(

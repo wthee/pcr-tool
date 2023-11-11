@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import android.os.Build
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,12 +47,12 @@ import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SCALE_LOGO
 import cn.wthee.pcrtool.ui.components.Subtitle1
@@ -79,12 +78,6 @@ import kotlinx.coroutines.runBlocking
 fun MainSettings() {
     val context = LocalContext.current
 
-    //调整主按钮图表
-    LaunchedEffect(navSheetState.isVisible) {
-        if (navSheetState.isVisible) {
-            MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        }
-    }
     //缓存删除确认弹窗
     val openDialog = remember {
         mutableStateOf(false)
@@ -98,195 +91,197 @@ fun MainSettings() {
     }
 
 
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = Dimen.mediumPadding)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-    ) {
+    MainScaffold {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(bottom = Dimen.largePadding)
-                .fillMaxWidth()
+                .padding(horizontal = Dimen.mediumPadding)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
         ) {
-            HeaderText(
-                text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
-                modifier = Modifier.padding(top = Dimen.mediumPadding)
-            )
-            MainIcon(
-                data = R.drawable.ic_launcher_foreground,
-                size = Dimen.largeIconSize,
-                modifier = Modifier.padding(Dimen.mediumPadding),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                contentScale = FixedScale(SCALE_LOGO)
-            )
-        }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(bottom = Dimen.largePadding)
+                    .fillMaxWidth()
+            ) {
+                HeaderText(
+                    text = stringResource(id = R.string.app_name) + " v" + BuildConfig.VERSION_NAME,
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                )
+                MainIcon(
+                    data = R.drawable.ic_launcher_foreground,
+                    size = Dimen.largeIconSize,
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    contentScale = FixedScale(SCALE_LOGO)
+                )
+            }
 
 
-        //其它设置
-        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
-        MainText(
-            text = stringResource(id = R.string.app_setting),
-            modifier = Modifier.padding(Dimen.largePadding)
-        )
-        //- 振动开关
-        SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = true)
-        //- 动画效果
-        SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = true)
-        //- 动态色彩，仅 Android 12 及以上可用
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
-            SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
-        }
-        //- 使用ip访问
-        if (useIpOnFlag) {
-            SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
-        }
-        //- 清除图片缓存
-        SettingCommonItem(
-            iconType = MainIconType.DELETE,
-            title = stringResource(id = R.string.clean_image_cache),
-            summary = stringResource(id = R.string.tip_clean_image_cache),
-            onClick = {
-                //清除缓存弹窗
-                openDialog.value = true
-            }
-        ) {
-            Subtitle2(
-                text = stringResource(
-                    id = R.string.image_cache,
-                    imageCacheSize.value.first,
-                    imageCacheSize.value.second
-                ),
-                color = MaterialTheme.colorScheme.primary
+            //其它设置
+            Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
+            MainText(
+                text = stringResource(id = R.string.app_setting),
+                modifier = Modifier.padding(Dimen.largePadding)
             )
-        }
-
-        //其它相关
-        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
-        MainText(
-            text = stringResource(id = R.string.other),
-            modifier = Modifier.padding(Dimen.largePadding)
-        )
-        //- 加入反馈群
-        SettingCommonItem(
-            iconType = MainIconType.SUPPORT,
-            title = stringResource(id = R.string.qq_group),
-            summary = stringResource(id = R.string.qq_group_summary),
-            onClick = {
-                joinQQGroup(context)
+            //- 振动开关
+            SettingSwitchCompose(type = SettingSwitchType.VIBRATE, showSummary = true)
+            //- 动画效果
+            SettingSwitchCompose(type = SettingSwitchType.ANIMATION, showSummary = true)
+            //- 动态色彩，仅 Android 12 及以上可用
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || BuildConfig.DEBUG) {
+                SettingSwitchCompose(type = SettingSwitchType.DYNAMIC_COLOR, showSummary = true)
             }
-        ) {
-            Subtitle2(
-                text = stringResource(id = R.string.to_join_qq_group),
-                color = MaterialTheme.colorScheme.primary
+            //- 使用ip访问
+            if (useIpOnFlag) {
+                SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
+            }
+            //- 清除图片缓存
+            SettingCommonItem(
+                iconType = MainIconType.DELETE,
+                title = stringResource(id = R.string.clean_image_cache),
+                summary = stringResource(id = R.string.tip_clean_image_cache),
+                onClick = {
+                    //清除缓存弹窗
+                    openDialog.value = true
+                }
+            ) {
+                Subtitle2(
+                    text = stringResource(
+                        id = R.string.image_cache,
+                        imageCacheSize.value.first,
+                        imageCacheSize.value.second
+                    ),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            //其它相关
+            Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
+            MainText(
+                text = stringResource(id = R.string.other),
+                modifier = Modifier.padding(Dimen.largePadding)
             )
-        }
-        //- 模型预览
-        SettingCommonItem(
-            iconType = MainIconType.PREVIEW_UNIT_SPINE,
-            title = stringResource(id = R.string.title_spine),
-            summary = stringResource(id = R.string.spine_tip),
-            onClick = {
-                BrowserUtil.open(Constants.PREVIEW_URL)
+            //- 加入反馈群
+            SettingCommonItem(
+                iconType = MainIconType.SUPPORT,
+                title = stringResource(id = R.string.qq_group),
+                summary = stringResource(id = R.string.qq_group_summary),
+                onClick = {
+                    joinQQGroup(context)
+                }
+            ) {
+                Subtitle2(
+                    text = stringResource(id = R.string.to_join_qq_group),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-        )
-        //- 酷安
-        val appUrl = stringResource(id = R.string.coolapk_url)
-        SettingCommonItem(
-            iconType = MainIconType.COOLAPK_APP_STORE,
-            title = stringResource(id = R.string.coolapk),
-            summary = stringResource(id = R.string.tip_coolapk),
-            onClick = {
-                BrowserUtil.open(appUrl)
-            }
-        ) {
-            Subtitle2(
-                text = stringResource(id = R.string.please),
-                color = MaterialTheme.colorScheme.primary
+            //- 模型预览
+            SettingCommonItem(
+                iconType = MainIconType.PREVIEW_UNIT_SPINE,
+                title = stringResource(id = R.string.title_spine),
+                summary = stringResource(id = R.string.spine_tip),
+                onClick = {
+                    BrowserUtil.open(Constants.PREVIEW_URL)
+                }
             )
+            //- 酷安
+            val appUrl = stringResource(id = R.string.coolapk_url)
+            SettingCommonItem(
+                iconType = MainIconType.COOLAPK_APP_STORE,
+                title = stringResource(id = R.string.coolapk),
+                summary = stringResource(id = R.string.tip_coolapk),
+                onClick = {
+                    BrowserUtil.open(appUrl)
+                }
+            ) {
+                Subtitle2(
+                    text = stringResource(id = R.string.please),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            //- 项目代码
+            val gitUrl = stringResource(id = R.string.github_project_url)
+            SettingCommonItem(
+                iconType = MainIconType.GITHUB_PROJECT,
+                title = stringResource(id = R.string.github),
+                summary = stringResource(id = R.string.tip_github),
+                onClick = {
+                    BrowserUtil.open(gitUrl)
+                }
+            )
+
+            //感谢友链
+            Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
+            MainText(
+                text = stringResource(id = R.string.thanks),
+                modifier = Modifier.padding(Dimen.largePadding)
+            )
+            //- 干炸里脊资源
+            val dataFromUrl = stringResource(id = R.string.data_from_url)
+            SettingCommonItem(
+                iconType = MainIconType.DATA_SOURCE,
+                title = stringResource(id = R.string.data_from),
+                summary = stringResource(id = R.string.data_from_hint),
+                onClick = {
+                    BrowserUtil.open(dataFromUrl)
+                }
+            )
+            //- 静流笔记
+            val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
+            SettingCommonItem(
+                iconType = MainIconType.NOTE,
+                title = stringResource(id = R.string.shizuru_note),
+                summary = stringResource(id = R.string.shizuru_note_tip),
+                onClick = {
+                    BrowserUtil.open(shizuruUrl)
+                }
+            )
+            //- 竞技场
+            val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
+            SettingCommonItem(
+                iconType = MainIconType.PVP_SEARCH,
+                title = stringResource(id = R.string.pcrdfans),
+                summary = stringResource(id = R.string.pcrdfans_tip),
+                onClick = {
+                    BrowserUtil.open(pcrdfansUrl)
+                }
+            )
+            //- 排行
+            val leaderUrl = stringResource(id = R.string.leader_source_url)
+            SettingCommonItem(
+                iconType = MainIconType.LEADER,
+                title = stringResource(id = R.string.leader_source),
+                summary = stringResource(id = R.string.leader_tip),
+                onClick = {
+                    BrowserUtil.open(leaderUrl)
+                }
+            )
+            //- 漫画汉化
+            val comicZhUrl = stringResource(id = R.string.comic_zh_url)
+            SettingCommonItem(
+                iconType = MainIconType.COMIC,
+                title = stringResource(id = R.string.title_comic_zh),
+                summary = stringResource(id = R.string.tip_comic_zh),
+                onClick = {
+                    BrowserUtil.open(comicZhUrl)
+                }
+            )
+            //- 日服情报
+            val jpInfoUrl = stringResource(id = R.string.jp_info_url)
+            SettingCommonItem(
+                iconType = MainIconType.TWEET,
+                title = stringResource(id = R.string.title_jp_info),
+                summary = stringResource(id = R.string.tip_jp_info),
+                onClick = {
+                    BrowserUtil.open(jpInfoUrl)
+                }
+            )
+
+            CommonSpacer()
         }
-        //- 项目代码
-        val gitUrl = stringResource(id = R.string.github_project_url)
-        SettingCommonItem(
-            iconType = MainIconType.GITHUB_PROJECT,
-            title = stringResource(id = R.string.github),
-            summary = stringResource(id = R.string.tip_github),
-            onClick = {
-                BrowserUtil.open(gitUrl)
-            }
-        )
-
-        //感谢友链
-        Spacer(modifier = Modifier.padding(vertical = Dimen.mediumPadding))
-        MainText(
-            text = stringResource(id = R.string.thanks),
-            modifier = Modifier.padding(Dimen.largePadding)
-        )
-        //- 干炸里脊资源
-        val dataFromUrl = stringResource(id = R.string.data_from_url)
-        SettingCommonItem(
-            iconType = MainIconType.DATA_SOURCE,
-            title = stringResource(id = R.string.data_from),
-            summary = stringResource(id = R.string.data_from_hint),
-            onClick = {
-                BrowserUtil.open(dataFromUrl)
-            }
-        )
-        //- 静流笔记
-        val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
-        SettingCommonItem(
-            iconType = MainIconType.NOTE,
-            title = stringResource(id = R.string.shizuru_note),
-            summary = stringResource(id = R.string.shizuru_note_tip),
-            onClick = {
-                BrowserUtil.open(shizuruUrl)
-            }
-        )
-        //- 竞技场
-        val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
-        SettingCommonItem(
-            iconType = MainIconType.PVP_SEARCH,
-            title = stringResource(id = R.string.pcrdfans),
-            summary = stringResource(id = R.string.pcrdfans_tip),
-            onClick = {
-                BrowserUtil.open(pcrdfansUrl)
-            }
-        )
-        //- 排行
-        val leaderUrl = stringResource(id = R.string.leader_source_url)
-        SettingCommonItem(
-            iconType = MainIconType.LEADER,
-            title = stringResource(id = R.string.leader_source),
-            summary = stringResource(id = R.string.leader_tip),
-            onClick = {
-                BrowserUtil.open(leaderUrl)
-            }
-        )
-        //- 漫画汉化
-        val comicZhUrl = stringResource(id = R.string.comic_zh_url)
-        SettingCommonItem(
-            iconType = MainIconType.COMIC,
-            title = stringResource(id = R.string.title_comic_zh),
-            summary = stringResource(id = R.string.tip_comic_zh),
-            onClick = {
-                BrowserUtil.open(comicZhUrl)
-            }
-        )
-        //- 日服情报
-        val jpInfoUrl = stringResource(id = R.string.jp_info_url)
-        SettingCommonItem(
-            iconType = MainIconType.TWEET,
-            title = stringResource(id = R.string.title_jp_info),
-            summary = stringResource(id = R.string.tip_jp_info),
-            onClick = {
-                BrowserUtil.open(jpInfoUrl)
-            }
-        )
-
-        CommonSpacer()
     }
+
 
     //弹窗确认
     MainAlertDialog(

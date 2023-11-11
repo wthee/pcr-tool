@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -38,7 +39,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -69,7 +70,6 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
 import cn.wthee.pcrtool.ui.character.getLimitTypeColor
@@ -174,6 +174,11 @@ fun MainScaffold(
     secondLineFab: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
+    //返回拦截
+    BackHandler(enableClickClose) {
+        onCloseClick()
+    }
+
     Box(
         modifier = (if (fillMaxSize) {
             modifier.fillMaxSize()
@@ -448,8 +453,6 @@ fun LinearProgressCompose(
 /**
  * 底部搜索栏
  *
- * @param keywordState 关键词，用于查询
- * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
  * @param defaultKeywordList 默认关键词列表
  * @param fabText 不为空时，fab将显示该文本
  */
@@ -461,10 +464,13 @@ fun BottomSearchBar(
     modifier: Modifier = Modifier,
     fabText: String? = null,
     @StringRes labelStringId: Int,
-    keywordInputState: MutableState<String>,
-    keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     defaultKeywordList: List<KeywordData>? = null,
+    keyword: String,
+    openSearch: Boolean,
+    showReset: Boolean,
+    changeSearchBar: (Boolean) -> Unit,
+    changeKeyword: (String) -> Unit,
     onTopClick: (suspend CoroutineScope.() -> Unit)? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -474,146 +480,153 @@ fun BottomSearchBar(
     val focusRequester = remember {
         FocusRequester()
     }
+    //关键词输入
+    val keywordInputState = remember {
+        mutableStateOf("")
+    }
     //键盘是否可见
     val isImeVisible = WindowInsets.isImeVisible
-    val openDialog = remember {
-        mutableStateOf(false)
+    LaunchedEffect(isImeVisible) {
+        if (!isImeVisible) {
+            changeSearchBar(false)
+        }
+    }
+    LaunchedEffect(openSearch) {
+        if (openSearch) {
+            keyboardController?.show()
+        }
     }
 
 
-    if (!isImeVisible) {
+    Box {
         Row(
+            horizontalArrangement = Arrangement.End,
             modifier = modifier
+                .fillMaxWidth()
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            horizontalArrangement = Arrangement.End
         ) {
-            //回到顶部
-            onTopClick?.let {
-                MainSmallFab(
-                    iconType = MainIconType.TOP
-                ) {
-                    coroutineScope.launch {
-                        onTopClick()
-                    }
-                }
-            }
-
-            //重置
-            if (keywordState.value != "") {
-                MainSmallFab(
-                    iconType = MainIconType.RESET
-                ) {
-                    keywordState.value = ""
-                    keywordInputState.value = ""
-                    if (onResetClick != null) {
-                        onResetClick()
-                    }
-                }
-            }
-
-            //搜索
-            MainSmallFab(
-                iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
-                text = fabText ?: keywordState.value
-            ) {
-                keyboardController?.show()
-                openDialog.value = true
-                focusRequester.requestFocus()
-                //如有日期弹窗，则关闭日期弹窗
-                navViewModel.fabCloseClick.postValue(true)
-            }
-        }
-    }
-
-    Column(
-        modifier = modifier
-            .clickClose(isImeVisible)
-            .padding(Dimen.mediumPadding)
-            .imePadding(),
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        //关键词列表，搜索时显示
-        ExpandAnimation(
-            visible = openDialog.value && isImeVisible && defaultKeywordList?.isNotEmpty() == true,
-            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
-        ) {
-            MainCard(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                elevation = Dimen.popupMenuElevation
-            ) {
-                Column(
-                    modifier = Modifier.padding(Dimen.mediumPadding)
-                ) {
-                    MainText(text = stringResource(id = R.string.search_suggestion))
-
-                    SuggestionChipGroup(
-                        defaultKeywordList ?: arrayListOf(),
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
-                    ) { keyword ->
-                        keywordInputState.value = keyword
-                        keywordState.value = keyword
-                        keyboardController?.hide()
-                        focusRequester.freeFocus()
-                        openDialog.value = false
-                    }
-                }
-
-            }
-        }
-
-        //focusRequester
-        MainCard(
-            elevation = Dimen.popupMenuElevation
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = if (openDialog.value && isImeVisible) Dp.Unspecified else 0.dp)
-                    .padding(Dimen.smallPadding)
-                    .focusRequester(focusRequester)
-                    .alpha(if (openDialog.value && isImeVisible) 1f else 0f),
-                value = keywordInputState.value,
-                shape = MaterialTheme.shapes.medium,
-                onValueChange = { keywordInputState.value = it.deleteSpace },
-                textStyle = MaterialTheme.typography.labelLarge,
-                leadingIcon = {
-                    MainIcon(
-                        data = leadingIcon,
-                        size = Dimen.fabIconSize
-                    )
-                },
-                trailingIcon = {
-                    MainIcon(
-                        data = MainIconType.SEARCH,
-                        size = Dimen.fabIconSize
+            if (!openSearch) {
+                //回到顶部
+                onTopClick?.let {
+                    MainSmallFab(
+                        iconType = MainIconType.TOP
                     ) {
-                        keyboardController?.hide()
-                        keywordState.value = keywordInputState.value
-                        focusRequester.freeFocus()
-                        openDialog.value = false
+                        coroutineScope.launch {
+                            onTopClick()
+                        }
                     }
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                        keywordState.value = keywordInputState.value
-                        focusRequester.freeFocus()
-                        openDialog.value = false
+                }
+
+                //重置
+                if (showReset) {
+                    MainSmallFab(
+                        iconType = MainIconType.RESET
+                    ) {
+                        changeKeyword("")
+                        if (onResetClick != null) {
+                            onResetClick()
+                        }
                     }
-                ),
-                label = {
-                    Text(
-                        text = stringResource(id = labelStringId),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                },
-                maxLines = 1,
-                singleLine = true,
-            )
+                }
+
+                //搜索
+                MainSmallFab(
+                    iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
+                    text = fabText ?: keyword
+                ) {
+                    keyboardController?.show()
+                    changeSearchBar(true)
+                    focusRequester.requestFocus()
+                }
+            }
+        }
+
+        Column(
+            modifier = modifier
+                .imePadding(),
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            //关键词列表，搜索时显示
+            ExpandAnimation(
+                visible = openSearch && defaultKeywordList?.isNotEmpty() == true,
+            ) {
+                MainCard(
+                    modifier = Modifier.padding(Dimen.largePadding),
+                    elevation = Dimen.popupMenuElevation,
+                ) {
+                    Column(
+                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    ) {
+                        MainText(text = stringResource(id = R.string.search_suggestion))
+
+                        SuggestionChipGroup(
+                            defaultKeywordList ?: arrayListOf(),
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        ) {
+                            changeKeyword(it)
+                            keyboardController?.hide()
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    }
+
+                }
+            }
+
+            //focusRequester
+            MainCard(
+                modifier = Modifier.padding(Dimen.largePadding),
+                elevation = Dimen.popupMenuElevation,
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(if (openSearch) 1f else 0.1f)
+                        .heightIn(max = if (openSearch) Dp.Unspecified else 0.dp)
+                        .padding(Dimen.smallPadding)
+                        .focusRequester(focusRequester)
+                        .alpha(if (openSearch) 1f else 0f),
+                    value = keywordInputState.value,
+                    shape = MaterialTheme.shapes.medium,
+                    onValueChange = { keywordInputState.value = it.deleteSpace },
+                    textStyle = MaterialTheme.typography.labelLarge,
+                    leadingIcon = {
+                        MainIcon(
+                            data = leadingIcon,
+                            size = Dimen.fabIconSize
+                        )
+                    },
+                    trailingIcon = {
+                        MainIcon(
+                            data = MainIconType.SEARCH,
+                            size = Dimen.fabIconSize
+                        ) {
+                            keyboardController?.hide()
+                            changeKeyword(keywordInputState.value)
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            changeKeyword(keywordInputState.value)
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    ),
+                    label = {
+                        Text(
+                            text = stringResource(id = labelStringId),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
+                    maxLines = 1,
+                    singleLine = true,
+                )
+            }
         }
     }
-
 }
 
 /**

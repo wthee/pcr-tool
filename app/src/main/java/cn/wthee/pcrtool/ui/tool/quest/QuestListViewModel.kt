@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,13 +54,7 @@ class QuestListViewModel @Inject constructor(
      * 获取装备掉落关卡信息
      *
      */
-    private fun getQuestList() = flow {
-        try {
-            val info = questRepository.getEquipDropQuestList(0)
-            emit(info)
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getQuestList")
-        }
+    private fun getQuestList() {
         viewModelScope.launch {
             val info = questRepository.getEquipDropQuestList(0)
             _uiState.update {

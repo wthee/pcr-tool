@@ -13,11 +13,10 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,6 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.db.view.getIndex
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.BottomSearchBar
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -47,7 +45,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.deleteSpace
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import kotlinx.coroutines.launch
 
 
 /**
@@ -57,24 +55,10 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 @Composable
 fun UniqueEquipListScreen(
     uniqueEquipListViewModel: UniqueEquipListViewModel = hiltViewModel(),
-    characterViewModel: CharacterViewModel = hiltViewModel(),
     toUniqueEquipDetail: (Int) -> Unit
 ) {
-    val defaultName = navViewModel.uniqueEquipName.value ?: ""
     val uiState by uniqueEquipListViewModel.uiState.collectAsStateWithLifecycle()
-
-    //关键词输入
-    val keywordInputState = remember {
-        mutableStateOf(defaultName)
-    }
-    //关键词查询
-    val keywordState = remember {
-        mutableStateOf(defaultName)
-    }
-
-    LaunchedEffect(keywordState.value) {
-        uniqueEquipListViewModel.getUniqueEquips(keywordState.value)
-    }
+    val scope = rememberCoroutineScope()
 
     val uniqueEquips = uiState.uniqueEquipList
 
@@ -112,20 +96,27 @@ fun UniqueEquipListScreen(
             val count = uniqueEquips?.size ?: 0
 
             BottomSearchBar(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd),
                 labelStringId = R.string.search_unique_equip,
-                keywordInputState = keywordInputState,
-                keywordState = keywordState,
+                keyword = uiState.keyword,
+                openSearch = uiState.openSearch,
                 leadingIcon = MainIconType.UNIQUE_EQUIP,
+                defaultKeywordList = uiState.keywordList,
+                showReset = uiState.keyword != "",
+                changeSearchBar = uniqueEquipListViewModel::changeSearchBar,
+                changeKeyword = uniqueEquipListViewModel::changeKeyword,
                 fabText = count.toString(),
                 onTopClick = {
-                    if (uniqueEquips1?.isNotEmpty() == true) {
-                        gridState1.scrollToItem(0)
+                    scope.launch {
+                        if (uniqueEquips1?.isNotEmpty() == true) {
+                            gridState1.scrollToItem(0)
+                        }
+                        if (uniqueEquips2?.isNotEmpty() == true) {
+                            gridState2.scrollToItem(0)
+                        }
                     }
-                    if (uniqueEquips2?.isNotEmpty() == true) {
-                        gridState2.scrollToItem(0)
-                    }
+                },
+                onResetClick = {
+                    uniqueEquipListViewModel.reset()
                 }
             )
         }
@@ -165,7 +156,7 @@ fun UniqueEquipListScreen(
                         ) { uniqueEquip ->
                             //获取角色名
                             val flow = remember(uniqueEquip.unitId) {
-                                characterViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
+                                uniqueEquipListViewModel.getCharacterBasicInfo(uniqueEquip.unitId)
                             }
                             val basicInfo by flow.collectAsState(initial = CharacterInfo())
 

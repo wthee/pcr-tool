@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
 import android.annotation.SuppressLint
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -35,7 +34,9 @@ fun RankEquipCountScreen(
     toEquipMaterial: (Int, String) -> Unit,
     rankEquipCountViewModel: RankEquipCountViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     val uiState by rankEquipCountViewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(uiState.maxRank) {
         if (uiState.maxRank == 0) {
             rankEquipCountViewModel.loadData()
@@ -46,13 +47,6 @@ fun RankEquipCountScreen(
         mutableStateOf(false)
     }
 
-    //返回监听
-    val scope = rememberCoroutineScope()
-    BackHandler(!openDialog.value) {
-        scope.launch {
-            navigateUp()
-        }
-    }
 
     //初始收藏信息
     LaunchedEffect(MainActivity.navSheetState.isVisible) {
@@ -64,7 +58,6 @@ fun RankEquipCountScreen(
     val scrollState = rememberLazyGridState()
 
     MainScaffold(
-        modifier = Modifier.padding(top = Dimen.largePadding),
         fab = {
             //回到顶部
             var allCount = 0

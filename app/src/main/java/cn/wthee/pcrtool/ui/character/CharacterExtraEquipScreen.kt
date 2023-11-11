@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import cn.wthee.pcrtool.utils.intArrayList
  */
 @Composable
 fun CharacterExtraEquipScreen(
-    scrollState: LazyListState,
     toExtraEquipDetail: (Int) -> Unit,
     characterExtraEquipViewModel: CharacterExtraEquipViewModel = hiltViewModel()
 ) {
@@ -39,7 +37,7 @@ fun CharacterExtraEquipScreen(
         StateBox(
             stateType = uiState.loadingState
         ) {
-            CharacterExtraEquipContent(scrollState, uiState.extraEquipList, toExtraEquipDetail)
+            CharacterExtraEquipContent(uiState.extraEquipList, toExtraEquipDetail)
         }
     }
 
@@ -47,10 +45,11 @@ fun CharacterExtraEquipScreen(
 
 @Composable
 private fun CharacterExtraEquipContent(
-    scrollState: LazyListState,
     equipList: List<CharacterExtraEquipData>?,
     toExtraEquipDetail: (Int) -> Unit,
 ) {
+    val scrollState = rememberLazyListState()
+
     LazyColumn(state = scrollState) {
         item {
             //标题
@@ -84,7 +83,6 @@ private fun CharacterExtraEquipContent(
 private fun CharacterExtraEquipContentPreview() {
     PreviewLayout {
         CharacterExtraEquipContent(
-            scrollState = rememberLazyListState(),
             equipList = arrayListOf(
                 CharacterExtraEquipData(exEquipmentIds = "1-2"),
                 CharacterExtraEquipData(exEquipmentIds = "1-2")

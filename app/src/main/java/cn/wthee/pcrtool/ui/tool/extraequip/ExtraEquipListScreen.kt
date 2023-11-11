@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -36,7 +38,6 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.equip.ExtraEquipListViewModel
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -58,12 +59,12 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun ExtraEquipList(
-    scrollState: LazyListState,
     extraEquipmentViewModel: ExtraEquipListViewModel = hiltViewModel(),
     toExtraEquipDetail: (Int) -> Unit,
     toFilterExtraEquip: (String) -> Unit,
 ) {
     val uiState by extraEquipmentViewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberLazyListState()
 
     //初始筛选信息
     LaunchedEffect(MainActivity.navSheetState.isVisible) {
@@ -75,13 +76,15 @@ fun ExtraEquipList(
 
     MainScaffold(
         fab = {
-            ExtraEquipListFabContent(
-                count = uiState.equipList?.size ?: 0,
-                scrollState = scrollState,
-                filter = uiState.filter,
-                resetFilter = extraEquipmentViewModel::resetFilter,
-                toFilterExtraEquip = toFilterExtraEquip
-            )
+            if (uiState.loadingState == LoadingState.Success) {
+                ExtraEquipListFabContent(
+                    count = uiState.equipList?.size ?: 0,
+                    scrollState = scrollState,
+                    filter = uiState.filter,
+                    resetFilter = extraEquipmentViewModel::resetFilter,
+                    toFilterExtraEquip = toFilterExtraEquip
+                )
+            }
         }
     ) {
         StateBox(

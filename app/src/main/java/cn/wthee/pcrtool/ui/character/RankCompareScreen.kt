@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,19 +40,13 @@ import kotlinx.coroutines.launch
 fun RankCompareScreen(
     rankCompareViewModel: RankCompareViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     val uiState by rankCompareViewModel.uiState.collectAsStateWithLifecycle()
 
     val openDialog = remember {
         mutableStateOf(false)
     }
 
-    //返回监听
-    val scope = rememberCoroutineScope()
-    BackHandler (!openDialog.value){
-        scope.launch {
-            navigateUpSheet()
-        }
-    }
 
 
     MainScaffold(

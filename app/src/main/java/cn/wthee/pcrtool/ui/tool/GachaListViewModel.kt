@@ -114,4 +114,19 @@ class GachaListViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * 重置
+     */
+    fun reset() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    dateRange = DateRange()
+                )
+            }
+        }
+        getGachaFesUnitList()
+        getGachaHistory(DateRange())
+    }
 }

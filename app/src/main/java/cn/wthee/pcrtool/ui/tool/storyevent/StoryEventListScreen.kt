@@ -35,7 +35,6 @@ import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
 import cn.wthee.pcrtool.ui.components.EventTitleCountdown
 import cn.wthee.pcrtool.ui.components.IconTextButton
@@ -74,13 +73,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoryEventListScreen(
-    scrollState: LazyStaggeredGridState,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
     storyEventListViewModel: StoryEventListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyStaggeredGridState()
     val uiState by storyEventListViewModel.uiState.collectAsStateWithLifecycle()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
@@ -104,7 +103,7 @@ fun StoryEventListScreen(
             //重置
             if (uiState.dateRange.hasFilter()) {
                 MainSmallFab(iconType = MainIconType.RESET) {
-                    storyEventListViewModel.changeRange(DateRange())
+                    storyEventListViewModel.reset()
                     dateRangePickerState.setSelection(null, null)
                 }
             }

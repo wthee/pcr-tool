@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -60,14 +61,13 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LeaderTierScreen(
-    scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
     leaderTierViewModel: LeaderTierViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
     val uiState by leaderTierViewModel.uiState.collectAsStateWithLifecycle()
 
     val tabs = arrayListOf(
@@ -119,9 +119,6 @@ fun LeaderTierScreen(
                     )
                 )
             }
-        },
-        fabWithCustomPadding = {
-
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {

@@ -21,6 +21,8 @@ import javax.inject.Inject
 @Immutable
 data class WebsiteUiState(
     val websiteResponseData: ResponseData<List<WebsiteGroupData>>? = null,
+    val type: Int = 0,
+    val openDialog: Boolean = false,
     val loadingState: LoadingState = LoadingState.Loading
 )
 
@@ -56,4 +58,30 @@ class WebsiteViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * 切换类型
+     */
+    fun changeSelect(type: Int) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    type = type
+                )
+            }
+        }
+    }
+
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
+        }
+    }
 }

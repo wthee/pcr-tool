@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
@@ -27,7 +28,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
 import cn.wthee.pcrtool.ui.components.EventTitle
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -52,10 +52,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarEventListScreen(
-    scrollState: LazyStaggeredGridState,
     calendarEventListViewModel: CalendarEventListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyStaggeredGridState()
     val uiState by calendarEventListViewModel.uiState.collectAsStateWithLifecycle()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
@@ -79,7 +79,7 @@ fun CalendarEventListScreen(
             //重置
             if (uiState.dateRange.hasFilter()) {
                 MainSmallFab(iconType = MainIconType.RESET) {
-                    calendarEventListViewModel.changeRange(DateRange())
+                    calendarEventListViewModel.reset()
                     dateRangePickerState.setSelection(null, null)
                 }
             }

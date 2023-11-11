@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +26,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
+import cn.wthee.pcrtool.navigation.navigateUp
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -57,16 +57,12 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun WebsiteScreen(
-    scrollState: LazyListState,
     websiteViewModel: WebsiteViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
     val uiState by websiteViewModel.uiState.collectAsStateWithLifecycle()
 
-
-    val type = remember {
-        mutableIntStateOf(0)
-    }
     val tabs = arrayListOf(
         stringResource(id = R.string.all),
         stringResource(id = R.string.db_cn),
@@ -78,15 +74,21 @@ fun WebsiteScreen(
     MainScaffold(
         secondLineFab = {
             //切换类型
-            SelectTypeFab(
-                icon = MainIconType.FILTER,
-                tabs = tabs,
-                type = type,
-                paddingValues = PaddingValues(
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+            if (uiState.loadingState == LoadingState.Success) {
+                SelectTypeFab(
+                    icon = MainIconType.FILTER,
+                    tabs = tabs,
+                    type = uiState.type,
+                    openDialog = uiState.openDialog,
+                    changeDialog = websiteViewModel::changeDialog,
+                    changeSelect = websiteViewModel::changeSelect,
+                    width = Dimen.dataChangeWidth + Dimen.fabSize,
+                    paddingValues = PaddingValues(
+                        end = Dimen.fabMargin,
+                        bottom = Dimen.fabMarginLargeBottom
+                    )
                 )
-            )
+            }
         },
         fab = {
             //回到顶部
@@ -109,6 +111,18 @@ fun WebsiteScreen(
                     }
                 }
             }
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                websiteViewModel.changeDialog(false)
+            } else {
+                navigateUp()
+            }
+        },
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            websiteViewModel.changeDialog(false)
         }
     ) {
         StateBox(
@@ -134,7 +148,7 @@ fun WebsiteScreen(
                         it.type
                     }
                 ) {
-                    WebsiteGroup(it, type.intValue)
+                    WebsiteGroup(it, uiState.type)
                 }
                 item {
                     CommonSpacer()

@@ -149,11 +149,11 @@ fun CharacterDetailScreen(
                 changeCutin = characterDetailViewModel::changeCutin
             )
         },
-        mainFabIcon = if(uiState.isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
+        mainFabIcon = if (uiState.isEditMode) MainIconType.OK else MainIconType.BACK,
         onMainFabClick = {
-            if(uiState.isEditMode){
+            if (uiState.isEditMode) {
                 characterDetailViewModel.changeEditMode(false)
-            }else{
+            } else {
                 navigateUp()
             }
         }

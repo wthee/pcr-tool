@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailContent
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 
@@ -101,10 +101,9 @@ fun ClanBattleDetailScreen(
                 //BOSS信息
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     if (uiState.bossDataList.isNotEmpty()) {
-                        EnemyDetailContent(
-                            enemyData = uiState.bossDataList[pagerIndex],
-                            isMultiEnemy = clanBattleValue.getMultiCount(pagerIndex) > 0,
-                            partEnemyList = uiState.partEnemyMap[uiState.bossDataList[pagerIndex].enemyId],
+                        val enemy = uiState.bossDataList[pagerIndex]
+                        EnemyDetailScreen(
+                            enemyId = enemy.enemyId,
                             toSummonDetail = toSummonDetail
                         )
                     }

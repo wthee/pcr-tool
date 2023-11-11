@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.SkillDao
+import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.db.view.SkillData
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.model.SkillDetail
@@ -64,50 +65,58 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
         lvs: List<Int>,
         atk: Int,
         unitId: Int
-    ): MutableList<SkillDetail> {
-        val infoList = mutableListOf<SkillDetail>()
-        //技能编号信息
-        val unitSkillData = skillDao.getUnitSkill(unitId)
+    ): List<SkillDetail> {
+        try {
+            val infoList = mutableListOf<SkillDetail>()
+            //技能编号信息
+            val unitSkillData = skillDao.getUnitSkill(unitId)
 
-        //技能信息
-        skillIds.forEachIndexed { index, skillId ->
-            val lv = if (lvs.size == 1) lvs[0] else lvs[index]
-            if (skillId != 0) {
-                val skill = getSkillData(skillId, lv)
-                if (skill != null) {
-                    val info = SkillDetail(
-                        skillId = skill.skillId,
-                        name = skill.name ?: "",
-                        desc = skill.description,
-                        iconType = skill.iconType,
-                        castTime = skill.skillCastTime,
-                        level = lv,
-                        atk = atk,
-                        bossUbCooltime = skill.bossUbCoolTime,
-                        enemySkillIndex = index,
-                    )
-                    val actions = getSkillActions(
-                        lv,
-                        atk,
-                        skill.getAllActionId(),
-                        isRfSkill = skill.isRfSkill
-                    )
-                    val dependIds = skill.getSkillDependData()
-                    actions.forEachIndexed { i, action ->
-                        if (i != 0) {
-                            action.dependId = dependIds[action.actionId] ?: 0
+            //技能信息
+            skillIds.forEachIndexed { index, skillId ->
+                val lv = if (lvs.size == 1) lvs[0] else lvs[index]
+                if (skillId != 0) {
+                    val skill = getSkillData(skillId, lv)
+                    if (skill != null) {
+                        val info = SkillDetail(
+                            skillId = skill.skillId,
+                            name = skill.name ?: "",
+                            desc = skill.description,
+                            iconType = skill.iconType,
+                            castTime = skill.skillCastTime,
+                            level = lv,
+                            atk = atk,
+                            bossUbCooltime = skill.bossUbCoolTime,
+                            enemySkillIndex = index,
+                        )
+                        val actions = getSkillActions(
+                            lv,
+                            atk,
+                            skill.getAllActionId(),
+                            isRfSkill = skill.isRfSkill
+                        )
+                        val dependIds = skill.getSkillDependData()
+                        actions.forEachIndexed { i, action ->
+                            if (i != 0) {
+                                action.dependId = dependIds[action.actionId] ?: 0
+                            }
                         }
+                        info.actions = actions
+                        //获取类型，ub或其它
+                        if (unitSkillData != null) {
+                            info.skillIndexType = unitSkillData.getSkillIndexType(skillId)
+                        }
+                        infoList.add(info)
                     }
-                    info.actions = actions
-                    //获取类型，ub或其它
-                    if(unitSkillData != null){
-                        info.skillIndexType = unitSkillData.getSkillIndexType(skillId)
-                    }
-                    infoList.add(info)
                 }
             }
+            return infoList
+        } catch (e: Exception) {
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_SKILL + "getSkills#unit_id:$unitId;skillId:${skillIds}"
+            )
+            return emptyList()
         }
-        return infoList
     }
 
     /**
@@ -124,8 +133,33 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
                 SkillType.SP -> spList
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillIds#unit_id:$unitId type:${skillType.name}")
+            LogReportUtil.upload(
+                e,
+                Constants.EXCEPTION_SKILL + "getSkillIds#unit_id:$unitId type:${skillType.name}"
+            )
         }
         return arrayListOf()
+    }
+
+    /**
+     * 获取怪物技能信息
+     *
+     * @param enemyParameterPro 怪物基本参数
+     */
+    suspend fun getAllEnemySkill(enemyParameterPro: EnemyParameterPro): List<SkillDetail> {
+        val data = getUnitSkill(enemyParameterPro.unitId)
+        data?.let {
+
+            return getSkills(
+                data.getEnemySkillId(),
+                enemyParameterPro.getSkillLv(),
+                maxOf(
+                    maxOf(enemyParameterPro.attr.atk, enemyParameterPro.attr.magicStr),
+                    enemyParameterPro.partAtk
+                ),
+                enemyParameterPro.unitId
+            )
+        }
+        return emptyList()
     }
 }

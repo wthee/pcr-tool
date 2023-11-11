@@ -88,10 +88,11 @@ private fun ExtraEquipDropListContent(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) {
+            val questData = dropList[pagerState.currentPage]
             TravelQuestItem(
                 selectedId = equipId,
-                questData = dropList[pagerState.currentPage],
-                subRewardList = subRewardListMap?.get(pagerState.currentPage)
+                questData = questData,
+                subRewardList = subRewardListMap?.get(questData.travelQuestId)
             )
         }
     }

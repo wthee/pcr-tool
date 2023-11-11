@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.equip
+package cn.wthee.pcrtool.ui.tool.extraequip
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel

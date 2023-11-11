@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -83,12 +84,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterListScreen(
-    scrollState: LazyGridState,
     toCharacterDetail: (Int) -> Unit,
     toFilterCharacter: (String) -> Unit,
     characterListViewModel: CharacterListViewModel = hiltViewModel(),
 ) {
     val uiState by characterListViewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberLazyGridState()
 
     //初始筛选信息
     LaunchedEffect(navSheetState.isVisible){

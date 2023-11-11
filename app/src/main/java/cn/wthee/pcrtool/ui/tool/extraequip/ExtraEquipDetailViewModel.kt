@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
@@ -19,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,13 +32,17 @@ import javax.inject.Inject
 data class ExtraEquipDetailUiState(
     //装备属性
     val equipData: ExtraEquipmentData? = null,
+    //装备类型
+    val category: Int = 0,
     //收藏信息
     val starIdList: List<Int> = emptyList(),
     //适用角色
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
     val loved: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadingState: LoadingState = LoadingState.Loading,
+    //技能
+    val skillList: List<SkillDetail>? = null
 )
 
 /**
@@ -46,6 +51,7 @@ data class ExtraEquipDetailUiState(
 @HiltViewModel
 class ExtraEquipDetailViewModel @Inject constructor(
     private val extraEquipmentRepository: ExtraEquipmentRepository,
+    private val skillRepository: SkillRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val equipId: Int? = savedStateHandle[NavRoute.EQUIP_ID]
@@ -72,11 +78,13 @@ class ExtraEquipDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     equipData = data,
+                    category = data?.category ?: 0,
                     loadingState = it.loadingState.isSuccess(data != null)
                 )
             }
             if (data != null) {
                 getExtraEquipUnitList(data.category)
+                getExtraEquipPassiveSkills(data.getPassiveSkillIds())
             }
         }
     }
@@ -84,8 +92,15 @@ class ExtraEquipDetailViewModel @Inject constructor(
     /**
      * 获取可使用装备的角色列表
      */
-    private fun getExtraEquipUnitList(category: Int) = flow {
-        emit(extraEquipmentRepository.getEquipUnitList(category))
+    private fun getExtraEquipUnitList(category: Int) {
+        viewModelScope.launch {
+            val list = extraEquipmentRepository.getEquipUnitList(category)
+            _uiState.update {
+                it.copy(
+                    unitIdList = list
+                )
+            }
+        }
     }
 
     /**
@@ -98,6 +113,27 @@ class ExtraEquipDetailViewModel @Inject constructor(
                 it.copy(
                     loved = list.contains(equipId),
                     starIdList = list
+                )
+            }
+        }
+    }
+
+    /**
+     * 获取ex装备被动技能信息
+     *
+     * @param skillIds 技能编号列表
+     */
+    private fun getExtraEquipPassiveSkills(skillIds: List<Int>) {
+        viewModelScope.launch {
+            val skillList = skillRepository.getSkills(
+                skillIds,
+                arrayListOf(0),
+                0,
+                0
+            )
+            _uiState.update {
+                it.copy(
+                    skillList = skillList
                 )
             }
         }

@@ -230,7 +230,7 @@
     <string name="tool_unique_equip">专用装备</string>
     <string name="search_unique_equip">装备名/角色名</string>
     <string name="character_detail">角色详情</string>
-    <string name="filter_by_start_date">按开始日期筛选</string>
+    <string name="filter_by_start_date">选择日期</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>

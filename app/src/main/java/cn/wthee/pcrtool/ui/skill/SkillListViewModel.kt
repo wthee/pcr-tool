@@ -21,8 +21,8 @@ import javax.inject.Inject
  */
 @Immutable
 data class SkillListUiState(
-    val normalSkillList: MutableList<SkillDetail> = arrayListOf(),
-    val spSkillList: MutableList<SkillDetail> = arrayListOf(),
+    val normalSkillList: List<SkillDetail> = arrayListOf(),
+    val spSkillList: List<SkillDetail> = arrayListOf(),
     val spLabel: SpSkillLabelData? = null
 )
 

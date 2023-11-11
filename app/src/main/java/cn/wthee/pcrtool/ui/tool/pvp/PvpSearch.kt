@@ -62,7 +62,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.spanCount
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -91,7 +90,6 @@ fun PvpSearchCompose(
     favoritesListState: LazyGridState,
     historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -101,7 +99,7 @@ fun PvpSearchCompose(
 
     //获取数据
     val characterDataListFlow = remember {
-        characterViewModel.getAllCharacter()
+        pvpViewModel.getAllCharacter()
     }
     val characterDataList by characterDataListFlow.collectAsState(initial = arrayListOf())
     //显示类型
@@ -110,7 +108,7 @@ fun PvpSearchCompose(
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
 
 
-    //返回选择
+    //返回拦截
     BackHandler(showResult) {
         navViewModel.showResult.postValue(false)
         pvpViewModel.requesting = false
@@ -128,6 +126,8 @@ fun PvpSearchCompose(
 
 
     MainScaffold(
+        hideMainFab = floatWindow,
+        mainFabIcon = if (showResult) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
             if (showResult) {
                 navViewModel.showResult.postValue(false)

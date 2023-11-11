@@ -30,8 +30,6 @@ object Dimen {
 
     val fabMarginEnd = fabMargin + fabSize + mediumPadding
 
-    val fabScaffoldMarginEnd = 48.dp
-
     val fabMarginLargeBottom = fabMargin * 2 + fabSize
 
     val textFabMargin = 3.dp
@@ -62,15 +60,11 @@ object Dimen {
 
     val homeDataChangeWidth = 100.dp
 
-    val mockGachaTypeChangeWidth = 160.dp
-
     val skillActionMinHeight = 16.dp
 
     val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
-
-    val minSheetHeight = 300.dp
 
     val attrWidth = 165.dp
 

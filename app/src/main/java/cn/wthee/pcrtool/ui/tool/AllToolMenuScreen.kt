@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
@@ -124,9 +123,6 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
     //其它
     val otherList = arrayListOf<ToolMenuData>()
     otherList.addItem(ToolMenuType.MOCK_GACHA)
-    if (BuildConfig.DEBUG) {
-        otherList.addItem(ToolMenuType.ALL_SKILL)
-    }
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
     //测试

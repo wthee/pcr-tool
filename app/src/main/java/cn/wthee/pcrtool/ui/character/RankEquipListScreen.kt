@@ -31,8 +31,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 
 /**
  * 角色Rank装备列表
- *
- * @param unitId 角色编号
  */
 @Composable
 fun RankEquipListScreen(

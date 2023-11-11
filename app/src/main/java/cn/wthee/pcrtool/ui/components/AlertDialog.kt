@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
 import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
@@ -10,17 +9,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
-import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -85,165 +81,6 @@ fun MainAlertDialog(
                 }
             }
         )
-    }
-
-}
-
-/**
- * 选择日期范围组件
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DateRangePickerCompose(
-    dateRange: MutableState<DateRange>,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
-) {
-    val context = LocalContext.current
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
-    val yearRange = getDatePickerYearRange()
-    val dateRangePickerState = rememberDateRangePickerState(yearRange = yearRange)
-
-    //关闭监听
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    if (close) {
-        openDialog = false
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
-    }
-
-    //更新日期
-    LaunchedEffect(
-        dateRangePickerState.selectedStartDateMillis,
-        dateRangePickerState.selectedEndDateMillis
-    ) {
-        //日期字符串处理
-        val startDate = dateRangePickerState.selectedStartDateMillis?.simpleDateFormatUTC
-        var endDate = dateRangePickerState.selectedEndDateMillis?.simpleDateFormatUTC
-        if (endDate != null) {
-            endDate = endDate.replace("00:00:00", "23:59:59")
-        }
-
-        dateRange.value = DateRange(
-            startDate = startDate ?: "",
-            endDate = endDate ?: ""
-        )
-    }
-
-
-    Box(modifier = Modifier.clickClose(openDialog)) {
-        //日期选择布局
-        SmallFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.fabMargin,
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
-                    top = Dimen.largePadding
-                )
-                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                //点击展开布局
-                if (!openDialog) {
-                    VibrateUtil(context).single()
-                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    openDialog = true
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
-            ),
-        ) {
-            if (openDialog) {
-                //日期选择
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.largePadding
-                        )
-                        .imePadding(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    //日期选择
-                    DateRangePicker(
-                        state = dateRangePickerState,
-                        showModeToggle = true,
-                        title = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                //标题
-                                DateRangePickerDefaults.DateRangePickerTitle(
-                                    state = dateRangePickerState,
-                                    modifier = Modifier.padding(Dimen.smallPadding)
-                                )
-
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                //重置选择
-                                if (dateRange.value.hasFilter()) {
-                                    IconTextButton(
-                                        icon = MainIconType.RESET,
-                                        text = stringResource(id = R.string.reset),
-                                    ) {
-                                        dateRange.value = DateRange()
-                                        //重置选择器状态
-                                        dateRangePickerState.setSelection(null, null)
-                                        navViewModel.fabCloseClick.postValue(true)
-                                    }
-                                }
-                            }
-                        },
-                        headline = {
-                            DateRangePickerDefaults.DateRangePickerHeadline(
-                                state = dateRangePickerState,
-                                dateFormatter = DatePickerFormatter(
-                                    selectedDateSkeleton = "yyyy/MM/dd"
-                                ),
-                                modifier = Modifier.padding(Dimen.smallPadding)
-                            )
-                        }
-                    )
-
-                }
-            } else {
-                //fab
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = if (dateRange.value.hasFilter()) {
-                            MainIconType.DATE_RANGE_PICKED
-                        } else {
-                            MainIconType.DATE_RANGE_NONE
-                        },
-                        size = Dimen.fabIconSize
-                    )
-                    Text(
-                        text = if (dateRange.value.hasFilter()) {
-                            stringResource(id = R.string.picked_date)
-                        } else {
-                            stringResource(id = R.string.pick_date)
-                        },
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
-                        )
-                    )
-                }
-            }
-        }
     }
 
 }

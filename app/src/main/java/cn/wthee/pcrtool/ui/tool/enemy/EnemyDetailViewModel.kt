@@ -4,13 +4,15 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EnemyRepository
+import cn.wthee.pcrtool.data.db.repository.SkillRepository
+import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.intArrayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +26,11 @@ data class EnemyDetailUiState(
     //怪物信息
     val enemyInfo: EnemyParameterPro? = null,
     //所有部位信息
-    val partInfoList: List<EnemyParameterPro> = emptyList()
+    val partInfoList: List<EnemyParameterPro> = emptyList(),
+    //技能
+    val skillList: List<SkillDetail>? = null,
+    //技能循环
+    val attackPatternList: List<AttackPattern>? = null
 )
 
 /**
@@ -34,7 +40,8 @@ data class EnemyDetailUiState(
  */
 @HiltViewModel
 class EnemyDetailViewModel @Inject constructor(
-    private val enemyRepository: EnemyRepository
+    private val enemyRepository: EnemyRepository,
+    private val skillRepository: SkillRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EnemyDetailUiState())
@@ -52,30 +59,19 @@ class EnemyDetailViewModel @Inject constructor(
      */
     private fun getEnemyAttr(enemyId: Int) {
         viewModelScope.launch {
+            val info = enemyRepository.getEnemyAttr(enemyId)
             _uiState.update {
                 it.copy(
-                    enemyInfo = enemyRepository.getEnemyAttr(enemyId)
+                    enemyInfo = info
                 )
             }
-        }
-    }
 
-    /**
-     * 获取 BOSS 属性，测试用
-     */
-    fun getAllBossIds() = flow {
-        try {
-            val list = arrayListOf<Int>()
-            val boss = enemyRepository.getAllBossIds()
-            boss.forEach {
-                list.add(it.unitId)
+            info?.let {
+                getAllEnemySkill(it)
+                getAllSkillLoops(it)
             }
-            emit(list)
-        } catch (_: Exception) {
-
         }
     }
-
 
     /**
      * 获取多目标部位属性
@@ -92,6 +88,38 @@ class EnemyDetailViewModel @Inject constructor(
                         partInfoList = list
                     )
                 }
+            }
+        }
+    }
+
+    /**
+     * 获取怪物技能信息
+     *
+     * @param enemyParameterPro 怪物基本参数
+     */
+    private fun getAllEnemySkill(enemyParameterPro: EnemyParameterPro) {
+        viewModelScope.launch {
+            val infoList = skillRepository.getAllEnemySkill(enemyParameterPro)
+            _uiState.update {
+                it.copy(
+                    skillList = infoList
+                )
+            }
+        }
+    }
+
+    /**
+     * 获取全部技能循环
+     *
+     * @param enemyParameterPro 怪物基本参数
+     */
+    private fun getAllSkillLoops(enemyParameterPro: EnemyParameterPro) {
+        viewModelScope.launch {
+            val list = skillRepository.getAttackPattern(enemyParameterPro.unitId)
+            _uiState.update {
+                it.copy(
+                    attackPatternList = list
+                )
             }
         }
     }

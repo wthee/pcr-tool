@@ -61,7 +61,7 @@ class CalendarEventListViewModel @Inject constructor(
     }
 
     /**
-     * 日期选择更新
+     * 弹窗状态更新
      */
     fun changeDialog(openDialog: Boolean) {
         viewModelScope.launch {
@@ -108,5 +108,19 @@ class CalendarEventListViewModel @Inject constructor(
             }
 
         }
+    }
+
+    /**
+     * 重置
+     */
+    fun reset() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    dateRange = DateRange()
+                )
+            }
+        }
+        getCalendarEventList(DateRange())
     }
 }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +25,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -53,7 +54,6 @@ import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.px2dp
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 
 /**
@@ -77,6 +77,8 @@ fun EnemyDetailScreen(
                 enemyData = it,
                 isMultiEnemy = uiState.partInfoList.isNotEmpty(),
                 partEnemyList = uiState.partInfoList,
+                skillList = uiState.skillList,
+                attackPatternList = uiState.attackPatternList,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -92,6 +94,8 @@ fun EnemyDetailContent(
     enemyData: EnemyParameterPro,
     isMultiEnemy: Boolean,
     partEnemyList: List<EnemyParameterPro>?,
+    skillList: List<SkillDetail>?,
+    attackPatternList: List<AttackPattern>?,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -188,7 +192,12 @@ fun EnemyDetailContent(
         }
         //技能，预览时隐藏
         if (!LocalInspectionMode.current) {
-            EnemySkillList(enemyData, UnitType.ENEMY, toSummonDetail)
+            EnemySkillList(
+                skillList = skillList,
+                attackPatternList = attackPatternList,
+                unitType = UnitType.ENEMY,
+                toSummonDetail = toSummonDetail
+            )
         }
         CommonSpacer()
     }
@@ -237,22 +246,11 @@ fun EnemyDetailContent(
  */
 @Composable
 fun EnemySkillList(
-    enemyData: EnemyParameterPro,
+    skillList: List<SkillDetail>?,
+    attackPatternList: List<AttackPattern>?,
     unitType: UnitType,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
-    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    //技能信息
-    val allSkillListFlow = remember(enemyData) {
-        skillViewModel.getAllEnemySkill(enemyData)
-    }
-    val allSkillList by allSkillListFlow.collectAsState(initial = null)
-    //技能循环信息
-    val allLoopDataFlow = remember(enemyData) {
-        skillViewModel.getAllSkillLoops(enemyData)
-    }
-    val allLoopData by allLoopDataFlow.collectAsState(initial = null)
-
 
     Column(
         modifier = Modifier
@@ -260,7 +258,7 @@ fun EnemySkillList(
             .fillMaxSize()
     ) {
         //技能循环
-        allLoopData?.let {
+        attackPatternList?.let {
             MainText(
                 text = stringResource(R.string.skill_loop),
                 modifier = Modifier
@@ -276,7 +274,7 @@ fun EnemySkillList(
         }
 
         //技能信息
-        if (allSkillList?.isNotEmpty() == true || allLoopData?.isNotEmpty() == true) {
+        if (skillList?.isNotEmpty() == true || attackPatternList?.isNotEmpty() == true) {
             MainText(
                 text = stringResource(R.string.skill),
                 modifier = Modifier
@@ -287,7 +285,7 @@ fun EnemySkillList(
 
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
 
-        allSkillList?.let { skillList ->
+        skillList?.let {
             skillList.filter { it.level > 0 }.forEach { skillDetail ->
                 SkillItemContent(
                     skillDetail = skillDetail,
@@ -312,7 +310,9 @@ private fun EnemyDetailContentPreview() {
             ),
             false,
             null,
-            null
+            skillList = arrayListOf(),
+            attackPatternList = arrayListOf(),
+            toSummonDetail = { _, _, _, _, _ -> }
         )
     }
 }

@@ -100,4 +100,18 @@ class StoryEventListViewModel @Inject constructor(
         }
 
     }
+
+    /**
+     * 重置
+     */
+    fun reset() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    dateRange = DateRange()
+                )
+            }
+        }
+        getStoryEventHistory(DateRange())
+    }
 }

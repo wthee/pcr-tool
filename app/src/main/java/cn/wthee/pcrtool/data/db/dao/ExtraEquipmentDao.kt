@@ -84,8 +84,6 @@ interface ExtraEquipmentDao {
      * @param flag 0：全部，1：普通：2：会战
      * @param rarity 装备品级
      * @param name 装备名称
-     * @param showAll 0: 仅收藏，1：全部
-     * @param starIds 收藏的装备编号
      */
     @SkipQueryVerification
     @Transaction

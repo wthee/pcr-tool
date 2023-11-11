@@ -11,9 +11,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +28,7 @@ import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -40,7 +39,6 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.UnitList
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -48,8 +46,6 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_EXTRA_EQUIPMENT_CATEGORY
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.viewmodel.ExtraEquipmentViewModel
-import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import kotlinx.coroutines.launch
 
 
@@ -81,7 +77,6 @@ fun ExtraEquipDetail(
             //装备收藏
             MainSmallFab(
                 iconType = if (uiState.loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                text = if (uiState.loved) "" else stringResource(id = R.string.love_equip)
             ) {
                 scope.launch {
                     extraEquipDetailViewModel.updateStarId()
@@ -94,7 +89,7 @@ fun ExtraEquipDetail(
                     iconType = MainIconType.CHARACTER,
                     text = uiState.unitIdList.size.toString()
                 ) {
-                    toExtraEquipUnit(equipId)
+                    toExtraEquipUnit(uiState.category)
                 }
             }
 
@@ -118,7 +113,7 @@ fun ExtraEquipDetail(
                             ExtraEquipBasicInfo(extraEquipmentData, uiState.loved)
                         }
                         //被动技能
-                        ExtraEquipSkill(extraEquipmentData.getPassiveSkillIds())
+                        uiState.skillList?.let { ExtraEquipSkill(it) }
 
                         CommonSpacer()
                     }
@@ -211,15 +206,10 @@ private fun ExtraEquipBasicInfo(
  */
 @Composable
 private fun ExtraEquipSkill(
-    skillIds: List<Int>,
-    skillViewModel: SkillViewModel = hiltViewModel()
+    skillList: List<SkillDetail>
 ) {
-    val skillsFlow = remember(skillIds) {
-        skillViewModel.getExtraEquipPassiveSkills(skillIds)
-    }
-    val skills by skillsFlow.collectAsState(initial = arrayListOf())
 
-    if (skills.isNotEmpty()) {
+    if (skillList.isNotEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -233,7 +223,7 @@ private fun ExtraEquipSkill(
                     .padding(top = Dimen.largePadding)
             )
 
-            skills.forEach { skillDetail ->
+            skillList.forEach { skillDetail ->
                 SkillItemContent(
                     skillDetail = skillDetail,
                     unitType = UnitType.CHARACTER,
@@ -247,21 +237,7 @@ private fun ExtraEquipSkill(
     }
 }
 
-/**
- * 可使用的ex装备角色
- */
-@Composable
-fun ExtraEquipUnitListScreen(
-    category: Int,
-    extraEquipmentViewModel: ExtraEquipmentViewModel = hiltViewModel()
-) {
-    val unitIdsFlow = remember(category) {
-        extraEquipmentViewModel.getExtraEquipUnitList(category)
-    }
-    val unitIds by unitIdsFlow.collectAsState(initial = arrayListOf())
 
-    UnitList(unitIds)
-}
 
 
 @CombinedPreviews
