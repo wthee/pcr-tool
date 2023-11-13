@@ -301,6 +301,7 @@
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
     <string name="data_file_error">文件已损坏\n点击重新下载</string>
+    <string name="remote_data_file_error">文件下载异常\n请加群反馈</string>
     <string name="data_file_error_desc">重新下载数据</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="tip_save_image">将图片保存至系统相册</string>

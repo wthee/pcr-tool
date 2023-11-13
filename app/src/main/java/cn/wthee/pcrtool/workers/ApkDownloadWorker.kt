@@ -93,8 +93,12 @@ class ApkDownloadWorker(
 
                     override fun onFinish() {
                         //下载完成
-                        setProgressAsync(Data.Builder().putInt("progress",100).build())
+                        setProgressAsync(Data.Builder().putInt("progress", 100).build())
                         notificationManager.cancelAll()
+                    }
+
+                    override fun onErrorSize() {
+
                     }
                 })
             ).getFile(apkName)

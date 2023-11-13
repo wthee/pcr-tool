@@ -78,6 +78,7 @@ import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.joinQQGroup
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -306,7 +307,7 @@ private fun ChangeDbCompose(
     dbVersion: DatabaseVersion?,
     downloadState: Int,
     updateDbDownloadState: (Int) -> Unit,
-    closeAllDialog : () -> Unit,
+    closeAllDialog: () -> Unit,
     updateDbVersionText: (DatabaseVersion?) -> Unit,
     onClick: () -> Unit
 ) {
@@ -319,8 +320,11 @@ private fun ChangeDbCompose(
         Modifier
     }
 
+    //远程数据文件异常
+    val remoteDbSizeError = downloadState == -3
+
     //颜色
-    val tintColor = if (dbError) {
+    val tintColor = if (dbError || remoteDbSizeError) {
         colorRed
     } else {
         MaterialTheme.colorScheme.primary
@@ -331,6 +335,7 @@ private fun ChangeDbCompose(
         if (showChangeDb) {
             DbVersionOtherContent(
                 dbError = dbError,
+                remoteDbSizeError = remoteDbSizeError,
                 dbVersion = dbVersion,
                 color = tintColor,
                 updateDbDownloadState = updateDbDownloadState,
@@ -353,7 +358,7 @@ private fun ChangeDbCompose(
             onClick = {
                 //非加载中可点击，加载中禁止点击
                 VibrateUtil(context).single()
-                if (downloadState == -2) {
+                if (downloadState <= -2) {
                     onClick()
                 }
             },
@@ -371,6 +376,14 @@ private fun ChangeDbCompose(
             } else {
                 //加载相关
                 when (downloadState) {
+                    -3 -> {
+                        MainIcon(
+                            data = MainIconType.DB_ERROR,
+                            tint = tintColor,
+                            size = Dimen.fabIconSize
+                        )
+                    }
+
                     -2 -> {
                         FadeAnimation(visible = dbError) {
                             MainIcon(
@@ -466,12 +479,14 @@ private fun DbVersionSelectContent(
 @Composable
 private fun DbVersionOtherContent(
     dbError: Boolean,
+    remoteDbSizeError: Boolean,
     dbVersion: DatabaseVersion?,
     color: Color,
     updateDbDownloadState: (Int) -> Unit,
     closeAllDialog: () -> Unit,
     updateDbVersionText: (DatabaseVersion?) -> Unit
 ) {
+    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.End,
@@ -533,11 +548,15 @@ private fun DbVersionOtherContent(
             onClick = {
                 MainScope().launch {
                     //重新下载
-                    DatabaseUpdater.checkDBVersion(
-                        fixDb = true,
-                        updateDbDownloadState = updateDbDownloadState,
-                        updateDbVersionText = updateDbVersionText,
-                    )
+                    if (remoteDbSizeError) {
+                        joinQQGroup(context)
+                    } else {
+                        DatabaseUpdater.checkDBVersion(
+                            fixDb = true,
+                            updateDbDownloadState = updateDbDownloadState,
+                            updateDbVersionText = updateDbVersionText,
+                        )
+                    }
                 }
                 closeAllDialog()
             },
@@ -555,7 +574,9 @@ private fun DbVersionOtherContent(
 
                 Text(
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    text = if (dbError) {
+                    text = if (remoteDbSizeError) {
+                        stringResource(id = R.string.remote_data_file_error)
+                    } else if (dbError) {
                         stringResource(id = R.string.data_file_error)
                     } else {
                         stringResource(id = R.string.data_file_error_desc)

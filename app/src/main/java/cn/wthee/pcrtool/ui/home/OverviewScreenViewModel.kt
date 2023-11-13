@@ -58,6 +58,7 @@ data class OverviewScreenUiState(
     val dbError: Boolean = false,
     /**
      * 数据库文件下载状态
+     * -3: 大小异常
      * -2: 隐藏
      * -1: 显示加载中
      * >0: 进度

@@ -172,7 +172,7 @@ object DatabaseUpdater {
                                         updateDbDownloadState(-2)
                                     }
 
-                                    WorkInfo.State.RUNNING -> {
+                                    WorkInfo.State.RUNNING, WorkInfo.State.FAILED -> {
                                         val value = workInfo.progress.getInt("progress", -1)
                                         updateDbDownloadState(value)
                                     }
