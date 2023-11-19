@@ -12,7 +12,7 @@ hilt {
 }
 
 val composeBom = "2023.10.01"
-val composeCompilerVersion = "1.5.3"
+val composeCompilerVersion = "1.5.4"
 val appVersionCode = 375
 val appVersionName = "3.7.5"
 val appId = "cn.wthee.pcrtool"
@@ -98,6 +98,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -140,7 +141,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9.2")
 
     //Coil
-    val coilVersion = "2.4.0"
+    val coilVersion = "2.5.0"
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //datastore
