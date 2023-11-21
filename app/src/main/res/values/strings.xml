@@ -49,7 +49,8 @@
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action_desc">等级 > 260，TP数值不会继续增加</string>
-    <string name="other_limit_level_action_desc">等级 > 300，数值不会继续增加</string>
+    <string name="other_limit_level_action_desc">等级 > 300，该数值不会继续增加</string>
+    <string name="other_limit_level_action_desc_unique">等级 > 300，回避数值不会继续增加</string>
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>

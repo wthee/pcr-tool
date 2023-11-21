@@ -99,10 +99,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                 )
 
             val level = if (tpBonusAttr != null) {
-                //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
+                //带tp相关属性，仅计算260级之前的属性
                 Constants.TP_LIMIT_LEVEL
             } else if (otherBonusAttr != null) {
-                //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
+                //带回避相关属性，仅计算300级之前的属性
                 Constants.OTHER_LIMIT_LEVEL
             } else {
                 //正常计算等级提升属性

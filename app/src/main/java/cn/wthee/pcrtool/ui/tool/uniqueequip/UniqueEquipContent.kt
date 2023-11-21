@@ -208,7 +208,7 @@ fun UniqueEquipContent(
             if (uniqueEquipmentMaxData.isOtherLimitAction) {
                 IconTextButton(
                     icon = MainIconType.INFO,
-                    text = stringResource(R.string.other_limit_level_action_desc)
+                    text = stringResource(R.string.other_limit_level_action_desc_unique)
                 )
             }
             //属性
