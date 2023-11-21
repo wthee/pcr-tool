@@ -18,13 +18,25 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     suspend fun getUnitSkill(unitId: Int) = skillDao.getUnitSkill(unitId)
 
-    suspend fun getSkillData(skillId: Int, lv: Int): SkillData? {
+    private suspend fun getSkillData(skillId: Int, lv: Int): SkillData? {
         val skillData = skillDao.getSkillData(skillId)
-        //等级大于260时，查询新技能信息
-        if (lv > Constants.TP_LIMIT_LEVEL) {
+        //等级大于310时，查询新技能信息
+        if (lv > Constants.OTHER_LIMIT_LEVEL) {
             try {
-                val rfSkillId = skillDao.getRfSkillId(skillId)
-                rfSkillId?.let { id ->
+                val otherRfSkillId = skillDao.getRfSkillId(skillId, Constants.OTHER_LIMIT_LEVEL)
+                otherRfSkillId?.let { id ->
+                    val rfSkillData = skillDao.getSkillData(id)
+                    rfSkillData?.isOtherRfSkill = true
+                    return rfSkillData
+                }
+            } catch (_: Exception) {
+
+            }
+        } else if (lv > Constants.TP_LIMIT_LEVEL) {
+            //等级大于260时，查询新技能信息
+            try {
+                val tpRfSkillId = skillDao.getRfSkillId(skillId, Constants.TP_LIMIT_LEVEL)
+                tpRfSkillId?.let { id ->
                     val rfSkillData = skillDao.getSkillData(id)
                     rfSkillData?.isRfSkill = true
                     return rfSkillData
@@ -38,12 +50,19 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     suspend fun getSkillIconType(skillId: Int) = skillDao.getSkillIconType(skillId)
 
-    suspend fun getSkillActions(lv: Int, atk: Int, actionIds: List<Int>, isRfSkill: Boolean) = try {
-        skillDao.getSkillActions(lv, atk, actionIds, isRfSkill)
+    suspend fun getSkillActions(
+        lv: Int,
+        atk: Int,
+        actionIds: List<Int>,
+        isRfSkill: Boolean,
+        isOtherRfSkill: Boolean
+    ) = try {
+        skillDao.getSkillActions(lv, atk, actionIds, isRfSkill, isOtherRfSkill)
     } catch (e: Exception) {
         LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillActions#actionIds:$actionIds")
         emptyList()
     }
+
     suspend fun getAttackPattern(unitId: Int) = skillDao.getAttackPattern(unitId)
 
     suspend fun getSpSkillLabel(unitId: Int) = try {
@@ -52,6 +71,7 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
         LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSpSkillLabel#unitId:$unitId")
         null
     }
+
     /**
      * 获取技能信息
      *
@@ -92,7 +112,8 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
                             lv,
                             atk,
                             skill.getAllActionId(),
-                            isRfSkill = skill.isRfSkill
+                            isRfSkill = skill.isRfSkill,
+                            isOtherRfSkill = skill.isOtherRfSkill
                         )
                         val dependIds = skill.getSkillDependData()
                         actions.forEachIndexed { i, action ->

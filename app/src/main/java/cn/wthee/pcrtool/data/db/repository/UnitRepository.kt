@@ -453,7 +453,7 @@ class UnitRepository @Inject constructor(
             unitId / 100 * 1000 + 501
         } * 100 + 1
         val list = try {
-            skillDao.getSkillActions(level, 0, arrayListOf(skillActionId), false)
+            skillDao.getSkillActions(level, 0, arrayListOf(skillActionId), false, false)
         } catch (e: Exception) {
             emptyList()
         }

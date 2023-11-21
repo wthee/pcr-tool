@@ -269,10 +269,10 @@ interface EquipmentDao {
         FROM
             unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equip AS r ON r.equip_id = a.equipment_id
-        WHERE r.unit_id = :unitId AND a.min_lv = 261
+        WHERE r.unit_id = :unitId AND a.min_lv = :minLv + 1
     """
     )
-    suspend fun getUniqueEquipBonus(unitId: Int, lv: Int): Attr?
+    suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int): Attr?
 
     /**
      * 获取专武信息（等级大于260）
@@ -303,10 +303,10 @@ interface EquipmentDao {
         FROM
             unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equipment AS r ON r.equip_id = a.equipment_id
-        WHERE r.unit_id = :unitId AND a.min_lv = 261
+        WHERE r.unit_id = :unitId AND a.min_lv = :minLv + 1
     """
     )
-    suspend fun getUniqueEquipBonusV2(unitId: Int, lv: Int): Attr?
+    suspend fun getUniqueEquipBonusV2(unitId: Int, lv: Int, minLv: Int): Attr?
 
     /**
      * 根获取专武最大强化等级

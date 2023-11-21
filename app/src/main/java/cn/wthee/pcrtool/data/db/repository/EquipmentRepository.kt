@@ -49,7 +49,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getCount() = try {
         equipmentDao.getCount()
-    }catch (_:Exception){
+    } catch (_: Exception) {
         0
     }
 
@@ -69,32 +69,64 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             } else {
                 "0"
             }
-        }catch (_:Exception){
+        } catch (_: Exception) {
             "0"
         }
     }
 
+    /**
+     * 获取专用装备信息
+     *
+     * @param unitId 角色编号
+     * @param lv 专用装备1等级
+     * @param lv2 专用装备2等级
+     */
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int, lv2: Int) =
         if (lv > Constants.TP_LIMIT_LEVEL) {
-            // 获取专武奖励属性
-            val bonusAttr = getUniqueEquipBonus(unitId, lv - Constants.TP_LIMIT_LEVEL)
-            val level = if (bonusAttr != null) {
+            //tp相关261 ~ 300
+            val tpBonusAttr =
+                getUniqueEquipBonus(
+                    unitId,
+                    lv - Constants.TP_LIMIT_LEVEL,
+                    Constants.TP_LIMIT_LEVEL
+                )
+            // 回避等相关301 ~
+            val otherBonusAttr =
+                getUniqueEquipBonus(
+                    unitId,
+                    lv - Constants.OTHER_LIMIT_LEVEL,
+                    Constants.OTHER_LIMIT_LEVEL
+                )
+
+            val level = if (tpBonusAttr != null) {
                 //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
                 Constants.TP_LIMIT_LEVEL
+            } else if (otherBonusAttr != null) {
+                //不为空，说明是带tp相关属性的专武，仅计算260及之前等级提升的属性
+                Constants.OTHER_LIMIT_LEVEL
             } else {
                 //正常计算等级提升属性
                 lv
             }
+
             val equipmentMaxData = getUniqueEquip(unitId, level, lv2)
             // 专武1奖励属性不为空，计算总属性：初始属性 + 奖励属性
-            if (bonusAttr != null && equipmentMaxData.isNotEmpty() && equipmentMaxData[0].equipmentId % 10 == 1) {
-                equipmentMaxData[0].isTpLimitAction = true
-                equipmentMaxData[0].attr = equipmentMaxData[0].attr.add(bonusAttr)
+            if (equipmentMaxData.isNotEmpty() && equipmentMaxData[0].equipmentId % 10 == 1) {
+                if (tpBonusAttr != null) {
+                    equipmentMaxData[0].isTpLimitAction = true
+                    equipmentMaxData[0].attr = equipmentMaxData[0].attr.add(tpBonusAttr)
+                }
+                if (otherBonusAttr != null) {
+                    equipmentMaxData[0].isOtherLimitAction = true
+                    equipmentMaxData[0].attr = equipmentMaxData[0].attr.add(otherBonusAttr)
+                }
             }
+
             equipmentMaxData
         } else {
             getUniqueEquip(unitId, lv, lv2)
         }
+
 
     /**
      * 查询两张专武关联表，适配不同游戏版本
@@ -123,10 +155,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     /**
      * 查询两张专武关联表，适配不同游戏版本
      */
-    private suspend fun getUniqueEquipBonus(unitId: Int, lv: Int) = try {
-        equipmentDao.getUniqueEquipBonusV2(unitId, lv)
+    private suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int) = try {
+        equipmentDao.getUniqueEquipBonusV2(unitId, lv, minLv)
     } catch (e: Exception) {
-        equipmentDao.getUniqueEquipBonus(unitId, lv)
+        equipmentDao.getUniqueEquipBonus(unitId, lv, minLv)
     }
 
     suspend fun getUniqueEquipMaxLv(slot: Int) = equipmentDao.getUniqueEquipMaxLv(slot)
@@ -197,30 +229,30 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     }
 
     suspend fun getUniqueEquipList(name: String, slot: Int) = try {
-            val data = (try {
-                val data = equipmentDao.getUniqueEquipListV2(name, slot)
-                data
-            } catch (_: Exception) {
-                equipmentDao.getUniqueEquipList(name, slot)
-            }).reversed()
+        val data = (try {
+            val data = equipmentDao.getUniqueEquipListV2(name, slot)
+            data
+        } catch (_: Exception) {
+            equipmentDao.getUniqueEquipList(name, slot)
+        }).reversed()
 
-            //处理台服排序
-            if (MainActivity.regionType == RegionType.TW) {
-                data.sortedBy {
-                    arrayListOf(
-                        138011,
-                        138021,
-                        138041,
-                        138061
-                    ).contains(it.equipId)
-                }
-            } else {
-                data
+        //处理台服排序
+        if (MainActivity.regionType == RegionType.TW) {
+            data.sortedBy {
+                arrayListOf(
+                    138011,
+                    138021,
+                    138041,
+                    138061
+                ).contains(it.equipId)
             }
-        } catch (e: Exception) {
-            LogReportUtil.upload(e, "getUniqueEquipInfoList")
-            null
+        } else {
+            data
         }
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUniqueEquipInfoList")
+        null
+    }
 
 
     /**

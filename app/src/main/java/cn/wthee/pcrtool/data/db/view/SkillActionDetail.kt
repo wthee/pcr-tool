@@ -48,10 +48,13 @@ data class SkillActionDetail(
     @ColumnInfo(name = "description") var description: String = "",
     @ColumnInfo(name = "ailment_name") var tag: String = "",
     @ColumnInfo(name = "isRfSkill") var isRfSkill: Boolean = false,
+    @ColumnInfo(name = "isOtherRfSkill") var isOtherRfSkill: Boolean = false,
     @Ignore
     var dependId: Int = 0,
     @Ignore
-    var isTpLimitAction: Boolean = false
+    var isTpLimitAction: Boolean = false,
+    @Ignore
+    var isOtherLimitAction: Boolean = false
 ) {
 
     /**
@@ -88,7 +91,8 @@ data class SkillActionDetail(
             showCoe,
             level,
             atk,
-            isTpLimitAction
+            isTpLimitAction,
+            isOtherLimitAction
         )
         if (BuildConfig.DEBUG) {
             skillActionText.debugText = getDebugText()
@@ -541,11 +545,15 @@ data class SkillActionDetail(
             }
             // 20：挑衅
             SkillActionType.TAUNT -> {
+                //回避等技能限制
+                initOtherLimit()
                 val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_20, getTarget(), ailmentName, time)
             }
             // 21：回避
             SkillActionType.INVINCIBLE -> {
+                //回避等技能限制
+                initOtherLimit()
                 tag = getString(
                     when (actionDetail1) {
                         1 -> R.string.skill_action_type_desc_21_1
@@ -1035,6 +1043,8 @@ data class SkillActionDetail(
             SkillActionType.CONTINUOUS_ATTACK_NEARBY -> UNKNOWN
             // 32：HP吸收
             SkillActionType.LIFE_STEAL -> {
+                //回避等技能限制
+                initOtherLimit()
                 val value = getValueText(1, actionValue1, actionValue2)
                 getString(
                     R.string.skill_action_type_desc_32,
@@ -1990,6 +2000,16 @@ data class SkillActionDetail(
         }
     )
 
+
+    /**
+     * 回避等技能限制
+     */
+    private fun initOtherLimit() {
+        if (level > Constants.OTHER_LIMIT_LEVEL && isOtherLimitAction) {
+            isOtherLimitAction = true
+        }
+    }
+
     constructor() : this(
         0,
         0,
@@ -2014,6 +2034,7 @@ data class SkillActionDetail(
         0,
         "",
         "0",
+        false,
         false,
         0,
         false

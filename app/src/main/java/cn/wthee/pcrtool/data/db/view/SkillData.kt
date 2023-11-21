@@ -38,6 +38,7 @@ data class SkillData(
     @ColumnInfo(name = "icon_type") var iconType: Int = 0,
     @ColumnInfo(name = "boss_ub_cool_time") var bossUbCoolTime: Double = 0.0,
     @Ignore var isRfSkill: Boolean = false,
+    @Ignore var isOtherRfSkill: Boolean = false,
 ) {
     /**
      * 获取技能所有动作id

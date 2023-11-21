@@ -48,7 +48,8 @@ interface SkillDao {
             :atk AS atk,
             a.*,
            COALESCE( b.ailment_name,"") as ailment_name,
-           :isRfSkill AS isRfSkill
+           :isRfSkill AS isRfSkill,
+           :isOtherRfSkill AS isOtherRfSkill
         FROM
             skill_action AS a
             LEFT JOIN ailment_data as b ON a.action_type = b.ailment_action AND (a.action_detail_1 = b.ailment_detail_1 OR b.ailment_detail_1 = -1)
@@ -59,7 +60,8 @@ interface SkillDao {
         lv: Int,
         atk: Int,
         actionIds: List<Int>,
-        isRfSkill: Boolean
+        isRfSkill: Boolean,
+        isOtherRfSkill: Boolean,
     ): List<SkillActionDetail>
 
     /**
@@ -83,7 +85,7 @@ interface SkillDao {
      * @param skillId 技能编号
      */
     @SkipQueryVerification
-    @Query("SELECT rf_skill_id FROM unit_skill_data_rf WHERE min_lv > 260 AND skill_id = :skillId")
-    suspend fun getRfSkillId(skillId: Int): Int?
+    @Query("SELECT rf_skill_id FROM unit_skill_data_rf WHERE min_lv = :minLv + 1 AND skill_id = :skillId")
+    suspend fun getRfSkillId(skillId: Int, minLv: Int): Int?
 
 }

@@ -540,6 +540,13 @@ fun SkillActionItem(
                     text = stringResource(R.string.tp_limit_level_action_desc)
                 )
             }
+            //技能等级超过限制等级的，添加标识
+            if (skillAction.isOtherLimitAction) {
+                IconTextButton(
+                    icon = MainIconType.INFO,
+                    text = stringResource(R.string.other_limit_level_action_desc)
+                )
+            }
         }
 
         //调试用

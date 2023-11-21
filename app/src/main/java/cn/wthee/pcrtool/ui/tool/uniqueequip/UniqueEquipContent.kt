@@ -197,11 +197,18 @@ fun UniqueEquipContent(
                     selectable = true
                 )
             }
-            //技能等级超过tp限制等级的，添加标识
+            //等级超过tp限制等级的，添加标识
             if (uniqueEquipmentMaxData.isTpLimitAction) {
                 IconTextButton(
                     icon = MainIconType.INFO,
                     text = stringResource(R.string.tp_limit_level_action_desc)
+                )
+            }
+            //等级超过限制等级的，添加标识
+            if (uniqueEquipmentMaxData.isOtherLimitAction) {
+                IconTextButton(
+                    icon = MainIconType.INFO,
+                    text = stringResource(R.string.other_limit_level_action_desc)
                 )
             }
             //属性
