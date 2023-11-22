@@ -1614,6 +1614,10 @@ data class SkillActionDetail(
                 val time = getTimeText(3, actionValue3, actionValue4)
                 getString(R.string.skill_action_type_desc_106, getTarget(), type, time)
             }
+            //107：暴击率合计
+            SkillActionType.SUM_CRITICAL -> {
+                getString(R.string.skill_action_type_desc_107, actionDetail1 % 10)
+            }
 
             else -> {
                 val value = getValueText(

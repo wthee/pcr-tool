@@ -474,6 +474,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 106：守护
      */
     GUARD(106, R.string.skill_type_106),
+
+    /**
+     * 107：暴击率合计
+     */
+    SUM_CRITICAL(107, R.string.none),
 }
 
 /**
