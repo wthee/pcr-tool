@@ -50,6 +50,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -98,17 +99,21 @@ fun Overview(
         if (uiState.firstLoad) {
             //初始化六星id
             overviewScreenViewModel.getR6Ids()
-            //数据库校验
-            MainScope().launch {
-                DatabaseUpdater.checkDBVersion(
-                    fixDb = false,
-                    updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
-                    updateDbVersionText = overviewScreenViewModel::updateDbVersionText
-                )
-            }
-            //应用更新校验
-            overviewScreenViewModel.checkUpdate()
         }
+    }
+
+    //从桌面重新打开时，更新校验
+    AppResumeEffect(uiState.firstLoad) {
+        //数据库校验
+        MainScope().launch {
+            DatabaseUpdater.checkDBVersion(
+                fixDb = false,
+                updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
+                updateDbVersionText = overviewScreenViewModel::updateDbVersionText
+            )
+        }
+        //应用更新校验
+        overviewScreenViewModel.checkUpdate()
     }
 
 
