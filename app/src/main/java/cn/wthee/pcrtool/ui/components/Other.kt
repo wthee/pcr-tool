@@ -1012,13 +1012,13 @@ fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner) {
+        var recreate = false
         val observer = LifecycleEventObserver { _, e ->
-            var recreate = false
             if (e == Lifecycle.Event.ON_CREATE) {
                 recreate = true
             }
             //首次加载 或 从桌面重新进入（不经过 ON_CREATE）
-            if (firstLoad || (!recreate && e == Lifecycle.Event.ON_RESUME)) {
+            if ((firstLoad && e == Lifecycle.Event.ON_RESUME) || (!recreate && e == Lifecycle.Event.ON_RESUME)) {
                 handler()
             }
         }
