@@ -39,9 +39,10 @@ fun ClanBattleOverviewItemContent(
         clanBattleOverviewViewModel.loadData(clanBattleEvent.id)
     }
 
+    val clanInfo = uiState.clanInfoMap[clanBattleEvent.id]
 
-    if (uiState.clanInfo != null) {
-        ClanBattleItem(clanBattleEvent, uiState.clanInfo!!, toClanBossInfo)
+    if (clanInfo != null) {
+        ClanBattleItem(clanBattleEvent, clanInfo, toClanBossInfo)
     } else {
         ClanBattleNoBossContent(clanBattleEvent)
     }

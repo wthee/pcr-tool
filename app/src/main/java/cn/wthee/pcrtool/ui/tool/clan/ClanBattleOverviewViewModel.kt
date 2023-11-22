@@ -20,7 +20,7 @@ import javax.inject.Inject
 @Immutable
 data class ClanBattleOverviewUiState(
     //公会战详情
-    val clanInfo: ClanBattleInfo? = null
+    val clanInfoMap: HashMap<Int, ClanBattleInfo?> = hashMapOf()
 )
 
 /**
@@ -47,8 +47,10 @@ class ClanBattleOverviewViewModel @Inject constructor(
             val clanList = clanBattleRepository.getClanBattleList(clanId, phase)
             if (clanList.isNotEmpty()) {
                 _uiState.update {
+                    val map = it.clanInfoMap
+                    map[clanId] = clanList[0]
                     it.copy(
-                        clanInfo = clanList[0]
+                        clanInfoMap = map
                     )
                 }
             }
