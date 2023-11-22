@@ -4,29 +4,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.spanCount
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlin.math.max
 
 
@@ -35,39 +29,39 @@ import kotlin.math.max
  */
 @Composable
 fun UniqueEquipSection(
-    actions: NavActions,
+    updateOrderData: (Int) -> Unit,
+    toUniqueEquipList: () -> Unit,
+    toUniqueEquipDetail: (Int) -> Unit,
     isEditMode: Boolean,
     orderStr: String,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    uniqueEquipSectionViewModel: UniqueEquipSectionViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.UNIQUE_EQUIP.id
-    val uniqueEquipSpanCount = max(
+    val uiState by uniqueEquipSectionViewModel.uiState.collectAsStateWithLifecycle()
+
+    val equipSpanCount = max(
         1,
         (Dimen.iconSize + Dimen.largePadding * 2).spanCount
     )
-    //装备总数
-    val uniqueEquipCountFlow = remember {
-        overviewViewModel.getUniqueEquipCount()
-    }
-    val uniqueEquipCount by uniqueEquipCountFlow.collectAsState(initial = "0")
 
+    LaunchedEffect(equipSpanCount) {
+        uniqueEquipSectionViewModel.loadData(equipSpanCount)
+    }
+
+    //装备总数
+    val uniqueEquipCount = uiState.uniqueEquipCount
+    //装备列表
     val initList = arrayListOf<UniqueEquipBasicData>()
-    for (i in 1..uniqueEquipSpanCount) {
+    for (i in 1..equipSpanCount) {
         initList.add(UniqueEquipBasicData())
     }
+    val equipList1 = if (uiState.uniqueEquipList1 == null) {
+        initList
+    } else {
+        uiState.uniqueEquipList1
+    }
 
-    //专用装备1
-    val equipList1Flow = remember(uniqueEquipSpanCount, 1) {
-        overviewViewModel.getUniqueEquipList(uniqueEquipSpanCount, 1)
-    }
-    val equipList1 by equipList1Flow.collectAsState(initial = initList)
-    //专用装备2
-    val equipList2Flow = remember(uniqueEquipSpanCount, 2) {
-        overviewViewModel.getUniqueEquipList(uniqueEquipSpanCount, 2)
-    }
-    val equipList2 by equipList2Flow.collectAsState(initial = arrayListOf())
+    val equipList2 = uiState.uniqueEquipList2
 
 
     Section(
@@ -80,21 +74,16 @@ fun UniqueEquipSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
-                actions.toUniqueEquipList()
+                toUniqueEquipList()
             }
         }
     ) {
         VerticalGrid(
             itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
-            equipList1.forEach {
+            equipList1?.forEach {
                 val placeholder = it.equipId == ImageRequestHelper.UNKNOWN_EQUIP_ID
                 Box(
                     modifier = Modifier
@@ -108,7 +97,7 @@ fun UniqueEquipSection(
                         modifier = Modifier.commonPlaceholder(placeholder)
                     ) {
                         if (!placeholder) {
-                            actions.toUniqueEquipDetail(it.unitId)
+                            toUniqueEquipDetail(it.unitId)
                         }
                     }
                 }
@@ -118,7 +107,7 @@ fun UniqueEquipSection(
         VerticalGrid(
             itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
-            equipList2.forEach {
+            equipList2?.forEach {
                 val placeholder = it.equipId == ImageRequestHelper.UNKNOWN_EQUIP_ID
                 Box(
                     modifier = Modifier
@@ -132,7 +121,7 @@ fun UniqueEquipSection(
                         modifier = Modifier.commonPlaceholder(placeholder)
                     ) {
                         if (!placeholder) {
-                            actions.toUniqueEquipDetail(it.unitId)
+                            toUniqueEquipDetail(it.unitId)
                         }
                     }
                 }

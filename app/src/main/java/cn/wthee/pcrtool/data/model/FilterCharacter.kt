@@ -1,17 +1,11 @@
 package cn.wthee.pcrtool.data.model
 
-import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.datastore.preferences.core.edit
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.GsonUtil
-import com.google.gson.Gson
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 /**
  * 角色信息筛选
@@ -58,10 +52,6 @@ data class FilterCharacter(
      *  1:常驻 2：限定 3：活动限定 4：额外角色
      */
     var type: Int = 0,
-    /**
-     * 收藏的角色编号
-     */
-    var starIds: ArrayList<Int> = arrayListOf()
 
 ) {
 
@@ -72,34 +62,15 @@ data class FilterCharacter(
         else -> arrayListOf(0, 9999)
     }
 
-}
+    companion object {
 
-/**
- * 获取角色收藏列表
- */
-@Composable
-fun getStarCharacterIdList() : ArrayList<Int>{
-    val context = LocalContext.current
-    val data = remember {
-        context.dataStoreMain.data.map {
-            it[MainPreferencesKeys.SP_STAR_CHARACTER]
+        /**
+         * 获取角色收藏列表
+         */
+        suspend fun getStarIdList(): ArrayList<Int> {
+            val data = MyApplication.context.dataStoreMain.data.first()
+            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
         }
-    }.collectAsState(initial = null).value
-    return GsonUtil.toIntList(data)
-}
-
-/**
- * 更新收藏的角色id
- */
-suspend fun updateStarCharacterId(context: Context, id: Int) {
-    context.dataStoreMain.edit { preferences ->
-        val list = GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
-        if (list.contains(id)) {
-            list.remove(id)
-        } else {
-            list.add(id)
-        }
-        preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
     }
 }
 

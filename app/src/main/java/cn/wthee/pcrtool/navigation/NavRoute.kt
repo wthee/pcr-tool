@@ -35,11 +35,19 @@ object NavRoute {
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
+    const val EQUIP_NAME = "equipName"
+
+    //最大rank
     const val MAX_RANK = "maxRank"
+    //等级
     const val LEVEL = "level"
+    //星级
     const val RARITY = "rarity"
+    //rank
     const val RANK = "rank"
+    //专用装备等级
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
+    //专用装备2等级
     const val UNIQUE_EQUIP_LEVEL2 = "uniqueEquipLevel2"
     const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
@@ -72,4 +80,19 @@ object NavRoute {
     const val UNIQUE_EQUIP_LIST = "uniqueEquipList"
     const val UNIQUE_EQUIP_DETAIL = "UniqueEquipDetail"
 
+    //角色筛选
+    const val FILTER_CHARACTER = "filterCharacter"
+
+    //装备筛选
+    const val FILTER_EQUIP = "filterEquip"
+
+    //ex装备筛选
+    const val FILTER_EXTRA_EQUIP = "filterExtraEquip"
+    const val FILTER_DATA = "filterData"
+
+    //角色详情是否显示所有信息
+    const val SHOW_ALL_INFO = "showAllInfo"
+
+    const val MOCK_GACHA_TYPE = "mockGachaType"
+    const val PICKUP_LIST = "pickUpList"
 }

@@ -11,8 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
@@ -29,15 +30,14 @@ import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.intArrayList
-import kotlinx.coroutines.flow.map
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -51,13 +51,13 @@ data class ToolMenuData(
  */
 @Composable
 fun ToolSection(
+    updateOrderData: (Int) -> Unit,
     actions: NavActions,
     isEditMode: Boolean,
-    orderStr: String
+    orderStr: String,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.TOOL.id
+
 
     Section(
         id = id,
@@ -67,18 +67,13 @@ fun ToolSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
                 actions.toToolMore(false)
             }
         }
     ) {
-        ToolMenu(actions = actions)
+        ToolMenu(actions = actions, isEditMode = isEditMode)
     }
 }
 
@@ -91,49 +86,54 @@ fun ToolSection(
 fun ToolMenu(
     actions: NavActions,
     isEditMode: Boolean = false,
-    isHome: Boolean = true
+    isHome: Boolean = true,
+    toolSectionViewModel: ToolSectionViewModel = hiltViewModel()
 ) {
+    val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
+    toolSectionViewModel.getToolOrderData()
+
 
     val context = LocalContext.current
 
-    //自定义显示
-    val toolOrderData = remember {
-        context.dataStoreMain.data.map {
-            it[MainPreferencesKeys.SP_TOOL_ORDER] ?: ""
-        }
-    }.collectAsState(initial = "").value
-
-    val toolList = arrayListOf<ToolMenuData>()
-    toolOrderData.intArrayList.forEach {
-        ToolMenuType.getByValue(it)?.let { toolMenuType ->
-            toolList.add(getToolMenuData(toolMenuType = toolMenuType))
-        }
-    }
-
-    if (toolList.isEmpty() && !isEditMode && isHome) {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            IconTextButton(icon = MainIconType.MAIN, text = stringResource(R.string.to_add_tool)) {
-                actions.toToolMore(true)
+    StateBox(
+        stateType = uiState.loadingState,
+        noDataContent = {
+            if (!isEditMode && isHome) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    IconTextButton(
+                        icon = MainIconType.MAIN,
+                        text = stringResource(R.string.to_add_tool)
+                    ) {
+                        actions.toToolMore(true)
+                    }
+                }
             }
         }
-    }
-
-    VerticalGrid(
-        itemWidth = Dimen.menuItemSize,
-        contentPadding = Dimen.largePadding + Dimen.mediumPadding,
-        modifier = Modifier.animateContentSize(defaultSpring())
     ) {
-        toolList.forEach {
-            Box(
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.mediumPadding,
-                        bottom = Dimen.largePadding
-                    )
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MenuItem(context, actions, it, isEditMode)
+        val toolList = arrayListOf<ToolMenuData>()
+        uiState.toolOrderData?.intArrayList?.forEach {
+            ToolMenuType.getByValue(it)?.let { toolMenuType ->
+                toolList.add(getToolMenuData(toolMenuType = toolMenuType))
+            }
+        }
+
+        VerticalGrid(
+            itemWidth = Dimen.menuItemSize,
+            contentPadding = Dimen.largePadding + Dimen.mediumPadding,
+            modifier = Modifier.animateContentSize(defaultSpring())
+        ) {
+            toolList.forEach {
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediumPadding,
+                            bottom = Dimen.largePadding
+                        )
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MenuItem(context, actions, it, isEditMode)
+                }
             }
         }
     }
@@ -198,7 +198,7 @@ fun getAction(
             ToolMenuType.EQUIP -> actions.toEquipList()
             ToolMenuType.TWEET -> actions.toTweetList()
             ToolMenuType.COMIC -> actions.toComicList()
-            ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
+//            ToolMenuType.ALL_SKILL -> actions.toAllSkillList()
             ToolMenuType.ALL_EQUIP -> actions.toAllEquipList()
             ToolMenuType.RANDOM_AREA -> actions.toRandomEquipArea(0)
             ToolMenuType.NEWS -> actions.toNews()
@@ -235,7 +235,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.LEADER -> ToolMenuData(R.string.tool_leader, MainIconType.LEADER)
         ToolMenuType.TWEET -> ToolMenuData(R.string.tweet, MainIconType.TWEET)
         ToolMenuType.COMIC -> ToolMenuData(R.string.comic, MainIconType.COMIC)
-        ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
+//        ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.calc_equip_count, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
         ToolMenuType.BIRTHDAY -> ToolMenuData(R.string.tool_birthday, MainIconType.BIRTHDAY)

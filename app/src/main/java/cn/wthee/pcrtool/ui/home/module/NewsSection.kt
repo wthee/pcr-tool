@@ -2,24 +2,18 @@ package cn.wthee.pcrtool.ui.home.module
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.tool.NewsItem
-import cn.wthee.pcrtool.utils.editOrder
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 
 /**
@@ -27,19 +21,14 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
  */
 @Composable
 fun NewsSection(
-    actions: NavActions,
+    updateOrderData: (Int) -> Unit,
+    toNews: () -> Unit,
     isEditMode: Boolean,
     orderStr: String,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    newsSectionViewModel: NewsSectionViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.NEWS.id
-    //公告列表
-    val newsListFlow = remember {
-        overviewViewModel.getNewsOverview()
-    }
-    val newsList by newsListFlow.collectAsState(initial = null)
+    val uiState by newsSectionViewModel.uiState.collectAsStateWithLifecycle()
 
 
     Section(
@@ -50,33 +39,27 @@ fun NewsSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
-                actions.toNews()
+                toNews()
             }
         }
     ) {
         Column {
-            if (newsList == null) {
-                for (i in 0 until 3) {
-                    NewsItem(news = NewsTable())
-                }
-            } else {
-                newsList?.let { list ->
-                    if (list.data?.isNotEmpty() == true) {
-                        list.data!!.forEach {
-                            NewsItem(news = it)
-                        }
-                    } else {
-                        CenterTipText(stringResource(id = R.string.no_data))
+            StateBox(
+                stateType = uiState.loadingState,
+                loadingContent = {
+                    for (i in 0 until 3) {
+                        NewsItem(news = NewsTable())
                     }
+                },
+                errorContent = {
+                    CenterTipText(stringResource(id = R.string.data_get_error))
                 }
-
+            ) {
+                uiState.newsList?.forEach {
+                    NewsItem(news = it)
+                }
             }
         }
     }

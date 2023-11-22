@@ -12,19 +12,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
@@ -35,8 +30,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
-import cn.wthee.pcrtool.utils.editOrder
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 
 /**
@@ -45,54 +38,43 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterSection(
-    actions: NavActions,
     isEditMode: Boolean,
     orderStr: String,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    updateOrderData: (Int) -> Unit,
+    toCharacterList: () -> Unit,
+    toCharacterDetail: (Int) -> Unit,
+    characterSectionViewModel: CharacterSectionViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.CHARACTER.id
-    //角色总数
-    val characterCountFlow = remember {
-        overviewViewModel.getCharacterCount()
-    }
-    val characterCount by characterCountFlow.collectAsState(initial = "0")
-    //角色列表
-    val characterListFlow = remember {
-        overviewViewModel.getCharacterInfoList()
-    }
-    val characterList by characterListFlow.collectAsState(
-        initial = arrayListOf(
-            CharacterInfo(),
-            CharacterInfo(),
-            CharacterInfo()
-        )
-    )
+    val uiState by characterSectionViewModel.uiState.collectAsStateWithLifecycle()
 
+    val characterList = if (uiState.characterList == null) {
+        arrayListOf(
+            CharacterInfo(),
+            CharacterInfo(),
+            CharacterInfo(),
+        )
+    } else {
+        uiState.characterList
+    }
 
     Section(
         id = id,
         titleId = R.string.character,
         iconType = MainIconType.CHARACTER,
-        hintText = characterCount,
-        contentVisible = characterCount != "0",
+        hintText = uiState.characterCount,
+        contentVisible = uiState.characterCount != "0",
         isEditMode = isEditMode,
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
-                actions.toCharacterList()
+                toCharacterList()
             }
         }
     ) {
-        if (characterList.isNotEmpty()) {
+        if (characterList?.isNotEmpty() == true) {
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
@@ -107,7 +89,7 @@ fun CharacterSection(
                     CharacterImageItem(
                         modifier = Modifier.fillMaxWidth(),
                         unitId = unitId,
-                        actions.toCharacterDetail
+                        toCharacterDetail = toCharacterDetail
                     )
                 }
             } else {
@@ -123,7 +105,7 @@ fun CharacterSection(
                                     .widthIn(max = getItemWidth() * 1.3f)
                                     .fillMaxWidth(),
                                 unitId = it.id,
-                                actions.toCharacterDetail
+                                toCharacterDetail = toCharacterDetail
                             )
                         }
                     }
@@ -136,6 +118,7 @@ fun CharacterSection(
         }
     }
 }
+
 
 /**
  * 角色图片

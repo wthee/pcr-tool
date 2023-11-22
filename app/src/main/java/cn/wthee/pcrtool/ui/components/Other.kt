@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +39,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,6 +53,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -59,6 +63,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -66,7 +72,8 @@ import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.isResultError
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.navigation.navigateUp
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.character.getAtkColor
 import cn.wthee.pcrtool.ui.character.getAtkText
 import cn.wthee.pcrtool.ui.character.getLimitTypeColor
@@ -99,6 +106,150 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * 通用加载数据 box
+ *
+ * @param stateType 状态
+ * @param loadingContent 加载中布局
+ * @param errorContent 异常布局
+ * @param noDataContent 无数据布局
+ * @param successContent 加载成功后的布局
+ */
+@Composable
+fun StateBox(
+    stateType: LoadingState,
+    loadingContent: @Composable (() -> Unit)? = {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressCompose(
+                modifier = Modifier
+                    .padding(vertical = Dimen.largePadding)
+                    .align(Alignment.Center)
+            )
+        }
+    },
+    errorContent: @Composable () -> Unit = {
+        CenterTipText(stringResource(id = R.string.not_installed))
+    },
+    noDataContent: @Composable () -> Unit = {
+        CenterTipText(stringResource(id = R.string.no_data))
+    },
+    successContent: @Composable () -> Unit
+) {
+    when (stateType) {
+        LoadingState.Loading -> if (loadingContent != null) {
+            loadingContent()
+        }
+
+        LoadingState.NoData -> noDataContent()
+        LoadingState.Error -> errorContent()
+        LoadingState.Success -> successContent()
+    }
+}
+
+
+/**
+ * 通用布局
+ * 已默认设置：背景色、主悬浮按钮
+ *
+ * @param backgroundColor 背景色
+ * @param fillMaxSize 最大尺寸布局，默认true
+ * @param onMainFabClick 主悬浮按钮点击事件，null时为返回
+ * @param mainFabIcon 主悬浮按钮图标
+ * @param hideMainFab 是否隐藏主悬浮按钮
+ * @param enableClickClose 是否启用点击背景关闭功能
+ * @param onCloseClick 点击背景关闭回调
+ * @param fabWithCustomPadding 需自定义 padding 的悬浮按钮
+ * @param fab 正常悬浮按钮
+ * @param secondLineFab 第二行显示的悬浮按钮
+ * @param content 内容
+ */
+@Composable
+fun MainScaffold(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    fillMaxSize: Boolean = true,
+    onMainFabClick: (() -> Unit)? = null,
+    mainFabIcon: MainIconType = MainIconType.BACK,
+    hideMainFab: Boolean = false,
+    enableClickClose: Boolean = false,
+    onCloseClick: () -> Unit = {},
+    fabWithCustomPadding: @Composable BoxScope.() -> Unit = {},
+    fab: @Composable RowScope.() -> Unit = {},
+    secondLineFab: @Composable () -> Unit = {},
+    content: @Composable BoxScope.() -> Unit
+) {
+    //返回拦截
+    BackHandler(enableClickClose) {
+        onCloseClick()
+    }
+
+    Box(
+        modifier = (if (fillMaxSize) {
+            modifier.fillMaxSize()
+        } else {
+            modifier
+        }).background(backgroundColor)
+    ) {
+        //主要内容
+        content()
+
+        //fab内容
+        Box(
+            modifier = Modifier
+                .clickClose(enableClickClose) {
+                    onCloseClick()
+                }
+                .navigationBarsPadding()
+                .align(Alignment.BottomEnd),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            //fab 第二行
+            Column(
+                modifier = Modifier
+                    .navigationBarsPadding()
+            ) {
+                secondLineFab()
+            }
+
+            //底部 fab
+            fabWithCustomPadding()
+            //底部 fab 行
+            Row(
+                modifier = Modifier
+                    .padding(
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    ),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                fab()
+            }
+
+
+            //主按钮
+            if (!hideMainFab) {
+                MainSmallFab(
+                    iconType = mainFabIcon,
+                    modifier = Modifier
+                        .padding(
+                            end = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin
+                        )
+                ) {
+                    if (onMainFabClick != null) {
+                        onMainFabClick()
+                    } else {
+                        //默认返回操作
+                        navigateUp()
+                    }
+                }
+            }
+        }
+
+
+    }
+}
 
 /**
  * 底部空白占位
@@ -189,6 +340,9 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
 /**
  * 指示器
  */
+/**
+ * 指示器
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainHorizontalPagerIndicator(
@@ -197,16 +351,19 @@ fun MainHorizontalPagerIndicator(
     pageCount: Int
 ) {
     HorizontalPagerIndicator(
-        modifier = modifier,
+        modifier = modifier.navigationBarsPadding(),
         pagerState = pagerState,
         pageCount = pageCount,
-        indicatorWidth = 7.dp,
+        indicatorWidth = Dimen.indicatorSize,
         activeColor = MaterialTheme.colorScheme.primary,
         indicatorShape = CutCornerShape(50),
         spacing = 1.dp
     )
 }
 
+/**
+ * 加载中-圆形
+ */
 /**
  * 加载中-圆形
  */
@@ -225,6 +382,9 @@ fun CircularProgressCompose(
     )
 }
 
+/**
+ * 加载中-圆形
+ */
 /**
  * 加载中-圆形
  */
@@ -257,6 +417,9 @@ fun CircularProgressCompose(
 /**
  * 加载中-直线
  */
+/**
+ * 加载中-直线
+ */
 @Composable
 fun LinearProgressCompose(
     modifier: Modifier = Modifier,
@@ -270,6 +433,9 @@ fun LinearProgressCompose(
     )
 }
 
+/**
+ * 加载中进度-直线
+ */
 /**
  * 加载中进度-直线
  */
@@ -291,8 +457,6 @@ fun LinearProgressCompose(
 /**
  * 底部搜索栏
  *
- * @param keywordState 关键词，用于查询
- * @param keywordInputState 输入框内文本，不实时更新 [keywordState] ，仅在输入确认后更新
  * @param defaultKeywordList 默认关键词列表
  * @param fabText 不为空时，fab将显示该文本
  */
@@ -304,10 +468,13 @@ fun BottomSearchBar(
     modifier: Modifier = Modifier,
     fabText: String? = null,
     @StringRes labelStringId: Int,
-    keywordInputState: MutableState<String>,
-    keywordState: MutableState<String>,
     leadingIcon: MainIconType,
     defaultKeywordList: List<KeywordData>? = null,
+    keyword: String,
+    openSearch: Boolean,
+    showReset: Boolean,
+    changeSearchBar: (Boolean) -> Unit,
+    changeKeyword: (String) -> Unit,
     onTopClick: (suspend CoroutineScope.() -> Unit)? = null,
     onResetClick: (() -> Unit)? = null,
 ) {
@@ -317,146 +484,153 @@ fun BottomSearchBar(
     val focusRequester = remember {
         FocusRequester()
     }
+    //关键词输入
+    val keywordInputState = remember {
+        mutableStateOf("")
+    }
     //键盘是否可见
     val isImeVisible = WindowInsets.isImeVisible
-    val openDialog = remember {
-        mutableStateOf(false)
+    LaunchedEffect(isImeVisible) {
+        if (!isImeVisible) {
+            changeSearchBar(false)
+        }
+    }
+    LaunchedEffect(openSearch) {
+        if (openSearch) {
+            keyboardController?.show()
+        }
     }
 
 
-    if (!isImeVisible) {
+    Box {
         Row(
+            horizontalArrangement = Arrangement.End,
             modifier = modifier
+                .fillMaxWidth()
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-            horizontalArrangement = Arrangement.End
         ) {
-            //回到顶部
-            onTopClick?.let {
-                MainSmallFab(
-                    iconType = MainIconType.TOP
-                ) {
-                    coroutineScope.launch {
-                        onTopClick()
-                    }
-                }
-            }
-
-            //重置
-            if (keywordState.value != "") {
-                MainSmallFab(
-                    iconType = MainIconType.RESET
-                ) {
-                    keywordState.value = ""
-                    keywordInputState.value = ""
-                    if (onResetClick != null) {
-                        onResetClick()
-                    }
-                }
-            }
-
-            //搜索
-            MainSmallFab(
-                iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
-                text = fabText ?: keywordState.value
-            ) {
-                keyboardController?.show()
-                openDialog.value = true
-                focusRequester.requestFocus()
-                //如有日期弹窗，则关闭日期弹窗
-                navViewModel.fabCloseClick.postValue(true)
-            }
-        }
-    }
-
-    Column(
-        modifier = modifier
-            .clickClose(isImeVisible)
-            .padding(Dimen.mediumPadding)
-            .imePadding(),
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        //关键词列表，搜索时显示
-        ExpandAnimation(
-            visible = openDialog.value && isImeVisible && defaultKeywordList?.isNotEmpty() == true,
-            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
-        ) {
-            MainCard(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                elevation = Dimen.popupMenuElevation
-            ) {
-                Column(
-                    modifier = Modifier.padding(Dimen.mediumPadding)
-                ) {
-                    MainText(text = stringResource(id = R.string.search_suggestion))
-
-                    SuggestionChipGroup(
-                        defaultKeywordList ?: arrayListOf(),
-                        modifier = Modifier.padding(top = Dimen.mediumPadding)
-                    ) { keyword ->
-                        keywordInputState.value = keyword
-                        keywordState.value = keyword
-                        keyboardController?.hide()
-                        focusRequester.freeFocus()
-                        openDialog.value = false
-                    }
-                }
-
-            }
-        }
-
-        //focusRequester
-        MainCard(
-            elevation = Dimen.popupMenuElevation
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = if (openDialog.value && isImeVisible) Dp.Unspecified else 0.dp)
-                    .padding(Dimen.smallPadding)
-                    .focusRequester(focusRequester)
-                    .alpha(if (openDialog.value && isImeVisible) 1f else 0f),
-                value = keywordInputState.value,
-                shape = MaterialTheme.shapes.medium,
-                onValueChange = { keywordInputState.value = it.deleteSpace },
-                textStyle = MaterialTheme.typography.labelLarge,
-                leadingIcon = {
-                    MainIcon(
-                        data = leadingIcon,
-                        size = Dimen.fabIconSize
-                    )
-                },
-                trailingIcon = {
-                    MainIcon(
-                        data = MainIconType.SEARCH,
-                        size = Dimen.fabIconSize
+            if (!openSearch) {
+                //回到顶部
+                onTopClick?.let {
+                    MainSmallFab(
+                        iconType = MainIconType.TOP
                     ) {
-                        keyboardController?.hide()
-                        keywordState.value = keywordInputState.value
-                        focusRequester.freeFocus()
-                        openDialog.value = false
+                        coroutineScope.launch {
+                            onTopClick()
+                        }
                     }
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                        keywordState.value = keywordInputState.value
-                        focusRequester.freeFocus()
-                        openDialog.value = false
+                }
+
+                //重置
+                if (showReset) {
+                    MainSmallFab(
+                        iconType = MainIconType.RESET
+                    ) {
+                        changeKeyword("")
+                        if (onResetClick != null) {
+                            onResetClick()
+                        }
                     }
-                ),
-                label = {
-                    Text(
-                        text = stringResource(id = labelStringId),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                },
-                maxLines = 1,
-                singleLine = true,
-            )
+                }
+
+                //搜索
+                MainSmallFab(
+                    iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
+                    text = fabText ?: keyword
+                ) {
+                    keyboardController?.show()
+                    changeSearchBar(true)
+                    focusRequester.requestFocus()
+                }
+            }
+        }
+
+        Column(
+            modifier = modifier
+                .imePadding(),
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            //关键词列表，搜索时显示
+            ExpandAnimation(
+                visible = openSearch && defaultKeywordList?.isNotEmpty() == true,
+            ) {
+                MainCard(
+                    modifier = Modifier.padding(Dimen.largePadding),
+                    elevation = Dimen.popupMenuElevation,
+                ) {
+                    Column(
+                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    ) {
+                        MainText(text = stringResource(id = R.string.search_suggestion))
+
+                        SuggestionChipGroup(
+                            defaultKeywordList ?: arrayListOf(),
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
+                        ) {
+                            changeKeyword(it)
+                            keyboardController?.hide()
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    }
+
+                }
+            }
+
+            //focusRequester
+            MainCard(
+                modifier = Modifier.padding(Dimen.largePadding),
+                elevation = Dimen.popupMenuElevation,
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(if (openSearch) 1f else 0.1f)
+                        .heightIn(max = if (openSearch) Dp.Unspecified else 0.dp)
+                        .padding(Dimen.smallPadding)
+                        .focusRequester(focusRequester)
+                        .alpha(if (openSearch) 1f else 0f),
+                    value = keywordInputState.value,
+                    shape = MaterialTheme.shapes.medium,
+                    onValueChange = { keywordInputState.value = it.deleteSpace },
+                    textStyle = MaterialTheme.typography.labelLarge,
+                    leadingIcon = {
+                        MainIcon(
+                            data = leadingIcon,
+                            size = Dimen.fabIconSize
+                        )
+                    },
+                    trailingIcon = {
+                        MainIcon(
+                            data = MainIconType.SEARCH,
+                            size = Dimen.fabIconSize
+                        ) {
+                            keyboardController?.hide()
+                            changeKeyword(keywordInputState.value)
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            changeKeyword(keywordInputState.value)
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    ),
+                    label = {
+                        Text(
+                            text = stringResource(id = labelStringId),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
+                    maxLines = 1,
+                    singleLine = true,
+                )
+            }
         }
     }
-
 }
 
 /**
@@ -565,6 +739,9 @@ fun EventTitle(
 /**
  * 日程倒计时
  */
+/**
+ * 日程倒计时
+ */
 @Composable
 fun EventTitleCountdown(
     today: String,
@@ -607,6 +784,9 @@ fun EventTitleCountdown(
 /**
  * 装备适用角色
  */
+/**
+ * 装备适用角色
+ */
 @Composable
 fun UnitList(unitIds: List<Int>) {
     LazyColumn(
@@ -636,6 +816,10 @@ fun UnitList(unitIds: List<Int>) {
     }
 }
 
+/**
+ * 角色标签行
+ *
+ */
 /**
  * 角色标签行
  *
@@ -733,6 +917,10 @@ fun CharacterTagRow(
  * 位置信息
  *
  */
+/**
+ * 位置信息
+ *
+ */
 @Composable
 fun CharacterPositionTag(
     modifier: Modifier = Modifier,
@@ -754,6 +942,9 @@ fun CharacterPositionTag(
     }
 }
 
+/**
+ * 获取位置描述
+ */
 /**
  * 获取位置描述
  */
@@ -812,6 +1003,32 @@ fun CharacterTag(
         }
     }
 }
+
+/**
+ * 从桌面返回监听
+ */
+@Composable
+fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        var recreate = false
+        val observer = LifecycleEventObserver { _, e ->
+            if (e == Lifecycle.Event.ON_CREATE) {
+                recreate = true
+            }
+            //首次加载 或 从桌面重新进入（不经过 ON_CREATE）
+            if ((firstLoad && e == Lifecycle.Event.ON_RESUME) || (!recreate && e == Lifecycle.Event.ON_RESUME)) {
+                handler()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews

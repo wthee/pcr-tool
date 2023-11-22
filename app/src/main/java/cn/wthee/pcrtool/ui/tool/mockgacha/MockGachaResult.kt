@@ -14,12 +14,14 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.MockGachaResultRecordData
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
@@ -40,7 +42,6 @@ import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.simpleDateFormat
-import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 
 
 /**
@@ -53,14 +54,15 @@ fun MockGachaResult(
     mockGachaType: MockGachaType,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
-    mockGachaViewModel.getResult(gachaId = gachaId)
-    val resultRecordList =
-        mockGachaViewModel.resultRecordList.observeAsState().value ?: arrayListOf()
+    val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(gachaId) {
+        mockGachaViewModel.getResult(gachaId = gachaId)
+    }
     val tipToPay = stringResource(id = R.string.tip_no_gacha_record)
     //统计抽中角色的次数
     var upCount = 0
     var start3Count = 0
-    resultRecordList.forEach { record ->
+    uiState.resultRecordList.forEach { record ->
         record.unitIds.intArrayList.forEachIndexed { index, unitId ->
             //单up时仅计算最后一个角色
             if ((mockGachaType == MockGachaType.PICK_UP_SINGLE && pickUpUnitIds.last() == unitId)
@@ -75,13 +77,13 @@ fun MockGachaResult(
     }
 
     //显示相关记录
-    if (resultRecordList.isEmpty()) {
+    if (uiState.resultRecordList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             MainText(text = tipToPay)
         }
     } else {
         //显示相关信息
-        val payCount = resultRecordList.size
+        val payCount = uiState.resultRecordList.size
         val sumText = stringResource(id = R.string.gacha_used_gem, payCount * 1500)
 
         Column(
@@ -116,10 +118,10 @@ fun MockGachaResult(
                 columns = GridCells.Adaptive(getItemWidth())
             ) {
                 itemsIndexed(
-                    items = resultRecordList
+                    items = uiState.resultRecordList
                 ) { index, resultRecord ->
                     MockGachaResultRecordItem(
-                        resultRecordList.size - index,
+                        uiState.resultRecordList.size - index,
                         pickUpUnitIds,
                         resultRecord,
                         mockGachaType

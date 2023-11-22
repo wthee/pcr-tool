@@ -15,8 +15,10 @@ val colorBlack = Color(0xFF0D0F0F)
 val colorGray = Color(0xFF9C9C9C)
 
 //遮罩颜色
-val colorAlphaBlack = Color(0, 0, 0, 128)
-val colorAlphaWhite = Color(255, 255, 255, 128)
+val colorAlphaBlack = Color(0, 0, 0, 144)
+val colorAlphaBlackStart = Color(0, 0, 0, 64)
+val colorAlphaWhite = Color(255, 255, 255, 144)
+val colorAlphaWhiteStart = Color(255, 255, 255, 64)
 
 //其它颜色
 /**

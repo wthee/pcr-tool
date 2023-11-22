@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
+import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -30,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PvpViewModel @Inject constructor(
     private val pvpRepository: PvpRepository,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: MyAPIRepository,
+    private val unitRepository: UnitRepository
 ) : ViewModel() {
 
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
@@ -170,4 +172,25 @@ class PvpViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * 竞技场角色信息
+     */
+    fun getAllCharacter() = flow {
+        try {
+            emit(unitRepository.getCharacterByPosition(1, 999))
+        } catch (_: Exception) {
+
+        }
+    }
+
+    /**
+     * 角色站位
+     */
+    suspend fun getPvpCharacterByIds(ids: List<Int>) =
+        try {
+            unitRepository.getCharacterByIds(ids).filter { it.position > 0 }
+        } catch (e: Exception) {
+            arrayListOf()
+        }
 }

@@ -37,6 +37,10 @@ class DownloadResponseBody(
                 val bytesRead = super.read(sink, byteCount)
                 if (null != downloadListener && bytesRead != -1L && totalBytesRead < responseBody.contentLength()) {
                     totalBytesRead += bytesRead
+                    if (totalBytesRead < 100) {
+                        downloadListener.onErrorSize()
+                        return -1
+                    }
                     val progress = (totalBytesRead * 100.0 / responseBody.contentLength()).toInt()
                     downloadListener.onProgress(
                         progress,
@@ -60,4 +64,5 @@ class DownloadResponseBody(
 interface DownloadListener {
     fun onProgress(progress: Int, currSize: Long, totalSize: Long)
     fun onFinish()
+    fun onErrorSize()
 }

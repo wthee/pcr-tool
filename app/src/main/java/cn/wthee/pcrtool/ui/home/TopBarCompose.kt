@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,26 +18,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
@@ -74,7 +68,6 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.joinQQGroup
-import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.workers.ApkDownloadWorker
 
 
@@ -84,28 +77,17 @@ import cn.wthee.pcrtool.workers.ApkDownloadWorker
  */
 @Composable
 fun TopBarCompose(
-    isEditMode: MutableState<Boolean>,
-    noticeViewModel: NoticeViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    isEditMode: Boolean,
+    apkDownloadState: Int,
+    updateApp: AppNotice,
+    isExpanded: Boolean,
+    changeEditMode: () -> Unit,
+    updateApkDownloadState: (Int) -> Unit,
+    updateAppNoticeLayoutState: (Boolean) -> Unit
 ) {
-    //应用更新通知
-    val updateAppFlow = remember {
-        noticeViewModel.updateApp
-    }
-    val updateApp by updateAppFlow.observeAsState(initial = AppNotice())
-    //应用安装包下载状态
-    val downloadState = MainActivity.navViewModel.apkDownloadProgress.observeAsState().value ?: -2
-    //展开布局
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-    LaunchedEffect(updateApp) {
-        if (updateApp.id == -1) {
-            isExpanded = false
-        }
-    }
 
     //Toolbar
-    if (downloadState <= -2) {
+    if (apkDownloadState <= -2) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -122,7 +104,7 @@ fun TopBarCompose(
             )
 
             //数据版本，测试用
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 CaptionText(text = MainActivity.regionType.name)
             }
 
@@ -152,7 +134,7 @@ fun TopBarCompose(
                             size = Dimen.fabIconSize,
                             modifier = Modifier.padding(start = Dimen.smallPadding)
                         ) {
-                            isExpanded = !isExpanded
+                            updateAppNoticeLayoutState(!isExpanded)
                         }
                     }
 
@@ -165,7 +147,7 @@ fun TopBarCompose(
                                 contentColor = colorGreen,
                                 iconSize = Dimen.fabIconSize
                             ) {
-                                isExpanded = !isExpanded
+                                updateAppNoticeLayoutState(true)
                             }
                         } else {
                             MainIcon(
@@ -174,7 +156,7 @@ fun TopBarCompose(
                                 size = Dimen.fabIconSize,
                                 modifier = Modifier.padding(start = Dimen.smallPadding)
                             ) {
-                                isExpanded = !isExpanded
+                                updateAppNoticeLayoutState(!isExpanded)
                             }
                         }
 
@@ -183,11 +165,11 @@ fun TopBarCompose(
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
                 //编辑
                 MainIcon(
-                    data = if (isEditMode.value) MainIconType.OK else MainIconType.EDIT_TOOL,
+                    data = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
                     tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 ) {
-                    isEditMode.value = !isEditMode.value
+                    changeEditMode()
                 }
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
@@ -196,8 +178,12 @@ fun TopBarCompose(
     }
 
     //更新卡片布局
-    ExpandAnimation(visible = isExpanded || updateApp.id == -2 || downloadState > -2) {
-        AppUpdateContent(appNotice = updateApp, downloadState)
+    ExpandAnimation(visible = isExpanded || updateApp.id == -2 || apkDownloadState > -2) {
+        AppUpdateContent(
+            appNotice = updateApp,
+            apkDownloadState = apkDownloadState,
+            updateApkDownloadState = updateApkDownloadState
+        )
     }
 }
 
@@ -205,18 +191,22 @@ fun TopBarCompose(
  * 应用更新内容或异常提示
  */
 @Composable
-private fun AppUpdateContent(appNotice: AppNotice, downloadState: Int) {
-    val downloading = downloadState > -2
+private fun AppUpdateContent(
+    appNotice: AppNotice,
+    apkDownloadState: Int,
+    updateApkDownloadState: (Int) -> Unit
+) {
+    val downloading = apkDownloadState > -2
     //下载、安装状态通知
-    when (downloadState) {
+    when (apkDownloadState) {
         -3 -> {
             ToastUtil.long(stringResource(R.string.download_apk_error))
-            MainActivity.navViewModel.apkDownloadProgress.postValue(-2)
+            updateApkDownloadState(-2)
         }
 
         -4 -> {
             ToastUtil.long(stringResource(R.string.install_apk_error))
-            MainActivity.navViewModel.apkDownloadProgress.postValue(-2)
+            updateApkDownloadState(-2)
         }
     }
 
@@ -240,9 +230,9 @@ private fun AppUpdateContent(appNotice: AppNotice, downloadState: Int) {
             )
             Spacer(modifier = Modifier.weight(1f))
             //下载进度
-            if (downloadState > -1) {
+            if (apkDownloadState > -1) {
                 CaptionText(
-                    text = "$downloadState%",
+                    text = "$apkDownloadState%",
                     modifier = Modifier.padding(
                         top = Dimen.largePadding
                     )
@@ -273,9 +263,9 @@ private fun AppUpdateContent(appNotice: AppNotice, downloadState: Int) {
             if (appNotice.id != -2) {
                 //下载相关
                 if (downloading) {
-                    DownloadingContent(downloadState)
+                    DownloadingContent(apkDownloadState)
                 } else {
-                    UpdateContent(appNotice)
+                    UpdateContent(appNotice, updateApkDownloadState)
                 }
             } else {
                 //异常
@@ -291,9 +281,9 @@ private fun AppUpdateContent(appNotice: AppNotice, downloadState: Int) {
  */
 @Composable
 private fun DownloadingContent(
-    downloadState: Int
+    apkDownloadState: Int
 ) {
-    when (downloadState) {
+    when (apkDownloadState) {
         -1, 100 -> {
             LinearProgressCompose(
                 modifier = Modifier.fillMaxWidth(1 - RATIO_GOLDEN),
@@ -304,7 +294,7 @@ private fun DownloadingContent(
         in 0..99 -> {
             LinearProgressCompose(
                 modifier = Modifier.fillMaxWidth(1 - RATIO_GOLDEN),
-                progress = downloadState / 100f,
+                progress = apkDownloadState / 100f,
                 color = colorGreen
             )
         }
@@ -316,9 +306,11 @@ private fun DownloadingContent(
  */
 @Composable
 private fun UpdateContent(
-    appNotice: AppNotice
+    appNotice: AppNotice,
+    updateApkDownloadState: (Int) -> Unit
 ) {
     val context = LocalContext.current
+    val owner = LocalLifecycleOwner.current
 
     Column(
         modifier = Modifier.padding(
@@ -370,28 +362,26 @@ private fun UpdateContent(
                         end = Dimen.largePadding
                     )
                     .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 //从GitHub下载
                 SubButton(
                     text = stringResource(id = R.string.download_apk_from_github),
-                    modifier = Modifier.weight(1f)
                 ) {
-                    downloadApk(githubReleaseUrl, context)
+                    downloadApk(githubReleaseUrl, context, updateApkDownloadState, owner)
                 }
 
                 MainButton(
                     text = stringResource(id = R.string.download_apk),
                     containerColor = colorGreen,
-                    modifier = Modifier.weight(1f)
                 ) {
                     if (appNotice.url.contains("coolapk")) {
                         //从酷安下载
                         BrowserUtil.open(appNotice.url)
                     } else {
                         //直接从服务器下载
-                        downloadApk(appNotice.url, context)
+                        downloadApk(appNotice.url, context, updateApkDownloadState, owner)
                     }
-
                 }
 
             }
@@ -406,7 +396,9 @@ private fun UpdateContent(
  */
 private fun downloadApk(
     url: String,
-    context: Context
+    context: Context,
+    updateApkDownloadState: (Int) -> Unit,
+    lifecycleOwner: LifecycleOwner
 ) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
         BrowserUtil.open(url)
@@ -430,7 +422,7 @@ private fun downloadApk(
         }
 
         //准备下载
-        MainActivity.navViewModel.apkDownloadProgress.postValue(-1)
+        updateApkDownloadState(-1)
         //下载
         val data = Data.Builder()
             .putString(ApkDownloadWorker.KEY_URL, url)
@@ -439,11 +431,32 @@ private fun downloadApk(
             OneTimeWorkRequestBuilder<ApkDownloadWorker>()
                 .setInputData(data)
                 .build()
-        WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+
+        val workManager = WorkManager.getInstance(MyApplication.context)
+        workManager.enqueueUniqueWork(
             Constants.DOWNLOAD_APK_WORK,
             ExistingWorkPolicy.KEEP,
             updateApkRequest
         )
+
+        //监听下载进度
+        workManager.getWorkInfoByIdLiveData(updateApkRequest.id)
+            .observe(lifecycleOwner) { workInfo: WorkInfo? ->
+                if (workInfo != null) {
+                    when (workInfo.state) {
+                        WorkInfo.State.SUCCEEDED -> {
+                            updateApkDownloadState(-2)
+                        }
+
+                        WorkInfo.State.RUNNING -> {
+                            val value = workInfo.progress.getInt("progress", -1)
+                            updateApkDownloadState(value)
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
     }
 }
 
@@ -538,7 +551,8 @@ private fun AppUpdateContentPreview() {
                 message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
-            22
+            apkDownloadState = 22,
+            updateApkDownloadState = {}
         )
         AppUpdateContent(
             AppNotice(
@@ -548,7 +562,8 @@ private fun AppUpdateContentPreview() {
                 message = "- [BUG] BUG\n- [测试] 测试",
                 file_url = "123"
             ),
-            -2
+            apkDownloadState = -2,
+            updateApkDownloadState = {}
         )
     }
 }

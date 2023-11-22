@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.FabMain
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -84,7 +83,12 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                 }
                 //返回
                 if (!min && showResult) {
-                    FabMain()
+                    MainSmallFab(
+                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.BACK
+                    ) {
+                        navViewModel.showResult.postValue(false)
+                        pvpViewModel.requesting = false
+                    }
                 }
             }
 

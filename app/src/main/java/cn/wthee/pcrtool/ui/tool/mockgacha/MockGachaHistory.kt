@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,11 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
@@ -44,7 +44,6 @@ import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.MockGachaViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -55,9 +54,8 @@ fun MockGachaHistory(
     scrollState: LazyGridState,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
-    //历史记录
-    mockGachaViewModel.getHistory()
-    val historyData = mockGachaViewModel.historyList.observeAsState().value ?: arrayListOf()
+    val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
+
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +63,7 @@ fun MockGachaHistory(
         columns = GridCells.Adaptive(getItemWidth())
     ) {
         items(
-            items = historyData,
+            items = uiState.historyList,
             key = {
                 it.gachaId
             }
@@ -88,7 +86,7 @@ fun MockGachaHistory(
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
-    mockGachaViewModel: MockGachaViewModel? = hiltViewModel(LocalContext.current as ComponentActivity)
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val scope = rememberCoroutineScope()
     val openDialog = remember {
@@ -147,7 +145,7 @@ private fun MockGachaHistoryItem(
                 text = stringResource(id = R.string.go_to_mock)
             ) {
                 scope.launch {
-                    mockGachaViewModel?.gachaId?.postValue(gachaData.gachaId)
+                    mockGachaViewModel.changeGachaId(gachaData.gachaId)
                     //卡池详情
                     val newPickUpList = arrayListOf<GachaUnitInfo>()
                     gachaData.pickUpIds.intArrayList.forEach {
@@ -160,14 +158,10 @@ private fun MockGachaHistoryItem(
                             )
                         )
                     }
-                    mockGachaViewModel?.pickUpList?.postValue(newPickUpList)
-                    mockGachaViewModel?.mockGachaType?.postValue(
-                        MockGachaType.getByValue(
-                            gachaData.gachaType
-                        )
-                    )
+                    mockGachaViewModel.updatePickUpList(newPickUpList)
+                    mockGachaViewModel.changeSelect(gachaData.gachaType)
                     //显示卡池结果
-                    mockGachaViewModel?.showMockGachaResult?.postValue(true)
+                    mockGachaViewModel.changeShowResult(true)
                 }
             }
         }
@@ -218,7 +212,7 @@ private fun MockGachaHistoryItem(
         title = stringResource(id = R.string.title_dialog_delete),
         text = stringResource(id = R.string.tip_delete_gacha),
     ) {
-        mockGachaViewModel?.deleteGachaByGachaId(gachaData.gachaId)
+        mockGachaViewModel.deleteGachaByGachaId(gachaData.gachaId)
     }
 
 }
@@ -235,8 +229,7 @@ private fun MockGachaHistoryItemPreview() {
                 resultUnitIds = "1-2-3-4-5-5-4-3-2-1",
                 resultUnitRaritys = "1-2-3-1-2-3-1-2-3-1",
                 createTime = "2020/01/01 00:00:00"
-            ),
-            mockGachaViewModel = null
+            )
         )
     }
 }

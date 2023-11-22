@@ -12,17 +12,6 @@ object Dimen {
 
     val textElevation = 2.dp
 
-    val fabSize = 40.dp
-
-    val fabIconSize = 26.dp
-
-    val fabMargin = 16.dp
-
-    //endPadding 16 + fabSize + 6
-    val fabMarginEnd = 64.dp
-
-    val textFabMargin = 3.dp
-
     val exSmallPadding = 3.dp
 
     val smallPadding = 4.dp
@@ -32,6 +21,20 @@ object Dimen {
     val largePadding = 14.dp
 
     val commonItemPadding = 6.dp
+
+    val fabSize = 40.dp
+
+    val fabIconSize = 26.dp
+
+    val fabMargin = 16.dp
+
+    val fabMarginEnd = fabMargin + fabSize + mediumPadding
+
+    val fabMarginLargeBottom = fabMargin * 2 + fabSize
+
+    val textFabMargin = 3.dp
+
+    val fabMarginSecondLineEnd = fabMargin + textFabMargin
 
     val smallIconSize = 18.dp
 
@@ -57,15 +60,11 @@ object Dimen {
 
     val homeDataChangeWidth = 100.dp
 
-    val mockGachaTypeChangeWidth = 160.dp
-
     val skillActionMinHeight = 16.dp
 
     val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
-
-    val minSheetHeight = 300.dp
 
     val attrWidth = 165.dp
 
@@ -77,4 +76,5 @@ object Dimen {
 
     val tweetImgHeight = 128.dp
 
+    val indicatorSize = 7.dp
 }

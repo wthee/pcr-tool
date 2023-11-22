@@ -155,7 +155,7 @@ fun enterTransition() = if (animOnFlag) {
         initialScale = 0.86f,
         animationSpec = defaultTween(300)
     ) + slideInVertically(defaultTween(600)) {
-        75
+        55
     } + myFadeIn
 } else {
     noAnimIn()

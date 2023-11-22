@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -36,7 +35,6 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 
@@ -96,8 +94,7 @@ private fun PvpHistoryItem(
     itemData: PvpHistoryData,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit,
-    pvpViewModel: PvpViewModel?,
-    characterViewModel: CharacterViewModel? = hiltViewModel(),
+    pvpViewModel: PvpViewModel?
 ) {
     val scope = rememberCoroutineScope()
     val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
@@ -126,7 +123,7 @@ private fun PvpHistoryItem(
                 scope.launch {
                     pvpViewModel?.pvpResult?.postValue(null)
                     val selectedData =
-                        characterViewModel?.getPvpCharacterByIds(itemData.getDefIds())
+                        pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                     selectedIds?.sortWith(comparePvpCharacterData())
                     navViewModel.selectedPvpData.postValue(selectedIds)
@@ -167,14 +164,12 @@ private fun PvpHistoryItemPreview() {
             false,
             { },
             null,
-            null
         )
         PvpHistoryItem(
             data,
             true,
             { },
             null,
-            null
         )
     }
 }

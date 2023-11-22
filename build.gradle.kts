@@ -4,7 +4,7 @@ plugins {
 }
 
 buildscript {
-    val kotlinVersion by extra("1.9.10")
+    val kotlinVersion by extra("1.9.20")
     val hiltVersion by extra("2.48.1")
 
     repositories {
@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.android.tools.build:gradle:8.1.1")
+        classpath("com.android.tools.build:gradle:8.2.0-rc03")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
 
         // NOTE: Do not place your application dependencies here; they belong

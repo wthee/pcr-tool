@@ -14,5 +14,6 @@ data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "equipment_name") var equipmentName: String = "?",
     @ColumnInfo(name = "description") var description: String = "?",
     @Embedded var attr: Attr = Attr(),
-    @Ignore var isTpLimitAction: Boolean = false
+    @Ignore var isTpLimitAction: Boolean = false,
+    @Ignore var isOtherLimitAction: Boolean = false,
 )

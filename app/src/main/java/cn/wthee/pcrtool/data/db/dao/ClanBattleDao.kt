@@ -37,8 +37,8 @@ interface ClanBattleDao {
             (a.lap_num_from > 1 OR a.clan_battle_id < 1011)
             AND b.release_month IS NOT NULL
             AND 1 = CASE
-            WHEN  0 = :clanId  THEN 1 
-            WHEN  a.clan_battle_id = :clanId  THEN 1 
+            WHEN  0 = :clanBattleId  THEN 1 
+            WHEN  a.clan_battle_id = :clanBattleId  THEN 1 
             END
         GROUP BY 
             a.clan_battle_id 
@@ -47,7 +47,7 @@ interface ClanBattleDao {
             a.lap_num_from
     """
     )
-    suspend fun getAllClanBattleData(clanId: Int): List<ClanBattleInfo>
+    suspend fun getAllClanBattleData(clanBattleId: Int): List<ClanBattleInfo>
 
 
     /**
@@ -72,8 +72,8 @@ interface ClanBattleDao {
             AND enemy_part_ids IS NOT NULL 
             AND phase = :phase
             AND 1 = CASE
-            WHEN  0 = :clanId  THEN 1 
-            WHEN  a.clan_battle_id = :clanId  THEN 1 
+            WHEN  0 = :clanBattleId  THEN 1 
+            WHEN  a.clan_battle_id = :clanBattleId  THEN 1 
             END
         GROUP BY
             a.clan_battle_id, c.enemy_id_1
@@ -82,8 +82,8 @@ interface ClanBattleDao {
     """
     )
     suspend fun getAllClanBattleTargetCount(
-        phase: Int,
-        clanId: Int
+        clanBattleId: Int,
+        phase: Int
     ): List<ClanBattleTargetCountData>
 
 }

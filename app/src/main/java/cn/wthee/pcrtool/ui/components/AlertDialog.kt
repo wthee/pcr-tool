@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.ui.components
 
 import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,17 +9,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
-import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -94,23 +91,14 @@ fun MainAlertDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangePickerCompose(
-    dateRange: MutableState<DateRange>,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    dateRangePickerState: DateRangePickerState,
+    dateRange: DateRange,
+    openDialog: Boolean,
+    changeDialog: (Boolean) -> Unit,
+    changeRange: (DateRange) -> Unit,
 ) {
     val context = LocalContext.current
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
-    val yearRange = getDatePickerYearRange()
-    val dateRangePickerState = rememberDateRangePickerState(yearRange = yearRange)
 
-    //关闭监听
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    if (close) {
-        openDialog = false
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
-    }
 
     //更新日期
     LaunchedEffect(
@@ -124,145 +112,122 @@ fun DateRangePickerCompose(
             endDate = endDate.replace("00:00:00", "23:59:59")
         }
 
-        dateRange.value = DateRange(
-            startDate = startDate ?: "",
-            endDate = endDate ?: ""
+
+        changeRange(
+            DateRange(
+                startDate = startDate ?: "",
+                endDate = endDate ?: ""
+            )
         )
     }
 
-
-    Box(modifier = Modifier.clickClose(openDialog)) {
-        //日期选择布局
-        SmallFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.fabMargin,
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
-                    top = Dimen.largePadding
-                )
-                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                //点击展开布局
-                if (!openDialog) {
-                    VibrateUtil(context).single()
-                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    openDialog = true
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
-            ),
-        ) {
-            if (openDialog) {
-                //日期选择
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.largePadding
-                        )
-                        .imePadding(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    //日期选择
-                    DateRangePicker(
-                        state = dateRangePickerState,
-                        showModeToggle = true,
-                        title = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                //标题
-                                DateRangePickerDefaults.DateRangePickerTitle(
-                                    state = dateRangePickerState,
-                                    modifier = Modifier.padding(Dimen.smallPadding)
-                                )
-
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                //重置选择
-                                if (dateRange.value.hasFilter()) {
-                                    IconTextButton(
-                                        icon = MainIconType.RESET,
-                                        text = stringResource(id = R.string.reset),
-                                    ) {
-                                        dateRange.value = DateRange()
-                                        //重置选择器状态
-                                        dateRangePickerState.setSelection(null, null)
-                                        navViewModel.fabCloseClick.postValue(true)
-                                    }
-                                }
-                            }
-                        },
-                        headline = {
-                            DateRangePickerDefaults.DateRangePickerHeadline(
-                                state = dateRangePickerState,
-                                dateFormatter = DatePickerFormatter(
-                                    selectedDateSkeleton = "yyyy/MM/dd"
-                                ),
-                                modifier = Modifier.padding(Dimen.smallPadding)
-                            )
-                        }
-                    )
-
-                }
+    //日期选择布局
+    SmallFloatingActionButton(
+        modifier = Modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                start = Dimen.fabMargin,
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
+                top = Dimen.largePadding
+            )
+            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            //点击展开布局
+            if (!openDialog) {
+                VibrateUtil(context).single()
+                changeDialog(true)
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog) {
+                Dimen.popupMenuElevation
             } else {
-                //fab
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = if (dateRange.value.hasFilter()) {
-                            MainIconType.DATE_RANGE_PICKED
-                        } else {
-                            MainIconType.DATE_RANGE_NONE
-                        },
-                        size = Dimen.fabIconSize
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog) {
+            //日期选择
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.largePadding
                     )
-                    Text(
-                        text = if (dateRange.value.hasFilter()) {
-                            stringResource(id = R.string.picked_date)
-                        } else {
-                            stringResource(id = R.string.pick_date)
-                        },
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                    .imePadding(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
+            ) {
+                //日期选择
+                DateRangePicker(
+                    state = dateRangePickerState,
+                    showModeToggle = true,
+                    title = {
+                        //标题
+                        MainText(
+                            text = stringResource(id = R.string.filter_by_start_date),
+                            modifier = Modifier.padding(start = Dimen.mediumPadding)
                         )
+                    },
+                    headline = {
+                        DateRangePickerDefaults.DateRangePickerHeadline(
+                            state = dateRangePickerState,
+                            dateFormatter = DatePickerFormatter(
+                                selectedDateSkeleton = "yyyy/MM/dd"
+                            ),
+                            modifier = Modifier.padding(Dimen.smallPadding)
+                        )
+                    }
+                )
+
+            }
+        } else {
+            //fab
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = if (dateRange.hasFilter()) {
+                        MainIconType.DATE_RANGE_PICKED
+                    } else {
+                        MainIconType.DATE_RANGE_NONE
+                    },
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = if (dateRange.hasFilter()) {
+                        stringResource(id = R.string.picked_date)
+                    } else {
+                        stringResource(id = R.string.pick_date)
+                    },
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
                     )
-                }
+                )
             }
         }
     }
-
 }
-
 
 /**
  * 选择RANK范围
  */
 @Composable
 fun RankRangePickerCompose(
-    rank0: MutableState<Int>,
-    rank1: MutableState<Int>,
+    rank0: Int,
+    rank1: Int,
     maxRank: Int,
+    openDialog: MutableState<Boolean>,
     type: RankSelectType = RankSelectType.DEFAULT,
-    navViewModel: NavViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    updateRank: (Int, Int) -> Unit
 ) {
     val context = LocalContext.current
-    var openDialog by remember {
-        mutableStateOf(false)
-    }
 
     val rankList = arrayListOf<Int>()
     for (i in maxRank downTo 1) {
@@ -271,103 +236,95 @@ fun RankRangePickerCompose(
 
     //选择
     val selectIndex0 = remember {
-        mutableIntStateOf(maxRank - rank0.value)
+        mutableIntStateOf(maxRank - rank0)
     }
     val selectIndex1 = remember {
-        mutableIntStateOf(maxRank - rank1.value)
+        mutableIntStateOf(maxRank - rank1)
     }
-
-    rank0.value = maxRank - selectIndex0.intValue
-    rank1.value = maxRank - selectIndex1.intValue
-
+    LaunchedEffect(selectIndex0.intValue, selectIndex1.intValue) {
+        updateRank(maxRank - selectIndex0.intValue, maxRank - selectIndex1.intValue)
+    }
 
     //关闭监听
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    if (close) {
-        openDialog = false
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabCloseClick.postValue(false)
+    BackHandler(openDialog.value) {
+        openDialog.value = false
     }
 
-    Box(modifier = Modifier.clickClose(openDialog)) {
-        //选择布局
-        SmallFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.fabMargin,
-                    end = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                )
-                .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-            shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-            onClick = {
-                //点击展开布局
-                if (!openDialog) {
-                    VibrateUtil(context).single()
-                    navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                    openDialog = true
-                }
-            },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (openDialog) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
+
+    //选择布局
+    SmallFloatingActionButton(
+        modifier = Modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                start = Dimen.fabMarginSecondLineEnd,
+                end = Dimen.fabMarginSecondLineEnd,
+                bottom = Dimen.fabMarginLargeBottom
             ),
-        ) {
-            if (openDialog) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.largePadding
-                        )
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    //当前
-                    MainText(text = stringResource(id = R.string.cur_rank))
-                    RankSelectItem(
-                        selectIndex = selectIndex0,
-                        rankList = rankList,
-                        targetType = RankSelectType.DEFAULT,
-                        currentRank = maxRank - selectIndex0.intValue
-                    )
-                    //目标
-                    MainText(
-                        text = stringResource(id = R.string.target_rank),
-                        modifier = Modifier.padding(top = Dimen.largePadding)
-                    )
-                    RankSelectItem(
-                        selectIndex = selectIndex1,
-                        rankList = rankList,
-                        targetType = type,
-                        currentRank = maxRank - selectIndex0.intValue
-                    )
-                }
+        shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            //点击展开布局
+            if (!openDialog.value) {
+                VibrateUtil(context).single()
+                openDialog.value = true
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (openDialog.value) {
+                Dimen.popupMenuElevation
             } else {
-                //fab
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(start = Dimen.largePadding)
-                ) {
-                    MainIcon(
-                        data = MainIconType.RANK_SELECT,
-                        size = Dimen.fabIconSize
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (openDialog.value) {
+            Column(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.mediumPadding,
+                        vertical = Dimen.largePadding
                     )
-                    Text(
-                        text = stringResource(id = R.string.rank_select),
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(
-                            start = Dimen.mediumPadding, end = Dimen.largePadding
-                        )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                //当前
+                MainText(text = stringResource(id = R.string.cur_rank))
+                RankSelectItem(
+                    selectIndex = selectIndex0,
+                    rankList = rankList,
+                    targetType = RankSelectType.DEFAULT,
+                    currentRank = maxRank - selectIndex0.intValue
+                )
+                //目标
+                MainText(
+                    text = stringResource(id = R.string.target_rank),
+                    modifier = Modifier.padding(top = Dimen.largePadding)
+                )
+                RankSelectItem(
+                    selectIndex = selectIndex1,
+                    rankList = rankList,
+                    targetType = type,
+                    currentRank = maxRank - selectIndex0.intValue
+                )
+            }
+        } else {
+            //fab
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                MainIcon(
+                    data = MainIconType.RANK_SELECT,
+                    size = Dimen.fabIconSize
+                )
+                Text(
+                    text = stringResource(id = R.string.rank_select),
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding, end = Dimen.largePadding
                     )
-                }
+                )
             }
         }
     }
@@ -477,7 +434,7 @@ data class DateRange(
 /**
  * 获取日期选择年份范围
  */
-private fun getDatePickerYearRange(): IntRange {
+fun getDatePickerYearRange(): IntRange {
     val maxYear = getYear()
     return IntRange(2018, maxYear)
 }

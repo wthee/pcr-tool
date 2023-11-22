@@ -8,10 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -19,66 +17,108 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import cn.wthee.pcrtool.data.enums.AllPicsType
-import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterDetail
-import cn.wthee.pcrtool.ui.character.CharacterExtraEquip
-import cn.wthee.pcrtool.ui.character.CharacterList
-import cn.wthee.pcrtool.ui.character.CharacterSkillLoop
-import cn.wthee.pcrtool.ui.character.CharacterStatusCoeCompose
-import cn.wthee.pcrtool.ui.character.CharacterStoryDetail
-import cn.wthee.pcrtool.ui.character.RankCompare
-import cn.wthee.pcrtool.ui.character.RankEquipCount
-import cn.wthee.pcrtool.ui.character.RankEquipList
-import cn.wthee.pcrtool.ui.equip.EquipList
-import cn.wthee.pcrtool.ui.equip.EquipMainInfo
-import cn.wthee.pcrtool.ui.equip.EquipMaterialDetail
-import cn.wthee.pcrtool.ui.equip.EquipUnitList
+import cn.wthee.pcrtool.ui.character.CharacterDetailScreen
+import cn.wthee.pcrtool.ui.character.CharacterExtraEquipScreen
+import cn.wthee.pcrtool.ui.character.CharacterListFilterScreen
+import cn.wthee.pcrtool.ui.character.CharacterListScreen
+import cn.wthee.pcrtool.ui.character.CharacterSkillLoopScreen
+import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
+import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
+import cn.wthee.pcrtool.ui.character.RankCompareScreen
+import cn.wthee.pcrtool.ui.character.RankEquipCountScreen
+import cn.wthee.pcrtool.ui.character.RankEquipListScreen
+import cn.wthee.pcrtool.ui.equip.EquipDetailScreen
+import cn.wthee.pcrtool.ui.equip.EquipListFilterScreen
+import cn.wthee.pcrtool.ui.equip.EquipListScreen
+import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
+import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
-import cn.wthee.pcrtool.ui.skill.SummonDetail
-import cn.wthee.pcrtool.ui.story.StoryPicList
+import cn.wthee.pcrtool.ui.picture.PictureScreen
+import cn.wthee.pcrtool.ui.skill.SkillSummonScreen
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
 import cn.wthee.pcrtool.ui.theme.shapeTop
-import cn.wthee.pcrtool.ui.tool.AllCharacterRankEquipCount
-import cn.wthee.pcrtool.ui.tool.AllSkillList
-import cn.wthee.pcrtool.ui.tool.AllToolMenu
-import cn.wthee.pcrtool.ui.tool.BirthdayList
-import cn.wthee.pcrtool.ui.tool.CalendarEventList
-import cn.wthee.pcrtool.ui.tool.ComicList
-import cn.wthee.pcrtool.ui.tool.FreeGachaList
-import cn.wthee.pcrtool.ui.tool.GachaList
-import cn.wthee.pcrtool.ui.tool.GuildList
-import cn.wthee.pcrtool.ui.tool.LeaderTier
-import cn.wthee.pcrtool.ui.tool.LeaderboardList
+import cn.wthee.pcrtool.ui.tool.AllToolMenuScreen
+import cn.wthee.pcrtool.ui.tool.BirthdayListScreen
+import cn.wthee.pcrtool.ui.tool.CalendarEventListScreen
+import cn.wthee.pcrtool.ui.tool.ComicListScreen
+import cn.wthee.pcrtool.ui.tool.FreeGachaListScreen
+import cn.wthee.pcrtool.ui.tool.GachaListScreen
+import cn.wthee.pcrtool.ui.tool.GuildListScreen
+import cn.wthee.pcrtool.ui.tool.LeaderTierScreen
+import cn.wthee.pcrtool.ui.tool.LeaderboardScreen
 import cn.wthee.pcrtool.ui.tool.MainSettings
-import cn.wthee.pcrtool.ui.tool.NewsList
+import cn.wthee.pcrtool.ui.tool.NewsScreen
 import cn.wthee.pcrtool.ui.tool.TweetList
-import cn.wthee.pcrtool.ui.tool.WebsiteList
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetail
-import cn.wthee.pcrtool.ui.tool.clan.ClanBattleList
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetail
+import cn.wthee.pcrtool.ui.tool.WebsiteScreen
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetailScreen
+import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropList
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropListScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelList
-import cn.wthee.pcrtool.ui.tool.extratravel.ExtraEquipTravelQuestDetail
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipListFilterScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitListScreen
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelDetailScreen
+import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
-import cn.wthee.pcrtool.ui.tool.quest.AllQuestList
-import cn.wthee.pcrtool.ui.tool.quest.RandomEquipArea
+import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
+import cn.wthee.pcrtool.ui.tool.quest.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
-import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventList
-import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipList
+import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
+
+
+//返回上一级
+@OptIn(ExperimentalMaterialApi::class)
+suspend fun navigateUpSheet() {
+    MainActivity.navSheetState.hide()
+}
+
+//返回上一级
+fun navigateUp() {
+    MainActivity.navController.navigateUp()
+}
+
+/**
+ * 设置当前页面数据
+ *
+ * @param prev 设置上一页面数据
+ */
+fun <T> setData(key: String, value: T?, prev: Boolean = false) {
+    if (prev) {
+        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.set(
+            key,
+            value
+        )
+    } else {
+        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.set(
+            key,
+            value
+        )
+    }
+}
+
+/**
+ * 获取当前页面数据
+ */
+fun <T> getData(key: String, prev: Boolean = false): T? {
+    return if (prev) {
+        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
+    } else {
+        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.get<T>(key)
+    }
+}
 
 /**
  * 导航内容
@@ -91,7 +131,6 @@ import com.google.accompanist.navigation.material.bottomSheet
 fun NavGraph(
     bottomSheetNavigator: BottomSheetNavigator,
     navController: NavHostController,
-    viewModel: NavViewModel,
     actions: NavActions,
 ) {
     val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
@@ -117,23 +156,26 @@ fun NavGraph(
             composable(
                 route = NavRoute.HOME
             ) {
-                //从其它页面返回时（非展开设置时），主按钮初始
-                if (navController.currentDestination?.route == NavRoute.HOME
-                    && viewModel.fabMainIcon.value != MainIconType.DOWN
-                ) {
-                    viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                }
-                val scrollState = rememberScrollState()
-                Overview(actions = actions, scrollState = scrollState)
+                Overview(actions = actions)
             }
 
             //角色列表
             composable(
                 route = NavRoute.CHARACTER_LIST
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyGridState()
-                CharacterList(scrollState, actions.toCharacterDetail)
+                CharacterListScreen(
+                    toCharacterDetail =  actions.toCharacterDetail,
+                    toFilterCharacter = actions.toFilterCharacter
+                )
+            }
+            //角色列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_CHARACTER}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                CharacterListFilterScreen()
             }
 
             //角色属性详情
@@ -143,9 +185,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetail(unitId = arguments.getInt(NavRoute.UNIT_ID), actions)
+                CharacterDetailScreen(actions)
             }
 
             //角色图片详情
@@ -157,13 +197,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-
-                StoryPicList(
-                    arguments.getInt(NavRoute.UNIT_ID),
-                    AllPicsType.getByValue(arguments.getInt(NavRoute.ALL_PICS_TYPE))
-                )
+                PictureScreen()
             }
 
             //角色资料
@@ -173,8 +207,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                CharacterBasicInfo(unitId = arguments.getInt(NavRoute.UNIT_ID))
+                CharacterBasicInfo()
             }
 
             //角色剧情属性详情
@@ -184,44 +217,56 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                CharacterStoryDetail(unitId = arguments.getInt(NavRoute.UNIT_ID))
+                CharacterStoryAttrScreen()
             }
 
             //装备列表
             composable(
                 route = NavRoute.EQUIP_LIST
             ) {
-                val scrollState = rememberLazyListState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                EquipList(
-                    scrollState = scrollState,
+                EquipListScreen(
                     toEquipDetail = actions.toEquipDetail,
                     toEquipMaterial = actions.toEquipMaterial,
-                    toSearchEquipQuest = actions.toSearchEquipQuest
+                    toSearchEquipQuest = actions.toSearchEquipQuest,
+                    toFilterEquip = actions.toFilterEquip,
                 )
+            }
+
+            //装备列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_EQUIP}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                EquipListFilterScreen()
             }
 
             //ex装备列表
             composable(
                 route = NavRoute.TOOL_EXTRA_EQUIP
             ) {
-                val scrollState = rememberLazyListState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 ExtraEquipList(
-                    scrollState = scrollState,
-                    toExtraEquipDetail = actions.toExtraEquipDetail
+                    toExtraEquipDetail = actions.toExtraEquipDetail,
+                    toFilterExtraEquip = actions.toFilterExtraEquip,
                 )
+            }
+
+            //ex装备列表筛选
+            bottomSheet(
+                route = "${NavRoute.FILTER_EXTRA_EQUIP}/{${NavRoute.FILTER_DATA}}",
+                arguments = listOf(navArgument(NavRoute.FILTER_DATA) {
+                    type = NavType.StringType
+                })
+            ) {
+                ExtraEquipListFilterScreen()
             }
 
             //ex装备冒险区域
             composable(
                 route = NavRoute.TOOL_TRAVEL_AREA
             ) {
-                val scrollState = rememberLazyListState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ExtraEquipTravelList(
-                    scrollState = scrollState,
+                ExtraTravelListScreen(
                     toExtraEquipTravelAreaDetail = actions.toExtraEquipTravelAreaDetail
                 )
             }
@@ -233,10 +278,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val arguments = requireNotNull(it.arguments)
-                ExtraEquipTravelQuestDetail(
-                    arguments.getInt(NavRoute.TRAVEL_QUEST_ID),
+                ExtraTravelDetailScreen(
                     actions.toExtraEquipDetail
                 )
             }
@@ -248,9 +290,8 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                EquipMainInfo(
+                EquipDetailScreen(
                     arguments.getInt(NavRoute.EQUIP_ID),
                     toEquipMaterial = actions.toEquipMaterial,
                     toEquipUnit = actions.toEquipUnit
@@ -264,8 +305,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                EquipUnitList(equipId = arguments.getInt(NavRoute.EQUIP_ID))
+                EquipUnitListScreen()
             }
 
             //ex装备详情
@@ -275,7 +315,6 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
                 ExtraEquipDetail(
                     equipId = arguments.getInt(NavRoute.EQUIP_ID),
@@ -291,8 +330,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                ExtraEquipUnitList(category = arguments.getInt(NavRoute.EXTRA_EQUIP_CATEGORY))
+                ExtraEquipUnitListScreen()
             }
 
             //ex装备掉落信息
@@ -303,18 +341,19 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ExtraEquipDropList(equipId = arguments.getInt(NavRoute.EQUIP_ID))
+                ExtraEquipDropListScreen(equipId = arguments.getInt(NavRoute.EQUIP_ID))
             }
 
             //装备素材详情
             bottomSheet(
-                route = "${NavRoute.EQUIP_MATERIAL}/{${NavRoute.EQUIP_ID}}",
+                route = "${NavRoute.EQUIP_MATERIAL}/{${NavRoute.EQUIP_ID}}/{${NavRoute.EQUIP_NAME}}",
                 arguments = listOf(navArgument(NavRoute.EQUIP_ID) {
                     type = NavType.IntType
+                }, navArgument(NavRoute.EQUIP_NAME) {
+                    type = NavType.StringType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                EquipMaterialDetail(arguments.getInt(NavRoute.EQUIP_ID))
+                EquipMaterialDropInfoScreen()
             }
 
             //角色 RANK 装备
@@ -326,11 +365,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankEquipList(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    currentRank = arguments.getInt(NavRoute.RANK)
-                )
+                RankEquipListScreen()
             }
 
             //角色 RANK 对比
@@ -350,15 +385,7 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankCompare(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    maxRank = arguments.getInt(NavRoute.MAX_RANK),
-                    level = arguments.getInt(NavRoute.LEVEL),
-                    rarity = arguments.getInt(NavRoute.RARITY),
-                    uniqueEquipLevel = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL),
-                    uniqueEquipLevel2 = arguments.getInt(NavRoute.UNIQUE_EQUIP_LEVEL2)
-                )
+                RankCompareScreen()
             }
 
             //角色ex装备列表
@@ -368,28 +395,28 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                val scrollState = rememberLazyListState()
-                val arguments = requireNotNull(it.arguments)
-                CharacterExtraEquip(
-                    scrollState = scrollState,
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
+                CharacterExtraEquipScreen(
                     toExtraEquipDetail = actions.toExtraEquipDetail
                 )
             }
 
             //角色装备统计
             composable(
-                route = "${NavRoute.EQUIP_COUNT}/{${NavRoute.UNIT_ID}}/{${NavRoute.MAX_RANK}}",
+                route = "${NavRoute.EQUIP_COUNT}/{${NavRoute.UNIT_ID}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.MAX_RANK) {
                     type = NavType.IntType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                RankEquipCount(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    maxRank = arguments.getInt(NavRoute.MAX_RANK),
+                RankEquipCountScreen(
+                    actions.toEquipMaterial
+                )
+            }
+
+            //全角色装备统计
+            composable(
+                route = NavRoute.ALL_EQUIP
+            ) {
+                RankEquipCountScreen(
                     actions.toEquipMaterial
                 )
             }
@@ -398,46 +425,35 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_LEADER
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                LeaderboardList(scrollState, actions.toCharacterDetail)
+                LeaderboardScreen(actions.toCharacterDetail)
             }
 
             //角色排行评级
             composable(
                 route = NavRoute.TOOL_LEADER_TIER
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                LeaderTier(scrollState, actions.toCharacterDetail)
+                LeaderTierScreen(actions.toCharacterDetail)
             }
 
             //角色卡池
             composable(
                 route = NavRoute.TOOL_GACHA
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                GachaList(scrollState, actions.toCharacterDetail, actions.toMockGacha)
+                GachaListScreen(actions.toCharacterDetail, actions.toMockGacha)
             }
 
             //免费十连
             composable(
                 route = NavRoute.TOOL_FREE_GACHA
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                FreeGachaList(scrollState)
+                FreeGachaListScreen()
             }
 
             //剧情活动
             composable(
                 route = NavRoute.TOOL_STORY_EVENT
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                StoryEventList(
-                    scrollState = scrollState,
+                StoryEventListScreen(
                     toCharacterDetail = actions.toCharacterDetail,
                     toEventEnemyDetail = actions.toEventEnemyDetail,
                     toAllPics = actions.toAllPics
@@ -448,18 +464,14 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_GUILD
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyStaggeredGridState()
-                GuildList(scrollState, actions.toCharacterDetail)
+                GuildListScreen(actions.toCharacterDetail)
             }
 
             //公会战
             composable(
                 route = NavRoute.TOOL_CLAN,
             ) {
-                val scrollState = rememberLazyGridState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ClanBattleList(scrollState, actions.toClanBossInfo)
+                ClanBattleListScreen(actions.toClanBossInfo)
             }
 
             //公会战详情
@@ -476,12 +488,8 @@ fun NavGraph(
                 }),
             ) {
                 val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ClanBattleDetail(
-                    arguments.getInt(NavRoute.TOOL_CLAN_Battle_ID),
+                ClanBattleDetailScreen(
                     arguments.getInt(NavRoute.TOOL_CLAN_BOSS_INDEX),
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE),
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE),
                     actions.toSummonDetail
                 )
             }
@@ -513,7 +521,6 @@ fun NavGraph(
             bottomSheet(
                 route = NavRoute.MAIN_SETTINGS
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 MainSettings()
             }
 
@@ -521,15 +528,13 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_NEWS
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                NewsList()
+                NewsScreen()
             }
 
             //推特信息
             composable(
                 route = NavRoute.TWEET
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 TweetList()
             }
 
@@ -537,25 +542,14 @@ fun NavGraph(
             composable(
                 route = NavRoute.COMIC
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ComicList()
-            }
-
-
-            //技能列表
-            composable(
-                route = NavRoute.ALL_SKILL
-            ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                AllSkillList(actions.toSummonDetail)
+                ComicListScreen()
             }
 
             //战力系数
             bottomSheet(
                 route = NavRoute.ATTR_COE
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterStatusCoeCompose()
+                CharacterStatusCoeScreen()
             }
 
             //召唤物信息
@@ -574,8 +568,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                SummonDetail(
+                SkillSummonScreen(
                     id = arguments.getInt(NavRoute.UNIT_ID),
                     unitType = UnitType.getByValue(arguments.getInt(NavRoute.UNIT_TYPE)),
                     level = arguments.getInt(NavRoute.LEVEL),
@@ -592,15 +585,10 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                CharacterSkillLoop(unitId = arguments.getInt(NavRoute.UNIT_ID), scrollable = true)
-            }
-
-            //所有角色所需装备统计
-            composable(
-                route = NavRoute.ALL_EQUIP
-            ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                AllCharacterRankEquipCount(actions.toEquipMaterial)
+                CharacterSkillLoopScreen(
+                    unitId = arguments.getInt(NavRoute.UNIT_ID),
+                    scrollable = true
+                )
             }
 
             //额外随机装备掉落地区
@@ -610,11 +598,9 @@ fun NavGraph(
                     type = NavType.IntType
                 }),
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
                 val arguments = requireNotNull(it.arguments)
-                RandomEquipArea(
-                    arguments.getInt(NavRoute.EQUIP_ID), scrollState
+                RandomDropAreaListScreen(
+                    arguments.getInt(NavRoute.EQUIP_ID)
                 )
             }
 
@@ -626,18 +612,15 @@ fun NavGraph(
                 }),
             ) {
                 val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                val scrollState = rememberLazyListState()
-                AllToolMenu(
-                    arguments.getBoolean(NavRoute.TOOL_MORE_EDIT_MODE), scrollState, actions
+                AllToolMenuScreen(
+                    arguments.getBoolean(NavRoute.TOOL_MORE_EDIT_MODE), actions
                 )
             }
 
             //模拟抽卡
             composable(
-                route = NavRoute.TOOL_MOCK_GACHA
+                route = NavRoute.TOOL_MOCK_GACHA,
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 MockGacha()
             }
 
@@ -645,18 +628,14 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_BIRTHDAY
             ) {
-                val scrollState = rememberLazyStaggeredGridState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                BirthdayList(scrollState, actions.toCharacterDetail)
+                BirthdayListScreen(actions.toCharacterDetail)
             }
 
             //日程
             composable(
                 route = NavRoute.TOOL_CALENDAR_EVENT
             ) {
-                val scrollState = rememberLazyStaggeredGridState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CalendarEventList(scrollState)
+                CalendarEventListScreen()
             }
 
             //怪物详情信息
@@ -666,9 +645,8 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
-                EnemyDetail(
+                EnemyDetailScreen(
                     arguments.getInt(NavRoute.ENEMY_ID),
                     actions.toSummonDetail
                 )
@@ -681,7 +659,6 @@ fun NavGraph(
                     type = NavType.IntType
                 })
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 val arguments = requireNotNull(it.arguments)
                 StoryEventBossDetail(
                     arguments.getInt(NavRoute.ENEMY_ID),
@@ -693,17 +670,14 @@ fun NavGraph(
             composable(
                 route = NavRoute.PCR_WEBSITE
             ) {
-                val scrollState = rememberLazyListState()
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                WebsiteList(scrollState)
+                WebsiteScreen()
             }
 
             //主线地图
             composable(
                 route = NavRoute.TOOL_ALL_QUEST
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                AllQuestList()
+                QuestListScreen()
             }
 
             //装备掉落搜索
@@ -714,7 +688,7 @@ fun NavGraph(
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                AllQuestList(
+                QuestListScreen(
                     searchEquipIds = arguments.getString(NavRoute.SEARCH_EQUIP_IDS) ?: ""
                 )
             }
@@ -723,26 +697,21 @@ fun NavGraph(
             composable(
                 route = NavRoute.UNIQUE_EQUIP_LIST
             ) {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                UniqueEquipList(
+                UniqueEquipListScreen(
                     toUniqueEquipDetail = actions.toUniqueEquipDetail
                 )
             }
 
             //专用装备属性详情
             composable(
-                route = "${NavRoute.UNIQUE_EQUIP_DETAIL}/{${NavRoute.UNIT_ID}}",
+                route = "${NavRoute.UNIQUE_EQUIP_DETAIL}/{${NavRoute.UNIT_ID}}/{${NavRoute.SHOW_ALL_INFO}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
                     type = NavType.IntType
+                }, navArgument(NavRoute.SHOW_ALL_INFO) {
+                    type = NavType.BoolType
                 })
             ) {
-                val arguments = requireNotNull(it.arguments)
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                CharacterDetail(
-                    unitId = arguments.getInt(NavRoute.UNIT_ID),
-                    actions,
-                    showAllInfo = false
-                )
+                CharacterDetailScreen(actions)
             }
         }
     }
@@ -812,8 +781,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 装备素材详情
      */
-    val toEquipMaterial: (Int) -> Unit = { equipId: Int ->
-        navController.navigate("${NavRoute.EQUIP_MATERIAL}/${equipId}")
+    val toEquipMaterial: (Int, String) -> Unit = { equipId, equipName ->
+        navController.navigate("${NavRoute.EQUIP_MATERIAL}/${equipId}/${equipName}")
     }
 
     /**
@@ -857,8 +826,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 角装备统计
      */
-    val toCharacterEquipCount: (Int, Int) -> Unit = { unitId: Int, maxRank: Int ->
-        navController.navigate("${NavRoute.EQUIP_COUNT}/${unitId}/${maxRank}")
+    val toCharacterEquipCount: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${NavRoute.EQUIP_COUNT}/${unitId}")
     }
 
 
@@ -1093,7 +1062,27 @@ class NavActions(navController: NavHostController) {
      * 专用装备详情
      */
     val toUniqueEquipDetail: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}")
+        navController.navigate("${NavRoute.UNIQUE_EQUIP_DETAIL}/${unitId}/${false}")
     }
 
+    /**
+     * 角色筛选
+     */
+    val toFilterCharacter: (String) -> Unit = { filter ->
+        navController.navigate("${NavRoute.FILTER_CHARACTER}/${filter}")
+    }
+
+    /**
+     * 装备筛选
+     */
+    val toFilterEquip: (String) -> Unit = { filter ->
+        navController.navigate("${NavRoute.FILTER_EQUIP}/${filter}")
+    }
+
+    /**
+     * ex装备筛选
+     */
+    val toFilterExtraEquip: (String) -> Unit = { filter ->
+        navController.navigate("${NavRoute.FILTER_EXTRA_EQUIP}/${filter}")
+    }
 }

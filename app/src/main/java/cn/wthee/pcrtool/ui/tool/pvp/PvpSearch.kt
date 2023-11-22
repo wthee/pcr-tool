@@ -4,8 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,10 +45,12 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
@@ -60,7 +62,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.spanCount
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -89,7 +90,6 @@ fun PvpSearchCompose(
     favoritesListState: LazyGridState,
     historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
-    characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
@@ -99,7 +99,7 @@ fun PvpSearchCompose(
 
     //获取数据
     val characterDataListFlow = remember {
-        characterViewModel.getAllCharacter()
+        pvpViewModel.getAllCharacter()
     }
     val characterDataList by characterDataListFlow.collectAsState(initial = arrayListOf())
     //显示类型
@@ -107,18 +107,10 @@ fun PvpSearchCompose(
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
 
-    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
 
-    if (showResult) {
-        navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-    } else {
-        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-    }
-
-    //返回选择
-    if (close) {
+    //返回拦截
+    BackHandler(showResult) {
         navViewModel.showResult.postValue(false)
-        navViewModel.fabCloseClick.postValue(false)
         pvpViewModel.requesting = false
     }
 
@@ -133,11 +125,64 @@ fun PvpSearchCompose(
     val spanCount = if (initSpanCount == 0) normalSize.spanCount else initSpanCount
 
 
+    MainScaffold(
+        hideMainFab = floatWindow,
+        mainFabIcon = if (showResult) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (showResult) {
+                navViewModel.showResult.postValue(false)
+                pvpViewModel.requesting = false
+            } else {
+                navigateUp()
+            }
+        },
+        fab = {
+            //底部悬浮按钮
+            if (!showResult && !floatWindow) {
+                //悬浮窗
+                MainSmallFab(
+                    iconType = MainIconType.FLOAT
+                ) {
+                    val homeIntent = Intent(Intent.ACTION_MAIN)
+                    homeIntent.addCategory(Intent.CATEGORY_HOME)
+                    if (Settings.canDrawOverlays(context)) {
+                        //启动悬浮服务
+                        val serviceIntent = Intent(context, PvpFloatService::class.java)
+                        navViewModel.floatServiceRun.postValue(true)
+                        context.stopService(serviceIntent)
+                        context.startActivity(homeIntent)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(serviceIntent)
+                        } else {
+                            context.startService(serviceIntent)
+                        }
+                    } else {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${MyApplication.context.packageName}")
+                        )
+                        context.startActivity(intent)
+                    }
+                }
+                //查询
+                MainSmallFab(
+                    iconType = MainIconType.PVP_SEARCH,
+                    text = stringResource(id = R.string.pvp_search)
+                ) {
+                    //查询
+                    try {
+                        scope.launch {
+                            resultListState.scrollToItem(0)
+                        }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+                    } catch (_: Exception) {
+
+                    }
+                    pvpViewModel.pvpResult.postValue(null)
+                    navViewModel.showResult.postValue(true)
+                }
+            }
+        }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             //标题
@@ -257,60 +302,6 @@ fun PvpSearchCompose(
                             )
                         }
                     }
-                }
-            }
-        }
-        //底部悬浮按钮
-        if (!showResult && !floatWindow) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(
-                        end = Dimen.fabMarginEnd,
-                        bottom = Dimen.fabMargin
-                    )
-            ) {
-                //悬浮窗
-                MainSmallFab(
-                    iconType = MainIconType.FLOAT
-                ) {
-                    val homeIntent = Intent(Intent.ACTION_MAIN)
-                    homeIntent.addCategory(Intent.CATEGORY_HOME)
-                    if (Settings.canDrawOverlays(context)) {
-                        //启动悬浮服务
-                        val serviceIntent = Intent(context, PvpFloatService::class.java)
-                        navViewModel.floatServiceRun.postValue(true)
-                        context.stopService(serviceIntent)
-                        context.startActivity(homeIntent)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            context.startForegroundService(serviceIntent)
-                        } else {
-                            context.startService(serviceIntent)
-                        }
-                    } else {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${MyApplication.context.packageName}")
-                        )
-                        context.startActivity(intent)
-                    }
-                }
-                //查询
-                MainSmallFab(
-                    iconType = MainIconType.PVP_SEARCH,
-                    text = stringResource(id = R.string.pvp_search)
-                ) {
-                    //查询
-                    try {
-                        scope.launch {
-                            resultListState.scrollToItem(0)
-                        }
-
-                    } catch (_: Exception) {
-
-                    }
-                    pvpViewModel.pvpResult.postValue(null)
-                    navViewModel.showResult.postValue(true)
                 }
             }
         }

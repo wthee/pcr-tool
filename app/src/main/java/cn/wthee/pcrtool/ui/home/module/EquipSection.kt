@@ -4,29 +4,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
-import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.spanCount
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import kotlin.math.max
 
 
@@ -35,32 +29,37 @@ import kotlin.math.max
  */
 @Composable
 fun EquipSection(
-    actions: NavActions,
+    updateOrderData: (Int) -> Unit,
+    toEquipList: () -> Unit,
+    toEquipDetail: (Int) -> Unit,
     isEditMode: Boolean,
     orderStr: String,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    equipSectionViewModel: EquipSectionViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val id = OverviewType.EQUIP.id
+    val uiState by equipSectionViewModel.uiState.collectAsStateWithLifecycle()
+
     val equipSpanCount = max(
         1,
         (Dimen.iconSize + Dimen.largePadding * 2).spanCount
     )
+
+    LaunchedEffect(equipSpanCount) {
+        equipSectionViewModel.loadData(equipSpanCount)
+    }
+
     //装备总数
-    val equipCountFlow = remember {
-        overviewViewModel.getEquipCount()
-    }
-    val equipCount by equipCountFlow.collectAsState(initial = 0)
+    val equipCount = uiState.equipCount
     //装备列表
-    val equipListFlow = remember(equipSpanCount) {
-        overviewViewModel.getEquipList(equipSpanCount * 2)
-    }
     val initList = arrayListOf<EquipmentBasicInfo>()
     for (i in 1..equipSpanCount) {
         initList.add(EquipmentBasicInfo())
     }
-    val equipList by equipListFlow.collectAsState(initial = initList)
+    val equipList = if (uiState.equipList == null) {
+        initList
+    } else {
+        uiState.equipList
+    }
 
 
     Section(
@@ -73,21 +72,16 @@ fun EquipSection(
         orderStr = orderStr,
         onClick = {
             if (isEditMode) {
-                editOrder(
-                    context,
-                    scope,
-                    id,
-                    MainPreferencesKeys.SP_OVERVIEW_ORDER
-                )
+                updateOrderData(id)
             } else {
-                actions.toEquipList()
+                toEquipList()
             }
         }
     ) {
         VerticalGrid(
             itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
-            if (equipList.isNotEmpty()) {
+            if (equipList?.isNotEmpty() == true) {
                 equipList.forEach {
                     val placeholder = it.equipmentId == ImageRequestHelper.UNKNOWN_EQUIP_ID
                     Box(
@@ -102,7 +96,7 @@ fun EquipSection(
                             modifier = Modifier.commonPlaceholder(placeholder)
                         ) {
                             if (!placeholder) {
-                                actions.toEquipDetail(it.equipmentId)
+                                toEquipDetail(it.equipmentId)
                             }
                         }
                     }

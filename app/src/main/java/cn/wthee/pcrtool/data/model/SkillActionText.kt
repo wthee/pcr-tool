@@ -12,7 +12,8 @@ data class SkillActionText(
     val showCoe: Boolean,
     val level: Int,
     val atk: Int,
-    val isTpLimitAction: Boolean
+    val isTpLimitAction: Boolean,
+    val isOtherLimitAction: Boolean,
 ) {
     var debugText = ""
 }

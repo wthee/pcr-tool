@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.ExtraEquipmentDao
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
+import cn.wthee.pcrtool.utils.LogReportUtil
 import javax.inject.Inject
 
 /**
@@ -11,10 +12,15 @@ import javax.inject.Inject
  */
 class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: ExtraEquipmentDao) {
 
-    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfo(equipId)
+    suspend fun getEquipmentData(equipId: Int) = try {
+        equipmentDao.getEquipInfo(equipId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipmentData#equipId:$equipId")
+        null
+    }
 
-    suspend fun getEquipments(filter: FilterExtraEquipment, limit: Int) = try {
-        equipmentDao.getEquipments(
+    suspend fun getEquipmentList(filter: FilterExtraEquipment, limit: Int) = try {
+        val filterList = equipmentDao.getEquipments(
             filter.flag,
             filter.rarity,
             filter.name,
@@ -24,10 +30,17 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
                 //全部
                 else -> 0
             },
-            if (filter.all) 1 else 0,
-            filter.starIds,
             limit
         )
+        if (filter.all) {
+            filterList
+        } else {
+            //筛选收藏的
+            val starIdList = FilterExtraEquipment.getStarIdList()
+            filterList.filter {
+                starIdList.contains(it.equipmentId)
+            }
+        }
     } catch (_: Exception) {
         null
     }
@@ -45,9 +58,17 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
         arrayListOf()
     }
 
-    suspend fun getEquipUnitList(category: Int) = equipmentDao.getEquipUnitList(category)
+    suspend fun getEquipUnitList(category: Int) = try {
+        equipmentDao.getEquipUnitList(category)
+    } catch (_: Exception) {
+        emptyList()
+    }
 
-    suspend fun getDropQuestList(equipId: Int) = equipmentDao.getDropQuestList(equipId)
+    suspend fun getDropQuestList(equipId: Int) = try {
+        equipmentDao.getDropQuestList(equipId)
+    } catch (_: Exception) {
+        null
+    }
 
     suspend fun getSubRewardList(questId: Int) = equipmentDao.getSubRewardList(questId)
 

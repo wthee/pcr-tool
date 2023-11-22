@@ -59,8 +59,6 @@ interface EquipmentDao {
      * @param craft -1：全部，0：素材：1：装备
      * @param colorType 装备品级
      * @param name 装备名称
-     * @param showAll 0: 仅收藏，1：全部
-     * @param starIds 收藏的装备编号
      */
     @SkipQueryVerification
     @Transaction
@@ -74,12 +72,7 @@ interface EquipmentDao {
             a.require_level
         FROM
             equipment_data AS a
-        WHERE a.equipment_name like '%' || :name || '%' 
-            AND (
-                (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-                OR 
-                (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-            )
+        WHERE a.equipment_name like '%' || :name || '%'
             AND a.equipment_id < 140000
             AND 1 = CASE
                 WHEN  0 = :colorType  THEN 1 
@@ -93,12 +86,10 @@ interface EquipmentDao {
         LIMIT :limit
     """
     )
-    suspend fun getEquipments(
+    suspend fun getEquipmentList(
         craft: Int,
         colorType: Int,
         name: String,
-        showAll: Int,
-        starIds: List<Int>,
         limit: Int
     ): List<EquipmentBasicInfo>
 
@@ -278,10 +269,10 @@ interface EquipmentDao {
         FROM
             unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equip AS r ON r.equip_id = a.equipment_id
-        WHERE r.unit_id = :unitId AND a.min_lv = 261
+        WHERE r.unit_id = :unitId AND a.min_lv = :minLv + 1
     """
     )
-    suspend fun getUniqueEquipBonus(unitId: Int, lv: Int): Attr?
+    suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int): Attr?
 
     /**
      * 获取专武信息（等级大于260）
@@ -312,10 +303,10 @@ interface EquipmentDao {
         FROM
             unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equipment AS r ON r.equip_id = a.equipment_id
-        WHERE r.unit_id = :unitId AND a.min_lv = 261
+        WHERE r.unit_id = :unitId AND a.min_lv = :minLv + 1
     """
     )
-    suspend fun getUniqueEquipBonusV2(unitId: Int, lv: Int): Attr?
+    suspend fun getUniqueEquipBonusV2(unitId: Int, lv: Int, minLv: Int): Attr?
 
     /**
      * 根获取专武最大强化等级
@@ -420,7 +411,7 @@ interface EquipmentDao {
      */
     @SkipQueryVerification
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
-    suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
+    suspend fun getRankEquipList(unitId: Int): List<UnitPromotion>
 
     /**
      * 获取已开放的最新区域

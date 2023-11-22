@@ -6,7 +6,7 @@ import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
@@ -51,9 +51,7 @@ interface UnitDao {
      * @param pos2 站位范围结束
      * @param atkType 0:全部，1：物理，2：魔法
      * @param guildId 角色所属公会id
-     * @param showAll 0：仅收藏，1：全部
      * @param r6 0：全部，1：仅六星解放
-     * @param starIds 收藏的角色编号
      * @param type 获取类型
      * @param exUnitIdList 额外角色编号
      */
@@ -99,11 +97,6 @@ interface UnitDao {
             unit_data.unit_name like '%' || :unitName || '%'
         AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
-        AND (
-            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
         AND 1 = CASE
             WHEN  0 = :r6  THEN 1
             WHEN  r6Id != 0 AND 1 = :r6  THEN 1 
@@ -153,7 +146,7 @@ interface UnitDao {
     )
     suspend fun getCharacterInfoList(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guildId: Int, showAll: Int, r6: Int, starIds: List<Int>,
+        atkType: Int, guildId: Int, r6: Int,
         type: Int, limit: Int, exUnitIdList: List<Int>, raceName: String
     ): List<CharacterInfo>
 
@@ -274,7 +267,7 @@ interface UnitDao {
             unit_profile.unit_id = :unitId 
         GROUP BY unit_profile.unit_id """
     )
-    suspend fun getInfoPro(unitId: Int): CharacterInfoPro?
+    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo?
 
     /**
      * 获取角色小屋对话
@@ -532,7 +525,7 @@ interface UnitDao {
         WHERE b.unit_id = :unitId
     """
     )
-    suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
+    suspend fun getCharacterStoryAttrList(unitId: Int): List<CharacterStoryAttr>
 
     /**
      * 获取角色最大等级

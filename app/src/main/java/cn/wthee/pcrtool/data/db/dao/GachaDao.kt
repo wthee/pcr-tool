@@ -71,5 +71,5 @@ interface GachaDao {
         LIMIT 0, 1
     """
     )
-    suspend fun getFesUnitIds(): GachaFesUnitInfo
+    suspend fun getFesUnitIdList(): GachaFesUnitInfo
 }

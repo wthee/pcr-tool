@@ -1,13 +1,15 @@
 package cn.wthee.pcrtool.ui.theme
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.MainActivity
 
@@ -90,15 +92,21 @@ fun PCRToolComposeTheme(
 /**
  * 预览正常、深色模式
  */
+//@Preview(
+//    name = "dark theme",
+//    group = "dark",
+//    uiMode = UI_MODE_NIGHT_YES,
+//    showBackground = true
+//)
 @Preview(
-    name = "dark theme",
-    group = "themes",
-    uiMode = UI_MODE_NIGHT_YES,
+    name = "normal",
+    group = "light",
     showBackground = true
 )
 @Preview(
-    name = "normal",
-    group = "themes",
+    name = "tablet",
+    group = "tablet",
+    device = Devices.TABLET,
     showBackground = true
 )
 annotation class CombinedPreviews
@@ -107,11 +115,14 @@ annotation class CombinedPreviews
  * 预览
  */
 @Composable
-fun PreviewLayout(content: @Composable () -> Unit) {
+fun PreviewLayout(
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit
+) {
     val dynamicColor =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
 
-    Column {
+    Column(horizontalAlignment = horizontalAlignment) {
         //正常主题
         MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
             Column {
@@ -119,19 +130,19 @@ fun PreviewLayout(content: @Composable () -> Unit) {
             }
         }
         //动态色彩主题
-        MaterialTheme(
-            if (dynamicColor && isSystemInDarkTheme()) {
-                dynamicDarkColorScheme(LocalContext.current)
-            } else if (dynamicColor) {
-                dynamicLightColorScheme(LocalContext.current)
-            } else {
-                LightColorPalette
-            }
-        ) {
-            Column {
-                content()
-            }
-        }
+//        MaterialTheme(
+//            if (dynamicColor && isSystemInDarkTheme()) {
+//                dynamicDarkColorScheme(LocalContext.current)
+//            } else if (dynamicColor) {
+//                dynamicLightColorScheme(LocalContext.current)
+//            } else {
+//                LightColorPalette
+//            }
+//        ) {
+//            Column {
+//                content()
+//            }
+//        }
     }
 
 }
