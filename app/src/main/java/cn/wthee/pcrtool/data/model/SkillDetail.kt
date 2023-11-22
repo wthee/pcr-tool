@@ -52,17 +52,20 @@ data class SkillDetail(
     fun getActionIndexWithCoe(): ArrayList<ShowCoe> {
         val list = arrayListOf<ShowCoe>()
         try {
-            actions.forEachIndexed { index, skillActionPro ->
-                skillActionPro.getActionDesc().let { actionDesc ->
-                    if (actionDesc.showCoe) {
-                        val coe = Regex("\\{.\\}").findAll(actionDesc.action).first().value
-                        list.add(ShowCoe(index, 0, coe))
-                        val actionText = getString(R.string.skill_action)
-                        Regex("${actionText}\\(.\\)").findAll(actionDesc.action).forEach { result ->
-                            val next = result.value.substring(3, 4).toInt() - 1
-                            list.add(ShowCoe(next, 1, coe))
-                        }
-                    }
+             actions.forEachIndexed { index, skillActionPro ->
+                 skillActionPro.getActionDesc().let { actionDesc ->
+                     if (actionDesc.showCoe) {
+                         val coe = Regex("\\{.\\}").findAll(actionDesc.action).firstOrNull()?.value
+                         coe?.let {
+                             list.add(ShowCoe(index, 0, coe))
+                             val actionText = getString(R.string.skill_action)
+                             Regex("${actionText}\\(.\\)").findAll(actionDesc.action)
+                                 .forEach { result ->
+                                     val next = result.value.substring(3, 4).toInt() - 1
+                                     list.add(ShowCoe(next, 1, coe))
+                                 }
+                         }
+                     }
                 }
             }
         } catch (e: Exception) {
@@ -74,6 +77,11 @@ data class SkillDetail(
 
 }
 
+/**
+ * @param actionIndex 动作下标
+ * @param type 类型0表达式中系数，如<{1}100+10*攻击力>、1描述中的系数，如：动作(1)的系数{1}
+ * @param coe 系数
+ */
 data class ShowCoe(
     val actionIndex: Int,
     val type: Int,
