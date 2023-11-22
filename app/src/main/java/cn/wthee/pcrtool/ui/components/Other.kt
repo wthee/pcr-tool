@@ -1011,9 +1011,12 @@ fun CharacterTag(
 fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    DisposableEffect(lifecycleOwner) {
+    DisposableEffect(lifecycleOwner, firstLoad) {
         var recreate = false
         val observer = LifecycleEventObserver { _, e ->
+            if (e == Lifecycle.Event.ON_PAUSE) {
+                recreate = false
+            }
             if (e == Lifecycle.Event.ON_CREATE) {
                 recreate = true
             }
