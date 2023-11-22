@@ -111,7 +111,7 @@ dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.preference:preference-ktx:1.2.0")
@@ -135,7 +135,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
-    implementation("androidx.browser:browser:1.6.0")
+    implementation("androidx.browser:browser:1.7.0")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9.2")
@@ -145,12 +145,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha05")
+    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha06")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-rc01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //Lifecycle
     val lifecycleVersion = "2.6.2"
