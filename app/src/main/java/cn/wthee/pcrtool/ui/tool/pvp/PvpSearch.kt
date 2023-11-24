@@ -27,10 +27,8 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -62,7 +61,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.spanCount
-import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -96,12 +94,10 @@ fun PvpSearchCompose(
     val context = LocalContext.current
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
     val tip = stringResource(id = R.string.tip_select_5)
+    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
 
     //获取数据
-    val characterDataListFlow = remember {
-        pvpViewModel.getAllCharacter()
-    }
-    val characterDataList by characterDataListFlow.collectAsState(initial = arrayListOf())
+    val characterDataList = uiState.allUnitList
     //显示类型
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
@@ -111,7 +107,7 @@ fun PvpSearchCompose(
     //返回拦截
     BackHandler(showResult) {
         navViewModel.showResult.postValue(false)
-        pvpViewModel.requesting = false
+        pvpViewModel.changeRequesting(false)
     }
 
     val tabs = arrayListOf(
@@ -131,7 +127,7 @@ fun PvpSearchCompose(
         onMainFabClick = {
             if (showResult) {
                 navViewModel.showResult.postValue(false)
-                pvpViewModel.requesting = false
+                pvpViewModel.changeRequesting(false)
             } else {
                 navigateUp()
             }
@@ -178,7 +174,7 @@ fun PvpSearchCompose(
                     } catch (_: Exception) {
 
                     }
-                    pvpViewModel.pvpResult.postValue(null)
+                    pvpViewModel.resetResult()
                     navViewModel.showResult.postValue(true)
                 }
             }
@@ -280,7 +276,6 @@ fun PvpSearchCompose(
                             usedListState = usedListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
-                            characterDataList = characterDataList,
                             pvpViewModel = pvpViewModel
                         )
 
