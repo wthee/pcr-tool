@@ -13,9 +13,13 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.request.CachePolicy
+import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 
 /**
@@ -31,18 +35,26 @@ class MyApplication : Application(), ImageLoaderFactory {
         var URL_DOMAIN = "wthee.xyz"
         var useIpOnFlag = false
 
+        //视频缓存
+        lateinit var simpleCache: SimpleCache
+        lateinit var leastRecentlyUsedCacheEvictor: LeastRecentlyUsedCacheEvictor
+        lateinit var standaloneDatabaseProvider: StandaloneDatabaseProvider
+        private const val exoCacheSize: Long =
+            100 * 1024 * 1024 // Setting cache size to be ~ 100 MB
+
     }
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+
         runBlocking {
             val preferences = dataStoreSetting.data.first()
             useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] ?: false
-        }
-        //使用ip访问
-        if (useIpOnFlag) {
-            URL_DOMAIN = "96.45.190.76"
+            //使用ip访问
+            if (useIpOnFlag) {
+                URL_DOMAIN = "96.45.190.76"
+            }
         }
 
         //Bugly
@@ -51,6 +63,17 @@ class MyApplication : Application(), ImageLoaderFactory {
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
+
+        //初始视频缓存
+        leastRecentlyUsedCacheEvictor = LeastRecentlyUsedCacheEvictor(
+            exoCacheSize
+        )
+        standaloneDatabaseProvider = StandaloneDatabaseProvider(this)
+        simpleCache = SimpleCache(
+            File(this.cacheDir, "media"),
+            leastRecentlyUsedCacheEvictor,
+            standaloneDatabaseProvider
+        )
     }
 
     override fun newImageLoader(): ImageLoader {

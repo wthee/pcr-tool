@@ -84,9 +84,9 @@ fun SkillListScreen(
         skillListViewModel.loadData(property.level, atk, unitId)
     }
 
-
     SkillListContent(
         uiState = uiState,
+        unitId = unitId,
         isFilterSkill = isFilterSkill,
         filterSkillCount = filterSkillCount,
         unitType = unitType,
@@ -98,6 +98,7 @@ fun SkillListScreen(
 @Composable
 private fun SkillListContent(
     uiState: SkillListUiState,
+    unitId: Int,
     isFilterSkill: Boolean,
     filterSkillCount: Int,
     unitType: UnitType,
@@ -115,6 +116,10 @@ private fun SkillListContent(
             MainText(
                 text = stringResource(R.string.skill)
             )
+        }
+        //角色技能动画
+        if (unitType == UnitType.CHARACTER) {
+            SkillVideoDialog(unitId = unitId)
         }
         //普通技能
         (if (isFilterSkill) {
@@ -613,6 +618,7 @@ private fun SkillListContentPreview() {
                 ),
                 spLabel = null
             ),
+            unitId = 0,
             isFilterSkill = false,
             filterSkillCount = 0,
             unitType = UnitType.CHARACTER,

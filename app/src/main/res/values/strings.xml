@@ -382,6 +382,7 @@
     <string name="ex_skill">EX技能</string>
     <string name="character_summon_info">等级：%d / RANK：%d / 星级：%d</string>
     <string name="normal_attack">普攻</string>
+    <string name="ub_video">动画预览</string>
 
     <!--装备rank颜色-->
     <string name="color_blue">蓝</string>

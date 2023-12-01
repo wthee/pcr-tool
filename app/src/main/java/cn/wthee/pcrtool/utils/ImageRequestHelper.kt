@@ -25,6 +25,9 @@ class ImageRequestHelper {
         //图片格式
         const val WEBP = ".webp"
 
+        //视频格式
+        const val MP4 = ".mp4"
+
         //角色卡面
         const val CARD_PROFILE = "card/profile/"
 
@@ -57,6 +60,8 @@ class ImageRequestHelper {
         //剧情活动剧情
         const val EVENT_STORY = "event/story/"
 
+        //技能动画
+        const val SKILL_MOVIE = "movie/skill/"
     }
 
     /**
@@ -65,6 +70,12 @@ class ImageRequestHelper {
      */
     fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = true) =
         RESOURCE_PREFIX_URL + (if (forceJpType) "jp" else type) + RESOURCE + resUrl + id.toString() + WEBP
+
+
+    //获取技能动画
+    fun getSkillMovieUrl(unitId: Int) =
+        RESOURCE_PREFIX_URL + "jp" + RESOURCE + SKILL_MOVIE + unitId.toString() + MP4
+
 
     //获取装备图标
     fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {

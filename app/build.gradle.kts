@@ -147,6 +147,9 @@ dependencies {
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0-alpha06")
 
+    //exoplayer - 视频播放器
+    implementation("com.google.android.exoplayer:exoplayer:2.18.7")
+
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")

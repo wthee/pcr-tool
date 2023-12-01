@@ -52,6 +52,7 @@ import androidx.compose.material.icons.rounded.Looks4
 import androidx.compose.material.icons.rounded.ManageSearch
 import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material.icons.rounded.MiscellaneousServices
+import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.NavigateBefore
 import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material.icons.rounded.NotificationsNone
@@ -527,5 +528,10 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 下载
      */
-    DOWNLOAD(Icons.Rounded.CloudDownload)
+    DOWNLOAD(Icons.Rounded.CloudDownload),
+
+    /**
+     * 动画
+     */
+    MOVIE(Icons.Rounded.Movie),
 }

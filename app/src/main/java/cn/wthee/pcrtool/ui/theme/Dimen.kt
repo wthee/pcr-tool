@@ -77,4 +77,6 @@ object Dimen {
     val tweetImgHeight = 128.dp
 
     val indicatorSize = 7.dp
+
+    val videoMaxWidth = 400.dp
 }
