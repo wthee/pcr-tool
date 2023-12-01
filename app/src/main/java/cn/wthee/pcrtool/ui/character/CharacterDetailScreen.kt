@@ -452,7 +452,7 @@ private fun CharacterDetailContent(
                         CharacterDetailModuleType.SKILL -> SkillListScreen(
                             unitId = uiState.currentId,
                             atk = uiState.maxAtk,
-                            unitType = UnitType.CHARACTER_SUMMON,
+                            unitType = UnitType.CHARACTER,
                             property = uiState.currentValue,
                             toSummonDetail = actions.toSummonDetail,
                             isFilterSkill = !uiState.showAllInfo,
