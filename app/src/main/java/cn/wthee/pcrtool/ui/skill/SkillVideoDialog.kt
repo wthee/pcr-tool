@@ -2,14 +2,18 @@ package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -22,14 +26,17 @@ import androidx.compose.ui.window.DialogProperties
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
@@ -51,7 +58,13 @@ fun SkillVideoDialog(
     var loading by remember {
         mutableStateOf(true)
     }
-
+    val speedList = listOf(0.1f, 0.25f, 0.5f, 1f, 2f, 4f)
+    var speed by remember {
+        mutableFloatStateOf(1f)
+    }
+    var speedExpend by remember {
+        mutableStateOf(false)
+    }
     val context = LocalContext.current
 
     //打开弹窗
@@ -128,12 +141,40 @@ fun SkillVideoDialog(
                         .padding(top = Dimen.mediumPadding, end = Dimen.smallPadding)
                         .align(Alignment.End)
                 ) {
-                    IconTextButton(
-                        text = stringResource(id = R.string.open_browser),
-                        icon = MainIconType.BROWSER
-                    ) {
-                        BrowserUtil.open(url)
+                    Row {
+                        DropdownMenu(
+                            expanded = speedExpend,
+                            onDismissRequest = {}
+                        ) {
+                            speedList.forEach {
+                                DropdownMenuItem(
+                                    text = { CaptionText(text = it.toString()) },
+                                    onClick = {
+                                        VibrateUtil(context).single()
+                                        speed = it
+                                        val playbackParameters = PlaybackParameters(speed, 1.0f)
+                                        exoPlayer.playbackParameters = playbackParameters
+                                        speedExpend = false
+                                    }
+                                )
+                            }
+                        }
+
+                        IconTextButton(
+                            text = "x$speed",
+                            icon = MainIconType.CHANGE_DATA,
+                        ) {
+                            speedExpend = !speedExpend
+                        }
+
+                        IconTextButton(
+                            text = stringResource(id = R.string.open_browser),
+                            icon = MainIconType.BROWSER,
+                        ) {
+                            BrowserUtil.open(url)
+                        }
                     }
+
                 }
             }
         }
