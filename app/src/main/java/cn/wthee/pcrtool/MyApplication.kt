@@ -18,6 +18,9 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.HttpsURLConnection
 
 
 /**
@@ -42,6 +45,8 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        //忽略证书校验
+        disableSSLCertificateChecking()
 
         runBlocking {
             val preferences = dataStoreSetting.data.first()
@@ -81,5 +86,17 @@ class MyApplication : Application(), ImageLoaderFactory {
                 ApiUtil.buildClient()
             }
             .build()
+    }
+
+    private fun disableSSLCertificateChecking() {
+        try {
+            val ssl = ApiUtil.getSSL()
+            HttpsURLConnection.setDefaultSSLSocketFactory(ssl.first.socketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+        } catch (e: KeyManagementException) {
+            e.printStackTrace()
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
     }
 }

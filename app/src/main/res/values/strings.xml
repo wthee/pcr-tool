@@ -277,7 +277,6 @@
     <string name="drop">掉落量</string>
     <string name="mana">玛那掉落量</string>
     <string name="multiple">%s倍</string>
-
     <string name="free_gacha_content">「免费十连」%d 次</string>
     <string name="story_event_sub">支线</string>
     <string name="story_event_re">复刻</string>
@@ -823,4 +822,6 @@
     <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
 
+    <!-- 其他-->
+    <string name="video_play_speed">播放速度</string>
 </resources>

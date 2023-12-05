@@ -1033,6 +1033,27 @@ fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
 }
 
 
+/**
+ * 生命周期监听
+ * fixme 多个事件避免重复调用
+ */
+@Composable
+fun LifecycleEffect(vararg events: Lifecycle.Event, handler: () -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, e ->
+            if (events.contains(e)) {
+                handler()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable

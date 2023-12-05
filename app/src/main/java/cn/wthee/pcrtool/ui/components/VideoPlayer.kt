@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.components
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,12 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,13 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.navigation.navigateUpSheet
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navSheetState
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -154,15 +152,10 @@ private fun VideoPlayer(
     }
 
     //关闭时释放资源
-    BackHandler {
+    LifecycleEffect(Lifecycle.Event.ON_PAUSE) {
         exoPlayer.release()
         scope.launch {
             navigateUpSheet()
-        }
-    }
-    LaunchedEffect(navSheetState.isVisible) {
-        if (!navSheetState.isVisible && navSheetState.targetValue == ModalBottomSheetValue.Hidden) {
-            exoPlayer.release()
         }
     }
 
@@ -196,50 +189,52 @@ private fun VideoPlayer(
 
         Row(modifier = Modifier.align(Alignment.End)) {
             //倍速列表
-            DropdownMenu(
-                expanded = speedExpend,
-                onDismissRequest = {
-                    speedExpend = false
-                }
-            ) {
-                //返回
-                IconTextButton(
-                    text = stringResource(id = R.string.cancel),
-                    icon = MainIconType.BACK,
-                    modifier = Modifier.fillMaxWidth()
+            PCRToolComposeTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.medium)) {
+                DropdownMenu(
+                    expanded = speedExpend,
+                    onDismissRequest = {
+                        speedExpend = false
+                    }
                 ) {
-                    speedExpend = false
-                }
-                //倍速可选项
-                speedList.forEach {
-                    DropdownMenuItem(
-                        leadingIcon = {
-                            if (speed == it) {
-                                MainIcon(
-                                    data = MainIconType.OK,
-                                    size = Dimen.smallIconSize
-                                )
-                            }
-                        },
-                        text = {
-                            Subtitle1(
-                                text = it.toString(),
-                                modifier = Modifier.fillMaxWidth(),
-                                color = if (speed == it) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    Color.Unspecified
+                    //返回
+                    IconTextButton(
+                        text = stringResource(id = R.string.video_play_speed),
+                        icon = MainIconType.BACK,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        speedExpend = false
+                    }
+                    //倍速可选项
+                    speedList.forEach {
+                        DropdownMenuItem(
+                            leadingIcon = {
+                                if (speed == it) {
+                                    MainIcon(
+                                        data = MainIconType.OK,
+                                        size = Dimen.smallIconSize
+                                    )
                                 }
-                            )
-                        },
-                        onClick = {
-                            VibrateUtil(context).single()
-                            speed = it
-                            val playbackParameters = PlaybackParameters(speed, 1.0f)
-                            exoPlayer.playbackParameters = playbackParameters
-                            speedExpend = false
-                        }
-                    )
+                            },
+                            text = {
+                                Subtitle1(
+                                    text = it.toString(),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = if (speed == it) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        Color.Unspecified
+                                    }
+                                )
+                            },
+                            onClick = {
+                                VibrateUtil(context).single()
+                                speed = it
+                                val playbackParameters = PlaybackParameters(speed, 1.0f)
+                                exoPlayer.playbackParameters = playbackParameters
+                                speedExpend = false
+                            }
+                        )
+                    }
                 }
             }
 
@@ -247,6 +242,7 @@ private fun VideoPlayer(
             IconTextButton(
                 text = speed.toString(),
                 icon = MainIconType.VIDEO_SPEED,
+                modifier = Modifier.padding(top = Dimen.smallPadding)
             ) {
                 speedExpend = !speedExpend
             }
@@ -255,6 +251,7 @@ private fun VideoPlayer(
             IconTextButton(
                 text = stringResource(id = R.string.open_browser),
                 icon = MainIconType.BROWSER,
+                modifier = Modifier.padding(start = Dimen.mediumPadding, top = Dimen.smallPadding)
             ) {
                 BrowserUtil.open(url)
             }

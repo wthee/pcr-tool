@@ -27,8 +27,7 @@ object ApiUtil {
     private const val MAX_RETRY = 3
 
     @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
-    private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
-        val client = this
+    fun getSSL(): Pair<SSLContext, X509TrustManager> {
         //初始 SSL
         val trustManager = object : X509TrustManager {
             @Throws(CertificateException::class)
@@ -52,7 +51,14 @@ object ApiUtil {
 
         val sslContext = SSLContext.getInstance("TLSv1.2")
         sslContext.init(null, arrayOf<TrustManager>(trustManager), SecureRandom())
-        client.sslSocketFactory(sslContext.socketFactory, trustManager)
+
+        return Pair(sslContext, trustManager)
+    }
+
+    private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
+        val client = this
+        val ssl = getSSL()
+        client.sslSocketFactory(ssl.first.socketFactory, ssl.second)
             .hostnameVerifier { _, _ -> true }
         return client
     }
