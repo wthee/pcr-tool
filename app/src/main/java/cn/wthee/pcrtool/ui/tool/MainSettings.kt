@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -73,7 +72,6 @@ import kotlinx.coroutines.runBlocking
 /**
  * 设置页面
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
@@ -87,7 +85,7 @@ fun MainSettings() {
         mutableStateOf(Pair("", 0))
     }
     LaunchedEffect(openDialog.value) {
-        imageCacheSize.value = FileUtil.getCoilDirSize(context)
+        imageCacheSize.value = FileUtil.getMediaDirSize(context)
     }
 
 
@@ -136,11 +134,11 @@ fun MainSettings() {
             if (useIpOnFlag) {
                 SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
             }
-            //- 清除图片缓存
+            //- 清除图片缓存 fixme 添加调整缓存占比功能
             SettingCommonItem(
                 iconType = MainIconType.DELETE,
                 title = stringResource(id = R.string.clean_image_cache),
-                summary = stringResource(id = R.string.tip_clean_image_cache),
+                summary = stringResource(id = R.string.tip_clean_cache),
                 onClick = {
                     //清除缓存弹窗
                     openDialog.value = true
@@ -148,7 +146,7 @@ fun MainSettings() {
             ) {
                 Subtitle2(
                     text = stringResource(
-                        id = R.string.image_cache,
+                        id = R.string.cache_size,
                         imageCacheSize.value.first,
                         imageCacheSize.value.second
                     ),
@@ -288,9 +286,10 @@ fun MainSettings() {
         openDialog = openDialog,
         icon = MainIconType.DELETE,
         title = stringResource(id = R.string.title_dialog_clean_cache),
-        text = stringResource(id = R.string.confirm_clean_image_cache)
+        text = stringResource(id = R.string.confirm_clean_cache)
     ) {
         FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
+        FileUtil.delete(context.filesDir.resolve(Constants.VIDEO_DIR))
     }
 
 }

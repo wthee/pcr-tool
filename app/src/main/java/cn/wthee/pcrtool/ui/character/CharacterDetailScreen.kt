@@ -61,6 +61,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.navigation.NavActions
@@ -385,7 +386,8 @@ private fun CharacterDetailContent(
                                 unitId = uiState.unitId,
                                 cutinId = uiState.cutinId,
                                 toCharacterBasicInfo = actions.toCharacterBasicInfo,
-                                toAllPics = actions.toAllPics
+                                toAllPics = actions.toAllPics,
+                                toCharacterVideo = actions.toCharacterVideo
                             )
 
                         //星级
@@ -455,6 +457,7 @@ private fun CharacterDetailContent(
                             unitType = UnitType.CHARACTER,
                             property = uiState.currentValue,
                             toSummonDetail = actions.toSummonDetail,
+                            toCharacterVideo = actions.toCharacterVideo,
                             isFilterSkill = !uiState.showAllInfo,
                             filterSkillCount = uiState.allAttr.uniqueEquipList.size,
                         )
@@ -527,6 +530,7 @@ private fun ToolsContent(
     cutinId: Int,
     toCharacterBasicInfo: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
+    toCharacterVideo: (Int, Int) -> Unit,
 ) {
 
     FlowRow(
@@ -557,6 +561,14 @@ private fun ToolsContent(
         ) {
             val id = if (cutinId != 0) cutinId else unitId
             BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+        }
+        //动态卡面
+        IconTextButton(
+            icon = MainIconType.MOVIE,
+            text = stringResource(id = R.string.character_card_video),
+            modifier = Modifier.padding(end = Dimen.smallPadding)
+        ) {
+            toCharacterVideo(unitId, VideoType.CHARACTER_CARD.value)
         }
     }
 
@@ -1049,8 +1061,9 @@ private fun ToolsContentPreview() {
         ToolsContent(
             unitId = 100101,
             cutinId = 0,
-            {},
-            { _, _ -> }
+            toCharacterBasicInfo = {},
+            toAllPics = { _, _ -> },
+            toCharacterVideo = { _, _ -> },
         )
     }
 }

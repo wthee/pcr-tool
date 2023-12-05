@@ -41,6 +41,7 @@
     <string name="rank_compare">RANK对比</string>
     <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
+    <string name="character_card_video">动态卡面</string>
     <string name="character_basic_info">资料</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">剧情立绘</string>
@@ -195,10 +196,10 @@
     <string name="qq_group">反馈交流群</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
-    <string name="clean_image_cache">清除图片缓存</string>
-    <string name="tip_clean_image_cache">加载缓存图片，可减少网络数据使用。正常使用中请勿清除</string>
-    <string name="image_cache">占用：%s\n数量：%d</string>
-    <string name="confirm_clean_image_cache">清除图片缓存，下次打开应用将通过网络重新加载图片</string>
+    <string name="clean_image_cache">清除缓存</string>
+    <string name="tip_clean_cache">加载缓存，可减少网络数据使用。正常使用中请勿清除</string>
+    <string name="cache_size">占用：%s\n数量：%d</string>
+    <string name="confirm_clean_cache">清除缓存后，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
     <string name="coolapk">酷安</string>
     <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
@@ -382,7 +383,7 @@
     <string name="ex_skill">EX技能</string>
     <string name="character_summon_info">等级：%d / RANK：%d / 星级：%d</string>
     <string name="normal_attack">普攻</string>
-    <string name="ub_video">动画预览</string>
+    <string name="ub_video">技能动画</string>
 
     <!--装备rank颜色-->
     <string name="color_blue">蓝</string>

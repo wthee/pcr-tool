@@ -21,6 +21,9 @@ object Constants {
     //图片缓存
     const val COIL_DIR = "coil_image_cache"
 
+    //视频缓存
+    const val VIDEO_DIR = "video_cache"
+
     const val mediaType = "application/json; charset=utf-8"
 
     //数据库资源地址

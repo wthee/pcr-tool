@@ -71,6 +71,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Signpost
+import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
@@ -534,4 +535,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 动画
      */
     MOVIE(Icons.Rounded.Movie),
+
+    /**
+     * 视频倍速
+     */
+    VIDEO_SPEED(Icons.Rounded.SlowMotionVideo),
 }

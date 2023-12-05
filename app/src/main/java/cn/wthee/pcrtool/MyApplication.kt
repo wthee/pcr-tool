@@ -9,17 +9,15 @@ import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.BuglyInitializer
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.VideoCache
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.request.CachePolicy
-import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import java.io.File
 
 
 /**
@@ -37,12 +35,9 @@ class MyApplication : Application(), ImageLoaderFactory {
 
         //视频缓存
         lateinit var simpleCache: SimpleCache
-        lateinit var leastRecentlyUsedCacheEvictor: LeastRecentlyUsedCacheEvictor
-        lateinit var standaloneDatabaseProvider: StandaloneDatabaseProvider
-        private const val exoCacheSize: Long =
-            100 * 1024 * 1024 // Setting cache size to be ~ 100 MB
 
     }
+
 
     override fun onCreate() {
         super.onCreate()
@@ -64,16 +59,8 @@ class MyApplication : Application(), ImageLoaderFactory {
             backupMode = tryOpenDatabase() == 0
         }
 
-        //初始视频缓存
-        leastRecentlyUsedCacheEvictor = LeastRecentlyUsedCacheEvictor(
-            exoCacheSize
-        )
-        standaloneDatabaseProvider = StandaloneDatabaseProvider(this)
-        simpleCache = SimpleCache(
-            File(this.cacheDir, "media"),
-            leastRecentlyUsedCacheEvictor,
-            standaloneDatabaseProvider
-        )
+        //初始化视频缓存
+        simpleCache = VideoCache().init(this)
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -84,6 +71,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             .diskCache {
                 //调整缓存位置，避免缓存被系统自动清除
                 DiskCache.Builder()
+                    .maxSizePercent(0.04)
                     .directory(context.filesDir.resolve(Constants.COIL_DIR))
                     .build()
             }

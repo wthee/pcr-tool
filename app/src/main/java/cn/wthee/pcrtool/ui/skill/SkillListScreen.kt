@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SkillIndexType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
@@ -75,6 +76,7 @@ fun SkillListScreen(
     property: CharacterProperty,
     unitType: UnitType,
     toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toCharacterVideo: ((Int, Int) -> Unit)? = null,
     isFilterSkill: Boolean = false,
     filterSkillCount: Int = 0,
     skillListViewModel: SkillListViewModel = hiltViewModel(),
@@ -91,7 +93,8 @@ fun SkillListScreen(
         filterSkillCount = filterSkillCount,
         unitType = unitType,
         property = property,
-        toSummonDetail = toSummonDetail
+        toSummonDetail = toSummonDetail,
+        toCharacterVideo = toCharacterVideo
     )
 }
 
@@ -103,7 +106,8 @@ private fun SkillListContent(
     filterSkillCount: Int,
     unitType: UnitType,
     property: CharacterProperty,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?
+    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?,
+    toCharacterVideo: ((Int, Int) -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -118,9 +122,12 @@ private fun SkillListContent(
             )
         }
         //角色技能动画
-        if (unitType == UnitType.CHARACTER) {
-            SkillVideoDialog(unitId = unitId)
+        if (unitType == UnitType.CHARACTER && toCharacterVideo != null) {
+            IconTextButton(icon = MainIconType.MOVIE, text = stringResource(R.string.ub_video)) {
+                toCharacterVideo(unitId, VideoType.UB_SKILL.value)
+            }
         }
+
         //普通技能
         (if (isFilterSkill) {
             //过滤专用装备影响的技能
@@ -623,7 +630,8 @@ private fun SkillListContentPreview() {
             filterSkillCount = 0,
             unitType = UnitType.CHARACTER,
             property = CharacterProperty(),
-            toSummonDetail = { _, _, _, _, _ -> }
+            toSummonDetail = { _, _, _, _, _ -> },
+            toCharacterVideo = null
         )
     }
 }
