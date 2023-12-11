@@ -17,17 +17,32 @@ import java.io.File
 
 /**
  * 图片保存到本地
+ * fixme 合并图片视频保存代码
  */
 class ImageDownloadHelper(private val context: Context) {
-    //图片文件夹名
-    private val imageDir = "pcr"
+
+    companion object {
+        const val DIR = "/storage/emulated/0"
+
+        //文件夹名
+        private const val baseDir = "pcr"
+
+        /**
+         * 获取保存路径
+         */
+        fun getSaveDir(): String {
+            var path: String = Environment.DIRECTORY_PICTURES
+            path = DIR + File.separator + path + File.separator + baseDir
+            return path
+        }
+    }
 
     /**
      * 保存bitmap
      */
     fun saveBitmap(bitmap: Bitmap, displayName: String) {
         MainScope().launch(IO) {
-            val path = getImagePath() + File.separator + imageDir
+            val path = getSaveDir()
             try {
                 //保存属性
                 val contentValues = ContentValues()
@@ -40,21 +55,11 @@ class ImageDownloadHelper(private val context: Context) {
                     folder.mkdir()
                 }
                 val file = File("$path/$displayName")
-                if (file.exists()) {
-                    Looper.prepare()
-                    ToastUtil.short(
-                        getString(
-                            R.string.pic_exist,
-                            file.absolutePath.replace(DIR, "")
-                        )
-                    )
-                    Looper.loop()
-                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     contentValues.put(
                         MediaStore.MediaColumns.RELATIVE_PATH,
-                        Environment.DIRECTORY_PICTURES + File.separator + imageDir
+                        Environment.DIRECTORY_PICTURES + File.separator + baseDir
                     )
                 } else {
                     contentValues.put(MediaStore.Images.Media.DATA, file.absolutePath)
@@ -81,7 +86,7 @@ class ImageDownloadHelper(private val context: Context) {
             } catch (e: Exception) {
                 VibrateUtil(context).error()
                 Looper.prepare()
-                ToastUtil.short(getString(R.string.save_failure))
+                ToastUtil.short(getString(R.string.save_error))
                 Looper.loop()
             }
         }
@@ -114,15 +119,4 @@ class ImageDownloadHelper(private val context: Context) {
         return saveSuccess
     }
 
-    companion object {
-        private const val DIR = "/storage/emulated/0"
-        /**
-         * 获取图片保存路径
-         */
-        fun getImagePath(): String {
-            var path: String = Environment.DIRECTORY_PICTURES
-            path = DIR + File.separator + path
-            return path
-        }
-    }
 }

@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.picture
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Looper
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,8 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.checkPermissions
+import cn.wthee.pcrtool.utils.getString
+import java.io.File
 
 //权限
 val permissions = arrayOf(
@@ -104,15 +107,15 @@ private fun StoryPictureContent(
             MainText(text = storyCardList.size.toString())
         }
     }
-    if(isLoadingStory){
-        Box(modifier = Modifier.fillMaxSize()){
+    if (isLoadingStory) {
+        Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressCompose(
                 modifier = Modifier
                     .padding(vertical = Dimen.largePadding)
                     .align(Alignment.Center)
             )
         }
-    }else{
+    } else {
         if (storyCardList.isNotEmpty()) {
             CardGridList(
                 urls = storyCardList
@@ -169,6 +172,7 @@ private fun CardGridList(
             val loading = remember {
                 mutableStateOf(true)
             }
+            val displayName = "${getFileName(picUrl)}.jpg"
 
             MainCard(
                 modifier = Modifier
@@ -178,6 +182,18 @@ private fun CardGridList(
                     if (!loading.value) {
                         //权限校验
                         checkPermissions(context, permissions) {
+                            val path = ImageDownloadHelper.getSaveDir()
+                            val file = File("$path/$displayName")
+                            if (file.exists()) {
+                                ToastUtil.short(
+                                    getString(
+                                        R.string.pic_exist,
+                                        file.absolutePath.replace(ImageDownloadHelper.DIR, "")
+                                    )
+                                )
+                                return@checkPermissions
+                            }
+
                             openDialog.value = true
                         }
                     } else {
@@ -201,7 +217,7 @@ private fun CardGridList(
                 openDialog = openDialog,
                 icon = MainIconType.PREVIEW_IMAGE,
                 title = stringResource(R.string.title_dialog_save_img),
-                text = stringResource(R.string.tip_save_image),
+                text = stringResource(R.string.tip_save_to_gallery),
                 onDismissRequest = {
                     openDialog.value = false
                 }
@@ -209,7 +225,7 @@ private fun CardGridList(
                 loadedPic.value.let {
                     ImageDownloadHelper(context).saveBitmap(
                         bitmap = (it as BitmapDrawable).bitmap,
-                        displayName = "${getFileName(picUrl)}.jpg"
+                        displayName = displayName
                     )
                     openDialog.value = false
                 }
