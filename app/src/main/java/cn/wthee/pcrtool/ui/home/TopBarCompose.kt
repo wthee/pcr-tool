@@ -28,6 +28,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -51,6 +52,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.skill.ColorTextIndex
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -64,11 +66,13 @@ import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.joinQQGroup
-import cn.wthee.pcrtool.workers.ApkDownloadWorker
+import cn.wthee.pcrtool.workers.FileDownloadWorker
+import java.io.File
 
 
 /**
@@ -311,6 +315,7 @@ private fun UpdateContent(
 ) {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
+    val placeholder = appNotice.id == -1
 
     Column(
         modifier = Modifier.padding(
@@ -320,7 +325,8 @@ private fun UpdateContent(
     ) {
         //更新内容
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.commonPlaceholder(placeholder)
         ) {
             //版本
             Text(
@@ -347,7 +353,9 @@ private fun UpdateContent(
         )
 
         //内容
-        ColorText(appNotice.message)
+        ColorText(
+            modifier = Modifier.commonPlaceholder(placeholder), message = appNotice.message
+        )
 
         //前往更新
         if (appNotice.id == 0) {
@@ -425,10 +433,10 @@ private fun downloadApk(
         updateApkDownloadState(-1)
         //下载
         val data = Data.Builder()
-            .putString(ApkDownloadWorker.KEY_URL, url)
+            .putString(FileDownloadWorker.KEY_URL, url)
             .build()
         val updateApkRequest =
-            OneTimeWorkRequestBuilder<ApkDownloadWorker>()
+            OneTimeWorkRequestBuilder<FileDownloadWorker>()
                 .setInputData(data)
                 .build()
 
@@ -445,6 +453,10 @@ private fun downloadApk(
                 if (workInfo != null) {
                     when (workInfo.state) {
                         WorkInfo.State.SUCCEEDED -> {
+                            //下载成功，安装应用
+                            val apkName = url.split("/").last()
+                            val file = FileUtil.getFileDir() + File.separator + apkName
+                            openAPK(MyApplication.context, File(file))
                             updateApkDownloadState(-2)
                         }
 
@@ -464,7 +476,7 @@ private fun downloadApk(
  * 优化字体风格
  */
 @Composable
-private fun ColorText(message: String) {
+private fun ColorText(modifier: Modifier = Modifier, message: String) {
     val mark0 = arrayListOf<ColorTextIndex>()
     message.forEachIndexed { index, c ->
         if (c == '[') {
@@ -497,7 +509,7 @@ private fun ColorText(message: String) {
             }
         },
         textAlign = TextAlign.Start,
-        modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
+        modifier = modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
         style = MaterialTheme.typography.bodyLarge,
     )
 }
@@ -520,7 +532,7 @@ private fun ErrorContent() {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         //内容
-        ColorText(stringResource(id = R.string.content_api_request_error))
+        ColorText(message = stringResource(id = R.string.content_api_request_error))
 
         //网络异常设置
         SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
@@ -538,6 +550,29 @@ private fun ErrorContent() {
             )
         }
     }
+}
+
+
+/**
+ * 安装apk
+ */
+private fun openAPK(context: Context, apkFile: File) {
+    val auth = BuildConfig.APPLICATION_ID + ".provider"
+    val type = "application/vnd.android.package-archive"
+
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.setDataAndType(
+        FileProvider.getUriForFile(
+            context,
+            auth,
+            apkFile
+        ),
+        type
+    )
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+    context.startActivity(intent)
 }
 
 @CombinedPreviews

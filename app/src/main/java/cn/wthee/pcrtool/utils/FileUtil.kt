@@ -22,6 +22,8 @@ object FileUtil {
 
     fun getApkDir(context: Context = MyApplication.context) = getAppDir(context) + "/apk"
 
+    fun getFileDir(context: Context = MyApplication.context): String = context.filesDir.path
+
     /**
      * 获取 App 内部存储路径
      */

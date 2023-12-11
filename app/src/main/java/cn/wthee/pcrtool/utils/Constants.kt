@@ -106,8 +106,9 @@ object Constants {
     // 异常
     const val EXCEPTION_API = "api exception:"
     const val EXCEPTION_DOWNLOAD_DB = "db download exception:"
-    const val EXCEPTION_DOWNLOAD_APK = "apk download exception:"
+    const val EXCEPTION_DOWNLOAD_FILE = "file download exception:"
     const val EXCEPTION_SAVE_DB = "db file save exception:"
+    const val EXCEPTION_FILE_SAVE = "file saveexception:"
     const val EXCEPTION_LOAD_ATTR = "character attr exception:"
     const val EXCEPTION_UNIT_NULL = "character info exception:"
     const val EXCEPTION_SKILL = "skill exception:"
@@ -117,4 +118,5 @@ object Constants {
     //任务
     const val DOWNLOAD_DB_WORK = "updateDatabase"
     const val DOWNLOAD_APK_WORK = "updateApk"
+    const val DOWNLOAD_FILE_WORK = "downloadFile"
 }
