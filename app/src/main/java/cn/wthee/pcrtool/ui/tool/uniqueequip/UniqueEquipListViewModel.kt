@@ -26,8 +26,6 @@ import javax.inject.Inject
 data class UniqueEquipListUiState(
     val uniqueEquipList: List<UniqueEquipBasicData>? = null,
     val loadingState: LoadingState = LoadingState.Loading,
-    //日期选择弹窗
-    val openDialog: Boolean = false,
     //搜索弹窗
     val openSearch: Boolean = false,
     //快捷搜索关键词
@@ -96,28 +94,13 @@ class UniqueEquipListViewModel @Inject constructor(
     }
 
     /**
-     * 弹窗状态更新
-     */
-    fun changeDialog(openDialog: Boolean) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    openDialog = openDialog,
-                    openSearch = false
-                )
-            }
-        }
-    }
-
-    /**
      * 搜索弹窗
      */
     fun changeSearchBar(openSearch: Boolean) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openSearch = openSearch,
-                    openDialog = false
+                    openSearch = openSearch
                 )
             }
         }
