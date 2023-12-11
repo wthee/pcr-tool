@@ -72,11 +72,11 @@ object Dimen {
 
     val strokeWidth = 3.dp
 
+    val smallStrokeWidth = 2.dp
+
     val linearProgressHeight = 6.dp
 
     val tweetImgHeight = 128.dp
 
     val indicatorSize = 7.dp
-
-    val videoMaxWidth = 400.dp
 }

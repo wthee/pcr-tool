@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.DesktopWindows
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.DownloadDone
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.EventAvailable
@@ -530,6 +531,11 @@ enum class MainIconType(val icon: ImageVector) {
      * 下载
      */
     DOWNLOAD(Icons.Rounded.CloudDownload),
+
+    /**
+     * 下载完成
+     */
+    DOWNLOAD_DONE(Icons.Rounded.DownloadDone),
 
     /**
      * 动画

@@ -306,14 +306,18 @@
     <string name="remote_data_file_error">文件下载异常\n请加群反馈</string>
     <string name="data_file_error_desc">重新下载数据</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="tip_save_image">将图片保存至系统相册</string>
+    <string name="tip_save_to_gallery">保存至系统相册</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
+    <string name="wait_video_load">请等待视频加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
     <string name="update_database">数据更新</string>
     <string name="pic_exist">图片已存在\n%s</string>
+    <string name="video_exist">视频已存在\n%s</string>
     <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
+    <string name="save_error">保存异常</string>
+    <string name="download_failure">下载失败</string>
     <string name="copy_success">文本已复制~</string>
     <string name="db_diff_version">版本</string>
     <string name="db_diff_content">更新内容</string>
@@ -822,6 +826,14 @@
     <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
 
-    <!-- 其他-->
+    <!-- 视频播放 -->
     <string name="video_play_speed">播放速度</string>
+    <string name="play_error">播放出错或资源不存在</string>
+    <string name="video_resource_error">资源不存在</string>
+    <string name="download_video">下载视频</string>
+    <string name="downloaded_video">已保存</string>
+
+    <string name="title_download_file">正在下载</string>
+    <string name="download_file_notice">文件下载通知</string>
+
 </resources>

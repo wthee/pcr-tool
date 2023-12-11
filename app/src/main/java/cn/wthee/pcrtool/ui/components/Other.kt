@@ -371,6 +371,7 @@ fun MainHorizontalPagerIndicator(
 fun CircularProgressCompose(
     modifier: Modifier = Modifier,
     size: Dp = Dimen.menuIconSize,
+    strokeWidth: Dp = Dimen.strokeWidth,
     color: Color = MaterialTheme.colorScheme.primary
 ) {
     CircularProgressIndicator(
@@ -378,7 +379,7 @@ fun CircularProgressCompose(
             .size(size)
             .padding(Dimen.exSmallPadding),
         color = color,
-        strokeWidth = Dimen.strokeWidth
+        strokeWidth = strokeWidth
     )
 }
 
@@ -739,9 +740,6 @@ fun EventTitle(
 /**
  * 日程倒计时
  */
-/**
- * 日程倒计时
- */
 @Composable
 fun EventTitleCountdown(
     today: String,
@@ -784,9 +782,6 @@ fun EventTitleCountdown(
 /**
  * 装备适用角色
  */
-/**
- * 装备适用角色
- */
 @Composable
 fun UnitList(unitIds: List<Int>) {
     LazyColumn(
@@ -816,10 +811,6 @@ fun UnitList(unitIds: List<Int>) {
     }
 }
 
-/**
- * 角色标签行
- *
- */
 /**
  * 角色标签行
  *
@@ -917,10 +908,6 @@ fun CharacterTagRow(
  * 位置信息
  *
  */
-/**
- * 位置信息
- *
- */
 @Composable
 fun CharacterPositionTag(
     modifier: Modifier = Modifier,
@@ -942,9 +929,6 @@ fun CharacterPositionTag(
     }
 }
 
-/**
- * 获取位置描述
- */
 /**
  * 获取位置描述
  */

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -22,11 +23,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.ui.PlayerView
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -36,16 +51,12 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import cn.wthee.pcrtool.utils.VideoDownloadHelper
+import cn.wthee.pcrtool.utils.getString
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * 视频播放页面
@@ -87,7 +98,7 @@ fun VideoPlayerScreen(
             }
             VerticalGrid(itemWidth = getItemWidth()) {
                 urlList.forEach {
-                    VideoPlayer(url = it, ratio = ratio)
+                    VideoPlayer(url = it, ratio = ratio, videoTypeValue = videoTypeValue)
                 }
             }
         }
@@ -102,24 +113,49 @@ fun VideoPlayerScreen(
  * @param url 视频链接
  * @param ratio 比例
  */
-@OptIn(ExperimentalMaterialApi::class)
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 private fun VideoPlayer(
     url: String,
-    ratio: Float
+    ratio: Float,
+    videoTypeValue: Int,
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
-
+    //加载中
     var loading by remember(url) {
         mutableStateOf(true)
     }
+    //播放倍速
     val speedList = listOf(0.25f, 0.5f, 1f, 2f, 4f)
     var speed by remember(url) {
         mutableFloatStateOf(1f)
     }
+    //播放倍速选择列表
     var speedExpend by remember(url) {
         mutableStateOf(false)
+    }
+    //播放错误
+    var playError by remember(url) {
+        mutableStateOf(false)
+    }
+    //下载状态
+    var downloading by remember(url) {
+        mutableStateOf(false)
+    }
+    //下载弹窗
+    val openDialog = remember { mutableStateOf(false) }
+    //是否已存在
+    var saved by remember {
+        mutableStateOf(false)
+    }
+
+    //判断是否已存在
+    val fileName = "${videoTypeValue}_" + url.split("/").last()
+    val targetFile = VideoDownloadHelper.getSaveDir() + File.separator + fileName
+    if (File(targetFile).exists()) {
+        saved = true
     }
 
     //视频源
@@ -147,6 +183,12 @@ private fun VideoPlayer(
                         super.onIsPlayingChanged(isPlaying)
                         loading = !isPlaying
                     }
+
+                    override fun onPlayerError(error: PlaybackException) {
+                        super.onPlayerError(error)
+                        loading = false
+                        playError = true
+                    }
                 })
             }
     }
@@ -171,7 +213,7 @@ private fun VideoPlayer(
                 //播放器
                 AndroidView(
                     factory = {
-                        StyledPlayerView(context).apply {
+                        PlayerView(context).apply {
                             useController = false
                             player = exoPlayer
                         }
@@ -184,9 +226,14 @@ private fun VideoPlayer(
                 if (loading) {
                     CircularProgressCompose()
                 }
+                //播放出错
+                if (playError) {
+                    MainTitleText(text = stringResource(R.string.play_error))
+                }
             }
         }
 
+        //功能按钮
         Row(modifier = Modifier.align(Alignment.End)) {
             //倍速列表
             PCRToolComposeTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.medium)) {
@@ -196,14 +243,6 @@ private fun VideoPlayer(
                         speedExpend = false
                     }
                 ) {
-                    //返回
-                    IconTextButton(
-                        text = stringResource(id = R.string.video_play_speed),
-                        icon = MainIconType.BACK,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        speedExpend = false
-                    }
                     //倍速可选项
                     speedList.forEach {
                         DropdownMenuItem(
@@ -217,7 +256,7 @@ private fun VideoPlayer(
                             },
                             text = {
                                 Subtitle1(
-                                    text = it.toString(),
+                                    text = "x$it",
                                     modifier = Modifier.fillMaxWidth(),
                                     color = if (speed == it) {
                                         MaterialTheme.colorScheme.primary
@@ -240,22 +279,108 @@ private fun VideoPlayer(
 
             //倍速
             IconTextButton(
-                text = speed.toString(),
+                text = stringResource(id = R.string.video_play_speed) + " x" + speed.toString(),
                 icon = MainIconType.VIDEO_SPEED,
                 modifier = Modifier.padding(top = Dimen.smallPadding)
             ) {
                 speedExpend = !speedExpend
             }
 
-            //浏览器中查看
+            //下载视频
+            val videoLoading = stringResource(id = R.string.wait_video_load)
+            val videoError = stringResource(R.string.video_resource_error)
+            if (!downloading) {
+                IconTextButton(
+                    text = stringResource(id = if (saved) R.string.downloaded_video else R.string.download_video),
+                    icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
+                    modifier = Modifier.padding(
+                        start = Dimen.largePadding,
+                        top = Dimen.smallPadding
+                    )
+                ) {
+                    if (saved) {
+                        ToastUtil.short(
+                            getString(
+                                R.string.video_exist,
+                                File(targetFile).absolutePath.replace(VideoDownloadHelper.DIR, "")
+                            )
+                        )
+                        return@IconTextButton
+                    }
+
+                    if (loading) {
+                        ToastUtil.short(videoLoading)
+                    } else if (playError) {
+                        ToastUtil.short(videoError)
+                    } else {
+                        openDialog.value = true
+                    }
+                }
+            } else {
+                //下载中
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.largePadding,
+                            top = Dimen.smallPadding,
+                        )
+                        .clip(MaterialTheme.shapes.small)
+                        .padding(Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CircularProgressCompose(
+                        size = Dimen.textIconSize,
+                        strokeWidth = Dimen.smallStrokeWidth
+                    )
+
+                    Text(
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        text = stringResource(id = R.string.title_download_file),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
+
+        //浏览器中查看
+        if (BuildConfig.DEBUG) {
             IconTextButton(
                 text = stringResource(id = R.string.open_browser),
                 icon = MainIconType.BROWSER,
-                modifier = Modifier.padding(start = Dimen.mediumPadding, top = Dimen.smallPadding)
+                modifier = Modifier.align(Alignment.End)
             ) {
                 BrowserUtil.open(url)
             }
         }
+    }
+
+    //下载确认
+    val videoDownloadError = stringResource(R.string.download_failure)
+    MainAlertDialog(
+        openDialog = openDialog,
+        icon = MainIconType.DOWNLOAD,
+        title = stringResource(R.string.download_video),
+        text = stringResource(R.string.tip_save_to_gallery),
+        onDismissRequest = {
+            openDialog.value = false
+        }
+    ) {
+        downloading = true
+        openDialog.value = false
+        //开始下载
+        VideoDownloadHelper(MyApplication.context).download(
+            url,
+            fileName,
+            lifecycleOwner,
+            onFinished = {
+                downloading = false
+            },
+            onDownloadFailure = {
+                downloading = false
+                ToastUtil.short(videoDownloadError)
+            }
+        )
     }
 
 }

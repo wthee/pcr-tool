@@ -147,9 +147,6 @@ dependencies {
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0-alpha06")
 
-    //exoplayer - 视频播放器
-    implementation("com.google.android.exoplayer:exoplayer:2.18.7")
-
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
@@ -163,6 +160,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+
+    //media3
+    val media3Version = "1.2.0"
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-ui:$media3Version")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.4")

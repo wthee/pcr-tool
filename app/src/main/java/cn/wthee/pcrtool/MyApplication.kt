@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.media3.datasource.cache.SimpleCache
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.ui.dataStoreSetting
@@ -14,7 +15,6 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.request.CachePolicy
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

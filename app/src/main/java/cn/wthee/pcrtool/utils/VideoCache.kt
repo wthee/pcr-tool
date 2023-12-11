@@ -2,9 +2,11 @@ package cn.wthee.pcrtool.utils
 
 import android.content.Context
 import android.os.StatFs
-import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import java.io.File
 
 /**
@@ -12,7 +14,7 @@ import java.io.File
  */
 class VideoCache {
 
-    //视频缓存大小
+    //视频缓存大小 MB
     private val minimumMaxSizeBytes = 50L * 1024 * 1024
     private val maximumMaxSizeBytes = 500L * 1024 * 1024
 
@@ -20,6 +22,7 @@ class VideoCache {
     private val maxSizePercent = 0.06
 
 
+    @OptIn(UnstableApi::class)
     fun init(context: Context): SimpleCache {
         //视频缓存文件夹
         val videoDir = File(context.filesDir, Constants.VIDEO_DIR)
