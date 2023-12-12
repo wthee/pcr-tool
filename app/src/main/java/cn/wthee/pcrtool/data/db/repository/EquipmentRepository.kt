@@ -228,6 +228,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
+    /**
+     * 获取排序后的专用装备列表
+     */
     suspend fun getUniqueEquipList(name: String, slot: Int) = try {
         val data = (try {
             val data = equipmentDao.getUniqueEquipListV2(name, slot)
@@ -236,18 +239,32 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             equipmentDao.getUniqueEquipList(name, slot)
         }).reversed()
 
-        //处理台服排序
-        if (MainActivity.regionType == RegionType.TW) {
-            data.sortedBy {
-                arrayListOf(
-                    138011,
-                    138021,
-                    138041,
-                    138061
-                ).contains(it.equipId)
+        when (MainActivity.regionType) {
+            RegionType.CN -> {
+                //处理国服排序
+                data.sortedBy {
+                    arrayListOf(
+                        137011,
+                        137021
+                    ).contains(it.equipId)
+                }
             }
-        } else {
-            data
+
+            RegionType.TW -> {
+                //处理台服排序
+                data.sortedBy {
+                    arrayListOf(
+                        138011,
+                        138021,
+                        138041,
+                        138061
+                    ).contains(it.equipId)
+                }
+            }
+
+            else -> {
+                data
+            }
         }
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getUniqueEquipInfoList")
