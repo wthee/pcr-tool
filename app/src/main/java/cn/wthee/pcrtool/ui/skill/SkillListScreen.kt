@@ -218,7 +218,10 @@ fun SkillItemContent(
             val str = skillActionText.action
             if (show) {
                 //系数表达式开始位置
-                val startIndex = str.indexOfFirst { ch -> ch == '<' }
+                var startIndex = str.indexOfFirst { ch -> ch == '<' }
+                if (startIndex == -1) {
+                    startIndex = str.indexOfFirst { ch -> ch == '[' }
+                }
                 if (startIndex != -1) {
                     var coeExpr = str.substring(startIndex, str.length)
                     Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
