@@ -92,8 +92,9 @@ class MediaDownloadHelper(private val context: Context) {
                     when (workInfo.state) {
                         WorkInfo.State.SUCCEEDED -> {
                             //下载成功，保存
-                            val sourceFile = FileUtil.getFileDir() + File.separator + fileName
-                            saveMedia(videoPath = sourceFile, displayName = fileName)
+                            val sourceFile =
+                                File(FileUtil.getDownloadDir() + File.separator + fileName)
+                            saveMedia(videoFile = sourceFile, displayName = fileName)
                             onFinished()
                         }
 
@@ -110,11 +111,11 @@ class MediaDownloadHelper(private val context: Context) {
     /**
      * 保存媒体文件
      *
-     * @param videoPath 视频文件路径
+     * @param videoFile 视频文件
      * @param bitmap 图片
      */
     fun saveMedia(
-        videoPath: String? = null,
+        videoFile: File? = null,
         bitmap: Bitmap? = null,
         displayName: String
     ) {
@@ -158,11 +159,6 @@ class MediaDownloadHelper(private val context: Context) {
                 }
 
                 //保存
-                val videoFile = if (videoPath == null) {
-                    null
-                } else {
-                    File(videoPath)
-                }
                 if (insertMedia(videoFile, bitmap, contentValues, isVideo)) {
                     VibrateUtil(context).done()
                     ToastUtil.launchShort(
@@ -177,9 +173,11 @@ class MediaDownloadHelper(private val context: Context) {
                 }
             } catch (e: Exception) {
                 VibrateUtil(context).error()
-                LogReportUtil.upload(e, Constants.EXCEPTION_FILE_SAVE + videoPath + displayName)
+                LogReportUtil.upload(e, Constants.EXCEPTION_FILE_SAVE + displayName)
                 ToastUtil.launchShort(getString(R.string.save_error))
             }
+            //删除下载缓存
+            videoFile?.delete()
         }
     }
 

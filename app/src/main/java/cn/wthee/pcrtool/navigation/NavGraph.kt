@@ -30,14 +30,14 @@ import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.character.RankCompareScreen
 import cn.wthee.pcrtool.ui.character.RankEquipCountScreen
 import cn.wthee.pcrtool.ui.character.RankEquipListScreen
-import cn.wthee.pcrtool.ui.components.VideoPlayerScreen
 import cn.wthee.pcrtool.ui.equip.EquipDetailScreen
 import cn.wthee.pcrtool.ui.equip.EquipListFilterScreen
 import cn.wthee.pcrtool.ui.equip.EquipListScreen
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
 import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
-import cn.wthee.pcrtool.ui.picture.PictureScreen
+import cn.wthee.pcrtool.ui.media.PictureScreen
+import cn.wthee.pcrtool.ui.media.VideoScreen
 import cn.wthee.pcrtool.ui.skill.SkillSummonScreen
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
@@ -235,7 +235,7 @@ fun NavGraph(
             ) {
                 val arguments = requireNotNull(it.arguments)
 
-                VideoPlayerScreen(
+                VideoScreen(
                     unitId = arguments.getInt(NavRoute.UNIT_ID),
                     videoTypeValue = arguments.getInt(NavRoute.CHARACTER_VIDEO_TYPE)
                 )

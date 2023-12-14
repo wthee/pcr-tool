@@ -61,8 +61,8 @@ fun MediaGridList(
         if (urlList.isNotEmpty()) {
             //正常加载
             VerticalGrid(itemWidth = getItemWidth()) {
-                urlList.forEach { picUrl ->
-                    itemContent(picUrl)
+                urlList.forEach {
+                    itemContent(it)
                 }
             }
         } else {
