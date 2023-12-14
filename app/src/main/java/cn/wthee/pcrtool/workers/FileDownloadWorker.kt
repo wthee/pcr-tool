@@ -3,21 +3,19 @@ package cn.wthee.pcrtool.workers
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.content.FileProvider
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.FileService
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_FILE_WORK
+import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
 import cn.wthee.pcrtool.utils.DownloadListener
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -47,7 +45,7 @@ class FileDownloadWorker(
     private val noticeId = 0
     private lateinit var notification: NotificationCompat.Builder
 
-    private val folderPath = FileUtil.getFileDir()
+    private val folderPath = FileUtil.getDownloadDir()
     private lateinit var service: Call<ResponseBody>
 
     companion object {
@@ -64,7 +62,7 @@ class FileDownloadWorker(
         if (result == Result.failure()) {
             WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_FILE_WORK)
         } else if (result == Result.success()) {
-            setProgressAsync(Data.Builder().putInt("progress", -2).build())
+            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, -2).build())
         }
         return@coroutineScope result
     }
@@ -82,6 +80,11 @@ class FileDownloadWorker(
         val baseUrl = downloadUrl.substring(0, downloadUrl.lastIndexOf("/") + 1)
 
         try {
+            //创建文件夹
+            val folder = File(folderPath)
+            if (!folder.exists()) {
+                folder.mkdir()
+            }
             //创建Retrofit服务
             service = ApiUtil.createWithClient(
                 FileService::class.java,
@@ -91,7 +94,7 @@ class FileDownloadWorker(
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         try {
                             //更新下载进度
-                            setProgressAsync(Data.Builder().putInt("progress", progress).build())
+                            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
                         } catch (_: Exception) {
 
                         }
@@ -99,7 +102,7 @@ class FileDownloadWorker(
 
                     override fun onFinish() {
                         //下载完成
-                        setProgressAsync(Data.Builder().putInt("progress", 100).build())
+                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, 100).build())
                         notificationManager.cancelAll()
                     }
 
@@ -120,7 +123,7 @@ class FileDownloadWorker(
             //保存
             FileUtil.save(response!!.body()!!.byteStream(), file)
         } catch (e: Exception) {
-            setProgressAsync(Data.Builder().putInt("progress", -3).build())
+            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, -3).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_FILE)
             return Result.failure()
         }

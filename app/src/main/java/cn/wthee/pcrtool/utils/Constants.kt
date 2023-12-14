@@ -70,6 +70,11 @@ object Constants {
     const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
     const val DATABASE_WAL_BACKUP_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
 
+    //安装包名称
+    const val DOWNLOAD_APK_NAME = "pcrtool.apk"
+
+    //进度
+    const val KEY_PROGRESS = "progress"
 
     //其它数据库
     const val DATABASE_NEWS = "news.db"
