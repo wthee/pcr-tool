@@ -1,20 +1,23 @@
 package cn.wthee.pcrtool.ui.media
 
-import android.content.Context
+import android.util.Log
 import androidx.annotation.OptIn
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,22 +27,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
-import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
@@ -52,19 +53,22 @@ import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
+import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MediaDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.checkPermissions
+import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getString
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -100,26 +104,34 @@ fun VideoScreen(
 
 /**
  * 视频播放
- * fixme 进度显示
  *
  * @param url 视频链接
  */
 @OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer(url: String) {
-//    val ratio = when (videoType) {
-//        VideoType.UB_SKILL -> 960f / 720
-//        else -> RATIO
-//    }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    //视频比例
+    val ratio = when {
+        url.contains("skill") -> 960f / 720
+        else -> RATIO
+    }
+
     //加载中
     var loading by remember(url) {
         mutableStateOf(true)
     }
-
+    //播放中
+    var playing by remember(url) {
+        mutableStateOf(false)
+    }
     //播放错误
     var playError by remember(url) {
+        mutableStateOf(false)
+    }
+    //工具栏展开
+    var expanded by remember(url) {
         mutableStateOf(false)
     }
 
@@ -145,9 +157,17 @@ fun VideoPlayer(url: String) {
                 repeatMode = Player.REPEAT_MODE_ALL
                 //加载中监听
                 addListener(object : Player.Listener {
+                    override fun onIsLoadingChanged(isLoading: Boolean) {
+                        super.onIsLoadingChanged(isLoading)
+                        loading = isLoading
+                        if (isPlaying) {
+                            loading = false
+                        }
+                    }
+
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
                         super.onIsPlayingChanged(isPlaying)
-                        loading = !isPlaying
+                        playing = isPlaying
                     }
 
                     override fun onPlayerError(error: PlaybackException) {
@@ -155,6 +175,7 @@ fun VideoPlayer(url: String) {
                         loading = false
                         playError = true
                     }
+
                 })
             }
     }
@@ -167,25 +188,35 @@ fun VideoPlayer(url: String) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
-            .fillMaxWidth()
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        ),
+        onClick = {
+            expanded = !expanded
+        }
     ) {
         //播放器组件
         MainPlayView(
             exoPlayer = exoPlayer,
+            ratio = ratio,
             loading = loading,
-            playError = playError
+            playError = playError,
         )
 
         //功能按钮
-        ToolButtonContent(
-            url = url,
-            exoPlayer = exoPlayer,
-            loading = loading,
-            playError = playError
-        )
+        ExpandAnimation(expanded) {
+            Column {
+                ToolButtonContent(
+                    url = url,
+                    exoPlayer = exoPlayer,
+                    loading = loading,
+                    playing = playing,
+                    playError = playError
+                )
+            }
+        }
     }
 
 }
@@ -193,11 +224,13 @@ fun VideoPlayer(url: String) {
 /**
  * 播放控制、保存等
  */
+@kotlin.OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ColumnScope.ToolButtonContent(
+private fun ToolButtonContent(
     url: String,
     exoPlayer: ExoPlayer,
     loading: Boolean,
+    playing: Boolean,
     playError: Boolean
 ) {
     val context = LocalContext.current
@@ -222,10 +255,75 @@ private fun ColumnScope.ToolButtonContent(
         saved = true
     }
 
+    //播放按钮控制
+    var play by remember(url) {
+        mutableStateOf(false)
+    }
+    if (playing) {
+        play = true
+    }
+
+    //播放进度 fixme 性能优化
+    val currentPosition = currentDurationFlow(exoPlayer).collectAsState(initial = 0L).value
+    //当前进度
+    val current =
+        (currentPosition / 1000).toString().fillZero(2)
+    //视频长度
+    val duration = if (exoPlayer.duration < 0) {
+        "00.00"
+    } else {
+        (exoPlayer.duration / 1000).toString().fillZero(2)
+    }
+
+    //播放倍速
+    val speedValueList = listOf(
+        0.25f, 0.5f, 0.75f, 1f, 2f, 4f, 8f
+    )
+    var selectedSpeed by remember(url) {
+        mutableFloatStateOf(1f)
+    }
+    exoPlayer.setPlaybackSpeed(selectedSpeed)
+
     //功能按钮
-    Row(modifier = Modifier.align(Alignment.End)) {
-        //播放速度控制
-        PlaySpeedButton(url, context, exoPlayer)
+    Row(
+        modifier = Modifier.padding(top = Dimen.smallPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (!playError) {
+            //播放进度
+            val progress = "00:$current / 00:$duration"
+
+            //播放/暂停
+            if (play) {
+                IconTextButton(
+                    text = progress,
+                    icon = MainIconType.VIDEO_PAUSE
+                ) {
+                    play = false
+                    exoPlayer.pause()
+                }
+            } else {
+                IconTextButton(
+                    text = progress,
+                    icon = MainIconType.VIDEO_PLAY
+                ) {
+                    play = true
+                    exoPlayer.play()
+                }
+            }
+        }
+
+        //浏览器中查看
+        if (BuildConfig.DEBUG) {
+            IconTextButton(
+                text = "",
+                icon = MainIconType.BROWSER,
+            ) {
+                BrowserUtil.open(url)
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
 
         //下载视频
         val videoLoading = stringResource(id = R.string.wait_video_load)
@@ -234,10 +332,7 @@ private fun ColumnScope.ToolButtonContent(
             IconTextButton(
                 text = stringResource(id = if (saved) R.string.downloaded_video else R.string.download_video),
                 icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
-                modifier = Modifier.padding(
-                    start = Dimen.largePadding,
-                    top = Dimen.smallPadding
-                )
+                modifier = Modifier.padding(start = Dimen.smallPadding)
             ) {
                 //权限校验
                 checkPermissions(context, permissions) {
@@ -265,10 +360,7 @@ private fun ColumnScope.ToolButtonContent(
             //下载中
             Row(
                 modifier = Modifier
-                    .padding(
-                        start = Dimen.largePadding,
-                        top = Dimen.smallPadding,
-                    )
+                    .padding(start = Dimen.smallPadding)
                     .clip(MaterialTheme.shapes.small)
                     .padding(Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically
@@ -288,14 +380,29 @@ private fun ColumnScope.ToolButtonContent(
         }
     }
 
-    //浏览器中查看
-    if (BuildConfig.DEBUG) {
-        IconTextButton(
-            text = stringResource(id = R.string.open_browser),
-            icon = MainIconType.BROWSER,
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            BrowserUtil.open(url)
+    //倍速选择
+    FlowRow(
+        modifier = Modifier.padding(bottom = Dimen.smallPadding),
+        verticalArrangement = Arrangement.Center
+    ) {
+        SelectText(
+            selected = false,
+            text = stringResource(id = R.string.video_play_speed),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(Dimen.smallPadding),
+            margin = 0.dp,
+            textColor = MaterialTheme.colorScheme.primary
+        )
+        speedValueList.forEach {
+            SelectText(
+                selected = it == selectedSpeed,
+                text = it.toString(),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(Dimen.smallPadding),
+                margin = 0.dp
+            ) {
+                selectedSpeed = it
+            }
         }
     }
 
@@ -330,113 +437,40 @@ private fun ColumnScope.ToolButtonContent(
 }
 
 /**
- * 播放速度控制
- */
-@Composable
-private fun PlaySpeedButton(
-    url: String,
-    context: Context,
-    exoPlayer: ExoPlayer
-) {
-    //播放倍速
-    val speedList = listOf(0.25f, 0.5f, 1f, 2f, 4f)
-    var speed by remember(url) {
-        mutableFloatStateOf(1f)
-    }
-    //播放倍速选择列表
-    var speedExpend by remember(url) {
-        mutableStateOf(false)
-    }
-
-    //倍速列表
-    PCRToolComposeTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.medium)) {
-        DropdownMenu(
-            expanded = speedExpend,
-            onDismissRequest = {
-                speedExpend = false
-            }
-        ) {
-            //倍速可选项
-            speedList.forEach {
-                DropdownMenuItem(
-                    leadingIcon = {
-                        if (speed == it) {
-                            MainIcon(
-                                data = MainIconType.OK,
-                                size = Dimen.smallIconSize
-                            )
-                        }
-                    },
-                    text = {
-                        Subtitle1(
-                            text = "x$it",
-                            modifier = Modifier.fillMaxWidth(),
-                            color = if (speed == it) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                Color.Unspecified
-                            }
-                        )
-                    },
-                    onClick = {
-                        VibrateUtil(context).single()
-                        speed = it
-                        val playbackParameters = PlaybackParameters(speed, 1.0f)
-                        exoPlayer.playbackParameters = playbackParameters
-                        speedExpend = false
-                    }
-                )
-            }
-        }
-    }
-
-    //倍速
-    IconTextButton(
-        text = stringResource(id = R.string.video_play_speed) + " x" + speed.toString(),
-        icon = MainIconType.VIDEO_SPEED,
-        modifier = Modifier.padding(top = Dimen.smallPadding)
-    ) {
-        speedExpend = !speedExpend
-    }
-}
-
-/**
  * 播放器
  */
 @OptIn(UnstableApi::class)
 @Composable
 private fun MainPlayView(
     exoPlayer: ExoPlayer,
+    ratio: Float,
     loading: Boolean,
     playError: Boolean
 ) {
     val context = LocalContext.current
 
-    MainCard {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            //播放器
-            AndroidView(
-                factory = {
-                    PlayerView(context).apply {
-                        useController = false
-                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                        player = exoPlayer
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-//                        .aspectRatio(ratio = ratio)
-            )
-            //加载中
-            if (loading) {
-                CircularProgressCompose()
-            }
-            //播放出错
-            if (playError) {
-                MainTitleText(text = stringResource(R.string.play_error))
-            }
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+        //播放器
+        AndroidView(
+            factory = {
+                PlayerView(context).apply {
+                    useController = false
+                    player = exoPlayer
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(ratio = ratio)
+        )
+        //加载中
+        if (loading) {
+            CircularProgressCompose()
+        }
+        //播放出错
+        if (playError) {
+            MainTitleText(text = stringResource(R.string.play_error))
         }
     }
 }
@@ -457,3 +491,18 @@ private fun getVideoFileName(url: String): String {
         System.currentTimeMillis().toString()
     }
 }
+
+/**
+ * 播放进度
+ */
+private fun currentDurationFlow(player: ExoPlayer) = flow {
+    val offset = 25L
+    if (player.isPlaying) {
+        while (player.currentPosition + offset <= player.duration) {
+            Log.e("play position", "${player.currentPosition + offset} / ${player.duration}")
+            delay(50L)
+            emit(player.currentPosition + offset)
+        }
+        player.seekToDefaultPosition()
+    }
+}.conflate()

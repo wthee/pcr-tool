@@ -827,7 +827,7 @@
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
 
     <!-- 视频播放 -->
-    <string name="video_play_speed">播放速度</string>
+    <string name="video_play_speed">倍速:</string>
     <string name="play_error">播放出错或资源不存在</string>
     <string name="video_resource_error">资源不存在</string>
     <string name="download_video">下载视频</string>

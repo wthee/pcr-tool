@@ -58,8 +58,10 @@ import androidx.compose.material.icons.rounded.NavigateBefore
 import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material.icons.rounded.NotificationsNone
 import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Pets
 import androidx.compose.material.icons.rounded.PhoneAndroid
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.PlaylistAdd
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.ReceiptLong
@@ -546,4 +548,14 @@ enum class MainIconType(val icon: ImageVector) {
      * 视频倍速
      */
     VIDEO_SPEED(Icons.Rounded.SlowMotionVideo),
+
+    /**
+     * 播放
+     */
+    VIDEO_PLAY(Icons.Rounded.PlayArrow),
+
+    /**
+     * 暂停
+     */
+    VIDEO_PAUSE(Icons.Rounded.Pause),
 }
