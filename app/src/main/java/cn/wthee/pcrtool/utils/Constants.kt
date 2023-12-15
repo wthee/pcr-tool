@@ -12,8 +12,8 @@ object Constants {
     //tp属性变化等级，260级后，tp回复将转化为攻击力
     const val TP_LIMIT_LEVEL = 260
 
-    //属性变化等级，310级后，回避等属性转换为其他属性
-    const val OTHER_LIMIT_LEVEL = 310
+    //属性变化等级，300级后，回避等属性转换为其他属性
+    const val OTHER_LIMIT_LEVEL = 300
 
     //本地数据库版本
     const val SQLITE_VERSION = 374
