@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.EventTitle
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.utils.fixJpTime
@@ -85,7 +85,7 @@ private fun ClanBattleNoBossContent(clanBattleEvent: ClanBattleEvent) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Subtitle2(text = stringResource(id = R.string.tool_clan_no_boss))
+                    Subtitle1(text = stringResource(id = R.string.tool_clan_no_boss))
                 }
 
                 //结束日期

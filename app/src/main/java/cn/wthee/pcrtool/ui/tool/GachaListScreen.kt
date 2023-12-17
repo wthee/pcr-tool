@@ -21,7 +21,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -39,11 +38,11 @@ import cn.wthee.pcrtool.ui.components.EventTitle
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -222,14 +221,13 @@ fun GachaItem(
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //图标/描述
                 if (icons.isEmpty()) {
-                    MainContentText(
+                    Subtitle1(
                         text = gachaInfo.getDesc(),
                         modifier = Modifier.padding(
                             top = Dimen.mediumPadding,
                             start = Dimen.mediumPadding,
                             end = Dimen.mediumPadding
-                        ),
-                        textAlign = TextAlign.Start
+                        )
                     )
                 } else {
                     GridIconList(
