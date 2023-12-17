@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -67,9 +68,10 @@ fun Modifier.clickClose(
  * 通用 placeholder
  */
 @Suppress("DEPRECATION")
-fun Modifier.commonPlaceholder(visible: Boolean): Modifier = composed {
+fun Modifier.commonPlaceholder(visible: Boolean, shape: Shape? = null): Modifier = composed {
     Modifier.placeholder(
         visible = visible,
-        highlight = PlaceholderHighlight.shimmer()
+        highlight = PlaceholderHighlight.shimmer(),
+        shape = shape
     )
 }
