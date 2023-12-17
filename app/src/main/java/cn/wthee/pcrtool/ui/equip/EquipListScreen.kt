@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
@@ -39,9 +39,9 @@ import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -90,10 +90,8 @@ fun EquipListScreen(
     val scrollState = rememberLazyListState()
 
     //初始筛选信息
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (!MainActivity.navSheetState.isVisible) {
-            equipListViewModel.initFilter()
-        }
+    LifecycleEffect(Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_CREATE) {
+        equipListViewModel.initFilter()
     }
 
 

@@ -36,7 +36,8 @@ import cn.wthee.pcrtool.ui.equip.EquipListScreen
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
 import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
-import cn.wthee.pcrtool.ui.picture.PictureScreen
+import cn.wthee.pcrtool.ui.media.PictureScreen
+import cn.wthee.pcrtool.ui.media.VideoScreen
 import cn.wthee.pcrtool.ui.skill.SkillSummonScreen
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
@@ -164,7 +165,7 @@ fun NavGraph(
                 route = NavRoute.CHARACTER_LIST
             ) {
                 CharacterListScreen(
-                    toCharacterDetail =  actions.toCharacterDetail,
+                    toCharacterDetail = actions.toCharacterDetail,
                     toFilterCharacter = actions.toFilterCharacter
                 )
             }
@@ -218,6 +219,26 @@ fun NavGraph(
                 })
             ) {
                 CharacterStoryAttrScreen()
+            }
+
+            //角色相关视频
+            bottomSheet(
+                route = "${NavRoute.CHARACTER_VIDEO}/{${NavRoute.UNIT_ID}}/{${NavRoute.CHARACTER_VIDEO_TYPE}}",
+                arguments = listOf(
+                    navArgument(NavRoute.UNIT_ID) {
+                        type = NavType.IntType
+                    },
+                    navArgument(NavRoute.CHARACTER_VIDEO_TYPE) {
+                        type = NavType.IntType
+                    },
+                )
+            ) {
+                val arguments = requireNotNull(it.arguments)
+
+                VideoScreen(
+                    unitId = arguments.getInt(NavRoute.UNIT_ID),
+                    videoTypeValue = arguments.getInt(NavRoute.CHARACTER_VIDEO_TYPE)
+                )
             }
 
             //装备列表
@@ -797,6 +818,13 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterStoryDetail: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${NavRoute.CHARACTER_STORY_DETAIL}/${unitId}")
+    }
+
+    /**
+     * 角色相关视频
+     */
+    val toCharacterVideo: (Int, Int) -> Unit = { unitId: Int, videoType: Int ->
+        navController.navigate("${NavRoute.CHARACTER_VIDEO}/${unitId}/${videoType}")
     }
 
     /**

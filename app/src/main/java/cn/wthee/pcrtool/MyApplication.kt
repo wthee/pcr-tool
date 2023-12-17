@@ -3,12 +3,14 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import androidx.media3.datasource.cache.SimpleCache
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.BuglyInitializer
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.VideoCache
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -16,6 +18,9 @@ import coil.request.CachePolicy
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.HttpsURLConnection
 
 
 /**
@@ -31,18 +36,25 @@ class MyApplication : Application(), ImageLoaderFactory {
         var URL_DOMAIN = "wthee.xyz"
         var useIpOnFlag = false
 
+        //视频缓存
+        lateinit var simpleCache: SimpleCache
+
     }
+
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        //忽略证书校验
+        disableSSLCertificateChecking()
+
         runBlocking {
             val preferences = dataStoreSetting.data.first()
             useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] ?: false
-        }
-        //使用ip访问
-        if (useIpOnFlag) {
-            URL_DOMAIN = "96.45.190.76"
+            //使用ip访问
+            if (useIpOnFlag) {
+                URL_DOMAIN = "96.45.190.76"
+            }
         }
 
         //Bugly
@@ -51,6 +63,9 @@ class MyApplication : Application(), ImageLoaderFactory {
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
+
+        //初始化视频缓存
+        simpleCache = VideoCache().init(this)
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -61,6 +76,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             .diskCache {
                 //调整缓存位置，避免缓存被系统自动清除
                 DiskCache.Builder()
+                    .maxSizePercent(0.04)
                     .directory(context.filesDir.resolve(Constants.COIL_DIR))
                     .build()
             }
@@ -70,5 +86,17 @@ class MyApplication : Application(), ImageLoaderFactory {
                 ApiUtil.buildClient()
             }
             .build()
+    }
+
+    private fun disableSSLCertificateChecking() {
+        try {
+            val ssl = ApiUtil.getSSL()
+            HttpsURLConnection.setDefaultSSLSocketFactory(ssl.first.socketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+        } catch (e: KeyManagementException) {
+            e.printStackTrace()
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
     }
 }

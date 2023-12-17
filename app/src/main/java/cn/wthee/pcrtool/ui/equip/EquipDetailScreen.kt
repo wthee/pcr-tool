@@ -10,13 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -44,10 +44,8 @@ fun EquipDetailScreen(
 
 
     //初始收藏信息
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (!MainActivity.navSheetState.isVisible) {
-            equipDetailViewModel.reloadStarList()
-        }
+    LifecycleEffect(Lifecycle.Event.ON_RESUME) {
+        equipDetailViewModel.reloadStarList()
     }
 
     MainScaffold(

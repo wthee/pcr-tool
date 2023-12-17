@@ -28,6 +28,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -42,6 +44,7 @@ import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
+import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LinearProgressCompose
@@ -64,11 +67,14 @@ import cn.wthee.pcrtool.ui.tool.SettingCommonItem
 import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_APK_NAME
+import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.joinQQGroup
-import cn.wthee.pcrtool.workers.ApkDownloadWorker
+import cn.wthee.pcrtool.workers.FileDownloadWorker
+import java.io.File
 
 
 /**
@@ -242,30 +248,30 @@ private fun AppUpdateContent(
         }
 
         MainCard(
-            modifier = if (downloading) {
-                Modifier
-                    .padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-            } else {
-                Modifier
-                    .padding(
-                        top = Dimen.largePadding,
-                        bottom = Dimen.mediumPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-            },
+            modifier = Modifier.padding(
+                top = Dimen.largePadding,
+                bottom = if (downloading) 0.dp else Dimen.mediumPadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding,
+            ),
             fillMaxWidth = !downloading
         ) {
             if (appNotice.id != -2) {
-                //下载相关
                 if (downloading) {
+                    //下载相关
                     DownloadingContent(apkDownloadState)
                 } else {
-                    UpdateContent(appNotice, updateApkDownloadState)
+                    if (appNotice.id == -1) {
+                        //加载中
+                        CircularProgressCompose(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(Dimen.mediumPadding)
+                        )
+                    } else {
+                        //正常展示更新内容
+                        UpdateContent(appNotice, updateApkDownloadState)
+                    }
                 }
             } else {
                 //异常
@@ -347,7 +353,7 @@ private fun UpdateContent(
         )
 
         //内容
-        ColorText(appNotice.message)
+        ColorText(message = appNotice.message)
 
         //前往更新
         if (appNotice.id == 0) {
@@ -371,17 +377,12 @@ private fun UpdateContent(
                     downloadApk(githubReleaseUrl, context, updateApkDownloadState, owner)
                 }
 
+                //从服务器下载
                 MainButton(
                     text = stringResource(id = R.string.download_apk),
                     containerColor = colorGreen,
                 ) {
-                    if (appNotice.url.contains("coolapk")) {
-                        //从酷安下载
-                        BrowserUtil.open(appNotice.url)
-                    } else {
-                        //直接从服务器下载
-                        downloadApk(appNotice.url, context, updateApkDownloadState, owner)
-                    }
+                    downloadApk(appNotice.url, context, updateApkDownloadState, owner)
                 }
 
             }
@@ -425,10 +426,11 @@ private fun downloadApk(
         updateApkDownloadState(-1)
         //下载
         val data = Data.Builder()
-            .putString(ApkDownloadWorker.KEY_URL, url)
+            .putString(FileDownloadWorker.KEY_URL, url)
+            .putString(FileDownloadWorker.KEY_FILE_NAME, DOWNLOAD_APK_NAME)
             .build()
         val updateApkRequest =
-            OneTimeWorkRequestBuilder<ApkDownloadWorker>()
+            OneTimeWorkRequestBuilder<FileDownloadWorker>()
                 .setInputData(data)
                 .build()
 
@@ -445,11 +447,15 @@ private fun downloadApk(
                 if (workInfo != null) {
                     when (workInfo.state) {
                         WorkInfo.State.SUCCEEDED -> {
+                            //下载成功，安装应用
+                            val file =
+                                FileUtil.getDownloadDir() + File.separator + DOWNLOAD_APK_NAME
+                            openAPK(MyApplication.context, File(file))
                             updateApkDownloadState(-2)
                         }
 
                         WorkInfo.State.RUNNING -> {
-                            val value = workInfo.progress.getInt("progress", -1)
+                            val value = workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
                             updateApkDownloadState(value)
                         }
 
@@ -464,7 +470,7 @@ private fun downloadApk(
  * 优化字体风格
  */
 @Composable
-private fun ColorText(message: String) {
+private fun ColorText(modifier: Modifier = Modifier, message: String) {
     val mark0 = arrayListOf<ColorTextIndex>()
     message.forEachIndexed { index, c ->
         if (c == '[') {
@@ -497,7 +503,7 @@ private fun ColorText(message: String) {
             }
         },
         textAlign = TextAlign.Start,
-        modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
+        modifier = modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
         style = MaterialTheme.typography.bodyLarge,
     )
 }
@@ -520,7 +526,7 @@ private fun ErrorContent() {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         //内容
-        ColorText(stringResource(id = R.string.content_api_request_error))
+        ColorText(message = stringResource(id = R.string.content_api_request_error))
 
         //网络异常设置
         SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
@@ -538,6 +544,29 @@ private fun ErrorContent() {
             )
         }
     }
+}
+
+
+/**
+ * 安装apk
+ */
+private fun openAPK(context: Context, apkFile: File) {
+    val auth = BuildConfig.APPLICATION_ID + ".provider"
+    val type = "application/vnd.android.package-archive"
+
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.setDataAndType(
+        FileProvider.getUriForFile(
+            context,
+            auth,
+            apkFile
+        ),
+        type
+    )
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+    context.startActivity(intent)
 }
 
 @CombinedPreviews

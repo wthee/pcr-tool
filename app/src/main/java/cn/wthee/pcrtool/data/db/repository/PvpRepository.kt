@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.repository
 import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
+import cn.wthee.pcrtool.utils.LogReportUtil
 import javax.inject.Inject
 
 /**
@@ -12,14 +13,28 @@ import javax.inject.Inject
  */
 class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
-    suspend fun getLiked(region: Int) = pvpDao.getAll(region)
+    suspend fun getLiked(region: Int) = try {
+        pvpDao.getAll(region)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getLiked#region:$region")
+        emptyList()
+    }
 
-    suspend fun getLikedList(defs: String, region: Int) =
+    suspend fun getLikedList(defs: String, region: Int) = try {
         pvpDao.getLikedList(defs, region)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getLikedList#region:$region,defs:$defs")
+        emptyList()
+    }
 
     suspend fun insert(data: PvpFavoriteData) = pvpDao.insert(data)
 
-    suspend fun getHistory(region: Int, limit: Int) = pvpDao.getHistory(region, limit)
+    suspend fun getHistory(region: Int, limit: Int) = try {
+        pvpDao.getHistory(region, limit)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getHistory#region:$region,limit:$limit")
+        emptyList()
+    }
 
     suspend fun insert(data: PvpHistoryData) = pvpDao.insert(data)
 

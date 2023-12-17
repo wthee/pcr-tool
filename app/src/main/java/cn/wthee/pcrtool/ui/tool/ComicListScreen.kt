@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -40,7 +39,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -300,8 +298,6 @@ private fun ComicTocList(
     changeSelect: ((Int) -> Unit),
     changeDialog: (Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val tabs = arrayListOf<String>()
     if (items.size > 0) {
         for (i in 0 until items.size) {
@@ -344,25 +340,18 @@ private fun ComicTocList(
             columns = GridCells.Adaptive(getItemWidth())
         ) {
             itemsIndexed(tabs) { index, tab ->
-                val mModifier = if (pagerState.currentPage == index) {
-                    Modifier.fillMaxWidth()
-                } else {
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            changeSelect(index)
-                            changeDialog(false)
-                        }
-                }
                 SelectText(
                     selected = pagerState.currentPage == index,
                     text = tab,
                     textStyle = MaterialTheme.typography.titleMedium,
-                    modifier = mModifier.padding(Dimen.mediumPadding),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.mediumPadding),
                     textAlign = TextAlign.Start
-                )
+                ) {
+                    changeSelect(index)
+                    changeDialog(false)
+                }
             }
         }
 

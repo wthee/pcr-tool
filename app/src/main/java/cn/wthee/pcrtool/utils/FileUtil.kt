@@ -5,6 +5,7 @@ import android.os.Build
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.utils.Constants.COIL_DIR
+import cn.wthee.pcrtool.utils.Constants.VIDEO_DIR
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -19,7 +20,7 @@ object FileUtil {
      */
     fun getDatabaseDir(context: Context = MyApplication.context) = getAppDir(context) + "/databases"
 
-    fun getApkDir(context: Context = MyApplication.context) = getAppDir(context) + "/apk"
+    fun getDownloadDir(context: Context = MyApplication.context) = getAppDir(context) + "/download"
 
     /**
      * 获取 App 内部存储路径
@@ -148,18 +149,25 @@ object FileUtil {
     /**
      * 获取文件夹内文件大小
      *
-     * @return 大小、文件数 / 2 为图片数
+     * @return 大小、文件数
      */
-    fun getCoilDirSize(context: Context): Pair<String, Int> {
+    fun getMediaDirSize(context: Context): Pair<String, Int> {
         val dir = context.filesDir.resolve(COIL_DIR)
+        val videoDir = context.filesDir.resolve(VIDEO_DIR)
         var size = 0L
-        var count = 0
+        var imageCount = 0
+        var videoCount = 0
         dir.listFiles()?.forEach {
             size += it.length()
-            count++
+            imageCount++
         }
-        return Pair(size.convertFileSize(), count / 2)
-
+        videoDir.listFiles()?.forEach {
+            it.listFiles()?.forEach { videoCache ->
+                size += videoCache.length()
+                videoCount++
+            }
+        }
+        return Pair(size.convertFileSize(), imageCount / 2 + videoCount)
     }
 
     /**
@@ -173,14 +181,17 @@ object FileUtil {
             this >= gb -> {
                 String.format("%.1f GB", this.toFloat() / gb)
             }
+
             this >= mb -> {
                 val f = this.toFloat() / mb
                 String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
             }
+
             this >= kb -> {
                 val f = this.toFloat() / kb
                 String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
             }
+
             else -> String.format("%d B", this)
         }
     }

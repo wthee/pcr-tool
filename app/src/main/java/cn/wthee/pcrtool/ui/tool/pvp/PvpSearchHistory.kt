@@ -13,13 +13,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -35,7 +34,6 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 
 
@@ -49,10 +47,9 @@ fun PvpSearchHistory(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val historyDataListFlow = remember {
-        pvpViewModel.getHistory()
-    }
-    val historyDataList by historyDataListFlow.collectAsState(initial = arrayListOf())
+    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
+
+    val historyDataList = uiState.historyList
     val itemWidth = getItemWidth(floatWindow)
 
 
@@ -121,7 +118,7 @@ private fun PvpHistoryItem(
                 size = Dimen.fabIconSize
             ) {
                 scope.launch {
-                    pvpViewModel?.pvpResult?.postValue(null)
+                    pvpViewModel?.resetResult()
                     val selectedData =
                         pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?

@@ -14,11 +14,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -35,7 +36,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 
 
@@ -50,8 +50,7 @@ fun PvpFavorites(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
-    val favoriteDataList = pvpViewModel.allFavoritesList.observeAsState().value
-    pvpViewModel.getAllFavorites()
+    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
     val itemWidth = getItemWidth(floatWindow)
 
     Box(
@@ -59,34 +58,32 @@ fun PvpFavorites(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (favoriteDataList != null) {
-            if (favoriteDataList.isNotEmpty()) {
-                LazyVerticalGrid(
-                    state = favoritesListState,
-                    columns = GridCells.Adaptive(itemWidth)
-                ) {
-                    items(
-                        items = favoriteDataList,
-                        key = {
-                            it.id
-                        }
-                    ) { data ->
-                        PvpFavoriteItem(
-                            data,
-                            floatWindow,
-                            toCharacter,
-                            pvpViewModel
-                        )
+        if (uiState.allFavoritesList.isNotEmpty()) {
+            LazyVerticalGrid(
+                state = favoritesListState,
+                columns = GridCells.Adaptive(itemWidth)
+            ) {
+                items(
+                    items = uiState.allFavoritesList,
+                    key = {
+                        it.id
                     }
-                    item {
-                        CommonSpacer()
-                    }
+                ) { data ->
+                    PvpFavoriteItem(
+                        data,
+                        floatWindow,
+                        toCharacter,
+                        pvpViewModel
+                    )
                 }
-            } else {
-                CenterTipText(
-                    text = stringResource(id = R.string.pvp_no_favorites)
-                )
+                item {
+                    CommonSpacer()
+                }
             }
+        } else {
+            CenterTipText(
+                text = stringResource(id = R.string.pvp_no_favorites)
+            )
         }
     }
 }
@@ -135,7 +132,7 @@ private fun PvpFavoriteItem(
             ) {
                 //重置页面
                 scope.launch {
-                    pvpViewModel?.pvpResult?.postValue(null)
+                    pvpViewModel?.resetResult()
                     val selectedData =
                         pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?

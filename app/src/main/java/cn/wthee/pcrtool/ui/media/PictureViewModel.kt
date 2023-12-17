@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.picture
+package cn.wthee.pcrtool.ui.media
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
@@ -25,8 +25,7 @@ import javax.inject.Inject
 data class PictureUiState(
     val unitCardList: ArrayList<String> = arrayListOf(),
     val storyCardList: ArrayList<String> = arrayListOf(),
-    val isLoadingStory: Boolean = false,
-    val hasStory: Boolean = false
+    val isLoadingStory: Boolean = false
 )
 
 /**
@@ -98,14 +97,12 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             storyCardList = list,
-                            isLoadingStory = false,
-                            hasStory = list.isNotEmpty()
+                            isLoadingStory = false
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            hasStory = false,
                             isLoadingStory = false
                         )
                     }

@@ -12,14 +12,17 @@ object Constants {
     //tp属性变化等级，260级后，tp回复将转化为攻击力
     const val TP_LIMIT_LEVEL = 260
 
-    //属性变化等级，310级后，回避等属性转换为其他属性
-    const val OTHER_LIMIT_LEVEL = 310
+    //属性变化等级，300级后，回避等属性转换为其他属性
+    const val OTHER_LIMIT_LEVEL = 300
 
     //本地数据库版本
     const val SQLITE_VERSION = 374
 
     //图片缓存
     const val COIL_DIR = "coil_image_cache"
+
+    //视频缓存
+    const val VIDEO_DIR = "video_cache"
 
     const val mediaType = "application/json; charset=utf-8"
 
@@ -67,6 +70,11 @@ object Constants {
     const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
     const val DATABASE_WAL_BACKUP_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
 
+    //安装包名称
+    const val DOWNLOAD_APK_NAME = "pcrtool.apk"
+
+    //进度
+    const val KEY_PROGRESS = "progress"
 
     //其它数据库
     const val DATABASE_NEWS = "news.db"
@@ -103,8 +111,9 @@ object Constants {
     // 异常
     const val EXCEPTION_API = "api exception:"
     const val EXCEPTION_DOWNLOAD_DB = "db download exception:"
-    const val EXCEPTION_DOWNLOAD_APK = "apk download exception:"
+    const val EXCEPTION_DOWNLOAD_FILE = "file download exception:"
     const val EXCEPTION_SAVE_DB = "db file save exception:"
+    const val EXCEPTION_FILE_SAVE = "file saveexception:"
     const val EXCEPTION_LOAD_ATTR = "character attr exception:"
     const val EXCEPTION_UNIT_NULL = "character info exception:"
     const val EXCEPTION_SKILL = "skill exception:"
@@ -114,4 +123,5 @@ object Constants {
     //任务
     const val DOWNLOAD_DB_WORK = "updateDatabase"
     const val DOWNLOAD_APK_WORK = "updateApk"
+    const val DOWNLOAD_FILE_WORK = "downloadFile"
 }

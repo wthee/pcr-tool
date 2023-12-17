@@ -31,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,6 +51,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -61,6 +61,7 @@ import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.navigation.NavActions
@@ -68,11 +69,11 @@ import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -113,12 +114,10 @@ fun CharacterDetailScreen(
     val uiState by characterDetailViewModel.uiState.collectAsStateWithLifecycle()
 
     //rank 装备选择监听
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (!MainActivity.navSheetState.isVisible) {
-            val currentRank = getData<Int>(NavRoute.RANK)
-            if (currentRank != null) {
-                characterDetailViewModel.updateCurrentValue(uiState.currentValue.copy(rank = currentRank))
-            }
+    LifecycleEffect(Lifecycle.Event.ON_RESUME) {
+        val currentRank = getData<Int>(NavRoute.RANK)
+        if (currentRank != null) {
+            characterDetailViewModel.updateCurrentValue(uiState.currentValue.copy(rank = currentRank))
         }
     }
 
@@ -385,7 +384,8 @@ private fun CharacterDetailContent(
                                 unitId = uiState.unitId,
                                 cutinId = uiState.cutinId,
                                 toCharacterBasicInfo = actions.toCharacterBasicInfo,
-                                toAllPics = actions.toAllPics
+                                toAllPics = actions.toAllPics,
+                                toCharacterVideo = actions.toCharacterVideo
                             )
 
                         //星级
@@ -452,9 +452,10 @@ private fun CharacterDetailContent(
                         CharacterDetailModuleType.SKILL -> SkillListScreen(
                             unitId = uiState.currentId,
                             atk = uiState.maxAtk,
-                            unitType = UnitType.CHARACTER_SUMMON,
+                            unitType = UnitType.CHARACTER,
                             property = uiState.currentValue,
                             toSummonDetail = actions.toSummonDetail,
+                            toCharacterVideo = actions.toCharacterVideo,
                             isFilterSkill = !uiState.showAllInfo,
                             filterSkillCount = uiState.allAttr.uniqueEquipList.size,
                         )
@@ -527,6 +528,7 @@ private fun ToolsContent(
     cutinId: Int,
     toCharacterBasicInfo: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
+    toCharacterVideo: (Int, Int) -> Unit,
 ) {
 
     FlowRow(
@@ -557,6 +559,14 @@ private fun ToolsContent(
         ) {
             val id = if (cutinId != 0) cutinId else unitId
             BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+        }
+        //动态卡面
+        IconTextButton(
+            icon = MainIconType.MOVIE,
+            text = stringResource(id = R.string.character_card_video),
+            modifier = Modifier.padding(end = Dimen.smallPadding)
+        ) {
+            toCharacterVideo(unitId, VideoType.CHARACTER_CARD.value)
         }
     }
 
@@ -1049,8 +1059,9 @@ private fun ToolsContentPreview() {
         ToolsContent(
             unitId = 100101,
             cutinId = 0,
-            {},
-            { _, _ -> }
+            toCharacterBasicInfo = {},
+            toAllPics = { _, _ -> },
+            toCharacterVideo = { _, _ -> },
         )
     }
 }

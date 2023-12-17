@@ -10,6 +10,8 @@ object NavRoute {
     const val ALL_PICS_TYPE = "allPicsType"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
+    const val CHARACTER_VIDEO = "characterVideo"
+    const val CHARACTER_VIDEO_TYPE = "characterVideoType"
     const val EQUIP_LIST = "equipList"
     const val EQUIP_DETAIL = "equipDetail"
     const val EXTRA_EQUIP_DETAIL = "exEquipDetail"

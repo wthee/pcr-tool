@@ -426,7 +426,6 @@ private fun ChangeDbCompose(
 private fun DbVersionSelectContent(
     color: Color
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val region = MainActivity.regionType
     val menuTexts = arrayListOf(
@@ -448,30 +447,21 @@ private fun DbVersionSelectContent(
             //是否选中
             val selected = region.value == i + 2
 
-            val mModifier = if (selected) {
-                Modifier
-                    .fillMaxWidth()
-            } else {
-                Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        VibrateUtil(context).single()
-                        coroutineScope.launch {
-                            //正常切换
-                            DatabaseUpdater.changeDatabase(regionType)
-                        }
-                    }
-                    .padding(vertical = Dimen.mediumPadding)
-            }
-
             SelectText(
                 selected = selected,
                 text = menuTexts[i],
                 textStyle = MaterialTheme.typography.titleLarge,
-                modifier = mModifier
-                    .padding(horizontal = Dimen.smallPadding),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Dimen.smallPadding)
+                    .padding(vertical = Dimen.mediumPadding),
                 selectedColor = color
-            )
+            ) {
+                coroutineScope.launch {
+                    //正常切换
+                    DatabaseUpdater.changeDatabase(regionType)
+                }
+            }
 
         }
     }

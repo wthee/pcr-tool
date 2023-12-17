@@ -398,6 +398,10 @@ data class SkillActionDetail(
                         R.string.skill_debuff
                     }
                 )
+                if (actionDetail1 % 1000 / 10 == 5) {
+                    //回避等技能限制
+                    initOtherLimit()
+                }
                 val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
                 val aura = getAura(actionDetail1, value)
                 val time = getTimeText(4, actionValue4, actionValue5)
@@ -822,8 +826,8 @@ data class SkillActionDetail(
                     else -> UNKNOWN
                 }
                 //上限判断
-                if (actionValue4.toInt() != 0 && actionValue5.toInt() != 0) {
-                    val limitValue = getValueText(4, actionValue4, actionValue5)
+                if (actionValue4.toInt() != 0) {
+                    val limitValue = getValueText(4, actionValue4, actionValue5, hideIndex = true)
                     val limit = getString(R.string.skill_action_limit, limitValue)
                     extraDesc + limit
                 } else {
@@ -1386,14 +1390,15 @@ data class SkillActionDetail(
                     actionValue3.toString()
                 )
 
-                main + if (successClause != UNKNOWN && failureClause != UNKNOWN)
+                main + if (successClause != UNKNOWN && failureClause != UNKNOWN) {
                     successClause + failureClause
-                else if (successClause != UNKNOWN)
+                } else if (successClause != UNKNOWN) {
                     successClause
-                else if (failureClause != UNKNOWN)
+                } else if (failureClause != UNKNOWN) {
                     failureClause
-                else
+                } else {
                     UNKNOWN
+                }
             }
             // 69：变身
             SkillActionType.REINDEER -> {
@@ -1706,23 +1711,23 @@ data class SkillActionDetail(
         val skillAtkStrText = getString(R.string.skill_atk_text)
         var value = if (v3 == 0.0) {
             if (v1 == 0.0 && v2 != 0.0) {
-                "[${(v2 * level).intStr}$percent] <{${index + 1}}$v2 * $skillLevelText>"
+                "[${(v2 * level).intStr}$percent] <{${index + 1}}${v2.intStr} * $skillLevelText>"
             } else if (v1 != 0.0 && v2 == 0.0) {
                 "{${index}}[${v1.toBigDecimal().stripTrailingZeros().toPlainString()}$percent]"
             } else if (v1 != 0.0) {
-                "[${(v1 + v2 * level).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText>"
+                "[${(v1 + v2 * level).intStr}$percent] <{${index}}${v1.intStr} + {${index + 1}}${v2.intStr} * $skillLevelText>"
             } else {
                 "{$index}[0]$percent"
             }
         } else {
             if (v4 != 0.0) {
-                "[${(v1 + v2 * level + (v3 + v4 * level) * atk).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + ﹙{${index + 2}}$v3 + {${index + 3}}$v4 * $skillLevelText﹚ * $skillAtkStrText>"
+                "[${(v1 + v2 * level + (v3 + v4 * level) * atk).intStr}$percent] <{${index}}${v1.intStr} + {${index + 1}}${v2.intStr} * $skillLevelText + ﹙{${index + 2}}${v3.intStr} + {${index + 3}}${v4.intStr} * $skillLevelText﹚ * $skillAtkStrText>"
             } else if (v1 == 0.0 && v2 != 0.0) {
-                "[${(v2 + v3 * atk).intStr}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v2 + v3 * atk).intStr}$percent] <{${index + 1}}${v2.intStr} + {${index + 2}}${v3.intStr} * $skillAtkStrText>"
             } else if (v1 == 0.0) {
-                "[${(v3 * atk).intStr}$percent] <{${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v3 * atk).intStr}$percent] <{${index + 2}}${v3.intStr} * $skillAtkStrText>"
             } else if (v2 != 0.0) {
-                "[${(v1 + v2 * level + v3 * atk).intStr}$percent] <{${index}}$v1 + {${index + 1}}$v2 * $skillLevelText + {${index + 2}}$v3 * $skillAtkStrText>"
+                "[${(v1 + v2 * level + v3 * atk).intStr}$percent] <{${index}}${v1.intStr} + {${index + 1}}${v2.intStr} * $skillLevelText + {${index + 2}}${v3.intStr} * $skillAtkStrText>"
             } else {
                 "{$index}[0]$percent"
             }
@@ -2009,7 +2014,7 @@ data class SkillActionDetail(
      * 回避等技能限制
      */
     private fun initOtherLimit() {
-        if (level > Constants.OTHER_LIMIT_LEVEL && isOtherLimitAction) {
+        if (level > Constants.OTHER_LIMIT_LEVEL && isOtherRfSkill) {
             isOtherLimitAction = true
         }
     }

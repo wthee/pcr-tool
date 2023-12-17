@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 
 
@@ -280,15 +284,27 @@ fun SelectText(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     padding: Dp = Dimen.smallPadding,
     margin: Dp = Dimen.smallPadding,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    onClick: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
     val mModifier = if (selected) {
         modifier
             .padding(top = margin)
             .background(color = selectedColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(start = padding, end = padding)
     } else {
-        modifier.padding(top = margin)
+        (if (onClick != null) {
+            modifier
+                .clip(MaterialTheme.shapes.extraSmall)
+                .clickable {
+                    VibrateUtil(context).single()
+                    onClick()
+                }
+        } else {
+            modifier
+        })
+            .padding(top = margin, start = padding, end = padding)
     }
     Text(
         text = text,

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -87,7 +88,6 @@ fun CharacterSection(
                 ) { index ->
                     val unitId = if (characterList.isEmpty()) 0 else characterList[index].id
                     CharacterImageItem(
-                        modifier = Modifier.fillMaxWidth(),
                         unitId = unitId,
                         toCharacterDetail = toCharacterDetail
                     )
@@ -101,9 +101,7 @@ fun CharacterSection(
                     items(characterList) {
                         Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
                             CharacterImageItem(
-                                modifier = Modifier
-                                    .widthIn(max = getItemWidth() * 1.3f)
-                                    .fillMaxWidth(),
+                                modifier = Modifier.widthIn(max = getItemWidth() * 1.3f),
                                 unitId = it.id,
                                 toCharacterDetail = toCharacterDetail
                             )
@@ -132,7 +130,7 @@ private fun CharacterImageItem(
     val placeholder = unitId == -1
     MainCard(
         modifier = modifier
-            .commonPlaceholder(placeholder),
+            .commonPlaceholder(placeholder, MaterialTheme.shapes.medium),
         onClick = {
             if (!placeholder) {
                 toCharacterDetail(unitId)

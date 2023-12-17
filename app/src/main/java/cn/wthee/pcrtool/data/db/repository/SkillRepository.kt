@@ -20,7 +20,7 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     private suspend fun getSkillData(skillId: Int, lv: Int): SkillData? {
         val skillData = skillDao.getSkillData(skillId)
-        //等级大于310时，查询新技能信息
+        //等级大于300时，查询新技能信息
         if (lv > Constants.OTHER_LIMIT_LEVEL) {
             try {
                 val otherRfSkillId = skillDao.getRfSkillId(skillId, Constants.OTHER_LIMIT_LEVEL)

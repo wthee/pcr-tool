@@ -3,12 +3,12 @@ package cn.wthee.pcrtool.ui.character
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.*
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -27,7 +26,6 @@ import kotlinx.coroutines.launch
 /**
  * rank 范围装备素材数量统计
  */
-@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun RankEquipCountScreen(
@@ -49,10 +47,8 @@ fun RankEquipCountScreen(
 
 
     //初始收藏信息
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (!MainActivity.navSheetState.isVisible) {
-            rankEquipCountViewModel.reloadStarList()
-        }
+    LifecycleEffect(Lifecycle.Event.ON_RESUME) {
+        rankEquipCountViewModel.reloadStarList()
     }
 
     val scrollState = rememberLazyGridState()

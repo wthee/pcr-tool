@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
@@ -48,7 +49,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -65,6 +65,7 @@ fun PvpSearchResult(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
 ) {
+    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
 
     val defIds = selectedIds.subList(0, 5).getIdStr()
     //展示搜索结果
@@ -72,14 +73,19 @@ fun PvpSearchResult(
     for (sel in selectedIds.subList(0, 5)) {
         idArray.add(sel.unitId)
     }
-    val result = pvpViewModel.pvpResult.observeAsState().value
+    val result = uiState.pvpResult
     val placeholder = result == null
-    pvpViewModel.getPVPData(idArray)
+
+    //加载数据
+    LaunchedEffect(selectedIds) {
+        pvpViewModel.getPVPData(idArray)
+        pvpViewModel.getFavoritesList(defIds)
+    }
+
     //收藏信息
-    val favorites = pvpViewModel.favoritesList.observeAsState().value
-    pvpViewModel.getFavoritesList(defIds)
+    val favorites = uiState.favoritesList
     val favoritesList = arrayListOf<String>()
-    favorites?.forEach { data ->
+    favorites.forEach { data ->
         favoritesList.add(data.atks)
     }
 
@@ -177,7 +183,7 @@ fun PvpSearchResult(
                             text = stringResource(id = R.string.pvp_research),
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
-                            pvpViewModel.pvpResult.postValue(null)
+                            pvpViewModel.resetResult()
                             pvpViewModel.getPVPData(idArray)
                         }
                     }

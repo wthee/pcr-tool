@@ -119,6 +119,10 @@ fun UniqueEquipListScreen(
                     uniqueEquipListViewModel.reset()
                 }
             )
+        },
+        enableClickClose = uiState.openSearch,
+        onCloseClick = {
+            uniqueEquipListViewModel.changeSearchBar(false)
         }
     ) {
         StateBox(stateType = uiState.loadingState) {

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -73,7 +72,6 @@ import kotlinx.coroutines.runBlocking
 /**
  * 设置页面
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
@@ -87,7 +85,7 @@ fun MainSettings() {
         mutableStateOf(Pair("", 0))
     }
     LaunchedEffect(openDialog.value) {
-        imageCacheSize.value = FileUtil.getCoilDirSize(context)
+        imageCacheSize.value = FileUtil.getMediaDirSize(context)
     }
 
 
@@ -140,7 +138,7 @@ fun MainSettings() {
             SettingCommonItem(
                 iconType = MainIconType.DELETE,
                 title = stringResource(id = R.string.clean_image_cache),
-                summary = stringResource(id = R.string.tip_clean_image_cache),
+                summary = stringResource(id = R.string.tip_clean_cache),
                 onClick = {
                     //清除缓存弹窗
                     openDialog.value = true
@@ -148,7 +146,7 @@ fun MainSettings() {
             ) {
                 Subtitle2(
                     text = stringResource(
-                        id = R.string.image_cache,
+                        id = R.string.cache_size,
                         imageCacheSize.value.first,
                         imageCacheSize.value.second
                     ),
@@ -288,9 +286,10 @@ fun MainSettings() {
         openDialog = openDialog,
         icon = MainIconType.DELETE,
         title = stringResource(id = R.string.title_dialog_clean_cache),
-        text = stringResource(id = R.string.confirm_clean_image_cache)
+        text = stringResource(id = R.string.confirm_clean_cache)
     ) {
         FileUtil.delete(context.filesDir.resolve(Constants.COIL_DIR))
+        FileUtil.delete(context.filesDir.resolve(Constants.VIDEO_DIR))
     }
 
 }
@@ -390,15 +389,15 @@ fun SettingSwitchCompose(
             //保存设置信息
             context.dataStoreSetting.edit {
                 it[spKey] = checkedState
+            }
 
-                //动态色彩变更后，重启应用
-                if (type == SettingSwitchType.DYNAMIC_COLOR) {
-                    MainActivity.handler.sendEmptyMessage(1)
-                }
-                //ip变更，结束应用
-                if (type == SettingSwitchType.USE_IP) {
-                    MainActivity.handler.sendEmptyMessage(404)
-                }
+            //动态色彩变更后，重启应用
+            if (type == SettingSwitchType.DYNAMIC_COLOR) {
+                MainActivity.handler.sendEmptyMessage(1)
+            }
+            //ip变更，结束应用
+            if (type == SettingSwitchType.USE_IP) {
+                MainActivity.handler.sendEmptyMessage(404)
             }
         }
     }

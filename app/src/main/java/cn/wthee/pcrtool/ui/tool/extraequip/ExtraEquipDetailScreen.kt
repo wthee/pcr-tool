@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -29,9 +29,9 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillDetail
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.AttrCompare
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -66,10 +66,8 @@ fun ExtraEquipDetail(
     val uiState by extraEquipDetailViewModel.uiState.collectAsStateWithLifecycle()
 
     //初始收藏信息
-    LaunchedEffect(MainActivity.navSheetState.isVisible) {
-        if (!MainActivity.navSheetState.isVisible) {
-            extraEquipDetailViewModel.reloadStarList()
-        }
+    LifecycleEffect(Lifecycle.Event.ON_RESUME) {
+        extraEquipDetailViewModel.reloadStarList()
     }
 
     MainScaffold(
@@ -236,8 +234,6 @@ private fun ExtraEquipSkill(
 
     }
 }
-
-
 
 
 @CombinedPreviews

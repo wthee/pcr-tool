@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
 /**
@@ -24,6 +25,9 @@ class ImageRequestHelper {
 
         //图片格式
         const val WEBP = ".webp"
+
+        //视频格式
+        const val MP4 = ".mp4"
 
         //角色卡面
         const val CARD_PROFILE = "card/profile/"
@@ -57,6 +61,11 @@ class ImageRequestHelper {
         //剧情活动剧情
         const val EVENT_STORY = "event/story/"
 
+        //技能动画
+        const val SKILL_MOVIE = "movie/skill/"
+
+        //动态卡面
+        const val CARD_MOVIE = "movie/card/"
     }
 
     /**
@@ -65,6 +74,39 @@ class ImageRequestHelper {
      */
     fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = true) =
         RESOURCE_PREFIX_URL + (if (forceJpType) "jp" else type) + RESOURCE + resUrl + id.toString() + WEBP
+
+
+    //获取动画列表
+    fun getMovieUrlList(unitId: Int, videoType: VideoType): List<String> {
+        val list = arrayListOf<String>()
+
+        when (videoType) {
+            VideoType.UB_SKILL -> {
+                val url =
+                    RESOURCE_PREFIX_URL + "jp" + RESOURCE + SKILL_MOVIE + unitId.toString() + MP4
+                list.add(url)
+            }
+
+            VideoType.CHARACTER_CARD -> {
+                if (r6Ids.contains(unitId)) {
+                    val sixStarUrl = RESOURCE_PREFIX_URL + "jp" + RESOURCE + CARD_MOVIE + getStarId(
+                        unitId,
+                        6
+                    ) + MP4
+                    list.add(sixStarUrl)
+                }
+                val normalUrl =
+                    RESOURCE_PREFIX_URL + "jp" + RESOURCE + CARD_MOVIE + getStarId(unitId, 3) + MP4
+
+                list.add(normalUrl)
+            }
+
+            VideoType.UNKNOWN -> {}
+        }
+
+        return list
+    }
+
 
     //获取装备图标
     fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {

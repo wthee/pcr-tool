@@ -71,6 +71,7 @@
 
 # 实体类
 -keep class cn.wthee.pcrtool.data.model.** { *; }
+-keep class cn.wthee.pcrtool.data.enums.** { *; }
 -keep class cn.wthee.pcrtool.data.network.** { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.NewsTable { *; }
 -keep class cn.wthee.pcrtool.data.db.entity.TweetData { *; }

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -173,26 +172,20 @@ fun SelectTypeFab(
             ) {
                 //选择
                 tabs.forEachIndexed { index, tab ->
-                    val mModifier = if (type == index) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                VibrateUtil(context).single()
-                                coroutineScope.launch {
-                                    changeSelect(index)
-                                }
-                                changeDialog(false)
-                            }
-                    }
                     SelectText(
                         selected = type == index,
                         text = tab,
                         textStyle = MaterialTheme.typography.titleLarge,
                         selectedColor = selectedColor,
-                        modifier = mModifier.padding(Dimen.mediumPadding)
-                    )
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimen.mediumPadding)
+                    ) {
+                        coroutineScope.launch {
+                            changeSelect(index)
+                        }
+                        changeDialog(false)
+                    }
                 }
             }
         } else {

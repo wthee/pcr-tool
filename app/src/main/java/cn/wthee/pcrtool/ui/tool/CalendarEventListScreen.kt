@@ -35,7 +35,6 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -161,7 +160,7 @@ fun CalendarEventItem(calendar: CalendarEvent) {
                 //内容
                 calendar.getEventList().forEach {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Subtitle2(text = it.title + it.info)
+                        Subtitle1(text = it.title + it.info)
                         if (it.multiple != "") {
                             Subtitle1(
                                 text = it.multiple,

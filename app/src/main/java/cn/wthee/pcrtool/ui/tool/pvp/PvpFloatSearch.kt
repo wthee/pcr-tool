@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.SCALE_LOGO
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -77,7 +76,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         } catch (_: Exception) {
 
                         }
-                        pvpViewModel.pvpResult.postValue(null)
+                        pvpViewModel.resetResult()
                         navViewModel.showResult.postValue(true)
                     }
                 }
@@ -87,7 +86,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         iconType = if (showResult) MainIconType.CLOSE else MainIconType.BACK
                     ) {
                         navViewModel.showResult.postValue(false)
-                        pvpViewModel.requesting = false
+                        pvpViewModel.changeRequesting(false)
                     }
                 }
             }

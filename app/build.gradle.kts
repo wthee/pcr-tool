@@ -12,9 +12,9 @@ hilt {
 }
 
 val composeBom = "2023.10.01"
-val composeCompilerVersion = "1.5.4"
-val appVersionCode = 380
-val appVersionName = "3.8.0"
+val composeCompilerVersion = "1.5.6"
+val appVersionCode = 381
+val appVersionName = "3.8.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -114,7 +114,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("androidx.preference:preference-ktx:1.2.1")
 
     //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
@@ -145,7 +145,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha06")
+    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha07")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
@@ -161,8 +161,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
+    //media3
+    val media3Version = "1.2.0"
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-ui:$media3Version")
+
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
 
     //Paging3
     val pagingVersion = "3.2.1"
@@ -175,7 +180,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.6.0"
+    val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -191,8 +196,8 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     //Work
-    val workVersion = "2.8.1"
-    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    val workVersion = "2.9.0"
+    implementation("androidx.work:work-runtime:$workVersion")
 
     implementation(files("libs/commons-compress-1.19.jar"))
     implementation(files("libs/dec-0.1.2.jar"))

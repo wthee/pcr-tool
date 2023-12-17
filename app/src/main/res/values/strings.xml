@@ -41,6 +41,7 @@
     <string name="rank_compare">RANK对比</string>
     <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
+    <string name="character_card_video">动态卡面</string>
     <string name="character_basic_info">资料</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">剧情立绘</string>
@@ -195,10 +196,10 @@
     <string name="qq_group">反馈交流群</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
-    <string name="clean_image_cache">清除图片缓存</string>
-    <string name="tip_clean_image_cache">加载缓存图片，可减少网络数据使用。正常使用中请勿清除</string>
-    <string name="image_cache">占用：%s\n数量：%d</string>
-    <string name="confirm_clean_image_cache">清除图片缓存，下次打开应用将通过网络重新加载图片</string>
+    <string name="clean_image_cache">清除缓存</string>
+    <string name="tip_clean_cache">加载缓存，可减少网络数据使用。正常使用中请勿清除</string>
+    <string name="cache_size">占用：%s\n数量：%d</string>
+    <string name="confirm_clean_cache">清除缓存后，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
     <string name="coolapk">酷安</string>
     <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
@@ -276,7 +277,6 @@
     <string name="drop">掉落量</string>
     <string name="mana">玛那掉落量</string>
     <string name="multiple">%s倍</string>
-
     <string name="free_gacha_content">「免费十连」%d 次</string>
     <string name="story_event_sub">支线</string>
     <string name="story_event_re">复刻</string>
@@ -306,14 +306,18 @@
     <string name="remote_data_file_error">文件下载异常\n请加群反馈</string>
     <string name="data_file_error_desc">重新下载数据</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="tip_save_image">将图片保存至系统相册</string>
+    <string name="tip_save_to_gallery">保存至系统相册</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
+    <string name="wait_video_load">请等待视频加载完成</string>
     <string name="change_failed">切换失败</string>
     <string name="title_download_database">正在下载数据</string>
     <string name="update_database">数据更新</string>
     <string name="pic_exist">图片已存在\n%s</string>
+    <string name="video_exist">视频已存在\n%s</string>
     <string name="save_success">已成功保存至系统相册\n%s</string>
     <string name="save_failure">保存失败</string>
+    <string name="save_error">保存异常</string>
+    <string name="download_failure">下载失败</string>
     <string name="copy_success">文本已复制~</string>
     <string name="db_diff_version">版本</string>
     <string name="db_diff_content">更新内容</string>
@@ -382,6 +386,7 @@
     <string name="ex_skill">EX技能</string>
     <string name="character_summon_info">等级：%d / RANK：%d / 星级：%d</string>
     <string name="normal_attack">普攻</string>
+    <string name="ub_video">技能动画</string>
 
     <!--装备rank颜色-->
     <string name="color_blue">蓝</string>
@@ -820,5 +825,15 @@
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
     <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
+
+    <!-- 视频播放 -->
+    <string name="video_play_speed">倍速:</string>
+    <string name="play_error">播放出错或资源不存在</string>
+    <string name="video_resource_error">资源不存在</string>
+    <string name="download_video">下载视频</string>
+    <string name="downloaded_video">已保存</string>
+
+    <string name="title_download_file">正在下载</string>
+    <string name="download_file_notice">文件下载通知</string>
 
 </resources>
