@@ -398,6 +398,10 @@ data class SkillActionDetail(
                         R.string.skill_debuff
                     }
                 )
+                if (actionDetail1 % 1000 / 10 == 5) {
+                    //回避等技能限制
+                    initOtherLimit()
+                }
                 val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
                 val aura = getAura(actionDetail1, value)
                 val time = getTimeText(4, actionValue4, actionValue5)

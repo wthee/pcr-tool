@@ -229,7 +229,7 @@ fun NavGraph(
                         type = NavType.IntType
                     },
                     navArgument(NavRoute.CHARACTER_VIDEO_TYPE) {
-                        type = androidx.navigation.NavType.IntType
+                        type = NavType.IntType
                     },
                 )
             ) {

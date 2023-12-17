@@ -3,7 +3,11 @@ package cn.wthee.pcrtool.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -33,7 +37,11 @@ fun GridIconList(
     onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalGrid(
-        modifier = Modifier.padding(top = Dimen.mediumPadding),
+        modifier = Modifier.padding(
+            top = Dimen.mediumPadding,
+            start = Dimen.smallPadding,
+            end = Dimen.smallPadding
+        ),
         itemWidth = Dimen.iconSize,
         contentPadding = Dimen.mediumPadding,
         fixCount = if (LocalInspectionMode.current) 5 else 0,
@@ -83,7 +91,7 @@ private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
 
 
 /**
- * 网格布局
+ * 网格布局 fixme 屏幕旋转后显示异常问题
  * @param itemWidth 子项宽度
  * @param fixCount 固定列数
  * @param contentPadding 子项间距

@@ -298,8 +298,6 @@ private fun ComicTocList(
     changeSelect: ((Int) -> Unit),
     changeDialog: (Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val tabs = arrayListOf<String>()
     if (items.size > 0) {
         for (i in 0 until items.size) {

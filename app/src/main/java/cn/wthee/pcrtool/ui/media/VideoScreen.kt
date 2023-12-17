@@ -168,6 +168,9 @@ fun VideoPlayer(url: String) {
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
                         super.onIsPlayingChanged(isPlaying)
                         playing = isPlaying
+                        if (isPlaying) {
+                            loading = false
+                        }
                     }
 
                     override fun onPlayerError(error: PlaybackException) {

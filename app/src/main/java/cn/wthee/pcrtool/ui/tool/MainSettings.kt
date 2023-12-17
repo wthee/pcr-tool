@@ -134,7 +134,7 @@ fun MainSettings() {
             if (useIpOnFlag) {
                 SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
             }
-            //- 清除图片缓存 fixme 添加调整缓存占比功能
+            //- 清除图片缓存
             SettingCommonItem(
                 iconType = MainIconType.DELETE,
                 title = stringResource(id = R.string.clean_image_cache),
@@ -389,15 +389,15 @@ fun SettingSwitchCompose(
             //保存设置信息
             context.dataStoreSetting.edit {
                 it[spKey] = checkedState
+            }
 
-                //动态色彩变更后，重启应用
-                if (type == SettingSwitchType.DYNAMIC_COLOR) {
-                    MainActivity.handler.sendEmptyMessage(1)
-                }
-                //ip变更，结束应用
-                if (type == SettingSwitchType.USE_IP) {
-                    MainActivity.handler.sendEmptyMessage(404)
-                }
+            //动态色彩变更后，重启应用
+            if (type == SettingSwitchType.DYNAMIC_COLOR) {
+                MainActivity.handler.sendEmptyMessage(1)
+            }
+            //ip变更，结束应用
+            if (type == SettingSwitchType.USE_IP) {
+                MainActivity.handler.sendEmptyMessage(404)
             }
         }
     }

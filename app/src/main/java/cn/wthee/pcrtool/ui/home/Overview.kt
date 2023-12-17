@@ -426,7 +426,6 @@ private fun ChangeDbCompose(
 private fun DbVersionSelectContent(
     color: Color
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val region = MainActivity.regionType
     val menuTexts = arrayListOf(
