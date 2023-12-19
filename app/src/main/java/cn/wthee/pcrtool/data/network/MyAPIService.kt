@@ -74,6 +74,12 @@ interface MyAPIService {
     suspend fun getStoryList(@Body body: RequestBody): ResponseData<String>
 
     /**
+     * 1格漫画
+     */
+    @POST("comic/type")
+    suspend fun getComicType(@Body body: RequestBody): ResponseData<String>
+
+    /**
      * 获取网站列表
      */
     @POST("website/list/v2")

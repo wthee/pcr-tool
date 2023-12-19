@@ -297,6 +297,33 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 查询1格漫画类型
+     */
+    suspend fun getComicType(id: Int): ResponseData<String> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("id", id)
+            val body =
+                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
+
+            val response = service.getComicType(body)
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComicType")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 查询网站信息
      */
     suspend fun getWebsiteList(): ResponseData<List<WebsiteGroupData>> {

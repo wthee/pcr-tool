@@ -8,6 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.updateLoadingState
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,10 @@ import javax.inject.Inject
 data class PictureUiState(
     val unitCardList: ArrayList<String> = arrayListOf(),
     val storyCardList: ArrayList<String> = arrayListOf(),
-    val isLoadingStory: Boolean = false
+    val comicList: ArrayList<String> = arrayListOf(),
+    val storyLoadState: LoadingState = LoadingState.Loading,
+    val comicLoadState: LoadingState = LoadingState.Loading,
+    val pageCount: Int = 1
 )
 
 /**
@@ -40,6 +45,7 @@ class PictureViewModel @Inject constructor(
 
     //角色或剧情id
     private val id: Int? = savedStateHandle[NavRoute.UNIT_ID]
+
     //类型
     private val type: Int? = savedStateHandle[NavRoute.ALL_PICS_TYPE]
 
@@ -48,12 +54,21 @@ class PictureViewModel @Inject constructor(
 
     init {
         if (id != null && type != null) {
-            //角色立绘
+            //角色相关
             if (AllPicsType.getByValue(type) == AllPicsType.CHARACTER) {
+                _uiState.update {
+                    it.copy(
+                        pageCount = 3
+                    )
+                }
+                //角色立绘
                 getUnitCardList(id)
+                //1格漫画
+                getComicList(id)
             }
             //剧情立绘
             getStoryCardList(id, type)
+
         }
     }
 
@@ -69,7 +84,9 @@ class PictureViewModel @Inject constructor(
             val list = arrayListOf<String>()
             list.addAll(picUrls)
             _uiState.update {
-                it.copy(unitCardList = list)
+                it.copy(
+                    unitCardList = list
+                )
             }
         }
     }
@@ -80,9 +97,6 @@ class PictureViewModel @Inject constructor(
      * @param id 剧情活动id
      */
     private fun getStoryCardList(id: Int, type: Int) {
-        _uiState.update {
-            it.copy(isLoadingStory = true)
-        }
         viewModelScope.launch {
             val responseData = apiRepository.getStoryList(id)
             responseData.data.let { data ->
@@ -97,13 +111,46 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             storyCardList = list,
-                            isLoadingStory = false
+                            storyLoadState = updateLoadingState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            isLoadingStory = false
+                            storyLoadState = LoadingState.Error
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 漫画数据
+     *
+     * @param id 角色id
+     */
+    private fun getComicList(id: Int) {
+        viewModelScope.launch {
+            val responseData = apiRepository.getComicType(id)
+            responseData.data.let { data ->
+                if (data != null) {
+                    val url = ImageRequestHelper.getInstance().getComicUrl(id, data)
+                    val list = arrayListOf<String>()
+                    if (data != "") {
+                        list.add(url)
+                    }
+
+                    _uiState.update {
+                        it.copy(
+                            comicList = list,
+                            comicLoadState = updateLoadingState(list)
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            comicLoadState = LoadingState.Error
                         )
                     }
                 }
