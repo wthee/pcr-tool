@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -89,13 +87,8 @@ fun VideoScreen(
 
 
     MainScaffold {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-        ) {
-            MediaGridList(urlList = urlList, title = typeName) {
-                VideoPlayer(url = it)
-            }
+        MediaGridList(urlList = urlList, title = typeName) {
+            VideoPlayer(url = it)
         }
     }
 
