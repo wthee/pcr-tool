@@ -38,6 +38,7 @@ import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -131,8 +132,8 @@ fun UniqueEquipListScreen(
                     MainTabRow(
                         pagerState = pagerState,
                         tabs = arrayListOf(
-                            getIndex(1) + uniqueEquips1!!.size,
-                            getIndex(2) + uniqueEquips2!!.size
+                            TabData(tab = getIndex(1), count = uniqueEquips1!!.size),
+                            TabData(tab = getIndex(2), count = uniqueEquips2!!.size)
                         ),
                         modifier = Modifier
                             .fillMaxWidth(RATIO_GOLDEN)

@@ -1053,7 +1053,7 @@ private fun AllPreview() {
         CommonTitleContentText(title = text, content = text)
         MainTabRow(
             pagerState = rememberPagerState { 2 },
-            tabs = arrayListOf(text, text)
+            tabs = arrayListOf(TabData(tab = text), TabData(tab = text))
         )
     }
 }

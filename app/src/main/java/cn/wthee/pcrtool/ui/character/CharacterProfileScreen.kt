@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -183,14 +184,16 @@ private fun HomePageCommentContent(
     }
     //多星级时
     if (homePageCommentList.isNotEmpty()) {
-        val tabs = arrayListOf<String>()
+        val tabs = arrayListOf<TabData>()
         homePageCommentList.forEach {
             tabs.add(
-                "★" + if (it.unitId % 100 / 10 == 0) {
-                    "1"
-                } else {
-                    "${it.unitId % 100 / 10}"
-                }
+                TabData(
+                    tab = "★" + if (it.unitId % 100 / 10 == 0) {
+                        "1"
+                    } else {
+                        "${it.unitId % 100 / 10}"
+                    }
+                )
             )
         }
         MainTabRow(

@@ -53,6 +53,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getPositionColor
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -111,10 +112,10 @@ fun PvpSearchCompose(
     }
 
     val tabs = arrayListOf(
-        stringResource(id = R.string.character),
-        stringResource(id = R.string.title_recently_used),
-        stringResource(id = R.string.title_love),
-        stringResource(id = R.string.title_history),
+        TabData(tab = stringResource(id = R.string.character)),
+        TabData(tab = stringResource(id = R.string.title_recently_used)),
+        TabData(tab = stringResource(id = R.string.title_love)),
+        TabData(tab = stringResource(id = R.string.title_history)),
     )
     //动态调整 spanCount
     val normalSize = (Dimen.iconSize + Dimen.largePadding * 2)

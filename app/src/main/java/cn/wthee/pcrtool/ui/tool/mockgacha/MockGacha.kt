@@ -45,6 +45,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -78,8 +79,8 @@ fun MockGacha(
     )
     //类型
     val pageTabs = arrayListOf(
-        stringResource(id = R.string.character),
-        stringResource(id = R.string.title_history)
+        TabData(tab = stringResource(id = R.string.character)),
+        TabData(tab = stringResource(id = R.string.title_history))
     )
 
     //卡池信息

@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -90,7 +91,7 @@ fun QuestPager(
 ) {
     var pagerCount = 0
     //tab文本
-    val tabs = arrayListOf<String>()
+    val tabs = arrayListOf<TabData>()
     //tab颜色
     val colorList = arrayListOf<Color>()
 
@@ -99,7 +100,7 @@ fun QuestPager(
     val normalList = questList.filterAndSortSearch(type = 1, searchEquipIdList = searchEquipIdList)
     if (normalList.isNotEmpty()) {
         pagerCount++
-        tabs.add(normal)
+        tabs.add(TabData(tab = normal))
         colorList.add(colorCyan)
     }
     val normalListScrollState = rememberLazyListState()
@@ -109,7 +110,7 @@ fun QuestPager(
     val hardList = questList.filterAndSortSearch(type = 2, searchEquipIdList = searchEquipIdList)
     if (hardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(hard)
+        tabs.add(TabData(tab = hard))
         colorList.add(colorRed)
     }
     val hardListScrollState = rememberLazyListState()
@@ -120,7 +121,7 @@ fun QuestPager(
         questList.filterAndSortSearch(type = 3, searchEquipIdList = searchEquipIdList)
     if (veryHardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(veryHard)
+        tabs.add(TabData(tab = veryHard))
         colorList.add(colorPurple)
     }
     val veryHardListScrollState = rememberLazyListState()
@@ -139,7 +140,7 @@ fun QuestPager(
         }
     if (randomList?.isNotEmpty() == true) {
         pagerCount++
-        tabs.add(randomDrop)
+        tabs.add(TabData(tab = randomDrop))
         colorList.add(colorGreen)
     }
     val randomListScrollState = rememberLazyListState()
@@ -192,7 +193,7 @@ fun QuestPager(
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(tabs.size * 0.25f)
                 ) {
-                    when (tabs[it]) {
+                    when (tabs[it].tab) {
                         normal -> normalListScrollState.scrollToItem(0)
                         hard -> hardListScrollState.scrollToItem(0)
                         veryHard -> veryHardListScrollState.scrollToItem(0)
@@ -201,7 +202,8 @@ fun QuestPager(
                 }
                 if (randomDropResponseData == null) {
                     CircularProgressCompose(
-                        size = Dimen.smallIconSize
+                        size = Dimen.smallIconSize,
+                        strokeWidth = Dimen.smallStrokeWidth
                     )
                 }
             }
@@ -212,7 +214,7 @@ fun QuestPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { pagerIndex ->
-                if (tabs[pagerIndex] == randomDrop) {
+                if (tabs[pagerIndex].tab == randomDrop) {
                     //随机掉落
                     CommonResponseBox(responseData = randomDropResponseData) {
                         RandomDropAreaContent(
@@ -226,7 +228,7 @@ fun QuestPager(
                     //主线掉落
                     val list: List<QuestDetail>
                     val scrollState: LazyListState
-                    when (tabs[pagerIndex]) {
+                    when (tabs[pagerIndex].tab) {
                         normal -> {
                             list = normalList
                             scrollState = normalListScrollState

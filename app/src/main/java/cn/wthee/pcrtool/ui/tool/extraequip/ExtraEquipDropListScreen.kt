@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -64,13 +65,15 @@ private fun ExtraEquipDropListContent(
 ) {
     Column {
         val pagerState = rememberPagerState { dropList.size }
-        val tabs = arrayListOf<String>()
+        val tabs = arrayListOf<TabData>()
         dropList.forEach {
             tabs.add(
-                stringResource(
-                    id = R.string.extra_area_quest,
-                    it.getAreaOrder(),
-                    it.getQuestName()
+                TabData(
+                    tab = stringResource(
+                        id = R.string.extra_area_quest,
+                        it.getAreaOrder(),
+                        it.getQuestName()
+                    )
                 )
             )
         }

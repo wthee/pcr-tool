@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +21,13 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
+data class TabData(
+    var tab: String,
+    var count: Int? = null,
+    var isLoading: Boolean = false,
+    var color: Color? = null
+)
 
 /**
  * 通用 TabRow
@@ -30,7 +39,7 @@ import kotlinx.coroutines.launch
 fun MainTabRow(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    tabs: List<String>,
+    tabs: List<TabData>,
     scrollable: Boolean = false,
     colorList: ArrayList<Color> = arrayListOf(),
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
@@ -54,7 +63,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
+            MainTabList(pagerState, tabs, onClickCurrentTab)
         }
     } else {
         TabRow(
@@ -69,7 +78,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
+            MainTabList(pagerState, tabs, onClickCurrentTab)
         }
     }
 
@@ -82,14 +91,22 @@ fun MainTabRow(
 @Composable
 private fun MainTabList(
     pagerState: PagerState,
-    tabs: List<String>,
-    colorList: ArrayList<Color>,
+    tabs: List<TabData>,
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    tabs.forEachIndexed { index, s ->
+    tabs.forEachIndexed { index, tab ->
+        val color = if (tab.color != null) {
+            tab.color!!
+        } else {
+            if (pagerState.currentPage == index) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
+        }
         Tab(
             selected = pagerState.currentPage == index,
             onClick = {
@@ -101,20 +118,30 @@ private fun MainTabList(
                         pagerState.scrollToPage(index)
                     }
                 }
-            }) {
-            Subtitle1(
-                text = s,
-                modifier = Modifier.padding(Dimen.smallPadding),
-                color = if (colorList.isNotEmpty()) {
-                    colorList[index]
-                } else {
-                    if (pagerState.currentPage == index) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
+            }
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Subtitle1(
+                    text = tab.tab,
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    color = color
+                )
+                tab.count?.let {
+                    Subtitle2(
+                        text = it.toString(),
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        color = color
+                    )
                 }
-            )
+
+                if (tab.isLoading) {
+                    CircularProgressCompose(
+                        size = Dimen.smallIconSize,
+                        strokeWidth = Dimen.smallStrokeWidth
+                    )
+                }
+            }
+
         }
     }
 }
