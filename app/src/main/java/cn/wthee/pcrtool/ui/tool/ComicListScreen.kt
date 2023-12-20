@@ -60,7 +60,6 @@ import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
-import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
@@ -69,6 +68,7 @@ import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.media.PictureItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -199,10 +199,9 @@ private fun ComicItem(data: ComicData) {
             )
         }
 
-        MainImage(
-            data = data.url,
+        PictureItem(
+            picUrl = data.url,
             ratio = RATIO_COMIC,
-            modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillHeight,
         )
         CommonSpacer()
