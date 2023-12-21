@@ -220,7 +220,7 @@ fun SubImage(
     val loader = LocalContext.current.imageLoader
 
 
-    Box {
+    Box(modifier = modifier) {
         SubcomposeAsyncImage(
             model = data,
             contentDescription = null,
@@ -229,8 +229,8 @@ fun SubImage(
             loading = {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(RATIO)
+                        .fillMaxSize()
+                        .aspectRatio(ratio ?: RATIO)
                         .commonPlaceholder(true)
                 )
             },
@@ -239,7 +239,7 @@ fun SubImage(
                     AsyncImage(
                         model = R.drawable.error,
                         contentDescription = null,
-                        modifier = Modifier.aspectRatio(RATIO)
+                        modifier = Modifier.aspectRatio(ratio ?: RATIO)
                     )
                 }
                 loading?.value = false
@@ -258,11 +258,11 @@ fun SubImage(
                 loader.enqueue(request)
             },
             modifier = if (ratio != null) {
-                modifier
+                Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio)
             } else {
-                modifier.fillMaxWidth()
+                Modifier.fillMaxWidth()
             }
         )
 

@@ -41,14 +41,9 @@ fun MainTabRow(
     pagerState: PagerState,
     tabs: List<TabData>,
     scrollable: Boolean = false,
-    colorList: ArrayList<Color> = arrayListOf(),
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
-    val contentColor = if (colorList.isNotEmpty()) {
-        colorList[pagerState.currentPage]
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
+    val contentColor = tabs[pagerState.currentPage].color ?: MaterialTheme.colorScheme.primary
 
     if (scrollable) {
         ScrollableTabRow(

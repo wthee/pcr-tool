@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.QuestRepository
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.updateLoadingState
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,8 @@ import javax.inject.Inject
 @Immutable
 data class RandomDropAreaListUiState(
     //额外掉落
-    val randomDropResponseData: ResponseData<List<RandomEquipDropArea>>? = null
+    val randomDropList: List<RandomEquipDropArea>? = null,
+    val loadingState: LoadingState = LoadingState.Loading
 )
 
 
@@ -59,19 +61,26 @@ class RandomDropAreaListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = apiRepository.getEquipArea(equipId)
-                response.data?.let {
+                if (response.data != null) {
                     val maxArea = equipmentRepository.getMaxArea() % 100
-                    val filterList = it.filter { areaData -> areaData.area <= maxArea }
-                    response.data = filterList
+                    val filterList = response.data!!.filter { areaData -> areaData.area <= maxArea }
+
+                    _uiState.update {
+                        it.copy(
+                            randomDropList = filterList,
+                            loadingState = updateLoadingState(filterList)
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            loadingState = LoadingState.Error
+                        )
+                    }
                 }
 
-                _uiState.update {
-                    it.copy(
-                        randomDropResponseData = response
-                    )
-                }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, "getEquipAreaList")
+                LogReportUtil.upload(e, "getDropAreaList")
             }
         }
     }

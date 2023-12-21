@@ -326,7 +326,7 @@ private fun ToolButtonContent(
         val videoError = stringResource(R.string.video_resource_error)
         if (!downloading) {
             IconTextButton(
-                text = stringResource(id = if (saved) R.string.downloaded_video else R.string.download_video),
+                text = stringResource(id = if (saved) R.string.saved else R.string.download_video),
                 icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
                 modifier = Modifier.padding(start = Dimen.smallPadding)
             ) {
@@ -421,7 +421,7 @@ private fun ToolButtonContent(
             url,
             fileName,
             lifecycleOwner,
-            onFinished = {
+            onDownloadFinished = {
                 downloading = false
             },
             onDownloadFailure = {

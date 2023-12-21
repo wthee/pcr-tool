@@ -84,7 +84,7 @@ fun LeaderTierScreen(
             MainSmallFab(
                 iconType = MainIconType.LEADER_TIER,
                 text = uiState.currentData?.leader?.size.toString(),
-                extraContent = if (uiState.currentData == null) {
+                extraContent = if (uiState.loadingState == LoadingState.Loading) {
                     //加载提示
                     {
                         CircularProgressCompose()

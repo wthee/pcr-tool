@@ -197,9 +197,9 @@ class OverviewScreenViewModel @Inject constructor(
             var dbError = false
             val r6Ids = unitRepository.getR6Ids()
 
-            if(r6Ids == null){
+            if (r6Ids == null) {
                 dbError = true
-            }else{
+            } else {
                 MainActivity.r6Ids = r6Ids
             }
 

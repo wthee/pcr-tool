@@ -12,7 +12,6 @@ import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
@@ -50,9 +49,9 @@ data class EquipMaterialDetailUiState(
     //收藏角色
     val loved: Boolean = false,
     val loadingState: LoadingState = LoadingState.Loading,
-    val materialLoadingState: LoadingState = LoadingState.Loading,
+    val randomDropLoadingState: LoadingState = LoadingState.Loading,
     //额外掉落
-    val randomDropResponseData: ResponseData<List<RandomEquipDropArea>>? = null
+    val randomDropList: List<RandomEquipDropArea>? = null
 )
 
 /**
@@ -131,17 +130,24 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = apiRepository.getEquipArea(equipId)
-                response.data?.let {
+                if (response.data != null) {
                     val maxArea = equipmentRepository.getMaxArea() % 100
-                    val filterList = it.filter { areaData -> areaData.area <= maxArea }
-                    response.data = filterList
+                    val filterList = response.data!!.filter { areaData -> areaData.area <= maxArea }
+
+                    _uiState.update {
+                        it.copy(
+                            randomDropList = filterList,
+                            randomDropLoadingState = updateLoadingState(filterList)
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            randomDropLoadingState = LoadingState.Error
+                        )
+                    }
                 }
 
-                _uiState.update {
-                    it.copy(
-                        randomDropResponseData = response
-                    )
-                }
             } catch (e: Exception) {
                 LogReportUtil.upload(e, "getEquipArea#equipId:$equipId")
             }

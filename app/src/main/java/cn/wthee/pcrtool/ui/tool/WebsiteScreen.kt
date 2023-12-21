@@ -95,7 +95,7 @@ fun WebsiteScreen(
             MainSmallFab(
                 iconType = MainIconType.WEBSITE_BOOKMARK,
                 text = stringResource(id = R.string.tool_website),
-                extraContent = if (uiState.websiteResponseData == null) {
+                extraContent = if (uiState.loadingState == LoadingState.Loading) {
                     //加载提示
                     {
                         CircularProgressCompose()

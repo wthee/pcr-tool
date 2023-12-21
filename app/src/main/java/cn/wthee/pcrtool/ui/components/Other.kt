@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -167,6 +168,8 @@ fun StateBox(
 fun MainScaffold(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentAlignment: Alignment = Alignment.TopStart,
+    shape: Shape = CutCornerShape(0),
     fillMaxSize: Boolean = true,
     onMainFabClick: (() -> Unit)? = null,
     mainFabIcon: MainIconType = MainIconType.BACK,
@@ -188,7 +191,8 @@ fun MainScaffold(
             modifier.fillMaxSize()
         } else {
             modifier
-        }).background(backgroundColor)
+        }).background(color = backgroundColor, shape),
+        contentAlignment = contentAlignment
     ) {
         //主要内容
         content()

@@ -121,7 +121,7 @@ fun LeaderboardScreen(
             MainSmallFab(
                 iconType = MainIconType.LEADER,
                 text = (uiState.currentList.size).toString(),
-                extraContent = if (uiState.leaderboardResponseData == null) {
+                extraContent = if (uiState.loadingState == LoadingState.Loading) {
                     //加载提示
                     {
                         CircularProgressCompose()

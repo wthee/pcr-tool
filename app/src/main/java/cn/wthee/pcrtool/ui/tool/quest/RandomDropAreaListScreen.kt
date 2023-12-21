@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -16,11 +17,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
@@ -45,7 +47,7 @@ fun RandomDropAreaListScreen(
             MainSmallFab(
                 iconType = MainIconType.RANDOM_AREA,
                 text = stringResource(id = R.string.random_area),
-                extraContent = if (uiState.randomDropResponseData == null) {
+                extraContent = if (uiState.loadingState == LoadingState.Loading) {
                     //加载提示
                     {
                         CircularProgressCompose()
@@ -63,25 +65,29 @@ fun RandomDropAreaListScreen(
             }
         }
     ) {
-        CommonResponseBox(
-            responseData = uiState.randomDropResponseData,
-            placeholder = {
-                for (i in 0..10) {
-                    AreaItem(
-                        -1,
-                        arrayListOf(EquipmentIdWithOdds()),
-                        "",
-                        arrayListOf(),
-                        colorGreen
-                    )
+        StateBox(
+            stateType = uiState.loadingState,
+            loadingContent = {
+                Column {
+                    for (i in 0..10) {
+                        AreaItem(
+                            -1,
+                            arrayListOf(EquipmentIdWithOdds()),
+                            "",
+                            arrayListOf(),
+                            colorGreen
+                        )
+                    }
                 }
             }
-        ) { data ->
-            RandomDropAreaContent(
-                selectId = equipId,
-                scrollState = scrollState,
-                areaList = data
-            )
+        ) {
+            uiState.randomDropList?.let {
+                RandomDropAreaContent(
+                    selectId = equipId,
+                    scrollState = scrollState,
+                    areaList = it
+                )
+            }
         }
     }
 

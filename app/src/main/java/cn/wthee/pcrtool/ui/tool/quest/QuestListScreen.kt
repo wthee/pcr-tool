@@ -29,11 +29,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -71,7 +70,8 @@ fun QuestListScreen(
                 questList = it,
                 equipId = 0,
                 searchEquipIdList = searchEquipIds.intArrayList,
-                randomDropResponseData = uiState.randomDropResponseData
+                randomDropList = uiState.randomDropList,
+                loadingState = uiState.loadingState,
             )
         }
     }
@@ -87,21 +87,19 @@ fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
     searchEquipIdList: List<Int> = arrayListOf(),
-    randomDropResponseData: ResponseData<List<RandomEquipDropArea>>?
+    randomDropList: List<RandomEquipDropArea>?,
+    loadingState: LoadingState
 ) {
     var pagerCount = 0
     //tab文本
     val tabs = arrayListOf<TabData>()
-    //tab颜色
-    val colorList = arrayListOf<Color>()
 
     //普通
     val normal = stringResource(id = R.string.normal)
     val normalList = questList.filterAndSortSearch(type = 1, searchEquipIdList = searchEquipIdList)
     if (normalList.isNotEmpty()) {
         pagerCount++
-        tabs.add(TabData(tab = normal))
-        colorList.add(colorCyan)
+        tabs.add(TabData(tab = normal, color = colorCyan))
     }
     val normalListScrollState = rememberLazyListState()
 
@@ -110,8 +108,7 @@ fun QuestPager(
     val hardList = questList.filterAndSortSearch(type = 2, searchEquipIdList = searchEquipIdList)
     if (hardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(TabData(tab = hard))
-        colorList.add(colorRed)
+        tabs.add(TabData(tab = hard, color = colorRed))
     }
     val hardListScrollState = rememberLazyListState()
 
@@ -121,15 +118,14 @@ fun QuestPager(
         questList.filterAndSortSearch(type = 3, searchEquipIdList = searchEquipIdList)
     if (veryHardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(TabData(tab = veryHard))
-        colorList.add(colorPurple)
+        tabs.add(TabData(tab = veryHard, color = colorPurple))
     }
     val veryHardListScrollState = rememberLazyListState()
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
     val randomList =
-        randomDropResponseData?.data?.filter {
+        randomDropList?.filter {
             if (searchEquipIdList.isNotEmpty()) {
                 getRandomQuestMatchCount(it, searchEquipIdList) > 0
             } else {
@@ -140,8 +136,7 @@ fun QuestPager(
         }
     if (randomList?.isNotEmpty() == true) {
         pagerCount++
-        tabs.add(TabData(tab = randomDrop))
-        colorList.add(colorGreen)
+        tabs.add(TabData(tab = randomDrop, color = colorGreen))
     }
     val randomListScrollState = rememberLazyListState()
 
@@ -188,7 +183,6 @@ fun QuestPager(
                 MainTabRow(
                     pagerState = pagerState,
                     tabs = tabs,
-                    colorList = colorList,
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(tabs.size * 0.25f)
@@ -200,7 +194,7 @@ fun QuestPager(
                         randomDrop -> randomListScrollState.scrollToItem(0)
                     }
                 }
-                if (randomDropResponseData == null) {
+                if (loadingState == LoadingState.Loading) {
                     CircularProgressCompose(
                         size = Dimen.smallIconSize,
                         strokeWidth = Dimen.smallStrokeWidth
@@ -216,7 +210,7 @@ fun QuestPager(
             ) { pagerIndex ->
                 if (tabs[pagerIndex].tab == randomDrop) {
                     //随机掉落
-                    CommonResponseBox(responseData = randomDropResponseData) {
+                    if (loadingState == LoadingState.Success) {
                         RandomDropAreaContent(
                             selectId = equipId,
                             areaList = randomList!!,
