@@ -109,6 +109,11 @@ fun TopBarCompose(
                 text = stringResource(id = R.string.app_name)
             )
 
+            //异常时显示版本号
+            if (updateApp.id == -2) {
+                CaptionText(text = "v" + BuildConfig.VERSION_NAME)
+            }
+
             //数据版本，测试用
             if (BuildConfig.DEBUG) {
                 CaptionText(text = MainActivity.regionType.name)
