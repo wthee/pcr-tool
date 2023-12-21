@@ -97,4 +97,6 @@ object NavRoute {
 
     const val MOCK_GACHA_TYPE = "mockGachaType"
     const val PICKUP_LIST = "pickUpList"
+
+    const val LOAD_COMIC_LIST = "loadComicList"
 }

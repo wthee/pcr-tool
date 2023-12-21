@@ -103,6 +103,7 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
     searchList.addItem(ToolMenuType.WEBSITE)
     searchList.addItem(ToolMenuType.TWEET)
     searchList.addItem(ToolMenuType.COMIC)
+    searchList.addItem(ToolMenuType.LOAD_COMIC)
     itemGroupList.add(
         ToolMenuGroup(
             stringResource(id = R.string.search_api),

@@ -67,6 +67,7 @@ import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipListFilterScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitListScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelDetailScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
+import cn.wthee.pcrtool.ui.tool.loadcomic.LoadComicListScreen
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
 import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
@@ -734,6 +735,13 @@ fun NavGraph(
             ) {
                 CharacterDetailScreen(actions)
             }
+
+            //过场漫画列表
+            composable(
+                route = NavRoute.LOAD_COMIC_LIST
+            ) {
+                LoadComicListScreen()
+            }
         }
     }
 }
@@ -1113,4 +1121,12 @@ class NavActions(navController: NavHostController) {
     val toFilterExtraEquip: (String) -> Unit = { filter ->
         navController.navigate("${NavRoute.FILTER_EXTRA_EQUIP}/${filter}")
     }
+
+    /**
+     * 过场漫画列表
+     */
+    val toLoadComicList = {
+        navController.navigate(NavRoute.LOAD_COMIC_LIST)
+    }
+
 }

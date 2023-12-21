@@ -102,6 +102,7 @@ enum class ToolMenuType(val id: Int) {
     LEADER_TIER(221),
     ALL_QUEST(222),
     UNIQUE_EQUIP(223),
+    LOAD_COMIC(224),
     ;
 
 

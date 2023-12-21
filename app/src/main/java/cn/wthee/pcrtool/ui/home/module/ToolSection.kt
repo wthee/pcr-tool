@@ -212,6 +212,7 @@ fun getAction(
             ToolMenuType.LEADER_TIER -> actions.toLeaderTier()
             ToolMenuType.ALL_QUEST -> actions.toAllQuest()
             ToolMenuType.UNIQUE_EQUIP -> actions.toUniqueEquipList()
+            ToolMenuType.LOAD_COMIC -> actions.toLoadComicList()
         }
     }
 
@@ -234,7 +235,7 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.PVP_SEARCH -> ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH)
         ToolMenuType.LEADER -> ToolMenuData(R.string.tool_leader, MainIconType.LEADER)
         ToolMenuType.TWEET -> ToolMenuData(R.string.tweet, MainIconType.TWEET)
-        ToolMenuType.COMIC -> ToolMenuData(R.string.comic, MainIconType.COMIC)
+        ToolMenuType.COMIC -> ToolMenuData(R.string.comic_4, MainIconType.COMIC)
 //        ToolMenuType.ALL_SKILL -> ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
         ToolMenuType.ALL_EQUIP -> ToolMenuData(R.string.calc_equip_count, MainIconType.EQUIP_CALC)
         ToolMenuType.MOCK_GACHA -> ToolMenuData(R.string.tool_mock_gacha, MainIconType.MOCK_GACHA)
@@ -268,6 +269,11 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.UNIQUE_EQUIP -> ToolMenuData(
             R.string.tool_unique_equip,
             MainIconType.UNIQUE_EQUIP
+        )
+
+        ToolMenuType.LOAD_COMIC -> ToolMenuData(
+            R.string.tool_load_comic,
+            MainIconType.LOAD_COMIC
         )
     }
     //设置模块类别

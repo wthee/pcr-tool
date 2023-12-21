@@ -75,7 +75,13 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
      * @param startTime 开始时间 格式如：2020/01/01 00:00:00
      * @param endTime 结束时间
      */
-    suspend fun getNews(region: Int, after: Int?, keyword: String, startTime:String, endTime:String): ResponseData<List<NewsTable>> {
+    suspend fun getNews(
+        region: Int,
+        after: Int?,
+        keyword: String,
+        startTime: String,
+        endTime: String
+    ): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
@@ -135,7 +141,12 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
      * @param startTime 开始时间 格式如：2020/01/01 00:00:00
      * @param endTime 结束时间
      */
-    suspend fun getTweet(after: Int?, keyword: String, startTime:String, endTime:String): ResponseData<List<TweetData>> {
+    suspend fun getTweet(
+        after: Int?,
+        keyword: String,
+        startTime: String,
+        endTime: String
+    ): ResponseData<List<TweetData>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("keyword", keyword)
@@ -297,9 +308,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 查询1格漫画类型
+     * 查询过场漫画类型
      */
-    suspend fun getComicType(id: Int): ResponseData<String> {
+    suspend fun getLoadComicType(id: Int): ResponseData<String> {
         //请求
         try {
             //接口参数
@@ -308,7 +319,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             val body =
                 json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
 
-            val response = service.getComicType(body)
+            val response = service.getLoadComicType(body)
             if (isError(response)) {
                 return error()
             }
@@ -317,7 +328,28 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getComicType")
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getLoadComicType")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询过场漫画列表
+     */
+    suspend fun getLoadComicList(): ResponseData<List<String>> {
+        //请求
+        try {
+            val response = service.getLoadComicList()
+            if (isError(response)) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                LogReportUtil.upload(e, Constants.EXCEPTION_API + "getLoadComicList")
             }
         }
         return error()

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.Animation
 import androidx.compose.material.icons.rounded.Api
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.AutoAwesomeMotion
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cake
@@ -388,6 +389,11 @@ enum class MainIconType(val icon: ImageVector) {
      * 漫画信息
      */
     COMIC(Icons.Rounded.Looks4),
+
+    /**
+     * 漫画信息
+     */
+    LOAD_COMIC(Icons.Rounded.AutoAwesomeMotion),
 
     /**
      * 漫画目录

@@ -67,7 +67,7 @@ class ImageRequestHelper {
         //动态卡面
         const val CARD_MOVIE = "movie/card/"
 
-        //1格漫画
+        //过场漫画
         const val COMIC = "comic/"
     }
 
@@ -78,9 +78,10 @@ class ImageRequestHelper {
     fun getUrl(resUrl: String, id: Any, forceJpType: Boolean = true) =
         RESOURCE_PREFIX_URL + (if (forceJpType) "jp" else type) + RESOURCE + resUrl + id.toString() + WEBP
 
+    fun getResourcePrefixUrl() = RESOURCE_PREFIX_URL
 
     /**
-     * 获取1格漫画资源地址
+     * 获取过场漫画资源地址
      * @param resourceType 资源类型
      */
     fun getComicUrl(id: Any, resourceType: String) =

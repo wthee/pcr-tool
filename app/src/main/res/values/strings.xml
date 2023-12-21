@@ -180,6 +180,7 @@
     <string name="twitter">查看原文</string>
     <string name="tweet">日服情报</string>
     <string name="comic">漫画</string>
+    <string name="comic_4">4格漫画</string>
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
     <string name="comic_input_hint">输入跳转，如：382</string>
@@ -235,6 +236,7 @@
     <string name="search_unique_equip">装备名/角色名</string>
     <string name="character_detail">角色详情</string>
     <string name="filter_by_start_date">选择日期</string>
+    <string name="tool_load_comic">过场漫画</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>
@@ -832,7 +834,7 @@
     <string name="play_error">播放出错或资源不存在</string>
     <string name="video_resource_error">资源不存在</string>
     <string name="download_video">下载视频</string>
-    <string name="downloaded_video">已保存</string>
+    <string name="saved">已保存</string>
 
     <string name="title_download_file">正在下载</string>
     <string name="download_file_notice">文件下载通知</string>

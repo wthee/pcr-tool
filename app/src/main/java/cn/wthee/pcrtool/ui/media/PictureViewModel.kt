@@ -63,7 +63,7 @@ class PictureViewModel @Inject constructor(
                 }
                 //角色立绘
                 getUnitCardList(id)
-                //1格漫画
+                //过场漫画
                 getComicList(id)
             }
             //剧情立绘
@@ -132,7 +132,7 @@ class PictureViewModel @Inject constructor(
      */
     private fun getComicList(id: Int) {
         viewModelScope.launch {
-            val responseData = apiRepository.getComicType(id)
+            val responseData = apiRepository.getLoadComicType(id)
             responseData.data.let { data ->
                 if (data != null) {
                     val url = ImageRequestHelper.getInstance().getComicUrl(id, data)
