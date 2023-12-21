@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.utils
 
 import android.annotation.SuppressLint
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.utils.Constants.APP_VERSION
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -69,9 +70,13 @@ object ApiUtil {
     fun buildDownloadClient(listener: DownloadListener): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .addInterceptor(Interceptor {
-                val originalResponse: Response = it.proceed(it.request())
-                return@Interceptor originalResponse.newBuilder()
-                    .body(DownloadResponseBody(originalResponse.body!!, listener))
+                val request = it.request()
+                    .newBuilder()
+                    .addHeader(APP_VERSION, BuildConfig.VERSION_NAME)
+                    .build()
+                val response = it.proceed(request)
+                return@Interceptor response.newBuilder()
+                    .body(DownloadResponseBody(response.body!!, listener))
                     .build()
             })
             .retryOnConnectionFailure(true)
@@ -135,7 +140,7 @@ class RetryInterceptor(  //最大重试次数
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
             .newBuilder()
-            .addHeader("app-version", BuildConfig.VERSION_NAME)
+            .addHeader(APP_VERSION, BuildConfig.VERSION_NAME)
             .build()
         var response = chain.proceed(request)
         while (!response.isSuccessful && retryNum < maxRetry) {
