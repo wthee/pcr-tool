@@ -95,6 +95,7 @@ import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
@@ -169,7 +170,7 @@ fun MainScaffold(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentAlignment: Alignment = Alignment.TopStart,
-    shape: Shape = CutCornerShape(0),
+    shape: Shape = noShape(),
     fillMaxSize: Boolean = true,
     onMainFabClick: (() -> Unit)? = null,
     mainFabIcon: MainIconType = MainIconType.BACK,

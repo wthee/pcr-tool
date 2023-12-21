@@ -57,14 +57,14 @@ class MediaDownloadHelper(private val context: Context) {
      * @param url 下载地址
      * @param fileName 保存后的文件名
      * @param lifecycleOwner
-     * @param onFinished 保存结束（成功或失败）监听
+     * @param onDownloadFinished 下载成功监听
      * @param onDownloadFailure 下载失败监听
      */
     fun downloadVideo(
         url: String,
         fileName: String,
         lifecycleOwner: LifecycleOwner,
-        onFinished: () -> Unit,
+        onDownloadFinished: () -> Unit,
         onDownloadFailure: () -> Unit
     ) {
 
@@ -92,10 +92,10 @@ class MediaDownloadHelper(private val context: Context) {
                     when (workInfo.state) {
                         WorkInfo.State.SUCCEEDED -> {
                             //下载成功，保存
+                            onDownloadFinished()
                             val sourceFile =
                                 File(FileUtil.getDownloadDir() + File.separator + fileName)
-                            saveMedia(videoFile = sourceFile, displayName = fileName)
-                            onFinished()
+                            saveMedia(videoFile = sourceFile, displayName = fileName) {}
                         }
 
                         WorkInfo.State.FAILED -> {
@@ -117,9 +117,11 @@ class MediaDownloadHelper(private val context: Context) {
     fun saveMedia(
         videoFile: File? = null,
         bitmap: Bitmap? = null,
-        displayName: String
+        displayName: String,
+        onSaved: () -> Unit
     ) {
         MainScope().launch(Dispatchers.IO) {
+            var saveSuccess = false
             val isVideo = bitmap == null
 
             val path = getSaveDir(isVideo)
@@ -161,6 +163,7 @@ class MediaDownloadHelper(private val context: Context) {
                 //保存
                 if (insertMedia(videoFile, bitmap, contentValues, isVideo)) {
                     VibrateUtil(context).done()
+                    saveSuccess = true
                     ToastUtil.launchShort(
                         getString(
                             R.string.save_success,
@@ -178,6 +181,9 @@ class MediaDownloadHelper(private val context: Context) {
             }
             //删除下载缓存
             videoFile?.delete()
+            if (saveSuccess) {
+                onSaved()
+            }
         }
     }
 

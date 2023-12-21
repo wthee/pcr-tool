@@ -1,15 +1,18 @@
 package cn.wthee.pcrtool.ui.tool.loadcomic
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -18,6 +21,8 @@ import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.MediaGridList
 import cn.wthee.pcrtool.ui.media.PictureItem
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.noShape
 import kotlinx.coroutines.launch
 
 /**
@@ -57,7 +62,8 @@ fun LoadComicListScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadState, loadingContent = {
+            stateType = uiState.loadState,
+            loadingContent = {
                 VerticalGrid(
                     itemWidth = getItemWidth() / 2
                 ) {
@@ -65,11 +71,16 @@ fun LoadComicListScreen(
                         PictureItem(
                             picUrl = "",
                             ratio = 1f,
-                            shape = RoundedCornerShape(0.dp)
+                            shape = noShape(),
+                            modifier = Modifier.padding(Dimen.mediumPadding)
                         )
                     }
                 }
-            }) {
+            },
+            errorContent = {
+                CenterTipText(stringResource(id = R.string.data_get_error))
+            }
+        ) {
             MediaGridList(
                 urlList = uiState.comicList!!,
                 showTitle = false,
@@ -79,7 +90,8 @@ fun LoadComicListScreen(
                 PictureItem(
                     picUrl = it,
                     ratio = 1f,
-                    shape = RoundedCornerShape(0.dp)
+                    shape = noShape(),
+                    modifier = Modifier.padding(Dimen.mediumPadding)
                 )
             }
         }

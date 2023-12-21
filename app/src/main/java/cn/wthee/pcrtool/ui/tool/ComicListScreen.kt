@@ -73,6 +73,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
@@ -203,6 +204,7 @@ private fun ComicItem(data: ComicData) {
             picUrl = data.url,
             ratio = RATIO_COMIC,
             contentScale = ContentScale.FillHeight,
+            shape = noShape()
         )
         CommonSpacer()
         CommonSpacer()

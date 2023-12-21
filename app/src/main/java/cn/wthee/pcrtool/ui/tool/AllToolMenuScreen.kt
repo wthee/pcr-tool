@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,6 +50,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.intArrayList
@@ -182,7 +182,7 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
                         shape = shapeTop()
                     )
                     .background(
-                        shape = if (isEditMode) shapeTop() else RoundedCornerShape(0.dp),
+                        shape = if (isEditMode) shapeTop() else noShape(),
                         color = if (isEditMode) MaterialTheme.colorScheme.surface else Color.Transparent
                     ),
                 state = scrollState

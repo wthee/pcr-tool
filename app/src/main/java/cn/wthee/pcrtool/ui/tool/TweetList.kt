@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -43,16 +41,17 @@ import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
-import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
+import cn.wthee.pcrtool.ui.media.PictureItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.BrowserUtil
 import java.util.regex.Pattern
 
@@ -274,24 +273,18 @@ private fun TweetItem(data: TweetData) {
                 //图片
                 if (photos.isNotEmpty()) {
                     if (photos.size > 1) {
-                        VerticalGrid(fixCount = 3, contentPadding = Dimen.mediumPadding) {
+                        VerticalGrid(fixCount = 3, isSubLayout = true) {
                             photos.forEach {
-                                MainImage(
-                                    data = it,
-                                    ratio = -1f,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(Dimen.tweetImgHeight),
-                                    contentScale = ContentScale.Crop
+                                PictureItem(
+                                    picUrl = it,
+                                    shape = noShape()
                                 )
                             }
                         }
                     } else {
-                        MainImage(
-                            data = photos[0],
-                            ratio = -1f,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentScale = ContentScale.Crop
+                        PictureItem(
+                            picUrl = photos[0],
+                            shape = noShape()
                         )
                     }
 
