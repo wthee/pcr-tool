@@ -33,9 +33,8 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(ToolSectionUiState())
     val uiState: StateFlow<ToolSectionUiState> = _uiState.asStateFlow()
 
-
     /**
-     * 获取新闻
+     * 获取功能排序
      */
     fun getToolOrderData() {
         val orderData = runBlocking {
@@ -50,4 +49,14 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    /**
+     * 更新排序
+     */
+    fun updateOrderData(orderData: String) {
+        _uiState.update {
+            it.copy(
+                toolOrderData = orderData,
+            )
+        }
+    }
 }

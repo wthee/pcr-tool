@@ -221,7 +221,7 @@ private fun CalendarEventOperation(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    MenuItem(context, actions, it, false)
+                    MenuItem(actions, it, false)
                 }
             }
         }

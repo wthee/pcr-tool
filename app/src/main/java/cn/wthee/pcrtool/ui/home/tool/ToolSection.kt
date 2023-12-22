@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home.tool
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -20,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -27,8 +27,10 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
@@ -55,9 +57,13 @@ fun ToolSection(
     actions: NavActions,
     isEditMode: Boolean,
     orderStr: String,
+    toolSectionViewModel: ToolSectionViewModel = hiltViewModel()
 ) {
     val id = OverviewType.TOOL.id
-
+    val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
+    LifecycleEffect(Lifecycle.Event.ON_START) {
+        toolSectionViewModel.getToolOrderData()
+    }
 
     Section(
         id = id,
@@ -73,7 +79,13 @@ fun ToolSection(
             }
         }
     ) {
-        ToolMenu(actions = actions, isEditMode = isEditMode)
+        ToolMenu(
+            toolOrderData = uiState.toolOrderData,
+            loadingState = uiState.loadingState,
+            actions = actions,
+            isEditMode = isEditMode,
+            updateOrderData = toolSectionViewModel::updateOrderData
+        )
     }
 }
 
@@ -84,19 +96,16 @@ fun ToolSection(
  */
 @Composable
 fun ToolMenu(
+    toolOrderData: String?,
+    loadingState: LoadingState,
     actions: NavActions,
     isEditMode: Boolean = false,
     isHome: Boolean = true,
-    toolSectionViewModel: ToolSectionViewModel = hiltViewModel()
+    updateOrderData: (String) -> Unit
 ) {
-    val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
-    toolSectionViewModel.getToolOrderData()
-
-
-    val context = LocalContext.current
 
     StateBox(
-        stateType = uiState.loadingState,
+        stateType = loadingState,
         noDataContent = {
             if (!isEditMode && isHome) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -111,7 +120,7 @@ fun ToolMenu(
         }
     ) {
         val toolList = arrayListOf<ToolMenuData>()
-        uiState.toolOrderData?.intArrayList?.forEach {
+        toolOrderData?.intArrayList?.forEach {
             ToolMenuType.getByValue(it)?.let { toolMenuType ->
                 toolList.add(getToolMenuData(toolMenuType = toolMenuType))
             }
@@ -132,7 +141,12 @@ fun ToolMenu(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    MenuItem(context, actions, it, isEditMode)
+                    MenuItem(
+                        actions = actions,
+                        toolMenuData = it,
+                        isEditMode = isEditMode,
+                        updateOrderData = updateOrderData
+                    )
                 }
             }
         }
@@ -141,12 +155,13 @@ fun ToolMenu(
 
 @Composable
 fun MenuItem(
-    context: Context,
     actions: NavActions,
     toolMenuData: ToolMenuData,
-    isEditMode: Boolean
+    isEditMode: Boolean,
+    updateOrderData: ((String) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -160,7 +175,11 @@ fun MenuItem(
                         scope,
                         toolMenuData.type.id,
                         MainPreferencesKeys.SP_TOOL_ORDER
-                    )
+                    ) {
+                        if (updateOrderData != null) {
+                            updateOrderData(it)
+                        }
+                    }
                 } else {
                     getAction(actions, toolMenuData)()
                 }
