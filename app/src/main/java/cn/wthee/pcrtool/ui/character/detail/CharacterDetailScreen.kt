@@ -26,7 +26,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -107,7 +106,7 @@ import cn.wthee.pcrtool.utils.int
 /**
  * 角色信息
  */
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterDetailScreen(
     actions: NavActions,
@@ -344,7 +343,7 @@ private fun CharacterDetailContent(
             }
 
             CommonSpacer()
-            Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
+            CommonSpacer()
         }
 
     } else {
@@ -478,7 +477,7 @@ private fun CharacterDetailContent(
                 }
 
                 CommonSpacer()
-                Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
+                CommonSpacer()
             }
         }
     }

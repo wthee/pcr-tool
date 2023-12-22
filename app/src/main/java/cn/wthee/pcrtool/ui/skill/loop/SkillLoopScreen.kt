@@ -34,6 +34,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 
 /**
  * 技能循环
+ * @param scrollable 是否可滚动，false：不可滚动，用于列表。true：可滚动，用于bottom sheet
  */
 @Composable
 fun SkillLoopScreen(

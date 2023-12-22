@@ -80,16 +80,23 @@ import java.io.File
 /**
  * 顶部工具栏
  *
+ * @param isEditMode 是否编辑模式
+ * @param apkDownloadState 应用下载状态 [cn.wthee.pcrtool.ui.home.OverviewScreenUiState.apkDownloadState]
+ * @param appUpdateData 应用更新内容
+ * @param isExpanded 是否展开
+ * @param changeEditMode 变更编辑模式 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.changeEditMode]
+ * @param updateApkDownloadState 更新下载状态 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.updateApkDownloadState]
+ * @param updateExpanded 更新展开状态 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.updateExpanded]
  */
 @Composable
 fun TopBarCompose(
     isEditMode: Boolean,
     apkDownloadState: Int,
-    updateApp: AppNotice,
+    appUpdateData: AppNotice,
     isExpanded: Boolean,
     changeEditMode: () -> Unit,
     updateApkDownloadState: (Int) -> Unit,
-    updateAppNoticeLayoutState: (Boolean) -> Unit
+    updateExpanded: (Boolean) -> Unit
 ) {
 
     //Toolbar
@@ -110,7 +117,7 @@ fun TopBarCompose(
             )
 
             //异常时显示版本号
-            if (updateApp.id == -2) {
+            if (appUpdateData.id == -2) {
                 CaptionText(text = "v" + BuildConfig.VERSION_NAME)
             }
 
@@ -125,7 +132,7 @@ fun TopBarCompose(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //应用更新
-                when (updateApp.id) {
+                when (appUpdateData.id) {
                     -1 -> {
                         //校验更新中
                         CircularProgressIndicator(
@@ -145,20 +152,23 @@ fun TopBarCompose(
                             size = Dimen.fabIconSize,
                             modifier = Modifier.padding(start = Dimen.smallPadding)
                         ) {
-                            updateAppNoticeLayoutState(!isExpanded)
+                            updateExpanded(!isExpanded)
                         }
                     }
 
                     else -> {
                         //提示
-                        if (updateApp.id == 0 && !isExpanded) {
+                        if (appUpdateData.id == 0 && !isExpanded) {
                             IconTextButton(
                                 icon = MainIconType.APP_UPDATE,
-                                text = stringResource(R.string.find_new_release, updateApp.title),
+                                text = stringResource(
+                                    R.string.find_new_release,
+                                    appUpdateData.title
+                                ),
                                 contentColor = colorGreen,
                                 iconSize = Dimen.fabIconSize
                             ) {
-                                updateAppNoticeLayoutState(true)
+                                updateExpanded(true)
                             }
                         } else {
                             MainIcon(
@@ -167,7 +177,7 @@ fun TopBarCompose(
                                 size = Dimen.fabIconSize,
                                 modifier = Modifier.padding(start = Dimen.smallPadding)
                             ) {
-                                updateAppNoticeLayoutState(!isExpanded)
+                                updateExpanded(!isExpanded)
                             }
                         }
 
@@ -189,9 +199,9 @@ fun TopBarCompose(
     }
 
     //更新卡片布局
-    ExpandAnimation(visible = isExpanded || updateApp.id == -2 || apkDownloadState > -2) {
+    ExpandAnimation(visible = isExpanded || appUpdateData.id == -2 || apkDownloadState > -2) {
         AppUpdateContent(
-            appNotice = updateApp,
+            appUpdateData = appUpdateData,
             apkDownloadState = apkDownloadState,
             updateApkDownloadState = updateApkDownloadState
         )
@@ -203,7 +213,7 @@ fun TopBarCompose(
  */
 @Composable
 private fun AppUpdateContent(
-    appNotice: AppNotice,
+    appUpdateData: AppNotice,
     apkDownloadState: Int,
     updateApkDownloadState: (Int) -> Unit
 ) {
@@ -261,12 +271,12 @@ private fun AppUpdateContent(
             ),
             fillMaxWidth = !downloading
         ) {
-            if (appNotice.id != -2) {
+            if (appUpdateData.id != -2) {
                 if (downloading) {
                     //下载相关
                     DownloadingContent(apkDownloadState)
                 } else {
-                    if (appNotice.id == -1) {
+                    if (appUpdateData.id == -1) {
                         //加载中
                         CircularProgressCompose(
                             modifier = Modifier
@@ -275,7 +285,7 @@ private fun AppUpdateContent(
                         )
                     } else {
                         //正常展示更新内容
-                        UpdateContent(appNotice, updateApkDownloadState)
+                        UpdateContent(appUpdateData, updateApkDownloadState)
                     }
                 }
             } else {

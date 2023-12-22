@@ -22,7 +22,7 @@ import javax.inject.Inject
  */
 @Immutable
 data class CharacterStoryUiState(
-    val storyAttrList : List<CharacterStoryAttr>? = emptyList(),
+    val storyMap: HashMap<Int, List<CharacterStoryAttr>> = hashMapOf(),
     val loadingState: LoadingState = LoadingState.Loading
 )
 
@@ -57,11 +57,27 @@ class CharacterStoryViewModel @Inject constructor(
             val list = unitRepository.getCharacterStoryAttrList(unitId)
             _uiState.update {
                 it.copy(
-                    storyAttrList = list,
+                    storyMap = groupStory((list)),
                     loadingState = updateLoadingState(list)
                 )
             }
         }
+    }
+
+    /**
+     * 分组
+     */
+    private fun groupStory(list: List<CharacterStoryAttr>): HashMap<Int, List<CharacterStoryAttr>> {
+        val map = hashMapOf<Int, List<CharacterStoryAttr>>()
+        list.forEach {
+            val key = it.storyId / 1000
+            if (map[key] == null) {
+                map[key] = list.filter { data -> data.storyId / 1000 == key }
+            } else {
+                return@forEach
+            }
+        }
+        return map
     }
 
 }

@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -49,15 +48,6 @@ fun CharacterSection(
     val id = OverviewType.CHARACTER.id
     val uiState by characterSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val characterList = if (uiState.characterList == null) {
-        arrayListOf(
-            CharacterInfo(),
-            CharacterInfo(),
-            CharacterInfo(),
-        )
-    } else {
-        uiState.characterList
-    }
 
     Section(
         id = id,
@@ -75,7 +65,8 @@ fun CharacterSection(
             }
         }
     ) {
-        if (characterList?.isNotEmpty() == true) {
+        if (uiState.characterList?.isNotEmpty() == true) {
+            val characterList = uiState.characterList!!
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(

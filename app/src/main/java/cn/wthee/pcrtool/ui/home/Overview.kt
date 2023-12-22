@@ -152,12 +152,12 @@ fun Overview(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             TopBarCompose(
                 isEditMode = uiState.isEditMode,
-                updateApp = uiState.updateApp,
+                appUpdateData = uiState.appUpdateData,
                 apkDownloadState = uiState.apkDownloadState,
                 isExpanded = uiState.isAppNoticeExpanded,
                 updateApkDownloadState = overviewScreenViewModel::updateApkDownloadState,
                 changeEditMode = overviewScreenViewModel::changeEditMode,
-                updateAppNoticeLayoutState = overviewScreenViewModel::updateAppNoticeLayoutState,
+                updateExpanded = overviewScreenViewModel::updateExpanded,
             )
             if (!uiState.isEditMode) {
                 uiState.orderData.intArrayList.forEach {

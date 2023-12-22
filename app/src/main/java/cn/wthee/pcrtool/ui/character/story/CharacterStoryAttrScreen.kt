@@ -34,25 +34,21 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 fun CharacterStoryAttrScreen(characterStoryViewModel: CharacterStoryViewModel = hiltViewModel()) {
     val uiState by characterStoryViewModel.uiState.collectAsStateWithLifecycle()
 
-
     MainScaffold {
         StateBox(stateType = uiState.loadingState) {
-            uiState.storyAttrList?.let {
-                CharacterStoryAttrContent(storyAttrList = it)
-            }
+            CharacterStoryAttrContent(storyMap = uiState.storyMap)
         }
     }
-
 }
 
 @Composable
-private fun CharacterStoryAttrContent(storyAttrList: List<CharacterStoryAttr>){
+private fun CharacterStoryAttrContent(storyMap: HashMap<Int, List<CharacterStoryAttr>>) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.verticalScroll(
             rememberScrollState()
         )
     ) {
-        for ((key, value) in groupStory(storyAttrList)) {
+        for ((key, value) in storyMap) {
             StoryAttrItemContent(key, value)
         }
         CommonSpacer()
@@ -97,22 +93,6 @@ private fun StoryAttrItemContent(key: Int, attrList: List<CharacterStoryAttr>) {
 
 }
 
-/**
- * 分组
- */
-private fun groupStory(list: List<CharacterStoryAttr>): HashMap<Int, List<CharacterStoryAttr>> {
-    val map = hashMapOf<Int, List<CharacterStoryAttr>>()
-    list.forEach {
-        val key = it.storyId / 1000
-        if (map[key] == null) {
-            map[key] = list.filter { data -> data.storyId / 1000 == key }
-        } else {
-            return@forEach
-        }
-    }
-    return map
-}
-
 @CombinedPreviews
 @Composable
 private fun CharacterStoryAttrContentPreview() {
@@ -120,14 +100,18 @@ private fun CharacterStoryAttrContentPreview() {
     val subTitle = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         CharacterStoryAttrContent(
-            arrayListOf(
-                CharacterStoryAttr(
-                    title = title,
-                    subTitle = subTitle,
-                    status_rate_1 = 1,
-                    status_rate_2 = 2,
+            hashMapOf<Int, List<CharacterStoryAttr>>().apply {
+                put(
+                    1, arrayListOf(
+                        CharacterStoryAttr(
+                            title = title,
+                            subTitle = subTitle,
+                            status_rate_1 = 1,
+                            status_rate_2 = 2,
+                        )
+                    )
                 )
-            )
+            }
         )
     }
 }

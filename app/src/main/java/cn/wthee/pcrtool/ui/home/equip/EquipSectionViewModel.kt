@@ -39,6 +39,17 @@ class EquipSectionViewModel @Inject constructor(
 
 
     fun loadData(limit: Int) {
+        if (_uiState.value.equipList == null) {
+            val initList = arrayListOf<EquipmentBasicInfo>()
+            for (i in 1..limit) {
+                initList.add(EquipmentBasicInfo())
+            }
+            _uiState.update {
+                it.copy(
+                    equipList = initList
+                )
+            }
+        }
         getEquipCount()
         getEquipInfoList(limit)
     }

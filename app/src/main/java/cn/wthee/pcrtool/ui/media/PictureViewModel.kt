@@ -25,8 +25,11 @@ import javax.inject.Inject
  */
 @Immutable
 data class PictureUiState(
+    //角色卡面
     val unitCardList: ArrayList<String> = arrayListOf(),
+    //剧情
     val storyCardList: ArrayList<String> = arrayListOf(),
+    //过场漫画
     val comicList: ArrayList<String> = arrayListOf(),
     val storyLoadState: LoadingState = LoadingState.Loading,
     val comicLoadState: LoadingState = LoadingState.Loading,

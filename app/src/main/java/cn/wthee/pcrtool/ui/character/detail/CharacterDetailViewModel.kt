@@ -245,11 +245,13 @@ class CharacterDetailViewModel @Inject constructor(
     private fun getOrderData(showAllInfo: Boolean): String {
         //自定义显示顺序
         return if (showAllInfo) {
+            //角色详情页面
             runBlocking {
                 val data = MyApplication.context.dataStoreMain.data.first()
                 data[MainPreferencesKeys.SP_CHARACTER_DETAIL_ORDER] ?: defaultOrder
             }
         } else {
+            //专武详情页面
             "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
         }
     }

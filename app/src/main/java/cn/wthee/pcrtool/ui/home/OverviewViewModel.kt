@@ -41,7 +41,7 @@ data class OverviewScreenUiState(
     //数据切换弹窗
     val showChangeDb: Boolean = false,
     //顶部通知信息
-    val updateApp: AppNotice = AppNotice(id = -1),
+    val appUpdateData: AppNotice = AppNotice(id = -1),
     /**
      * apk下载状态
      * -4: 安装包安装失败
@@ -222,7 +222,7 @@ class OverviewScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    updateApp = AppNotice(id = -1),
+                    appUpdateData = AppNotice(id = -1),
                     firstLoad = false
                 )
             }
@@ -232,13 +232,13 @@ class OverviewScreenViewModel @Inject constructor(
                 val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
                 _uiState.update {
                     it.copy(
-                        updateApp = data
+                        appUpdateData = data
                     )
                 }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
-                        updateApp = AppNotice(id = -2)
+                        appUpdateData = AppNotice(id = -2)
                     )
                 }
             }
@@ -261,7 +261,7 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 更新应用通知布局状态
      */
-    fun updateAppNoticeLayoutState(isAppNoticeExpanded: Boolean) {
+    fun updateExpanded(isAppNoticeExpanded: Boolean) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(

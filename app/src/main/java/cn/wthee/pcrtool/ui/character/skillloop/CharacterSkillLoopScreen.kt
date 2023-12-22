@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 /**
  * 角色技能循环（嵌入或使用bottomSheet跳转）
  *
- * @param scrollable 是否可滚动
+ * @param scrollable 是否可滚动，false：不可滚动，用于列表。true：可滚动，用于bottom sheet
  */
 @Composable
 fun CharacterSkillLoopScreen(

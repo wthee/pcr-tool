@@ -38,6 +38,17 @@ class CharacterSectionViewModel @Inject constructor(
     val uiState: StateFlow<CharacterSectionUiState> = _uiState.asStateFlow()
 
     init {
+        if (_uiState.value.characterList == null) {
+            _uiState.update {
+                it.copy(
+                    characterList = arrayListOf(
+                        CharacterInfo(),
+                        CharacterInfo(),
+                        CharacterInfo(),
+                    )
+                )
+            }
+        }
         getCharacterCount()
         getCharacterInfoList()
     }

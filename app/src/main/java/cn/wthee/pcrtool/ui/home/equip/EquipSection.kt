@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -50,16 +49,7 @@ fun EquipSection(
 
     //装备总数
     val equipCount = uiState.equipCount
-    //装备列表
-    val initList = arrayListOf<EquipmentBasicInfo>()
-    for (i in 1..equipSpanCount) {
-        initList.add(EquipmentBasicInfo())
-    }
-    val equipList = if (uiState.equipList == null) {
-        initList
-    } else {
-        uiState.equipList
-    }
+
 
 
     Section(
@@ -81,8 +71,8 @@ fun EquipSection(
         VerticalGrid(
             itemWidth = Dimen.iconSize + Dimen.largePadding * 2
         ) {
-            if (equipList?.isNotEmpty() == true) {
-                equipList.forEach {
+            if (uiState.equipList?.isNotEmpty() == true) {
+                uiState.equipList?.forEach {
                     val placeholder = it.equipmentId == ImageRequestHelper.UNKNOWN_EQUIP_ID
                     Box(
                         modifier = Modifier

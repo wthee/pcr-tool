@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -51,16 +50,7 @@ fun UniqueEquipSection(
     //装备总数
     val uniqueEquipCount = uiState.uniqueEquipCount
     //装备列表
-    val initList = arrayListOf<UniqueEquipBasicData>()
-    for (i in 1..equipSpanCount) {
-        initList.add(UniqueEquipBasicData())
-    }
-    val equipList1 = if (uiState.uniqueEquipList1 == null) {
-        initList
-    } else {
-        uiState.uniqueEquipList1
-    }
-
+    val equipList1 = uiState.uniqueEquipList1
     val equipList2 = uiState.uniqueEquipList2
 
 
