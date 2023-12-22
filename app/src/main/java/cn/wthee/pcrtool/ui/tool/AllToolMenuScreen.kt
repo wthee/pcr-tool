@@ -41,10 +41,10 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.ui.home.module.ToolMenu
-import cn.wthee.pcrtool.ui.home.module.ToolMenuData
-import cn.wthee.pcrtool.ui.home.module.getAction
-import cn.wthee.pcrtool.ui.home.module.getToolMenuData
+import cn.wthee.pcrtool.ui.home.tool.ToolMenu
+import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
+import cn.wthee.pcrtool.ui.home.tool.getAction
+import cn.wthee.pcrtool.ui.home.tool.getToolMenuData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation

@@ -43,6 +43,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.SettingCommonItem
+import cn.wthee.pcrtool.ui.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.HeaderText
@@ -63,8 +65,6 @@ import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.ui.tool.SettingCommonItem
-import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_APK_NAME
