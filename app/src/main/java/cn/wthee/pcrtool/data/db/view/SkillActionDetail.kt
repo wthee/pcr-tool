@@ -608,7 +608,7 @@ data class SkillActionDetail(
                         )
                     } else {
                         when (actionDetail1) {
-                            in 600..699, 710 -> {
+                            in 600..699, 710, 6145 -> {
                                 getString(
                                     R.string.skill_action_if_mark,
                                     getTarget(),
@@ -647,7 +647,7 @@ data class SkillActionDetail(
                         )
                     } else {
                         when (actionDetail1) {
-                            in 600..699, 710 -> {
+                            in 600..699, 710, 6145 -> {
                                 getString(
                                     R.string.skill_action_if_mark_not,
                                     getTarget(),
