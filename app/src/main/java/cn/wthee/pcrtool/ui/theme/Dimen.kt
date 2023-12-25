@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.theme
 
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.ui.components.getItemWidth
 
 object Dimen {
 
@@ -76,7 +77,10 @@ object Dimen {
 
     val linearProgressHeight = 6.dp
 
-    val tweetImgHeight = 128.dp
+    val tweetImageHeight = 128.dp
 
     val indicatorSize = 7.dp
+
+    //子项最大宽度
+    val itemMaxWidth = getItemWidth() * 1.3f
 }

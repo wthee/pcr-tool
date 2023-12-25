@@ -83,7 +83,6 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getRankColor
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.skill.SkillListScreen
@@ -502,7 +501,7 @@ private fun CharacterCard(
                 end = Dimen.largePadding,
                 bottom = Dimen.smallPadding,
             )
-            .widthIn(max = getItemWidth() * 1.3f)
+            .widthIn(max = Dimen.itemMaxWidth)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

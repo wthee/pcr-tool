@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -45,6 +48,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.PictureItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -63,7 +67,7 @@ import java.util.regex.Pattern
 fun TweetList(
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
-    val scrollState = rememberLazyListState()
+    val scrollState = rememberLazyStaggeredGridState()
     val uiState by tweetViewModel.uiState.collectAsStateWithLifecycle()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
@@ -118,7 +122,10 @@ fun TweetList(
                 }
             }
         ) {
-            LazyColumn(state = scrollState) {
+            LazyVerticalStaggeredGrid(
+                state = scrollState,
+                columns = StaggeredGridCells.Adaptive(getItemWidth())
+            ) {
                 //头部加载中提示
                 item {
                     ExpandAnimation(tweetItems.loadState.refresh == LoadState.Loading) {
@@ -275,10 +282,17 @@ private fun TweetItem(data: TweetData) {
                     if (photos.size > 1) {
                         VerticalGrid(fixCount = 3, isSubLayout = true) {
                             photos.forEach {
-                                PictureItem(
-                                    picUrl = it,
-                                    shape = noShape()
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .height(Dimen.tweetImageHeight)
+                                        .padding(Dimen.exSmallPadding)
+                                ) {
+                                    PictureItem(
+                                        picUrl = it,
+                                        shape = noShape(),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
                             }
                         }
                     } else {

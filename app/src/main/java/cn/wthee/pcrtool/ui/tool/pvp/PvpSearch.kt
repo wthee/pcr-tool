@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -29,15 +30,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.MyApplication
@@ -54,7 +62,6 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.getPositionColor
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -62,6 +69,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.spanCount
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -118,11 +126,19 @@ fun PvpSearchCompose(
         TabData(tab = stringResource(id = R.string.title_history)),
     )
     //动态调整 spanCount
-    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2)
-    val spanCount = if (initSpanCount == 0) normalSize.spanCount else initSpanCount
-
+    val itemWidth = (Dimen.iconSize + Dimen.largePadding * 2)
+    val appWidth = LocalView.current.width
+    var size by remember { mutableStateOf(IntSize(width = appWidth, height = 0)) }
+    val spanCount = if (initSpanCount == 0) {
+        spanCount(size.width, itemWidth)
+    } else {
+        initSpanCount
+    }
 
     MainScaffold(
+        modifier = Modifier.onSizeChanged {
+            size = it
+        },
         hideMainFab = floatWindow,
         mainFabIcon = if (showResult) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -136,102 +152,17 @@ fun PvpSearchCompose(
         fab = {
             //底部悬浮按钮
             if (!showResult && !floatWindow) {
-                //悬浮窗
-                MainSmallFab(
-                    iconType = MainIconType.FLOAT
-                ) {
-                    val homeIntent = Intent(Intent.ACTION_MAIN)
-                    homeIntent.addCategory(Intent.CATEGORY_HOME)
-                    if (Settings.canDrawOverlays(context)) {
-                        //启动悬浮服务
-                        val serviceIntent = Intent(context, PvpFloatService::class.java)
-                        navViewModel.floatServiceRun.postValue(true)
-                        context.stopService(serviceIntent)
-                        context.startActivity(homeIntent)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            context.startForegroundService(serviceIntent)
-                        } else {
-                            context.startService(serviceIntent)
-                        }
-                    } else {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${MyApplication.context.packageName}")
-                        )
-                        context.startActivity(intent)
-                    }
-                }
-                //查询
-                MainSmallFab(
-                    iconType = MainIconType.PVP_SEARCH,
-                    text = stringResource(id = R.string.pvp_search)
-                ) {
-                    //查询
-                    try {
-                        scope.launch {
-                            resultListState.scrollToItem(0)
-                        }
-
-                    } catch (_: Exception) {
-
-                    }
-                    pvpViewModel.resetResult()
-                    navViewModel.showResult.postValue(true)
-                }
+                PvpSearchFabContent(context, scope, resultListState, pvpViewModel)
             }
         }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             //标题
             if (!floatWindow) {
-                val url = stringResource(id = R.string.pcrdfans_url)
-                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-
-                Row(
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.largePadding,
-                        vertical = Dimen.mediumPadding
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainTitleText(
-                        text = stringResource(id = R.string.pcrdfans),
-                        modifier = Modifier
-                            .clickable {
-                                VibrateUtil(context).single()
-                                BrowserUtil.open(url)
-                            }
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    //添加信息
-                    IconTextButton(
-                        icon = MainIconType.PVP_ADD,
-                        text = stringResource(id = R.string.pvp_upload)
-                    ) {
-                        //打开网页
-                        BrowserUtil.open(addUrl)
-                    }
-                }
-
+                PvpSearchHeader()
             }
             //已选择列表
-            Row(
-                modifier = Modifier
-                    .padding(mediumPadding)
-                    .widthIn(max = getItemWidth() * 1.3f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                selectedIds.forEach {
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        PvpIconItem(
-                            selectedIds = selectedIds,
-                            pvpCharacterData = it,
-                            floatWindow = floatWindow
-                        )
-                    }
-                }
-            }
+            PvpSearchSelectedContent(mediumPadding, selectedIds, floatWindow)
 
             //展示查询结果页面或选择角色页面
             if (showResult) {
@@ -303,6 +234,124 @@ fun PvpSearchCompose(
         }
     }
 
+}
+
+/**
+ * 已选择的角色列表
+ */
+@Composable
+private fun PvpSearchSelectedContent(
+    mediumPadding: Dp,
+    selectedIds: java.util.ArrayList<PvpCharacterData>,
+    floatWindow: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .padding(mediumPadding)
+            .widthIn(max = Dimen.itemMaxWidth)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        selectedIds.forEach {
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                PvpIconItem(
+                    selectedIds = selectedIds,
+                    pvpCharacterData = it,
+                    floatWindow = floatWindow
+                )
+            }
+        }
+    }
+}
+
+/**
+ * 顶部内容（标题、上传）
+ */
+@Composable
+private fun PvpSearchHeader() {
+    val context = LocalContext.current
+    val url = stringResource(id = R.string.pcrdfans_url)
+    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+
+    Row(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MainTitleText(
+            text = stringResource(id = R.string.pcrdfans),
+            modifier = Modifier
+                .clickable {
+                    VibrateUtil(context).single()
+                    BrowserUtil.open(url)
+                }
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        //添加信息
+        IconTextButton(
+            icon = MainIconType.PVP_ADD,
+            text = stringResource(id = R.string.pvp_upload)
+        ) {
+            //打开网页
+            BrowserUtil.open(addUrl)
+        }
+    }
+}
+
+/**
+ * 底部按钮
+ */
+@Composable
+private fun PvpSearchFabContent(
+    context: Context,
+    scope: CoroutineScope,
+    resultListState: LazyGridState,
+    pvpViewModel: PvpViewModel
+) {
+    //悬浮窗
+    MainSmallFab(
+        iconType = MainIconType.FLOAT
+    ) {
+        val homeIntent = Intent(Intent.ACTION_MAIN)
+        homeIntent.addCategory(Intent.CATEGORY_HOME)
+        if (Settings.canDrawOverlays(context)) {
+            //启动悬浮服务
+            val serviceIntent = Intent(context, PvpFloatService::class.java)
+            navViewModel.floatServiceRun.postValue(true)
+            context.stopService(serviceIntent)
+            context.startActivity(homeIntent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
+            }
+        } else {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${MyApplication.context.packageName}")
+            )
+            context.startActivity(intent)
+        }
+    }
+    //查询
+    MainSmallFab(
+        iconType = MainIconType.PVP_SEARCH,
+        text = stringResource(id = R.string.pvp_search)
+    ) {
+        //查询
+        try {
+            scope.launch {
+                resultListState.scrollToItem(0)
+            }
+
+        } catch (_: Exception) {
+
+        }
+        pvpViewModel.resetResult()
+        navViewModel.showResult.postValue(true)
+    }
 }
 
 /**

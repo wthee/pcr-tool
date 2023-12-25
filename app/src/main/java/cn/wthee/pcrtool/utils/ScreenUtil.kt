@@ -48,7 +48,14 @@ object ScreenUtil {
  */
 val Dp.spanCount: Int
     @Composable
-    get() = max(1, LocalView.current.width / this.value.dp2pxNotComposable)
+    get() = max(1, LocalView.current.width / this.value.dp2px)
+
+/**
+ * 计算 spanCount
+ * @param width 总宽度
+ * @param itemDp 子项宽度
+ */
+fun spanCount(width: Int, itemDp: Dp) = max(1, width / itemDp.value.dp2pxNotComposable)
 
 /**
  *  获取 像素 的dp

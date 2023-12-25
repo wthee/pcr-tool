@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -393,6 +394,7 @@ private fun PreviewPictureDialog(
                 contentScale = ContentScale.FillWidth,
                 ratio = ratio,
                 modifier = Modifier
+                    .widthIn(max = Dimen.itemMaxWidth)
                     .padding(horizontal = Dimen.largePadding)
                     .graphicsLayer(
                         scaleX = scale,

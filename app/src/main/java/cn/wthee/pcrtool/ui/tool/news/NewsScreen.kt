@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDateRangePickerState
@@ -38,6 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -56,7 +58,7 @@ import cn.wthee.pcrtool.utils.formatTime
 fun NewsScreen(
     newsViewModel: NewsViewModel = hiltViewModel()
 ) {
-    val scrollState = rememberLazyListState()
+    val scrollState = rememberLazyStaggeredGridState()
     val uiState by newsViewModel.uiState.collectAsStateWithLifecycle()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
@@ -111,7 +113,10 @@ fun NewsScreen(
                 }
             }
         ) {
-            LazyColumn(state = scrollState) {
+            LazyVerticalStaggeredGrid(
+                state = scrollState,
+                columns = StaggeredGridCells.Adaptive(getItemWidth())
+            ) {
                 //头部加载中提示
                 item {
                     ExpandAnimation(newsItems.loadState.refresh == LoadState.Loading) {

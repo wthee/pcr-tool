@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.commonPlaceholder
-import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -92,7 +91,7 @@ fun CharacterSection(
                     items(characterList) {
                         Box(modifier = Modifier.padding(start = Dimen.largePadding)) {
                             CharacterImageItem(
-                                modifier = Modifier.widthIn(max = getItemWidth() * 1.3f),
+                                modifier = Modifier.widthIn(max = Dimen.itemMaxWidth),
                                 unitId = it.id,
                                 toCharacterDetail = toCharacterDetail
                             )

@@ -91,7 +91,7 @@ private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
 
 
 /**
- * 网格布局 fixme 屏幕旋转后显示异常问题
+ * 网格布局
  * @param itemWidth 子项宽度
  * @param fixCount 固定列数
  * @param contentPadding 子项间距
@@ -109,15 +109,17 @@ fun VerticalGrid(
     val appWidth = LocalView.current.width
     var size by remember { mutableStateOf(IntSize(width = appWidth, height = 0)) }
     val mSpanCount = if (fixCount == 0) {
+        val itemPx = (itemWidth!! + contentPadding).value.dp2px
         if (isSubLayout) {
-            val parentSpanCount = getItemWidth().spanCount
-            ((appWidth - (Dimen.largePadding * 2).value.toInt()) / parentSpanCount / (itemWidth!! + contentPadding).value.dp2px)
+            val parentSpanCount = spanCount(size.width, getItemWidth())
+            ((size.width - (Dimen.largePadding * 2).value.toInt()) / parentSpanCount / itemPx)
         } else {
-            (size.width / (itemWidth!! + contentPadding).value.dp2px)
+            (size.width / itemPx)
         }
     } else {
         fixCount
     }
+
 
     Layout(
         content = children,
