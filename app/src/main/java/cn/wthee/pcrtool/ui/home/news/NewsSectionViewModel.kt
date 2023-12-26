@@ -44,7 +44,7 @@ class NewsSectionViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    private fun getNewsOverview() {
+    fun getNewsOverview() {
         viewModelScope.launch {
             try {
                 val data = apiRepository.getNewsOverviewByRegion(MainActivity.regionType.value)

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +10,12 @@ import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.editOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,8 +31,6 @@ import javax.inject.Inject
  */
 @Immutable
 data class OverviewScreenUiState(
-    //首次加载
-    val firstLoad: Boolean = true,
     //排序数量
     val orderData: String = "",
     //日程点击展开状态
@@ -84,7 +85,24 @@ class OverviewScreenViewModel @Inject constructor(
     val uiState: StateFlow<OverviewScreenUiState> = _uiState.asStateFlow()
 
     init {
+        initCheck()
         getOrderData()
+    }
+
+    fun initCheck() {
+        Log.e("TAG", "initCheck: ")
+        //初始化六星id
+        getR6Ids()
+        //数据库校验
+        MainScope().launch {
+            DatabaseUpdater.checkDBVersion(
+                fixDb = false,
+                updateDbDownloadState = this@OverviewScreenViewModel::updateDbDownloadState,
+                updateDbVersionText = this@OverviewScreenViewModel::updateDbVersionText
+            )
+        }
+        //应用更新校验
+        checkUpdate()
     }
 
     /**
@@ -222,8 +240,7 @@ class OverviewScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    appUpdateData = AppNotice(id = -1),
-                    firstLoad = false
+                    appUpdateData = AppNotice(id = -1)
                 )
             }
 

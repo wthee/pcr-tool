@@ -93,19 +93,8 @@ fun Overview(
     val uiState by overviewScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     //从桌面重新打开时，更新校验
-    AppResumeEffect(uiState.firstLoad) {
-        //初始化六星id
-        overviewScreenViewModel.getR6Ids()
-        //数据库校验
-        MainScope().launch {
-            DatabaseUpdater.checkDBVersion(
-                fixDb = false,
-                updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
-                updateDbVersionText = overviewScreenViewModel::updateDbVersionText
-            )
-        }
-        //应用更新校验
-        overviewScreenViewModel.checkUpdate()
+    AppResumeEffect {
+        overviewScreenViewModel.initCheck()
     }
 
 

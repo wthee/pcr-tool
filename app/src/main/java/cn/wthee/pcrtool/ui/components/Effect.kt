@@ -11,10 +11,10 @@ import androidx.lifecycle.LifecycleEventObserver
  * 从桌面返回监听
  */
 @Composable
-fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
+fun AppResumeEffect(handler: () -> Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    DisposableEffect(lifecycleOwner, firstLoad) {
+    DisposableEffect(lifecycleOwner) {
         var recreate = false
         val observer = LifecycleEventObserver { _, e ->
             if (e == Lifecycle.Event.ON_PAUSE) {
@@ -24,7 +24,7 @@ fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
                 recreate = true
             }
             //首次加载 或 从桌面重新进入（不经过 ON_CREATE）
-            if ((firstLoad && e == Lifecycle.Event.ON_START) || (!recreate && e == Lifecycle.Event.ON_START)) {
+            if (!recreate && e == Lifecycle.Event.ON_START) {
                 handler()
             }
         }

@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.home.Section
@@ -29,7 +30,9 @@ fun NewsSection(
 ) {
     val id = OverviewType.NEWS.id
     val uiState by newsSectionViewModel.uiState.collectAsStateWithLifecycle()
-
+    AppResumeEffect {
+        newsSectionViewModel.getNewsOverview()
+    }
 
     Section(
         id = id,
@@ -45,18 +48,19 @@ fun NewsSection(
             }
         }
     ) {
-        Column {
-            StateBox(
-                stateType = uiState.loadingState,
-                loadingContent = {
-                    for (i in 0 until 3) {
-                        NewsItem(news = NewsTable())
-                    }
-                },
-                errorContent = {
-                    CenterTipText(stringResource(id = R.string.data_get_error))
+        StateBox(
+            stateType = uiState.loadingState,
+            loadingContent = {
+                for (i in 0 until 3) {
+                    NewsItem(news = NewsTable())
                 }
-            ) {
+            },
+            errorContent = {
+                CenterTipText(stringResource(id = R.string.data_get_error))
+            }
+        ) {
+            //fixme 优化横屏显示效果
+            Column {
                 uiState.newsList?.forEach {
                     NewsItem(news = it)
                 }
