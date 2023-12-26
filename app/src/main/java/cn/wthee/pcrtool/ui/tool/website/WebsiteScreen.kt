@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.tool.website
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -83,10 +82,7 @@ fun WebsiteScreen(
                     changeDialog = websiteViewModel::changeDialog,
                     changeSelect = websiteViewModel::changeSelect,
                     width = Dimen.dataChangeWidth + Dimen.fabSize,
-                    paddingValues = PaddingValues(
-                        end = Dimen.fabMargin,
-                        bottom = Dimen.fabMarginLargeBottom
-                    )
+                    isSecondLineFab = true
                 )
             }
         },

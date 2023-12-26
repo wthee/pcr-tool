@@ -29,6 +29,7 @@ data class RankCompareUiState(
     val rarity: Int = 0,
     val uniqueEquipLevel: Int = 0,
     val uniqueEquipLevel2: Int = 0,
+    val openDialog: Boolean = false
 )
 
 /**
@@ -115,4 +116,16 @@ class RankCompareViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
+        }
+    }
 }

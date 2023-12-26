@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,11 +41,6 @@ fun RankCompareScreen(
     val scope = rememberCoroutineScope()
     val uiState by rankCompareViewModel.uiState.collectAsStateWithLifecycle()
 
-    val openDialog = remember {
-        mutableStateOf(false)
-    }
-
-
 
     MainScaffold(
         modifier = Modifier.padding(top = Dimen.largePadding),
@@ -64,23 +57,24 @@ fun RankCompareScreen(
                 rank0 = uiState.rank0,
                 rank1 = uiState.rank1,
                 maxRank = uiState.maxRank,
-                openDialog = openDialog,
-                updateRank = rankCompareViewModel::updateRank
+                openDialog = uiState.openDialog,
+                updateRank = rankCompareViewModel::updateRank,
+                changeDialog = rankCompareViewModel::changeDialog
             )
         },
         onMainFabClick = {
             scope.launch {
-                if (openDialog.value) {
-                    openDialog.value = false
+                if (uiState.openDialog) {
+                    rankCompareViewModel.changeDialog(false)
                 } else {
                     navigateUpSheet()
                 }
             }
         },
-        mainFabIcon = if (openDialog.value) MainIconType.CLOSE else MainIconType.BACK,
-        enableClickClose = openDialog.value,
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        enableClickClose = uiState.openDialog,
         onCloseClick = {
-            openDialog.value = false
+            rankCompareViewModel.changeDialog(false)
         }
     ) {
         RankCompareContent(

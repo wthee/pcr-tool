@@ -188,13 +188,12 @@ class EquipListViewModel @Inject constructor(
     /**
      * 切换搜索模式
      */
-    fun changeSearchDialog(open: Boolean? = null) {
+    fun changeSearchDialog(open: Boolean) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openSearchDialog = open ?: !it.openSearchDialog,
-
-                    )
+                    openSearchDialog = open
+                )
             }
         }
     }

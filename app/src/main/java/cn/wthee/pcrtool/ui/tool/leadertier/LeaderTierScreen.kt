@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.tool.leadertier
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -113,10 +112,7 @@ fun LeaderTierScreen(
                     changeDialog = leaderTierViewModel::changeDialog,
                     changeSelect = leaderTierViewModel::changeSelect,
                     width = Dimen.dataChangeWidth + Dimen.fabSize,
-                    paddingValues = PaddingValues(
-                        end = Dimen.fabMargin,
-                        bottom = Dimen.fabMarginLargeBottom
-                    )
+                    isSecondLineFab = true
                 )
             }
         },

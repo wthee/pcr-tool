@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.comic
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,15 +19,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -58,6 +51,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableFab
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -72,9 +66,7 @@ import cn.wthee.pcrtool.ui.media.PictureItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
@@ -226,65 +218,26 @@ private fun ComicIndexChange(
     changeDialog: (Boolean) -> Unit,
     changeSelect: ((Int) -> Unit)
 ) {
-    val context = LocalContext.current
 
     //切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(
-                start = Dimen.fabMargin,
-                end = Dimen.fabMargin,
-                bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
-                top = Dimen.fabMargin
-            )
-            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+    ExpandableFab(
+        modifier = modifier,
+        expanded = openDialog,
         onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                changeDialog(true)
-            }
+            changeDialog(true)
         },
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = if (openDialog) {
-                Dimen.popupMenuElevation
-            } else {
-                Dimen.fabElevation
-            }
-        ),
+        icon = MainIconType.COMIC_NAV,
+        text = stringResource(id = R.string.comic_toc),
+        isSecondLineFab = true
     ) {
-        if (openDialog) {
-            //展开目录
-            ComicTocList(
-                gridState = gridState,
-                items = items,
-                pagerState = pagerState,
-                changeSelect = changeSelect,
-                changeDialog = changeDialog,
-            )
-        } else {
-            //fab
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                MainIcon(
-                    data = MainIconType.COMIC_NAV,
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = stringResource(id = R.string.comic_toc),
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
-                )
-            }
-
-        }
+        //展开目录
+        ComicTocList(
+            gridState = gridState,
+            items = items,
+            pagerState = pagerState,
+            changeSelect = changeSelect,
+            changeDialog = changeDialog,
+        )
     }
 }
 

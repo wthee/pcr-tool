@@ -41,10 +41,6 @@ fun RankEquipCountScreen(
         }
     }
 
-    val openDialog = remember {
-        mutableStateOf(false)
-    }
-
 
     //初始收藏信息
     LifecycleEffect(Lifecycle.Event.ON_RESUME) {
@@ -75,24 +71,25 @@ fun RankEquipCountScreen(
                 rank0 = uiState.rank0,
                 rank1 = uiState.rank1,
                 maxRank = uiState.maxRank,
-                openDialog = openDialog,
+                openDialog = uiState.openDialog,
                 updateRank = rankEquipCountViewModel::updateRank,
+                changeDialog = rankEquipCountViewModel::changeDialog,
                 type = RankSelectType.LIMIT
             )
         },
         onMainFabClick = {
             scope.launch {
-                if (openDialog.value) {
-                    openDialog.value = false
+                if (uiState.openDialog) {
+                    rankEquipCountViewModel.changeDialog(false)
                 } else {
                     navigateUp()
                 }
             }
         },
-        mainFabIcon = if (openDialog.value) MainIconType.CLOSE else MainIconType.BACK,
-        enableClickClose = openDialog.value,
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        enableClickClose = uiState.openDialog,
         onCloseClick = {
-            openDialog.value = false
+            rankEquipCountViewModel.changeDialog(false)
         }
     ) {
         uiState.equipmentMaterialList?.let {
@@ -203,7 +200,8 @@ private fun EquipCountItem(
         modifier = Modifier.padding(Dimen.mediumPadding)
     ) {
         MainIcon(
-            data = ImageRequestHelper.getInstance().getEquipPic(item.id),
+            data = ImageRequestHelper.getInstance()
+                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, item.id),
             modifier = Modifier.commonPlaceholder(placeholder)
         ) {
             toEquipMaterial(item.id, item.name)

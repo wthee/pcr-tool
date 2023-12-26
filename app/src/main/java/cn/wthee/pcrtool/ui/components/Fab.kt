@@ -136,6 +136,112 @@ fun MainSmallFab(
 }
 
 /**
+ * 可展开fab
+ *
+ * @param expanded 状态
+ * @param onClick 点击监听改变状态
+ * @param icon 按钮图标
+ * @param tint 按钮图标和文本颜色
+ * @param text 按钮文本
+ * @param isSecondLineFab fab 所在行，是否在第二行
+ * @param paddingValues 自定义边距
+ * @param customContent 自定义未展开布局
+ * @param expandedContent 展开布局具体内容
+ */
+@Composable
+fun ExpandableFab(
+    modifier: Modifier = Modifier,
+    expanded: Boolean,
+    onClick: () -> Unit,
+    icon: MainIconType? = null,
+    tint: Color = MaterialTheme.colorScheme.primary,
+    text: String = "",
+    isSecondLineFab: Boolean = false,
+    paddingValues: PaddingValues? = null,
+    animateContent: Boolean = true,
+    customContent: @Composable (() -> Unit)? = null,
+    expandedContent: @Composable () -> Unit
+) {
+    val context = LocalContext.current
+    val mPaddingValues = paddingValues ?: PaddingValues(
+        start = Dimen.fabMargin,
+        end = if (isSecondLineFab) {
+            Dimen.fabMargin
+        } else {
+            Dimen.fabMarginEnd
+        },
+        top = Dimen.largePadding,
+        bottom = if (isSecondLineFab) {
+            Dimen.fabMarginLargeBottom
+        } else {
+            Dimen.fabMargin
+        }
+    )
+    val mModifier = if (animateContent) {
+        modifier.animateContentSize(defaultSpring())
+    } else {
+        modifier
+    }
+
+
+    SmallFloatingActionButton(
+        modifier = mModifier
+            .widthIn(max = Dimen.itemMaxWidth)
+            .padding(mPaddingValues)
+            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
+            .imePadding()
+            .navigationBarsPadding(),
+        shape = if (expanded) MaterialTheme.shapes.medium else CircleShape,
+        onClick = {
+            //点击展开布局
+            if (!expanded) {
+                VibrateUtil(context).single()
+                onClick()
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = if (expanded) {
+                Dimen.popupMenuElevation
+            } else {
+                Dimen.fabElevation
+            }
+        ),
+    ) {
+        if (expanded) {
+            //展开内容
+            expandedContent()
+        } else {
+            if (customContent != null) {
+                customContent()
+            } else {
+                //fab
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = Dimen.largePadding)
+                ) {
+                    if (icon != null) {
+                        MainIcon(
+                            data = icon,
+                            tint = tint,
+                            size = Dimen.fabIconSize
+                        )
+                    }
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        color = tint,
+                        modifier = Modifier.padding(
+                            start = Dimen.mediumPadding, end = Dimen.largePadding
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
  * 切换
  * @param width 宽度
  */
@@ -149,87 +255,44 @@ fun SelectTypeFab(
     type: Int,
     width: Dp = Dimen.dataChangeWidth,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
-    paddingValues: PaddingValues = PaddingValues(
-        start = Dimen.fabMargin,
-        end = Dimen.fabMarginEnd,
-        top = Dimen.fabMargin,
-        bottom = Dimen.fabMargin,
-    ),
+    isSecondLineFab: Boolean = false,
     changeSelect: (Int) -> Unit
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-
     //切换
-    SmallFloatingActionButton(
-        modifier = modifier
-            .animateContentSize(defaultSpring())
-            .padding(paddingValues)
-            .padding(
-                start = Dimen.mediumPadding,
-                end = Dimen.textFabMargin,
-                top = Dimen.mediumPadding,
-            )
-            .navigationBarsPadding(),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+    ExpandableFab(
+        modifier = modifier,
+        expanded = openDialog,
         onClick = {
-            VibrateUtil(context).single()
-            if (!openDialog) {
-                changeDialog(true)
-            }
+            changeDialog(true)
         },
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = if (openDialog) {
-                Dimen.popupMenuElevation
-            } else {
-                Dimen.fabElevation
-            }
-        ),
+        icon = icon,
+        tint = selectedColor,
+        text = tabs[type],
+        isSecondLineFab = isSecondLineFab
     ) {
-        if (openDialog) {
-            Column(
-                modifier = Modifier.widthIn(max = width),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //选择
-                tabs.forEachIndexed { index, tab ->
-                    SelectText(
-                        selected = type == index,
-                        text = tab,
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        selectedColor = selectedColor,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(Dimen.mediumPadding)
-                    ) {
-                        coroutineScope.launch {
-                            changeSelect(index)
-                        }
-                        changeDialog(false)
+        Column(
+            modifier = Modifier.widthIn(max = width),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //选择
+            tabs.forEachIndexed { index, tab ->
+                SelectText(
+                    selected = type == index,
+                    text = tab,
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    selectedColor = selectedColor,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.mediumPadding)
+                ) {
+                    coroutineScope.launch {
+                        changeSelect(index)
                     }
+                    changeDialog(false)
                 }
             }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                MainIcon(
-                    data = icon, tint = selectedColor,
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = tabs[type],
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = selectedColor,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
-                )
-            }
-
         }
     }
 }
@@ -246,8 +309,6 @@ fun DateRangePickerCompose(
     changeDialog: (Boolean) -> Unit,
     changeRange: (DateRange) -> Unit,
 ) {
-    val context = LocalContext.current
-
     //更新日期
     LaunchedEffect(
         dateRangePickerState.selectedStartDateMillis,
@@ -260,7 +321,6 @@ fun DateRangePickerCompose(
             endDate = endDate.replace("00:00:00", "23:59:59")
         }
 
-
         changeRange(
             DateRange(
                 startDate = startDate ?: "",
@@ -270,78 +330,37 @@ fun DateRangePickerCompose(
     }
 
     //日期选择布局
-    SmallFloatingActionButton(
-        modifier = Modifier
-            .widthIn(max = Dimen.itemMaxWidth)
-            .animateContentSize(defaultSpring())
-            .padding(
-                start = Dimen.fabMargin,
-                end = Dimen.fabMargin,
-                bottom = Dimen.fabMargin * 2 + Dimen.fabSize,
-                top = Dimen.largePadding
-            )
-            .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
-            .imePadding(),
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+    ExpandableFab(
+        expanded = openDialog,
         onClick = {
-            //点击展开布局
-            if (!openDialog) {
-                VibrateUtil(context).single()
-                changeDialog(true)
-            }
+            changeDialog(true)
         },
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = if (openDialog) {
-                Dimen.popupMenuElevation
-            } else {
-                Dimen.fabElevation
-            }
-        ),
-    ) {
-        if (openDialog) {
-            //日期选择
-            DateRangePicker(
-                modifier = Modifier.padding(Dimen.smallPadding),
-                state = dateRangePickerState,
-                showModeToggle = true,
-                title = {},
-                headline = {
-                    DateRangePickerDefaults.DateRangePickerHeadline(
-                        dateRangePickerState,
-                        remember { DatePickerFormatter() },
-                        modifier = Modifier.padding(Dimen.smallPadding)
-                    )
-                }
-            )
+        icon = if (dateRange.hasFilter()) {
+            MainIconType.DATE_RANGE_PICKED
         } else {
-            //fab
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                MainIcon(
-                    data = if (dateRange.hasFilter()) {
-                        MainIconType.DATE_RANGE_PICKED
-                    } else {
-                        MainIconType.DATE_RANGE_NONE
-                    },
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = if (dateRange.hasFilter()) {
-                        stringResource(id = R.string.picked_date)
-                    } else {
-                        stringResource(id = R.string.pick_date)
-                    },
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
+            MainIconType.DATE_RANGE_NONE
+        },
+        text = if (dateRange.hasFilter()) {
+            stringResource(id = R.string.picked_date)
+        } else {
+            stringResource(id = R.string.pick_date)
+        },
+        isSecondLineFab = true
+    ) {
+        //日期选择
+        DateRangePicker(
+            modifier = Modifier.padding(Dimen.smallPadding),
+            state = dateRangePickerState,
+            showModeToggle = true,
+            title = {},
+            headline = {
+                DateRangePickerDefaults.DateRangePickerHeadline(
+                    dateRangePickerState,
+                    remember { DatePickerFormatter() },
+                    modifier = Modifier.padding(Dimen.smallPadding)
                 )
             }
-        }
+        )
     }
 }
 
@@ -353,12 +372,11 @@ fun RankRangePickerCompose(
     rank0: Int,
     rank1: Int,
     maxRank: Int,
-    openDialog: MutableState<Boolean>,
+    openDialog: Boolean,
+    changeDialog: (Boolean) -> Unit,
     type: RankSelectType = RankSelectType.DEFAULT,
     updateRank: (Int, Int) -> Unit
 ) {
-    val context = LocalContext.current
-
     val rankList = arrayListOf<Int>()
     for (i in maxRank downTo 1) {
         rankList.add(i)
@@ -376,90 +394,49 @@ fun RankRangePickerCompose(
     }
 
     //关闭监听
-    BackHandler(openDialog.value) {
-        openDialog.value = false
+    BackHandler(openDialog) {
+        changeDialog(false)
     }
 
-
-    //选择布局
-    SmallFloatingActionButton(
-        modifier = Modifier
-            .widthIn(max = Dimen.itemMaxWidth)
-            .animateContentSize(defaultSpring())
-            .padding(
-                start = Dimen.fabMarginSecondLineEnd,
-                end = Dimen.fabMarginSecondLineEnd,
-                bottom = Dimen.fabMarginLargeBottom
-            ),
-        shape = if (openDialog.value) MaterialTheme.shapes.medium else CircleShape,
+    ExpandableFab(
+        expanded = openDialog,
         onClick = {
-            //点击展开布局
-            if (!openDialog.value) {
-                VibrateUtil(context).single()
-                openDialog.value = true
-            }
+            changeDialog(true)
         },
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = if (openDialog.value) {
-                Dimen.popupMenuElevation
-            } else {
-                Dimen.fabElevation
-            }
-        ),
+        icon = MainIconType.RANK_SELECT,
+        text = stringResource(id = R.string.rank_select),
+        isSecondLineFab = true
     ) {
-        if (openDialog.value) {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        horizontal = Dimen.mediumPadding,
-                        vertical = Dimen.largePadding
-                    )
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                //当前
-                MainText(text = stringResource(id = R.string.cur_rank))
-                RankSelectItem(
-                    selectIndex = selectIndex0,
-                    rankList = rankList,
-                    targetType = RankSelectType.DEFAULT,
-                    currentRank = maxRank - selectIndex0.intValue
+        Column(
+            modifier = Modifier
+                .padding(
+                    horizontal = Dimen.mediumPadding,
+                    vertical = Dimen.largePadding
                 )
-                //目标
-                MainText(
-                    text = stringResource(id = R.string.target_rank),
-                    modifier = Modifier.padding(top = Dimen.largePadding)
-                )
-                RankSelectItem(
-                    selectIndex = selectIndex1,
-                    rankList = rankList,
-                    targetType = type,
-                    currentRank = maxRank - selectIndex0.intValue
-                )
-            }
-        } else {
-            //fab
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = Dimen.largePadding)
-            ) {
-                MainIcon(
-                    data = MainIconType.RANK_SELECT,
-                    size = Dimen.fabIconSize
-                )
-                Text(
-                    text = stringResource(id = R.string.rank_select),
-                    style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                    )
-                )
-            }
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            //当前
+            MainText(text = stringResource(id = R.string.cur_rank))
+            RankSelectItem(
+                selectIndex = selectIndex0,
+                rankList = rankList,
+                targetType = RankSelectType.DEFAULT,
+                currentRank = maxRank - selectIndex0.intValue
+            )
+            //目标
+            MainText(
+                text = stringResource(id = R.string.target_rank),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            RankSelectItem(
+                selectIndex = selectIndex1,
+                rankList = rankList,
+                targetType = type,
+                currentRank = maxRank - selectIndex0.intValue
+            )
         }
     }
-
 }
 
 /**

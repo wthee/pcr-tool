@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -57,9 +56,6 @@ fun ClanBattleDetailScreen(
                 openDialog = uiState.openDialog,
                 changeDialog = clanBattleDetailViewModel::changeDialog,
                 selectedColor = sectionColor,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .navigationBarsPadding(),
                 changeSelect = clanBattleDetailViewModel::changeSelect
             )
         },

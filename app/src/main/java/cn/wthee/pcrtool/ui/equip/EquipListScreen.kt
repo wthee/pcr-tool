@@ -4,20 +4,16 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,6 +37,7 @@ import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableFab
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -119,12 +116,12 @@ fun EquipListScreen(
         },
         enableClickClose = uiState.openSearchDialog,
         onCloseClick = {
-            equipListViewModel.changeSearchDialog()
+            equipListViewModel.changeSearchDialog(false)
         },
         mainFabIcon = if (uiState.openSearchDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
             if (uiState.openSearchDialog) {
-                equipListViewModel.changeSearchDialog()
+                equipListViewModel.changeSearchDialog(false)
             } else {
                 navigateUp()
             }
@@ -162,10 +159,8 @@ private fun EquipSearchFabContent(
     toSearchEquipQuest: (String) -> Unit,
     changeSearchMode: () -> Unit,
     selectEquip: (Int) -> Unit,
-    changeSearchDialog: () -> Unit
+    changeSearchDialog: (Boolean) -> Unit
 ) {
-    val context = LocalContext.current
-
 
     Box(
         modifier = Modifier
@@ -180,77 +175,48 @@ private fun EquipSearchFabContent(
             ) {
                 if (searchEquipIdList.isNotEmpty()) {
                     //预览已选择的
-                    SmallFloatingActionButton(
-                        modifier = Modifier
-                            .padding(
-                                start = Dimen.fabMargin,
-                                end = Dimen.textFabMargin
-                            ),
-                        shape = if (openSearchDialog) MaterialTheme.shapes.medium else CircleShape,
-                        onClick = {
-                            VibrateUtil(context).single()
-                            changeSearchDialog()
-                        },
-                        elevation = FloatingActionButtonDefaults.elevation(
-                            defaultElevation = if (openSearchDialog) {
-                                Dimen.popupMenuElevation
-                            } else {
-                                Dimen.fabElevation
-                            }
+                    ExpandableFab(
+                        paddingValues = PaddingValues(
+                            start = Dimen.fabMargin,
+                            end = Dimen.textFabMargin
                         ),
+                        expanded = openSearchDialog,
+                        onClick = {
+                            changeSearchDialog(true)
+                        },
+                        icon = MainIconType.BOX,
+                        text = searchEquipIdList.size.toString(),
+                        animateContent = false
                     ) {
-                        if (openSearchDialog) {
-                            //展开已选择的装备
-                            Column(modifier = Modifier.widthIn(max = (Dimen.iconSize + Dimen.largePadding * 2) * 5)) {
-                                MainText(
-                                    text = stringResource(id = R.string.picked_equip),
-                                    modifier = Modifier.padding(
-                                        start = Dimen.mediumPadding,
-                                        end = Dimen.mediumPadding,
-                                        top = Dimen.mediumPadding,
-                                    )
+                        //展开已选择的装备
+                        Column {
+                            MainText(
+                                text = stringResource(id = R.string.picked_equip),
+                                modifier = Modifier.padding(
+                                    start = Dimen.mediumPadding,
+                                    end = Dimen.mediumPadding,
+                                    top = Dimen.mediumPadding,
                                 )
-                                VerticalGrid(
-                                    modifier = Modifier.padding(Dimen.mediumPadding),
-                                    itemWidth = Dimen.iconSize,
-                                    contentPadding = Dimen.largePadding
-                                ) {
-                                    searchEquipIdList.forEach {
-                                        Box(
-                                            contentAlignment = Alignment.Center,
-                                            modifier = Modifier.fillMaxWidth()
+                            )
+                            VerticalGrid(
+                                modifier = Modifier.padding(Dimen.mediumPadding),
+                                itemWidth = Dimen.iconSize,
+                                contentPadding = Dimen.largePadding
+                            ) {
+                                searchEquipIdList.forEach {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        MainIcon(
+                                            data = ImageRequestHelper.getInstance()
+                                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it),
                                         ) {
-                                            MainIcon(
-                                                data = ImageRequestHelper.getInstance()
-                                                    .getEquipPic(it),
-                                            ) {
-                                                selectEquip(it)
-                                            }
+                                            selectEquip(it)
                                         }
                                     }
                                 }
                             }
-                        } else {
-                            //显示数量
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(start = Dimen.largePadding)
-                            ) {
-                                MainIcon(
-                                    data = MainIconType.BOX,
-                                    size = Dimen.fabIconSize
-                                )
-                                Text(
-                                    text = searchEquipIdList.size.toString(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.padding(
-                                        start = Dimen.mediumPadding, end = Dimen.largePadding
-                                    )
-                                )
-                            }
-
                         }
                     }
                 }
@@ -437,7 +403,8 @@ private fun EquipItem(
     ) {
         Box(contentAlignment = Alignment.Center) {
             MainIcon(
-                data = ImageRequestHelper.getInstance().getEquipPic(equip.equipmentId)
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipmentId)
             )
             if (searchEquipMode && searchEquipIdList.contains(equip.equipmentId)) {
                 SelectText(

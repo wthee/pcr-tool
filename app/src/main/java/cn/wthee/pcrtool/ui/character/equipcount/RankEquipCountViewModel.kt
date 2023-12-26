@@ -31,7 +31,8 @@ data class RankEquipCountUiState(
     val isAllUnit: Boolean = false,
     //收藏信息
     val starIdList: List<Int> = emptyList(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadingState: LoadingState = LoadingState.Loading,
+    val openDialog: Boolean = false
 )
 
 /**
@@ -110,4 +111,16 @@ class RankEquipCountViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
+        }
+    }
 }
