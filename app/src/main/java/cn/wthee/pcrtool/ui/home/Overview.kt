@@ -94,16 +94,10 @@ fun Overview(
 ) {
     val uiState by overviewScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    //初始化加载六星数据
-    LaunchedEffect(uiState.firstLoad) {
-        if (uiState.firstLoad) {
-            //初始化六星id
-            overviewScreenViewModel.getR6Ids()
-        }
-    }
-
     //从桌面重新打开时，更新校验
     AppResumeEffect(uiState.firstLoad) {
+        //初始化六星id
+        overviewScreenViewModel.getR6Ids()
         //数据库校验
         MainScope().launch {
             DatabaseUpdater.checkDBVersion(

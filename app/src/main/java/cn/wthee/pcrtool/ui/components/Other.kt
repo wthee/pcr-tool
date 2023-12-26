@@ -993,56 +993,6 @@ fun CharacterTag(
     }
 }
 
-/**
- * 从桌面返回监听
- */
-@Composable
-fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner, firstLoad) {
-        var recreate = false
-        val observer = LifecycleEventObserver { _, e ->
-            if (e == Lifecycle.Event.ON_PAUSE) {
-                recreate = false
-            }
-            if (e == Lifecycle.Event.ON_CREATE) {
-                recreate = true
-            }
-            //首次加载 或 从桌面重新进入（不经过 ON_CREATE）
-            if ((firstLoad && e == Lifecycle.Event.ON_RESUME) || (!recreate && e == Lifecycle.Event.ON_RESUME)) {
-                handler()
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-}
-
-
-/**
- * 生命周期监听
- * fixme 多个事件避免重复调用
- */
-@Composable
-fun LifecycleEffect(vararg events: Lifecycle.Event, handler: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, e ->
-            if (events.contains(e)) {
-                handler()
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable

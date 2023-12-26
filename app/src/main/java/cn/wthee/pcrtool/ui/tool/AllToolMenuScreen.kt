@@ -148,7 +148,7 @@ fun AllToolMenuScreen(
     )
 
     val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
-    LifecycleEffect(Lifecycle.Event.ON_START) {
+    LifecycleEffect(Lifecycle.Event.ON_CREATE) {
         toolSectionViewModel.getToolOrderData()
     }
 
