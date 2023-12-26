@@ -29,6 +29,7 @@ import kotlin.math.max
 
 /**
  * 角色、装备图标列表
+ *
  * @param idList id列表
  * @param isSubLayout 是否子布局
  * @param iconResourceType 图标类型
@@ -36,8 +37,10 @@ import kotlin.math.max
 @Composable
 fun GridIconList(
     idList: List<Int>,
-    isSubLayout: Boolean = true,
+    isSubLayout: Boolean = false,
     iconResourceType: IconResourceType,
+    itemWidth: Dp = Dimen.iconSize,
+    contentPadding: Dp = Dimen.mediumPadding,
     onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalGrid(
@@ -46,8 +49,8 @@ fun GridIconList(
             start = Dimen.smallPadding,
             end = Dimen.smallPadding
         ),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding,
+        itemWidth = itemWidth,
+        contentPadding = contentPadding,
         fixCount = if (LocalInspectionMode.current) 5 else 0,
         isSubLayout = isSubLayout
     ) {
@@ -65,11 +68,13 @@ fun GridIconList(
  * 角色、装备图标
  */
 @Composable
-private fun IconItem(
+fun IconItem(
     id: Int,
     iconResourceType: IconResourceType,
     onClickItem: ((Int) -> Unit)? = null
 ) {
+    val placeholder = id == ImageRequestHelper.UNKNOWN_EQUIP_ID
+
     val unitId: Int = if (id / 10000 == 3) {
         //item 转 unit
         id % 10000 * 100 + 1
@@ -77,12 +82,12 @@ private fun IconItem(
         id
     }
 
-    val data = when (iconResourceType) {
+    val url = when (iconResourceType) {
         IconResourceType.CHARACTER -> {
             ImageRequestHelper.getInstance().getMaxIconUrl(unitId)
         }
 
-        IconResourceType.EQUIP -> {
+        IconResourceType.EQUIP, IconResourceType.UNIQUE_EQUIP -> {
             ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EQUIPMENT, id)
         }
 
@@ -90,7 +95,6 @@ private fun IconItem(
             ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, id)
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -101,7 +105,8 @@ private fun IconItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainIcon(
-            data = data,
+            modifier = Modifier.commonPlaceholder(placeholder),
+            data = url,
             onClick = if (onClickItem != null) {
                 {
                     onClickItem(unitId)

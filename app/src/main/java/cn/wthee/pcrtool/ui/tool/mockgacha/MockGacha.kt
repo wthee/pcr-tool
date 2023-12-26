@@ -31,12 +31,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIds
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -46,7 +48,6 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -62,13 +63,12 @@ import java.util.UUID
 /**
  * 模拟卡池
  */
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MockGacha(
     pagerState: PagerState = rememberPagerState { 2 },
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
 ) {
-    val scope = rememberCoroutineScope()
     val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
 
     //类型
@@ -100,59 +100,7 @@ fun MockGacha(
     MainScaffold(
         secondLineFab = {
             //抽取
-            FadeAnimation(
-                modifier = Modifier
-                    .padding(
-                        end = Dimen.fabMargin,
-                        bottom = Dimen.fabMargin * 2 + Dimen.fabSize
-                    ),
-                visible = uiState.pickUpList.isNotEmpty() && uiState.unitsInGacha != null
-            ) {
-                val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
-                MainSmallFab(
-                    iconType = MainIconType.MOCK_GACHA_PAY,
-                    text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
-                ) {
-                    if (uiState.pickUpList.isNotEmpty()) {
-                        val mockGachaHelper = MockGachaHelper(
-                            pickUpType = mockGachaType,
-                            pickUpList = uiState.pickUpList,
-                            uiState.unitsInGacha!!
-                        )
-
-                        if (!showResult) {
-                            //自选单up，至少选择两名
-                            if (mockGachaType == MockGachaType.PICK_UP_SINGLE && uiState.pickUpList.size < 2) {
-                                ToastUtil.short(tipSingleError)
-                                return@MainSmallFab
-                            }
-                            mockGachaViewModel.changeShowResult(true)
-                            //创建卡池，若存在相同卡池，则不重新创建
-                            scope.launch {
-                                var id = UUID.randomUUID().toString()
-                                val oldGacha = mockGachaViewModel.getGachaByPickUp(
-                                    mockGachaType,
-                                    uiState.pickUpList
-                                )
-                                if (oldGacha != null) {
-                                    id = oldGacha.gachaId
-                                    mockGachaViewModel.changeSelect(oldGacha.gachaType)
-                                }
-                                mockGachaViewModel.changeGachaId(id)
-                                mockGachaViewModel.createMockGacha(
-                                    id,
-                                    mockGachaType,
-                                    uiState.pickUpList,
-                                )
-                            }
-                        } else if (uiState.gachaId != "") {
-                            val result = mockGachaHelper.giveMe1500Gems()
-                            //保存记录
-                            mockGachaViewModel.addMockResult(uiState.gachaId, result)
-                        }
-                    }
-                }
-            }
+            MockGachaFabContent(uiState, showResult, mockGachaType, mockGachaViewModel)
         },
         fabWithCustomPadding = {
             //卡池类型选择
@@ -201,47 +149,9 @@ fun MockGacha(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                FadeAnimation(uiState.pickUpList.isEmpty()) {
-                    MainText(
-                        text = when (mockGachaType) {
-                            MockGachaType.PICK_UP -> stringResource(id = R.string.tip_to_pick_up_normal)
-                            MockGachaType.PICK_UP_SINGLE -> stringResource(id = R.string.tip_to_pick_up_single)
-                            else -> stringResource(id = R.string.tip_to_pick_up)
-                        }
-                    )
-                }
-                ExpandAnimation(uiState.pickUpList.isNotEmpty()) {
-                    //选中的角色
-                    FlowRow(
-                        modifier = Modifier.animateContentSize(defaultSpring())
-                    ) {
-                        uiState.pickUpList.forEachIndexed { index, gachaUnitInfo ->
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier.padding(top = Dimen.smallPadding)
-                            ) {
-                                MainIcon(
-                                    data = ImageRequestHelper.getInstance()
-                                        .getUnitIconUrl(gachaUnitInfo.unitId, 3),
-                                    modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
-                                ) {
-                                    //更新选中
-                                    if (!showResult) {
-                                        mockGachaViewModel.updatePickUpList(gachaUnitInfo)
-                                    }
-                                }
-                                if (mockGachaType == MockGachaType.PICK_UP_SINGLE && index == uiState.pickUpList.size - 1) {
-                                    SelectText(
-                                        selected = true,
-                                        text = stringResource(id = R.string.selected_mark)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //模拟抽卡顶部
+            MockGachaHeader(uiState, mockGachaType, showResult, mockGachaViewModel)
+
             if (showResult) {
                 //抽卡结果
                 MockGachaResult(
@@ -293,6 +203,123 @@ fun MockGacha(
     }
 }
 
+@Composable
+@OptIn(ExperimentalLayoutApi::class)
+private fun MockGachaHeader(
+    uiState: MockGachaUiState,
+    mockGachaType: MockGachaType,
+    showResult: Boolean,
+    mockGachaViewModel: MockGachaViewModel
+) {
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        FadeAnimation(uiState.pickUpList.isEmpty()) {
+            MainText(
+                text = when (mockGachaType) {
+                    MockGachaType.PICK_UP -> stringResource(id = R.string.tip_to_pick_up_normal)
+                    MockGachaType.PICK_UP_SINGLE -> stringResource(id = R.string.tip_to_pick_up_single)
+                    else -> stringResource(id = R.string.tip_to_pick_up)
+                }
+            )
+        }
+        ExpandAnimation(uiState.pickUpList.isNotEmpty()) {
+            //选中的角色
+            FlowRow(
+                modifier = Modifier.animateContentSize(defaultSpring())
+            ) {
+                uiState.pickUpList.forEachIndexed { index, gachaUnitInfo ->
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.padding(top = Dimen.smallPadding)
+                    ) {
+                        MainIcon(
+                            data = ImageRequestHelper.getInstance()
+                                .getUnitIconUrl(gachaUnitInfo.unitId, 3),
+                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
+                        ) {
+                            //更新选中
+                            if (!showResult) {
+                                mockGachaViewModel.updatePickUpList(gachaUnitInfo)
+                            }
+                        }
+                        if (mockGachaType == MockGachaType.PICK_UP_SINGLE && index == uiState.pickUpList.size - 1) {
+                            SelectText(
+                                selected = true,
+                                text = stringResource(id = R.string.selected_mark)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 模拟抽卡按钮
+ */
+@Composable
+private fun MockGachaFabContent(
+    uiState: MockGachaUiState,
+    showResult: Boolean,
+    mockGachaType: MockGachaType,
+    mockGachaViewModel: MockGachaViewModel
+) {
+    val scope = rememberCoroutineScope()
+
+    FadeAnimation(
+        modifier = Modifier
+            .padding(
+                end = Dimen.fabMargin,
+                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+            ),
+        visible = uiState.pickUpList.isNotEmpty() && uiState.unitsInGacha != null
+    ) {
+        val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
+        MainSmallFab(
+            iconType = MainIconType.MOCK_GACHA_PAY,
+            text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
+        ) {
+            if (uiState.pickUpList.isNotEmpty()) {
+                val mockGachaHelper = MockGachaHelper(
+                    pickUpType = mockGachaType,
+                    pickUpList = uiState.pickUpList,
+                    uiState.unitsInGacha!!
+                )
+
+                if (!showResult) {
+                    //自选单up，至少选择两名
+                    if (mockGachaType == MockGachaType.PICK_UP_SINGLE && uiState.pickUpList.size < 2) {
+                        ToastUtil.short(tipSingleError)
+                        return@MainSmallFab
+                    }
+                    mockGachaViewModel.changeShowResult(true)
+                    //创建卡池，若存在相同卡池，则不重新创建
+                    scope.launch {
+                        var id = UUID.randomUUID().toString()
+                        val oldGacha = mockGachaViewModel.getGachaByPickUp(
+                            mockGachaType,
+                            uiState.pickUpList
+                        )
+                        if (oldGacha != null) {
+                            id = oldGacha.gachaId
+                            mockGachaViewModel.changeSelect(oldGacha.gachaType)
+                        }
+                        mockGachaViewModel.changeGachaId(id)
+                        mockGachaViewModel.createMockGacha(
+                            id,
+                            mockGachaType,
+                            uiState.pickUpList,
+                        )
+                    }
+                } else if (uiState.gachaId != "") {
+                    val result = mockGachaHelper.giveMe1500Gems()
+                    //保存记录
+                    mockGachaViewModel.addMockResult(uiState.gachaId, result)
+                }
+            }
+        }
+    }
+}
 
 /**
  * 全部角色列表
@@ -305,7 +332,7 @@ private fun ToSelectMockGachaUnitList(
 ) {
     Column(
         modifier = Modifier
-            .padding(Dimen.mediumPadding)
+            .padding(vertical = Dimen.mediumPadding)
             .verticalScroll(scrollState)
     ) {
         if (mockGachaType == MockGachaType.FES) {
@@ -327,10 +354,14 @@ private fun ToSelectMockGachaUnitList(
  */
 @Composable
 private fun ToSelectMockGachaUnitGroup(
-    data: List<GachaUnitInfo>,
+    gachaUnitList: List<GachaUnitInfo>,
     title: String,
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
+    val idList = gachaUnitList.map {
+        it.unitId + (if (it.rarity == 1) 10 else 30)
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(
@@ -341,45 +372,15 @@ private fun ToSelectMockGachaUnitGroup(
     ) {
         MainTitleText(text = title)
         Spacer(modifier = Modifier.weight(1f))
-        MainText(text = data.size.toString())
+        MainText(text = gachaUnitList.size.toString())
     }
-    MockGachaUnitIconListCompose(icons = data, onClickItem = {
-        mockGachaViewModel.updatePickUpList(it)
-    })
-}
 
-/**
- * 角色图标列表
- */
-@Composable
-private fun MockGachaUnitIconListCompose(
-    icons: List<GachaUnitInfo>,
-    onClickItem: (GachaUnitInfo) -> Unit
-) {
-    VerticalGrid(
-        modifier = Modifier.padding(
-            top = Dimen.mediumPadding
-        ),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding
-    ) {
-        icons.forEach { gachaUnitInfo ->
-            val iconId = gachaUnitInfo.unitId + (if (gachaUnitInfo.rarity == 1) 10 else 30)
-            Column(
-                modifier = Modifier
-                    .padding(
-                        bottom = Dimen.mediumPadding
-                    )
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance()
-                        .getUrl(ImageRequestHelper.ICON_UNIT, iconId)
-                ) {
-                    onClickItem(gachaUnitInfo)
-                }
-            }
+    GridIconList(
+        idList = idList,
+        iconResourceType = IconResourceType.CHARACTER
+    ) { unitId ->
+        gachaUnitList.find { it.unitId / 100 == unitId / 100 }?.let {
+            mockGachaViewModel.updatePickUpList(it)
         }
     }
 }

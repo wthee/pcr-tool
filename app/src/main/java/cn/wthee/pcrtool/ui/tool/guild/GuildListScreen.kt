@@ -153,6 +153,7 @@ private fun GuildItem(
                 GridIconList(
                     idList = idList,
                     iconResourceType = IconResourceType.CHARACTER,
+                    isSubLayout = true,
                     onClickItem = toCharacterDetail
                 )
             }

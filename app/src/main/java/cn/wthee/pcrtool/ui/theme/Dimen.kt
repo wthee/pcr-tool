@@ -83,4 +83,6 @@ object Dimen {
 
     //子项最大宽度
     val itemMaxWidth = getItemWidth() * 1.3f
+
+    val homeIconItemWidth = iconSize + largePadding * 2
 }

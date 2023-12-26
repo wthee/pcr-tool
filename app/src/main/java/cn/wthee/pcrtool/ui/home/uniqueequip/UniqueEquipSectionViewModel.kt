@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
-import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +22,9 @@ data class UniqueEquipSectionUiState(
     //装备数量
     val uniqueEquipCount: String = "",
     //专用装备1列表
-    val uniqueEquipList1: List<UniqueEquipBasicData>? = null,
+    val uniqueEquipIdList1: List<Int>? = null,
     //专用装备2列表
-    val uniqueEquipList2: List<UniqueEquipBasicData>? = null,
+    val uniqueEquipIdList2: List<Int>? = null,
 )
 
 /**
@@ -40,14 +40,14 @@ class UniqueEquipSectionViewModel @Inject constructor(
 
 
     fun loadData(limit: Int) {
-        if (_uiState.value.uniqueEquipList1 == null) {
-            val initList = arrayListOf<UniqueEquipBasicData>()
+        if (_uiState.value.uniqueEquipIdList1 == null) {
+            val initList = arrayListOf<Int>()
             for (i in 1..limit) {
-                initList.add(UniqueEquipBasicData())
+                initList.add(ImageRequestHelper.UNKNOWN_EQUIP_ID)
             }
             _uiState.update {
                 it.copy(
-                    uniqueEquipList1 = initList
+                    uniqueEquipIdList1 = initList
                 )
             }
         }
@@ -74,13 +74,13 @@ class UniqueEquipSectionViewModel @Inject constructor(
      */
     private fun getUniqueEquipInfoList(limit: Int) {
         viewModelScope.launch {
-            val filterList1 = equipmentRepository.getUniqueEquipList("", 1)
-            val filterList2 = equipmentRepository.getUniqueEquipList("", 2)
+            val filterList1 = equipmentRepository.getUniqueEquipList("", 1)?.map { it.equipId }
+            val filterList2 = equipmentRepository.getUniqueEquipList("", 2)?.map { it.equipId }
 
             _uiState.update {
                 it.copy(
-                    uniqueEquipList1 = filterList1?.subList(0, min(limit, filterList1.size)),
-                    uniqueEquipList2 = filterList2?.subList(0, min(limit, filterList2.size)),
+                    uniqueEquipIdList1 = filterList1?.subList(0, min(limit, filterList1.size)),
+                    uniqueEquipIdList2 = filterList2?.subList(0, min(limit, filterList2.size)),
                 )
             }
         }

@@ -1,24 +1,18 @@
 package cn.wthee.pcrtool.ui.home.equip
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.components.MainIcon
-import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.spanCount
 import kotlin.math.max
 
@@ -38,10 +32,7 @@ fun EquipSection(
     val id = OverviewType.EQUIP.id
     val uiState by equipSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val equipSpanCount = max(
-        1,
-        (Dimen.iconSize + Dimen.largePadding * 2).spanCount
-    )
+    val equipSpanCount = max(1, Dimen.homeIconItemWidth.spanCount)
 
     LaunchedEffect(equipSpanCount) {
         equipSectionViewModel.loadData(equipSpanCount)
@@ -64,30 +55,14 @@ fun EquipSection(
             }
         }
     ) {
-        VerticalGrid(
-            itemWidth = Dimen.iconSize + Dimen.largePadding * 2
-        ) {
-            if (uiState.equipList?.isNotEmpty() == true) {
-                uiState.equipList?.forEach {
-                    val placeholder = it.equipmentId == ImageRequestHelper.UNKNOWN_EQUIP_ID
-                    Box(
-                        modifier = Modifier
-                            .padding(Dimen.mediumPadding)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        MainIcon(
-                            data = ImageRequestHelper.getInstance()
-                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it.equipmentId),
-                            modifier = Modifier.commonPlaceholder(placeholder)
-                        ) {
-                            if (!placeholder) {
-                                toEquipDetail(it.equipmentId)
-                            }
-                        }
-                    }
-                }
-            }
+        uiState.equipIdList?.let {
+            GridIconList(
+                idList = it,
+                iconResourceType = IconResourceType.EQUIP,
+                itemWidth = Dimen.homeIconItemWidth,
+                contentPadding = 0.dp,
+                onClickItem = toEquipDetail
+            )
         }
     }
 }

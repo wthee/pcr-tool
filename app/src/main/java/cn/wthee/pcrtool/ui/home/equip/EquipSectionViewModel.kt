@@ -4,8 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
-import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
 import cn.wthee.pcrtool.data.model.FilterEquip
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ data class EquipSectionUiState(
     //装备数量
     val equipCount: Int = 0,
     //装备列表
-    val equipList: List<EquipmentBasicInfo>? = null
+    val equipIdList: List<Int>? = null
 )
 
 /**
@@ -39,14 +39,14 @@ class EquipSectionViewModel @Inject constructor(
 
 
     fun loadData(limit: Int) {
-        if (_uiState.value.equipList == null) {
-            val initList = arrayListOf<EquipmentBasicInfo>()
+        if (_uiState.value.equipIdList == null) {
+            val initList = arrayListOf<Int>()
             for (i in 1..limit) {
-                initList.add(EquipmentBasicInfo())
+                initList.add(ImageRequestHelper.UNKNOWN_EQUIP_ID)
             }
             _uiState.update {
                 it.copy(
-                    equipList = initList
+                    equipIdList = initList
                 )
             }
         }
@@ -74,10 +74,13 @@ class EquipSectionViewModel @Inject constructor(
     private fun getEquipInfoList(limit: Int) {
         viewModelScope.launch {
             try {
-                val filterList = equipmentRepository.getEquipmentList(FilterEquip(), limit)
+                val filterList = equipmentRepository.getEquipmentList(FilterEquip(), limit)?.map {
+                    it.equipmentId
+                }
+
                 _uiState.update {
                     it.copy(
-                        equipList = filterList
+                        equipIdList = filterList
                     )
                 }
             } catch (e: Exception) {

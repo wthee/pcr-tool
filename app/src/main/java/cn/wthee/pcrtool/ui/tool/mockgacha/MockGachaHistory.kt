@@ -177,6 +177,7 @@ private fun MockGachaHistoryItem(
                 GridIconList(
                     idList = idList,
                     iconResourceType = IconResourceType.CHARACTER,
+                    isSubLayout = true,
                     onClickItem = { }
                 )
                 Row(

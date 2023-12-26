@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentBasicInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipGroupData
 import cn.wthee.pcrtool.data.model.FilterEquip
@@ -38,11 +38,11 @@ import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableFab
+import cn.wthee.pcrtool.ui.components.IconListContent
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
@@ -189,35 +189,12 @@ private fun EquipSearchFabContent(
                         animateContent = false
                     ) {
                         //展开已选择的装备
-                        Column {
-                            MainText(
-                                text = stringResource(id = R.string.picked_equip),
-                                modifier = Modifier.padding(
-                                    start = Dimen.mediumPadding,
-                                    end = Dimen.mediumPadding,
-                                    top = Dimen.mediumPadding,
-                                )
-                            )
-                            VerticalGrid(
-                                modifier = Modifier.padding(Dimen.mediumPadding),
-                                itemWidth = Dimen.iconSize,
-                                contentPadding = Dimen.largePadding
-                            ) {
-                                searchEquipIdList.forEach {
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        MainIcon(
-                                            data = ImageRequestHelper.getInstance()
-                                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it),
-                                        ) {
-                                            selectEquip(it)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        IconListContent(
+                            idList = searchEquipIdList,
+                            title = stringResource(id = R.string.picked_equip),
+                            iconResourceType = IconResourceType.EQUIP,
+                            onClickItem = selectEquip
+                        )
                     }
                 }
 

@@ -362,6 +362,7 @@ enum class VideoType(val value: Int, val typeName: Int) {
 enum class IconResourceType {
     CHARACTER,
     EQUIP,
+    UNIQUE_EQUIP,
     EX_EQUIP,
     ;
 }
