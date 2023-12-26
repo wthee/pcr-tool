@@ -204,7 +204,8 @@ private fun UniqueEquipItem(
         )
     ) {
         MainIcon(
-            data = ImageRequestHelper.getInstance().getEquipPic(equip.equipId)
+            data = ImageRequestHelper.getInstance()
+                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId)
         ) {
             toUniqueEquipDetail(equip.unitId)
         }

@@ -121,7 +121,8 @@ private fun RankEquipListItem(
                     ) {
                         MainIcon(
                             modifier = Modifier.padding(Dimen.smallPadding),
-                            data = ImageRequestHelper.getInstance().getEquipPic(it)
+                            data = ImageRequestHelper.getInstance()
+                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it)
                         )
                     }
                 }

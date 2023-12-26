@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 
@@ -24,16 +23,16 @@ class ImageRequestHelper {
         private var RESOURCE = "/resource/"
 
         //图片格式
-        const val WEBP = ".webp"
+        private const val WEBP = ".webp"
 
         //视频格式
-        const val MP4 = ".mp4"
+        private const val MP4 = ".mp4"
 
         //角色卡面
-        const val CARD_PROFILE = "card/profile/"
+        private const val CARD_PROFILE = "card/profile/"
 
         //角色完整卡面
-        const val CARD_FULL = "card/full/"
+        private const val CARD_FULL = "card/full/"
 
         //现实角色卡面
         const val CARD_ACTUAL_PROFILE = "card/actual_profile/"
@@ -117,14 +116,6 @@ class ImageRequestHelper {
         }
 
         return list
-    }
-
-
-    //获取装备图标
-    fun getEquipPic(id: Int) = if (id == UNKNOWN_EQUIP_ID) {
-        R.drawable.unknown_item
-    } else {
-        getUrl(ICON_EQUIPMENT, id.toString())
     }
 
     /**

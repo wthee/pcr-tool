@@ -83,7 +83,7 @@ fun UniqueEquipSection(
                 ) {
                     MainIcon(
                         data = ImageRequestHelper.getInstance()
-                            .getEquipPic(it.equipId),
+                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it.equipId),
                         modifier = Modifier.commonPlaceholder(placeholder)
                     ) {
                         if (!placeholder) {
@@ -107,7 +107,7 @@ fun UniqueEquipSection(
                 ) {
                     MainIcon(
                         data = ImageRequestHelper.getInstance()
-                            .getEquipPic(it.equipId),
+                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it.equipId),
                         modifier = Modifier.commonPlaceholder(placeholder)
                     ) {
                         if (!placeholder) {

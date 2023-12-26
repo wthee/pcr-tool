@@ -65,7 +65,7 @@ import cn.wthee.pcrtool.utils.deleteSpace
     ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
-fun UniqueEquipContent(
+fun UniqueEquipDetail(
     slot: Int,
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
@@ -189,7 +189,8 @@ fun UniqueEquipContent(
                     .fillMaxWidth()
             ) {
                 MainIcon(
-                    data = ImageRequestHelper.getInstance().getEquipPic(it.equipmentId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it.equipmentId)
                 )
                 Subtitle2(
                     text = getIndex(it.equipmentId % 10) + it.description.deleteSpace,
@@ -223,7 +224,7 @@ fun UniqueEquipContent(
 @Composable
 private fun UniqueEquipPreview() {
     PreviewLayout {
-        UniqueEquipContent(
+        UniqueEquipDetail(
             1,
             currentValue = CharacterProperty(),
             uniqueEquipLevelMax = 100,

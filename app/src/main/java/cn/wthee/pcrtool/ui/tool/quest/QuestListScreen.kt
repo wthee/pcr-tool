@@ -171,7 +171,8 @@ fun QuestPager(
                                 .weight(1f)
                         ) {
                             MainIcon(
-                                data = ImageRequestHelper.getInstance().getEquipPic(it),
+                                data = ImageRequestHelper.getInstance()
+                                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it),
                             )
                         }
                     }
@@ -433,7 +434,7 @@ private fun EquipWithOddCompose(
         Box(contentAlignment = Alignment.Center) {
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getEquipPic(oddData.equipId)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, oddData.equipId)
             )
             if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd == 0) {
                 SelectText(

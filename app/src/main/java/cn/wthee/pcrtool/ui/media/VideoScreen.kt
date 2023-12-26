@@ -58,6 +58,7 @@ import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MediaDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -478,9 +479,9 @@ private fun MainPlayView(
 private fun getVideoFileName(url: String): String {
     return try {
         val type = when {
-            url.contains("card") -> "card"
-            url.contains("skill") -> "skill"
-            else -> ""
+            url.contains(ImageRequestHelper.CARD_MOVIE) -> "card"
+            url.contains(ImageRequestHelper.SKILL_MOVIE) -> "skill"
+            else -> Constants.UNKNOWN
         } + "_"
         type + url.split('/').last().split('.')[0] + ".mp4"
     } catch (e: Exception) {

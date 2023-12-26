@@ -47,17 +47,13 @@ fun EquipSection(
         equipSectionViewModel.loadData(equipSpanCount)
     }
 
-    //装备总数
-    val equipCount = uiState.equipCount
-
-
 
     Section(
         id = id,
         titleId = R.string.tool_equip,
         iconType = MainIconType.EQUIP,
-        hintText = equipCount.toString(),
-        contentVisible = equipCount > 0,
+        hintText = uiState.equipCount.toString(),
+        contentVisible = uiState.equipCount > 0,
         isEditMode = isEditMode,
         orderStr = orderStr,
         onClick = {
@@ -82,7 +78,7 @@ fun EquipSection(
                     ) {
                         MainIcon(
                             data = ImageRequestHelper.getInstance()
-                                .getEquipPic(it.equipmentId),
+                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it.equipmentId),
                             modifier = Modifier.commonPlaceholder(placeholder)
                         ) {
                             if (!placeholder) {

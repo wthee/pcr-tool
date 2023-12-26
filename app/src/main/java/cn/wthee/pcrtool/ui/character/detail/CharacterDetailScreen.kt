@@ -90,7 +90,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultTween
-import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipContent
+import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipDetail
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UnitIconAndTag
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
@@ -435,7 +435,7 @@ private fun CharacterDetailContent(
                         //专武
                         CharacterDetailModuleType.UNIQUE_EQUIP -> uiState.allAttr.uniqueEquipList
                             .forEachIndexed { index, uniqueEquipmentMaxData ->
-                                UniqueEquipContent(
+                                UniqueEquipDetail(
                                     slot = index + 1,
                                     currentValue = uiState.currentValue,
                                     uniqueEquipLevelMax = if (index == 0) {
@@ -892,12 +892,18 @@ private fun EquipContent(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id6)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id6)
+            ) {
                 if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id3)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id3)
+            ) {
                 if (id3 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id3)
                 }
@@ -912,7 +918,10 @@ private fun EquipContent(
                 .padding(Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id5)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id5)
+            ) {
                 if (id5 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id5)
                 }
@@ -956,7 +965,10 @@ private fun EquipContent(
                 }
             }
             val id2 = equips[3].equipmentId
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id2)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id2)
+            ) {
                 if (id2 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id2)
                 }
@@ -971,13 +983,19 @@ private fun EquipContent(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id4)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id4)
+            ) {
                 if (id4 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id4)
                 }
 
             }
-            MainIcon(data = ImageRequestHelper.getInstance().getEquipPic(id1)) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id1)
+            ) {
                 if (id1 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id1)
                 }

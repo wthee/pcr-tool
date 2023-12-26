@@ -54,6 +54,7 @@ import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MediaDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -418,9 +419,9 @@ private fun PreviewPictureDialog(
 private fun getFileName(url: String): String {
     return try {
         val type = when {
-            url.contains("story") -> "story"
-            url.contains("actual_profile") -> "unit_actual"
-            url.contains("comic") -> "comic"
+            url.contains(ImageRequestHelper.CARD_STORY) -> "story"
+            url.contains(ImageRequestHelper.CARD_ACTUAL_PROFILE) -> "unit_actual"
+            url.contains(ImageRequestHelper.COMIC) -> "comic"
             //b站动态图片
             url.contains("bfs") -> "info"
             else -> "unit"

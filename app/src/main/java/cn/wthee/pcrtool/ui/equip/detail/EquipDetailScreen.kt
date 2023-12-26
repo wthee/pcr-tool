@@ -117,7 +117,8 @@ private fun EquipDetailContent(
                     .padding(Dimen.largePadding)
             ) {
                 MainIcon(
-                    data = ImageRequestHelper.getInstance().getEquipPic(equipId)
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equipId)
                 )
                 Subtitle2(
                     text = equipMaxData.getDesc(),
@@ -165,7 +166,8 @@ private fun EquipMaterialListContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     MainIcon(
-                        data = ImageRequestHelper.getInstance().getEquipPic(material.id)
+                        data = ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, material.id)
                     ) {
                         toEquipMaterial(material.id, material.name)
                     }
