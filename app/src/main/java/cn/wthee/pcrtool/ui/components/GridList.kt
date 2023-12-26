@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -27,13 +28,16 @@ import kotlin.math.max
 
 
 /**
- * 角色图标列表
- * @param icons unitId
+ * 角色、装备图标列表
+ * @param idList id列表
+ * @param isSubLayout 是否子布局
+ * @param iconResourceType 图标类型
  */
 @Composable
 fun GridIconList(
-    icons: List<Int>,
+    idList: List<Int>,
     isSubLayout: Boolean = true,
+    iconResourceType: IconResourceType,
     onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalGrid(
@@ -47,26 +51,47 @@ fun GridIconList(
         fixCount = if (LocalInspectionMode.current) 5 else 0,
         isSubLayout = isSubLayout
     ) {
-        icons.forEach {
-            UnitIcon(
-                it,
-                onClickItem
+        idList.forEach {
+            IconItem(
+                id = it,
+                iconResourceType = iconResourceType,
+                onClickItem = onClickItem
             )
         }
     }
 }
 
 /**
- * 角色图标
+ * 角色、装备图标
  */
 @Composable
-private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
+private fun IconItem(
+    id: Int,
+    iconResourceType: IconResourceType,
+    onClickItem: ((Int) -> Unit)? = null
+) {
     val unitId: Int = if (id / 10000 == 3) {
         //item 转 unit
         id % 10000 * 100 + 1
     } else {
         id
     }
+
+    val data = when (iconResourceType) {
+        IconResourceType.CHARACTER -> {
+            ImageRequestHelper.getInstance().getMaxIconUrl(unitId)
+        }
+
+        IconResourceType.EQUIP -> {
+            ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EQUIPMENT, id)
+        }
+
+        IconResourceType.EX_EQUIP -> {
+            ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, id)
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .padding(
@@ -76,7 +101,7 @@ private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainIcon(
-            data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
+            data = data,
             onClick = if (onClickItem != null) {
                 {
                     onClickItem(unitId)
@@ -88,7 +113,6 @@ private fun UnitIcon(id: Int, onClickItem: ((Int) -> Unit)? = null) {
     }
 
 }
-
 
 /**
  * 网格布局
@@ -190,6 +214,9 @@ private fun IconListComposePreview() {
         mockData.add(i)
     }
     PreviewLayout {
-        GridIconList(icons = mockData, onClickItem = {})
+        GridIconList(
+            idList = mockData,
+            iconResourceType = IconResourceType.CHARACTER,
+            onClickItem = {})
     }
 }

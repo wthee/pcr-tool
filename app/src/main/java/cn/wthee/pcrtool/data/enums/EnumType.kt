@@ -354,3 +354,14 @@ enum class VideoType(val value: Int, val typeName: Int) {
             .find { it.value == value } ?: UNKNOWN
     }
 }
+
+
+/**
+ * 图标类型
+ */
+enum class IconResourceType {
+    CHARACTER,
+    EQUIP,
+    EX_EQUIP,
+    ;
+}

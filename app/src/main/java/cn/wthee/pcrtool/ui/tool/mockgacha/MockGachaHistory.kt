@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -174,7 +175,9 @@ private fun MockGachaHistoryItem(
                     idList.add(unitId + 30)
                 }
                 GridIconList(
-                    icons = idList
+                    idList = idList,
+                    iconResourceType = IconResourceType.CHARACTER,
+                    onClickItem = { }
                 )
                 Row(
                     modifier = Modifier

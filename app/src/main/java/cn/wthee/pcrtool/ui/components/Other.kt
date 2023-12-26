@@ -25,21 +25,20 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +53,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -64,10 +62,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
@@ -785,36 +782,41 @@ fun EventTitleCountdown(
 }
 
 /**
- * 装备适用角色
+ * 装备、角色图标布局
  */
 @Composable
-fun UnitList(unitIds: List<Int>) {
-    LazyColumn(
+fun IconListContent(
+    idList: List<Int>,
+    title: String,
+    iconResourceType: IconResourceType,
+    onClickItem: ((Int) -> Unit)? = null
+) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = Dimen.mediumPadding),
-        state = rememberLazyListState()
+            .padding(horizontal = Dimen.mediumPadding)
+            .verticalScroll(rememberScrollState())
     ) {
         //标题
-        item {
-            MainText(
-                text = stringResource(R.string.extra_equip_unit),
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth()
-            )
-        }
+        MainText(
+            text = title,
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .fillMaxWidth()
+        )
 
-        //角色图标
-        item {
-            GridIconList(unitIds, isSubLayout = false) {}
-        }
+        //图标
+        GridIconList(
+            idList = idList,
+            iconResourceType = iconResourceType,
+            isSubLayout = false,
+            onClickItem = onClickItem
+        )
 
-        item {
-            CommonSpacer()
-        }
+        CommonSpacer()
     }
 }
+
 
 /**
  * 角色标签行

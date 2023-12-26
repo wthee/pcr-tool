@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.GachaType
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
 import cn.wthee.pcrtool.navigation.NavRoute
@@ -176,7 +177,7 @@ fun GachaItem(
     toCharacterDetail: (Int) -> Unit,
     toMockGacha: () -> Unit
 ) {
-    val icons = gachaInfo.unitIds.intArrayList
+    val idList = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when (type) {
         GachaType.LIMIT, GachaType.NORMAL -> colorRed
@@ -187,7 +188,11 @@ fun GachaItem(
     }
     //是否普通角色、fes混合卡池
     val isMixedGachaPool =
-        icons.find { !fesUnitIdList.contains(it) } != null && icons.find { fesUnitIdList.contains(it) } != null
+        idList.find { !fesUnitIdList.contains(it) } != null && idList.find {
+            fesUnitIdList.contains(
+                it
+            )
+        } != null
     val mockGachaType = when (type) {
         GachaType.FES -> MockGachaType.FES
         GachaType.RE_LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
@@ -220,7 +225,7 @@ fun GachaItem(
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                 //图标/描述
-                if (icons.isEmpty()) {
+                if (idList.isEmpty()) {
                     Subtitle1(
                         text = gachaInfo.getDesc(),
                         modifier = Modifier.padding(
@@ -231,7 +236,8 @@ fun GachaItem(
                     )
                 } else {
                     GridIconList(
-                        icons = icons,
+                        idList = idList,
+                        iconResourceType = IconResourceType.CHARACTER,
                         onClickItem = toCharacterDetail
                     )
                 }

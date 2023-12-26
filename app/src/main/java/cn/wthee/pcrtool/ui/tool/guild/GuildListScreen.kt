@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildMemberInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
@@ -119,9 +120,9 @@ private fun GuildItem(
     }
     //调整排序
     memberList.sortWith(compareUnit(masterName))
-    val iconIdList = arrayListOf<Int>()
+    val idList = arrayListOf<Int>()
     memberList.forEach {
-        iconIdList.add(it.unitId)
+        idList.add(it.unitId)
     }
 
     Column(
@@ -150,7 +151,8 @@ private fun GuildItem(
                 }
                 //角色图标列表
                 GridIconList(
-                    icons = iconIdList,
+                    idList = idList,
+                    iconResourceType = IconResourceType.CHARACTER,
                     onClickItem = toCharacterDetail
                 )
             }

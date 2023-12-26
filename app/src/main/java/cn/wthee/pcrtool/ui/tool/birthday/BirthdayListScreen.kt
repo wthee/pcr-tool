@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.startTime
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
@@ -106,7 +107,7 @@ fun BirthdayItem(
     val today = getToday()
     val sd = data.startTime.formatTime
     val comingSoon = isComingSoon(today, sd, false)
-    val icons = data.getOrderUnitIdList()
+    val idList = data.getOrderUnitIdList()
 
 
     Column(
@@ -160,7 +161,8 @@ fun BirthdayItem(
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //图标
                 GridIconList(
-                    icons = icons,
+                    idList = idList,
+                    iconResourceType = IconResourceType.CHARACTER,
                     onClickItem = toCharacterDetail
                 )
             }

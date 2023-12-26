@@ -472,6 +472,7 @@ interface EquipmentDao {
             OR equip_slot_6 = :equipId)
             AND unit_id < 400000
             GROUP BY unit_id
+            ORDER BY unit_id
         """
     )
     suspend fun getEquipUnitList(equipId: Int): List<Int>
