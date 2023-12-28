@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.EquipLevelColor
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquip
@@ -154,8 +155,8 @@ private fun EquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val craftChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.uncraft)),
-            ChipData(1, stringResource(id = R.string.craft)),
+            ChipData(stringResource(id = R.string.uncraft)),
+            ChipData(stringResource(id = R.string.craft)),
         )
         ChipGroup(
             craftChipData,
@@ -168,8 +169,8 @@ private fun EquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val loveChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(stringResource(id = R.string.loved)),
         )
         ChipGroup(
             loveChipData,
@@ -182,9 +183,15 @@ private fun EquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val colorChipData =
-            arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            arrayListOf(ChipData(stringResource(id = R.string.all)))
         for (i in 1..colorNum) {
-            colorChipData.add(ChipData(i, getEquipColorText(i)))
+            val colorType = EquipLevelColor.getByType(i)
+            colorChipData.add(
+                ChipData(
+                    text = stringResource(id = colorType.typeNameId),
+                    color = colorType.color
+                )
+            )
         }
         ChipGroup(
             colorChipData,
@@ -194,26 +201,6 @@ private fun EquipListFilterContent(
         CommonSpacer()
     }
 }
-
-/**
- * 装备品级颜色名
- */
-@Composable
-private fun getEquipColorText(colorType: Int): String {
-    return when (colorType) {
-        1 -> stringResource(id = R.string.color_blue)
-        2 -> stringResource(id = R.string.color_copper)
-        3 -> stringResource(id = R.string.color_silver)
-        4 -> stringResource(id = R.string.color_gold)
-        5 -> stringResource(id = R.string.color_purple)
-        6 -> stringResource(id = R.string.color_red)
-        7 -> stringResource(id = R.string.color_green)
-        8 -> stringResource(id = R.string.color_orange)
-        9 -> stringResource(id = R.string.color_cyan)
-        else -> stringResource(id = R.string.unknown)
-    }
-}
-
 
 @CombinedPreviews
 @Composable

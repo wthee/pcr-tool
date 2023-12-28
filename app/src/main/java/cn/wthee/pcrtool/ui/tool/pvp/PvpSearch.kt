@@ -52,6 +52,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -62,7 +63,6 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.getPositionColor
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -369,15 +369,15 @@ private fun PvpToSelectList(
     //选择页面
     val character0 = arrayListOf(PvpCharacterData(unitId = 0, type = 0))
     character0.addAll(characterDataList.filter {
-        it.position in 0..299
+        PositionType.getPositionType(it.position) == PositionType.POSITION_FRONT
     })
     val character1 = arrayListOf(PvpCharacterData(unitId = 1, type = 1))
     character1.addAll(characterDataList.filter {
-        it.position in 300..599
+        PositionType.getPositionType(it.position) == PositionType.POSITION_MIDDLE
     })
     val character2 = arrayListOf(PvpCharacterData(unitId = 2, type = 2))
     character2.addAll(characterDataList.filter {
-        it.position in 600..9999
+        PositionType.getPositionType(it.position) == PositionType.POSITION_BACK
     })
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
@@ -573,25 +573,6 @@ fun PvpUnitIconLine(
             }
         }
     }
-//    VerticalGrid(spanCount = 5) {
-//        ids.forEach {
-//            Box(
-//                contentAlignment = Alignment.Center,
-//                modifier = Modifier.weight(1f)
-//            ) {
-//                IconCompose(
-//                    data = ImageResourceHelper.getInstance().getMaxIconUrl(it),
-//                    wrapSize = true
-//                ) {
-//                    if (!floatWindow) {
-//                        toCharacter(it)
-//                    }
-//                }
-//            }
-//
-//        }
-
-//    }
 }
 
 
@@ -607,7 +588,7 @@ private fun CharacterPositionText(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     val color = if (showColor) {
-        getPositionColor(position)
+        PositionType.getPositionType(position).color
     } else {
         Color.Unspecified
     }

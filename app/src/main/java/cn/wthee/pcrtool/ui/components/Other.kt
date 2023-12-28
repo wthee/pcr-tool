@@ -60,16 +60,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.AtkType
+import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.character.getAtkColor
-import cn.wthee.pcrtool.ui.character.getAtkText
-import cn.wthee.pcrtool.ui.character.getLimitTypeColor
-import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -86,7 +84,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -255,18 +252,6 @@ fun CommonSpacer() {
             .navigationBarsPadding()
             .height(Dimen.fabSize + Dimen.fabMargin + Dimen.mediumPadding)
     )
-}
-
-/**
- * 位置颜色
- * @param position 角色占位
- */
-@Composable
-fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
-    PositionType.POSITION_0_299 -> colorRed
-    PositionType.POSITION_300_599 -> colorGold
-    PositionType.POSITION_600_999 -> colorCyan
-    PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
 }
 
 /**
@@ -718,22 +703,24 @@ fun CharacterTagRow(
                 position = basicInfo!!.position
             )
 
+            val limitType = CharacterLimitType.getByType(basicInfo.limitType)
 
             Row {
                 //获取方式
                 CharacterTag(
                     modifier = Modifier.padding(Dimen.smallPadding),
-                    text = getLimitTypeText(limitType = basicInfo.limitType),
-                    backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
+                    text = stringResource(id = limitType.typeNameId),
+                    backgroundColor = limitType.color
                 )
                 //攻击
+                val atkType = AtkType.getByType(basicInfo.atkType)
                 CharacterTag(
                     modifier = Modifier.padding(
                         bottom = Dimen.smallPadding,
                         top = Dimen.smallPadding
                     ),
-                    text = getAtkText(atkType = basicInfo.atkType),
-                    backgroundColor = getAtkColor(atkType = basicInfo.atkType)
+                    text = stringResource(id = R.string.atk_type),
+                    backgroundColor = atkType.color
                 )
             }
 
@@ -789,7 +776,8 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-    val positionText = getPositionText(position)
+    val positionText =
+        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //位置图标
@@ -800,27 +788,9 @@ fun CharacterPositionTag(
         CharacterTag(
             modifier = Modifier.padding(start = Dimen.smallPadding),
             text = positionText,
-            backgroundColor = getPositionColor(position)
+            backgroundColor = PositionType.getPositionType(position).color
         )
     }
-}
-
-/**
- * 获取位置描述
- */
-@Composable
-private fun getPositionText(position: Int): String {
-    var positionText = ""
-    val pos = when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-        PositionType.UNKNOWN -> Constants.UNKNOWN
-    }
-    if (pos != Constants.UNKNOWN) {
-        positionText = "$pos $position"
-    }
-    return positionText
 }
 
 /**
@@ -889,8 +859,8 @@ private fun AllPreview() {
 private fun CharacterTagPreview() {
     PreviewLayout {
         CharacterTag(
-            text = getLimitTypeText(limitType = 1),
-            backgroundColor = getLimitTypeColor(limitType = 1)
+            text = stringResource(id = CharacterLimitType.LIMIT.typeNameId),
+            backgroundColor = CharacterLimitType.LIMIT.color
         )
     }
 }

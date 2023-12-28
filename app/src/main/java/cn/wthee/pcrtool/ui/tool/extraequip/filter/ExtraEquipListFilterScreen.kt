@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.extraequip
+package cn.wthee.pcrtool.ui.tool.extraequip.filter
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipCategoryData
+import cn.wthee.pcrtool.data.enums.ExtraEquipLevelColor
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
@@ -38,7 +39,6 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
@@ -161,9 +161,9 @@ private fun ExtraEquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val flagChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.extra_equip_normal)),
-            ChipData(2, stringResource(id = R.string.extra_equip_clan)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(stringResource(id = R.string.extra_equip_normal)),
+            ChipData(stringResource(id = R.string.extra_equip_clan)),
         )
         ChipGroup(
             flagChipData,
@@ -176,8 +176,8 @@ private fun ExtraEquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val loveChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(stringResource(id = R.string.loved)),
         )
         ChipGroup(
             loveChipData,
@@ -190,9 +190,10 @@ private fun ExtraEquipListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val rarityChipData =
-            arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            arrayListOf(ChipData(stringResource(id = R.string.all)))
         for (i in 1..colorNum) {
-            rarityChipData.add(ChipData(i, getExtraEquipColorText(i)))
+            val colorType = ExtraEquipLevelColor.getByType(i)
+            rarityChipData.add(ChipData(text = colorType.typeName, color = colorType.color))
         }
         ChipGroup(
             rarityChipData,
@@ -206,10 +207,10 @@ private fun ExtraEquipListFilterContent(
                 modifier = Modifier.padding(top = Dimen.largePadding)
             )
             val categoryChipData = arrayListOf(
-                ChipData(0, stringResource(id = R.string.all)),
+                ChipData(stringResource(id = R.string.all)),
             )
-            equipCategoryList.forEachIndexed { index, categoryData ->
-                categoryChipData.add(ChipData(index + 1, categoryData.categoryName))
+            equipCategoryList.forEach { categoryData ->
+                categoryChipData.add(ChipData(categoryData.categoryName))
             }
             ChipGroup(
                 categoryChipData,
@@ -220,20 +221,6 @@ private fun ExtraEquipListFilterContent(
         }
 
         CommonSpacer()
-    }
-}
-
-/**
- * 装备品级颜色名
- */
-private fun getExtraEquipColorText(colorType: Int): String {
-    return when (colorType) {
-        1 -> "★1"
-        2 -> "★2"
-        3 -> "★3"
-        4 -> "★4"
-        5 -> "★5"
-        else -> Constants.UNKNOWN
     }
 }
 

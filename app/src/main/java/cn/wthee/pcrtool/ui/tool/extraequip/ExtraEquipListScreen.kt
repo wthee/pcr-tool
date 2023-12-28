@@ -8,14 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +22,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
+import cn.wthee.pcrtool.data.enums.ExtraEquipLevelColor
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
@@ -41,11 +40,6 @@ import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorPink
-import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.gson.Gson
@@ -54,9 +48,6 @@ import kotlinx.coroutines.launch
 /**
  * ex装备列表
  */
-@OptIn(
-    ExperimentalMaterialApi::class
-)
 @Composable
 fun ExtraEquipList(
     extraEquipmentViewModel: ExtraEquipListViewModel = hiltViewModel(),
@@ -194,7 +185,7 @@ private fun ExtraEquipGroup(
                 equipGroupData.category
             ),
         iconSize = Dimen.smallIconSize,
-        backgroundColor = getEquipColor(equipGroupData.rarity),
+        backgroundColor = ExtraEquipLevelColor.getByType(equipGroupData.rarity).color,
         titleStart = stringResource(
             id = R.string.extra_equip_rarity_and_type,
             equipGroupData.rarity,
@@ -267,21 +258,6 @@ private fun ExtraEquipItem(
         )
     }
 }
-
-
-/**
- * 装备品级颜色
- */
-private fun getEquipColor(colorType: Int): Color {
-    return when (colorType) {
-        1 -> colorCopper
-        2 -> colorSilver
-        3 -> colorGold
-        4 -> colorPink
-        else -> colorGray
-    }
-}
-
 
 @CombinedPreviews
 @Composable

@@ -26,8 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GuildData
+import cn.wthee.pcrtool.data.enums.AtkType
+import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -41,6 +44,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
@@ -199,13 +203,13 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val sortChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.sort_date)),
-            ChipData(1, stringResource(id = R.string.age)),
-            ChipData(2, stringResource(id = R.string.title_height)),
-            ChipData(3, stringResource(id = R.string.title_weight)),
-            ChipData(4, stringResource(id = R.string.title_position)),
-            ChipData(5, stringResource(id = R.string.title_birth)),
-            ChipData(6, stringResource(id = R.string.title_unlock_6))
+            ChipData(stringResource(id = R.string.sort_date)),
+            ChipData(stringResource(id = R.string.age)),
+            ChipData(stringResource(id = R.string.title_height)),
+            ChipData(stringResource(id = R.string.title_weight)),
+            ChipData(stringResource(id = R.string.title_position)),
+            ChipData(stringResource(id = R.string.title_birth)),
+            ChipData(stringResource(id = R.string.title_unlock_6))
         )
         ChipGroup(
             sortChipData,
@@ -218,8 +222,8 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val sortAscChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.sort_asc)),
-            ChipData(1, stringResource(id = R.string.sort_desc)),
+            ChipData(stringResource(id = R.string.sort_asc)),
+            ChipData(stringResource(id = R.string.sort_desc)),
         )
         ChipGroup(
             sortAscChipData,
@@ -232,8 +236,8 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val loveChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(stringResource(id = R.string.loved)),
         )
         ChipGroup(
             loveChipData,
@@ -246,11 +250,23 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val typeChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.type_normal)),
-            ChipData(2, stringResource(id = R.string.type_limit)),
-            ChipData(3, stringResource(id = R.string.type_event_limit)),
-            ChipData(4, stringResource(id = R.string.type_extra_character)),
+            ChipData(text = stringResource(id = R.string.all)),
+            ChipData(
+                text = stringResource(id = CharacterLimitType.NORMAL.typeNameId),
+                color = CharacterLimitType.NORMAL.color
+            ),
+            ChipData(
+                text = stringResource(id = CharacterLimitType.LIMIT.typeNameId),
+                color = CharacterLimitType.LIMIT.color
+            ),
+            ChipData(
+                text = stringResource(id = CharacterLimitType.EVENT.typeNameId),
+                color = CharacterLimitType.EVENT.color
+            ),
+            ChipData(
+                text = stringResource(id = CharacterLimitType.EXTRA.typeNameId),
+                color = CharacterLimitType.EXTRA.color
+            ),
         )
         ChipGroup(
             typeChipData,
@@ -260,9 +276,9 @@ private fun CharacterListFilterContent(
 
         //六星
         val r6ChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.six_star)),
-            ChipData(2, stringResource(id = R.string.six_locked)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(text = stringResource(id = R.string.six_star), color = colorPink),
+            ChipData(stringResource(id = R.string.six_locked)),
         )
         //是否选择了六星解放排序
         val isUnlock6SortType = sortTypeIndex.intValue == CharacterSortType.SORT_UNLOCK_6.type
@@ -287,10 +303,19 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val positionChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.position_0)),
-            ChipData(2, stringResource(id = R.string.position_1)),
-            ChipData(3, stringResource(id = R.string.position_2)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(
+                text = stringResource(id = PositionType.POSITION_FRONT.typeNameId),
+                color = PositionType.POSITION_FRONT.color
+            ),
+            ChipData(
+                text = stringResource(id = PositionType.POSITION_MIDDLE.typeNameId),
+                color = PositionType.POSITION_MIDDLE.color
+            ),
+            ChipData(
+                text = stringResource(id = PositionType.POSITION_BACK.typeNameId),
+                color = PositionType.POSITION_BACK.color
+            ),
         )
         ChipGroup(
             positionChipData,
@@ -303,9 +328,15 @@ private fun CharacterListFilterContent(
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
         val atkChipData = arrayListOf(
-            ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.physical)),
-            ChipData(2, stringResource(id = R.string.magic)),
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(
+                text = stringResource(id = AtkType.PHYSICAL.typeNameId),
+                color = AtkType.PHYSICAL.color
+            ),
+            ChipData(
+                text = stringResource(id = AtkType.MAGIC.typeNameId),
+                color = AtkType.MAGIC.color
+            ),
         )
         ChipGroup(
             atkChipData,
@@ -319,11 +350,11 @@ private fun CharacterListFilterContent(
                 modifier = Modifier.padding(top = Dimen.largePadding)
             )
             val raceChipData = arrayListOf(
-                ChipData(0, stringResource(id = R.string.all)),
-                ChipData(1, stringResource(id = R.string.title_race_multiple)),
+                ChipData(stringResource(id = R.string.all)),
+                ChipData(stringResource(id = R.string.title_race_multiple)),
             )
-            raceList.forEachIndexed { index, raceData ->
-                raceChipData.add(ChipData(index + 2, raceData))
+            raceList.forEach { raceData ->
+                raceChipData.add(ChipData(raceData))
             }
             ChipGroup(
                 raceChipData,
@@ -338,11 +369,11 @@ private fun CharacterListFilterContent(
                 modifier = Modifier.padding(top = Dimen.largePadding)
             )
             val guildChipData = arrayListOf(
-                ChipData(0, stringResource(id = R.string.all)),
-                ChipData(1, stringResource(id = R.string.no_guild)),
+                ChipData(stringResource(id = R.string.all)),
+                ChipData(stringResource(id = R.string.no_guild)),
             )
-            guildList.forEachIndexed { index, guildData ->
-                guildChipData.add(ChipData(index + 2, guildData.guildName))
+            guildList.forEach { guildData ->
+                guildChipData.add(ChipData(guildData.guildName))
             }
             ChipGroup(
                 guildChipData,

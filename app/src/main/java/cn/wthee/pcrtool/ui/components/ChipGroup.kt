@@ -19,13 +19,14 @@ import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 
 /**
  * ChipGroup
  *
- * @param items chip 数据列表
+ * @param items 文本列表
  * @param selectIndex 选择位置状态
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -37,7 +38,7 @@ fun ChipGroup(
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(item = chipData, selectIndex, index)
+            ChipItem(index = index, chipData = chipData, selectIndex = selectIndex)
         }
     }
 }
@@ -78,7 +79,7 @@ fun SuggestionChipGroup(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
+fun ChipItem(index: Int, chipData: ChipData, selectIndex: MutableState<Int>) {
     val context = LocalContext.current
     val isSelected = selectIndex.value == index
     //字体颜色
@@ -87,7 +88,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         colorWhite
     } else {
         //未选中字体颜色
-        MaterialTheme.colorScheme.onSurface
+        chipData.color ?: MaterialTheme.colorScheme.onSurface
     }
 
 
@@ -100,14 +101,17 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
         modifier = Modifier.padding(horizontal = Dimen.smallPadding),
         colors = FilterChipDefaults.elevatedFilterChipColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            selectedContainerColor = MaterialTheme.colorScheme.primary
+            selectedContainerColor = chipData.color ?: MaterialTheme.colorScheme.primary
         ),
         label = {
             CaptionText(
-                text = item.text,
+                text = chipData.text,
                 color = textColor
             )
-        }
+        },
+        border = FilterChipDefaults.filterChipBorder(
+            borderColor = textColor
+        )
     )
 }
 
@@ -119,8 +123,9 @@ private fun ChipGroupPreview() {
     val selectIndex = remember {
         mutableIntStateOf(3)
     }
+    mockData.add(ChipData("chip"))
     for (i in 0..10) {
-        mockData.add(ChipData(i, "chip $i"))
+        mockData.add(ChipData("chip $i", colorPurple))
     }
     PreviewLayout {
         ChipGroup(items = mockData, selectIndex = selectIndex)
