@@ -32,6 +32,8 @@ class UnitRepository @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) {
 
+    suspend fun getUnitIdList() = unitDao.getUnitIdList()
+
     /**
      * 获取角色列表
      */
@@ -45,13 +47,13 @@ class UnitRepository @Inject constructor(
             }
 
             var filterList = unitDao.getCharacterInfoList(
-                filter.sortType.type,
-                if (filter.asc) "asc" else "desc",
-                filter.name,
-                filter.position()[0],
-                filter.position()[1],
-                filter.atk,
-                when {
+                sortType = filter.sortType.type,
+                asc = if (filter.asc) "asc" else "desc",
+                unitName = filter.name,
+                pos1 = filter.position()[0],
+                pos2 = filter.position()[1],
+                atkType = filter.atk,
+                guildId = when {
                     //公会
                     filter.guild > 1 -> getGuilds()[filter.guild - 2].guildId
                     //无公会
@@ -60,11 +62,11 @@ class UnitRepository @Inject constructor(
                     else -> 0
                 },
                 //六星排序时，仅显示六星角色
-                if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
-                filter.type,
-                limit,
-                exUnitIdList,
-                when {
+                r6 = if (filter.sortType == CharacterSortType.SORT_UNLOCK_6) 1 else filter.r6,
+                type = filter.type,
+                limit = limit,
+                exUnitIdList = exUnitIdList,
+                raceName = when {
                     //种族
                     filter.race > 1 -> getRaces()[filter.race - 2]
                     //多人卡
@@ -140,7 +142,7 @@ class UnitRepository @Inject constructor(
         } catch (_: Exception) {
             arrayListOf()
         }
-        unitDao.getCharacterBasicInfo(unitId, exUnitIdList)
+        unitDao.getCharacterBasicInfo(unitId = unitId, exUnitIdList = exUnitIdList)
     } catch (e: Exception) {
         LogReportUtil.upload(
             e,
@@ -321,7 +323,7 @@ class UnitRepository @Inject constructor(
         try {
             //RANK 奖励属性
             try {
-                val bonus = unitDao.getRankBonus(rank, unitId)
+                val bonus = unitDao.getRankBonus(rank = rank, unitId = unitId)
                 bonus?.let {
                     info.add(it.attr)
                     allData.rankBonus = it
@@ -331,21 +333,22 @@ class UnitRepository @Inject constructor(
             }
 
             //星级属性
-            val rarityData = unitDao.getRarity(unitId, rarity)
+            val rarityData = unitDao.getRarity(unitId = unitId, rarity = rarity)
             info.add(rarityData.attr)
 
             //成长属性
             info.add(Attr.setGrowthValue(rarityData).multiply((level + rank).toDouble()))
 
             //RANK 属性
-            val rankData = unitDao.getRankStatus(unitId, rank)
+            val rankData = unitDao.getRankStatus(unitId = unitId, rank = rank)
             rankData?.let {
                 info.add(rankData.attr)
             }
 
             //装备
             try {
-                val equipIds = unitDao.getRankEquipment(unitId, rank).getAllOrderIds()
+                val equipIds =
+                    unitDao.getRankEquipment(unitId = unitId, rank = rank).getAllOrderIds()
                 val eqs = arrayListOf<EquipmentMaxData>()
                 equipIds.forEach {
                     if (it == ImageRequestHelper.UNKNOWN_EQUIP_ID || it == 0) {
@@ -371,9 +374,9 @@ class UnitRepository @Inject constructor(
             //专武
             try {
                 val uniqueEquip = equipmentRepository.getUniqueEquipInfo(
-                    unitId,
-                    uniqueEquipLevel,
-                    uniqueEquipLevel2
+                    unitId = unitId,
+                    lv = uniqueEquipLevel,
+                    lv2 = uniqueEquipLevel2
                 )
                 if (uniqueEquip.isNotEmpty()) {
                     val uniqueEquipList = arrayListOf<UniqueEquipmentMaxData>()
@@ -396,7 +399,7 @@ class UnitRepository @Inject constructor(
             allData.storyAttr = storyAttr
 
             //被动技能数值
-            val skillActionData = getExSkillAttr(unitId, rarity, level)
+            val skillActionData = getExSkillAttr(unitId = unitId, rarity = rarity, level = level)
             val skillAttr = Attr()
             val skillValue = skillActionData.actionValue2 + skillActionData.actionValue3 * level
             when (skillActionData.actionDetail1) {
@@ -453,7 +456,13 @@ class UnitRepository @Inject constructor(
             unitId / 100 * 1000 + 501
         } * 100 + 1
         val list = try {
-            skillDao.getSkillActions(level, 0, arrayListOf(skillActionId), false, false)
+            skillDao.getSkillActions(
+                lv = level,
+                atk = 0,
+                actionIds = arrayListOf(skillActionId),
+                isRfSkill = false,
+                isOtherRfSkill = false
+            )
         } catch (e: Exception) {
             emptyList()
         }
@@ -495,12 +504,12 @@ class UnitRepository @Inject constructor(
     suspend fun getCharacterInfo(unitId: Int, property: CharacterProperty?) = try {
         if (property != null && property.isInit()) {
             getAttrs(
-                unitId,
-                property.level,
-                property.rank,
-                property.rarity,
-                property.uniqueEquipmentLevel,
-                property.uniqueEquipmentLevel2
+                unitId = unitId,
+                level = property.level,
+                rank = property.rank,
+                rarity = property.rarity,
+                uniqueEquipLevel = property.uniqueEquipmentLevel,
+                uniqueEquipLevel2 = property.uniqueEquipmentLevel2
             )
         } else {
             null

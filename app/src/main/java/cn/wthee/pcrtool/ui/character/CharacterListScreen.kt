@@ -39,12 +39,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableFab
+import cn.wthee.pcrtool.ui.components.IconListContent
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -56,20 +60,14 @@ import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.TrapezoidShape
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.fixedStr
@@ -104,6 +102,39 @@ fun CharacterListScreen(
                 resetFilter = characterListViewModel::resetFilter,
                 toFilterCharacter = toFilterCharacter
             )
+        },
+        secondLineFab = {
+            //已收藏
+            if (uiState.starIdList.isNotEmpty()) {
+                ExpandableFab(
+                    expanded = uiState.openDialog,
+                    onClick = {
+                        characterListViewModel.changeDialog(true)
+                    },
+                    icon = MainIconType.LOVE_FILL,
+                    text = uiState.starIdList.size.toString(),
+                    isSecondLineFab = true
+                ) {
+                    IconListContent(
+                        idList = uiState.starIdList,
+                        title = stringResource(id = R.string.loved),
+                        iconResourceType = IconResourceType.CHARACTER,
+                        onClickItem = toCharacterDetail
+                    )
+                }
+            }
+        },
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            characterListViewModel.changeDialog(false)
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                characterListViewModel.changeDialog(false)
+            } else {
+                navigateUp()
+            }
         }
     ) {
         StateBox(
@@ -113,7 +144,7 @@ fun CharacterListScreen(
                 characterList = uiState.characterList,
                 scrollState = scrollState,
                 starIdList = uiState.starIdList,
-                toDetail = toCharacterDetail
+                toCharacterDetail = toCharacterDetail
             )
         }
     }
@@ -123,8 +154,8 @@ fun CharacterListScreen(
 private fun CharacterListContent(
     characterList: List<CharacterInfo>?,
     scrollState: LazyGridState,
-    starIdList: ArrayList<Int>,
-    toDetail: (Int) -> Unit
+    starIdList: List<Int>,
+    toCharacterDetail: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(getItemWidth()),
@@ -143,7 +174,7 @@ private fun CharacterListContent(
                     loved = starIdList.contains(it.id),
                     modifier = Modifier.padding(Dimen.mediumPadding),
                 ) {
-                    toDetail(it.id)
+                    toCharacterDetail(it.id)
                 }
             }
         }
@@ -228,7 +259,7 @@ fun CharacterItemContent(
 
 
     MainCard(
-        modifier = modifier.commonPlaceholder(character?.id == -1),
+        modifier = modifier.placeholder(character?.id == -1),
         onClick = onClick
     ) {
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -389,72 +420,6 @@ fun CharacterItemContent(
         }
     }
 }
-
-
-/**
- * 获取限定类型
- */
-@Composable
-fun getLimitTypeText(limitType: Int) = when (limitType) {
-    2 -> {
-        stringResource(id = R.string.type_limit)
-    }
-
-    3 -> {
-        stringResource(id = R.string.type_event_limit)
-    }
-
-    4 -> {
-        stringResource(id = R.string.type_extra_character)
-
-    }
-
-    else -> {
-        stringResource(id = R.string.type_normal)
-    }
-}
-
-/**
- * 获取限定类型颜色
- */
-fun getLimitTypeColor(limitType: Int) = when (limitType) {
-    2 -> {
-        colorRed
-    }
-
-    3 -> {
-        colorGreen
-    }
-
-    4 -> {
-        colorCyan
-    }
-
-    else -> {
-        colorGold
-    }
-}
-
-
-/**
- * 攻击类型
- */
-@Composable
-fun getAtkText(atkType: Int) = when (atkType) {
-    1 -> stringResource(id = R.string.physical)
-    2 -> stringResource(id = R.string.magic)
-    else -> stringResource(id = R.string.unknown)
-}
-
-/**
- * 攻击颜色
- */
-fun getAtkColor(atkType: Int) = when (atkType) {
-    1 -> colorGold
-    2 -> colorPurple
-    else -> colorCopper
-}
-
 
 /**
  * 角色名称

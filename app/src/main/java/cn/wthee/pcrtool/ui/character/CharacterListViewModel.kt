@@ -28,8 +28,9 @@ data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
     val filter: FilterCharacter? = null,
     //收藏的角色编号
-    val starIdList: ArrayList<Int> = arrayListOf(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val starIdList: List<Int> = arrayListOf(),
+    val loadingState: LoadingState = LoadingState.Loading,
+    val openDialog: Boolean = false
 )
 
 /**
@@ -70,7 +71,14 @@ class CharacterListViewModel @Inject constructor(
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
             val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
-            val starIdList = FilterCharacter.getStarIdList()
+            val idList = unitRepository.getUnitIdList()
+            val starIdList = FilterCharacter.getStarIdList().filter { starId ->
+                //筛选出当前区服版本下的收藏角色
+                idList.find {
+                    it == starId
+                } != null
+            }
+
             val initFilter = filter ?: FilterCharacter()
             _uiState.update {
                 it.copy(
@@ -102,5 +110,17 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
+        }
+    }
 }
 

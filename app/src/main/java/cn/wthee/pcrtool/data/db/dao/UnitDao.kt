@@ -151,6 +151,24 @@ interface UnitDao {
     ): List<CharacterInfo>
 
     /**
+     * 获取所有角色id
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_profile.unit_id
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+        WHERE 
+            unit_data.search_area_width > 0 AND unit_profile.unit_id < $maxUnitId
+        """
+    )
+    suspend fun getUnitIdList(): List<Int>
+
+    /**
      * 角色数量
      */
     @SkipQueryVerification
