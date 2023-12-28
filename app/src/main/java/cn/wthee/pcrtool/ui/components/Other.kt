@@ -4,12 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -25,11 +23,9 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -68,8 +64,6 @@ import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.character.getAtkColor
@@ -79,7 +73,6 @@ import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorBlue
 import cn.wthee.pcrtool.ui.theme.colorCopper
@@ -101,7 +94,6 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -297,75 +289,7 @@ fun getRankColor(rank: Int): Color {
     }
 }
 
-/**
- * 带指示器图标
- * @param urls 最大5个
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
-    val scope = rememberCoroutineScope()
-    Box(
-        modifier = Modifier.fillMaxWidth(urls.size * 0.2f),
-        contentAlignment = Alignment.Center
-    ) {
-        //显示指示器
-        Row {
-            urls.forEachIndexed { index, url ->
-                val modifier = if (pagerState.currentPage == index) {
-                    Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
-                        .border(
-                            width = Dimen.border,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = MaterialTheme.shapes.extraSmall
-                        )
-                } else {
-                    Modifier.padding(horizontal = Dimen.mediumPadding)
-                }
 
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    MainIcon(
-                        modifier = modifier,
-                        data = url,
-                    ) {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-/**
- * 指示器
- */
-/**
- * 指示器
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun MainHorizontalPagerIndicator(
-    modifier: Modifier = Modifier,
-    pagerState: PagerState,
-    pageCount: Int
-) {
-    HorizontalPagerIndicator(
-        modifier = modifier.navigationBarsPadding(),
-        pagerState = pagerState,
-        pageCount = pageCount,
-        indicatorWidth = Dimen.indicatorSize,
-        activeColor = MaterialTheme.colorScheme.primary,
-        indicatorShape = CutCornerShape(50),
-        spacing = 1.dp
-    )
-}
-
-/**
- * 加载中-圆形
- */
 /**
  * 加载中-圆形
  */
@@ -420,9 +344,6 @@ fun CircularProgressCompose(
 /**
  * 加载中-直线
  */
-/**
- * 加载中-直线
- */
 @Composable
 fun LinearProgressCompose(
     modifier: Modifier = Modifier,
@@ -436,9 +357,6 @@ fun LinearProgressCompose(
     )
 }
 
-/**
- * 加载中进度-直线
- */
 /**
  * 加载中进度-直线
  */
@@ -637,54 +555,6 @@ fun BottomSearchBar(
 }
 
 /**
- * 通用布局（涉及网络请求）
- *
- * @param fabContent 右下fab内容，加载成功后显示
- * @param placeholder 占位布局
- * @param content 内容
- */
-@Composable
-fun <T> CommonResponseBox(
-    responseData: ResponseData<T>?,
-    fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
-    placeholder: @Composable (ColumnScope.() -> Unit)? = null,
-    content: @Composable (BoxScope.(T) -> Unit)
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        FadeAnimation(visible = isResultError(responseData)) {
-            CenterTipText(text = stringResource(id = R.string.response_error))
-        }
-        FadeAnimation(visible = responseData?.data != null) {
-            content(responseData!!.data!!)
-        }
-        if (responseData == null) {
-            FadeAnimation(placeholder == null) {
-                CircularProgressCompose(
-                    modifier = Modifier
-                        .padding(vertical = Dimen.largePadding)
-                        .align(Alignment.Center)
-                )
-            }
-            FadeAnimation(placeholder != null) {
-                if (placeholder != null) {
-                    Column {
-                        placeholder()
-                    }
-                }
-            }
-        }
-
-        if (responseData?.data != null && fabContent != null) {
-            fabContent(responseData.data!!)
-        }
-    }
-}
-
-/**
  * 日程标题
  * @param showDays 显示天数
  * @param showOverdueColor 过期日程颜色变灰色
@@ -782,7 +652,7 @@ fun EventTitleCountdown(
 }
 
 /**
- * 装备、角色图标布局
+ * 装备、角色图标布局，带标题
  */
 @Composable
 fun IconListContent(
@@ -809,7 +679,6 @@ fun IconListContent(
         GridIconList(
             idList = idList,
             iconResourceType = iconResourceType,
-            isSubLayout = false,
             onClickItem = onClickItem
         )
 
