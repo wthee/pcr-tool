@@ -299,6 +299,7 @@ private fun CharacterDetailContent(
 
 
     if (uiState.isEditMode) {
+        //编辑模式
         val typeList = arrayListOf(
             CharacterDetailModuleType.CARD,
             CharacterDetailModuleType.COE,
@@ -346,6 +347,7 @@ private fun CharacterDetailContent(
         }
 
     } else {
+        //正常模式
         HorizontalPager(state = pagerState) { index ->
             Column(
                 modifier = Modifier
@@ -626,8 +628,6 @@ private fun OtherToolsContent(
         ) {
             toCharacterExtraEquip(unitId)
         }
-
-
     }
 }
 
@@ -946,7 +946,8 @@ private fun EquipContent(
                     color = getRankColor(rank),
                     modifier = Modifier.padding(
                         vertical = Dimen.largePadding * 2
-                    )
+                    ),
+                    useBrush = true
                 ) {
                     toCharacterRankEquip(unitId, rank)
                 }
