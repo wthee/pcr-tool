@@ -119,6 +119,7 @@ dependencies {
     //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
     debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-util")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
@@ -130,7 +131,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
