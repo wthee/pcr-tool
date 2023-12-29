@@ -49,19 +49,22 @@ class RankEquipCountViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RankEquipCountUiState())
     val uiState: StateFlow<RankEquipCountUiState> = _uiState.asStateFlow()
 
-
-    suspend fun loadData() {
-        val maxRank = equipmentRepository.getMaxRank()
-        _uiState.update {
-            it.copy(
-                unitId = unitId,
-                rank0 = maxRank,
-                rank1 = maxRank,
-                maxRank = maxRank,
-                isAllUnit = unitId == 0
-            )
+    init {
+        viewModelScope.launch {
+            if (_uiState.value.maxRank == 0) {
+                val maxRank = equipmentRepository.getMaxRank()
+                _uiState.update {
+                    it.copy(
+                        unitId = unitId,
+                        rank0 = maxRank,
+                        rank1 = maxRank,
+                        maxRank = maxRank,
+                        isAllUnit = unitId == 0
+                    )
+                }
+                getEquipByRank()
+            }
         }
-        getEquipByRank()
     }
 
     /**
@@ -86,9 +89,9 @@ class RankEquipCountViewModel @Inject constructor(
     private fun getEquipByRank() {
         viewModelScope.launch {
             val data = equipmentRepository.getEquipByRank(
-                _uiState.value.unitId,
-                _uiState.value.rank0,
-                _uiState.value.rank1,
+                unitId = _uiState.value.unitId,
+                startRank = _uiState.value.rank0,
+                endRank = _uiState.value.rank1,
             )
             _uiState.update {
                 it.copy(

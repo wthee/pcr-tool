@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.extraequip
+package cn.wthee.pcrtool.ui.tool.extraequip.unit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

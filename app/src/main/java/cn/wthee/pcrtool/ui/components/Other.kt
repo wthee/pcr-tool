@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -72,16 +72,8 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorBlue
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.dates
@@ -253,27 +245,6 @@ fun CommonSpacer() {
             .height(Dimen.fabSize + Dimen.fabMargin + Dimen.mediumPadding)
     )
 }
-
-/**
- * rank 颜色
- * @param rank rank数值
- */
-@Composable
-fun getRankColor(rank: Int): Color {
-    return when (rank) {
-        1 -> colorBlue
-        in 2..3 -> colorCopper
-        in 4..6 -> colorSilver
-        in 7..10 -> colorGold
-        in 11..17 -> colorPurple
-        in 18..20 -> colorRed
-        in 21..23 -> colorGreen
-        in 24..27 -> colorOrange
-        in 28..99 -> colorCyan
-        else -> colorGray
-    }
-}
-
 
 /**
  * 加载中-圆形
@@ -719,7 +690,7 @@ fun CharacterTagRow(
                         bottom = Dimen.smallPadding,
                         top = Dimen.smallPadding
                     ),
-                    text = stringResource(id = R.string.atk_type),
+                    text = stringResource(id = atkType.typeNameId),
                     backgroundColor = atkType.color
                 )
             }
@@ -840,16 +811,22 @@ fun CharacterTag(
 private fun AllPreview() {
     val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
-        MainTitleText(text = text)
-        MainButton(text = text) {}
-        SubButton(text = text) {}
-        RankText(rank = 21)
-        SelectText(text = text, selected = true)
-        IconTextButton(icon = MainIconType.MORE, text = text)
-        CommonTitleContentText(title = text, content = text)
-        MainTabRow(
-            pagerState = rememberPagerState { 2 },
-            tabs = arrayListOf(TabData(tab = text), TabData(tab = text))
+        CircularProgressCompose(progress = 0.31f)
+        LinearProgressCompose(progress = 0.31f)
+        EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
+        EventTitleCountdown(
+            today = "2023/12/13 22:22:22",
+            sd = "2023/12/12 22:22:22",
+            ed = "2023/12/15 22:22:22",
+            inProgress = true,
+            comingSoon = false
+        )
+        EventTitleCountdown(
+            today = "2023/12/10 22:22:22",
+            sd = "2023/12/12 22:22:22",
+            ed = "2023/12/15 22:22:22",
+            inProgress = false,
+            comingSoon = true
         )
     }
 }
@@ -858,9 +835,28 @@ private fun AllPreview() {
 @Composable
 private fun CharacterTagPreview() {
     PreviewLayout {
-        CharacterTag(
-            text = stringResource(id = CharacterLimitType.LIMIT.typeNameId),
-            backgroundColor = CharacterLimitType.LIMIT.color
+        val text = stringResource(id = R.string.debug_short_text)
+        Column(modifier = Modifier.width(150.dp)) {
+            CharacterTagRow(
+                unknown = false,
+                basicInfo = CharacterInfo(
+                    position = 123,
+                    atkType = 1,
+                    limitType = 2
+                ),
+                tipText = text,
+                endText = text,
+            )
+        }
+        CharacterTagRow(
+            unknown = false,
+            basicInfo = CharacterInfo(
+                position = 123,
+                atkType = 1,
+                limitType = 2
+            ),
+            tipText = text,
+            endText = text,
         )
     }
 }

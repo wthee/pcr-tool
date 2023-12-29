@@ -44,7 +44,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -107,11 +107,10 @@ fun LeaderTierScreen(
                 SelectTypeFab(
                     icon = MainIconType.CLAN_SECTION,
                     tabs = tabs,
-                    type = uiState.leaderTierType.type,
+                    selectedIndex = uiState.leaderTierType.type,
                     openDialog = uiState.openDialog,
                     changeDialog = leaderTierViewModel::changeDialog,
                     changeSelect = leaderTierViewModel::changeSelect,
-                    width = Dimen.dataChangeWidth + Dimen.fabSize,
                     isSecondLineFab = true
                 )
             }
@@ -300,7 +299,7 @@ private fun LeaderItem(
         MainCard(
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
-                .commonPlaceholder(placeholder)
+                .placeholder(placeholder)
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
                 if (!unknown) {

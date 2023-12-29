@@ -24,7 +24,9 @@ import javax.inject.Inject
  */
 @Immutable
 data class CharacterListFilterUiState(
+    // 公会信息
     val guildList: List<GuildData> = emptyList(),
+    // 种族信息
     val raceList: List<String> = emptyList(),
     val filter: FilterCharacter = FilterCharacter()
 )

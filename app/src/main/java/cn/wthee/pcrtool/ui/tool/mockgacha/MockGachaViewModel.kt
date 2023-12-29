@@ -69,11 +69,13 @@ class MockGachaViewModel @Inject constructor(
     private val mockGachaRepository: MockGachaRepository
 ) : ViewModel() {
 
-    //模拟抽卡最大up数
-    private val MOCK_GACHA_MAX_UP_COUNT = 12
+    companion object {
+        //模拟抽卡fes最大up数
+        private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 
-    //模拟抽卡fes最大up数
-    private val MOCK_GACHA_FES_MAX_UP_COUNT = 2
+        //模拟抽卡最大up数
+        private const val MOCK_GACHA_MAX_UP_COUNT = 12
+    }
 
     private val _uiState = MutableStateFlow(MockGachaUiState())
     val uiState: StateFlow<MockGachaUiState> = _uiState.asStateFlow()
@@ -98,7 +100,7 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取卡池角色
      */
-    fun getGachaUnits() {
+    private fun getGachaUnits() {
         viewModelScope.launch {
             try {
                 val fesUnitInfo = gachaRepository.getFesUnitIdList()
@@ -211,7 +213,7 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取历史记录
      */
-    fun getHistory() {
+    private fun getHistory() {
         viewModelScope.launch {
             val data = mockGachaRepository.getHistory(MainActivity.regionType.value)
             _uiState.update {

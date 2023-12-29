@@ -50,7 +50,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SubImage
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
@@ -71,7 +71,7 @@ val permissions = arrayOf(
 
 
 /**
- * 角色/活动剧情图片
+ * 角色、活动剧情、过场漫画图片
  *
  */
 @Composable
@@ -171,7 +171,8 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                         urlList = uiState.storyCardList,
                         title = tabs[index].tab,
                         loading = uiState.storyLoadState,
-                        showTitle = uiState.pageCount == 1
+                        showTitle = uiState.pageCount == 1,
+                        noDataText = stringResource(id = R.string.no_story_info)
                     ) {
                         PictureItem(
                             picUrl = it,
@@ -189,7 +190,8 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                         urlList = uiState.comicList,
                         title = tabs[index].tab,
                         loading = uiState.comicLoadState,
-                        showTitle = false
+                        showTitle = false,
+                        noDataText = stringResource(id = R.string.no_comic_info)
                     ) {
                         PictureItem(
                             picUrl = it,
@@ -264,7 +266,7 @@ fun PictureItem(
                 VibrateUtil(context).single()
                 openPreviewDialog.value = true
             }
-            .commonPlaceholder(placeholder)
+            .placeholder(placeholder)
     ) {
         //获取本地原图缓存
         loadedPic.value = it

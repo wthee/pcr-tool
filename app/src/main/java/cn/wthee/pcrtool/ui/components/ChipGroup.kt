@@ -13,6 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.KeywordData
@@ -38,7 +39,13 @@ fun ChipGroup(
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(index = index, chipData = chipData, selectIndex = selectIndex)
+            MainChip(
+                index = index,
+                selected = selectIndex.value == index,
+                selectIndex = selectIndex,
+                text = chipData.text,
+                selectedColor = chipData.color
+            )
         }
     }
 }
@@ -79,21 +86,17 @@ fun SuggestionChipGroup(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChipItem(index: Int, chipData: ChipData, selectIndex: MutableState<Int>) {
+fun MainChip(
+    index: Int,
+    selected: Boolean,
+    selectIndex: MutableState<Int>,
+    text: String,
+    selectedColor: Color?
+) {
     val context = LocalContext.current
-    val isSelected = selectIndex.value == index
-    //字体颜色
-    val textColor = if (isSelected) {
-        //选中字体颜色
-        colorWhite
-    } else {
-        //未选中字体颜色
-        chipData.color ?: MaterialTheme.colorScheme.onSurface
-    }
-
 
     ElevatedFilterChip(
-        selected = isSelected,
+        selected = selected,
         onClick = {
             VibrateUtil(context).single()
             selectIndex.value = index
@@ -101,20 +104,25 @@ fun ChipItem(index: Int, chipData: ChipData, selectIndex: MutableState<Int>) {
         modifier = Modifier.padding(horizontal = Dimen.smallPadding),
         colors = FilterChipDefaults.elevatedFilterChipColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            selectedContainerColor = chipData.color ?: MaterialTheme.colorScheme.primary
+            selectedContainerColor = selectedColor ?: MaterialTheme.colorScheme.primary
         ),
         label = {
             CaptionText(
-                text = chipData.text,
-                color = textColor
+                text = text,
+                color = if (selected) {
+                    //选中字体颜色
+                    colorWhite
+                } else {
+                    //未选中字体颜色
+                    selectedColor ?: MaterialTheme.colorScheme.onSurface
+                }
             )
         },
         border = FilterChipDefaults.filterChipBorder(
-            borderColor = textColor
+            borderColor = selectedColor ?: MaterialTheme.colorScheme.onSurface
         )
     )
 }
-
 
 @CombinedPreviews
 @Composable

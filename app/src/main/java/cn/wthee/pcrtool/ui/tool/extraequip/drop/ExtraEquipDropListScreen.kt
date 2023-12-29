@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.extraequip
+package cn.wthee.pcrtool.ui.tool.extraequip.drop
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -109,11 +109,11 @@ private fun ExtraEquipDropListContentPreview() {
         val data = hashMapOf<Int, List<ExtraEquipSubRewardData>>()
         data[1] = arrayListOf(
             ExtraEquipSubRewardData(
-                1,
-                1,
-                stringResource(id = R.string.debug_short_text),
-                "1",
-                "1"
+                travelQuestId = 1,
+                category = 1,
+                categoryName = stringResource(id = R.string.debug_short_text),
+                subRewardIds = "1",
+                subRewardDrops = "1"
             )
         )
 
@@ -121,15 +121,15 @@ private fun ExtraEquipDropListContentPreview() {
             ExtraEquipDropListContent(
                 dropList = arrayListOf(
                     ExtraEquipQuestData(
-                        1,
-                        1,
-                        stringResource(id = R.string.debug_short_text),
-                        10,
-                        1000,
-                        2000,
-                        1,
-                        1,
-                        1
+                        travelQuestId = 1,
+                        travelAreaId = 1,
+                        travelQuestName = stringResource(id = R.string.debug_short_text),
+                        limitUnitNum = 10,
+                        travelTime = 1000,
+                        travelTimeDecreaseLimit = 2000,
+                        travelDecreaseFlag = 1,
+                        needPower = 1,
+                        iconId = 1
                     )
                 ),
                 equipId = 1,

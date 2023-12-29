@@ -84,13 +84,15 @@ fun TweetList(
             },
             secondLineFab = {
                 //日期选择
-                DateRangePickerCompose(
-                    dateRangePickerState = dateRangePickerState,
-                    dateRange = uiState.dateRange,
-                    openDialog = uiState.openDialog,
-                    changeRange = tweetViewModel::changeRange,
-                    changeDialog = tweetViewModel::changeDialog
-                )
+                if (!uiState.openSearch) {
+                    DateRangePickerCompose(
+                        dateRangePickerState = dateRangePickerState,
+                        dateRange = uiState.dateRange,
+                        openDialog = uiState.openDialog,
+                        changeRange = tweetViewModel::changeRange,
+                        changeDialog = tweetViewModel::changeDialog
+                    )
+                }
             },
             fabWithCustomPadding = {
                 //搜索栏

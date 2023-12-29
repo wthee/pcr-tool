@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -16,7 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,7 +63,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, onClickCurrentTab)
+            TabItemList(pagerState, tabs, onClickCurrentTab)
         }
     } else {
         TabRow(
@@ -73,7 +78,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, onClickCurrentTab)
+            TabItemList(pagerState, tabs, onClickCurrentTab)
         }
     }
 
@@ -84,7 +89,7 @@ fun MainTabRow(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MainTabList(
+private fun TabItemList(
     pagerState: PagerState,
     tabs: List<TabData>,
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
@@ -138,5 +143,33 @@ private fun MainTabList(
             }
 
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@CombinedPreviews
+@Composable
+private fun TabRowPreview() {
+    PreviewLayout {
+        MainTabRow(
+            pagerState = rememberPagerState {
+                3
+            },
+            tabs = arrayListOf(
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                    count = 10,
+                    color = MaterialTheme.colorScheme.primary,
+                    isLoading = true
+                ),
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                    count = 2,
+                ),
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                )
+            )
+        )
     }
 }

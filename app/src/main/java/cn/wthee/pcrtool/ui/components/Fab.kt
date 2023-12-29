@@ -5,23 +5,19 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DateRangePickerDefaults
-import androidx.compose.material3.DateRangePickerState
-import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -41,19 +37,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankColor
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.simpleDateFormatUTC
 import kotlinx.coroutines.launch
 
 /**
@@ -145,7 +139,7 @@ fun MainSmallFab(
  * @param text 按钮文本
  * @param isSecondLineFab fab 所在行，是否在第二行
  * @param paddingValues 自定义边距
- * @param customContent 自定义未展开布局
+ * @param customFabContent 自定义未展开布局
  * @param expandedContent 展开布局具体内容
  */
 @Composable
@@ -159,7 +153,7 @@ fun ExpandableFab(
     isSecondLineFab: Boolean = false,
     paddingValues: PaddingValues? = null,
     animateContent: Boolean = true,
-    customContent: @Composable (() -> Unit)? = null,
+    customFabContent: @Composable (() -> Unit)? = null,
     expandedContent: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -211,8 +205,8 @@ fun ExpandableFab(
             //展开内容
             expandedContent()
         } else {
-            if (customContent != null) {
-                customContent()
+            if (customFabContent != null) {
+                customFabContent()
             } else {
                 //fab
                 Row(
@@ -252,8 +246,7 @@ fun SelectTypeFab(
     changeDialog: (Boolean) -> Unit,
     icon: MainIconType,
     tabs: List<String>,
-    type: Int,
-    width: Dp = Dimen.dataChangeWidth,
+    selectedIndex: Int,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     isSecondLineFab: Boolean = false,
     changeSelect: (Int) -> Unit
@@ -269,17 +262,19 @@ fun SelectTypeFab(
         },
         icon = icon,
         tint = selectedColor,
-        text = tabs[type],
+        text = tabs[selectedIndex],
         isSecondLineFab = isSecondLineFab
     ) {
         Column(
-            modifier = Modifier.widthIn(max = width),
+            modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .widthIn(min = Dimen.selectFabMinWidth),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //选择
             tabs.forEachIndexed { index, tab ->
                 SelectText(
-                    selected = type == index,
+                    selected = selectedIndex == index,
                     text = tab,
                     textStyle = MaterialTheme.typography.titleLarge,
                     selectedColor = selectedColor,
@@ -297,72 +292,6 @@ fun SelectTypeFab(
     }
 }
 
-/**
- * 选择日期范围组件
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DateRangePickerCompose(
-    dateRangePickerState: DateRangePickerState,
-    dateRange: DateRange,
-    openDialog: Boolean,
-    changeDialog: (Boolean) -> Unit,
-    changeRange: (DateRange) -> Unit,
-) {
-    //更新日期
-    LaunchedEffect(
-        dateRangePickerState.selectedStartDateMillis,
-        dateRangePickerState.selectedEndDateMillis
-    ) {
-        //日期字符串处理
-        val startDate = dateRangePickerState.selectedStartDateMillis?.simpleDateFormatUTC
-        var endDate = dateRangePickerState.selectedEndDateMillis?.simpleDateFormatUTC
-        if (endDate != null) {
-            endDate = endDate.replace("00:00:00", "23:59:59")
-        }
-
-        changeRange(
-            DateRange(
-                startDate = startDate ?: "",
-                endDate = endDate ?: ""
-            )
-        )
-    }
-
-    //日期选择布局
-    ExpandableFab(
-        expanded = openDialog,
-        onClick = {
-            changeDialog(true)
-        },
-        icon = if (dateRange.hasFilter()) {
-            MainIconType.DATE_RANGE_PICKED
-        } else {
-            MainIconType.DATE_RANGE_NONE
-        },
-        text = if (dateRange.hasFilter()) {
-            stringResource(id = R.string.picked_date)
-        } else {
-            stringResource(id = R.string.pick_date)
-        },
-        isSecondLineFab = true
-    ) {
-        //日期选择
-        DateRangePicker(
-            modifier = Modifier.padding(Dimen.smallPadding),
-            state = dateRangePickerState,
-            showModeToggle = true,
-            title = {},
-            headline = {
-                DateRangePickerDefaults.DateRangePickerHeadline(
-                    dateRangePickerState,
-                    remember { DatePickerFormatter() },
-                    modifier = Modifier.padding(Dimen.smallPadding)
-                )
-            }
-        )
-    }
-}
 
 /**
  * 选择RANK范围
@@ -390,7 +319,9 @@ fun RankRangePickerCompose(
         mutableIntStateOf(maxRank - rank1)
     }
     LaunchedEffect(selectIndex0.intValue, selectIndex1.intValue) {
-        updateRank(maxRank - selectIndex0.intValue, maxRank - selectIndex1.intValue)
+        if (maxRank != 0) {
+            updateRank(maxRank - selectIndex0.intValue, maxRank - selectIndex1.intValue)
+        }
     }
 
     //关闭监听
@@ -463,26 +394,15 @@ private fun RankSelectItem(
         }.forEachIndexed { index, rank ->
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
-                val rankColor = getRankColor(rank = rank)
+                val rankColor = RankColor.getRankColor(rank = rank)
                 val selected = selectIndex.value == index
 
-
-                ElevatedFilterChip(
+                MainChip(
+                    index = index,
                     selected = selected,
-                    onClick = {
-                        VibrateUtil(context).single()
-                        selectIndex.value = index
-                    },
-                    colors = FilterChipDefaults.elevatedFilterChipColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        selectedContainerColor = rankColor
-                    ),
-                    label = {
-                        CaptionText(
-                            text = rankFillBlank(rank),
-                            color = if (selected) colorWhite else rankColor
-                        )
-                    }
+                    selectIndex = selectIndex,
+                    text = rankFillBlank(rank),
+                    selectedColor = rankColor
                 )
             }
         }
@@ -513,5 +433,45 @@ private fun FabComposePreview() {
 
             }
         }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun SelectTypeFabPreview() {
+    PreviewLayout {
+        val debugText = stringResource(id = R.string.debug_short_text)
+        val debugText2 = stringResource(id = R.string.debug_name)
+        SelectTypeFab(
+            openDialog = true,
+            changeDialog = {},
+            icon = MainIconType.MAIN,
+            tabs = arrayListOf(debugText, debugText2, debugText),
+            selectedIndex = 2,
+            changeSelect = {}
+        )
+        SelectTypeFab(
+            openDialog = false,
+            changeDialog = {},
+            icon = MainIconType.MAIN,
+            tabs = arrayListOf(debugText, debugText2, debugText),
+            selectedIndex = 2,
+            changeSelect = {}
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun RankRangePickerComposePreview() {
+    PreviewLayout {
+        RankRangePickerCompose(
+            rank0 = 1,
+            rank1 = 30,
+            maxRank = 30,
+            openDialog = true,
+            changeDialog = {},
+            updateRank = { _, _ -> }
+        )
     }
 }

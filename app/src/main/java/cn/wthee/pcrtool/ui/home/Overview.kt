@@ -336,7 +336,7 @@ private fun ChangeDbCompose(
                     onClick()
                 }
             },
-            customContent = {
+            customFabContent = {
                 //加载相关
                 when (downloadState) {
                     -3 -> {
@@ -396,7 +396,7 @@ private fun DbVersionSelectContent(
 
     Column(
         modifier = Modifier
-            .width(Dimen.homeDataChangeWidth)
+            .width(Dimen.selectFabMinWidth)
             .padding(bottom = Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
@@ -463,13 +463,15 @@ private fun DbVersionOtherContent(
                 stringResource(R.string.db_diff_content_none)
             } else {
                 dbVersion.desc
-            },
+            }
         )
 
         Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
 
         Row(
-            modifier = Modifier.widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
         ) {
 
             //数据更新时间
@@ -480,16 +482,20 @@ private fun DbVersionOtherContent(
                 } else {
                     stringResource(id = R.string.unknown)
                 },
-                modifier = Modifier.width(60.dp)
+                modifier = Modifier
+                    .width(60.dp)
+                    .fillMaxHeight()
             )
 
             Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
 
-            //数据版本
+            //数据版本号
             DbVersionContentItem(
                 title = stringResource(id = R.string.db_diff_version),
                 content = dbVersion?.truthVersion ?: stringResource(id = R.string.unknown),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .widthIn(max = Dimen.dataChangeWidth)
             )
         }
 
@@ -560,8 +566,7 @@ private fun DbVersionContentItem(
     onClick: (() -> Unit)? = null
 ) {
     MainCard(
-        modifier = modifier
-            .height(IntrinsicSize.Min),
+        modifier = modifier.height(IntrinsicSize.Min),
         fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
         onClick = onClick,
@@ -578,13 +583,11 @@ private fun DbVersionContentItem(
             color = color,
             style = MaterialTheme.typography.bodyMedium,
         )
-
         CaptionText(
             text = content,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
-                .weight(1f)
                 .padding(
                     start = Dimen.mediumPadding,
                     end = Dimen.mediumPadding,
@@ -781,28 +784,64 @@ private fun SettingDropMenu(
 
 @CombinedPreviews
 @Composable
-private fun DbVersionContentItemPreview() {
+private fun ChangeDbComposePreview() {
     PreviewLayout {
-        Column(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .width(Dimen.dataChangeWidth)
+        ChangeDbCompose(
+            showChangeDb = true,
+            dbError = false,
+            dbVersion = DatabaseVersion(
+                truthVersion = "202302022223",
+                hash = "",
+                desc = stringResource(id = R.string.debug_name),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
         ) {
-            DbVersionContentItem(
-                title = stringResource(id = R.string.data_file_error),
-                content = stringResource(id = R.string.data_file_error_desc),
-                color = colorRed
-            )
+
         }
+
     }
-
 }
-
 
 @CombinedPreviews
 @Composable
-private fun DbVersionListPreview() {
+private fun ChangeDbCompose2Preview() {
     PreviewLayout {
-        DbVersionSelectContent(MaterialTheme.colorScheme.primary)
+        ChangeDbCompose(
+            showChangeDb = true,
+            dbError = true,
+            dbVersion = DatabaseVersion(
+                truthVersion = "1002342",
+                hash = "",
+                desc = stringResource(id = R.string.debug_long_text),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
+        ) {
+
+        }
+        ChangeDbCompose(
+            showChangeDb = false,
+            dbError = true,
+            dbVersion = DatabaseVersion(
+                truthVersion = "202302022223",
+                hash = "",
+                desc = stringResource(id = R.string.debug_name),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
+        ) {
+
+        }
+
     }
 }

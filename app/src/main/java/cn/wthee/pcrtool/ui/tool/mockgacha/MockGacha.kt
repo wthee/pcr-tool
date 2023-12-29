@@ -108,11 +108,10 @@ fun MockGacha(
                 SelectTypeFab(
                     icon = MainIconType.CHANGE_FILTER_TYPE,
                     tabs = tabs,
-                    type = mockGachaType.type,
+                    selectedIndex = mockGachaType.type,
                     openDialog = uiState.openDialog,
                     changeDialog = mockGachaViewModel::changeDialog,
                     changeSelect = mockGachaViewModel::changeSelect,
-                    width = Dimen.dataChangeWidth + Dimen.fabSize,
                 )
             } else {
                 MainSmallFab(

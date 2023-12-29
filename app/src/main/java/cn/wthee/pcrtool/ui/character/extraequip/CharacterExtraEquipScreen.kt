@@ -1,10 +1,10 @@
 package cn.wthee.pcrtool.ui.character.extraequip
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -37,7 +37,10 @@ fun CharacterExtraEquipScreen(
         StateBox(
             stateType = uiState.loadingState
         ) {
-            CharacterExtraEquipContent(uiState.extraEquipList, toExtraEquipDetail)
+            CharacterExtraEquipContent(
+                equipList = uiState.extraEquipList,
+                toExtraEquipDetail = toExtraEquipDetail
+            )
         }
     }
 
@@ -48,32 +51,24 @@ private fun CharacterExtraEquipContent(
     equipList: List<CharacterExtraEquipData>?,
     toExtraEquipDetail: (Int) -> Unit,
 ) {
-    val scrollState = rememberLazyListState()
-
-    LazyColumn(state = scrollState) {
-        item {
-            //标题
-            MainText(
-                text = stringResource(R.string.unit_extra_equip_slot),
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth()
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        //标题
+        MainText(
+            text = stringResource(R.string.unit_extra_equip_slot),
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .fillMaxWidth()
+        )
+        equipList?.forEach {
+            ExtraEquipGroup(
+                category = it.category,
+                categoryName = it.categoryName,
+                equipIdList = it.exEquipmentIds.intArrayList,
+                selectedId = 0,
+                toExtraEquipDetail = toExtraEquipDetail
             )
         }
-        equipList?.let {
-            items(equipList) {
-                ExtraEquipGroup(
-                    it.category,
-                    it.categoryName,
-                    it.exEquipmentIds.intArrayList,
-                    selectedId = 0,
-                    toExtraEquipDetail = toExtraEquipDetail
-                )
-            }
-        }
-        item {
-            CommonSpacer()
-        }
+        CommonSpacer()
     }
 }
 

@@ -35,13 +35,6 @@ fun RankEquipCountScreen(
     val scope = rememberCoroutineScope()
     val uiState by rankEquipCountViewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState.maxRank) {
-        if (uiState.maxRank == 0) {
-            rankEquipCountViewModel.loadData()
-        }
-    }
-
-
     //初始收藏信息
     LifecycleEffect(Lifecycle.Event.ON_RESUME) {
         rankEquipCountViewModel.reloadStarList()
@@ -92,18 +85,16 @@ fun RankEquipCountScreen(
             rankEquipCountViewModel.changeDialog(false)
         }
     ) {
-        uiState.equipmentMaterialList?.let {
-            RankEquipCountContent(
-                rank0 = uiState.rank0,
-                rank1 = uiState.rank1,
-                isAllUnit = uiState.isAllUnit,
-                loadingState = uiState.loadingState,
-                equipmentMaterialList = it,
-                scrollState = scrollState,
-                starIdList = uiState.starIdList,
-                toEquipMaterial = toEquipMaterial
-            )
-        }
+        RankEquipCountContent(
+            rank0 = uiState.rank0,
+            rank1 = uiState.rank1,
+            isAllUnit = uiState.isAllUnit,
+            loadingState = uiState.loadingState,
+            equipmentMaterialList = uiState.equipmentMaterialList,
+            scrollState = scrollState,
+            starIdList = uiState.starIdList,
+            toEquipMaterial = toEquipMaterial
+        )
     }
 
 }
@@ -114,7 +105,7 @@ private fun RankEquipCountContent(
     rank1: Int,
     isAllUnit: Boolean,
     loadingState: LoadingState,
-    equipmentMaterialList: List<EquipmentMaterial>,
+    equipmentMaterialList: List<EquipmentMaterial>?,
     scrollState: LazyGridState,
     starIdList: List<Int>,
     toEquipMaterial: (Int, String) -> Unit,
@@ -153,28 +144,36 @@ private fun RankEquipCountContent(
             when (loadingState) {
                 LoadingState.Success -> {
                     items(
-                        items = equipmentMaterialList,
+                        items = equipmentMaterialList!!,
                         key = {
                             it.id
                         }
                     ) { item ->
                         EquipCountItem(
-                            item,
-                            starIdList.contains(item.id),
-                            toEquipMaterial
+                            item = item,
+                            loved = starIdList.contains(item.id),
+                            toEquipMaterial = toEquipMaterial
                         )
                     }
                 }
 
                 LoadingState.Loading -> {
                     items(count = 10) {
-                        EquipCountItem(EquipmentMaterial(), false, toEquipMaterial)
+                        EquipCountItem(
+                            item = EquipmentMaterial(),
+                            loved = false,
+                            toEquipMaterial = toEquipMaterial
+                        )
                     }
                 }
 
                 LoadingState.Error -> {
                     items(count = 10) {
-                        EquipCountItem(EquipmentMaterial(-1), false, toEquipMaterial)
+                        EquipCountItem(
+                            item = EquipmentMaterial(-1),
+                            loved = false,
+                            toEquipMaterial = toEquipMaterial
+                        )
                     }
                 }
 
@@ -202,7 +201,7 @@ private fun EquipCountItem(
         MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ImageRequestHelper.ICON_EQUIPMENT, item.id),
-            modifier = Modifier.commonPlaceholder(placeholder)
+            modifier = Modifier.placeholder(placeholder)
         ) {
             toEquipMaterial(item.id, item.name)
         }

@@ -52,7 +52,7 @@ fun ClanBattleDetailScreen(
             SelectTypeFab(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,
-                type = uiState.phaseIndex,
+                selectedIndex = uiState.phaseIndex,
                 openDialog = uiState.openDialog,
                 changeDialog = clanBattleDetailViewModel::changeDialog,
                 selectedColor = sectionColor,
@@ -86,14 +86,14 @@ fun ClanBattleDetailScreen(
                     modifier = Modifier.padding(vertical = Dimen.mediumPadding)
                 )
                 //图标
-                val urls = arrayListOf<String>()
+                val urlList = arrayListOf<String>()
                 clanBattleValue.unitIds.split("-").subList(0, 5).forEach {
-                    urls.add(
+                    urlList.add(
                         ImageRequestHelper.getInstance()
                             .getUrl(ImageRequestHelper.ICON_UNIT, it)
                     )
                 }
-                IconHorizontalPagerIndicator(pagerState = pagerState, urls = urls)
+                IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList)
                 //BOSS信息
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     if (uiState.bossDataList.isNotEmpty()) {

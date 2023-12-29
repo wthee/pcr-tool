@@ -105,7 +105,7 @@ fun IconItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainIcon(
-            modifier = Modifier.commonPlaceholder(placeholder),
+            modifier = Modifier.placeholder(placeholder),
             data = url,
             onClick = if (onClickItem != null) {
                 {

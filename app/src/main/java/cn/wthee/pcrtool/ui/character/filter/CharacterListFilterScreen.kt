@@ -212,8 +212,8 @@ private fun CharacterListFilterContent(
             ChipData(stringResource(id = R.string.title_unlock_6))
         )
         ChipGroup(
-            sortChipData,
-            sortTypeIndex,
+            items = sortChipData,
+            selectIndex = sortTypeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //排序方式
@@ -226,8 +226,8 @@ private fun CharacterListFilterContent(
             ChipData(stringResource(id = R.string.sort_desc)),
         )
         ChipGroup(
-            sortAscChipData,
-            sortAscIndex,
+            items = sortAscChipData,
+            selectIndex = sortAscIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //收藏
@@ -240,8 +240,8 @@ private fun CharacterListFilterContent(
             ChipData(stringResource(id = R.string.loved)),
         )
         ChipGroup(
-            loveChipData,
-            loveIndex,
+            items = loveChipData,
+            selectIndex = loveIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //类型
@@ -269,8 +269,8 @@ private fun CharacterListFilterContent(
             ),
         )
         ChipGroup(
-            typeChipData,
-            typeIndex,
+            items = typeChipData,
+            selectIndex = typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
 
@@ -282,7 +282,7 @@ private fun CharacterListFilterContent(
         )
         //是否选择了六星解放排序
         val isUnlock6SortType = sortTypeIndex.intValue == CharacterSortType.SORT_UNLOCK_6.type
-        //未选择六星解放排序是显示
+        //未选择六星解放排序时，显示星级筛选
         ExpandAnimation(visible = !isUnlock6SortType) {
             Column {
                 MainText(
@@ -290,8 +290,8 @@ private fun CharacterListFilterContent(
                     modifier = Modifier.padding(top = Dimen.largePadding)
                 )
                 ChipGroup(
-                    r6ChipData,
-                    r6Index,
+                    items = r6ChipData,
+                    selectIndex = r6Index,
                     modifier = Modifier.padding(Dimen.smallPadding)
                 )
             }
@@ -318,8 +318,8 @@ private fun CharacterListFilterContent(
             ),
         )
         ChipGroup(
-            positionChipData,
-            positionIndex,
+            items = positionChipData,
+            selectIndex = positionIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //攻击类型
@@ -339,8 +339,8 @@ private fun CharacterListFilterContent(
             ),
         )
         ChipGroup(
-            atkChipData,
-            atkIndex,
+            items = atkChipData,
+            selectIndex = atkIndex,
             modifier = Modifier.padding(Dimen.smallPadding)
         )
         //种族
@@ -357,8 +357,8 @@ private fun CharacterListFilterContent(
                 raceChipData.add(ChipData(raceData))
             }
             ChipGroup(
-                raceChipData,
-                raceIndex,
+                items = raceChipData,
+                selectIndex = raceIndex,
                 modifier = Modifier.padding(Dimen.smallPadding),
             )
         }
@@ -376,8 +376,8 @@ private fun CharacterListFilterContent(
                 guildChipData.add(ChipData(guildData.guildName))
             }
             ChipGroup(
-                guildChipData,
-                guildIndex,
+                items = guildChipData,
+                selectIndex = guildIndex,
                 modifier = Modifier.padding(Dimen.smallPadding),
             )
             CommonSpacer()

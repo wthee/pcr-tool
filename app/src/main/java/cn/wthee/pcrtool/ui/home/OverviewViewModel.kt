@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -90,7 +89,6 @@ class OverviewScreenViewModel @Inject constructor(
     }
 
     fun initCheck() {
-        Log.e("TAG", "initCheck: ")
         //初始化六星id
         getR6Ids()
         //数据库校验
@@ -210,7 +208,7 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 六星 id 列表
      */
-    fun getR6Ids() {
+    private fun getR6Ids() {
         viewModelScope.launch {
             var dbError = false
             val r6Ids = unitRepository.getR6Ids()
@@ -236,7 +234,7 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 应用、数据库更新校验
      */
-    fun checkUpdate() {
+    private fun checkUpdate() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(

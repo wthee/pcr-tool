@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,9 +71,6 @@ import kotlinx.coroutines.launch
 /**
  * 装备列表
  */
-@OptIn(
-    ExperimentalMaterialApi::class
-)
 @Composable
 fun EquipListScreen(
     toEquipDetail: (Int) -> Unit,

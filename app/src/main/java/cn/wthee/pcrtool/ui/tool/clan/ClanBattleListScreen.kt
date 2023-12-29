@@ -36,8 +36,8 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -176,7 +176,7 @@ fun ClanBattleItem(
                 //日期
                 MainTitleText(
                     text = getClanBattleDate(clanBattleInfo),
-                    modifier = Modifier.commonPlaceholder(visible = placeholder)
+                    modifier = Modifier.placeholder(visible = placeholder)
                 )
                 //阶段数
                 MainTitleText(
@@ -187,7 +187,7 @@ fun ClanBattleItem(
                     backgroundColor = getSectionTextColor(clanBattleInfo.maxPhase),
                     modifier = Modifier
                         .padding(start = Dimen.smallPadding)
-                        .commonPlaceholder(visible = placeholder)
+                        .placeholder(visible = placeholder)
                 )
             } else {
                 //标题
@@ -207,7 +207,7 @@ fun ClanBattleItem(
         }
 
         MainCard(
-            modifier = Modifier.commonPlaceholder(visible = placeholder)
+            modifier = Modifier.placeholder(visible = placeholder)
         ) {
             Column(Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //图标

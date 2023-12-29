@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.equip.detail
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import kotlinx.coroutines.launch
  *
  * @param equipId 装备编号
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EquipDetailScreen(
     equipId: Int,

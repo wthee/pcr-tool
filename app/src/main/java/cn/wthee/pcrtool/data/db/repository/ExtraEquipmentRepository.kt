@@ -21,16 +21,16 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
 
     suspend fun getEquipmentList(filter: FilterExtraEquipment, limit: Int) = try {
         val filterList = equipmentDao.getEquipments(
-            filter.flag,
-            filter.rarity,
-            filter.name,
-            when {
-                //公会
+            flag = filter.flag,
+            rarity = filter.rarity,
+            name = filter.name,
+            category = when {
+                //类型
                 filter.category > 0 -> getEquipCategoryList()[filter.category - 1].category
                 //全部
                 else -> 0
             },
-            limit
+            limit = limit
         )
         if (filter.all) {
             filterList

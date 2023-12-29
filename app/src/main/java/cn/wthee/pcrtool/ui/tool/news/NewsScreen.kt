@@ -37,9 +37,9 @@ import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -75,13 +75,15 @@ fun NewsScreen(
             },
             secondLineFab = {
                 //日期选择
-                DateRangePickerCompose(
-                    dateRangePickerState = dateRangePickerState,
-                    dateRange = uiState.dateRange,
-                    openDialog = uiState.openDialog,
-                    changeRange = newsViewModel::changeRange,
-                    changeDialog = newsViewModel::changeDialog
-                )
+                if (!uiState.openSearch) {
+                    DateRangePickerCompose(
+                        dateRangePickerState = dateRangePickerState,
+                        dateRange = uiState.dateRange,
+                        openDialog = uiState.openDialog,
+                        changeRange = newsViewModel::changeRange,
+                        changeDialog = newsViewModel::changeDialog
+                    )
+                }
             },
             fabWithCustomPadding = {
                 //搜索栏
@@ -181,17 +183,17 @@ fun NewsItem(
             MainTitleText(
                 text = stringResource(id = tag.stringId),
                 backgroundColor = color,
-                modifier = Modifier.commonPlaceholder(visible = placeholder)
+                modifier = Modifier.placeholder(visible = placeholder)
             )
             MainTitleText(
                 text = news.date.formatTime,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
-                    .commonPlaceholder(visible = placeholder)
+                    .placeholder(visible = placeholder)
             )
         }
         MainCard(modifier = Modifier
-            .commonPlaceholder(visible = placeholder)
+            .placeholder(visible = placeholder)
             .heightIn(min = Dimen.cardHeight),
             onClick = {
                 if (!placeholder) {

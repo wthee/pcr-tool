@@ -434,12 +434,4 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 }
 
-/**
- * 已返回结果，校验结果是否正常
- * response 为 null 时，为加载中
- */
-fun <T> isResultError(response: ResponseData<T>?): Boolean {
-    return response != null && response.status != 0
-}
-
 

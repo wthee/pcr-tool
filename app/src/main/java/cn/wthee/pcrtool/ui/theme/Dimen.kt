@@ -35,8 +35,6 @@ object Dimen {
 
     val textFabMargin = 3.dp
 
-    val fabMarginSecondLineEnd = fabMargin + textFabMargin
-
     val smallIconSize = 18.dp
 
     val textIconSize = 20.dp
@@ -59,11 +57,9 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
-    val homeDataChangeWidth = 100.dp
+    val selectFabMinWidth = 100.dp
 
     val skillActionMinHeight = 16.dp
-
-    val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
 
@@ -84,5 +80,6 @@ object Dimen {
     //子项最大宽度
     val itemMaxWidth = getItemWidth() * 1.3f
 
+    //首页图标大小（装备等）
     val homeIconItemWidth = iconSize + largePadding * 2
 }

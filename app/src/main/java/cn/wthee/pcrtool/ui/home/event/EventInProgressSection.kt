@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -190,7 +189,6 @@ fun CalendarEventLayout(
 private fun CalendarEventOperation(
     actions: NavActions
 ) {
-    val context = LocalContext.current
     //日程相关工具
     val toolList = arrayListOf<ToolMenuData>()
     toolList.add(getToolMenuData(toolMenuType = ToolMenuType.CLAN))

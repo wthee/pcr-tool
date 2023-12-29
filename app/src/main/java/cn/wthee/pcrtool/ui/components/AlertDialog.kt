@@ -1,14 +1,19 @@
 package cn.wthee.pcrtool.ui.components
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.utils.VibrateUtil
 
 
 /**
@@ -73,109 +78,38 @@ fun MainAlertDialog(
 
 }
 
-/**
- * 日期选择弹窗
- *
- * @param pickStartLimit    限制开始时间可选择范围，开始时间必须小于结束时间
- * @param pickEndLimit      限制结束时间可选择范围，结束时间必须大于开始时间
- */
-@SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
+@CombinedPreviews
 @Composable
-private fun MainDatePickerDialog(
-    datePickerState: DatePickerState,
-    openDialog: MutableState<Boolean>,
-    pickStartLimit: Long? = null,
-    pickEndLimit: Long? = null,
-) {
+private fun MainAlertDialogPreview() {
+    val openDialog = remember {
+        mutableStateOf(true)
+    }
 
-    if (openDialog.value) {
-        //日期是否可确认选择判断
-        val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-
-        DatePickerDialog(
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
-                    },
-                    enabled = confirmEnabled.value
-                ) {
-                    Text(stringResource(id = R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
-                    }
-                ) {
-                    Text(stringResource(id = R.string.cancel))
-                }
-            }
+    PreviewLayout(themeType = 1) {
+        MainAlertDialog(
+            openDialog = openDialog, icon = MainIconType.DOWNLOAD,
+            title = stringResource(id = R.string.debug_short_text),
+            text = stringResource(id = R.string.debug_long_text)
         ) {
-            DatePicker(
-                state = datePickerState,
-                dateValidator = {
-                    var pickStartLimitFlag = true
-                    var pickEndLimitFlag = true
-                    //选择开始日期时
-                    if (pickStartLimit != null) {
-                        pickStartLimitFlag = it < pickStartLimit
-                    }
-                    //选择结束日期时
-                    if (pickEndLimit != null) {
-                        pickEndLimitFlag = it > pickEndLimit
-                    }
-                    return@DatePicker pickEndLimitFlag && pickStartLimitFlag
-                }
-            )
+
         }
     }
 }
 
-/**
- * 日期范围
- */
-data class DateRange(
-    val startDate: String = "",
-    val endDate: String = ""
-) {
-    /**
-     * 是否筛选判断
-     */
-    fun hasFilter() = startDate != "" || endDate != ""
-
-    /**
-     * 筛选条件，判断开始时间是否在范围内
-     */
-    fun predicate(start: String): Boolean {
-        var startFlag = true
-        var endFlag = true
-        //大于开始时间
-        if (startDate != "") {
-            startFlag = start.formatTime.fixJpTime.second(startDate) > 0
-        }
-        //小于结束时间
-        if (endDate != "") {
-            endFlag = start.formatTime.fixJpTime.second(endDate) < 0
-        }
-
-        return startFlag && endFlag
+@CombinedPreviews
+@Composable
+private fun MainAlertDialog2Preview() {
+    val openDialog = remember {
+        mutableStateOf(true)
     }
 
-    override fun toString(): String {
-        return "$startDate|$endDate"
-    }
-}
+    PreviewLayout(themeType = 2) {
+        MainAlertDialog(
+            openDialog = openDialog, icon = MainIconType.DOWNLOAD,
+            title = stringResource(id = R.string.debug_short_text),
+            text = stringResource(id = R.string.debug_long_text)
+        ) {
 
-/**
- * 获取日期选择年份范围
- */
-fun getDatePickerYearRange(): IntRange {
-    val maxYear = getYear()
-    return IntRange(2018, maxYear)
+        }
+    }
 }

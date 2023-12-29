@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.media
 
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -260,7 +259,7 @@ private fun ToolButtonContent(
         play = true
     }
 
-    //播放进度 fixme 性能优化
+    //播放进度
     val currentPosition = currentDurationFlow(exoPlayer).collectAsState(initial = 0L).value
     //当前进度
     val current =
@@ -496,7 +495,6 @@ private fun currentDurationFlow(player: ExoPlayer) = flow {
     val offset = 25L
     if (player.isPlaying) {
         while (player.currentPosition + offset <= player.duration) {
-            Log.e("play position", "${player.currentPosition + offset} / ${player.duration}")
             delay(50L)
             emit(player.currentPosition + offset)
         }

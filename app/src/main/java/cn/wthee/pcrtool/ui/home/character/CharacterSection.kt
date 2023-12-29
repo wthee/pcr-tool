@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -120,7 +120,7 @@ private fun CharacterImageItem(
     val placeholder = unitId == -1
     MainCard(
         modifier = modifier
-            .commonPlaceholder(placeholder, MaterialTheme.shapes.medium),
+            .placeholder(visible = placeholder, shape = MaterialTheme.shapes.medium),
         onClick = {
             if (!placeholder) {
                 toCharacterDetail(unitId)

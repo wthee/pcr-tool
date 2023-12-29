@@ -40,7 +40,7 @@ import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -393,7 +393,7 @@ fun AreaItem(
         backgroundColor = color,
         modifier = Modifier
             .padding(Dimen.mediumPadding)
-            .commonPlaceholder(placeholder)
+            .placeholder(placeholder)
     )
 
     VerticalGrid(
@@ -402,7 +402,7 @@ fun AreaItem(
                 start = Dimen.commonItemPadding,
                 end = Dimen.commonItemPadding
             )
-            .commonPlaceholder(placeholder),
+            .placeholder(placeholder),
         itemWidth = Dimen.iconSize,
         contentPadding = Dimen.mediumPadding
     ) {

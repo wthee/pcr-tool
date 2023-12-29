@@ -47,14 +47,6 @@ val String.simpleDateFormat: String
     }
 
 /**
- * 毫秒转日期字符串 UTC +8
- */
-val Long.simpleDateFormat: String
-    get() {
-        return df1.format(Date(this))
-    }
-
-/**
  * 毫秒转日期字符串 UTC
  */
 val Long.simpleDateFormatUTC: String

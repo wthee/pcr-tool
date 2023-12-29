@@ -157,8 +157,8 @@ fun getRegionName(region: RegionType) = getString(
 /**
  * 获取文本
  */
-fun getString(resId: Int, vararg formatArgs: Any) =
-    MyApplication.context.getString(resId, *formatArgs)
+fun getString(id: Int, vararg formatArgs: Any) =
+    MyApplication.context.getString(id, *formatArgs)
 
 /**
  * 格式化文本

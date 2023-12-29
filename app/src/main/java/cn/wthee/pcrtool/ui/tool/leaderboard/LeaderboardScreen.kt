@@ -53,7 +53,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -381,7 +381,7 @@ private fun LeaderboardItem(
                 .padding(
                     start = Dimen.mediumPadding
                 )
-                .commonPlaceholder(placeholder),
+                .placeholder(placeholder),
             onClick = {
                 if (!unknown) {
                     toCharacterDetail(leader.unitId)
@@ -461,7 +461,7 @@ fun LeaderCharacterIcon(
             } else {
                 R.drawable.unknown_item
             },
-            modifier = Modifier.commonPlaceholder(placeholder)
+            modifier = Modifier.placeholder(placeholder)
         ) {
             if (!unknown) {
                 toCharacterDetail(unitId)

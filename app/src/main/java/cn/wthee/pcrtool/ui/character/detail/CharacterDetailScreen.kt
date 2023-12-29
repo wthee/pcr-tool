@@ -59,6 +59,7 @@ import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankColor
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.AllAttrData
@@ -83,7 +84,6 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.getRankColor
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.skill.SkillListScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -930,7 +930,7 @@ private fun EquipContent(
                 if (currentValue.rank < maxRank) {
                     MainIcon(
                         data = MainIconType.BACK,
-                        tint = getRankColor(rank = rank + 1),
+                        tint = RankColor.getRankColor(rank = rank + 1),
                         onClick = {
                             updateCurrentValue(currentValue.copy(rank = rank + 1))
                         },
@@ -943,7 +943,7 @@ private fun EquipContent(
                 //跳转至所有 RANK 装备列表
                 SubButton(
                     text = getFormatText(rank),
-                    color = getRankColor(rank),
+                    color = RankColor.getRankColor(rank),
                     modifier = Modifier.padding(
                         vertical = Dimen.largePadding * 2
                     ),
@@ -954,7 +954,7 @@ private fun EquipContent(
                 if (rank > 1) {
                     MainIcon(
                         data = MainIconType.MORE,
-                        tint = getRankColor(rank = rank - 1),
+                        tint = RankColor.getRankColor(rank = rank - 1),
                         onClick = {
                             updateCurrentValue(currentValue.copy(rank = rank - 1))
                         },

@@ -6,6 +6,7 @@
 - 竞技场查询数据：[公主连结Re: Dive Fan Club](https://pcrdfans.com)
 - 排行榜数据：[GameWith](https://gamewith.jp/pricone-re/article/show/93068)
 - 感谢大佬的开源项目！[静流笔记|ShizuruNotes](https://github.com/MalitsPlus/ShizuruNotes)
+- QQ 交流群：775966246
 
 > 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
 
@@ -16,6 +17,15 @@
 ## 更新记录
 
 ### 3.X.X
+
+#### 3.8.2
+
+- 新增：[过场漫画] 预览功能
+- 新增：[漫画] 和 [日服情报] 图片保存功能
+- 新增：图片预览（手势操作：移动、旋转、缩放）功能
+- 优化：部分技能描述
+- 优化：页面细节
+- 修复：已知 BUG
 
 #### 3.8.1
 

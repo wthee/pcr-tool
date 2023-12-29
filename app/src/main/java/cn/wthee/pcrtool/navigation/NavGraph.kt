@@ -52,11 +52,11 @@ import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
 import cn.wthee.pcrtool.ui.tool.comic.ComicListScreen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 import cn.wthee.pcrtool.ui.tool.event.CalendarEventListScreen
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropListScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipListFilterScreen
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitListScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.detail.ExtraEquipDetail
+import cn.wthee.pcrtool.ui.tool.extraequip.drop.ExtraEquipDropListScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.filter.ExtraEquipListFilterScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.unit.ExtraEquipUnitListScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelDetailScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
 import cn.wthee.pcrtool.ui.tool.freegacha.FreeGachaListScreen

@@ -116,9 +116,9 @@ private fun EquipMaterialDropInfoContent(
             LazyColumn {
                 items(odds.size) {
                     AreaItem(
-                        -1,
-                        odds,
-                        "30-15",
+                        selectedId = -1,
+                        odds = odds,
+                        num = "30-15",
                         color = colorWhite
                     )
                 }
@@ -143,8 +143,8 @@ private fun EquipMaterialDropInfoContentPreview() {
             equipName = stringResource(id = R.string.debug_long_text),
             dropQuestList = arrayListOf(QuestDetail(questId = 1)),
             loved = true,
-            null,
-            LoadingState.Success
+            randomDropList = null,
+            randomDropLoadingState = LoadingState.Success
         )
     }
 }

@@ -35,7 +35,7 @@ class MediaDownloadHelper(private val context: Context) {
         const val DIR = "/storage/emulated/0"
 
         //文件夹名
-        private val baseDir = "pcr"
+        private const val baseDir = "pcr"
 
         /**
          * 获取保存路径

@@ -75,11 +75,9 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Signpost
-import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
-import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.SyncProblem
 import androidx.compose.material.icons.rounded.Timeline
 import androidx.compose.material.icons.rounded.Toc
@@ -134,11 +132,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 重置
      */
     RESET(Icons.Rounded.RestartAlt),
-
-    /**
-     * 同步
-     */
-    SYNC(Icons.Rounded.Sync),
 
     /**
      * 回到顶部
@@ -549,11 +542,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 动画
      */
     MOVIE(Icons.Rounded.Movie),
-
-    /**
-     * 视频倍速
-     */
-    VIDEO_SPEED(Icons.Rounded.SlowMotionVideo),
 
     /**
      * 播放

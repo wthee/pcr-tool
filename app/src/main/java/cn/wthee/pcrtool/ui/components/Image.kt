@@ -91,7 +91,7 @@ fun MainImage(
             loading.value = true
         },
         modifier = if (placeholder) {
-            mModifier.commonPlaceholder(visible = loading.value)
+            mModifier.placeholder(visible = loading.value)
         } else {
             mModifier
         }
@@ -103,12 +103,7 @@ fun MainImage(
  */
 @Composable
 fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.smallIconSize) {
-    val positionIconId = when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> R.drawable.ic_position_0
-        PositionType.POSITION_300_599 -> R.drawable.ic_position_1
-        PositionType.POSITION_600_999 -> R.drawable.ic_position_2
-        PositionType.UNKNOWN -> R.drawable.unknown_item
-    }
+    val positionIconId = PositionType.getPositionType(position).iconId
 
     MainIcon(
         data = positionIconId,
@@ -135,16 +130,17 @@ fun MainIcon(
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val shape = MaterialTheme.shapes.extraSmall
 
     var mModifier = if (onClick != null) {
         modifier
-            .clip(MaterialTheme.shapes.extraSmall)
+            .clip(shape)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick()
             })
     } else {
-        modifier.clip(MaterialTheme.shapes.extraSmall)
+        modifier.clip(shape)
     }
     mModifier = if (!wrapSize) {
         mModifier.size(size)
@@ -197,7 +193,7 @@ fun MainIcon(
                 },
                 modifier = mModifier
                     .aspectRatio(1f)
-                    .commonPlaceholder(visible = loading.value)
+                    .placeholder(visible = loading.value, shape = shape)
             )
         }
     }
@@ -231,7 +227,7 @@ fun SubImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .aspectRatio(ratio ?: RATIO)
-                        .commonPlaceholder(true)
+                        .placeholder(true)
                 )
             },
             error = {
@@ -272,7 +268,8 @@ fun SubImage(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding),
-                size = Dimen.fabIconSize
+                size = Dimen.smallIconSize,
+                strokeWidth = Dimen.smallStrokeWidth
             )
         }
     }

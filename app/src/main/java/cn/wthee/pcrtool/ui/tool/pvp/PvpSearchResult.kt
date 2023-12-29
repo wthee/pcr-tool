@@ -39,8 +39,8 @@ import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SubButton
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -251,7 +251,7 @@ private fun PvpResultItem(
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
-                modifier = Modifier.commonPlaceholder(visible = placeholder)
+                modifier = Modifier.placeholder(visible = placeholder)
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
@@ -282,7 +282,7 @@ private fun PvpResultItem(
         }
 
         MainCard(
-            modifier = Modifier.commonPlaceholder(visible = placeholder)
+            modifier = Modifier.placeholder(visible = placeholder)
         ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()

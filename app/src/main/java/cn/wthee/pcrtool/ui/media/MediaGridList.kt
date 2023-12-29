@@ -42,6 +42,7 @@ fun MediaGridList(
     urlList: List<String>,
     loading: LoadingState = LoadingState.Success,
     title: String = "",
+    noDataText: String = stringResource(id = R.string.no_data),
     showTitle: Boolean = true,
     itemWidth: Dp = getItemWidth(),
     scrollState: LazyGridState = rememberLazyGridState(),
@@ -72,6 +73,9 @@ fun MediaGridList(
 
         StateBox(
             stateType = loading,
+            noDataContent = {
+                CenterTipText(noDataText)
+            },
             errorContent = {
                 CenterTipText(stringResource(id = R.string.data_get_error))
             }

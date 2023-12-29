@@ -39,7 +39,7 @@ fun StoryEventBossDetail(
             SelectTypeFab(
                 icon = MainIconType.CLAN_SECTION,
                 tabs = tabs,
-                type = uiState.modeIndex,
+                selectedIndex = uiState.modeIndex,
                 openDialog = uiState.openDialog,
                 changeDialog = storyEventBossViewModel::changeDialog,
                 modifier = Modifier

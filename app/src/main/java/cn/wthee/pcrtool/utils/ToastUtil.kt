@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.utils
 import android.os.Looper
 import android.widget.Toast
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

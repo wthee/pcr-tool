@@ -1,11 +1,13 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.MyApplication
 import kotlin.math.max
 
@@ -60,11 +62,16 @@ fun spanCount(width: Int, itemDp: Dp) = max(1, width / itemDp.value.dp2pxNotComp
 /**
  *  获取 像素 的dp
  */
-val Int.px2dp: Int
+val Int.px2dp: Dp
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this / scale + 0.5f).toInt()
+        return (this / scale).dp
     }
+
+fun px2dp(context: Context, px: Int): Dp {
+    val scale: Float = context.resources.displayMetrics.density
+    return (px / scale).dp
+}
 
 /**
  *  获取dp的像素，Composable

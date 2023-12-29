@@ -25,8 +25,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.enums.EquipLevelColor
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RankColor
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.navigateUpSheet
@@ -185,7 +185,7 @@ private fun EquipListFilterContent(
         val colorChipData =
             arrayListOf(ChipData(stringResource(id = R.string.all)))
         for (i in 1..colorNum) {
-            val colorType = EquipLevelColor.getByType(i)
+            val colorType = RankColor.getByType(i)
             colorChipData.add(
                 ChipData(
                     text = stringResource(id = colorType.typeNameId),

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.extraequip
+package cn.wthee.pcrtool.ui.tool.extraequip.detail
 
 import androidx.compose.runtime.Immutable
 import androidx.datastore.preferences.core.edit

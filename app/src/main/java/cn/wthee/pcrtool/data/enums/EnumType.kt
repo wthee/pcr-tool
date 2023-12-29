@@ -397,9 +397,9 @@ enum class CharacterLimitType(val type: Int, val color: Color, val typeNameId: I
 }
 
 /**
- * 装备品级
+ * 装备品级、RANk 颜色
  */
-enum class EquipLevelColor(val type: Int, val color: Color, val typeNameId: Int) {
+enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
     UNKNOWN(0, colorGray, R.string.unknown),
     BLUE(1, colorBlue, R.string.color_blue),
     COPPER(2, colorCopper, R.string.color_copper),
@@ -413,8 +413,28 @@ enum class EquipLevelColor(val type: Int, val color: Color, val typeNameId: Int)
     ;
 
     companion object {
-        fun getByType(type: Int) = EquipLevelColor.entries
+        fun getByType(type: Int) = RankColor.entries
             .find { it.type == type } ?: UNKNOWN
+
+
+        /**
+         * rank 颜色
+         * @param rank rank数值
+         */
+        fun getRankColor(rank: Int): Color {
+            return when (rank) {
+                1 -> BLUE.color
+                in 2..3 -> COPPER.color
+                in 4..6 -> SILVER.color
+                in 7..10 -> GOLD.color
+                in 11..17 -> PURPLE.color
+                in 18..20 -> RED.color
+                in 21..23 -> GREEN.color
+                in 24..27 -> ORANGE.color
+                in 28..99 -> CYAN.color
+                else -> UNKNOWN.color
+            }
+        }
     }
 }
 

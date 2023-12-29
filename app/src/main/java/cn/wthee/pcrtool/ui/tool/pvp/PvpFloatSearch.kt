@@ -64,29 +64,26 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         navViewModel.floatServiceRun.postValue(false)
                     }
                 }
-                //查询
-                if (!min && !showResult) {
+                if (!min) {
                     MainSmallFab(
-                        iconType = MainIconType.PVP_SEARCH
+                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.PVP_SEARCH
                     ) {
-                        try {
-                            scope.launch {
-                                resultListState.scrollToItem(0)
-                            }
-                        } catch (_: Exception) {
+                        if (showResult) {
+                            //返回
+                            navViewModel.showResult.postValue(false)
+                            pvpViewModel.changeRequesting(false)
+                        } else {
+                            //查询
+                            try {
+                                scope.launch {
+                                    resultListState.scrollToItem(0)
+                                }
+                            } catch (_: Exception) {
 
+                            }
+                            pvpViewModel.resetResult()
+                            navViewModel.showResult.postValue(true)
                         }
-                        pvpViewModel.resetResult()
-                        navViewModel.showResult.postValue(true)
-                    }
-                }
-                //返回
-                if (!min && showResult) {
-                    MainSmallFab(
-                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.BACK
-                    ) {
-                        navViewModel.showResult.postValue(false)
-                        pvpViewModel.changeRequesting(false)
                     }
                 }
             }

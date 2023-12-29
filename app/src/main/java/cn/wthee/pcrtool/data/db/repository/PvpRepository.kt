@@ -21,7 +21,7 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
     }
 
     suspend fun getLikedList(defs: String, region: Int) = try {
-        pvpDao.getLikedList(defs, region)
+        pvpDao.getLikedList(defs = defs, region = region)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getLikedList#region:$region,defs:$defs")
         emptyList()
@@ -30,7 +30,7 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
     suspend fun insert(data: PvpFavoriteData) = pvpDao.insert(data)
 
     suspend fun getHistory(region: Int, limit: Int) = try {
-        pvpDao.getHistory(region, limit)
+        pvpDao.getHistory(region = region, limit = limit)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getHistory#region:$region,limit:$limit")
         emptyList()
@@ -38,9 +38,13 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
     suspend fun insert(data: PvpHistoryData) = pvpDao.insert(data)
 
-    suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(atks, defs, region)
+    suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(
+        atks = atks,
+        defs = defs,
+        region = region
+    )
 
     suspend fun deleteOldHistory(region: Int, endDate: String) =
-        pvpDao.deleteOldHistory(region, endDate)
+        pvpDao.deleteOldHistory(region = region, endDate = endDate)
 
 }

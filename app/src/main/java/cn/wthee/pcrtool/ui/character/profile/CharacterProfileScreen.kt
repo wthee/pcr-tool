@@ -73,8 +73,6 @@ fun CharacterBasicInfo(
             }
         }
     }
-
-
 }
 
 /**
@@ -108,29 +106,29 @@ private fun ProfileInfoContent(info: CharacterProfileInfo) {
         SingleRow(title = stringResource(id = R.string.cv), content = info.voice)
 
         //身高、体重
-        TwoColumnsInfo(
-            stringResource(id = R.string.title_height),
-            "${info.height.fixedStr} CM",
-            stringResource(id = R.string.title_weight),
-            "${info.weight.fixedStr} KG"
+        TwoColumn(
+            title0 = stringResource(id = R.string.title_height),
+            text0 = "${info.height.fixedStr} CM",
+            title1 = stringResource(id = R.string.title_weight),
+            text1 = "${info.weight.fixedStr} KG"
         )
         //生日、年龄
-        TwoColumnsInfo(
-            stringResource(id = R.string.title_birth),
-            stringResource(
+        TwoColumn(
+            title0 = stringResource(id = R.string.title_birth),
+            text0 = stringResource(
                 id = R.string.date_m_d,
                 info.birthMonth.fixedStr,
                 info.birthDay.fixedStr
             ),
-            stringResource(id = R.string.age),
-            info.age.fixedStr
+            title1 = stringResource(id = R.string.age),
+            text1 = info.age.fixedStr
         )
         //血型、种族
-        TwoColumnsInfo(
-            stringResource(id = R.string.title_blood),
-            info.bloodType.fixedStr,
-            stringResource(id = R.string.title_race),
-            info.race,
+        TwoColumn(
+            title0 = stringResource(id = R.string.title_blood),
+            text0 = info.bloodType.fixedStr,
+            title1 = stringResource(id = R.string.title_race),
+            text1 = info.race,
         )
         //公会
         TwoRow(title = stringResource(id = R.string.title_guild), content = info.guild)
@@ -249,13 +247,13 @@ private fun RoomCommentContent(roomCommentList: List<RoomCommentData>) {
 
         //多角色时，显示角色图标
         if (list.size > 1) {
-            val urls = arrayListOf<String>()
+            val urlList = arrayListOf<String>()
             list.forEach { roomComment ->
-                urls.add(
+                urlList.add(
                     ImageRequestHelper.getInstance().getMaxIconUrl(roomComment.unitId)
                 )
             }
-            IconHorizontalPagerIndicator(pagerState, urls)
+            IconHorizontalPagerIndicator(pagerState, urlList)
         }
         HorizontalPager(
             state = pagerState,
@@ -313,7 +311,7 @@ private fun TwoRow(title: String, content: String) {
  * 两列信息
  */
 @Composable
-private fun TwoColumnsInfo(
+private fun TwoColumn(
     title0: String,
     text0: String,
     title1: String,

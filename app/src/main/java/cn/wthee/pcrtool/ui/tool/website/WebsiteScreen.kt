@@ -40,8 +40,8 @@ import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -77,11 +77,10 @@ fun WebsiteScreen(
                 SelectTypeFab(
                     icon = MainIconType.FILTER,
                     tabs = tabs,
-                    type = uiState.type,
+                    selectedIndex = uiState.type,
                     openDialog = uiState.openDialog,
                     changeDialog = websiteViewModel::changeDialog,
                     changeSelect = websiteViewModel::changeSelect,
-                    width = Dimen.dataChangeWidth + Dimen.fabSize,
                     isSecondLineFab = true
                 )
             }
@@ -221,7 +220,7 @@ private fun WebsiteItem(data: WebsiteData) {
             //区服
             MainTitleText(
                 text = regionName,
-                modifier = Modifier.commonPlaceholder(placeholder)
+                modifier = Modifier.placeholder(placeholder)
             )
             //摘要
             if (data.summary != "") {
@@ -237,7 +236,7 @@ private fun WebsiteItem(data: WebsiteData) {
             modifier = Modifier
                 .padding(top = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight)
-                .commonPlaceholder(placeholder),
+                .placeholder(placeholder),
             onClick = {
                 if (!placeholder) {
                     BrowserUtil.open(data.url)

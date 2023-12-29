@@ -27,10 +27,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipmentList(filter: FilterEquip, limit: Int) = try {
         val filterList = equipmentDao.getEquipmentList(
-            filter.craft,
-            filter.colorType,
-            filter.name,
-            limit
+            craft = filter.craft,
+            colorType = filter.colorType,
+            name = filter.name,
+            limit = limit
         )
 
         if (filter.all) {
@@ -53,6 +53,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         0
     }
 
+    /**
+     * 获取专用装备1、2数量
+     */
     suspend fun getUniqueEquipCount() = try {
         val uniqueEquipCount = equipmentDao.getUniqueEquipCountV2()
         if (uniqueEquipCount.size > 1) {
@@ -86,16 +89,16 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             //tp相关261 ~ 300
             val tpBonusAttr =
                 getUniqueEquipBonus(
-                    unitId,
-                    lv - Constants.TP_LIMIT_LEVEL,
-                    Constants.TP_LIMIT_LEVEL
+                    unitId = unitId,
+                    lv = lv - Constants.TP_LIMIT_LEVEL,
+                    minLv = Constants.TP_LIMIT_LEVEL
                 )
             // 回避等相关301 ~
             val otherBonusAttr =
                 getUniqueEquipBonus(
-                    unitId,
-                    lv - Constants.OTHER_LIMIT_LEVEL,
-                    Constants.OTHER_LIMIT_LEVEL
+                    unitId = unitId,
+                    lv = lv - Constants.OTHER_LIMIT_LEVEL,
+                    minLv = Constants.OTHER_LIMIT_LEVEL
                 )
 
             val level = if (tpBonusAttr != null) {
@@ -109,7 +112,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                 lv
             }
 
-            val equipmentMaxData = getUniqueEquip(unitId, level, lv2)
+            val equipmentMaxData = getUniqueEquip(unitId = unitId, lv = level, lv2 = lv2)
             // 专武1奖励属性不为空，计算总属性：初始属性 + 奖励属性
             if (equipmentMaxData.isNotEmpty() && equipmentMaxData[0].equipmentId % 10 == 1) {
                 if (tpBonusAttr != null) {
@@ -124,7 +127,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
             equipmentMaxData
         } else {
-            getUniqueEquip(unitId, lv, lv2)
+            getUniqueEquip(unitId = unitId, lv = lv, lv2 = lv2)
         }
 
 
@@ -138,14 +141,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     ): List<UniqueEquipmentMaxData> {
         val list = arrayListOf<UniqueEquipmentMaxData>()
         try {
-            equipmentDao.getUniqueEquipInfoV2(unitId, lv, 1)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId = unitId, lv = lv, slot = 1)?.let {
                 list.add(it)
             }
-            equipmentDao.getUniqueEquipInfoV2(unitId, lv2 + 1, 2)?.let {
+            equipmentDao.getUniqueEquipInfoV2(unitId = unitId, lv = lv2 + 1, slot = 2)?.let {
                 list.add(it)
             }
         } catch (e: Exception) {
-            equipmentDao.getUniqueEquipInfo(unitId, lv)?.let {
+            equipmentDao.getUniqueEquipInfo(unitId = unitId, lv = lv)?.let {
                 list.add(it)
             }
         }
@@ -156,9 +159,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * 查询两张专武关联表，适配不同游戏版本
      */
     private suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int) = try {
-        equipmentDao.getUniqueEquipBonusV2(unitId, lv, minLv)
+        equipmentDao.getUniqueEquipBonusV2(unitId = unitId, lv = lv, minLv = minLv)
     } catch (e: Exception) {
-        equipmentDao.getUniqueEquipBonus(unitId, lv, minLv)
+        equipmentDao.getUniqueEquipBonus(unitId = unitId, lv = lv, minLv = minLv)
     }
 
     suspend fun getUniqueEquipMaxLv(slot: Int) = equipmentDao.getUniqueEquipMaxLv(slot)
@@ -167,7 +170,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * 获取所有角色所需的装备统计
      */
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = try {
-        val data = equipmentDao.getEquipByRank(unitId, startRank, endRank)
+        val data = equipmentDao.getEquipByRank(
+            unitId = unitId,
+            startRank = startRank,
+            endRank = endRank
+        )
         //计算倍数
         val materials = arrayListOf<EquipmentMaterial>()
         data.forEach { equipCountData ->
@@ -233,10 +240,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      */
     suspend fun getUniqueEquipList(name: String, slot: Int) = try {
         val data = (try {
-            val data = equipmentDao.getUniqueEquipListV2(name, slot)
+            val data = equipmentDao.getUniqueEquipListV2(name = name, slot = slot)
             data
         } catch (_: Exception) {
-            equipmentDao.getUniqueEquipList(name, slot)
+            equipmentDao.getUniqueEquipList(name = name, slot = slot)
         }).reversed()
 
         when (MainActivity.regionType) {
@@ -282,13 +289,19 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         if (equip.craftFlg == 0) {
             materials.add(
                 EquipmentMaterial(
-                    equip.equipmentId,
-                    equip.equipmentName,
-                    1
+                    id = equip.equipmentId,
+                    name = equip.equipmentName,
+                    count = 1
                 )
             )
         } else {
-            getAllMaterial(materials, equip.equipmentId, equip.equipmentName, 1, 1)
+            getAllMaterial(
+                materials = materials,
+                equipmentId = equip.equipmentId,
+                name = equip.equipmentName,
+                count = 1,
+                craftFlg = 1
+            )
         }
         materials
     } catch (e: Exception) {
@@ -314,23 +327,25 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     ) {
         try {
             if (craftFlg == 1) {
+                //迭代获取所有素材数量
                 val material = equipmentDao.getEquipmentCraft(equipmentId).getAllMaterialId()
                 material.forEach {
                     val data = equipmentDao.getEquipBasicInfo(it.id)
                     getAllMaterial(
-                        materials,
-                        data.equipmentId,
-                        data.equipmentName,
-                        it.count,
-                        data.craftFlg
+                        materials = materials,
+                        equipmentId = data.equipmentId,
+                        name = data.equipmentName,
+                        count = it.count,
+                        craftFlg = data.craftFlg
                     )
                 }
             } else {
+                //直接获取素材数量
                 val material =
                     EquipmentMaterial(
-                        equipmentId,
-                        name,
-                        count
+                        id = equipmentId,
+                        name = name,
+                        count = count
                     )
                 var flag = -1
                 materials.forEachIndexed { index, equipmentMaterial ->
@@ -338,9 +353,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                         flag = index
                     }
                 }
+                //素材数量统计
                 if (flag == -1) {
+                    //不存在，添加
                     materials.add(material)
                 } else {
+                    //已存在，累加数量
                     materials[flag].count += material.count
                 }
             }

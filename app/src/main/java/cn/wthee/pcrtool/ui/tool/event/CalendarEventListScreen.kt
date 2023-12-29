@@ -152,7 +152,11 @@ fun CalendarEventItem(calendar: CalendarEvent) {
             modifier = Modifier.padding(bottom = Dimen.mediumPadding),
             verticalArrangement = Arrangement.Center
         ) {
-            EventTitle(calendar.startTime, calendar.endTime, showOverdueColor = true)
+            EventTitle(
+                startTime = calendar.startTime,
+                endTime = calendar.endTime,
+                showOverdueColor = true
+            )
         }
 
         MainCard {

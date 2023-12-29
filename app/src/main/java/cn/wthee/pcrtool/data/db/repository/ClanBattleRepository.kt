@@ -20,7 +20,7 @@ class ClanBattleRepository @Inject constructor(private val clanBattleDao: ClanBa
     }
 
     private suspend fun getAllClanBattleTargetCount(clanBattleId: Int, phase: Int) = try {
-        clanBattleDao.getAllClanBattleTargetCount(clanBattleId, phase)
+        clanBattleDao.getAllClanBattleTargetCount(clanBattleId = clanBattleId, phase = phase)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getAllClanBattleData#clanBattleId:$clanBattleId,phase:$phase")
         emptyList()
@@ -30,7 +30,7 @@ class ClanBattleRepository @Inject constructor(private val clanBattleDao: ClanBa
      * 获取公会战列表
      */
     suspend fun getClanBattleList(clanBattleId: Int, phase: Int) = try {
-        val targetList = getAllClanBattleTargetCount(clanBattleId, phase)
+        val targetList = getAllClanBattleTargetCount(clanBattleId = clanBattleId, phase = phase)
         val clanList = getAllClanBattleData(clanBattleId)
         //设置多目标数
         clanList.forEach { info ->

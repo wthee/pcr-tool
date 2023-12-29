@@ -2,7 +2,9 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -13,7 +15,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.VibrateUtil
 
 
@@ -55,4 +59,15 @@ fun MainCard(
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = containerColor)
     )
+}
+
+
+@CombinedPreviews
+@Composable
+private fun MainCardPreview() {
+    PreviewLayout {
+        MainCard {
+            Spacer(modifier = Modifier.size(Dimen.cardHeight))
+        }
+    }
 }
