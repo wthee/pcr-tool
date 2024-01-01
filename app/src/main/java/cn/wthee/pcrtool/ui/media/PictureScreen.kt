@@ -86,7 +86,7 @@ fun PictureScreen(
 }
 
 /**
- * 角色/活动剧情图片
+ * 角色、活动剧情、过场漫画图片
  *
  */
 @Composable

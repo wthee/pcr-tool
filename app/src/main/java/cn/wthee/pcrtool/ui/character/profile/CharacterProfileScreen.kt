@@ -102,6 +102,8 @@ private fun ProfileInfoContent(info: CharacterProfileInfo) {
         SingleRow(title = stringResource(id = R.string.character), content = info.unitName)
         //现实名字
         SingleRow(title = stringResource(id = R.string.name), content = info.actualName.fixedStr)
+        //编号
+        SingleRow(title = stringResource(id = R.string.id), content = info.unitId.toString())
         //cv
         SingleRow(title = stringResource(id = R.string.cv), content = info.voice)
 
@@ -398,7 +400,9 @@ private fun HomePageCommentContentPreview() {
 @CombinedPreviews
 @Composable
 private fun RoomCommentContentPreview() {
-    PreviewLayout {
+    PreviewLayout(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         val text = stringResource(id = R.string.debug_long_text)
         RoomCommentContent(
             roomCommentList = arrayListOf(

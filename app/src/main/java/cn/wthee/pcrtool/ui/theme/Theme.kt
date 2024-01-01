@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -129,12 +130,14 @@ fun PreviewLayout(
 
     Column(
         horizontalAlignment = horizontalAlignment,
-        modifier = Modifier.padding(Dimen.mediumPadding)
+        modifier = Modifier
+            .padding(Dimen.mediumPadding)
+            .fillMaxWidth()
     ) {
         //正常主题
         if (themeType == 0 || themeType == 1) {
             MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
-                Column {
+                Column(horizontalAlignment = horizontalAlignment) {
                     content()
                 }
             }
@@ -157,7 +160,7 @@ fun PreviewLayout(
                     LightColorPalette
                 }
             ) {
-                Column {
+                Column(horizontalAlignment = horizontalAlignment) {
                     content()
                 }
             }

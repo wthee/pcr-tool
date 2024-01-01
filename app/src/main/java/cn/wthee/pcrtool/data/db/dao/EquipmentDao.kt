@@ -460,9 +460,10 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-            unit_id
+            unit_promotion.unit_id
         FROM
             unit_promotion 
+            LEFT JOIN unit_data ON unit_promotion.unit_id = unit_data.unit_id
         WHERE
             (equip_slot_1 = :equipId 
             OR equip_slot_2 = :equipId 
@@ -470,9 +471,9 @@ interface EquipmentDao {
             OR equip_slot_4 = :equipId 
             OR equip_slot_5 = :equipId 
             OR equip_slot_6 = :equipId)
-            AND unit_id < 400000
-            GROUP BY unit_id
-            ORDER BY unit_id
+            AND unit_promotion.unit_id < 400000
+            GROUP BY unit_promotion.unit_id
+            ORDER BY unit_data.unit_name
         """
     )
     suspend fun getEquipUnitList(equipId: Int): List<Int>

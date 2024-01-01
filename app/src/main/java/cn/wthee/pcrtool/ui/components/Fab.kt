@@ -237,7 +237,6 @@ fun ExpandableFab(
 
 /**
  * 切换
- * @param width 宽度
  */
 @Composable
 fun SelectTypeFab(
