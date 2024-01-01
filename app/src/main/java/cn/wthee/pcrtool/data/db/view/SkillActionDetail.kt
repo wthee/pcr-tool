@@ -1188,10 +1188,27 @@ data class SkillActionDetail(
                         val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
 
                         getString(
-                            R.string.skill_action_type_desc_42,
+                            R.string.skill_action_type_desc_42_2,
                             actionValue4.toInt(),
                             value,
                             actionDetail2 % 10
+                        )
+                    }
+
+                    14 -> {
+                        val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
+                        var actionText = getString(id = R.string.skill_action_d, actionDetail2 % 10)
+                        if (actionDetail3 != 0) {
+                            actionText += "、" + getString(
+                                id = R.string.skill_action_d,
+                                actionDetail3 % 10
+                            )
+                        }
+                        getString(
+                            R.string.skill_action_type_desc_42_14,
+                            actionValue4.toInt(),
+                            value,
+                            actionText
                         )
                     }
 

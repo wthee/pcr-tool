@@ -138,6 +138,7 @@
     <string name="type_event_limit">活动</string>
     <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
+    <string name="id">编号</string>
 
     <!--装备相关-->
     <string name="equip_require_level">需求等级：%s</string>
@@ -535,6 +536,7 @@
 
     <!--技能描述相关-->
     <string name="skill_action">动作</string>
+    <string name="skill_action_d">动作(%d)</string>
     <string name="skill_effect_time">，持续 %s 秒</string>
     <string name="skill_all">所有</string>
     <string name="skill_level_text">技能等级</string>
@@ -684,7 +686,8 @@
     <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
-    <string name="skill_action_type_desc_42">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
+    <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
+    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s</string>
     <string name="skill_action_type_desc_44">战斗开始 [%d] 秒后入场</string>
     <string name="skill_action_type_desc_45">技能计数加 [1]%s</string>
     <string name="skill_action_type_desc_46_1">对%s造成最大HP %s 伤害</string>
