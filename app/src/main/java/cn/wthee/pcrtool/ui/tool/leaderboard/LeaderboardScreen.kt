@@ -368,7 +368,7 @@ private fun LeaderboardItem(
         LeaderCharacterIcon(
             hasUnitId,
             placeholder,
-            leader.unitId!!,
+            leader.unitId,
             leader.url,
             unknown,
             tipText,
@@ -384,7 +384,7 @@ private fun LeaderboardItem(
                 .placeholder(placeholder),
             onClick = {
                 if (!unknown) {
-                    toCharacterDetail(leader.unitId)
+                    leader.unitId?.let { toCharacterDetail(it) }
                 } else {
                     ToastUtil.short(tipText)
                 }
@@ -446,7 +446,7 @@ private fun LeaderboardItem(
 fun LeaderCharacterIcon(
     hasUnitId: Boolean,
     placeholder: Boolean = false,
-    unitId: Int,
+    unitId: Int?,
     url: String,
     unknown: Boolean,
     tipText: String,
@@ -457,14 +457,14 @@ fun LeaderCharacterIcon(
         MainIcon(
             data = if (hasUnitId) {
                 ImageRequestHelper.getInstance()
-                    .getMaxIconUrl(unitId)
+                    .getMaxIconUrl(unitId!!)
             } else {
                 R.drawable.unknown_item
             },
             modifier = Modifier.placeholder(placeholder)
         ) {
             if (!unknown) {
-                toCharacterDetail(unitId)
+                unitId?.let { toCharacterDetail(it) }
             } else {
                 ToastUtil.short(tipText)
             }

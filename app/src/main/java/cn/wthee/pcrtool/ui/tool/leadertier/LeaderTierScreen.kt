@@ -289,7 +289,7 @@ private fun LeaderItem(
         LeaderCharacterIcon(
             hasUnitId,
             placeholder,
-            leader.unitId!!,
+            leader.unitId,
             leader.url,
             unknown,
             tipText,
@@ -303,7 +303,7 @@ private fun LeaderItem(
                 .heightIn(min = Dimen.cardHeight),
             onClick = {
                 if (!unknown) {
-                    toCharacterDetail(leader.unitId)
+                    leader.unitId?.let { toCharacterDetail(it) }
                 } else {
                     ToastUtil.short(tipText)
                 }
