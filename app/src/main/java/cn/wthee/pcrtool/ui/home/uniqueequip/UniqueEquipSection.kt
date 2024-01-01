@@ -55,18 +55,20 @@ fun UniqueEquipSection(
             }
         }
     ) {
-        uiState.uniqueEquipIdList1?.let {
+        uiState.uniqueEquipList1?.let { list ->
             GridIconList(
-                idList = it,
+                idList = list.map { it.equipId },
+                detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
                 itemWidth = Dimen.homeIconItemWidth,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )
         }
-        uiState.uniqueEquipIdList2?.let {
+        uiState.uniqueEquipList2?.let { list ->
             GridIconList(
-                idList = it,
+                idList = list.map { it.equipId },
+                detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
                 itemWidth = Dimen.homeIconItemWidth,
                 contentPadding = 0.dp,

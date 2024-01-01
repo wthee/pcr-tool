@@ -31,12 +31,14 @@ import kotlin.math.max
  * 角色、装备图标列表
  *
  * @param idList id列表
+ * @param detailIdList 调整详情用id列表
  * @param isSubLayout 是否子布局
  * @param iconResourceType 图标类型
  */
 @Composable
 fun GridIconList(
     idList: List<Int>,
+    detailIdList: List<Int> = arrayListOf(),
     isSubLayout: Boolean = false,
     iconResourceType: IconResourceType,
     itemWidth: Dp = Dimen.iconSize,
@@ -54,9 +56,14 @@ fun GridIconList(
         fixCount = if (LocalInspectionMode.current) 5 else 0,
         isSubLayout = isSubLayout
     ) {
-        idList.forEach {
+        idList.forEachIndexed { index, it ->
             IconItem(
                 id = it,
+                detailId = if (detailIdList.isNotEmpty()) {
+                    detailIdList[index]
+                } else {
+                    null
+                },
                 iconResourceType = iconResourceType,
                 onClickItem = onClickItem
             )
@@ -70,29 +77,33 @@ fun GridIconList(
 @Composable
 fun IconItem(
     id: Int,
+    detailId: Int? = null,
     iconResourceType: IconResourceType,
     onClickItem: ((Int) -> Unit)? = null
 ) {
     val placeholder = id == ImageRequestHelper.UNKNOWN_EQUIP_ID
 
-    val unitId: Int = if (id / 10000 == 3) {
-        //item 转 unit
-        id % 10000 * 100 + 1
-    } else {
-        id
-    }
+    var mId: Int = id
+    val url: String
 
-    val url = when (iconResourceType) {
+    when (iconResourceType) {
         IconResourceType.CHARACTER -> {
-            ImageRequestHelper.getInstance().getMaxIconUrl(unitId)
+            mId = if (id / 10000 == 3) {
+                //item 转 unit
+                id % 10000 * 100 + 1
+            } else {
+                id
+            }
+            url = ImageRequestHelper.getInstance().getMaxIconUrl(mId)
         }
 
         IconResourceType.EQUIP, IconResourceType.UNIQUE_EQUIP -> {
-            ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EQUIPMENT, id)
+            url = ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EQUIPMENT, id)
         }
 
         IconResourceType.EX_EQUIP -> {
-            ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, id)
+            url =
+                ImageRequestHelper.getInstance().getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, id)
         }
     }
 
@@ -109,7 +120,7 @@ fun IconItem(
             data = url,
             onClick = if (onClickItem != null) {
                 {
-                    onClickItem(unitId)
+                    onClickItem(detailId ?: mId)
                 }
             } else {
                 null
