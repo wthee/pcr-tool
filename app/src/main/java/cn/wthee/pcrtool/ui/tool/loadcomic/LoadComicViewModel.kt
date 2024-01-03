@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.ui.tool.loadcomic
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -30,7 +30,7 @@ data class LoadComicUiState(
  */
 @HiltViewModel
 class LoadComicViewModel @Inject constructor(
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoadComicUiState())

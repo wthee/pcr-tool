@@ -10,11 +10,10 @@ import cn.wthee.pcrtool.data.db.dao.TweetDao
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.paging.TweetRemoteMediator
 import cn.wthee.pcrtool.database.AppTweetDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
-import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +48,7 @@ data class TweetUiState(
 class TweetViewModel @Inject constructor(
     private val tweetDao: TweetDao,
     private val database: AppTweetDatabase,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TweetUiState())
@@ -75,10 +74,10 @@ class TweetViewModel @Inject constructor(
                             pageSize = pageSize
                         ),
                         remoteMediator = TweetRemoteMediator(
-                            keyword,
-                            dateRange,
-                            database,
-                            apiRepository
+                            keyword = keyword,
+                            dateRange = dateRange,
+                            database = database,
+                            repository = apiRepository
                         )
                     ) {
                         tweetDao.pagingSource(keyword)
@@ -93,16 +92,12 @@ class TweetViewModel @Inject constructor(
      */
     private fun getKeywords() {
         viewModelScope.launch {
-            try {
-                val data = apiRepository.getKeywords(KeywordType.TWEET.type).data ?: arrayListOf()
+            val data = apiRepository.getKeywords(KeywordType.TWEET.type).data ?: arrayListOf()
 
-                _uiState.update {
-                    it.copy(
-                        keywordList = data
-                    )
-                }
-            } catch (e: Exception) {
-                LogReportUtil.upload(e, "getKeywords#keywordType:${KeywordType.TWEET.type}")
+            _uiState.update {
+                it.copy(
+                    keywordList = data
+                )
             }
         }
     }

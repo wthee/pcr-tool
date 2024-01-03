@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.utils.fixedLeaderDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +43,7 @@ data class LeaderTierUiState(
  */
 @HiltViewModel
 class LeaderTierViewModel @Inject constructor(
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val unitRepository: UnitRepository
 ) : ViewModel() {
 

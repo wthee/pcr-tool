@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.QuestRepository
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
@@ -39,7 +39,7 @@ data class RandomDropAreaListUiState(
 @HiltViewModel
 class RandomDropAreaListViewModel @Inject constructor(
     private val questRepository: QuestRepository,
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val equipmentRepository: EquipmentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

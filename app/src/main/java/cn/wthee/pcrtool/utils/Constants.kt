@@ -26,6 +26,9 @@ object Constants {
 
     const val mediaType = "application/json; charset=utf-8"
 
+    const val SERVER_DOMAIN = "wthee.xyz"
+    const val SERVER_IP = "96.45.190.76"
+
     //数据库资源地址
     var DATABASE_URL = "https://$URL_DOMAIN/db/"
 
@@ -109,16 +112,16 @@ object Constants {
 
 
     // 异常
-    const val EXCEPTION_API = "api exception:"
-    const val EXCEPTION_DOWNLOAD_DB = "db download exception:"
-    const val EXCEPTION_DOWNLOAD_FILE = "file download exception:"
-    const val EXCEPTION_SAVE_DB = "db file save exception:"
-    const val EXCEPTION_FILE_SAVE = "file save exception:"
-    const val EXCEPTION_LOAD_ATTR = "character attr exception:"
-    const val EXCEPTION_UNIT_NULL = "character info exception:"
-    const val EXCEPTION_SKILL = "skill exception:"
-    const val EXCEPTION_PVP_SERVICE = "pvp search exception:"
-    const val EXCEPTION_DATA_CHANGE = "db change exception:"
+    const val EXCEPTION_API = "api exception: "
+    const val EXCEPTION_DOWNLOAD_DB = "db download exception: "
+    const val EXCEPTION_DOWNLOAD_FILE = "file download exception: "
+    const val EXCEPTION_SAVE_DB = "db file save exception: "
+    const val EXCEPTION_FILE_SAVE = "file save exception: "
+    const val EXCEPTION_LOAD_ATTR = "character attr exception: "
+    const val EXCEPTION_UNIT_NULL = "character info exception: "
+    const val EXCEPTION_SKILL = "skill exception: "
+    const val EXCEPTION_PVP_SERVICE = "pvp search exception: "
+    const val EXCEPTION_DATA_CHANGE = "db change exception: "
 
     //任务
     const val DOWNLOAD_DB_WORK = "updateDatabase"
@@ -127,5 +130,4 @@ object Constants {
 
     //应用版本
     const val APP_VERSION = "app-version"
-
 }

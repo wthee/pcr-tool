@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.TweetData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppTweetDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
 import retrofit2.HttpException
@@ -20,7 +20,7 @@ class TweetRemoteMediator(
     private val keyword: String,
     private val dateRange: DateRange,
     private val database: AppTweetDatabase,
-    private val repository: MyAPIRepository
+    private val repository: ApiRepository
 ) : RemoteMediator<Int, TweetData>() {
 
     private val tweetDao = database.getTweetDao()
@@ -34,6 +34,7 @@ class TweetRemoteMediator(
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
                 )
+
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                         ?: return MediatorResult.Success(
@@ -44,7 +45,7 @@ class TweetRemoteMediator(
             }
 
             //获取数据
-            val response = repository.getTweet(
+            val response = repository.getTweetList(
                 after,
                 keyword,
                 dateRange.startDate,

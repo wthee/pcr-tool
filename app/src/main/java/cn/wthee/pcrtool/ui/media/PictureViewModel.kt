@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.AllPicsType
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
@@ -41,7 +41,7 @@ data class PictureUiState(
  */
 @HiltViewModel
 class PictureViewModel @Inject constructor(
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val unitRepository: UnitRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

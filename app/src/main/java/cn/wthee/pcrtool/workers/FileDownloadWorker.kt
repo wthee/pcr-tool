@@ -11,20 +11,18 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.network.FileService
-import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_FILE_WORK
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
-import cn.wthee.pcrtool.utils.DownloadListener
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.getString
+import io.ktor.client.call.body
+import io.ktor.client.plugins.onDownload
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.coroutineScope
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
 import java.io.File
 
 
@@ -46,7 +44,6 @@ class FileDownloadWorker(
     private lateinit var notification: NotificationCompat.Builder
 
     private val folderPath = FileUtil.getDownloadDir()
-    private lateinit var service: Call<ResponseBody>
 
     companion object {
         const val KEY_URL = "KEY_URL"
@@ -73,11 +70,9 @@ class FileDownloadWorker(
      * @param downloadUrl 文件url
      * @param rename 重命名的文件名
      */
-    private fun download(downloadUrl: String, rename: String?): Result {
-        val response: Response<ResponseBody>?
+    private suspend fun download(downloadUrl: String, rename: String?): Result {
         val fileName = downloadUrl.split("/").last()
         val file: File
-        val baseUrl = downloadUrl.substring(0, downloadUrl.lastIndexOf("/") + 1)
 
         try {
             //创建文件夹
@@ -85,34 +80,18 @@ class FileDownloadWorker(
             if (!folder.exists()) {
                 folder.mkdir()
             }
-            //创建Retrofit服务
-            service = ApiUtil.createWithClient(
-                FileService::class.java,
-                baseUrl,
-                ApiUtil.buildDownloadClient(object : DownloadListener {
-                    //下载进度
-                    override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
-                        try {
-                            //更新下载进度
-                            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
-                        } catch (_: Exception) {
-
-                        }
-                    }
-
-                    override fun onFinish() {
-                        //下载完成
-                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, 100).build())
+            //创建下载请求
+            val httpResponse: HttpResponse = DownloadFileClient.client.get(downloadUrl) {
+                onDownload { bytesSentTotal, contentLength ->
+                    val progress = (bytesSentTotal * 100.0 / contentLength).toInt()
+                    //更新下载进度
+                    setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
+                    if (progress == 100) {
                         notificationManager.cancelAll()
                     }
-
-                    override fun onErrorSize() {
-
-                    }
-                })
-            ).getFile(fileName)
-            //下载文件
-            response = service.execute()
+                }
+            }
+            val responseBody: ByteArray = httpResponse.body()
             //文件路径，判断是否需要重命名
             val existFilePath = folderPath + File.separator + (rename ?: fileName)
             file = File(existFilePath)
@@ -121,7 +100,7 @@ class FileDownloadWorker(
                 FileUtil.delete(file, saveDir = true)
             }
             //保存
-            FileUtil.save(response!!.body()!!.byteStream(), file)
+            file.writeBytes(responseBody)
         } catch (e: Exception) {
             setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, -3).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_FILE)

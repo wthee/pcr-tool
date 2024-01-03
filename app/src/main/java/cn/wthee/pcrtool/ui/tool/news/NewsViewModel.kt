@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.KeywordType
 import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import cn.wthee.pcrtool.ui.MainActivity
@@ -50,7 +50,7 @@ data class NewsUiState(
 class NewsViewModel @Inject constructor(
     private val newsDao: NewsDao,
     private val database: AppNewsDatabase,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NewsUiState())
@@ -76,11 +76,11 @@ class NewsViewModel @Inject constructor(
                             pageSize = pageSize
                         ),
                         remoteMediator = NewsRemoteMediator(
-                            MainActivity.regionType.value,
-                            keyword,
-                            dateRange,
-                            database,
-                            apiRepository
+                            region = MainActivity.regionType.value,
+                            keyword = keyword,
+                            dateRange = dateRange,
+                            database = database,
+                            repository = apiRepository
                         )
                     ) {
                         newsDao.pagingSource(MainActivity.regionType.value, keyword)

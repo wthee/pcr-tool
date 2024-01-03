@@ -1,10 +1,12 @@
 package cn.wthee.pcrtool.data.model
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
+
 
 /**
  * 应用通知内容
  */
+@Serializable
 data class AppNotice(
     val date: String = "",
     val file_url: String = "",
@@ -14,4 +16,4 @@ data class AppNotice(
     val title: String = "",
     val type: Int = -1,
     var url: String = ""
-) : Serializable
+)

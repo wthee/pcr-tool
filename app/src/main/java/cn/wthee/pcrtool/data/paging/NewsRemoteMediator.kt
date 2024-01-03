@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
 import retrofit2.HttpException
@@ -21,7 +21,7 @@ class NewsRemoteMediator(
     private val keyword: String,
     private val dateRange: DateRange,
     private val database: AppNewsDatabase,
-    private val repository: MyAPIRepository
+    private val repository: ApiRepository
 ) : RemoteMediator<Int, NewsTable>() {
 
     private val newsDao = database.getNewsDao()
@@ -45,7 +45,7 @@ class NewsRemoteMediator(
             }
 
             //获取数据
-            val response = repository.getNews(
+            val response = repository.getNewsList(
                 region,
                 after,
                 keyword,

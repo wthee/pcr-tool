@@ -7,11 +7,12 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.dataStoreMain
+import cn.wthee.pcrtool.utils.Constants.SERVER_DOMAIN
 import cn.wthee.pcrtool.utils.editOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.MainScope
@@ -76,7 +77,7 @@ data class OverviewScreenUiState(
 @HiltViewModel
 class OverviewScreenViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
     private val defaultOrder = "0-1-6-2-3-4-5-"
 
@@ -245,6 +246,8 @@ class OverviewScreenViewModel @Inject constructor(
             //应用更新
             try {
                 val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
+                // fixme url 使用ip或域名判断
+                data.url.replace(SERVER_DOMAIN, MyApplication.URL_DOMAIN)
                 _uiState.update {
                     it.copy(
                         appUpdateData = data

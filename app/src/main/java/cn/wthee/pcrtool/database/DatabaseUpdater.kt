@@ -12,24 +12,18 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.network.MyAPIService
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
-import cn.wthee.pcrtool.utils.Constants.mediaType
 import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
-import com.google.gson.JsonObject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 /**
@@ -60,31 +54,23 @@ object DatabaseUpdater {
         updateDbVersionText: (DatabaseVersion?) -> Unit,
         updateDbDownloadState: (Int) -> Unit
     ) {
-        //获取数据库最新版本
-        try {
-            updateDbDownloadState(-1)
-        } catch (_: Exception) {
-        }
-        try {
-            //创建服务
-            val service = ApiUtil.create(MyAPIService::class.java, API_URL)
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("regionCode", getRegionCode())
-
-            val body =
-                json.toString().toRequestBody(mediaType.toMediaTypeOrNull())
-
-            val version = service.getDbVersion(body)
-            //更新判断
-            updateDbVersionText(version.data)
-            downloadDB(version.data!!, fixDb, updateDbDownloadState)
-        } catch (e: Exception) {
-            if (e !is CancellationException) {
-                ToastUtil.short(getString(R.string.check_db_error))
-            }
+        //加载中
+        updateDbDownloadState(-1)
+        //获取远程数据版本
+        val version = ApiRepository().getDbVersion(getRegionCode())
+        if (version.status == -1) {
+            ToastUtil.short(getString(R.string.check_db_error))
             updateDbDownloadState(-2)
+            return
         }
+//        if(version.status == -2){
+//            //取消
+//            return
+//        }
+        //更新版本文本内容
+        updateDbVersionText(version.data)
+        //下载数据库
+        downloadDB(version.data!!, fixDb, updateDbDownloadState)
     }
 
     /**

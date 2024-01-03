@@ -3,10 +3,12 @@ package cn.wthee.pcrtool.data.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.enums.NewsType
+import kotlinx.serialization.Serializable
 
 /**
  * 官网公告，api和本地数据公用
  */
+@Serializable
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey

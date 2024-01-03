@@ -49,8 +49,9 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
-import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
 import java.util.UUID
 import kotlin.math.round
 
@@ -69,10 +70,12 @@ fun PvpSearchResult(
 
     val defIds = selectedIds.subList(0, 5).getIdStr()
     //展示搜索结果
-    val idArray = JsonArray()
-    for (sel in selectedIds.subList(0, 5)) {
-        idArray.add(sel.unitId)
+    var idArray = buildJsonArray {
+        for (sel in selectedIds.subList(0, 5)) {
+            add(sel.unitId)
+        }
     }
+
     val result = uiState.pvpResult
     val placeholder = result == null
 
@@ -91,16 +94,19 @@ fun PvpSearchResult(
 
     //获取数据
     LaunchedEffect(selectedIds) {
-        //添加搜索记录
+        //fixme 添加搜索记录
         var unSplitDefIds = ""
         var isError = false
-        for (sel in selectedIds.subList(0, 5)) {
-            if (sel.unitId == 0) {
-                isError = true
+        idArray = buildJsonArray {
+            for (sel in selectedIds.subList(0, 5)) {
+                if (sel.unitId == 0) {
+                    isError = true
+                }
+                add(sel.unitId)
+                unSplitDefIds += "${sel.unitId}-"
             }
-            idArray.add(sel.unitId)
-            unSplitDefIds += "${sel.unitId}-"
         }
+
         if (!isError) {
             pvpViewModel.insert(
                 PvpHistoryData(

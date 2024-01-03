@@ -10,19 +10,19 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.calcDate
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
-import com.google.gson.JsonArray
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonArray
 import javax.inject.Inject
 
 
@@ -57,7 +57,7 @@ data class PvpUiState(
 @HiltViewModel
 class PvpViewModel @Inject constructor(
     private val pvpRepository: PvpRepository,
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val unitRepository: UnitRepository
 ) : ViewModel() {
 

@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
@@ -60,7 +60,7 @@ data class EquipMaterialDetailUiState(
 @HiltViewModel
 class EquipMaterialDropInfoViewModel @Inject constructor(
     private val questRepository: QuestRepository,
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val equipmentRepository: EquipmentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

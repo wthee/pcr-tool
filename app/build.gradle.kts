@@ -4,6 +4,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("kotlinx-serialization")
 }
 
 
@@ -141,8 +142,9 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9.2")
 
     //Coil
-    val coilVersion = "2.5.0"
-    implementation("io.coil-kt:coil-compose:$coilVersion")
+    val coilVersion = "3.0.0-alpha01"
+    implementation("io.coil-kt.coil3:coil-network:$coilVersion")
+    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0-alpha07")
@@ -151,6 +153,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    //ktor
+    implementation("io.ktor:ktor-client-core:${rootProject.extra["ktorVersion"]}")
+    implementation("io.ktor:ktor-client-content-negotiation:${rootProject.extra["ktorVersion"]}")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:${rootProject.extra["ktorVersion"]}")
+    implementation("io.ktor:ktor-client-android:${rootProject.extra["ktorVersion"]}")
+    implementation("io.ktor:ktor-client-logging:${rootProject.extra["ktorVersion"]}")
 
     //Lifecycle
     val lifecycleVersion = "2.6.2"

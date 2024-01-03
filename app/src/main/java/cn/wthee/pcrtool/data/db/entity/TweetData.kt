@@ -2,10 +2,12 @@ package cn.wthee.pcrtool.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * 推特信息
  */
+@Serializable
 @Entity(tableName = "tweet")
 data class TweetData(
     @PrimaryKey

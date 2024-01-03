@@ -1,9 +1,12 @@
 package cn.wthee.pcrtool.data.model
 
+import kotlinx.serialization.Serializable
+
 
 /**
  * 排行详情
  */
+@Serializable
 data class LeaderboardData(
     val unitId: Int? = 0,
     val name: String = "???",

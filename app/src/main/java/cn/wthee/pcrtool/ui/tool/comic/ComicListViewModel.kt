@@ -8,7 +8,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import cn.wthee.pcrtool.data.db.dao.ComicDao
 import cn.wthee.pcrtool.data.db.entity.ComicData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.paging.ComicRemoteMediator
 import cn.wthee.pcrtool.database.AppComicDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +37,7 @@ data class ComicListUiState(
 class ComicListViewModel @Inject constructor(
     private val comicDao: ComicDao,
     private val database: AppComicDatabase,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ComicListUiState())
@@ -86,9 +86,9 @@ class ComicListViewModel @Inject constructor(
                             pageSize = 1000
                         ),
                         remoteMediator = ComicRemoteMediator(
-                            "",
-                            database,
-                            apiRepository
+                            keyword = "",
+                            database = database,
+                            repository = apiRepository
                         )
                     ) {
                         comicDao.pagingSource("")

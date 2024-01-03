@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.FilterLeaderboard
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.getToday
@@ -40,7 +40,7 @@ data class LeaderboardUiState(
  */
 @HiltViewModel
 class LeaderboardViewModel @Inject constructor(
-    private val apiRepository: MyAPIRepository,
+    private val apiRepository: ApiRepository,
     private val unitRepository: UnitRepository
 ) : ViewModel() {
 
