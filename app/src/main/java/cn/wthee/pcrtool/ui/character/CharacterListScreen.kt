@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -72,6 +71,8 @@ import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
+import coil3.BitmapImage
+import coil3.annotation.ExperimentalCoilApi
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
@@ -227,6 +228,7 @@ private fun CharacterListFabContent(
 /**
  * 角色列表项
  */
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CharacterItemContent(
     unitId: Int,
@@ -272,7 +274,8 @@ fun CharacterItemContent(
             ) { result ->
                 imageLoadSuccess = true
                 //取色
-                Palette.from(result.drawable.toBitmap()).generate { palette ->
+                val bitmap = ((result.image) as BitmapImage).bitmap
+                Palette.from(bitmap).generate { palette ->
                     palette?.let {
                         cardMaskColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
                     }

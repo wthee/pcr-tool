@@ -418,9 +418,9 @@ private fun ToolButtonContent(
         openDialog.value = false
         //开始下载
         MediaDownloadHelper(MyApplication.context).downloadVideo(
-            url,
-            fileName,
-            lifecycleOwner,
+            url = url,
+            fileName = fileName,
+            lifecycleOwner = lifecycleOwner,
             onDownloadFinished = {
                 downloading = false
             },

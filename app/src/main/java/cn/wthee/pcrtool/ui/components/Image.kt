@@ -1,21 +1,14 @@
 package cn.wthee.pcrtool.ui.components
 
-import android.graphics.drawable.Drawable
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,14 +23,11 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.imageLoader
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
+import coil3.request.ErrorResult
+import coil3.request.SuccessResult
 
 const val RATIO = 16 / 9f
 
@@ -51,22 +41,20 @@ const val SCALE_LOGO = 2.2f
 /**
  * 图片加载
  */
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MainImage(
     modifier: Modifier = Modifier,
     data: String,
-    ratio: Float,
-    contentScale: ContentScale = ContentScale.FillWidth,
+    ratio: Float?,
+    contentScale: ContentScale = ContentScale.Fit,
     placeholder: Boolean = true,
     onError: (ErrorResult) -> Unit = {},
     onSuccess: (SuccessResult) -> Unit = {},
 ) {
 
     var mModifier = modifier
-    if (ratio > 0) {
-        mModifier = modifier
-            .aspectRatio(ratio)
+    if (ratio != null) {
+        mModifier = modifier.aspectRatio(ratio)
     }
     val loading = remember {
         mutableStateOf(true)
@@ -77,6 +65,7 @@ fun MainImage(
         model = data,
         contentDescription = null,
         contentScale = contentScale,
+        filterQuality = FilterQuality.None,
         error = rememberAsyncImagePainter(R.drawable.error, contentScale = contentScale),
         onSuccess = {
             loading.value = false
@@ -90,8 +79,10 @@ fun MainImage(
         onLoading = {
             loading.value = true
         },
-        modifier = if (placeholder) {
-            mModifier.placeholder(visible = loading.value)
+        modifier = if (placeholder && loading.value) {
+            mModifier
+                .aspectRatio(ratio ?: RATIO)
+                .placeholder(visible = loading.value)
         } else {
             mModifier
         }
@@ -178,11 +169,13 @@ fun MainIcon(
                 colorFilter = colorFilter,
                 contentDescription = null,
                 contentScale = contentScale,
+                filterQuality = FilterQuality.None,
                 error = rememberAsyncImagePainter(
                     R.drawable.unknown_item,
                     contentScale = contentScale
                 ),
                 onError = {
+                    it.result.throwable
                     loading.value = false
                 },
                 onSuccess = {
@@ -197,81 +190,4 @@ fun MainIcon(
             )
         }
     }
-}
-
-/**
- * 图片
- * @param loading 保存原图时使用，等原图缓存结束
- */
-@Composable
-fun SubImage(
-    modifier: Modifier = Modifier,
-    data: String,
-    contentScale: ContentScale = ContentScale.Fit,
-    loading: MutableState<Boolean>? = null,
-    ratio: Float? = null,
-    onSuccess: (Drawable?) -> Unit = {},
-) {
-    val context = LocalContext.current
-    val loader = LocalContext.current.imageLoader
-
-
-    Box(modifier = modifier) {
-        SubcomposeAsyncImage(
-            model = data,
-            contentDescription = null,
-            contentScale = contentScale,
-            filterQuality = FilterQuality.None,
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(ratio ?: RATIO)
-                        .placeholder(true)
-                )
-            },
-            error = {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    AsyncImage(
-                        model = R.drawable.error,
-                        contentDescription = null,
-                        modifier = Modifier.aspectRatio(ratio ?: RATIO)
-                    )
-                }
-                loading?.value = false
-            },
-            onSuccess = {
-                val request = ImageRequest.Builder(context)
-                    .data(data)
-                    .diskCacheKey(data)
-                    .listener(
-                        onSuccess = { _, result ->
-                            onSuccess(result.drawable)
-                            loading?.value = false
-                        }
-                    )
-                    .build()
-                loader.enqueue(request)
-            },
-            modifier = if (ratio != null) {
-                Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(ratio)
-            } else {
-                Modifier.fillMaxWidth()
-            }
-        )
-
-        //加载立绘原图时
-        if (loading != null && loading.value) {
-            CircularProgressCompose(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = Dimen.smallPadding, end = Dimen.mediumPadding),
-                size = Dimen.smallIconSize,
-                strokeWidth = Dimen.smallStrokeWidth
-            )
-        }
-    }
-
 }

@@ -1,8 +1,7 @@
 package cn.wthee.pcrtool.ui.media
 
 import android.Manifest
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,10 +44,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
-import cn.wthee.pcrtool.ui.components.SubImage
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -60,6 +59,8 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.checkPermissions
 import cn.wthee.pcrtool.utils.getString
+import coil3.BitmapImage
+import coil3.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -226,36 +227,14 @@ fun PictureItem(
     val context = LocalContext.current
     val placeholder = picUrl == ""
 
-    //未加载提示
-    val unLoadToast = stringResource(R.string.wait_pic_load)
-    //drawable
-    val loadedPic: MutableState<Drawable?> = remember(picUrl) {
-        mutableStateOf(null)
-    }
-    //加载中
-    val loading = remember(picUrl) {
-        mutableStateOf(true)
-    }
     //预览弹窗
     val openPreviewDialog = remember(picUrl) {
         mutableStateOf(false)
     }
 
-    val displayName = getFileName(picUrl)
-    val path = MediaDownloadHelper.getSaveDir(isVideo = false)
-    val file = File("$path/$displayName")
-    //是否已存在
-    var saved by remember {
-        mutableStateOf(false)
-    }
-    if (file.exists()) {
-        saved = true
-    }
-
     //图片
-    SubImage(
+    MainImage(
         data = picUrl,
-        loading = loading,
         contentScale = contentScale,
         ratio = ratio,
         modifier = modifier
@@ -267,64 +246,51 @@ fun PictureItem(
                 openPreviewDialog.value = true
             }
             .placeholder(placeholder)
-    ) {
-        //获取本地原图缓存
-        loadedPic.value = it
-    }
+    )
 
     //预览
     if (openPreviewDialog.value) {
         PreviewPictureDialog(
             openPreviewDialog = openPreviewDialog,
-            loading = loading,
             picUrl = picUrl,
-            ratio = ratio,
-            saved = saved
-        ) {
-            checkPermissions(context, permissions) {
-                //已保存
-                if (saved) {
-                    ToastUtil.short(
-                        getString(
-                            R.string.pic_exist,
-                            file.absolutePath.replace(MediaDownloadHelper.DIR, "")
-                        )
-                    )
-                    return@checkPermissions
-                }
-                if (loading.value) {
-                    ToastUtil.short(unLoadToast)
-                } else {
-                    loadedPic.value.let {
-                        MediaDownloadHelper(context).saveMedia(
-                            bitmap = (it as BitmapDrawable).bitmap,
-                            displayName = displayName
-                        ) {
-                            saved = true
-                        }
-                    }
-                }
-            }
-        }
+            ratio = ratio
+        )
     }
-
 }
 
 /**
  * 图片预览弹窗
- * fixme 小窗模式底部显示异常
+ * fixme 小窗模式底部显示异常（dialog导致问题）
  */
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 private fun PreviewPictureDialog(
     openPreviewDialog: MutableState<Boolean>,
-    loading: MutableState<Boolean>,
-    saved: Boolean,
     picUrl: String,
-    ratio: Float?,
-    toSave: () -> Unit
+    ratio: Float?
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    //加载完成bitmap
+    val loadedPic: MutableState<Bitmap?> = remember(picUrl) {
+        mutableStateOf(null)
+    }
+    //加载成功
+    var success by remember(picUrl) {
+        mutableStateOf(false)
+    }
+    //文件名
+    val displayName = getFileName(picUrl)
+    val path = MediaDownloadHelper.getSaveDir(isVideo = false)
+    val file = File("$path/$displayName")
+    //是否已存在
+    var saved by remember {
+        mutableStateOf(false)
+    }
+    if (file.exists()) {
+        saved = true
+    }
+
     //手势操作
     var scale by remember { mutableFloatStateOf(1f) }
     var rotation by remember { mutableFloatStateOf(0f) }
@@ -335,6 +301,9 @@ private fun PreviewPictureDialog(
             rotation += rotationChange
             offset += offsetChange * scale
         }
+
+    //未加载提示
+    val unLoadToast = stringResource(R.string.wait_pic_load)
 
     AlertDialog(
         onDismissRequest = {
@@ -377,7 +346,28 @@ private fun PreviewPictureDialog(
                         }
                     )
                 ) {
-                    toSave()
+                    checkPermissions(context, permissions) {
+                        //已保存
+                        if (saved) {
+                            ToastUtil.short(
+                                getString(
+                                    R.string.pic_exist,
+                                    file.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                                )
+                            )
+                            return@checkPermissions
+                        }
+                        if (!success) {
+                            ToastUtil.short(unLoadToast)
+                        } else {
+                            MediaDownloadHelper(context).saveMedia(
+                                bitmap = loadedPic.value,
+                                displayName = displayName
+                            ) {
+                                saved = true
+                            }
+                        }
+                    }
                 }
             },
             onMainFabClick = {
@@ -391,14 +381,11 @@ private fun PreviewPictureDialog(
             modifier = Modifier.navigationBarsPadding()
         ) {
             //预览功能，手势操作
-            SubImage(
+            MainImage(
                 data = picUrl,
-                loading = loading,
-                contentScale = ContentScale.FillWidth,
                 ratio = ratio,
                 modifier = Modifier
                     .widthIn(max = Dimen.itemMaxWidth)
-                    .padding(horizontal = Dimen.largePadding)
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale,
@@ -409,7 +396,11 @@ private fun PreviewPictureDialog(
                     .transformable(state = transformableState)
                     //置于最上层
                     .zIndex(99f)
-            )
+            ) {
+                //获取本地原图缓存
+                loadedPic.value = (it.image as BitmapImage).bitmap
+                success = true
+            }
         }
     }
 

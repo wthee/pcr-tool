@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -805,11 +804,9 @@ fun CharacterTag(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
-    val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         CircularProgressCompose(progress = 0.31f)
         LinearProgressCompose(progress = 0.31f)
