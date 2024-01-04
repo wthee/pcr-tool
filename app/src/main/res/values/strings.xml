@@ -484,11 +484,11 @@
     <string name="skill_status_1601">隐匿状态</string>
     <string name="skill_status_1700">魔法防御减少状态</string>
     <string name="skill_status_721_6107">龙之眼状态</string>
-    <string name="skill_status_1300">魔法攻击</string>
     <string name="skill_status_1800">多目标状态</string>
     <string name="skill_status_1900">护盾展开</string>
-    <string name="skill_status_2001">魔法攻击</string>
     <string name="skill_status_3137">界雷</string>
+    <string name="skill_status_physical_atk">物理攻击</string>
+    <string name="skill_status_magic_atk">魔法攻击</string>
 
     <!--技能目标类型相关-->
     <string name="skill_target_none">目标</string>
@@ -636,6 +636,7 @@
     <string name="skill_action_if_alone_not">%s多于一名时，使用动作(%d)</string>
     <string name="skill_action_if_hp_below">%s的HP在 [%d%%] 以下时，使用动作(%d)</string>
     <string name="skill_action_if_hp_above">%s的HP在 [%d%%] 以上时，使用动作(%d)</string>
+    <string name="skill_action_if_unit_atk_type">%s是 [%s] 对象时，使用动作(%d)</string>
     <string name="skill_action_random_1">随机：[%d%%] 的概率使用动作(%d)，否则使用动作(%d)</string>
     <string name="skill_action_random_2">随机：[%d%%] 的概率使用动作(%d)</string>
     <string name="skill_action_type_desc_24">复活%s，并回复其 [%d%%]HP</string>
