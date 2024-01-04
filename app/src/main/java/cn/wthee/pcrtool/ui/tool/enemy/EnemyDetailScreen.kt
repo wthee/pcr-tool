@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,12 +34,11 @@ import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
-import cn.wthee.pcrtool.ui.components.MainButton
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.skill.loop.SkillLoopScreen
@@ -202,41 +202,26 @@ fun EnemyDetailContent(
     }
 
     //描述文本弹窗
-    if (openDialog.value) {
-        AlertDialog(
-            title = {
-                Column(
-                    modifier = Modifier
-                        .heightIn(max = ScreenUtil.getHeight().px2dp * RATIO_GOLDEN)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    MainContentText(
-                        text = enemyData.getDesc(),
-                        textAlign = TextAlign.Start,
-                        selectable = true
-                    )
-                }
-            },
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            confirmButton = {
-                //复制
-                MainButton(text = stringResource(R.string.copy_all)) {
-                    copyText(context, enemyData.getDesc())
-                    openDialog.value = false
-                }
-            },
-            dismissButton = {
-                //取消
-                SubButton(
-                    text = stringResource(id = R.string.cancel)
-                ) {
-                    openDialog.value = false
-                }
-            })
-    }
-
+    MainAlertDialog(
+        modifier = Modifier
+            .heightIn(max = ScreenUtil.getHeight().px2dp * RATIO_GOLDEN),
+        openDialog = openDialog,
+        title = stringResource(id = R.string.description),
+        content = {
+            SelectionContainer(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = enemyData.getDesc()
+                )
+            }
+        },
+        confirmText = stringResource(R.string.copy_all),
+        dismissText = stringResource(R.string.cancel),
+        onConfirm = {
+            copyText(context, enemyData.getDesc())
+        }
+    )
 }
 
 

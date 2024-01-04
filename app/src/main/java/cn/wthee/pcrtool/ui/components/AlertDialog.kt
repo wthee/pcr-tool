@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
@@ -21,27 +22,44 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  */
 @Composable
 fun MainAlertDialog(
+    modifier: Modifier = Modifier,
     openDialog: MutableState<Boolean>,
-    icon: MainIconType,
-    title: String,
-    text: String,
+    icon: MainIconType? = null,
+    title: String? = null,
+    text: String? = null,
+    content: (@Composable () -> Unit)? = null,
     confirmText: String = stringResource(R.string.confirm),
     dismissText: String = stringResource(id = R.string.cancel),
+    showButton: Boolean = true,
     onDismissRequest: (() -> Unit)? = null,
-    onConfirm: () -> Unit,
+    onConfirm: (() -> Unit)? = null,
 ) {
     if (openDialog.value) {
         val context = LocalContext.current
 
         AlertDialog(
-            icon = {
-                MainIcon(data = icon, wrapSize = true)
+            modifier = modifier,
+            icon = if (icon == null) {
+                null
+            } else {
+                {
+                    MainIcon(data = icon, wrapSize = true)
+                }
             },
-            title = {
-                Text(text = title)
+            title = if (title == null) {
+                null
+            } else {
+                {
+                    Text(text = title)
+                }
             },
             text = {
-                Text(text = text)
+                if (text != null) {
+                    Text(text = text)
+                }
+                if (content != null) {
+                    content()
+                }
             },
             onDismissRequest = {
                 if (onDismissRequest != null) {
@@ -50,27 +68,33 @@ fun MainAlertDialog(
                 openDialog.value = false
             },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        VibrateUtil(context).single()
-                        onConfirm()
-                        openDialog.value = false
+                if (showButton) {
+                    TextButton(
+                        onClick = {
+                            VibrateUtil(context).single()
+                            if (onConfirm != null) {
+                                onConfirm()
+                            }
+                            openDialog.value = false
+                        }
+                    ) {
+                        Text(text = confirmText)
                     }
-                ) {
-                    Text(text = confirmText)
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = {
-                        VibrateUtil(context).single()
-                        if (onDismissRequest != null) {
-                            onDismissRequest()
+                if (showButton) {
+                    TextButton(
+                        onClick = {
+                            VibrateUtil(context).single()
+                            if (onDismissRequest != null) {
+                                onDismissRequest()
+                            }
+                            openDialog.value = false
                         }
-                        openDialog.value = false
+                    ) {
+                        Text(text = dismissText)
                     }
-                ) {
-                    Text(text = dismissText)
                 }
             }
         )
