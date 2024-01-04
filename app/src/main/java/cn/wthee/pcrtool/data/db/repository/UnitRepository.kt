@@ -475,21 +475,26 @@ class UnitRepository @Inject constructor(
     }
 
     /**
+     *  校验是否为多角色卡
+     */
+    suspend fun getMultiIds(unitId: Int): ArrayList<Int> = try {
+        val ids = arrayListOf(unitId)
+        val multiIds = unitDao.getMultiIds(unitId)
+        if (multiIds.isNotEmpty()) {
+            ids.addAll(multiIds)
+        }
+        ids
+    } catch (_: Exception) {
+        arrayListOf()
+    }
+
+    /**
      * 获取角色小屋对话
      *
      * @param unitId 角色编号
      */
     suspend fun getRoomComments(unitId: Int): ArrayList<RoomCommentData> {
-        //校验是否为多角色卡
-        val ids = arrayListOf(unitId)
-        try {
-            val multiIds = unitDao.getMultiIds(unitId)
-            if (multiIds.isNotEmpty()) {
-                ids.addAll(multiIds)
-            }
-        } catch (_: Exception) {
-
-        }
+        val ids = getMultiIds(unitId)
         val commentList = arrayListOf<RoomCommentData>()
         ids.forEach {
             val data = unitDao.getRoomComments(it)

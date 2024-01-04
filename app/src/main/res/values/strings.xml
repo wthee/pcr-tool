@@ -237,6 +237,7 @@
     <string name="search_unique_equip">装备名/角色名</string>
     <string name="character_detail">角色详情</string>
     <string name="tool_load_comic">过场漫画</string>
+    <string name="description">描述</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>
@@ -838,5 +839,8 @@
 
     <string name="title_download_file">正在下载</string>
     <string name="download_file_notice">文件下载通知</string>
+    <string name="preview_spine_type">预览类型</string>
+    <string name="preview_spine_battle">战斗</string>
+    <string name="preview_spine_room">小屋</string>
 
 </resources>

@@ -79,6 +79,8 @@ data class CharacterDetailUiState(
     val loadingState: LoadingState = LoadingState.Loading,
     //页面数量
     val pageCount: Int = 0,
+    //多人卡id
+    val idList: ArrayList<Int> = arrayListOf()
 )
 
 
@@ -115,6 +117,7 @@ class CharacterDetailViewModel @Inject constructor(
             getCharacterBasicInfo(unitId)
             getMaxRankAndRarity(unitId)
             getLoveState(unitId)
+            getMultiIds(unitId)
         }
     }
 
@@ -236,6 +239,18 @@ class CharacterDetailViewModel @Inject constructor(
             val list = FilterCharacter.getStarIdList()
             _uiState.update {
                 it.copy(loved = list.contains(unitId))
+            }
+        }
+    }
+
+    /**
+     * 获取角色多人id
+     */
+    private fun getMultiIds(unitId: Int) {
+        viewModelScope.launch {
+            val list = unitRepository.getMultiIds(unitId)
+            _uiState.update {
+                it.copy(idList = list)
             }
         }
     }

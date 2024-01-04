@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,6 +77,7 @@ import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -385,6 +387,7 @@ private fun CharacterDetailContent(
                             ToolsContent(
                                 unitId = uiState.unitId,
                                 cutinId = uiState.cutinId,
+                                idList = uiState.idList,
                                 toCharacterBasicInfo = actions.toCharacterBasicInfo,
                                 toAllPics = actions.toAllPics,
                                 toCharacterVideo = actions.toCharacterVideo
@@ -528,10 +531,14 @@ private fun CharacterCard(
 private fun ToolsContent(
     unitId: Int,
     cutinId: Int,
+    idList: ArrayList<Int>,
     toCharacterBasicInfo: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
     toCharacterVideo: (Int, Int) -> Unit,
 ) {
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
 
     FlowRow(
         modifier = Modifier
@@ -559,8 +566,13 @@ private fun ToolsContent(
             icon = MainIconType.PREVIEW_UNIT_SPINE,
             text = stringResource(id = R.string.spine_preview)
         ) {
-            val id = if (cutinId != 0) cutinId else unitId
-            BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+            if (idList.size > 1) {
+                //弹窗选择
+                openDialog.value = true
+            } else {
+                val id = if (cutinId != 0) cutinId else unitId
+                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+            }
         }
         //动态卡面
         IconTextButton(
@@ -572,6 +584,66 @@ private fun ToolsContent(
         }
     }
 
+    if (openDialog.value) {
+        PreviewSpineTypeSelectDialog(openDialog = openDialog, idList = idList)
+    }
+}
+
+/**
+ * 多人角色预览模型类型选择弹窗
+ */
+@Composable
+private fun PreviewSpineTypeSelectDialog(
+    openDialog: MutableState<Boolean>,
+    idList: List<Int>
+) {
+    MainAlertDialog(
+        showButton = false,
+        openDialog = openDialog,
+        icon = MainIconType.PREVIEW_UNIT_SPINE,
+        title = stringResource(id = R.string.preview_spine_type),
+        content = {
+            Column {
+                //战斗
+                Row(
+                    modifier = Modifier.padding(top = Dimen.largePadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.preview_spine_battle),
+                        modifier = Modifier.padding(end = Dimen.largePadding)
+                    )
+                    MainIcon(
+                        data = ImageRequestHelper.getInstance().getMaxIconUrl(idList[0]),
+                        onClick = {
+                            BrowserUtil.open(Constants.PREVIEW_UNIT_URL + idList[0] + "&type=1")
+                        }
+                    )
+                }
+
+                //小屋
+                Row(
+                    modifier = Modifier.padding(top = Dimen.largePadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.preview_spine_room),
+                        modifier = Modifier.padding(end = Dimen.largePadding)
+                    )
+                    idList.subList(1, idList.size).forEach {
+                        MainIcon(
+                            data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
+                            onClick = {
+                                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + it + "&type=2")
+                            },
+                            modifier = Modifier.padding(end = Dimen.largePadding)
+                        )
+                    }
+                }
+
+            }
+        }
+    )
 }
 
 /**
@@ -1078,6 +1150,7 @@ private fun ToolsContentPreview() {
         ToolsContent(
             unitId = 100101,
             cutinId = 0,
+            idList = arrayListOf(),
             toCharacterBasicInfo = {},
             toAllPics = { _, _ -> },
             toCharacterVideo = { _, _ -> },
