@@ -9,8 +9,6 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppTweetDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
-import retrofit2.HttpException
-import java.io.IOException
 
 /**
  * 推特加载
@@ -67,9 +65,7 @@ class TweetRemoteMediator(
             return MediatorResult.Success(
                 endOfPaginationReached = isEndOfList
             )
-        } catch (e: IOException) {
-            return MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
     }

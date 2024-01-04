@@ -9,14 +9,15 @@ import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.utils.GsonUtil
-import com.google.gson.Gson
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -41,7 +42,7 @@ class CharacterListFilterViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val filter: FilterCharacter? = GsonUtil.fromJson(savedStateHandle[NavRoute.FILTER_DATA])
+    private val filter: FilterCharacter? = JsonUtil.fromJson(savedStateHandle[NavRoute.FILTER_DATA])
 
     private val _uiState = MutableStateFlow(CharacterListFilterUiState())
     val uiState: StateFlow<CharacterListFilterUiState> = _uiState.asStateFlow()
@@ -98,7 +99,7 @@ class CharacterListFilterViewModel @Inject constructor(
     fun updateFilter(filter: FilterCharacter) {
         setData(
             NavRoute.FILTER_DATA,
-            Gson().toJson(filter),
+            Json.encodeToString(filter),
             prev = true
         )
         _uiState.update {

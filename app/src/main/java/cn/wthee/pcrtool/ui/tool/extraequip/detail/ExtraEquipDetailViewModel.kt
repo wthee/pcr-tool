@@ -15,14 +15,15 @@ import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.utils.GsonUtil
-import com.google.gson.Gson
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -159,7 +160,7 @@ class ExtraEquipDetailViewModel @Inject constructor(
             if (equipId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
                     val list =
-                        GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_EXTRA_EQUIP])
+                        JsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_EXTRA_EQUIP])
                     if (list.contains(equipId)) {
                         list.remove(equipId)
                         _uiState.update {
@@ -175,7 +176,7 @@ class ExtraEquipDetailViewModel @Inject constructor(
                             )
                         }
                     }
-                    preferences[MainPreferencesKeys.SP_STAR_EXTRA_EQUIP] = Gson().toJson(list)
+                    preferences[MainPreferencesKeys.SP_STAR_EXTRA_EQUIP] = Json.encodeToString(list)
                 }
             }
 

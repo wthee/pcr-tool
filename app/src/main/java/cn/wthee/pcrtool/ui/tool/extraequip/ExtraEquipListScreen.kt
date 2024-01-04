@@ -42,8 +42,9 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * ex装备列表
@@ -163,7 +164,7 @@ private fun ExtraEquipListFabContent(
         text = "$count"
     ) {
         filter?.let {
-            toFilterExtraEquip(Gson().toJson(filter))
+            toFilterExtraEquip(Json.encodeToString(filter))
         }
     }
 }

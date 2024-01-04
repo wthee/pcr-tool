@@ -18,15 +18,16 @@ import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.updateLoadingState
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -162,7 +163,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
             if (equipId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
                     val list =
-                        GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_EQUIP])
+                        JsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_EQUIP])
                     if (list.contains(equipId)) {
                         list.remove(equipId)
                         _uiState.update {
@@ -178,7 +179,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
                             )
                         }
                     }
-                    preferences[MainPreferencesKeys.SP_STAR_EQUIP] = Gson().toJson(list)
+                    preferences[MainPreferencesKeys.SP_STAR_EQUIP] = Json.encodeToString(list)
                 }
             }
 

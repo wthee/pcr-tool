@@ -115,7 +115,6 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("androidx.preference:preference-ktx:1.2.1")
 
     //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
@@ -159,7 +158,6 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:${rootProject.extra["ktorVersion"]}")
     implementation("io.ktor:ktor-serialization-kotlinx-json:${rootProject.extra["ktorVersion"]}")
     implementation("io.ktor:ktor-client-android:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-client-logging:${rootProject.extra["ktorVersion"]}")
 
     //Lifecycle
     val lifecycleVersion = "2.6.2"
@@ -182,11 +180,6 @@ dependencies {
     val pagingVersion = "3.2.1"
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:$pagingVersion")
-
-    //Retrofit
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
     val roomVersion = "2.6.1"

@@ -73,8 +73,9 @@ import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
 import coil3.BitmapImage
 import coil3.annotation.ExperimentalCoilApi
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * 角色列表
@@ -219,7 +220,7 @@ private fun CharacterListFabContent(
         text = "$count"
     ) {
         filter?.let {
-            toFilterCharacter(Gson().toJson(filter))
+            toFilterCharacter(Json.encodeToString(filter))
         }
     }
 

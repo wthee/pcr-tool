@@ -8,8 +8,6 @@ import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppComicDatabase
-import retrofit2.HttpException
-import java.io.IOException
 
 /**
  * 漫画加载
@@ -56,9 +54,7 @@ class ComicRemoteMediator(
             return MediatorResult.Success(
                 endOfPaginationReached = isEndOfList
             )
-        } catch (e: IOException) {
-            return MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
     }

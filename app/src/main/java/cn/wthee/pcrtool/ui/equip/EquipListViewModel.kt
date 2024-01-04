@@ -12,16 +12,17 @@ import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -78,7 +79,7 @@ class EquipListViewModel @Inject constructor(
     fun initFilter() {
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
-            val filter: FilterEquip? = GsonUtil.fromJson(filterData)
+            val filter: FilterEquip? = JsonUtil.fromJson(filterData)
             val starIdList = FilterEquip.getStarIdList()
             val initFilter = filter ?: FilterEquip()
             _uiState.update {
@@ -120,7 +121,7 @@ class EquipListViewModel @Inject constructor(
     private fun updateFilter(filter: FilterEquip) {
         setData(
             NavRoute.FILTER_DATA,
-            Gson().toJson(filter)
+            Json.encodeToString(filter)
         )
         _uiState.update {
             it.copy(

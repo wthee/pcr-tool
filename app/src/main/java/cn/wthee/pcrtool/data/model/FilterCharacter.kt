@@ -4,13 +4,15 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.Serializable
 
 /**
  * 角色信息筛选
  *
  */
+@Serializable
 data class FilterCharacter(
     /**
      * 是否全部显示：0全部、1仅收藏
@@ -69,7 +71,7 @@ data class FilterCharacter(
          */
         suspend fun getStarIdList(): ArrayList<Int> {
             val data = MyApplication.context.dataStoreMain.data.first()
-            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
+            return JsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_CHARACTER])
         }
     }
 }

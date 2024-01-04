@@ -9,14 +9,15 @@ import cn.wthee.pcrtool.data.db.view.ExtraEquipCategoryData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.utils.GsonUtil
-import com.google.gson.Gson
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -40,7 +41,7 @@ class ExtraEquipListFilterViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val filter: FilterExtraEquipment? =
-        GsonUtil.fromJson(savedStateHandle[NavRoute.FILTER_DATA])
+        JsonUtil.fromJson(savedStateHandle[NavRoute.FILTER_DATA])
 
     private val _uiState = MutableStateFlow(ExtraEquipListFilterUiState())
     val uiState: StateFlow<ExtraEquipListFilterUiState> = _uiState.asStateFlow()
@@ -98,7 +99,7 @@ class ExtraEquipListFilterViewModel @Inject constructor(
     fun updateFilter(filter: FilterExtraEquipment) {
         setData(
             NavRoute.FILTER_DATA,
-            Gson().toJson(filter),
+            Json.encodeToString(filter),
             prev = true
         )
     }

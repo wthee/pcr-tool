@@ -3,9 +3,11 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class FilterEquip(
     var all: Boolean = true,
     var craft: Int = 1,
@@ -19,7 +21,7 @@ data class FilterEquip(
          */
         suspend fun getStarIdList(): ArrayList<Int> {
             val data = MyApplication.context.dataStoreMain.data.first()
-            return GsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_EQUIP])
+            return JsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_EQUIP])
         }
     }
 }

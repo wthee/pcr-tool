@@ -9,8 +9,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import cn.wthee.pcrtool.ui.components.DateRange
-import retrofit2.HttpException
-import java.io.IOException
 
 /**
  * 公告加载
@@ -68,9 +66,7 @@ class NewsRemoteMediator(
             return MediatorResult.Success(
                 endOfPaginationReached = isEndOfList
             )
-        } catch (e: IOException) {
-            return MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
     }

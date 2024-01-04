@@ -19,12 +19,11 @@ import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.intArrayList
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +32,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -348,7 +349,7 @@ class CharacterDetailViewModel @Inject constructor(
             if (unitId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
                     val list =
-                        GsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
+                        JsonUtil.toIntList(preferences[MainPreferencesKeys.SP_STAR_CHARACTER])
                     if (list.contains(unitId)) {
                         list.remove(unitId)
                         _uiState.update {
@@ -364,7 +365,7 @@ class CharacterDetailViewModel @Inject constructor(
                             )
                         }
                     }
-                    preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Gson().toJson(list)
+                    preferences[MainPreferencesKeys.SP_STAR_CHARACTER] = Json.encodeToString(list)
                 }
             }
 

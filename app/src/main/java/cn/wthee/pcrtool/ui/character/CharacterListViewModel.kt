@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,7 +70,7 @@ class CharacterListViewModel @Inject constructor(
     fun initFilter() {
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
-            val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
+            val filter: FilterCharacter? = JsonUtil.fromJson(filterData)
             val idList = unitRepository.getUnitIdList()
             val starIdList = FilterCharacter.getStarIdList().filter { starId ->
                 //筛选出当前区服版本下的收藏角色

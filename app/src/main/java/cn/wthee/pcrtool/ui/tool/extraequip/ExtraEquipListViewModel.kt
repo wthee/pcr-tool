@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,7 +67,7 @@ class ExtraEquipListViewModel @Inject constructor(
     fun initFilter() {
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
-            val filter: FilterExtraEquipment? = GsonUtil.fromJson(filterData)
+            val filter: FilterExtraEquipment? = JsonUtil.fromJson(filterData)
             val starIdList = FilterExtraEquipment.getStarIdList()
             val initFilter = filter ?: FilterExtraEquipment()
             _uiState.update {

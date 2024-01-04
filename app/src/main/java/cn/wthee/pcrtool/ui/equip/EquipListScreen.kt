@@ -64,8 +64,9 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.listJoinStr
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 /**
@@ -256,7 +257,7 @@ private fun EquipListFabContent(
         text = "$count"
     ) {
         filter?.let {
-            toFilterEquip(Gson().toJson(filter))
+            toFilterEquip(Json.encodeToString(filter))
         }
     }
 }
