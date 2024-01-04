@@ -122,7 +122,7 @@ fun PvpSearchCompose(
     val tabs = arrayListOf(
         TabData(tab = stringResource(id = R.string.character)),
         TabData(tab = stringResource(id = R.string.title_recently_used)),
-        TabData(tab = stringResource(id = R.string.title_love)),
+        TabData(tab = stringResource(id = R.string.title_favorite)),
         TabData(tab = stringResource(id = R.string.title_history)),
     )
     //动态调整 spanCount

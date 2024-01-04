@@ -101,10 +101,10 @@ private fun CharacterListFilterContent(
     filter.asc = sortAscIndex.intValue == 0
 
     //收藏筛选
-    val loveIndex = remember {
+    val favoriteIndex = remember {
         mutableIntStateOf(if (filter.all) 0 else 1)
     }
-    filter.all = loveIndex.intValue == 0
+    filter.all = favoriteIndex.intValue == 0
 
     //六星筛选
     val r6Index = remember {
@@ -145,7 +145,7 @@ private fun CharacterListFilterContent(
 
     //更新信息
     LaunchedEffect(
-        textState.value, sortTypeIndex.intValue, sortAscIndex.intValue, loveIndex.intValue,
+        textState.value, sortTypeIndex.intValue, sortAscIndex.intValue, favoriteIndex.intValue,
         r6Index.intValue, positionIndex.intValue, atkIndex.intValue, guildIndex.intValue,
         raceIndex.intValue, typeIndex.intValue
     ) {
@@ -232,16 +232,16 @@ private fun CharacterListFilterContent(
         )
         //收藏
         MainText(
-            text = stringResource(id = R.string.title_love),
+            text = stringResource(id = R.string.title_favorite),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val loveChipData = arrayListOf(
+        val favoriteChipData = arrayListOf(
             ChipData(stringResource(id = R.string.all)),
-            ChipData(stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.favorite)),
         )
         ChipGroup(
-            items = loveChipData,
-            selectIndex = loveIndex,
+            items = favoriteChipData,
+            selectIndex = favoriteIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //类型

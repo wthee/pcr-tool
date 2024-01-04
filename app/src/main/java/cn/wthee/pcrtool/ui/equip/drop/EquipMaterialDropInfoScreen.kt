@@ -48,11 +48,11 @@ fun EquipMaterialDropInfoScreen(
         fab = {
             //装备素材收藏
             MainSmallFab(
-                iconType = if (uiState.loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                text = if (uiState.loved) "" else stringResource(id = R.string.love_equip_material)
+                iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
+                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip_material)
             ) {
                 scope.launch {
-                    equipMaterialDropInfoViewModel.updateStarId()
+                    equipMaterialDropInfoViewModel.updateFavoriteId()
                 }
             }
         }
@@ -61,7 +61,7 @@ fun EquipMaterialDropInfoScreen(
             equipId = uiState.equipId,
             equipName = uiState.equipName,
             dropQuestList = uiState.dropQuestList,
-            loved = uiState.loved,
+            favorite = uiState.favorite,
             randomDropList = uiState.randomDropList,
             randomDropLoadingState = uiState.randomDropLoadingState,
         )
@@ -74,7 +74,7 @@ private fun EquipMaterialDropInfoContent(
     equipId: Int?,
     equipName: String,
     dropQuestList: List<QuestDetail>?,
-    loved: Boolean,
+    favorite: Boolean,
     randomDropList: List<RandomEquipDropArea>?,
     randomDropLoadingState: LoadingState
 ) {
@@ -87,7 +87,7 @@ private fun EquipMaterialDropInfoContent(
             text = equipName,
             modifier = Modifier
                 .padding(top = Dimen.largePadding),
-            color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            color = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             selectable = true
         )
         //掉落信息
@@ -142,7 +142,7 @@ private fun EquipMaterialDropInfoContentPreview() {
             equipId = 1,
             equipName = stringResource(id = R.string.debug_long_text),
             dropQuestList = arrayListOf(QuestDetail(questId = 1)),
-            loved = true,
+            favorite = true,
             randomDropList = null,
             randomDropLoadingState = LoadingState.Success
         )

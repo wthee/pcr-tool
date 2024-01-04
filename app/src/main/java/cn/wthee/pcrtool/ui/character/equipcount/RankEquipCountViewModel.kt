@@ -30,7 +30,7 @@ data class RankEquipCountUiState(
     val unitId: Int = 0,
     val isAllUnit: Boolean = false,
     //收藏信息
-    val starIdList: List<Int> = emptyList(),
+    val favoriteIdList: List<Int> = emptyList(),
     val loadingState: LoadingState = LoadingState.Loading,
     val openDialog: Boolean = false
 )
@@ -105,11 +105,11 @@ class RankEquipCountViewModel @Inject constructor(
     /**
      * 获取收藏列表
      */
-    fun reloadStarList() {
+    fun reloadFavoriteList() {
         viewModelScope.launch {
-            val list = FilterEquip.getStarIdList()
+            val list = FilterEquip.getFavoriteIdList()
             _uiState.update {
-                it.copy(starIdList = list)
+                it.copy(favoriteIdList = list)
             }
         }
     }

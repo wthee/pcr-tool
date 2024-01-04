@@ -65,17 +65,17 @@ fun ExtraEquipDetail(
 
     //初始收藏信息
     LifecycleEffect(Lifecycle.Event.ON_RESUME) {
-        extraEquipDetailViewModel.reloadStarList()
+        extraEquipDetailViewModel.reloadFavoriteList()
     }
 
     MainScaffold(
         fab = {
             //装备收藏
             MainSmallFab(
-                iconType = if (uiState.loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
             ) {
                 scope.launch {
-                    extraEquipDetailViewModel.updateStarId()
+                    extraEquipDetailViewModel.updateFavoriteId()
                 }
             }
 
@@ -106,7 +106,7 @@ fun ExtraEquipDetail(
                     ) {
                         //基本信息
                         if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
-                            ExtraEquipBasicInfo(extraEquipmentData, uiState.loved)
+                            ExtraEquipBasicInfo(extraEquipmentData, uiState.favorite)
                         }
                         //被动技能
                         uiState.skillList?.let { ExtraEquipSkill(it) }
@@ -126,7 +126,7 @@ fun ExtraEquipDetail(
 @Composable
 private fun ExtraEquipBasicInfo(
     extraEquipmentData: ExtraEquipmentData,
-    loved: Boolean
+    favorite: Boolean
 ) {
     if (BuildConfig.DEBUG) {
         Subtitle1(
@@ -135,7 +135,7 @@ private fun ExtraEquipBasicInfo(
     }
     MainText(
         text = extraEquipmentData.equipmentName,
-        color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+        color = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
         selectable = true
     )
     Row(

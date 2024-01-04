@@ -88,10 +88,10 @@ private fun EquipListFilterContent(
     filter.craft = craftIndex.intValue
 
     //收藏筛选
-    val loveIndex = remember {
+    val favoriteIndex = remember {
         mutableIntStateOf(if (filter.all) 0 else 1)
     }
-    filter.all = loveIndex.intValue == 0
+    filter.all = favoriteIndex.intValue == 0
     //装备类型
     val typeIndex = remember {
         mutableIntStateOf(filter.colorType)
@@ -100,7 +100,7 @@ private fun EquipListFilterContent(
 
     //更新信息
     LaunchedEffect(
-        textState.value, craftIndex.intValue, loveIndex.intValue, typeIndex.intValue
+        textState.value, craftIndex.intValue, favoriteIndex.intValue, typeIndex.intValue
     ) {
         updateFilter(filter)
     }
@@ -165,16 +165,16 @@ private fun EquipListFilterContent(
         )
         //收藏
         MainText(
-            text = stringResource(id = R.string.title_love),
+            text = stringResource(id = R.string.title_favorite),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val loveChipData = arrayListOf(
+        val favoriteChipData = arrayListOf(
             ChipData(stringResource(id = R.string.all)),
-            ChipData(stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.favorite)),
         )
         ChipGroup(
-            loveChipData,
-            loveIndex,
+            favoriteChipData,
+            favoriteIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //品级

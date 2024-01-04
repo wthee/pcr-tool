@@ -131,7 +131,7 @@ fun EquipListScreen(
                 EquipListContent(
                     equipList = uiState.equipList!!,
                     scrollState = scrollState,
-                    starIdList = uiState.starIdList,
+                    favoriteIdList = uiState.favoriteIdList,
                     toEquipDetail = toEquipDetail,
                     toEquipMaterial = toEquipMaterial,
                     searchEquipMode = uiState.searchEquipMode,
@@ -266,7 +266,7 @@ private fun EquipListFabContent(
 private fun EquipListContent(
     equipList: List<EquipmentBasicInfo>,
     scrollState: LazyListState,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     searchEquipMode: Boolean,
     searchEquipIdList: List<Int>,
     toEquipDetail: (Int) -> Unit,
@@ -315,7 +315,7 @@ private fun EquipListContent(
             ) {
                 equipGroupData.equipIdList.forEach { equip ->
                     EquipItem(
-                        starIdList = starIdList,
+                        favoriteIdList = favoriteIdList,
                         equip = equip,
                         toEquipDetail = toEquipDetail,
                         toEquipMaterial = toEquipMaterial,
@@ -339,7 +339,7 @@ private fun EquipListContent(
  */
 @Composable
 private fun EquipItem(
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     equip: EquipmentBasicInfo,
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int, String) -> Unit,
@@ -395,7 +395,7 @@ private fun EquipItem(
                 maxLines = 2,
                 selectable = true,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
-                color = if (starIdList.contains(equip.equipmentId)) {
+                color = if (favoriteIdList.contains(equip.equipmentId)) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.onSurface
@@ -436,7 +436,7 @@ private fun EquipListContentPreview() {
                 EquipmentBasicInfo(equipmentId = 2, equipmentName = name, promotionLevel = 2),
             ),
             scrollState = rememberLazyListState(),
-            starIdList = arrayListOf(1),
+            favoriteIdList = arrayListOf(1),
             toEquipDetail = { },
             toEquipMaterial = { _, _ -> },
             searchEquipMode = false,

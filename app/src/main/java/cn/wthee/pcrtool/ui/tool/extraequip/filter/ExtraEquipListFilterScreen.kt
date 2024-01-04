@@ -89,10 +89,10 @@ private fun ExtraEquipListFilterContent(
     }
     filter.flag = flagIndex.intValue
     //收藏筛选
-    val loveIndex = remember {
+    val favoriteIndex = remember {
         mutableIntStateOf(if (filter.all) 0 else 1)
     }
-    filter.all = loveIndex.intValue == 0
+    filter.all = favoriteIndex.intValue == 0
     //装备稀有度
     val rarityIndex = remember {
         mutableIntStateOf(filter.rarity)
@@ -106,7 +106,7 @@ private fun ExtraEquipListFilterContent(
 
     //更新信息
     LaunchedEffect(
-        textState.value, rarityIndex.intValue, loveIndex.intValue, categoryIndex.intValue
+        textState.value, rarityIndex.intValue, favoriteIndex.intValue, categoryIndex.intValue
     ) {
         updateFilter(filter)
     }
@@ -172,16 +172,16 @@ private fun ExtraEquipListFilterContent(
         )
         //收藏
         MainText(
-            text = stringResource(id = R.string.title_love),
+            text = stringResource(id = R.string.title_favorite),
             modifier = Modifier.padding(top = Dimen.largePadding)
         )
-        val loveChipData = arrayListOf(
+        val favoriteChipData = arrayListOf(
             ChipData(stringResource(id = R.string.all)),
-            ChipData(stringResource(id = R.string.loved)),
+            ChipData(stringResource(id = R.string.favorite)),
         )
         ChipGroup(
-            loveChipData,
-            loveIndex,
+            favoriteChipData,
+            favoriteIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //稀有度

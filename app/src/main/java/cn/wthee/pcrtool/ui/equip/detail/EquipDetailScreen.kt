@@ -43,18 +43,18 @@ fun EquipDetailScreen(
 
     //初始收藏信息
     LifecycleEffect(Lifecycle.Event.ON_RESUME) {
-        equipDetailViewModel.reloadStarList()
+        equipDetailViewModel.reloadFavoriteList()
     }
 
     MainScaffold(
         fab = {
             //装备收藏
             MainSmallFab(
-                iconType = if (uiState.loved) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                text = if (uiState.loved) "" else stringResource(id = R.string.love_equip)
+                iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
+                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip)
             ) {
                 scope.launch {
-                    equipDetailViewModel.updateStarId()
+                    equipDetailViewModel.updateFavoriteId()
                 }
             }
 
@@ -75,7 +75,7 @@ fun EquipDetailScreen(
                     EquipDetailContent(
                         equipId = equipId,
                         equipMaxData = it,
-                        loved = uiState.loved
+                        favorite = uiState.favorite
                     )
                 }
             }
@@ -84,7 +84,7 @@ fun EquipDetailScreen(
             StateBox(stateType = uiState.materialLoadingState) {
                 EquipMaterialListContent(
                     materialList = uiState.materialList,
-                    starIdList = uiState.starIdList,
+                    favoriteIdList = uiState.favoriteIdList,
                     toEquipMaterial = toEquipMaterial
                 )
             }
@@ -97,13 +97,13 @@ fun EquipDetailScreen(
 private fun EquipDetailContent(
     equipId: Int,
     equipMaxData: EquipmentMaxData,
-    loved: Boolean,
+    favorite: Boolean,
 ) {
     Column {
         if (equipId != UNKNOWN_EQUIP_ID) {
             MainText(
                 text = equipMaxData.equipmentName,
-                color = if (loved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                color = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(top = Dimen.largePadding)
                     .align(Alignment.CenterHorizontally),
@@ -140,7 +140,7 @@ private fun EquipDetailContent(
 @Composable
 private fun EquipMaterialListContent(
     materialList: List<EquipmentMaterial>,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     toEquipMaterial: (Int, String) -> Unit,
 ) {
 
@@ -154,7 +154,7 @@ private fun EquipMaterialListContent(
         //装备合成素材
         VerticalGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.largePadding) {
             materialList.forEach { material ->
-                val loved = starIdList.contains(material.id)
+                val favorite = favoriteIdList.contains(material.id)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -170,7 +170,7 @@ private fun EquipMaterialListContent(
                         toEquipMaterial(material.id, material.name)
                     }
                     SelectText(
-                        selected = loved,
+                        selected = favorite,
                         text = material.count.toString()
                     )
                 }
@@ -187,7 +187,7 @@ private fun EquipDetailPreview() {
         EquipDetailContent(
             equipId = 0,
             equipMaxData = EquipmentMaxData(1001, "?", "", "?", 1, attr = Attr().random()),
-            loved = true
+            favorite = true
         )
     }
 }
@@ -198,7 +198,7 @@ private fun EquipmentMaterialPreview() {
     PreviewLayout {
         EquipMaterialListContent(
             materialList = arrayListOf(EquipmentMaterial(id = 1)),
-            starIdList = arrayListOf(1),
+            favoriteIdList = arrayListOf(1),
             toEquipMaterial = { _, _ -> }
         )
     }

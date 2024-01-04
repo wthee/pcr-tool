@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraTravelData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.CommonTitleContentText
@@ -68,7 +69,12 @@ fun ExtraTravelListScreen(
             }
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(
+            stateType = uiState.loadingState,
+            errorContent = {
+                CenterTipText(text = stringResource(R.string.not_installed))
+            }
+        ) {
             uiState.areaList?.let { areaList ->
                 LazyColumn(state = scrollState) {
                     items(areaList) {

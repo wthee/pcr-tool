@@ -19,7 +19,7 @@ data class FilterEquip(
         /**
          * 获取装备收藏列表
          */
-        suspend fun getStarIdList(): ArrayList<Int> {
+        suspend fun getFavoriteIdList(): ArrayList<Int> {
             val data = MyApplication.context.dataStoreMain.data.first()
             return JsonUtil.toIntList(data[MainPreferencesKeys.SP_STAR_EQUIP])
         }

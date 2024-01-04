@@ -166,12 +166,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 未收藏
      */
-    LOVE_LINE(Icons.Rounded.FavoriteBorder),
+    FAVORITE_LINE(Icons.Rounded.FavoriteBorder),
 
     /**
      * 收藏
      */
-    LOVE_FILL(Icons.Rounded.Favorite),
+    FAVORITE_FILL(Icons.Rounded.Favorite),
 
     /**
      * 角色介绍

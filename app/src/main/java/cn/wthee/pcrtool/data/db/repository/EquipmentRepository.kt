@@ -37,9 +37,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             filterList
         } else {
             //筛选收藏的
-            val starIdList = FilterEquip.getStarIdList()
+            val favoriteIdList = FilterEquip.getFavoriteIdList()
             filterList.filter {
-                starIdList.contains(it.equipmentId)
+                favoriteIdList.contains(it.equipmentId)
             }
         }
     } catch (e: Exception) {

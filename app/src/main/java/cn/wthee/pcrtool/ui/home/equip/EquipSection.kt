@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.spanCount
-import kotlin.math.max
 
 
 /**
@@ -32,7 +31,7 @@ fun EquipSection(
     val id = OverviewType.EQUIP.id
     val uiState by equipSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val equipSpanCount = max(1, Dimen.homeIconItemWidth.spanCount)
+    val equipSpanCount = Dimen.homeIconItemWidth.spanCount
 
     LaunchedEffect(equipSpanCount) {
         equipSectionViewModel.loadData(equipSpanCount)

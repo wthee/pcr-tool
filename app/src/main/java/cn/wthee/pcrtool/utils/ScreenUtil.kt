@@ -50,7 +50,7 @@ object ScreenUtil {
  */
 val Dp.spanCount: Int
     @Composable
-    get() = max(1, LocalView.current.width / this.value.dp2px)
+    get() = LocalView.current.width / this.value.dp2px
 
 /**
  * 计算 spanCount

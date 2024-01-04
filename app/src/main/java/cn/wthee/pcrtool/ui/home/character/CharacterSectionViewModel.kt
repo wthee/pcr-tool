@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,6 +37,7 @@ class CharacterSectionViewModel @Inject constructor(
     val uiState: StateFlow<CharacterSectionUiState> = _uiState.asStateFlow()
 
     init {
+        //初始加载占位
         if (_uiState.value.characterList == null) {
             _uiState.update {
                 it.copy(
@@ -72,17 +72,14 @@ class CharacterSectionViewModel @Inject constructor(
      */
     private fun getCharacterInfoList() {
         viewModelScope.launch {
-            try {
-                val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
+            val filterList = unitRepository.getCharacterInfoList(FilterCharacter(), 50)
+            filterList?.let {
                 _uiState.update {
                     it.copy(
-                        characterList = filterList?.subList(0, 10)
+                        characterList = filterList.subList(0, 10)
                     )
                 }
-            } catch (e: Exception) {
-                LogReportUtil.upload(e, "getCharacterInfoList")
             }
-
         }
     }
 

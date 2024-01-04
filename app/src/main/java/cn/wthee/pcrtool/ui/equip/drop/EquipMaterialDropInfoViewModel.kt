@@ -44,11 +44,11 @@ data class EquipMaterialDetailUiState(
     //素材列表
     val materialList: List<EquipmentMaterial> = emptyList(),
     //收藏信息
-    val starIdList: List<Int> = emptyList(),
+    val favoriteIdList: List<Int> = emptyList(),
     //适用角色
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
-    val loved: Boolean = false,
+    val favorite: Boolean = false,
     val loadingState: LoadingState = LoadingState.Loading,
     val randomDropLoadingState: LoadingState = LoadingState.Loading,
     //额外掉落
@@ -80,7 +80,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
                 )
             }
             getDropInfo(equipId)
-            getLoveState(equipId)
+            getFavoriteState(equipId)
             getEquipArea(equipId)
         }
     }
@@ -112,13 +112,13 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
     /**
      * 获取收藏列表
      */
-    private fun getLoveState(equipId: Int) {
+    private fun getFavoriteState(equipId: Int) {
         viewModelScope.launch {
-            val list = FilterEquip.getStarIdList()
+            val list = FilterEquip.getFavoriteIdList()
             _uiState.update {
                 it.copy(
-                    loved = list.contains(equipId),
-                    starIdList = list
+                    favorite = list.contains(equipId),
+                    favoriteIdList = list
                 )
             }
         }
@@ -158,7 +158,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
     /**
      * 更新收藏id
      */
-    fun updateStarId() {
+    fun updateFavoriteId() {
         viewModelScope.launch {
             if (equipId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
@@ -168,14 +168,14 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
                         list.remove(equipId)
                         _uiState.update {
                             it.copy(
-                                loved = false
+                                favorite = false
                             )
                         }
                     } else {
                         list.add(equipId)
                         _uiState.update {
                             it.copy(
-                                loved = true
+                                favorite = true
                             )
                         }
                     }

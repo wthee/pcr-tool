@@ -28,7 +28,7 @@ data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
     val filter: FilterCharacter? = null,
     //收藏的角色编号
-    val starIdList: List<Int> = arrayListOf(),
+    val favoriteIdList: List<Int> = arrayListOf(),
     val loadingState: LoadingState = LoadingState.Loading,
     val openDialog: Boolean = false
 )
@@ -72,10 +72,10 @@ class CharacterListViewModel @Inject constructor(
             val filterData = getData<String>(NavRoute.FILTER_DATA)
             val filter: FilterCharacter? = JsonUtil.fromJson(filterData)
             val idList = unitRepository.getUnitIdList()
-            val starIdList = FilterCharacter.getStarIdList().filter { starId ->
+            val favoriteIdList = FilterCharacter.getFavoriteIdList().filter { id ->
                 //筛选出当前区服版本下的收藏角色
                 idList.find {
-                    it == starId
+                    it == id
                 } != null
             }
 
@@ -83,7 +83,7 @@ class CharacterListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    starIdList = starIdList
+                    favoriteIdList = favoriteIdList
                 )
             }
 

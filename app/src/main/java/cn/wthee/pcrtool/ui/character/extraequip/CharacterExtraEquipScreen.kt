@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
@@ -35,7 +36,10 @@ fun CharacterExtraEquipScreen(
 
     MainScaffold {
         StateBox(
-            stateType = uiState.loadingState
+            stateType = uiState.loadingState,
+            errorContent = {
+                CenterTipText(text = stringResource(R.string.not_installed))
+            }
         ) {
             CharacterExtraEquipContent(
                 equipList = uiState.extraEquipList,

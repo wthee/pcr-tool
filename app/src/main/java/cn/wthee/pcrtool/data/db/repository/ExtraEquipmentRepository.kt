@@ -36,9 +36,9 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
             filterList
         } else {
             //筛选收藏的
-            val starIdList = FilterExtraEquipment.getStarIdList()
+            val favoriteIdList = FilterExtraEquipment.getFavoriteIdList()
             filterList.filter {
-                starIdList.contains(it.equipmentId)
+                favoriteIdList.contains(it.equipmentId)
             }
         }
     } catch (_: Exception) {

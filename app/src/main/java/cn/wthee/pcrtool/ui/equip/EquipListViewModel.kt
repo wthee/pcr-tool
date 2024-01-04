@@ -33,7 +33,7 @@ data class EquipListUiState(
     val equipList: List<EquipmentBasicInfo>? = null,
     val filter: FilterEquip? = null,
     //收藏的编号
-    val starIdList: List<Int> = emptyList(),
+    val favoriteIdList: List<Int> = emptyList(),
     //搜索模式
     val searchEquipMode: Boolean = false,
     //搜索装备编号
@@ -80,12 +80,12 @@ class EquipListViewModel @Inject constructor(
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
             val filter: FilterEquip? = JsonUtil.fromJson(filterData)
-            val starIdList = FilterEquip.getStarIdList()
+            val favoriteIdList = FilterEquip.getFavoriteIdList()
             val initFilter = filter ?: FilterEquip()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    starIdList = starIdList
+                    favoriteIdList = favoriteIdList
                 )
             }
 

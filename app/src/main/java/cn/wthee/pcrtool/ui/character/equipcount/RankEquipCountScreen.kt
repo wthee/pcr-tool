@@ -37,7 +37,7 @@ fun RankEquipCountScreen(
 
     //初始收藏信息
     LifecycleEffect(Lifecycle.Event.ON_RESUME) {
-        rankEquipCountViewModel.reloadStarList()
+        rankEquipCountViewModel.reloadFavoriteList()
     }
 
     val scrollState = rememberLazyGridState()
@@ -92,7 +92,7 @@ fun RankEquipCountScreen(
             loadingState = uiState.loadingState,
             equipmentMaterialList = uiState.equipmentMaterialList,
             scrollState = scrollState,
-            starIdList = uiState.starIdList,
+            favoriteIdList = uiState.favoriteIdList,
             toEquipMaterial = toEquipMaterial
         )
     }
@@ -107,7 +107,7 @@ private fun RankEquipCountContent(
     loadingState: LoadingState,
     equipmentMaterialList: List<EquipmentMaterial>?,
     scrollState: LazyGridState,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     toEquipMaterial: (Int, String) -> Unit,
 ) {
     Column(
@@ -151,7 +151,7 @@ private fun RankEquipCountContent(
                     ) { item ->
                         EquipCountItem(
                             item = item,
-                            loved = starIdList.contains(item.id),
+                            favorite = favoriteIdList.contains(item.id),
                             toEquipMaterial = toEquipMaterial
                         )
                     }
@@ -161,7 +161,7 @@ private fun RankEquipCountContent(
                     items(count = 10) {
                         EquipCountItem(
                             item = EquipmentMaterial(),
-                            loved = false,
+                            favorite = false,
                             toEquipMaterial = toEquipMaterial
                         )
                     }
@@ -171,7 +171,7 @@ private fun RankEquipCountContent(
                     items(count = 10) {
                         EquipCountItem(
                             item = EquipmentMaterial(-1),
-                            loved = false,
+                            favorite = false,
                             toEquipMaterial = toEquipMaterial
                         )
                     }
@@ -189,7 +189,7 @@ private fun RankEquipCountContent(
 @Composable
 private fun EquipCountItem(
     item: EquipmentMaterial,
-    loved: Boolean,
+    favorite: Boolean,
     toEquipMaterial: (Int, String) -> Unit,
 ) {
     val placeholder = item.id == ImageRequestHelper.UNKNOWN_EQUIP_ID
@@ -206,7 +206,7 @@ private fun EquipCountItem(
             toEquipMaterial(item.id, item.name)
         }
         SelectText(
-            selected = loved,
+            selected = favorite,
             text = item.count.toString(),
         )
     }
@@ -224,7 +224,7 @@ private fun RankEquipCountContentPreview() {
             loadingState = LoadingState.Success,
             equipmentMaterialList = arrayListOf(EquipmentMaterial(1), EquipmentMaterial(2)),
             scrollState = rememberLazyGridState(),
-            starIdList = arrayListOf(1),
+            favoriteIdList = arrayListOf(1),
             toEquipMaterial = { _, _ -> }
         )
     }

@@ -116,7 +116,7 @@ private fun PvpFavoriteItem(
             Spacer(modifier = Modifier.weight(1f))
             //取消收藏
             MainIcon(
-                data = MainIconType.LOVE_FILL,
+                data = MainIconType.FAVORITE_FILL,
                 size = Dimen.fabIconSize
             ) {
                 //点击取消收藏

@@ -107,19 +107,19 @@ fun CharacterListScreen(
         },
         secondLineFab = {
             //已收藏
-            if (uiState.starIdList.isNotEmpty()) {
+            if (uiState.favoriteIdList.isNotEmpty()) {
                 ExpandableFab(
                     expanded = uiState.openDialog,
                     onClick = {
                         characterListViewModel.changeDialog(true)
                     },
-                    icon = MainIconType.LOVE_FILL,
-                    text = uiState.starIdList.size.toString(),
+                    icon = MainIconType.FAVORITE_FILL,
+                    text = uiState.favoriteIdList.size.toString(),
                     isSecondLineFab = true
                 ) {
                     IconListContent(
-                        idList = uiState.starIdList,
-                        title = stringResource(id = R.string.loved),
+                        idList = uiState.favoriteIdList,
+                        title = stringResource(id = R.string.favorite),
                         iconResourceType = IconResourceType.CHARACTER,
                         onClickItem = toCharacterDetail
                     )
@@ -145,7 +145,7 @@ fun CharacterListScreen(
             CharacterListContent(
                 characterList = uiState.characterList,
                 scrollState = scrollState,
-                starIdList = uiState.starIdList,
+                favoriteIdList = uiState.favoriteIdList,
                 toCharacterDetail = toCharacterDetail
             )
         }
@@ -156,7 +156,7 @@ fun CharacterListScreen(
 private fun CharacterListContent(
     characterList: List<CharacterInfo>?,
     scrollState: LazyGridState,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     toCharacterDetail: (Int) -> Unit
 ) {
     LazyVerticalGrid(
@@ -173,7 +173,7 @@ private fun CharacterListContent(
                 CharacterItemContent(
                     unitId = it.id,
                     character = it,
-                    loved = starIdList.contains(it.id),
+                    favorite = favoriteIdList.contains(it.id),
                     modifier = Modifier.padding(Dimen.mediumPadding),
                 ) {
                     toCharacterDetail(it.id)
@@ -232,10 +232,10 @@ private fun CharacterListFabContent(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CharacterItemContent(
+    modifier: Modifier = Modifier,
     unitId: Int,
     character: CharacterInfo?,
-    loved: Boolean,
-    modifier: Modifier = Modifier,
+    favorite: Boolean,
     onClick: () -> Unit
 ) {
 
@@ -414,9 +414,9 @@ fun CharacterItemContent(
             }
 
             //收藏标识
-            FadeAnimation(visible = loved && (imageLoadSuccess || imageLoadError)) {
+            FadeAnimation(visible = favorite && (imageLoadSuccess || imageLoadError)) {
                 MainIcon(
-                    data = MainIconType.LOVE_FILL,
+                    data = MainIconType.FAVORITE_FILL,
                     size = Dimen.textIconSize,
                     modifier = Modifier.padding(Dimen.mediumPadding)
                 )
@@ -481,7 +481,7 @@ private fun CharacterItemPreview() {
                 position = 100,
                 name = stringResource(id = R.string.debug_name)
             ),
-            loved = true,
+            favorite = true,
         ) {}
     }
 }

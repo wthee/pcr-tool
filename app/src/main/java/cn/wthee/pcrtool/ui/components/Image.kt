@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -133,10 +132,8 @@ fun MainIcon(
     } else {
         modifier.clip(shape)
     }
-    mModifier = if (!wrapSize) {
-        mModifier.size(size)
-    } else {
-        mModifier.sizeIn(maxWidth = size, maxHeight = size)
+    if (!wrapSize) {
+        mModifier = mModifier.size(size)
     }
 
 

@@ -28,7 +28,7 @@ data class ExtraEquipListUiState(
     val equipList: List<ExtraEquipmentBasicInfo>? = null,
     val filter: FilterExtraEquipment? = null,
     //收藏的编号
-    val starIdList: List<Int> = emptyList(),
+    val favoriteIdList: List<Int> = emptyList(),
     val loadingState: LoadingState = LoadingState.Loading
 )
 
@@ -68,12 +68,12 @@ class ExtraEquipListViewModel @Inject constructor(
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
             val filter: FilterExtraEquipment? = JsonUtil.fromJson(filterData)
-            val starIdList = FilterExtraEquipment.getStarIdList()
+            val favoriteIdList = FilterExtraEquipment.getFavoriteIdList()
             val initFilter = filter ?: FilterExtraEquipment()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    starIdList = starIdList
+                    favoriteIdList = favoriteIdList
                 )
             }
 

@@ -36,11 +36,11 @@ data class ExtraEquipDetailUiState(
     //装备类型
     val category: Int = 0,
     //收藏信息
-    val starIdList: List<Int> = emptyList(),
+    val favoriteIdList: List<Int> = emptyList(),
     //适用角色
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
-    val loved: Boolean = false,
+    val favorite: Boolean = false,
     val loadingState: LoadingState = LoadingState.Loading,
     //技能
     val skillList: List<SkillDetail>? = null
@@ -63,7 +63,7 @@ class ExtraEquipDetailViewModel @Inject constructor(
     init {
         if (equipId != null) {
             getEquip(equipId)
-            getLoveState(equipId)
+            getFavoriteState(equipId)
         }
     }
 
@@ -107,13 +107,13 @@ class ExtraEquipDetailViewModel @Inject constructor(
     /**
      * 获取收藏列表
      */
-    private fun getLoveState(equipId: Int) {
+    private fun getFavoriteState(equipId: Int) {
         viewModelScope.launch {
-            val list = FilterExtraEquipment.getStarIdList()
+            val list = FilterExtraEquipment.getFavoriteIdList()
             _uiState.update {
                 it.copy(
-                    loved = list.contains(equipId),
-                    starIdList = list
+                    favorite = list.contains(equipId),
+                    favoriteIdList = list
                 )
             }
         }
@@ -143,11 +143,11 @@ class ExtraEquipDetailViewModel @Inject constructor(
     /**
      * 获取收藏列表
      */
-    fun reloadStarList() {
+    fun reloadFavoriteList() {
         viewModelScope.launch {
-            val list = FilterExtraEquipment.getStarIdList()
+            val list = FilterExtraEquipment.getFavoriteIdList()
             _uiState.update {
-                it.copy(starIdList = list)
+                it.copy(favoriteIdList = list)
             }
         }
     }
@@ -155,7 +155,7 @@ class ExtraEquipDetailViewModel @Inject constructor(
     /**
      * 更新收藏id
      */
-    fun updateStarId() {
+    fun updateFavoriteId() {
         viewModelScope.launch {
             if (equipId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
@@ -165,14 +165,14 @@ class ExtraEquipDetailViewModel @Inject constructor(
                         list.remove(equipId)
                         _uiState.update {
                             it.copy(
-                                loved = false
+                                favorite = false
                             )
                         }
                     } else {
                         list.add(equipId)
                         _uiState.update {
                             it.copy(
-                                loved = true
+                                favorite = true
                             )
                         }
                     }

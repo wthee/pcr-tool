@@ -97,9 +97,9 @@ class UnitRepository @Inject constructor(
                 filterList
             } else {
                 //筛选收藏的角色
-                val starIdList = FilterCharacter.getStarIdList()
+                val favoriteIdList = FilterCharacter.getFavoriteIdList()
                 filterList.filter {
-                    starIdList.contains(it.id)
+                    favoriteIdList.contains(it.id)
                 }
             }
         } catch (e: Exception) {

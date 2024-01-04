@@ -4,7 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -133,10 +132,10 @@ fun CharacterDetailScreen(
                 currentId = uiState.currentId,
                 showAllInfo = uiState.showAllInfo,
                 isEditMode = uiState.isEditMode,
-                loved = uiState.loved,
+                favorite = uiState.favorite,
                 orderData = uiState.orderData,
                 changeEditMode = characterDetailViewModel::changeEditMode,
-                updateStarCharacterId = characterDetailViewModel::updateStarId,
+                updateFavoriteCharacterId = characterDetailViewModel::updateFavoriteId,
                 toCharacterDetail = actions.toCharacterDetail,
                 toCharacterSkillLoop = actions.toCharacterSkillLoop,
             )
@@ -202,10 +201,10 @@ private fun CharacterDetailFabContent(
     currentId: Int,
     showAllInfo: Boolean,
     isEditMode: Boolean,
-    loved: Boolean,
+    favorite: Boolean,
     orderData: String,
     changeEditMode: (Boolean) -> Unit,
-    updateStarCharacterId: () -> Unit,
+    updateFavoriteCharacterId: () -> Unit,
     toCharacterSkillLoop: (Int) -> Unit,
     toCharacterDetail: (Int) -> Unit,
 ) {
@@ -221,13 +220,13 @@ private fun CharacterDetailFabContent(
 
                 //收藏
                 MainSmallFab(
-                    iconType = if (loved) {
-                        MainIconType.LOVE_FILL
+                    iconType = if (favorite) {
+                        MainIconType.FAVORITE_FILL
                     } else {
-                        MainIconType.LOVE_LINE
+                        MainIconType.FAVORITE_LINE
                     },
                 ) {
-                    updateStarCharacterId()
+                    updateFavoriteCharacterId()
                 }
             }
 
@@ -369,7 +368,7 @@ private fun CharacterDetailContent(
                         CharacterDetailModuleType.CARD -> CharacterCard(
                             unitId = uiState.unitId,
                             basicInfo = uiState.basicInfo,
-                            loved = uiState.loved,
+                            favorite = uiState.favorite,
                             toAllPics = actions.toAllPics
                         )
 
@@ -495,7 +494,7 @@ private fun CharacterDetailContent(
 private fun CharacterCard(
     unitId: Int,
     basicInfo: CharacterInfo?,
-    loved: Boolean,
+    favorite: Boolean,
     toAllPics: (Int, Int) -> Unit
 ) {
     Column(
@@ -511,14 +510,11 @@ private fun CharacterCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //卡面信息
-        Box {
-            CharacterItemContent(
-                unitId = unitId, character = basicInfo, loved = loved
-            ) {
-                toAllPics(unitId, AllPicsType.CHARACTER.type)
-            }
+        CharacterItemContent(
+            unitId = unitId, character = basicInfo, favorite = favorite
+        ) {
+            toAllPics(unitId, AllPicsType.CHARACTER.type)
         }
-
     }
 
 }
@@ -1117,10 +1113,10 @@ private fun FabContentPreview() {
             currentId = 101001,
             showAllInfo = true,
             isEditMode = false,
-            loved = true,
+            favorite = true,
             orderData = "",
             changeEditMode = {},
-            updateStarCharacterId = {},
+            updateFavoriteCharacterId = {},
             toCharacterSkillLoop = {},
             toCharacterDetail = {},
         )
@@ -1133,7 +1129,7 @@ private fun CharacterCardPreview() {
     PreviewLayout {
         CharacterCard(
             unitId = 100101,
-            loved = true,
+            favorite = true,
             basicInfo = CharacterInfo(
                 id = 100101,
                 position = 100

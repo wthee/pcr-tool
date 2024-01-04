@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -79,11 +80,14 @@ fun ExtraEquipList(
     ) {
         StateBox(
             stateType = uiState.loadingState,
+            errorContent = {
+                CenterTipText(text = stringResource(R.string.not_installed))
+            }
         ) {
             if (uiState.equipList != null && uiState.filter != null) {
                 ExtraEquipListContent(
                     equipList = uiState.equipList!!,
-                    starIdList = uiState.starIdList,
+                    favoriteIdList = uiState.favoriteIdList,
                     scrollState = scrollState,
                     toExtraEquipDetail = toExtraEquipDetail
                 )
@@ -95,7 +99,7 @@ fun ExtraEquipList(
 @Composable
 private fun ExtraEquipListContent(
     equipList: List<ExtraEquipmentBasicInfo>,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     scrollState: LazyListState,
     toExtraEquipDetail: (Int) -> Unit
 ) {
@@ -120,7 +124,7 @@ private fun ExtraEquipListContent(
         ) { equipGroupData ->
             ExtraEquipGroup(
                 equipGroupData = equipGroupData,
-                starIdList = starIdList,
+                favoriteIdList = favoriteIdList,
                 toExtraEquipDetail = toExtraEquipDetail
             )
         }
@@ -175,7 +179,7 @@ private fun ExtraEquipListFabContent(
 @Composable
 private fun ExtraEquipGroup(
     equipGroupData: ExtraEquipGroupData,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     toExtraEquipDetail: (Int) -> Unit
 ) {
     //分组标题
@@ -207,7 +211,7 @@ private fun ExtraEquipGroup(
     ) {
         equipGroupData.equipIdList.forEach { equip ->
             ExtraEquipItem(
-                starIdList = starIdList,
+                favoriteIdList = favoriteIdList,
                 equip = equip,
                 toExtraEquipDetail = toExtraEquipDetail
             )
@@ -220,7 +224,7 @@ private fun ExtraEquipGroup(
  */
 @Composable
 private fun ExtraEquipItem(
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     equip: ExtraEquipmentBasicInfo,
     toExtraEquipDetail: (Int) -> Unit
 ) {
@@ -251,7 +255,7 @@ private fun ExtraEquipItem(
             maxLines = 2,
             selectable = true,
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            color = if (starIdList.contains(equip.equipmentId)) {
+            color = if (favoriteIdList.contains(equip.equipmentId)) {
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.onSurface
@@ -276,7 +280,7 @@ private fun ExtraEquipGroupPreview() {
                     ExtraEquipmentBasicInfo(equipmentName = text)
                 )
             ),
-            starIdList = arrayListOf(1)
+            favoriteIdList = arrayListOf(1)
         ) { }
     }
 }

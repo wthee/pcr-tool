@@ -64,7 +64,7 @@ data class CharacterDetailUiState(
     //编辑模式
     val isEditMode: Boolean = false,
     //收藏角色
-    val loved: Boolean = false,
+    val favorite: Boolean = false,
     //排序
     val orderData: String = "",
     //主页面模块id列表
@@ -116,7 +116,7 @@ class CharacterDetailViewModel @Inject constructor(
             getCutinId(unitId)
             getCharacterBasicInfo(unitId)
             getMaxRankAndRarity(unitId)
-            getLoveState(unitId)
+            getFavoriteState(unitId)
             getMultiIds(unitId)
         }
     }
@@ -133,7 +133,7 @@ class CharacterDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     basicInfo = data,
-                    loadingState = it.loadingState.isNoData(data == null)
+                    loadingState = it.loadingState.isSuccess(data != null)
                 )
             }
         }
@@ -186,7 +186,7 @@ class CharacterDetailViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         maxValue = maxValue,
-                        loadingState = it.loadingState.isError(maxValue.level == -1)
+                        loadingState = it.loadingState.isSuccess(maxValue.level != -1)
                     )
                 }
             } catch (e: Exception) {
@@ -234,11 +234,11 @@ class CharacterDetailViewModel @Inject constructor(
     /**
      * 获取角色收藏列表
      */
-    private fun getLoveState(unitId: Int) {
+    private fun getFavoriteState(unitId: Int) {
         viewModelScope.launch {
-            val list = FilterCharacter.getStarIdList()
+            val list = FilterCharacter.getFavoriteIdList()
             _uiState.update {
-                it.copy(loved = list.contains(unitId))
+                it.copy(favorite = list.contains(unitId))
             }
         }
     }
@@ -359,7 +359,7 @@ class CharacterDetailViewModel @Inject constructor(
     /**
      * 更新收藏id
      */
-    fun updateStarId() {
+    fun updateFavoriteId() {
         viewModelScope.launch {
             if (unitId != null) {
                 MyApplication.context.dataStoreMain.edit { preferences ->
@@ -369,14 +369,14 @@ class CharacterDetailViewModel @Inject constructor(
                         list.remove(unitId)
                         _uiState.update {
                             it.copy(
-                                loved = false
+                                favorite = false
                             )
                         }
                     } else {
                         list.add(unitId)
                         _uiState.update {
                             it.copy(
-                                loved = true
+                                favorite = true
                             )
                         }
                     }

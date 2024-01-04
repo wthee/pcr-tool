@@ -263,7 +263,7 @@ private fun PvpResultItem(
             //收藏
             if (!placeholder) {
                 MainIcon(
-                    data = if (liked) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                    data = if (liked) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
                     size = Dimen.fabIconSize
                 ) {
                     scope.launch {

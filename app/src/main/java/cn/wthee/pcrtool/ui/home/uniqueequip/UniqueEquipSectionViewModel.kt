@@ -40,19 +40,22 @@ class UniqueEquipSectionViewModel @Inject constructor(
 
 
     fun loadData(limit: Int) {
-        if (_uiState.value.uniqueEquipList1 == null) {
-            val initList = arrayListOf<UniqueEquipBasicData>()
-            for (i in 1..limit) {
-                initList.add(UniqueEquipBasicData())
+        if (limit > 0) {
+            //初始加载占位
+            if (_uiState.value.uniqueEquipList1 == null) {
+                val initList = arrayListOf<UniqueEquipBasicData>()
+                for (i in 1..limit) {
+                    initList.add(UniqueEquipBasicData())
+                }
+                _uiState.update {
+                    it.copy(
+                        uniqueEquipList1 = initList
+                    )
+                }
             }
-            _uiState.update {
-                it.copy(
-                    uniqueEquipList1 = initList
-                )
-            }
+            getUniqueEquipCount()
+            getUniqueEquipInfoList(limit)
         }
-        getUniqueEquipCount()
-        getUniqueEquipInfoList(limit)
     }
 
     /**

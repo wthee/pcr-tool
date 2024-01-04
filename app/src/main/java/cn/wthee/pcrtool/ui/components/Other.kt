@@ -107,7 +107,7 @@ fun StateBox(
         }
     },
     errorContent: @Composable () -> Unit = {
-        CenterTipText(stringResource(id = R.string.not_installed))
+        CenterTipText(stringResource(id = R.string.data_get_error))
     },
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
@@ -118,7 +118,6 @@ fun StateBox(
         LoadingState.Loading -> if (loadingContent != null) {
             loadingContent()
         }
-
         LoadingState.NoData -> noDataContent()
         LoadingState.Error -> errorContent()
         LoadingState.Success -> successContent()
