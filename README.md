@@ -1,7 +1,6 @@
 ## PCR Tool
 
-- 下载地址：[酷安](https://www.coolapk.com/apk/273453)
-  | [Release](https://github.com/wthee/pcr-tool/releases)
+- 下载地址：[Release](https://github.com/wthee/pcr-tool/releases)
 - 资源获取工具：[Unity Texture Toolkit](https://github.com/esterTion/unity-texture-toolkit)
 - 竞技场查询数据：[公主连结Re: Dive Fan Club](https://pcrdfans.com)
 - 排行榜数据：[GameWith](https://gamewith.jp/pricone-re/article/show/93068)

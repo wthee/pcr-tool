@@ -414,9 +414,9 @@ enum class MainIconType(val icon: ImageVector) {
     GITHUB_PROJECT(Icons.Rounded.DataObject),
 
     /**
-     * 发布详情
+     * 认证
      */
-    COOLAPK_APP_STORE(Icons.Rounded.Verified),
+    VERIFIED(Icons.Rounded.Verified),
 
     /**
      * 编辑

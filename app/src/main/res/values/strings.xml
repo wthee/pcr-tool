@@ -204,9 +204,9 @@
     <string name="cache_size">占用：%s\n数量：%d</string>
     <string name="confirm_clean_cache">清除缓存后，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
-    <string name="coolapk">酷安</string>
-    <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
-    <string name="tip_coolapk">应用上架地址，期待你的关注与评价</string>
+    <string name="afd">爱发电</string>
+    <string name="afd_url">https://afdian.net/a/wthee</string>
+    <string name="tip_afd">期待你的关注与支持</string>
     <string name="please">✪ ω ✪</string>
     <string name="github_project_url">https://github.com/wthee/pcr-tool</string>
     <string name="tip_github">项目开源代码</string>

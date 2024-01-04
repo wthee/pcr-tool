@@ -181,14 +181,14 @@ fun MainSettings() {
                     BrowserUtil.open(Constants.PREVIEW_URL)
                 }
             )
-            //- 酷安
-            val appUrl = stringResource(id = R.string.coolapk_url)
+            //- 爱发电
+            val sponsorUrl = stringResource(id = R.string.afd_url)
             SettingCommonItem(
-                iconType = MainIconType.COOLAPK_APP_STORE,
-                title = stringResource(id = R.string.coolapk),
-                summary = stringResource(id = R.string.tip_coolapk),
+                iconType = MainIconType.VERIFIED,
+                title = stringResource(id = R.string.afd),
+                summary = stringResource(id = R.string.tip_afd),
                 onClick = {
-                    BrowserUtil.open(appUrl)
+                    BrowserUtil.open(sponsorUrl)
                 }
             ) {
                 Subtitle2(
