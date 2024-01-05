@@ -133,7 +133,7 @@ class CharacterDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     basicInfo = data,
-                    loadingState = it.loadingState.isSuccess(data != null)
+                    loadingState = it.loadingState.isNoData(data == null)
                 )
             }
         }
@@ -186,14 +186,15 @@ class CharacterDetailViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         maxValue = maxValue,
-                        loadingState = it.loadingState.isSuccess(maxValue.level != -1)
+                        loadingState = it.loadingState.isError(maxValue.level == -1)
                     )
                 }
             } catch (e: Exception) {
                 LogReportUtil.upload(e, "getMaxRankAndRarity:$unitId")
                 _uiState.update {
                     it.copy(
-                        maxValue = CharacterProperty(level = -1)
+                        maxValue = CharacterProperty(level = -1),
+                        loadingState = LoadingState.Error
                     )
                 }
             }
