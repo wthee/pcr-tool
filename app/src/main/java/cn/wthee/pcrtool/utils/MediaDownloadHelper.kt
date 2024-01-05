@@ -58,6 +58,7 @@ class MediaDownloadHelper(private val context: Context) {
      * @param fileName 保存后的文件名
      * @param lifecycleOwner
      * @param onDownloadFinished 下载成功监听
+     * @param onDownloading 下载进度监听
      * @param onDownloadFailure 下载失败监听
      */
     fun downloadVideo(
@@ -65,6 +66,7 @@ class MediaDownloadHelper(private val context: Context) {
         fileName: String,
         lifecycleOwner: LifecycleOwner,
         onDownloadFinished: () -> Unit,
+        onDownloading: (Int) -> Unit,
         onDownloadFailure: () -> Unit
     ) {
 
@@ -96,6 +98,11 @@ class MediaDownloadHelper(private val context: Context) {
                             val sourceFile =
                                 File(FileUtil.getDownloadDir() + File.separator + fileName)
                             saveMedia(videoFile = sourceFile, displayName = fileName) {}
+                        }
+
+                        WorkInfo.State.RUNNING -> {
+                            val value = workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
+                            onDownloading(value)
                         }
 
                         WorkInfo.State.FAILED -> {

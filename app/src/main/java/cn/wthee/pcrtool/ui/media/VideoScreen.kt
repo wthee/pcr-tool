@@ -10,20 +10,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -280,9 +280,16 @@ private fun ToolButtonContent(
     }
     exoPlayer.setPlaybackSpeed(selectedSpeed)
 
+    //下载进度
+    var downloadProgress by remember {
+        mutableIntStateOf(0)
+    }
+
     //功能按钮
     Row(
-        modifier = Modifier.padding(top = Dimen.smallPadding),
+        modifier = Modifier
+            .padding(top = Dimen.smallPadding)
+            .heightIn(min = Dimen.menuIconSize),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (!playError) {
@@ -328,7 +335,7 @@ private fun ToolButtonContent(
             IconTextButton(
                 text = stringResource(id = if (saved) R.string.saved else R.string.download_video),
                 icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
-                modifier = Modifier.padding(start = Dimen.smallPadding)
+                modifier = Modifier.padding(end = Dimen.smallPadding)
             ) {
                 //权限校验
                 checkPermissions(context, permissions) {
@@ -354,25 +361,10 @@ private fun ToolButtonContent(
             }
         } else {
             //下载中
-            Row(
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .clip(MaterialTheme.shapes.small)
-                    .padding(Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircularProgressCompose(
-                    size = Dimen.textIconSize,
-                    strokeWidth = Dimen.smallStrokeWidth
-                )
-
-                Text(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    text = stringResource(id = R.string.title_download_file),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            CircularProgressCompose(
+                modifier = Modifier.padding(end = Dimen.smallPadding),
+                progress = maxOf(0f, downloadProgress / 100f)
+            )
         }
     }
 
@@ -423,6 +415,9 @@ private fun ToolButtonContent(
             lifecycleOwner = lifecycleOwner,
             onDownloadFinished = {
                 downloading = false
+            },
+            onDownloading = {
+                downloadProgress = it
             },
             onDownloadFailure = {
                 downloading = false
