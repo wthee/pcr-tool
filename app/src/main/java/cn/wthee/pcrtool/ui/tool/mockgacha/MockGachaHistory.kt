@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,7 +51,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MockGachaHistory(
     scrollState: LazyGridState,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(),
 ) {
     val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -87,7 +85,7 @@ fun MockGachaHistory(
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val openDialog = remember {
@@ -152,10 +150,10 @@ private fun MockGachaHistoryItem(
                     gachaData.pickUpIds.intArrayList.forEach {
                         newPickUpList.add(
                             GachaUnitInfo(
-                                it,
-                                "",
-                                -1,
-                                3
+                                unitId = it,
+                                unitName = "",
+                                isLimited = -1,
+                                rarity = 3
                             )
                         )
                     }

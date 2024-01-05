@@ -156,7 +156,7 @@ fun CalendarEventLayout(
                         gachaInfo = it,
                         fesUnitIdList = fesUnitIdList,
                         toCharacterDetail = actions.toCharacterDetail,
-                        toMockGacha = actions.toMockGacha
+                        toMockGachaFromList = actions.toMockGachaFromList
                     )
                 }
                 freeGachaList.forEach {

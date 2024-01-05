@@ -29,6 +29,7 @@ object NavRoute {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_MOCK_GACHA = "toolMockGacha"
+    const val TOOL_MOCK_GACHA_FROM_LIST = "toolMockGachaFromList"
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
     const val COMIC = "comic"

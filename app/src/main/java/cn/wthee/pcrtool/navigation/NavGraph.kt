@@ -461,7 +461,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_GACHA
             ) {
-                GachaListScreen(actions.toCharacterDetail, actions.toMockGacha)
+                GachaListScreen(actions.toCharacterDetail, actions.toMockGachaFromList)
             }
 
             //免费十连
@@ -643,6 +643,22 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_MOCK_GACHA,
             ) {
+                MockGacha()
+            }
+
+            //模拟抽卡
+            composable(
+                route = "${NavRoute.TOOL_MOCK_GACHA_FROM_LIST}/{${NavRoute.MOCK_GACHA_TYPE}}/{${NavRoute.PICKUP_LIST}}",
+                arguments = listOf(
+                    navArgument(NavRoute.MOCK_GACHA_TYPE) {
+                        type = NavType.IntType
+                    },
+                    navArgument(NavRoute.PICKUP_LIST) {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                val arguments = requireNotNull(it.arguments)
                 MockGacha()
             }
 
@@ -1029,6 +1045,13 @@ class NavActions(navController: NavHostController) {
      */
     val toMockGacha = {
         navController.navigate(NavRoute.TOOL_MOCK_GACHA)
+    }
+
+    /**
+     * 模拟抽卡（从卡池列表跳转）
+     */
+    val toMockGachaFromList: (Int, String) -> Unit = { type, list ->
+        navController.navigate("${NavRoute.TOOL_MOCK_GACHA_FROM_LIST}/${type}/${list}")
     }
 
     /**

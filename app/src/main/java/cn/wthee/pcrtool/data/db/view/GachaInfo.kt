@@ -94,7 +94,7 @@ data class GachaInfo(
         val isLimits = isLimiteds.intArrayList
         val upIds = isUps.intArrayList
         val list = arrayListOf<GachaUnitInfo>()
-        //无大于0的，却不添加
+        //无大于0的，全部添加
         val addAll = upIds.none { it > 0 }
         //遍历卡池角色
         ids.forEachIndexed { index, id ->

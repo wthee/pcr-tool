@@ -97,11 +97,11 @@ class MockGachaHelper(
                     }
                 }
 
-                if(notUpFesList.isNotEmpty()){
+                if (notUpFesList.isNotEmpty()) {
                     //正常选择up时
                     gachaBoxList.add(GachaWeightInfo(notUpFesList, pickUpWeight))
                     gachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight))
-                }else{
+                } else {
                     //全选时
                     gachaBoxList.add(GachaWeightInfo(pickUpList, pickUpWeight * 2))
                 }
@@ -143,20 +143,28 @@ class MockGachaHelper(
         }
 
         var weightSum = 0
-        for (wc in boxList) {
-            weightSum += wc.weight
+        for (box in boxList) {
+            weightSum += box.weight
         }
         val randomNum = Random.nextInt(weightSum)
-        var m = 0
-        for (wc in boxList) {
-            if (m <= randomNum && randomNum < m + wc.weight) {
-                return wc.unitBox.random()
+        //角色池权重区间，开始值
+        var startWeight = 0
+        for (box in boxList) {
+            //判断是否在该角色池权重区间内，是则返回，否则进入下一角色池
+            if (startWeight <= randomNum && randomNum < startWeight + box.weight) {
+                return box.unitBox.random()
             }
-            m += wc.weight
+            startWeight += box.weight
         }
         return getSingleResult(isTenth)
     }
 
-    data class GachaWeightInfo(var unitBox: List<GachaUnitInfo>, var weight: Int)
+    /**
+     * 卡池权重
+     */
+    data class GachaWeightInfo(
+        var unitBox: List<GachaUnitInfo>,
+        var weight: Int
+    )
 
 }

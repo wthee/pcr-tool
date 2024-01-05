@@ -29,9 +29,7 @@ import cn.wthee.pcrtool.data.enums.GachaType
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.MockGachaType
-import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.DateRangePickerCompose
@@ -57,6 +55,8 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * 角色卡池页面
@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun GachaListScreen(
     toCharacterDetail: (Int) -> Unit,
-    toMockGacha: () -> Unit,
+    toMockGachaFromList: (Int, String) -> Unit,
     gachaListViewModel: GachaListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -126,7 +126,7 @@ fun GachaListScreen(
                 gachaList = uiState.gachaList!!,
                 fesUnitIdList = uiState.fesUnitIdList,
                 toCharacterDetail = toCharacterDetail,
-                toMockGacha = toMockGacha
+                toMockGachaFromList = toMockGachaFromList
             )
         }
 
@@ -141,7 +141,7 @@ private fun GachaListContent(
     gachaList: List<GachaInfo>,
     fesUnitIdList: List<Int>,
     toCharacterDetail: (Int) -> Unit,
-    toMockGacha: () -> Unit,
+    toMockGachaFromList: (Int, String) -> Unit,
 ) {
     LazyVerticalStaggeredGrid(
         state = scrollState,
@@ -157,7 +157,7 @@ private fun GachaListContent(
                 gachaInfo = it,
                 fesUnitIdList = fesUnitIdList,
                 toCharacterDetail = toCharacterDetail,
-                toMockGacha = toMockGacha
+                toMockGachaFromList = toMockGachaFromList
             )
         }
         items(2) {
@@ -175,7 +175,7 @@ fun GachaItem(
     gachaInfo: GachaInfo,
     fesUnitIdList: List<Int>,
     toCharacterDetail: (Int) -> Unit,
-    toMockGacha: () -> Unit
+    toMockGachaFromList: (Int, String) -> Unit,
 ) {
     val idList = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
@@ -255,16 +255,11 @@ fun GachaItem(
                             icon = MainIconType.MOCK_GACHA,
                             text = stringResource(R.string.tool_mock_gacha)
                         ) {
-                            setData(
-                                NavRoute.MOCK_GACHA_TYPE,
-                                mockGachaType.type
-                            )
-                            setData(
-                                NavRoute.PICKUP_LIST,
-                                gachaInfo.getMockGachaPickUpUnitList()
-                            )
                             //跳转
-                            toMockGacha()
+                            toMockGachaFromList(
+                                mockGachaType.type,
+                                Json.encodeToString(gachaInfo.getMockGachaPickUpUnitList())
+                            )
                         }
                     }
                     //结束日期
@@ -286,7 +281,7 @@ private fun GachaItemPreview() {
         GachaItem(
             gachaInfo = GachaInfo(),
             toCharacterDetail = {},
-            toMockGacha = {},
+            toMockGachaFromList = { _, _ -> },
             fesUnitIdList = arrayListOf()
         )
     }

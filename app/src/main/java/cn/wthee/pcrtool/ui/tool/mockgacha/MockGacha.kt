@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -25,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,7 +65,7 @@ import java.util.UUID
 @Composable
 fun MockGacha(
     pagerState: PagerState = rememberPagerState { 2 },
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(),
 ) {
     val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -355,7 +353,7 @@ private fun ToSelectMockGachaUnitList(
 private fun ToSelectMockGachaUnitGroup(
     gachaUnitList: List<GachaUnitInfo>,
     title: String,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
 ) {
     val idList = gachaUnitList.map {
         it.unitId + (if (it.rarity == 1) 10 else 30)

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.R
@@ -16,8 +17,8 @@ import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
@@ -66,8 +67,13 @@ data class MockGachaUiState(
 class MockGachaViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val unitRepository: UnitRepository,
-    private val mockGachaRepository: MockGachaRepository
+    private val mockGachaRepository: MockGachaRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val mockGachaType: Int? = savedStateHandle[NavRoute.MOCK_GACHA_TYPE]
+    private val pickUpList: List<GachaUnitInfo>? = JsonUtil.fromJson(
+        savedStateHandle[NavRoute.PICKUP_LIST]
+    )
 
     companion object {
         //模拟抽卡fes最大up数
@@ -81,9 +87,6 @@ class MockGachaViewModel @Inject constructor(
     val uiState: StateFlow<MockGachaUiState> = _uiState.asStateFlow()
 
     init {
-        val mockGachaType: Int? = getData(NavRoute.MOCK_GACHA_TYPE, true)
-        val pickUpList: List<GachaUnitInfo>? = getData(NavRoute.PICKUP_LIST, true)
-
         if (mockGachaType != null && pickUpList != null) {
             _uiState.update {
                 it.copy(
