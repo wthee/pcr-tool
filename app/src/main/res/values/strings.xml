@@ -100,7 +100,9 @@
     <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="title_spine">模型预览</string>
     <string name="spine_tip">可预览游戏内角色、BOSS模型</string>
-
+    <string name="random_drop_source">蘭德索爾圖書館</string>
+    <string name="random_drop_tip">额外掉落数据来源</string>
+    <string name="random_drop_source_url">https://pcredivewiki.tw/Other/MapExtraDrop</string>
 
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>

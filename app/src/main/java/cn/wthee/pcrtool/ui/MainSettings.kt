@@ -273,7 +273,16 @@ fun MainSettings() {
                     BrowserUtil.open(jpInfoUrl)
                 }
             )
-
+            //- 额外掉落
+            val randomDropUrl = stringResource(id = R.string.random_drop_source_url)
+            SettingCommonItem(
+                iconType = MainIconType.RANDOM_AREA,
+                title = stringResource(id = R.string.random_drop_source),
+                summary = stringResource(id = R.string.random_drop_tip),
+                onClick = {
+                    BrowserUtil.open(randomDropUrl)
+                }
+            )
             CommonSpacer()
         }
     }

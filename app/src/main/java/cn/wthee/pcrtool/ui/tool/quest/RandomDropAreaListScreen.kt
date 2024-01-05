@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableHeader
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
@@ -65,29 +66,39 @@ fun RandomDropAreaListScreen(
             }
         }
     ) {
-        StateBox(
-            stateType = uiState.loadingState,
-            loadingContent = {
-                Column {
-                    for (i in 0..10) {
-                        AreaItem(
-                            -1,
-                            arrayListOf(EquipmentIdWithOdds()),
-                            "",
-                            arrayListOf(),
-                            colorGreen
-                        )
+        Column {
+            ExpandableHeader(
+                scrollState = scrollState,
+                title = stringResource(id = R.string.random_drop_source),
+                startText = stringResource(id = R.string.random_drop_tip),
+                url = stringResource(id = R.string.random_drop_source_url)
+            )
+
+            StateBox(
+                stateType = uiState.loadingState,
+                loadingContent = {
+                    Column {
+                        for (i in 0..10) {
+                            AreaItem(
+                                -1,
+                                arrayListOf(EquipmentIdWithOdds()),
+                                "",
+                                arrayListOf(),
+                                colorGreen
+                            )
+                        }
                     }
                 }
+            ) {
+                uiState.randomDropList?.let {
+                    RandomDropAreaContent(
+                        selectId = equipId,
+                        scrollState = scrollState,
+                        areaList = it
+                    )
+                }
             }
-        ) {
-            uiState.randomDropList?.let {
-                RandomDropAreaContent(
-                    selectId = equipId,
-                    scrollState = scrollState,
-                    areaList = it
-                )
-            }
+
         }
     }
 
@@ -108,6 +119,7 @@ fun RandomDropAreaContent(
         modifier = Modifier.fillMaxSize(),
         state = scrollState
     ) {
+
         items(
             items = areaList,
             key = {
@@ -120,15 +132,18 @@ fun RandomDropAreaContent(
             }
 
             AreaItem(
-                selectId,
-                odds,
-                stringResource(id = R.string.random_drop_area_title, it.area) + when (it.type) {
+                selectedId = selectId,
+                odds = odds,
+                num = stringResource(
+                    id = R.string.random_drop_area_title,
+                    it.area
+                ) + when (it.type) {
                     1 -> stringResource(id = R.string.random_drop_area_1)
                     2 -> stringResource(id = R.string.random_drop_area_2)
                     else -> ""
                 },
-                searchEquipIdList,
-                colorGreen
+                searchEquipIdList = searchEquipIdList,
+                color = colorGreen
             )
         }
         item {
