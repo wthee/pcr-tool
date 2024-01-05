@@ -85,7 +85,7 @@ class EquipDetailViewModel @Inject constructor(
                 it.copy(
                     equipData = data,
                     loadingState = it.loadingState.isSuccess(data != null),
-                    materialLoadingState = it.materialLoadingState.isSuccess(data != null)
+                    materialLoadingState = it.materialLoadingState.isNoData(data == null)
                 )
             }
             if (data != null) {

@@ -51,10 +51,6 @@ fun MainImage(
     onSuccess: (SuccessResult) -> Unit = {},
 ) {
 
-    var mModifier = modifier
-    if (ratio != null) {
-        mModifier = modifier.aspectRatio(ratio)
-    }
     val loading = remember {
         mutableStateOf(true)
     }
@@ -78,13 +74,23 @@ fun MainImage(
         onLoading = {
             loading.value = true
         },
-        modifier = if (placeholder && loading.value) {
-            mModifier
-                .aspectRatio(ratio ?: RATIO)
-                .placeholder(visible = loading.value)
-        } else {
-            mModifier
-        }
+        modifier = modifier
+            .then(
+                if (ratio != null) {
+                    Modifier.aspectRatio(ratio)
+                } else {
+                    Modifier
+                }
+            )
+            .then(
+                if (placeholder && loading.value) {
+                    Modifier
+                        .aspectRatio(ratio ?: RATIO)
+                        .placeholder(visible = loading.value)
+                } else {
+                    Modifier
+                }
+            )
     )
 }
 
@@ -122,19 +128,26 @@ fun MainIcon(
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.extraSmall
 
-    var mModifier = if (onClick != null) {
-        modifier
-            .clip(shape)
-            .clickable(onClick = {
-                VibrateUtil(context).single()
-                onClick()
-            })
-    } else {
-        modifier.clip(shape)
-    }
-    if (!wrapSize) {
-        mModifier = mModifier.size(size)
-    }
+    val mModifier = modifier
+        .clip(shape)
+        .then(
+            if (onClick != null) {
+                Modifier
+                    .clickable(onClick = {
+                        VibrateUtil(context).single()
+                        onClick()
+                    })
+            } else {
+                Modifier
+            }
+        )
+        .then(
+            if (!wrapSize) {
+                Modifier.size(size)
+            } else {
+                Modifier
+            }
+        )
 
 
     when (data) {

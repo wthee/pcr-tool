@@ -37,24 +37,27 @@ fun MainCard(
 ) {
     val context = LocalContext.current
 
-    var mModifier = if (fillMaxWidth) {
-        modifier
-            .fillMaxWidth()
-            .shadow(elevation, shape, true)
-    } else {
-        modifier
-            .shadow(elevation, shape, true)
-    }
-
-    if (onClick != null) {
-        mModifier = mModifier.clickable {
-            VibrateUtil(context).single()
-            onClick()
-        }
-    }
-
     Card(
-        modifier = mModifier,
+        modifier = modifier
+            .then(
+                if (fillMaxWidth) {
+                    Modifier
+                        .fillMaxWidth()
+                } else {
+                    Modifier
+                }
+            )
+            .then(
+                if (onClick != null) {
+                    Modifier.clickable {
+                        VibrateUtil(context).single()
+                        onClick()
+                    }
+                } else {
+                    Modifier
+                }
+            )
+            .shadow(elevation, shape, true),
         content = content,
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = containerColor)

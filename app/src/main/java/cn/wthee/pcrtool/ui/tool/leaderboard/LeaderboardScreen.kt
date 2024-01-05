@@ -9,16 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +37,10 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableHeader
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
@@ -51,12 +48,10 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorBlue
 import cn.wthee.pcrtool.ui.theme.colorGold
@@ -151,7 +146,7 @@ fun LeaderboardScreen(
                     modifier = Modifier
                         .padding(
                             end = Dimen.fabMargin,
-                            bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                            bottom = Dimen.fabMarginLargeBottom
                         )
                 ) {
                     onlyLast.value = !onlyLast.value
@@ -161,7 +156,14 @@ fun LeaderboardScreen(
     ) {
         Column {
 
-            LeaderboardHeader(scrollState, sort, asc)
+            ExpandableHeader(
+                scrollState = scrollState,
+                title = stringResource(id = R.string.leader_source),
+                startText = stringResource(id = R.string.only_jp),
+                url = stringResource(id = R.string.leader_source_url)
+            ) {
+                SortTitleGroup(sort, asc)
+            }
 
             StateBox(
                 stateType = uiState.loadingState,
@@ -197,50 +199,6 @@ fun LeaderboardScreen(
         }
     }
 
-}
-
-/**
- * 头部
- */
-@Composable
-private fun LeaderboardHeader(
-    scrollState: LazyListState,
-    sort: MutableIntState,
-    asc: MutableState<Boolean>
-) {
-    val url = stringResource(id = R.string.leader_source_url)
-    val context = LocalContext.current
-    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
-
-
-    Column {
-        //更新
-        ExpandAnimation(visible = showTitle) {
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = "GameWith",
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(url)
-                        }
-                )
-
-                CaptionText(
-                    text = stringResource(id = R.string.only_jp),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
-        }
-        //标题
-        SortTitleGroup(sort, asc)
-    }
 }
 
 /**

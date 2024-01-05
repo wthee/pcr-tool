@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.leadertier
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,14 +10,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,30 +26,26 @@ import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableHeader
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalGrid
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
 import cn.wthee.pcrtool.ui.tool.leaderboard.LeaderCharacterIcon
 import cn.wthee.pcrtool.ui.tool.leaderboard.getLeaderUnknownTip
-import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.launch
 
 /**
@@ -130,7 +121,13 @@ fun LeaderTierScreen(
     ) {
         Column {
 
-            LeaderTierHeader(scrollState, uiState.date)
+            ExpandableHeader(
+                scrollState = scrollState,
+                title = stringResource(id = R.string.leader_source),
+                startText = stringResource(id = R.string.only_jp),
+                endText = uiState.date,
+                url = stringResource(id = R.string.leader_source_url)
+            )
 
             StateBox(
                 stateType = uiState.loadingState,
@@ -206,51 +203,6 @@ private fun LeaderTierContent(
         }
         items(count = 2) {
             CommonSpacer()
-        }
-    }
-}
-
-/**
- * 头部
- */
-@Composable
-private fun LeaderTierHeader(
-    scrollState: LazyListState,
-    date: String,
-) {
-    val context = LocalContext.current
-    val url = stringResource(id = R.string.leader_source_url)
-    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
-
-
-    Column {
-        //标题
-        ExpandAnimation(visible = showTitle) {
-            Row(
-                modifier = Modifier.padding(
-                    horizontal = Dimen.largePadding,
-                    vertical = Dimen.mediumPadding
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainTitleText(
-                    text = stringResource(id = R.string.leader_source),
-                    modifier = Modifier
-                        .clickable {
-                            VibrateUtil(context).single()
-                            BrowserUtil.open(url)
-                        }
-                )
-
-                CaptionText(
-                    text = stringResource(id = R.string.only_jp),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-                CaptionText(
-                    text = date,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
         }
     }
 }

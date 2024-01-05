@@ -24,8 +24,6 @@ object Constants {
     //视频缓存
     const val VIDEO_DIR = "video_cache"
 
-    const val mediaType = "application/json; charset=utf-8"
-
     const val SERVER_DOMAIN = "wthee.xyz"
     const val SERVER_IP = "96.45.190.76"
 

@@ -69,16 +69,8 @@ fun MainSmallFab(
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var mModifier = if (hasNavBarPadding) {
-        modifier.navigationBarsPadding()
-    } else {
-        modifier
-    }
     val isTextFab = text != "" && extraContent == null
 
-    if (isTextFab) {
-        mModifier = mModifier.padding(horizontal = Dimen.textFabMargin)
-    }
 
     SmallFloatingActionButton(
         onClick = {
@@ -88,7 +80,23 @@ fun MainSmallFab(
             onClick()
         },
         shape = CircleShape,
-        modifier = mModifier,
+        modifier = modifier
+            .then(
+                //导航栏间距
+                if (hasNavBarPadding) {
+                    Modifier.navigationBarsPadding()
+                } else {
+                    Modifier
+                }
+            )
+            .then(
+                //文本fab
+                if (isTextFab) {
+                    Modifier.padding(horizontal = Dimen.textFabMargin)
+                } else {
+                    Modifier
+                }
+            ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -171,15 +179,16 @@ fun ExpandableFab(
             Dimen.fabMargin
         }
     )
-    val mModifier = if (animateContent) {
-        modifier.animateContentSize(defaultSpring())
-    } else {
-        modifier
-    }
-
 
     SmallFloatingActionButton(
-        modifier = mModifier
+        modifier = modifier
+            .then(
+                if (animateContent) {
+                    Modifier.animateContentSize(defaultSpring())
+                } else {
+                    Modifier
+                }
+            )
             .widthIn(max = Dimen.itemMaxWidth)
             .padding(mPaddingValues)
             .padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
@@ -380,7 +389,6 @@ private fun RankSelectItem(
     targetType: RankSelectType,
     currentRank: Int
 ) {
-    val context = LocalContext.current
 
     VerticalGrid(
         itemWidth = Dimen.rankTextWidth,

@@ -267,7 +267,7 @@ private fun MockGachaFabContent(
         modifier = Modifier
             .padding(
                 end = Dimen.fabMargin,
-                bottom = Dimen.fabMargin * 2 + Dimen.fabSize
+                bottom = Dimen.fabMarginLargeBottom
             ),
         visible = uiState.pickUpList.isNotEmpty() && uiState.unitsInGacha != null
     ) {

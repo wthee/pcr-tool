@@ -246,8 +246,8 @@ class OverviewScreenViewModel @Inject constructor(
             //应用更新
             try {
                 val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
-                // fixme url 使用ip或域名判断
-                data.url.replace(SERVER_DOMAIN, MyApplication.URL_DOMAIN)
+                //将下载链接中的域名，根据设置替换为ip
+                data.url = data.url.replace(SERVER_DOMAIN, MyApplication.URL_DOMAIN)
                 _uiState.update {
                     it.copy(
                         appUpdateData = data

@@ -20,7 +20,7 @@ import kotlin.math.min
 @Immutable
 data class UniqueEquipSectionUiState(
     //装备数量
-    val uniqueEquipCount: String = "",
+    val uniqueEquipCount: String = "0",
     //专用装备1列表
     val uniqueEquipList1: List<UniqueEquipBasicData>? = null,
     //专用装备2列表

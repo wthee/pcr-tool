@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -61,7 +60,6 @@ import cn.wthee.pcrtool.ui.components.RATIO_COMIC
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.PictureItem
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -78,7 +76,7 @@ import kotlinx.coroutines.launch
 fun ComicListScreen(
     comicListViewModel: ComicListViewModel = hiltViewModel()
 ) {
-    val gridState = rememberLazyGridState()
+    val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val uiState by comicListViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -95,7 +93,7 @@ fun ComicListScreen(
         //同步滚动目录位置
         LaunchedEffect(uiState.selectedIndex) {
             pagerState.scrollToPage(uiState.selectedIndex)
-            gridState.scrollToItem(uiState.selectedIndex)
+            scrollState.scrollToItem(uiState.selectedIndex)
         }
 
 
@@ -106,7 +104,7 @@ fun ComicListScreen(
                     ComicIndexChange(
                         items = items,
                         pagerState = pagerState,
-                        gridState = gridState,
+                        scrollState = scrollState,
                         openDialog = uiState.openDialog,
                         changeDialog = comicListViewModel::changeDialog,
                         changeSelect = comicListViewModel::changeSelect,
@@ -210,8 +208,7 @@ private fun ComicItem(data: ComicData) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ComicIndexChange(
-    modifier: Modifier = Modifier,
-    gridState: LazyGridState,
+    scrollState: LazyListState,
     items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
     openDialog: Boolean,
@@ -221,7 +218,6 @@ private fun ComicIndexChange(
 
     //切换
     ExpandableFab(
-        modifier = modifier,
         expanded = openDialog,
         onClick = {
             changeDialog(true)
@@ -232,7 +228,7 @@ private fun ComicIndexChange(
     ) {
         //展开目录
         ComicTocList(
-            gridState = gridState,
+            scrollState = scrollState,
             items = items,
             pagerState = pagerState,
             changeSelect = changeSelect,
@@ -246,7 +242,7 @@ private fun ComicIndexChange(
 )
 @Composable
 private fun ComicTocList(
-    gridState: LazyGridState,
+    scrollState: LazyListState,
     items: ItemSnapshotList<ComicData>,
     pagerState: PagerState,
     changeSelect: ((Int) -> Unit),
@@ -285,13 +281,12 @@ private fun ComicTocList(
 
     Column {
         //目录
-        LazyVerticalGrid(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(Dimen.smallPadding),
-            state = gridState,
-            columns = GridCells.Adaptive(getItemWidth())
+            state = scrollState,
         ) {
             itemsIndexed(tabs) { index, tab ->
                 SelectText(
@@ -394,7 +389,7 @@ private fun ComicIndexChangePreview() {
             pagerState = rememberPagerState {
                 1
             },
-            gridState = rememberLazyGridState(),
+            scrollState = rememberLazyListState(),
             openDialog = true,
             changeDialog = {},
             changeSelect = {},

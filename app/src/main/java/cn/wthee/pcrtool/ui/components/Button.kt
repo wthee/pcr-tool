@@ -115,15 +115,16 @@ fun IconTextButton(
 ) {
     val context = LocalContext.current
 
-    Row(modifier = modifier
-        .clip(MaterialTheme.shapes.small)
-        .clickable(enabled = onClick != null) {
-            VibrateUtil(context).single()
-            if (onClick != null) {
-                onClick()
+    Row(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small)
+            .clickable(enabled = onClick != null) {
+                VibrateUtil(context).single()
+                if (onClick != null) {
+                    onClick()
+                }
             }
-        }
-        .padding(Dimen.smallPadding),
+            .padding(Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         icon?.let {

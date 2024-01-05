@@ -436,22 +436,24 @@ private fun CharacterName(
     isBorder: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val mModifier = if (isBorder) {
-        modifier
-            .padding(
-                start = Dimen.mediumPadding + Dimen.textElevation,
-                end = Dimen.mediumPadding,
-                top = Dimen.mediumPadding + Dimen.textElevation,
-                bottom = Dimen.mediumPadding
-            )
-
-    } else {
-        modifier
-            .padding(Dimen.mediumPadding)
-    }
 
     Column(
-        modifier = mModifier
+        modifier = modifier
+            .then(
+                if (isBorder) {
+                    Modifier
+                        .padding(
+                            start = Dimen.mediumPadding + Dimen.textElevation,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.mediumPadding + Dimen.textElevation,
+                            bottom = Dimen.mediumPadding
+                        )
+
+                } else {
+                    Modifier
+                        .padding(Dimen.mediumPadding)
+                }
+            )
             .fillMaxWidth(RATIO_GOLDEN)
     ) {
         Subtitle1(

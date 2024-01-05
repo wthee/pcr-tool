@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.components
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -35,6 +37,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +51,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -75,6 +80,8 @@ import cn.wthee.pcrtool.ui.theme.colorGray
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.noShape
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -118,6 +125,7 @@ fun StateBox(
         LoadingState.Loading -> if (loadingContent != null) {
             loadingContent()
         }
+
         LoadingState.NoData -> noDataContent()
         LoadingState.Error -> errorContent()
         LoadingState.Success -> successContent()
@@ -186,8 +194,7 @@ fun MainScaffold(
         ) {
             //fab 第二行
             Column(
-                modifier = Modifier
-                    .navigationBarsPadding()
+                modifier = Modifier.navigationBarsPadding()
             ) {
                 secondLineFab()
             }
@@ -227,7 +234,6 @@ fun MainScaffold(
                 }
             }
         }
-
 
     }
 }
@@ -274,8 +280,8 @@ fun CircularProgressCompose(
     progress: Float,
     modifier: Modifier = Modifier,
     size: Dp = Dimen.menuIconSize,
+    strokeWidth: Dp = Dimen.strokeWidth,
     color: Color = MaterialTheme.colorScheme.primary
-
 ) {
     Box(contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
@@ -284,7 +290,7 @@ fun CircularProgressCompose(
                 .size(size)
                 .padding(Dimen.exSmallPadding),
             color = color,
-            strokeWidth = Dimen.strokeWidth,
+            strokeWidth = strokeWidth
         )
         Text(
             text = (progress * 100).toInt().toString(),
@@ -802,6 +808,67 @@ fun CharacterTag(
         }
     }
 }
+
+/**
+ * 头部（滑动隐藏）
+ *
+ * @param url title点击跳转url
+ * @param title 标题 蓝底白字
+ * @param startText 标题后文字
+ * @param endText 末尾文字
+ * @param extraContent 额外内容
+ */
+@Composable
+fun ExpandableHeader(
+    scrollState: LazyListState,
+    url: String? = null,
+    title: String,
+    startText: String,
+    endText: String? = null,
+    extraContent: (@Composable () -> Unit)? = null
+) {
+    val context = LocalContext.current
+    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
+
+
+    Column {
+        //标题
+        ExpandAnimation(visible = showTitle) {
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = title,
+                    modifier = Modifier
+                        .clickable(url != null) {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(url!!)
+                        }
+                )
+
+                CaptionText(
+                    text = startText,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                if (endText != null) {
+                    CaptionText(
+                        text = endText,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+        //额外内容，不折叠
+        if (extraContent != null) {
+            extraContent()
+        }
+    }
+}
+
 
 @CombinedPreviews
 @Composable

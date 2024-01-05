@@ -474,6 +474,10 @@ private fun downloadApk(
                             updateApkDownloadState(value)
                         }
 
+                        WorkInfo.State.FAILED -> {
+                            updateApkDownloadState(-3)
+                        }
+
                         else -> Unit
                     }
                 }

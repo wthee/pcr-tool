@@ -3,20 +3,16 @@ package cn.wthee.pcrtool.ui.media
 import android.Manifest
 import android.graphics.Bitmap
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,6 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -260,7 +257,7 @@ fun PictureItem(
 
 /**
  * 图片预览弹窗
- * fixme 小窗模式底部显示异常（dialog导致问题）
+ * fixme 小窗模式底部显示异常（dialog导致问题）；横屏导致 fab错位
  */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
@@ -305,17 +302,13 @@ private fun PreviewPictureDialog(
     //未加载提示
     val unLoadToast = stringResource(R.string.wait_pic_load)
 
-    AlertDialog(
+    Dialog(
         onDismissRequest = {
             openPreviewDialog.value = false
         },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
-            .navigationBarsPadding()
     ) {
         MainScaffold(
             contentAlignment = Alignment.Center,
@@ -377,8 +370,7 @@ private fun PreviewPictureDialog(
             onCloseClick = {
                 openPreviewDialog.value = false
             },
-            backgroundColor = Color.Transparent,
-            modifier = Modifier.navigationBarsPadding()
+            backgroundColor = Color.Transparent
         ) {
             //预览功能，手势操作
             MainImage(
