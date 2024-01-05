@@ -1,17 +1,21 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -81,11 +85,23 @@ fun DateRangePickerCompose(
             showModeToggle = true,
             title = {},
             headline = {
-                DateRangePickerDefaults.DateRangePickerHeadline(
-                    dateRangePickerState,
-                    remember { DatePickerFormatter() },
-                    modifier = Modifier.padding(Dimen.smallPadding)
-                )
+                //调整字体大小
+                ProvideTextStyle(
+                    value = MaterialTheme.typography.titleMedium
+                ) {
+                    DateRangePickerDefaults.DateRangePickerHeadline(
+                        dateRangePickerState,
+                        remember { DatePickerFormatter() },
+                        modifier = Modifier.padding(
+                            PaddingValues(
+                                start = Dimen.largePadding,
+                                end = 12.dp,
+                                bottom = 12.dp
+                            )
+                        )
+                    )
+                }
+
             }
         )
     }
