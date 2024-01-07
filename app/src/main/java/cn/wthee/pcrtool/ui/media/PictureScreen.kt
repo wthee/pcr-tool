@@ -414,6 +414,7 @@ private fun getFileName(url: String): String {
             url.contains(ImageRequestHelper.CARD_STORY) -> "story"
             url.contains(ImageRequestHelper.CARD_ACTUAL_PROFILE) -> "unit_actual"
             url.contains(ImageRequestHelper.COMIC) -> "comic"
+            url.contains(ImageRequestHelper.COMIC_ZH) -> "comic"
             //b站动态图片
             url.contains("bfs") -> "info"
             else -> "unit"

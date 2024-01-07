@@ -808,7 +808,6 @@
 
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>
-    <string name="leader_new_character">新登场</string>
     <string name="only_jp">日服评价，仅供参考</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>

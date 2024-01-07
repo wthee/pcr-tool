@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.home.uniqueequip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,6 +14,7 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.spanCount
 
 
@@ -31,7 +33,10 @@ fun UniqueEquipSection(
     val id = OverviewType.UNIQUE_EQUIP.id
     val uiState by uniqueEquipSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val equipSpanCount = Dimen.homeIconItemWidth.spanCount
+    val equipSpanCount = spanCount(
+        LocalView.current.width - (Dimen.mediumPadding * 2).value.dp2px,
+        Dimen.homeIconItemWidth
+    )
 
     LaunchedEffect(equipSpanCount) {
         uniqueEquipSectionViewModel.loadData(equipSpanCount)

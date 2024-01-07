@@ -68,6 +68,7 @@ class ImageRequestHelper {
 
         //过场漫画
         const val COMIC = "comic/"
+        const val COMIC_ZH = "comic_zh/"
     }
 
     /**

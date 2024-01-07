@@ -106,7 +106,7 @@ fun Modifier.placeholder(
     }
 
     val paint = remember { Paint() }
-    val mShape = shape ?: MaterialTheme.shapes.small
+    val mShape = shape ?: MaterialTheme.shapes.extraSmall
     val color = color()
 
     remember(color, shape, highlight) {
