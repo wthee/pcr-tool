@@ -9,11 +9,10 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -50,6 +49,7 @@ import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MediaDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -197,7 +197,9 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                                 .padding(
                                     horizontal = Dimen.largePadding,
                                     vertical = Dimen.mediumPadding
-                                )
+                                ),
+                            shape = noShape(),
+                            ratio = 1f
                         )
                     }
                 }
@@ -242,7 +244,7 @@ fun PictureItem(
                 VibrateUtil(context).single()
                 openPreviewDialog.value = true
             }
-            .placeholder(placeholder)
+            .placeholder(placeholder, shape)
     )
 
     //预览
@@ -260,7 +262,7 @@ fun PictureItem(
  * fixme 小窗模式底部显示异常（dialog导致问题）；横屏导致 fab错位
  */
 @Composable
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class)
 private fun PreviewPictureDialog(
     openPreviewDialog: MutableState<Boolean>,
     picUrl: String,
@@ -377,7 +379,6 @@ private fun PreviewPictureDialog(
                 data = picUrl,
                 ratio = ratio,
                 modifier = Modifier
-                    .widthIn(max = Dimen.itemMaxWidth)
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale,
@@ -388,6 +389,12 @@ private fun PreviewPictureDialog(
                     .transformable(state = transformableState)
                     //置于最上层
                     .zIndex(99f)
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .width(Dimen.itemMaxWidth)
+                    .clickable {
+                        VibrateUtil(context).single()
+                        openPreviewDialog.value = false
+                    },
             ) {
                 //获取本地原图缓存
                 loadedPic.value = (it.image as BitmapImage).bitmap

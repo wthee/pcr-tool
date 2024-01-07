@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -197,114 +197,113 @@ private fun TweetItem(data: TweetData) {
 
 
         MainCard {
-            Column {
+            //来源
+            val jpInfoUrl = stringResource(id = R.string.jp_info_url)
+            IconTextButton(
+                text = "@" + stringResource(id = R.string.title_jp_info),
+                contentColor = MaterialTheme.colorScheme.primary
+            ) {
+                BrowserUtil.open(jpInfoUrl)
+            }
 
-                //来源
-                val jpInfoUrl = stringResource(id = R.string.jp_info_url)
-                IconTextButton(
-                    text = "@" + stringResource(id = R.string.title_jp_info),
-                    contentColor = MaterialTheme.colorScheme.primary
-                ) {
-                    BrowserUtil.open(jpInfoUrl)
-                }
+            //文本
+            if (data.tweet.contains("http")) {
+                val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+                    val str = data.getFormatTweet()
+                    val urlIndexList = clickableLink(str)
 
-                //文本
-                if (data.tweet.contains("http")) {
-                    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
-                        val str = data.getFormatTweet()
-                        val urlIndexList = clickableLink(str)
-
-                        urlIndexList.forEachIndexed { i, it ->
-                            val startIndex = it.first
-                            val endIndex = it.second
-                            //多个url时 只添加一次
-                            if (i == 0) {
-                                append(str)
-                            }
-                            addStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontSize = 16.sp,
-                                    textDecoration = TextDecoration.Underline
-                                ),
-                                start = startIndex,
-                                end = endIndex
-                            )
-
-                            addStringAnnotation(
-                                tag = "URL",
-                                annotation = str.substring(startIndex, endIndex),
-                                start = startIndex,
-                                end = endIndex
-                            )
+                    urlIndexList.forEachIndexed { i, it ->
+                        val startIndex = it.first
+                        val endIndex = it.second
+                        //多个url时 只添加一次
+                        if (i == 0) {
+                            append(str)
                         }
-                    }
+                        addStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 16.sp,
+                                textDecoration = TextDecoration.Underline
+                            ),
+                            start = startIndex,
+                            end = endIndex
+                        )
 
-                    ClickableText(
-                        modifier = Modifier.padding(
-                            start = Dimen.smallPadding,
-                            end = Dimen.smallPadding,
-                            bottom = Dimen.mediumPadding,
-                        ),
-                        text = annotatedLinkString,
-                        onClick = {
-                            annotatedLinkString
-                                .getStringAnnotations("URL", it, it)
-                                .firstOrNull()?.let { stringAnnotation ->
-                                    BrowserUtil.open(stringAnnotation.item)
-                                }
-                        }
-                    )
-                } else {
-                    MainContentText(
-                        text = data.getFormatTweet(),
-                        textAlign = TextAlign.Start,
-                        selectable = true,
-                        modifier = Modifier.padding(
-                            start = Dimen.smallPadding,
-                            end = Dimen.smallPadding,
-                            bottom = Dimen.mediumPadding,
-                        ),
-                    )
-                }
-
-                //相关链接跳转
-                IconTextButton(
-                    icon = MainIconType.BROWSER,
-                    text = stringResource(id = R.string.twitter),
-                    modifier = Modifier
-                        .padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding)
-                        .align(Alignment.End)
-                ) {
-                    BrowserUtil.open(data.link)
-                }
-
-                //图片
-                if (photos.isNotEmpty()) {
-                    if (photos.size > 1) {
-                        VerticalGrid(fixCount = 3, isSubLayout = true) {
-                            photos.forEach {
-                                Box(
-                                    modifier = Modifier
-                                        .height(Dimen.tweetImageHeight)
-                                        .padding(Dimen.exSmallPadding)
-                                ) {
-                                    PictureItem(
-                                        picUrl = it,
-                                        shape = noShape(),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        PictureItem(
-                            picUrl = photos[0],
-                            shape = noShape()
+                        addStringAnnotation(
+                            tag = "URL",
+                            annotation = str.substring(startIndex, endIndex),
+                            start = startIndex,
+                            end = endIndex
                         )
                     }
-
                 }
+
+                ClickableText(
+                    modifier = Modifier.padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.smallPadding,
+                        bottom = Dimen.mediumPadding,
+                    ),
+                    text = annotatedLinkString,
+                    onClick = {
+                        annotatedLinkString
+                            .getStringAnnotations("URL", it, it)
+                            .firstOrNull()?.let { stringAnnotation ->
+                                BrowserUtil.open(stringAnnotation.item)
+                            }
+                    }
+                )
+            } else {
+                MainContentText(
+                    text = data.getFormatTweet(),
+                    textAlign = TextAlign.Start,
+                    selectable = true,
+                    modifier = Modifier.padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.smallPadding,
+                        bottom = Dimen.mediumPadding,
+                    ),
+                )
+            }
+
+            //相关链接跳转
+            IconTextButton(
+                icon = MainIconType.BROWSER,
+                text = stringResource(id = R.string.twitter),
+                modifier = Modifier
+                    .padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding)
+                    .align(Alignment.End)
+            ) {
+                BrowserUtil.open(data.link)
+            }
+
+            //图片
+            if (photos.isNotEmpty()) {
+                if (photos.size > 1) {
+                    VerticalGrid(fixCount = 3, isSubLayout = true) {
+                        photos.forEach {
+                            Box(
+                                modifier = Modifier
+                                    .padding(Dimen.exSmallPadding)
+                                    .aspectRatio(1f)
+                            ) {
+                                PictureItem(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    picUrl = it,
+                                    shape = noShape(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    PictureItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        picUrl = photos[0],
+                        shape = noShape()
+                    )
+                }
+
             }
         }
 
