@@ -341,7 +341,7 @@ private fun ChangeDbCompose(
                 when (downloadState) {
                     -3 -> {
                         MainIcon(
-                            data = MainIconType.DB_ERROR,
+                            data = MainIconType.REMOTE_DB_ERROR,
                             tint = tintColor,
                             size = Dimen.fabIconSize
                         )
@@ -730,12 +730,13 @@ private fun SettingDropMenu(
         MainCard(
             fillMaxWidth = false,
             modifier = Modifier
+                .padding(Dimen.smallPadding)
                 .width(IntrinsicSize.Max)
                 .padding(
                     end = Dimen.fabMargin,
                     bottom = Dimen.fabMarginLargeBottom
                 ),
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             SettingSwitchCompose(
@@ -759,6 +760,7 @@ private fun SettingDropMenu(
                     wrapWidth = true
                 )
             }
+            Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             SettingCommonItem(
                 modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                 iconType = R.drawable.ic_launcher_foreground,
