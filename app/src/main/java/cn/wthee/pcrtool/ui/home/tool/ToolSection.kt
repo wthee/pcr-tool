@@ -106,7 +106,7 @@ fun ToolMenu(
 
     StateBox(
         stateType = loadingState,
-        noDataContent = {
+        errorContent = {
             if (!isEditMode && isHome) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     IconTextButton(

@@ -34,6 +34,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -177,7 +178,7 @@ fun AllToolMenuScreen(
                 ) {
                     ToolMenu(
                         toolOrderData = uiState.toolOrderData,
-                        loadingState = uiState.loadingState,
+                        loadingState = LoadingState.Success,
                         actions = actions,
                         isEditMode = isEditMode,
                         isHome = false,

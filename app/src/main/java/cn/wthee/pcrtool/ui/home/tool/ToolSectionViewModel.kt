@@ -56,6 +56,7 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
         _uiState.update {
             it.copy(
                 toolOrderData = orderData,
+                loadingState = it.loadingState.isSuccess(orderData != "")
             )
         }
     }
