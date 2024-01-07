@@ -7,16 +7,12 @@ import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.database.updateLocalDataBaseVersion
-import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -62,20 +58,13 @@ class DatabaseDownloadWorker(
         val region = inputData.getInt(KEY_REGION, 2)
         val fileName = inputData.getString(KEY_FILE)
         setForegroundAsync(createForegroundInfo())
-        val result = download(version, region, fileName ?: "")
-        if (result == Result.success()) {
-            //通知更新数据
-            handler.sendEmptyMessage(region)
-        } else if (result == Result.failure()) {
-            WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_DB_WORK)
-        }
-        return@coroutineScope result
+        return@coroutineScope download(version, region, fileName ?: "")
     }
 
 
     private suspend fun download(version: String, region: Int, fileName: String): Result {
-        var responseBody: ByteArray? = null
-        var progress = -3
+        val responseBody: ByteArray?
+        var progress = -2
 
         try {
             //创建下载请求
@@ -95,8 +84,8 @@ class DatabaseDownloadWorker(
                 }
             responseBody = httpResponse.body()!!
         } catch (e: Exception) {
-            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
+            return Result.failure(Data.Builder().putInt(KEY_PROGRESS, progress).build())
         }
 
         try {
@@ -113,7 +102,7 @@ class DatabaseDownloadWorker(
                 FileUtil.deleteBr(region)
             }
             //保存
-            db.writeBytes(responseBody!!)
+            db.writeBytes(responseBody)
             //关闭数据库
             AppBasicDatabase.close()
             //删除旧的wal
@@ -131,9 +120,8 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
-            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
-            return Result.failure()
+            return Result.failure(Data.Builder().putInt(KEY_PROGRESS, -2).build())
         }
     }
 

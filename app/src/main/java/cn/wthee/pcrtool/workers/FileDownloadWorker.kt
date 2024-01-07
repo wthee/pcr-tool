@@ -7,12 +7,9 @@ import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_FILE_WORK
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -55,13 +52,7 @@ class FileDownloadWorker(
         val downloadUrl = inputData.getString(KEY_URL) ?: return@coroutineScope Result.failure()
         val rename = inputData.getString(KEY_FILE_NAME)
         setForegroundAsync(createForegroundInfo())
-        val result = download(downloadUrl, rename)
-        if (result == Result.failure()) {
-            WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_FILE_WORK)
-        } else if (result == Result.success()) {
-            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, -2).build())
-        }
-        return@coroutineScope result
+        return@coroutineScope download(downloadUrl, rename)
     }
 
 

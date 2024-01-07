@@ -155,12 +155,18 @@ object DatabaseUpdater {
                             if (workInfo != null) {
                                 when (workInfo.state) {
                                     WorkInfo.State.SUCCEEDED -> {
-                                        updateDbDownloadState(-2)
+                                        handler.sendEmptyMessage(region.value)
                                     }
 
-                                    WorkInfo.State.RUNNING, WorkInfo.State.FAILED -> {
+                                    WorkInfo.State.RUNNING -> {
                                         val value =
                                             workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
+                                        updateDbDownloadState(value)
+                                    }
+
+                                    WorkInfo.State.FAILED -> {
+                                        val value =
+                                            workInfo.outputData.getInt(Constants.KEY_PROGRESS, -1)
                                         updateDbDownloadState(value)
                                     }
 
