@@ -142,12 +142,18 @@ private fun CharacterListFilterContent(
     }
     filter.type = typeIndex.intValue
 
+    //专用装备
+    val uniqueEquipTypeIndex = remember {
+        mutableIntStateOf(filter.uniqueEquipType)
+    }
+    filter.uniqueEquipType = uniqueEquipTypeIndex.intValue
+
 
     //更新信息
     LaunchedEffect(
         textState.value, sortTypeIndex.intValue, sortAscIndex.intValue, favoriteIndex.intValue,
         r6Index.intValue, positionIndex.intValue, atkIndex.intValue, guildIndex.intValue,
-        raceIndex.intValue, typeIndex.intValue
+        raceIndex.intValue, typeIndex.intValue, uniqueEquipTypeIndex.intValue
     ) {
         updateFilter(filter)
     }
@@ -341,6 +347,28 @@ private fun CharacterListFilterContent(
         ChipGroup(
             items = atkChipData,
             selectIndex = atkIndex,
+            modifier = Modifier.padding(Dimen.smallPadding)
+        )
+        //专用装备类型
+        MainText(
+            text = stringResource(id = R.string.tool_unique_equip),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val uniqueEquipTypeChipData = arrayListOf(
+            ChipData(stringResource(id = R.string.all)),
+            ChipData(
+                text = stringResource(id = R.string.tool_unique_equip) + 1
+            ),
+            ChipData(
+                text = stringResource(id = R.string.tool_unique_equip) + 2
+            ),
+            ChipData(
+                text = stringResource(id = R.string.other)
+            ),
+        )
+        ChipGroup(
+            items = uniqueEquipTypeChipData,
+            selectIndex = uniqueEquipTypeIndex,
             modifier = Modifier.padding(Dimen.smallPadding)
         )
         //种族

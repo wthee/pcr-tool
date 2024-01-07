@@ -649,7 +649,7 @@ fun IconListContent(
 
 /**
  * 角色标签行
- *
+ *@param showUniqueEquipType 是否显示专用装备图标
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -660,6 +660,7 @@ fun CharacterTagRow(
     tipText: String? = null,
     endText: String? = null,
     endTextColor: Color? = null,
+    showUniqueEquipType: Boolean = true,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
     FlowRow(
@@ -668,6 +669,24 @@ fun CharacterTagRow(
         verticalArrangement = Arrangement.Center
     ) {
         if (!unknown) {
+
+            //专用装备
+            if (showUniqueEquipType && basicInfo!!.uniqueEquipType != 0) {
+                MainIcon(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.smallPadding
+                        )
+                        .align(Alignment.CenterVertically),
+                    data = if (basicInfo.uniqueEquipType == 1) {
+                        R.drawable.ic_unique_equip
+                    } else {
+                        R.drawable.ic_unique_equip2
+                    },
+                    size = Dimen.smallIconSize,
+                )
+            }
+
             //位置
             CharacterPositionTag(
                 modifier = Modifier
@@ -679,7 +698,6 @@ fun CharacterTagRow(
             )
 
             val limitType = CharacterLimitType.getByType(basicInfo.limitType)
-
             Row {
                 //获取方式
                 CharacterTag(
@@ -751,8 +769,8 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-    val positionText =
-        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
+//    val positionText =
+//        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //位置图标
@@ -762,7 +780,7 @@ fun CharacterPositionTag(
         //位置
         CharacterTag(
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            text = positionText,
+            text = position.toString(),
             backgroundColor = PositionType.getPositionType(position).color
         )
     }
@@ -905,7 +923,8 @@ private fun CharacterTagPreview() {
                 basicInfo = CharacterInfo(
                     position = 123,
                     atkType = 1,
-                    limitType = 2
+                    limitType = 2,
+                    uniqueEquipType = 2
                 ),
                 tipText = text,
                 endText = text,
@@ -916,7 +935,8 @@ private fun CharacterTagPreview() {
             basicInfo = CharacterInfo(
                 position = 123,
                 atkType = 1,
-                limitType = 2
+                limitType = 2,
+                uniqueEquipType = 2
             ),
             tipText = text,
             endText = text,

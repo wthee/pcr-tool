@@ -54,7 +54,10 @@ data class FilterCharacter(
      *  1:常驻 2：限定 3：活动限定 4：额外角色
      */
     var type: Int = 0,
-
+    /**
+     * 六星：0全部、1专用装备1、2专用装备2
+     */
+    var uniqueEquipType: Int = 0,
 ) {
 
     fun position() = when (this.position) {
@@ -80,5 +83,8 @@ data class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && position == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0 && sortType == CharacterSortType.SORT_DATE && name == "" && (!asc) && type == 0)
+    return !(all && position == 0 && atk == 0 && (r6 == 0) && guild == 0 && race == 0
+            && sortType == CharacterSortType.SORT_DATE && name == "" && (!asc) && type == 0
+            && uniqueEquipType == 0
+            )
 }

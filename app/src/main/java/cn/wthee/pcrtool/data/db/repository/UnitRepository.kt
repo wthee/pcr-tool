@@ -76,6 +76,26 @@ class UnitRepository @Inject constructor(
                 },
             )
 
+            //筛选专用装备
+            val uniqueEquipList = equipmentRepository.getUniqueEquipList("", 0)
+            filterList.forEach {
+                val uniqueEquipType = uniqueEquipList?.count { equip ->
+                    equip.unitId == it.id
+                } ?: 0
+                it.uniqueEquipType = uniqueEquipType
+            }
+            filterList = when (filter.uniqueEquipType) {
+                1, 2 -> filterList.filter {
+                    it.uniqueEquipType == filter.uniqueEquipType
+                }
+
+                3 -> filterList.filter {
+                    it.uniqueEquipType == 0
+                }
+
+                else -> filterList
+            }
+
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
@@ -142,7 +162,13 @@ class UnitRepository @Inject constructor(
         } catch (_: Exception) {
             arrayListOf()
         }
-        unitDao.getCharacterBasicInfo(unitId = unitId, exUnitIdList = exUnitIdList)
+
+        val data = unitDao.getCharacterBasicInfo(unitId = unitId, exUnitIdList = exUnitIdList)!!
+        //获取专用装备信息
+        val uniqueEquipList = equipmentRepository.getUniqueEquipList("", 0, unitId = data.id)
+        data.uniqueEquipType = uniqueEquipList?.size ?: 0
+
+        data
     } catch (e: Exception) {
         LogReportUtil.upload(
             e,

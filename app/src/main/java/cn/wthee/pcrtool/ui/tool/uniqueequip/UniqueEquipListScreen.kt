@@ -235,7 +235,7 @@ private fun UniqueEquipItem(
                     selectable = true
                 )
 
-                UnitIconAndTag(basicInfo)
+                UnitIconAndTag(basicInfo = basicInfo, showUniqueEquipType = false)
 
             }
         }
@@ -249,7 +249,8 @@ private fun UniqueEquipItem(
  */
 @Composable
 fun UnitIconAndTag(
-    basicInfo: CharacterInfo?
+    basicInfo: CharacterInfo?,
+    showUniqueEquipType: Boolean
 ) {
     basicInfo?.let {
         Row(
@@ -272,7 +273,8 @@ fun UnitIconAndTag(
 
                 CharacterTagRow(
                     modifier = Modifier.padding(top = Dimen.smallPadding),
-                    basicInfo = basicInfo
+                    basicInfo = basicInfo,
+                    showUniqueEquipType = showUniqueEquipType
                 )
             }
         }

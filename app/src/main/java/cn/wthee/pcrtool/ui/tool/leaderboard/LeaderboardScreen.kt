@@ -189,7 +189,12 @@ fun LeaderboardScreen(
                             leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
                         }
                         val basicInfo by flow.collectAsState(initial = null)
-                        LeaderboardItem(it, index, basicInfo, toCharacterDetail)
+                        LeaderboardItem(
+                            leader = it,
+                            index = index,
+                            basicInfo = basicInfo,
+                            toCharacterDetail = toCharacterDetail
+                        )
                     }
                     items(count = 2) {
                         CommonSpacer()
@@ -324,13 +329,13 @@ private fun LeaderboardItem(
     ) {
         //图标
         LeaderCharacterIcon(
-            hasUnitId,
-            placeholder,
-            leader.unitId,
-            leader.url,
-            unknown,
-            tipText,
-            toCharacterDetail
+            hasUnitId = hasUnitId,
+            placeholder = placeholder,
+            unitId = leader.unitId,
+            url = leader.url,
+            unknown = unknown,
+            tipText = tipText,
+            toCharacterDetail = toCharacterDetail
         )
 
         //信息
@@ -379,7 +384,7 @@ private fun LeaderboardItem(
                 basicInfo = basicInfo,
                 tipText = tipText,
                 endText = if (leader.updateTime == null) {
-                    stringResource(id = R.string.leader_new_character)
+                    stringResource(id = R.string.none)
                 } else {
                     leader.updateTime.substring(0, 11)
                 },
@@ -388,7 +393,7 @@ private fun LeaderboardItem(
                 } else {
                     textColor
                 },
-                horizontalArrangement = Arrangement.End
+                showUniqueEquipType = false
             )
 
         }

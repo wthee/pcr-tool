@@ -1,29 +1,32 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import androidx.room.Ignore
 
 
 /**
  * 角色信息视图
  */
 data class CharacterInfo(
-    @ColumnInfo(name = "unit_id") val id: Int = -1,
-    @ColumnInfo(name = "unit_name") val name: String = "",
-    @ColumnInfo(name = "rarity") val rarity: Int = 3,
-    @ColumnInfo(name = "kana") val kana: String = "",
-    @ColumnInfo(name = "age_int") val age: String = "",
-    @ColumnInfo(name = "guild") val guild: String = "",
-    @ColumnInfo(name = "race") val race: String = "",
-    @ColumnInfo(name = "height_int") val height: String = "",
-    @ColumnInfo(name = "weight_int") val weight: String = "",
-    @ColumnInfo(name = "birth_month_int") val birthMonth: String = "",
-    @ColumnInfo(name = "birth_day_int") val birthDay: String = "",
-    @ColumnInfo(name = "search_area_width") val position: Int = 0,
-    @ColumnInfo(name = "atk_type") val atkType: Int = 1,
-    @ColumnInfo(name = "unit_start_time") val startTime: String = "2020-01-01 00:00:00",
-    @ColumnInfo(name = "r6Id") val r6Id: Int = 1,
-    @ColumnInfo(name = "limit_type") val limitType: Int = 0,
+    @ColumnInfo(name = "unit_id") var id: Int = -1,
+    @ColumnInfo(name = "unit_name") var name: String = "",
+    @ColumnInfo(name = "rarity") var rarity: Int = 3,
+    @ColumnInfo(name = "kana") var kana: String = "",
+    @ColumnInfo(name = "age_int") var age: String = "",
+    @ColumnInfo(name = "guild") var guild: String = "",
+    @ColumnInfo(name = "race") var race: String = "",
+    @ColumnInfo(name = "height_int") var height: String = "",
+    @ColumnInfo(name = "weight_int") var weight: String = "",
+    @ColumnInfo(name = "birth_month_int") var birthMonth: String = "",
+    @ColumnInfo(name = "birth_day_int") var birthDay: String = "",
+    @ColumnInfo(name = "search_area_width") var position: Int = 0,
+    @ColumnInfo(name = "atk_type") var atkType: Int = 1,
+    @ColumnInfo(name = "unit_start_time") var startTime: String = "",
+    @ColumnInfo(name = "r6Id") var r6Id: Int = 1,
+    @ColumnInfo(name = "limit_type") var limitType: Int = 0,
+    @Ignore var uniqueEquipType: Int = 0,
 ) {
+    constructor() : this(-1, "", 3, "", "", "", "", "", "", "", "", 0, 1, "", 1, 0, 0)
 
     /**
      * 获取名字，去除限定类型

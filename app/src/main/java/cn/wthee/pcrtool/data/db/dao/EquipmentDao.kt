@@ -497,9 +497,10 @@ interface EquipmentDao {
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
         WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
+            AND  (0 = :unitId OR ud.unit_id = :unitId)
         """
     )
-    suspend fun getUniqueEquipList(name: String, slot: Int): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipList(name: String, slot: Int, unitId: Int): List<UniqueEquipBasicData>
 
     /**
      * 获取专用装备列表
@@ -520,9 +521,14 @@ interface EquipmentDao {
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
         WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') AND  (0 = :slot OR ued.equipment_id % 10 = :slot)
+            AND  (0 = :unitId OR ud.unit_id = :unitId)
         """
     )
-    suspend fun getUniqueEquipListV2(name: String, slot: Int): List<UniqueEquipBasicData>
+    suspend fun getUniqueEquipListV2(
+        name: String,
+        slot: Int,
+        unitId: Int
+    ): List<UniqueEquipBasicData>
 
 
     /**

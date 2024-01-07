@@ -238,12 +238,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     /**
      * 获取排序后的专用装备列表
      */
-    suspend fun getUniqueEquipList(name: String, slot: Int) = try {
+    suspend fun getUniqueEquipList(name: String, slot: Int, unitId: Int = 0) = try {
         val data = (try {
-            val data = equipmentDao.getUniqueEquipListV2(name = name, slot = slot)
+            val data = equipmentDao.getUniqueEquipListV2(name = name, slot = slot, unitId = unitId)
             data
         } catch (_: Exception) {
-            equipmentDao.getUniqueEquipList(name = name, slot = slot)
+            equipmentDao.getUniqueEquipList(name = name, slot = slot, unitId = unitId)
         }).reversed()
 
         when (MainActivity.regionType) {

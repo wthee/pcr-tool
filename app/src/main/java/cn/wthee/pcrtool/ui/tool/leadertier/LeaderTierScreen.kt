@@ -285,7 +285,8 @@ private fun LeaderItem(
                     .padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
                 unknown = unknown,
                 basicInfo = basicInfo,
-                tipText = tipText
+                tipText = tipText,
+                showUniqueEquipType = false
             )
         }
     }

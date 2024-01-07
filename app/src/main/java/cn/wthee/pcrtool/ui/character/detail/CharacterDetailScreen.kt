@@ -465,7 +465,10 @@ private fun CharacterDetailContent(
                         )
 
                         //图标
-                        CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(uiState.basicInfo)
+                        CharacterDetailModuleType.UNIT_ICON -> UnitIconAndTag(
+                            uiState.basicInfo,
+                            showUniqueEquipType = uiState.showAllInfo
+                        )
 
                         //技能循环
                         CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoopScreen(
