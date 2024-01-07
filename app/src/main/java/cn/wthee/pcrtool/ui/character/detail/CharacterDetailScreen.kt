@@ -1091,13 +1091,13 @@ private fun StarSelectContent(
     Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
         for (i in 1..max) {
             val iconId = when {
-                i > currentValue.rarity -> R.drawable.ic_star_dark
+                i > currentValue.rarity -> R.drawable.ic_star_empty
                 i == 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
             MainIcon(
                 data = iconId,
-                size = Dimen.fabIconSize,
+                size = Dimen.textIconSize,
                 modifier = Modifier.padding(Dimen.smallPadding)
             ) {
                 updateCurrentValue(currentValue.copy(rarity = i))

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Celebration
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.CloudDownload
+import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContactSupport
 import androidx.compose.material.icons.rounded.CreditCard
@@ -302,6 +303,11 @@ enum class MainIconType(val icon: ImageVector) {
      * 数据异常
      */
     DB_ERROR(Icons.Rounded.SyncProblem),
+
+    /**
+     * 远程数据异常
+     */
+    REMOTE_DB_ERROR(Icons.Rounded.CloudOff),
 
     /**
      * 反馈交流群

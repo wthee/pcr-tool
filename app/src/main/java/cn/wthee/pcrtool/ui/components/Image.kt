@@ -122,7 +122,7 @@ fun MainIcon(
     tint: Color = MaterialTheme.colorScheme.primary,
     colorFilter: ColorFilter? = null,
     wrapSize: Boolean = false,
-    contentScale: ContentScale = ContentScale.Crop,
+    contentScale: ContentScale = ContentScale.FillBounds,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
