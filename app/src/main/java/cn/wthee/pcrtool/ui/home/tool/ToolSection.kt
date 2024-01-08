@@ -33,7 +33,7 @@ import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.defaultSpring
@@ -126,18 +126,14 @@ fun ToolMenu(
             }
         }
 
-        VerticalGrid(
+        VerticalStaggeredGrid(
             itemWidth = Dimen.menuItemSize,
-            contentPadding = Dimen.largePadding + Dimen.mediumPadding,
+            contentPadding = Dimen.mediumPadding,
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
             toolList.forEach {
                 Box(
                     modifier = Modifier
-                        .padding(
-                            top = Dimen.mediumPadding,
-                            bottom = Dimen.largePadding
-                        )
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {

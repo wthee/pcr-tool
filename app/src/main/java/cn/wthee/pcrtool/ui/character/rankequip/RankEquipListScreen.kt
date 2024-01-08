@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.RankText
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -113,7 +113,7 @@ private fun RankEquipListItem(
                 type = if (unitPromotion.promotionLevel == currentRank) 1 else 0
             )
 
-            VerticalGrid(fixCount = 2) {
+            VerticalStaggeredGrid(fixCount = 2) {
                 allIds.forEach {
                     Box(
                         modifier = Modifier.fillMaxWidth(),

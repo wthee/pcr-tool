@@ -163,7 +163,6 @@ fun BirthdayItem(
                 GridIconList(
                     idList = idList,
                     iconResourceType = IconResourceType.CHARACTER,
-                    isSubLayout = true,
                     onClickItem = toCharacterDetail
                 )
             }

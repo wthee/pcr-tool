@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -119,11 +118,17 @@ fun MainSmallFab(
                     text = text,
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
-                    modifier = if (isTextFab) {
-                        Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
-                    } else {
-                        Modifier
-                    }
+                    modifier = Modifier
+                        .then(
+                            if (isTextFab) {
+                                Modifier.padding(
+                                    start = Dimen.mediumPadding,
+                                    end = Dimen.largePadding
+                                )
+                            } else {
+                                Modifier
+                            }
+                        )
                         .widthIn(max = Dimen.fabTextMaxWidth),
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
@@ -381,7 +386,6 @@ fun RankRangePickerCompose(
 /**
  * RANK 选择器
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RankSelectItem(
     selectIndex: MutableState<Int>,
@@ -390,17 +394,15 @@ private fun RankSelectItem(
     currentRank: Int
 ) {
 
-    VerticalGrid(
+    VerticalStaggeredGrid(
         itemWidth = Dimen.rankTextWidth,
-        contentPadding = Dimen.mediumPadding
+        contentPadding = Dimen.smallPadding
     ) {
-
         rankList.filter {
             targetType == RankSelectType.DEFAULT ||
                     (targetType == RankSelectType.LIMIT && it >= currentRank)
         }.forEachIndexed { index, rank ->
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-
                 val rankColor = RankColor.getRankColor(rank = rank)
                 val selected = selectIndex.value == index
 
@@ -413,7 +415,6 @@ private fun RankSelectItem(
                 )
             }
         }
-
     }
 }
 

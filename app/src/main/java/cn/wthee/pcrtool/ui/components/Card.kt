@@ -47,6 +47,7 @@ fun MainCard(
                     Modifier
                 }
             )
+            .shadow(elevation, shape, true)
             .then(
                 if (onClick != null) {
                     Modifier.clickable {
@@ -56,8 +57,7 @@ fun MainCard(
                 } else {
                     Modifier
                 }
-            )
-            .shadow(elevation, shape, true),
+            ),
         content = content,
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = containerColor)

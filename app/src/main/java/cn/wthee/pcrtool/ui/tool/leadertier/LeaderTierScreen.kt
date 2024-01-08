@@ -37,7 +37,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -132,9 +132,9 @@ fun LeaderTierScreen(
             StateBox(
                 stateType = uiState.loadingState,
                 loadingContent = {
-                    VerticalGrid(
+                    VerticalStaggeredGrid(
                         itemWidth = Dimen.iconSize * 4,
-                        contentPadding = Dimen.largePadding,
+                        contentPadding = Dimen.mediumPadding,
                     ) {
                         for (i in 0..10) {
                             LeaderItem(LeaderTierItem(), null, toCharacterDetail)
@@ -183,9 +183,9 @@ private fun LeaderTierContent(
             }
             item {
                 //分组内容
-                VerticalGrid(
+                VerticalStaggeredGrid(
                     itemWidth = Dimen.iconSize * 4,
-                    contentPadding = Dimen.largePadding,
+                    contentPadding = Dimen.mediumPadding,
                 ) {
                     it.leaderList.forEach { leader ->
                         //获取角色名
@@ -229,14 +229,7 @@ private fun LeaderItem(
     val tipText = getLeaderUnknownTip(hasUnitId)
 
 
-    Row(
-        modifier = Modifier
-            .padding(
-                bottom = Dimen.largePadding,
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding,
-            )
-    ) {
+    Row {
         //图标
         LeaderCharacterIcon(
             hasUnitId,

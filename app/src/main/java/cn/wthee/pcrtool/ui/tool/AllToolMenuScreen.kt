@@ -44,7 +44,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.tool.ToolMenu
 import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
@@ -263,8 +263,9 @@ private fun MenuGroup(
         if (group.groupDesc != "") {
             CaptionText(text = group.groupDesc)
         }
-        VerticalGrid(
+        VerticalStaggeredGrid(
             itemWidth = (Dimen.iconSize * 3),
+            contentPadding = Dimen.mediumPadding,
             modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
         ) {
             group.toolList.forEach {
@@ -294,7 +295,6 @@ private fun MenuItem(
 
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = if (isEditMode) {
             {
                 editOrder(

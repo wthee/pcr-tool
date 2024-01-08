@@ -87,6 +87,7 @@ fun SuggestionChipGroup(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainChip(
+    modifier: Modifier = Modifier,
     index: Int,
     selected: Boolean,
     selectIndex: MutableState<Int>,
@@ -101,7 +102,7 @@ fun MainChip(
             VibrateUtil(context).single()
             selectIndex.value = index
         },
-        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+        modifier = modifier,
         colors = FilterChipDefaults.elevatedFilterChipColors(
             containerColor = MaterialTheme.colorScheme.surface,
             selectedContainerColor = selectedColor ?: MaterialTheme.colorScheme.primary

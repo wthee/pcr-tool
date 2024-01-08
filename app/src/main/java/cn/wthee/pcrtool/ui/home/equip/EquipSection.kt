@@ -1,9 +1,14 @@
 package cn.wthee.pcrtool.ui.home.equip
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,7 +19,6 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.spanCount
 
 
@@ -33,17 +37,18 @@ fun EquipSection(
     val id = OverviewType.EQUIP.id
     val uiState by equipSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val equipSpanCount = spanCount(
-        LocalView.current.width - (Dimen.mediumPadding * 2).value.dp2px,
-        Dimen.homeIconItemWidth
-    )
-
+    var equipSpanCount by remember {
+        mutableIntStateOf(0)
+    }
     LaunchedEffect(equipSpanCount) {
         equipSectionViewModel.loadData(equipSpanCount)
     }
 
 
     Section(
+        modifier = Modifier.onSizeChanged {
+            equipSpanCount = spanCount(it.width, Dimen.homeIconItemWidth)
+        },
         id = id,
         titleId = R.string.tool_equip,
         iconType = MainIconType.EQUIP,
@@ -59,14 +64,14 @@ fun EquipSection(
             }
         }
     ) {
-        uiState.equipIdList?.let {
-            GridIconList(
-                idList = it,
-                iconResourceType = IconResourceType.EQUIP,
-                itemWidth = Dimen.homeIconItemWidth,
-                contentPadding = 0.dp,
-                onClickItem = toEquipDetail
-            )
-        }
+        GridIconList(
+            paddingValues = PaddingValues(top = Dimen.mediumPadding),
+            idList = uiState.equipIdList,
+            iconResourceType = IconResourceType.EQUIP,
+            itemWidth = Dimen.homeIconItemWidth,
+            contentPadding = 0.dp,
+            fixCount = equipSpanCount,
+            onClickItem = toEquipDetail
+        )
     }
 }

@@ -39,7 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -123,10 +123,13 @@ fun WebsiteScreen(
         StateBox(
             stateType = uiState.loadingState,
             loadingContent = {
-                VerticalGrid(
+                VerticalStaggeredGrid(
                     itemWidth = getItemWidth(),
                     contentPadding = Dimen.mediumPadding,
-                    modifier = Modifier.animateContentSize(defaultSpring())
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        bottom = Dimen.largePadding
+                    )
                 ) {
                     for (i in 0..10) {
                         WebsiteItem(data = WebsiteData())
@@ -181,10 +184,12 @@ private fun WebsiteGroup(
         if (websiteList.isEmpty()) {
             CenterTipText(text = stringResource(id = R.string.no_data))
         } else {
-            VerticalGrid(
+            VerticalStaggeredGrid(
                 itemWidth = getItemWidth(),
                 contentPadding = Dimen.mediumPadding,
-                modifier = Modifier.animateContentSize(defaultSpring())
+                modifier = Modifier
+                    .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
+                    .animateContentSize(defaultSpring())
             ) {
                 websiteList.forEach {
                     WebsiteItem(data = it)
@@ -210,9 +215,7 @@ private fun WebsiteItem(data: WebsiteData) {
     }
 
     Column(
-        modifier = Modifier
-            .padding(vertical = Dimen.mediumPadding, horizontal = Dimen.largePadding)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

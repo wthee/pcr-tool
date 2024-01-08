@@ -43,6 +43,9 @@ object Dimen {
 
     val iconSize = 48.dp
 
+    //网格图标宽度
+    val iconItemWidth = iconSize + commonItemPadding * 2
+
     val largeIconSize = 56.dp
 
     val divLineHeight = 1.dp
@@ -65,15 +68,13 @@ object Dimen {
 
     val attrWidth = 165.dp
 
-    val rankTextWidth = 48.dp
+    val rankTextWidth = 56.dp
 
     val strokeWidth = 3.dp
 
     val smallStrokeWidth = 2.dp
 
     val linearProgressHeight = 6.dp
-
-    val tweetImageHeight = 128.dp
 
     val indicatorSize = 7.dp
 

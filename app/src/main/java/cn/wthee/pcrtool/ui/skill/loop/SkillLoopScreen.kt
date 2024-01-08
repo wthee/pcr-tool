@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.skill.getSkillColor
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -124,11 +124,11 @@ private fun SkillLoopItemContent(
         Spacer(modifier = Modifier.weight(1f))
     }
 
-    VerticalGrid(
+    VerticalStaggeredGrid(
         modifier = Modifier
             .padding(top = Dimen.mediumPadding),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.largePadding
+        itemWidth = Dimen.iconItemWidth,
+        verticalContentPadding = Dimen.commonItemPadding
     ) {
         loopList.forEach {
             val type: String
@@ -158,9 +158,7 @@ private fun SkillLoopItemContent(
             }
 
             Column(
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MainIcon(data = url)

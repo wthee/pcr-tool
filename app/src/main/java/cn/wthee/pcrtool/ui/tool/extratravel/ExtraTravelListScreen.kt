@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,7 +29,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -110,28 +108,21 @@ private fun TravelItem(
     )
 
     //quest列表
-    VerticalGrid(
+    VerticalStaggeredGrid(
         itemWidth = getItemWidth() / 2,
-        contentPadding = Dimen.largePadding,
-        modifier = Modifier.padding(
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
-        ),
+        contentPadding = Dimen.mediumPadding,
+        modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
     ) {
         travelData.questList.forEachIndexed { _, questData ->
-            MainCard(modifier = Modifier.padding(Dimen.mediumPadding),
+            MainCard(
                 onClick = {
                     toExtraEquipTravelAreaDetail(questData.travelQuestId)
                 }
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    TravelQuestHeader(
-                        questData = questData
-                    )
-                }
+                TravelQuestHeader(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    questData = questData
+                )
             }
         }
     }
@@ -143,15 +134,16 @@ private fun TravelItem(
  */
 @Composable
 fun TravelQuestHeader(
+    modifier: Modifier = Modifier,
     questData: ExtraEquipQuestData,
     showTitle: Boolean = true
 ) {
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .padding(vertical = Dimen.mediumPadding)
+            .padding(vertical = Dimen.mediumPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //图标
         MainIcon(
@@ -163,8 +155,7 @@ fun TravelQuestHeader(
             Subtitle1(text = questData.getQuestName())
         }
         //其它参数
-        VerticalGrid(
-            contentPadding = Dimen.smallPadding,
+        VerticalStaggeredGrid(
             itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(

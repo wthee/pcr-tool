@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home.event
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +23,7 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.components.MainCard
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.home.tool.MenuItem
@@ -32,7 +31,6 @@ import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
 import cn.wthee.pcrtool.ui.home.tool.getToolMenuData
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.birthday.BirthdayItem
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleOverviewItemContent
 import cn.wthee.pcrtool.ui.tool.event.CalendarEventItem
@@ -141,8 +139,8 @@ fun CalendarEventLayout(
             ExpandAnimation(visible = eventLayoutState == calendarType.type) {
                 CalendarEventOperation(actions)
             }
-            VerticalGrid(
-                itemWidth = getItemWidth(),
+            VerticalStaggeredGrid(
+                itemWidth = getItemWidth() + Dimen.largePadding * 2,
                 modifier = Modifier.padding(top = Dimen.mediumPadding)
             ) {
                 clanBattleList.forEach {
@@ -204,22 +202,17 @@ private fun CalendarEventOperation(
             vertical = Dimen.mediumPadding
         )
     ) {
-        VerticalGrid(
+        VerticalStaggeredGrid(
             itemWidth = Dimen.menuItemSize,
-            contentPadding = Dimen.largePadding + Dimen.mediumPadding,
-            modifier = Modifier.animateContentSize(defaultSpring())
+            contentPadding = Dimen.mediumPadding,
         ) {
             toolList.forEach {
                 Box(
                     modifier = Modifier
-                        .padding(
-                            top = Dimen.mediumPadding,
-                            bottom = Dimen.largePadding
-                        )
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    MenuItem(actions, it, false)
+                    MenuItem(actions = actions, toolMenuData = it, isEditMode = false)
                 }
             }
         }

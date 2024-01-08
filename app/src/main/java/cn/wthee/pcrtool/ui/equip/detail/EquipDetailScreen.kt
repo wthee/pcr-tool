@@ -152,15 +152,11 @@ private fun EquipMaterialListContent(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        VerticalGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.largePadding) {
+        VerticalStaggeredGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.mediumPadding) {
             materialList.forEach { material ->
                 val favorite = favoriteIdList.contains(material.id)
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            bottom = Dimen.largePadding
-                        ),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     MainIcon(

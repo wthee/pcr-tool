@@ -603,6 +603,7 @@ private fun DbVersionContentItem(
  */
 @Composable
 fun Section(
+    modifier: Modifier = Modifier,
     id: Int,
     @StringRes titleId: Int,
     iconType: MainIconType? = null,
@@ -620,38 +621,47 @@ fun Section(
     //首页排序
     val index = orderStr.intArrayList.indexOf(id)
 
-    val modifier = if (onClick == null) {
-        Modifier
-    } else {
-        Modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = {
-                VibrateUtil(context).single()
-                if (contentVisible) {
-                    onClick()
-                }
-            })
-            .background(
-                color = if (hasAdded) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = MaterialTheme.shapes.medium
-            )
-    }
+    val rowModifier = Modifier
+        .then(
+            if (onClick == null) {
+                Modifier
+            } else {
+                Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable(onClick = {
+                        VibrateUtil(context).single()
+                        if (contentVisible) {
+                            onClick()
+                        }
+                    })
+                    .background(
+                        color = if (hasAdded) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            Color.Transparent
+                        },
+                        shape = MaterialTheme.shapes.medium
+                    )
+            }
+        )
+        .padding(Dimen.mediumPadding)
 
 
     Column(
-        modifier = if (animOnFlag) {
-            Modifier
-                .padding(top = Dimen.largePadding)
-                .animateContentSize(defaultSpring())
-        } else {
-            Modifier
-                .padding(top = Dimen.largePadding)
-        }
+        modifier = modifier.then(
+            if (animOnFlag) {
+                Modifier
+                    .padding(top = Dimen.largePadding)
+                    .animateContentSize(defaultSpring())
+            } else {
+                Modifier
+                    .padding(top = Dimen.largePadding)
+            }
+        )
     ) {
         Row(
-            modifier = modifier
-                .padding(Dimen.mediumPadding),
+            modifier = rowModifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             //首页序号，编辑时显示

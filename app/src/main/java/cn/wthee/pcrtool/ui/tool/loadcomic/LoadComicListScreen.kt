@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.MediaGridList
 import cn.wthee.pcrtool.ui.media.PictureItem
@@ -64,15 +64,15 @@ fun LoadComicListScreen(
         StateBox(
             stateType = uiState.loadState,
             loadingContent = {
-                VerticalGrid(
-                    itemWidth = getItemWidth() / 2
+                VerticalStaggeredGrid(
+                    itemWidth = getItemWidth() / 2,
+                    contentPadding = Dimen.mediumPadding
                 ) {
                     for (i in 0..10) {
                         PictureItem(
                             picUrl = "",
                             ratio = 1f,
-                            shape = noShape(),
-                            modifier = Modifier.padding(Dimen.mediumPadding)
+                            shape = noShape()
                         )
                     }
                 }

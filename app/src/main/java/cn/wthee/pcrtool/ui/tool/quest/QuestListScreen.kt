@@ -39,7 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -396,15 +396,14 @@ fun AreaItem(
             .placeholder(placeholder)
     )
 
-    VerticalGrid(
+    VerticalStaggeredGrid(
         modifier = Modifier
             .padding(
-                start = Dimen.commonItemPadding,
-                end = Dimen.commonItemPadding
+                horizontal = Dimen.commonItemPadding
             )
             .placeholder(placeholder),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding
+        itemWidth = Dimen.iconItemWidth,
+        verticalContentPadding = Dimen.commonItemPadding
     ) {
         odds.forEach {
             EquipWithOddCompose(selectedId, it, searchEquipIdList)
@@ -424,9 +423,7 @@ private fun EquipWithOddCompose(
 ) {
 
     Column(
-        modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val selected =

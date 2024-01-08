@@ -3,7 +3,11 @@ package cn.wthee.pcrtool.ui.home.uniqueequip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,7 +18,6 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.spanCount
 
 
@@ -33,17 +36,18 @@ fun UniqueEquipSection(
     val id = OverviewType.UNIQUE_EQUIP.id
     val uiState by uniqueEquipSectionViewModel.uiState.collectAsStateWithLifecycle()
 
-    val equipSpanCount = spanCount(
-        LocalView.current.width - (Dimen.mediumPadding * 2).value.dp2px,
-        Dimen.homeIconItemWidth
-    )
-
+    var equipSpanCount by remember {
+        mutableIntStateOf(0)
+    }
     LaunchedEffect(equipSpanCount) {
         uniqueEquipSectionViewModel.loadData(equipSpanCount)
     }
 
 
     Section(
+        modifier = Modifier.onSizeChanged {
+            equipSpanCount = spanCount(it.width, Dimen.homeIconItemWidth)
+        },
         id = id,
         titleId = R.string.tool_unique_equip,
         iconType = MainIconType.UNIQUE_EQUIP,
@@ -65,6 +69,7 @@ fun UniqueEquipSection(
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
                 itemWidth = Dimen.homeIconItemWidth,
+                fixCount = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )
@@ -75,6 +80,7 @@ fun UniqueEquipSection(
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
                 itemWidth = Dimen.homeIconItemWidth,
+                fixCount = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )

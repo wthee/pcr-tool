@@ -165,16 +165,19 @@ fun UniqueEquipDetail(
                         }
                     }
                 }),
-                modifier = if (isImeVisible) {
-                    Modifier
-                        .focusRequester(focusRequester)
-                        .padding(Dimen.smallPadding)
-                } else {
-                    Modifier
-                        .focusRequester(focusRequester)
-                        .height(1.dp)
-                        .alpha(0f)
-                }.animateContentSize(defaultTween()),
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .then(
+                        if (isImeVisible) {
+                            Modifier
+                                .padding(Dimen.smallPadding)
+                        } else {
+                            Modifier
+                                .height(1.dp)
+                                .alpha(0f)
+                        }
+                    )
+                    .animateContentSize(defaultTween()),
                 maxLines = 1,
                 singleLine = true
             )

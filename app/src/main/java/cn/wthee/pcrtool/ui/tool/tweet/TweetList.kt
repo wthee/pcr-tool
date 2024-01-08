@@ -46,7 +46,7 @@ import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.PictureItem
@@ -280,7 +280,7 @@ private fun TweetItem(data: TweetData) {
             //图片
             if (photos.isNotEmpty()) {
                 if (photos.size > 1) {
-                    VerticalGrid(fixCount = 3, isSubLayout = true) {
+                    VerticalStaggeredGrid(fixCount = 3) {
                         photos.forEach {
                             Box(
                                 modifier = Modifier

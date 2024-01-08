@@ -37,7 +37,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -201,13 +201,12 @@ private fun ExtraEquipGroup(
     )
 
     //分组内容
-    VerticalGrid(
+    VerticalStaggeredGrid(
         itemWidth = Dimen.iconSize * 3,
-        contentPadding = Dimen.largePadding,
+        contentPadding = Dimen.mediumPadding,
         modifier = Modifier.padding(
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
-        ),
+            horizontal = Dimen.commonItemPadding
+        )
     ) {
         equipGroupData.equipIdList.forEach { equip ->
             ExtraEquipItem(
@@ -232,18 +231,12 @@ private fun ExtraEquipItem(
 
     Row(
         modifier = Modifier
-            .padding(
-                start = Dimen.smallPadding,
-                end = Dimen.smallPadding,
-                bottom = Dimen.mediumPadding
-            )
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
                 toExtraEquipDetail(equip.equipmentId)
             }
-            .padding(Dimen.smallPadding)
     ) {
         MainIcon(
             data = ImageRequestHelper.getInstance()
