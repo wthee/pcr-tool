@@ -25,7 +25,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2pxNotComposable
+import cn.wthee.pcrtool.utils.dp2px
 import kotlin.math.max
 
 private const val ACTION_FINISH = "pvp_service_finish"
@@ -149,7 +149,7 @@ class PvpFloatService : LifecycleService() {
         flags =
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         //位置大小设置
-        val minSize = (Dimen.fabSize + Dimen.mediumPadding * 3).value.dp2pxNotComposable
+        val minSize = dp2px((Dimen.fabSize + Dimen.mediumPadding * 3).value)
 
 
         height =
@@ -163,7 +163,7 @@ class PvpFloatService : LifecycleService() {
                 minSize
             } else {
                 max(
-                    (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2pxNotComposable),
+                    dp2px(spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value),
                     (height * 9 * 1.0f / 16).toInt()
                 ) + minSize
             }
@@ -195,5 +195,5 @@ class PvpFloatService : LifecycleService() {
 fun getFloatWindowHeight(): Int {
     val width = ScreenUtil.getWidth()
     val height = ScreenUtil.getHeight()
-    return (if (width > height) height else width) - Dimen.smallIconSize.value.dp2pxNotComposable
+    return (if (width > height) height else width) - dp2px(Dimen.smallIconSize.value)
 }

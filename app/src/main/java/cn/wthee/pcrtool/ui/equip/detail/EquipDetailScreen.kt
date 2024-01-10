@@ -1,9 +1,14 @@
 package cn.wthee.pcrtool.ui.equip.detail
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -16,7 +21,16 @@ import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -182,16 +196,15 @@ private fun EquipDetailPreview() {
     PreviewLayout {
         EquipDetailContent(
             equipId = 0,
-            equipMaxData = EquipmentMaxData(1001, "?", "", "?", 1, attr = Attr().random()),
+            equipMaxData = EquipmentMaxData(
+                equipmentId = 1001,
+                equipmentName = stringResource(id = R.string.debug_short_text),
+                description = stringResource(id = R.string.debug_long_text),
+                craftFlg = 1,
+                attr = Attr()
+            ),
             favorite = true
         )
-    }
-}
-
-@CombinedPreviews
-@Composable
-private fun EquipmentMaterialPreview() {
-    PreviewLayout {
         EquipMaterialListContent(
             materialList = arrayListOf(EquipmentMaterial(id = 1)),
             favoriteIdList = arrayListOf(1),

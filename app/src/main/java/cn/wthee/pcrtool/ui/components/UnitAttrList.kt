@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
@@ -28,10 +29,14 @@ import cn.wthee.pcrtool.utils.int
  * 属性列表
  */
 @Composable
-fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueType.INT) {
+fun AttrList(
+    attrs: List<AttrValue>,
+    attrValueType: AttrValueType = AttrValueType.INT,
+    itemWidth: Dp = Dimen.attrWidth
+) {
     VerticalStaggeredGrid(
         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
-        itemWidth = Dimen.attrWidth
+        itemWidth = itemWidth
     ) {
         attrs.forEach { attr ->
             val valueText = fixedAttrValueText(attr.value, attrValueType)

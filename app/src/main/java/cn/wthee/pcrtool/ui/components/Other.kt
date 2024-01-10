@@ -25,11 +25,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -66,7 +64,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.AtkType
 import cn.wthee.pcrtool.data.enums.CharacterLimitType
-import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
@@ -89,6 +86,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -552,7 +550,7 @@ fun EventTitle(
 
     //日期
     MainTitleText(
-        text = sd.substring(0, 10),
+        text = sd.toDate,
         modifier = Modifier.padding(end = Dimen.smallPadding),
         backgroundColor = color
     )
@@ -610,42 +608,6 @@ fun EventTitleCountdown(
         }
     }
 }
-
-/**
- * 装备、角色图标布局，带标题
- */
-@Composable
-fun IconListContent(
-    idList: List<Int>,
-    title: String,
-    iconResourceType: IconResourceType,
-    onClickItem: ((Int) -> Unit)? = null
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Dimen.mediumPadding)
-            .verticalScroll(rememberScrollState())
-    ) {
-        //标题
-        MainText(
-            text = title,
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
-        )
-
-        //图标
-        GridIconList(
-            idList = idList,
-            iconResourceType = iconResourceType,
-            onClickItem = onClickItem
-        )
-
-        CommonSpacer()
-    }
-}
-
 
 /**
  * 角色标签行

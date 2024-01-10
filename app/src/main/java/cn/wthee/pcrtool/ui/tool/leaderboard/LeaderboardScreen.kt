@@ -64,6 +64,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getRegionName
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 
@@ -386,7 +387,7 @@ private fun LeaderboardItem(
                 endText = if (leader.updateTime == null) {
                     stringResource(id = R.string.none)
                 } else {
-                    leader.updateTime.substring(0, 11)
+                    leader.updateTime.toDate
                 },
                 endTextColor = if (leader.updateTime == null) {
                     MaterialTheme.colorScheme.primary
@@ -436,7 +437,6 @@ fun LeaderCharacterIcon(
         //wiki页面
         if (!placeholder) {
             IconTextButton(
-                icon = MainIconType.BROWSER,
                 text = "wiki"
             ) {
                 BrowserUtil.open(url)

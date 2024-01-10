@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.getString
 import kotlin.random.Random
 
 /**
@@ -183,7 +184,7 @@ data class Attr(
                     16 -> this.energyReduceRate
                     else -> 0.0
                 }
-                attrs.add(AttrValue(Constants.ATTR[i], value))
+                attrs.add(AttrValue(getString(id = Constants.ATTR[i]), value))
             }
             attrs
         }

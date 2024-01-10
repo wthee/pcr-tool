@@ -1,8 +1,7 @@
 package cn.wthee.pcrtool.ui.equip.drop
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +19,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.tool.quest.AreaItem
 import cn.wthee.pcrtool.ui.tool.quest.QuestPager
+import cn.wthee.pcrtool.ui.tool.quest.QuestPagerPreview
 import kotlinx.coroutines.launch
 
 
@@ -79,7 +80,7 @@ private fun EquipMaterialDropInfoContent(
     randomDropLoadingState: LoadingState
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //基本信息
@@ -87,26 +88,14 @@ private fun EquipMaterialDropInfoContent(
             text = equipName,
             modifier = Modifier
                 .padding(top = Dimen.largePadding),
-            color = if (favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            color = if (favorite) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
             selectable = true
         )
         //掉落信息
-        dropQuestList?.let { questList ->
-            if (questList.isNotEmpty()) {
-                equipId?.let {
-                    QuestPager(
-                        questList = questList,
-                        equipId = it,
-                        randomDropList = randomDropList,
-                        loadingState = randomDropLoadingState
-                    )
-                }
-            } else {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    MainText(text = stringResource(id = R.string.tip_no_equip_get_area))
-                }
-            }
-        }
         if (dropQuestList == null) {
             //加载中
             val odds = arrayListOf<EquipmentIdWithOdds>()
@@ -126,12 +115,24 @@ private fun EquipMaterialDropInfoContent(
                     CommonSpacer()
                 }
             }
+        } else {
+            if (dropQuestList.isNotEmpty()) {
+                equipId?.let {
+                    QuestPager(
+                        questList = dropQuestList,
+                        equipId = it,
+                        randomDropList = randomDropList,
+                        loadingState = randomDropLoadingState
+                    )
+                }
+            } else {
+                CenterTipText(text = stringResource(id = R.string.tip_no_equip_get_area))
+            }
         }
     }
 }
 
 /**
- * fixme 预览
  * @see [QuestPager]
  */
 @CombinedPreviews
@@ -139,12 +140,13 @@ private fun EquipMaterialDropInfoContent(
 private fun EquipMaterialDropInfoContentPreview() {
     PreviewLayout {
         EquipMaterialDropInfoContent(
-            equipId = 1,
-            equipName = stringResource(id = R.string.debug_long_text),
+            equipId = null,
+            equipName = stringResource(id = R.string.debug_short_text),
             dropQuestList = arrayListOf(QuestDetail(questId = 1)),
             favorite = true,
             randomDropList = null,
-            randomDropLoadingState = LoadingState.Success
+            randomDropLoadingState = LoadingState.Error
         )
+        QuestPagerPreview()
     }
 }

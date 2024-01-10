@@ -253,7 +253,6 @@ fun CaptionText(
 fun RankText(
     modifier: Modifier = Modifier,
     rank: Int,
-    style: TextStyle = MaterialTheme.typography.titleMedium,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0
 ) {
@@ -261,17 +260,22 @@ fun RankText(
     val text = getFormatText(rank)
     if (type == 0) {
         Text(
-            text = text, textAlign = textAlign, color = color, style = style, modifier = modifier
+            modifier = modifier,
+            text = text,
+            textAlign = textAlign,
+            color = color,
+            style = MaterialTheme.typography.titleSmall
         )
     } else {
-        MainTitleText(
+        Text(
             text = text,
-            textStyle = MaterialTheme.typography.titleMedium,
-            backgroundColor = color,
+            color = colorWhite,
+            style = MaterialTheme.typography.titleSmall,
             modifier = modifier
+                .background(color = color, shape = MaterialTheme.shapes.extraSmall)
+                .padding(horizontal = Dimen.exSmallPadding)
         )
     }
-
 }
 
 /**

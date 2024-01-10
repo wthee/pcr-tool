@@ -40,6 +40,19 @@ val String.formatTime: String
         }
     }
 
+/**
+ * 截取日期年月日
+ */
+val String.toDate: String
+    get() = if (this.isNotBlank()) {
+        this.substring(0, kotlin.math.min(10, this.length))
+    } else {
+        ""
+    }
+
+/**
+ * 日期格式化 yyyy/MM/dd HH:mm:ss
+ */
 val String.simpleDateFormat: String
     get() {
         val d = df1.parse(this)!!.time

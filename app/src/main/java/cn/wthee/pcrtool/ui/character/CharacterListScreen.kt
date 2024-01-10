@@ -71,6 +71,7 @@ import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.toDate
 import coil3.BitmapImage
 import coil3.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
@@ -362,16 +363,6 @@ fun CharacterItemContent(
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
-                            //生日
-                            Subtitle2(
-                                text = stringResource(
-                                    id = R.string.date_m_d,
-                                    character.birthMonth.fixedStr,
-                                    character.birthDay.fixedStr
-                                ),
-                                fontWeight = FontWeight.Bold,
-                                color = textColor
-                            )
                             //体重
                             Subtitle2(
                                 text = "${character.weight.fixedStr} KG",
@@ -384,7 +375,16 @@ fun CharacterItemContent(
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
-
+                            //生日
+                            Subtitle2(
+                                text = stringResource(
+                                    id = R.string.date_m_d,
+                                    character.birthMonth.fixedStr,
+                                    character.birthDay.fixedStr
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
+                            )
                         }
 
                         //获取方式等
@@ -402,7 +402,7 @@ fun CharacterItemContent(
 
                         //最近登场日期
                         CaptionText(
-                            text = character.startTime.formatTime.substring(0, 10),
+                            text = character.startTime.formatTime.toDate,
                             color = textColor,
                             modifier = Modifier.padding(
                                 end = Dimen.mediumPadding,
@@ -474,14 +474,16 @@ private fun CharacterName(
 
 @CombinedPreviews
 @Composable
-private fun CharacterItemPreview() {
+fun CharacterItemPreview() {
     PreviewLayout {
         CharacterItemContent(
             unitId = 100101,
             character = CharacterInfo(
                 id = 100101,
                 position = 100,
-                name = stringResource(id = R.string.debug_name)
+                name = stringResource(id = R.string.debug_name),
+                startTime = "2022-02-03 22:22:22",
+                uniqueEquipType = 2
             ),
             favorite = true,
         ) {}

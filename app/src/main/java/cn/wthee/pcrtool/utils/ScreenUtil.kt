@@ -57,7 +57,7 @@ val Dp.spanCount: Int
  * @param width 总宽度
  * @param itemDp 子项宽度
  */
-fun spanCount(width: Int, itemDp: Dp) = max(1, width / itemDp.value.dp2pxNotComposable)
+fun spanCount(width: Int, itemDp: Dp) = max(1, width / dp2px(itemDp.value))
 
 /**
  *  获取 像素 的dp
@@ -87,9 +87,8 @@ val Float.dp2px: Int
 /**
  *  获取dp的像素，非 Composable
  */
-val Float.dp2pxNotComposable: Int
-    get() {
-        val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this * scale + 0.5f).toInt()
-    }
+fun dp2px(dp: Float, context: Context = MyApplication.context): Int {
+    val scale: Float = context.resources.displayMetrics.density
+    return (dp * scale + 0.5f).toInt()
+}
 

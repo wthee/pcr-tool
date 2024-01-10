@@ -454,23 +454,40 @@ private fun EquipWithOddCompose(
     }
 }
 
-
 @CombinedPreviews
 @Composable
-private fun AreaItemPreview() {
+fun QuestPagerPreview() {
     PreviewLayout {
-        AreaItem(
-            1,
-            arrayListOf(
-                EquipmentIdWithOdds(1, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
+        QuestPager(
+            equipId = 1,
+            questList = arrayListOf(
+                QuestDetail(
+                    questId = 1,
+                    questType = 1,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                ),
+                QuestDetail(
+                    questId = 1,
+                    questType = 2,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                ),
+                QuestDetail(
+                    questId = 1,
+                    questType = 3,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                )
             ),
-            "1-1"
+            randomDropList = arrayListOf(
+                RandomEquipDropArea(
+                    area = 1,
+                    equipIds = "1-2-3",
+                    type = 4
+                )
+            ),
+            loadingState = LoadingState.Success
         )
     }
 }

@@ -65,6 +65,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 /**
@@ -191,7 +192,7 @@ fun StoryEventItemContent(
     val today = getToday()
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
-    val previewEvent = sd.substring(0, 10) == "2030/12/30"
+    val previewEvent = sd.toDate == "2030/12/30"
     val days = ed.days(sd, showDay = false)
     if (days == "0") {
         showDays = false
@@ -248,7 +249,7 @@ fun StoryEventItemContent(
             )
             if (!previewEvent) {
                 MainTitleText(
-                    text = sd.substring(0, 10),
+                    text = sd.toDate,
                     modifier = Modifier.padding(end = Dimen.smallPadding),
                 )
             }

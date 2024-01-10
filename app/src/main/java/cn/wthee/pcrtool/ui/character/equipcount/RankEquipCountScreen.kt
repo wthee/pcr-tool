@@ -1,9 +1,19 @@
 package cn.wthee.pcrtool.ui.character.equipcount
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,7 +26,17 @@ import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.components.*
+import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
+import cn.wthee.pcrtool.ui.components.MainContentText
+import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainScaffold
+import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.RankRangePickerCompose
+import cn.wthee.pcrtool.ui.components.RankText
+import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -227,14 +247,5 @@ private fun RankEquipCountContentPreview() {
             favoriteIdList = arrayListOf(1),
             toEquipMaterial = { _, _ -> }
         )
-    }
-}
-
-@CombinedPreviews
-@Composable
-private fun EquipCountItemPreview() {
-    PreviewLayout {
-        EquipCountItem(EquipmentMaterial(), false) { _, _ -> }
-        EquipCountItem(EquipmentMaterial(), true) { _, _ -> }
     }
 }

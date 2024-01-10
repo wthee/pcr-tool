@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -25,7 +26,9 @@ import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.home.Section
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
@@ -34,7 +37,6 @@ import cn.wthee.pcrtool.utils.dp2px
 /**
  * 角色预览
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterSection(
     isEditMode: Boolean,
@@ -44,9 +46,29 @@ fun CharacterSection(
     toCharacterDetail: (Int) -> Unit,
     characterSectionViewModel: CharacterSectionViewModel = hiltViewModel()
 ) {
-    val id = OverviewType.CHARACTER.id
     val uiState by characterSectionViewModel.uiState.collectAsStateWithLifecycle()
 
+    CharacterSectionContent(
+        uiState = uiState,
+        isEditMode = isEditMode,
+        orderStr = orderStr,
+        updateOrderData = updateOrderData,
+        toCharacterList = toCharacterList,
+        toCharacterDetail = toCharacterDetail
+    )
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun CharacterSectionContent(
+    uiState: CharacterSectionUiState,
+    isEditMode: Boolean,
+    orderStr: String,
+    updateOrderData: (Int) -> Unit,
+    toCharacterList: () -> Unit,
+    toCharacterDetail: (Int) -> Unit
+) {
+    val id = OverviewType.CHARACTER.id
 
     Section(
         id = id,
@@ -65,7 +87,7 @@ fun CharacterSection(
         }
     ) {
         if (uiState.characterList?.isNotEmpty() == true) {
-            val characterList = uiState.characterList!!
+            val characterList = uiState.characterList
             //避免角色图片高度过高
             if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
                 HorizontalPager(
@@ -130,6 +152,32 @@ private fun CharacterImageItem(
         MainImage(
             data = ImageRequestHelper.getInstance().getMaxCardUrl(unitId),
             ratio = RATIO
+        )
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun CharacterSectionContentPreview() {
+    PreviewLayout {
+        CharacterSectionContent(
+            uiState = CharacterSectionUiState(
+                characterList = arrayListOf(
+                    CharacterInfo(
+                        id = 1
+                    ),
+                    CharacterInfo(
+                        id = 2
+                    )
+                ),
+                characterCount = "100"
+            ),
+            isEditMode = false,
+            orderStr = "${OverviewType.CHARACTER.id}",
+            updateOrderData = {},
+            toCharacterList = {},
+            toCharacterDetail = {}
         )
     }
 }

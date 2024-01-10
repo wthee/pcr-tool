@@ -451,6 +451,8 @@ private fun EquipListContentPreview() {
             equipList = arrayListOf(
                 EquipmentBasicInfo(equipmentId = 1, equipmentName = name, promotionLevel = 1),
                 EquipmentBasicInfo(equipmentId = 2, equipmentName = name, promotionLevel = 2),
+                EquipmentBasicInfo(equipmentId = 3, equipmentName = name, promotionLevel = 2),
+                EquipmentBasicInfo(equipmentId = 4, equipmentName = name, promotionLevel = 2),
             ),
             scrollState = rememberLazyListState(),
             favoriteIdList = arrayListOf(1),
@@ -470,7 +472,7 @@ private fun EquipSearchFabContentPreview() {
         EquipSearchFabContent(
             openSearchDialog = true,
             searchEquipMode = true,
-            searchEquipIdList = arrayListOf(1, 2),
+            searchEquipIdList = arrayListOf(1, 2, 3, 4, 5),
             toSearchEquipQuest = {},
             changeSearchMode = {},
             selectEquip = {},

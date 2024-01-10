@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 
@@ -111,7 +112,7 @@ private fun PvpFavoriteItem(
         ) {
             //日期
             MainTitleText(
-                text = itemData.date.formatTime.substring(0, 10)
+                text = itemData.date.formatTime.toDate
             )
             Spacer(modifier = Modifier.weight(1f))
             //取消收藏

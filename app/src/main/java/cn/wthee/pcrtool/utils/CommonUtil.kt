@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.icu.text.DecimalFormat
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
@@ -147,7 +148,7 @@ fun copyText(context: Context, text: String) {
  * 服务器版本名称
  */
 fun getRegionName(region: RegionType) = getString(
-    when (region) {
+    id = when (region) {
         RegionType.CN -> R.string.db_cn
         RegionType.TW -> R.string.db_tw
         RegionType.JP -> R.string.db_jp
@@ -157,9 +158,21 @@ fun getRegionName(region: RegionType) = getString(
 /**
  * 获取文本
  */
-fun getString(id: Int, vararg formatArgs: Any) =
+fun getString(
+    @StringRes id: Int,
+    vararg formatArgs: Any
+) =
     MyApplication.context.getString(id, *formatArgs)
 
+/**
+ * 获取文本
+ */
+fun getString(
+    context: Context,
+    @StringRes id: Int,
+    vararg formatArgs: Any
+) =
+    context.getString(id, *formatArgs)
 /**
  * 格式化文本
  * 999 -> ?
@@ -202,7 +215,7 @@ fun getZhNumberText(section: Int): String {
 /**
  * 获取区服代码
  */
-fun getRegionCode(type: RegionType = MainActivity.regionType) =when (type) {
+fun getRegionCode(type: RegionType = MainActivity.regionType) = when (type) {
     RegionType.CN -> "cn"
     RegionType.TW -> "tw"
     RegionType.JP -> "jp"

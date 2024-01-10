@@ -43,6 +43,7 @@ import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 /**
@@ -119,7 +120,7 @@ private fun MockGachaHistoryItem(
             verticalArrangement = Arrangement.Center
         ) {
             MainTitleText(
-                text = gachaData.createTime.formatTime.substring(0, 10)
+                text = gachaData.createTime.formatTime.toDate
             )
             //up个数
             if (upCount > 0) {

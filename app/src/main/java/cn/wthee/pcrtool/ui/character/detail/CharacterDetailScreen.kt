@@ -70,6 +70,7 @@ import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.character.CharacterItemContent
+import cn.wthee.pcrtool.ui.character.CharacterItemPreview
 import cn.wthee.pcrtool.ui.character.skillloop.CharacterSkillLoopScreen
 import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
@@ -584,7 +585,7 @@ private fun ToolsContent(
     }
 
     if (openDialog.value) {
-        PreviewSpineTypeSelectDialog(openDialog = openDialog, idList = idList)
+        SpineTypeSelectDialog(openDialog = openDialog, idList = idList)
     }
 }
 
@@ -592,7 +593,7 @@ private fun ToolsContent(
  * 多人角色预览模型类型选择弹窗
  */
 @Composable
-private fun PreviewSpineTypeSelectDialog(
+private fun SpineTypeSelectDialog(
     openDialog: MutableState<Boolean>,
     idList: List<Int>
 ) {
@@ -669,8 +670,6 @@ private fun OtherToolsContent(
         IconTextButton(
             icon = MainIconType.RANK_COMPARE,
             text = stringResource(id = R.string.rank_compare),
-            iconSize = Dimen.fabIconSize,
-            textStyle = MaterialTheme.typography.bodyMedium
         ) {
             toCharacterRankCompare(
                 unitId,
@@ -685,8 +684,6 @@ private fun OtherToolsContent(
         IconTextButton(
             icon = MainIconType.EQUIP_CALC,
             text = stringResource(id = R.string.calc_equip_count),
-            iconSize = Dimen.fabIconSize,
-            textStyle = MaterialTheme.typography.bodyMedium
         ) {
             toCharacterEquipCount(unitId)
         }
@@ -694,8 +691,6 @@ private fun OtherToolsContent(
         IconTextButton(
             icon = MainIconType.EXTRA_EQUIP,
             text = stringResource(id = R.string.tool_extra_equip),
-            iconSize = Dimen.fabIconSize,
-            textStyle = MaterialTheme.typography.bodyMedium
         ) {
             toCharacterExtraEquip(unitId)
         }
@@ -1114,35 +1109,27 @@ private fun StarSelectContent(
 @Composable
 private fun FabContentPreview() {
     PreviewLayout {
-        CharacterDetailFabContent(
-            loadingState = LoadingState.Success,
-            currentId = 101001,
-            showAllInfo = true,
-            isEditMode = false,
-            favorite = true,
-            orderData = "",
-            changeEditMode = {},
-            updateFavoriteCharacterId = {},
-            toCharacterSkillLoop = {},
-            toCharacterDetail = {},
-        )
+        Row {
+            CharacterDetailFabContent(
+                loadingState = LoadingState.Success,
+                currentId = 101001,
+                showAllInfo = true,
+                isEditMode = false,
+                favorite = true,
+                orderData = "",
+                changeEditMode = {},
+                updateFavoriteCharacterId = {},
+                toCharacterSkillLoop = {},
+                toCharacterDetail = {},
+            )
+        }
     }
 }
 
 @CombinedPreviews
 @Composable
 private fun CharacterCardPreview() {
-    PreviewLayout {
-        CharacterCard(
-            unitId = 100101,
-            favorite = true,
-            basicInfo = CharacterInfo(
-                id = 100101,
-                position = 100
-            ),
-            toAllPics = { _, _ -> }
-        )
-    }
+    CharacterItemPreview()
 }
 
 @CombinedPreviews
@@ -1247,3 +1234,17 @@ private fun StarSelectContentPreview() {
         )
     }
 }
+
+@CombinedPreviews
+@Composable
+private fun SpineTypeSelectDialogPreview() {
+    PreviewLayout {
+        SpineTypeSelectDialog(
+            openDialog = remember {
+                mutableStateOf(true)
+            },
+            idList = arrayListOf(1, 2, 3)
+        )
+    }
+}
+

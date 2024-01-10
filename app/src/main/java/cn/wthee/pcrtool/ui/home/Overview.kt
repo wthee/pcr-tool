@@ -693,7 +693,6 @@ fun Section(
             if (!isEditMode) {
                 Row(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

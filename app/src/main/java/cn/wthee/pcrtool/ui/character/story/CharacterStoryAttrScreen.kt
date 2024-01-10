@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -44,7 +45,8 @@ fun CharacterStoryAttrScreen(characterStoryViewModel: CharacterStoryViewModel = 
 @Composable
 private fun CharacterStoryAttrContent(storyMap: HashMap<Int, List<CharacterStoryAttr>>) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.verticalScroll(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.verticalScroll(
             rememberScrollState()
         )
     ) {
@@ -79,7 +81,7 @@ private fun StoryAttrItemContent(key: Int, attrList: List<CharacterStoryAttr>) {
                 ) {
                     if (it.subTitle != "") {
                         //标题
-                        CaptionText(text = it.getFixedTitle())
+                        CaptionText(text = it.getFixedTitle(), textAlign = TextAlign.Center)
                         //剧情名
                         Subtitle1(text = it.subTitle, selectable = true)
                     }
@@ -96,7 +98,6 @@ private fun StoryAttrItemContent(key: Int, attrList: List<CharacterStoryAttr>) {
 @CombinedPreviews
 @Composable
 private fun CharacterStoryAttrContentPreview() {
-    val title = stringResource(id = R.string.debug_short_text)
     val subTitle = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
         CharacterStoryAttrContent(
@@ -104,7 +105,17 @@ private fun CharacterStoryAttrContentPreview() {
                 put(
                     1, arrayListOf(
                         CharacterStoryAttr(
-                            title = title,
+                            title = stringResource(id = R.string.debug_short_text),
+                            subTitle = subTitle,
+                            status_rate_1 = 1,
+                            status_rate_2 = 2,
+                        )
+                    )
+                )
+                put(
+                    2, arrayListOf(
+                        CharacterStoryAttr(
+                            title = stringResource(id = R.string.debug_long_text),
                             subTitle = subTitle,
                             status_rate_1 = 1,
                             status_rate_2 = 2,

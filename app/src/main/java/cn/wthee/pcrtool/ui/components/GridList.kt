@@ -4,20 +4,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.dp2px
-import cn.wthee.pcrtool.utils.dp2pxNotComposable
 import kotlin.math.max
 
 
@@ -124,6 +128,41 @@ fun IconItem(
 }
 
 /**
+ * 装备、角色图标布局，带标题
+ */
+@Composable
+fun IconListContent(
+    idList: List<Int>,
+    title: String,
+    iconResourceType: IconResourceType,
+    onClickItem: ((Int) -> Unit)? = null
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimen.smallPadding)
+            .verticalScroll(rememberScrollState())
+    ) {
+        //标题
+        MainText(
+            text = title,
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .fillMaxWidth()
+        )
+
+        //图标
+        GridIconList(
+            idList = idList,
+            iconResourceType = iconResourceType,
+            onClickItem = onClickItem
+        )
+
+        CommonSpacer()
+    }
+}
+
+/**
  * 网格布局
  * @param itemWidth 子项宽度
  * @param fixCount 固定列数
@@ -140,6 +179,7 @@ fun VerticalStaggeredGrid(
 ) {
     val contentPaddingPx = contentPadding.value.dp2px
     val verticalContentPaddingPx = verticalContentPadding.value.dp2px
+    val context = LocalContext.current
 
     Layout(
         content = children,
@@ -153,7 +193,7 @@ fun VerticalStaggeredGrid(
         val columns = if (fixCount != 0) {
             fixCount
         } else {
-            val itemPx = (itemWidth!! + contentPadding * 2).value.dp2pxNotComposable
+            val itemPx = dp2px((itemWidth!! + contentPadding * 2).value, context)
             (constraints.maxWidth / itemPx.toDouble()).toInt()
         }
         val columnWidth = (constraints.maxWidth / max(1, columns).toFloat()).toInt()
@@ -210,15 +250,17 @@ fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
 
 @CombinedPreviews
 @Composable
-private fun IconListComposePreview() {
+fun IconListContentPreview() {
     val mockData = arrayListOf<Int>()
     for (i in 0..10) {
         mockData.add(i)
     }
     PreviewLayout {
-        GridIconList(
+        IconListContent(
             idList = mockData,
+            title = stringResource(id = R.string.debug_short_text),
             iconResourceType = IconResourceType.CHARACTER,
-            onClickItem = {})
+            onClickItem = {}
+        )
     }
 }

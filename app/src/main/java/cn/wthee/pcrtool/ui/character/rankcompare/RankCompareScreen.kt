@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.RankRangePickerCompose
 import cn.wthee.pcrtool.ui.components.RankText
-import cn.wthee.pcrtool.ui.components.Subtitle1
+import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -111,7 +111,7 @@ private fun RankCompareContent(
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(0.2f)
             )
-            Subtitle1(
+            Subtitle2(
                 text = stringResource(id = R.string.result),
                 textAlign = TextAlign.End,
                 modifier = Modifier.weight(0.2f),

@@ -139,7 +139,11 @@ fun IconTextButton(
             text = text,
             color = contentColor,
             style = textStyle,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier.padding(
+                start = Dimen.smallPadding,
+                top = Dimen.exSmallPadding,
+                bottom = Dimen.exSmallPadding
+            ),
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
         )

@@ -46,6 +46,8 @@ import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixedStr
 
+private const val TITLE_WEIGHT = 0.18f
+private const val CONTENT_WEIGHT = 1 - TITLE_WEIGHT
 /**
  * 角色基本信息
  */
@@ -153,9 +155,9 @@ private fun HomePageCommentContent(
         Row(modifier = Modifier.padding(start = Dimen.largePadding, top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_self),
-                modifier = Modifier.weight(0.15f)
+                modifier = Modifier.weight(TITLE_WEIGHT)
             )
-            Spacer(modifier = Modifier.weight(0.85f))
+            Spacer(modifier = Modifier.weight(CONTENT_WEIGHT))
         }
         CommentText(text = it)
     }
@@ -172,15 +174,15 @@ private fun HomePageCommentContent(
     ) {
         MainTitleText(
             text = stringResource(id = R.string.title_comments),
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
         MainTitleText(
             text = stringResource(id = R.string.title_home_page_comments),
             modifier = Modifier
                 .padding(start = Dimen.smallPadding)
-                .weight(0.15f)
+                .weight(TITLE_WEIGHT)
         )
-        Spacer(modifier = Modifier.weight(0.7f))
+        Spacer(modifier = Modifier.weight(1 - TITLE_WEIGHT * 2))
     }
     //多星级时
     if (homePageCommentList.isNotEmpty()) {
@@ -234,15 +236,15 @@ private fun RoomCommentContent(roomCommentList: List<RoomCommentData>) {
     ) {
         MainTitleText(
             text = stringResource(id = R.string.title_comments),
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
         MainTitleText(
             text = stringResource(id = R.string.title_room_comments),
             modifier = Modifier
                 .padding(start = Dimen.smallPadding)
-                .weight(0.15f)
+                .weight(TITLE_WEIGHT)
         )
-        Spacer(modifier = Modifier.weight(0.7f))
+        Spacer(modifier = Modifier.weight(1 - TITLE_WEIGHT * 2))
     }
     roomCommentList.let { list ->
         val pagerState = rememberPagerState { list.size }
@@ -279,11 +281,11 @@ private fun SingleRow(title: String, content: String) {
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(
             text = title,
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
         MainContentText(
             text = content,
-            modifier = Modifier.weight(0.85f),
+            modifier = Modifier.weight(CONTENT_WEIGHT),
             selectable = true
         )
     }
@@ -297,9 +299,9 @@ private fun TwoRow(title: String, content: String) {
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(
             text = title,
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
-        Spacer(modifier = Modifier.weight(0.85f))
+        Spacer(modifier = Modifier.weight(CONTENT_WEIGHT))
     }
     MainContentText(
         text = content,
@@ -322,22 +324,22 @@ private fun TwoColumn(
     Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
         MainTitleText(
             text = title0,
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
         MainContentText(
             text = text0,
             modifier = Modifier
-                .weight(0.35f)
+                .weight(0.5f - TITLE_WEIGHT)
                 .padding(end = Dimen.mediumPadding),
             selectable = true
         )
         MainTitleText(
             text = title1,
-            modifier = Modifier.weight(0.15f)
+            modifier = Modifier.weight(TITLE_WEIGHT)
         )
         MainContentText(
             text = text1,
-            modifier = Modifier.weight(0.35f),
+            modifier = Modifier.weight(0.5f - TITLE_WEIGHT),
             selectable = true
         )
     }

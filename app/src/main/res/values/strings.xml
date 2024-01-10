@@ -816,7 +816,7 @@
     <string name="leader_tier_d">T%s</string>
 
     <!--测试用-->
-    <string name="debug_short_text">测试文本测试文本</string>
+    <string name="debug_short_text">测试文本测试文本测试文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
     <string name="debug_name">测试名称（类型）</string>
 
