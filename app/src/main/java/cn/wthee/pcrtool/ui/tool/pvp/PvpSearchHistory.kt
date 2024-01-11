@@ -61,15 +61,11 @@ fun PvpSearchHistory(
     ) {
         if (historyDataList.isNotEmpty()) {
             LazyVerticalGrid(
-                state = historyListState,
-                columns = GridCells.Adaptive(itemWidth)
+                state = historyListState, columns = GridCells.Adaptive(itemWidth)
             ) {
                 items(historyDataList) { data ->
                     PvpHistoryItem(
-                        data,
-                        floatWindow,
-                        toCharacter,
-                        pvpViewModel
+                        data, floatWindow, toCharacter, pvpViewModel
                     )
                 }
                 item {
@@ -101,8 +97,7 @@ private fun PvpHistoryItem(
 
     Column(
         modifier = Modifier.padding(
-            horizontal = largePadding,
-            vertical = mediumPadding
+            horizontal = largePadding, vertical = mediumPadding
         )
     ) {
         Row(
@@ -115,13 +110,11 @@ private fun PvpHistoryItem(
             )
             Spacer(modifier = Modifier.weight(1f))
             MainIcon(
-                data = MainIconType.PVP_SEARCH,
-                size = Dimen.fabIconSize
+                data = MainIconType.PVP_SEARCH, size = Dimen.fabIconSize
             ) {
                 scope.launch {
                     pvpViewModel?.resetResult()
-                    val selectedData =
-                        pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
+                    val selectedData = pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
                     val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                     selectedIds?.sortWith(comparePvpCharacterData())
                     navViewModel.selectedPvpData.postValue(selectedIds)
@@ -129,19 +122,14 @@ private fun PvpHistoryItem(
                 }
             }
         }
+        //防守队伍角色图标
         MainCard {
-            //队伍角色图标
-            Column(
-                modifier = Modifier
-                    .padding(top = mediumPadding, bottom = mediumPadding)
-            ) {
-                //防守
-                PvpUnitIconLine(
-                    itemData.getDefIds(),
-                    floatWindow,
-                    toCharacter
-                )
-            }
+            PvpUnitIconLine(
+                modifier = Modifier.padding(top = mediumPadding, bottom = mediumPadding),
+                ids = itemData.getDefIds(),
+                floatWindow = floatWindow,
+                toCharacter = toCharacter
+            )
         }
     }
 
@@ -152,9 +140,7 @@ private fun PvpHistoryItem(
 @Composable
 private fun PvpHistoryItemPreview() {
     val data = PvpHistoryData(
-        "id",
-        "2@1-2-3-4-5",
-        "2020/01/01 00:00:00"
+        "id", "2@1-2-3-4-5", "2020/01/01 00:00:00"
     )
     PreviewLayout {
         PvpHistoryItem(

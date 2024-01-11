@@ -95,15 +95,23 @@ fun MediaGridList(
     }
 }
 
+
 @CombinedPreviews
 @Composable
 private fun ImageGridListPreview() {
     PreviewLayout {
         MediaGridList(
-            urlList = arrayListOf("1"),
+            urlList = arrayListOf("1", "2", "3"),
             title = stringResource(id = R.string.debug_short_text)
         ) {
-            PictureItem(picUrl = it)
+            PictureItem(
+                picUrl = it,
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimen.largePadding,
+                        vertical = Dimen.mediumPadding
+                    )
+            )
         }
     }
 }

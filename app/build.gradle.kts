@@ -146,7 +146,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha07")
+    implementation("androidx.datastore:datastore-preferences:1.1.0-beta01")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
@@ -160,7 +160,7 @@ dependencies {
     implementation("io.ktor:ktor-client-android:${rootProject.extra["ktorVersion"]}")
 
     //Lifecycle
-    val lifecycleVersion = "2.6.2"
+    val lifecycleVersion = "2.7.0"
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")

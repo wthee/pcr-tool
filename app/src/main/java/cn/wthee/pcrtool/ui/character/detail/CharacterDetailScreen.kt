@@ -42,7 +42,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -813,10 +812,10 @@ private fun ColumnScope.AttrListContent(
 
     Spacer(modifier = Modifier.height(Dimen.largePadding))
     //属性
-    AttrList(attrs = allAttr.sumAttr.all(isPreview = LocalInspectionMode.current))
+    AttrList(attrs = allAttr.sumAttr.all(context))
     //剧情属性
     val storyAttrList =
-        allAttr.storyAttr.allNotZero(isPreview = LocalInspectionMode.current)
+        allAttr.storyAttr.allNotZero(context)
     if (storyAttrList.isNotEmpty()) {
         Row(
             modifier = Modifier
@@ -842,7 +841,7 @@ private fun ColumnScope.AttrListContent(
     }
     //Rank 奖励
     val rankBonusList =
-        allAttr.rankBonus.attr.allNotZero(isPreview = LocalInspectionMode.current)
+        allAttr.rankBonus.attr.allNotZero(context)
     if (rankBonusList.isNotEmpty()) {
         Column(
             modifier = Modifier

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.loadcomic
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +22,9 @@ import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.media.MediaGridList
 import cn.wthee.pcrtool.ui.media.PictureItem
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.noShape
 import kotlinx.coroutines.launch
 
@@ -30,7 +33,7 @@ import kotlinx.coroutines.launch
  *
  */
 @Composable
-fun LoadComicListScreen(
+fun LoadComicScreen(
     loadComicViewModel: LoadComicViewModel = hiltViewModel()
 ) {
     val uiState by loadComicViewModel.uiState.collectAsStateWithLifecycle()
@@ -66,14 +69,16 @@ fun LoadComicListScreen(
             loadingContent = {
                 VerticalStaggeredGrid(
                     itemWidth = getItemWidth() / 2,
-                    contentPadding = Dimen.mediumPadding
+                    contentPadding = Dimen.largePadding,
+                    verticalContentPadding = Dimen.mediumPadding
                 ) {
                     for (i in 0..10) {
                         PictureItem(
                             picUrl = "",
                             ratio = 1f,
-                            shape = noShape()
-                        )
+                            shape = noShape(),
+
+                            )
                     }
                 }
             },
@@ -81,19 +86,45 @@ fun LoadComicListScreen(
                 CenterTipText(stringResource(id = R.string.data_get_error))
             }
         ) {
-            MediaGridList(
-                urlList = uiState.comicList!!,
-                showTitle = false,
-                itemWidth = getItemWidth() / 2,
+            LoadComicContent(
+                comicList = uiState.comicList!!,
                 scrollState = scrollState
-            ) {
-                PictureItem(
-                    picUrl = it,
-                    ratio = 1f,
-                    shape = noShape(),
-                    modifier = Modifier.padding(Dimen.mediumPadding)
-                )
-            }
+            )
         }
+    }
+}
+
+@Composable
+private fun LoadComicContent(
+    comicList: ArrayList<String>,
+    scrollState: LazyGridState
+) {
+    MediaGridList(
+        urlList = comicList,
+        showTitle = false,
+        itemWidth = getItemWidth() / 2,
+        scrollState = scrollState
+    ) {
+        PictureItem(
+            picUrl = it,
+            ratio = 1f,
+            shape = noShape(),
+            modifier = Modifier.padding(
+                horizontal = Dimen.largePadding,
+                vertical = Dimen.mediumPadding
+            )
+        )
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun LoadComicContentPreview() {
+    PreviewLayout {
+        LoadComicContent(
+            comicList = arrayListOf("1", "2", "3"),
+            scrollState = rememberLazyGridState()
+        )
     }
 }

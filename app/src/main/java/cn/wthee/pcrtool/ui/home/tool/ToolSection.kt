@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
@@ -35,9 +36,12 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.home.Section
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.intArrayList
 
@@ -59,11 +63,31 @@ fun ToolSection(
     orderStr: String,
     toolSectionViewModel: ToolSectionViewModel = hiltViewModel()
 ) {
-    val id = OverviewType.TOOL.id
     val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
     LifecycleEffect(Lifecycle.Event.ON_CREATE) {
         toolSectionViewModel.getToolOrderData()
     }
+
+    ToolSectionContent(
+        uiState = uiState,
+        actions = actions,
+        isEditMode = isEditMode,
+        orderStr = orderStr,
+        updateOrderData = updateOrderData,
+        updateToolOrderData = toolSectionViewModel::updateToolOrderData,
+    )
+}
+
+@Composable
+private fun ToolSectionContent(
+    uiState: ToolSectionUiState,
+    actions: NavActions,
+    isEditMode: Boolean,
+    orderStr: String,
+    updateOrderData: (Int) -> Unit,
+    updateToolOrderData: (String) -> Unit
+) {
+    val id = OverviewType.TOOL.id
 
     Section(
         id = id,
@@ -84,7 +108,7 @@ fun ToolSection(
             loadingState = uiState.loadingState,
             actions = actions,
             isEditMode = isEditMode,
-            updateOrderData = toolSectionViewModel::updateOrderData
+            updateToolOrderData = updateToolOrderData
         )
     }
 }
@@ -101,16 +125,21 @@ fun ToolMenu(
     actions: NavActions,
     isEditMode: Boolean = false,
     isHome: Boolean = true,
-    updateOrderData: (String) -> Unit
+    updateToolOrderData: (String) -> Unit
 ) {
 
     StateBox(
         stateType = loadingState,
         errorContent = {
             if (!isEditMode && isHome) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = Dimen.mediumPadding),
+                    contentAlignment = Alignment.Center
+                ) {
                     IconTextButton(
-                        icon = MainIconType.MAIN,
+                        icon = MainIconType.ADD,
                         text = stringResource(R.string.to_add_tool)
                     ) {
                         actions.toToolMore(true)
@@ -141,7 +170,7 @@ fun ToolMenu(
                         actions = actions,
                         toolMenuData = it,
                         isEditMode = isEditMode,
-                        updateOrderData = updateOrderData
+                        updateOrderData = updateToolOrderData
                     )
                 }
             }
@@ -294,4 +323,43 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
     //设置模块类别
     tool.type = toolMenuType
     return tool
+}
+
+
+@CombinedPreviews
+@Composable
+private fun ToolSectionContentPreview() {
+    PreviewLayout {
+        ToolSectionContent(
+            uiState = ToolSectionUiState(
+                toolOrderData = """
+                    ${ToolMenuType.BIRTHDAY.id}-
+                    ${ToolMenuType.PVP_SEARCH.id}-
+                    ${ToolMenuType.ALL_EQUIP.id}-
+                    ${ToolMenuType.GACHA.id}-
+                    ${ToolMenuType.FREE_GACHA.id}-
+                    ${ToolMenuType.GUILD.id}-
+                """.deleteSpace,
+                loadingState = LoadingState.Success
+            ),
+            actions = NavActions(NavHostController(LocalContext.current)),
+            isEditMode = false,
+            orderStr = "${OverviewType.TOOL.id}",
+            updateOrderData = { },
+            updateToolOrderData = {}
+        )
+
+        //未添加功能时
+        ToolSectionContent(
+            uiState = ToolSectionUiState(
+                toolOrderData = "",
+                loadingState = LoadingState.Error
+            ),
+            actions = NavActions(NavHostController(LocalContext.current)),
+            isEditMode = false,
+            orderStr = "${OverviewType.TOOL.id}",
+            updateOrderData = { },
+            updateToolOrderData = {}
+        )
+    }
 }

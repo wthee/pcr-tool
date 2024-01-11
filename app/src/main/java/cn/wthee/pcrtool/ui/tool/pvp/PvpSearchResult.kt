@@ -293,38 +293,36 @@ private fun PvpResultItem(
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }
-            Column {
-                //点赞信息
-                Row(
-                    modifier = Modifier.padding(horizontal = mediumPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainContentText(
-                        text = "${upRatio}%",
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    MainContentText(
-                        text = item.up.toString(),
-                        color = colorGreen,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    MainContentText(
-                        text = item.down.toString(),
-                        color = colorRed,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
-                    )
-                }
-                //队伍角色图标
-                //进攻
-                PvpUnitIconLine(
-                    item.getIdList(0),
-                    floatWindow
-                ) { }
+            //点赞信息
+            Row(
+                modifier = Modifier.padding(horizontal = mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainContentText(
+                    text = "${upRatio}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(0.3f)
+                )
+                MainContentText(
+                    text = item.up.toString(),
+                    color = colorGreen,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(0.3f)
+                )
+                MainContentText(
+                    text = item.down.toString(),
+                    color = colorRed,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
+                )
             }
+            //队伍角色图标
+            //进攻
+            PvpUnitIconLine(
+                ids = item.getIdList(0),
+                floatWindow = floatWindow
+            ) { }
         }
 
     }

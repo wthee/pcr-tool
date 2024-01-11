@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.data.db.view
 
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 
@@ -59,14 +61,14 @@ data class ExtraEquipmentData(
     /**
      * 属性整合
      */
-    fun fixAttrList(isPreview: Boolean = false): List<AttrCompareData> {
+    fun fixAttrList(context: Context = MyApplication.context): List<AttrCompareData> {
         val dataList = arrayListOf<AttrCompareData>()
-        this.attrDefault.toAttrInt().allNotZero(isPreview).forEachIndexed { index, attrValue ->
+        this.attrDefault.toAttrInt().allNotZero(context).forEachIndexed { index, attrValue ->
             dataList.add(
                 AttrCompareData(
                     title = attrValue.title,
                     attr0 = attrValue.value,
-                    attr1 = this.attr.allNotZero(isPreview)[index].value,
+                    attr1 = this.attr.allNotZero(context)[index].value,
                     attrCompare = 0.0
                 )
             )

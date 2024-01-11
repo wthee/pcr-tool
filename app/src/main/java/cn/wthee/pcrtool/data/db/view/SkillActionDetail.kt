@@ -84,15 +84,15 @@ data class SkillActionDetail(
             else -> false
         }
         val skillActionText = SkillActionText(
-            actionId,
-            tag,
-            "(${actionId % 10}) $formatDescText",
-            summonUnitId,
-            showCoe,
-            level,
-            atk,
-            isTpLimitAction,
-            isOtherLimitAction
+            actionId = actionId,
+            tag = tag,
+            action = "(${actionId % 10}) $formatDescText",
+            summonUnitId = summonUnitId,
+            showCoe = showCoe,
+            level = level,
+            atk = atk,
+            isTpLimitAction = isTpLimitAction,
+            isOtherLimitAction = isOtherLimitAction
         )
         if (BuildConfig.DEBUG) {
             skillActionText.debugText = getDebugText()

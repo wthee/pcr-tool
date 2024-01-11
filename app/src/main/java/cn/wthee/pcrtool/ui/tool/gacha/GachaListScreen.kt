@@ -223,55 +223,57 @@ fun GachaItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //图标/描述
-                if (idList.isEmpty()) {
-                    Subtitle1(
-                        text = gachaInfo.getDesc(),
-                        modifier = Modifier.padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding
-                        )
+            //图标/描述
+            if (idList.isEmpty()) {
+                Subtitle1(
+                    text = gachaInfo.getDesc(),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
                     )
-                } else {
-                    GridIconList(
-                        idList = idList,
-                        iconResourceType = IconResourceType.CHARACTER,
-                        onClickItem = toCharacterDetail
-                    )
-                }
+                )
+            } else {
+                GridIconList(
+                    idList = idList,
+                    iconResourceType = IconResourceType.CHARACTER,
+                    onClickItem = toCharacterDetail
+                )
+            }
 
-                Row(
-                    modifier = Modifier
-                        .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //模拟抽卡 fixme 暂不支持普通和fes角色混合池
-                    if (!isMixedGachaPool) {
-                        IconTextButton(
-                            icon = MainIconType.MOCK_GACHA,
-                            text = stringResource(R.string.tool_mock_gacha)
-                        ) {
-                            //跳转
-                            toMockGachaFromList(
-                                mockGachaType.type,
-                                Json.encodeToString(gachaInfo.getMockGachaPickUpUnitList())
-                            )
-                        }
-                    }
-                    //结束日期
-                    CaptionText(
-                        text = gachaInfo.endTime.formatTime.fixJpTime,
-                        modifier = Modifier.weight(1f)
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.mediumPadding,
+                        bottom = Dimen.smallPadding
                     )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //模拟抽卡 fixme 暂不支持普通和fes角色混合池
+                if (!isMixedGachaPool) {
+                    IconTextButton(
+                        icon = MainIconType.MOCK_GACHA,
+                        text = stringResource(R.string.tool_mock_gacha)
+                    ) {
+                        //跳转
+                        toMockGachaFromList(
+                            mockGachaType.type,
+                            Json.encodeToString(gachaInfo.getMockGachaPickUpUnitList())
+                        )
+                    }
                 }
+                //结束日期
+                CaptionText(
+                    text = gachaInfo.endTime.formatTime.fixJpTime,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
-
 }
+
 
 @CombinedPreviews
 @Composable

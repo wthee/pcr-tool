@@ -158,6 +158,6 @@ fun Preview() {
         MainButton(text = text) {}
         SubButton(text = text, color = MaterialTheme.colorScheme.primary, useBrush = false) {}
         SubButton(text = text, color = MaterialTheme.colorScheme.primary, useBrush = true) {}
-        IconTextButton(text = text, icon = MainIconType.MAIN) {}
+        IconTextButton(text = text, icon = MainIconType.ADD) {}
     }
 }

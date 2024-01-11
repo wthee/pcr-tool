@@ -41,6 +41,7 @@ import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
+import cn.wthee.pcrtool.data.model.SummonProperty
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -58,6 +59,8 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_SKILL
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * 角色技能列表
@@ -75,7 +78,7 @@ fun SkillListScreen(
     atk: Int,
     property: CharacterProperty,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
     toCharacterVideo: ((Int, Int) -> Unit)? = null,
     isFilterSkill: Boolean = false,
     filterSkillCount: Int = 0,
@@ -106,7 +109,7 @@ private fun SkillListContent(
     filterSkillCount: Int,
     unitType: UnitType,
     property: CharacterProperty,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)?,
+    toSummonDetail: ((String) -> Unit)?,
     toCharacterVideo: ((Int, Int) -> Unit)?
 ) {
     Column(
@@ -200,7 +203,7 @@ fun SkillItemContent(
     skillDetail: SkillDetail,
     unitType: UnitType,
     property: CharacterProperty = CharacterProperty(),
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
     isExtraEquipSKill: Boolean = false
 ) {
     //是否显示参数判断
@@ -441,7 +444,7 @@ fun SkillActionItem(
     skillAction: SkillActionText,
     unitType: UnitType,
     property: CharacterProperty,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
 ) {
     //调试用
     val expand = remember {
@@ -540,11 +543,15 @@ fun SkillActionItem(
                     text = stringResource(R.string.to_summon)
                 ) {
                     toSummonDetail(
-                        skillAction.summonUnitId,
-                        unitType.type,
-                        property.level,
-                        property.rank,
-                        property.rarity
+                        Json.encodeToString(
+                            SummonProperty(
+                                id = skillAction.summonUnitId,
+                                type = unitType.type,
+                                level = property.level,
+                                rank = property.rank,
+                                rarity = property.rarity
+                            )
+                        )
                     )
                 }
             }
@@ -612,11 +619,34 @@ data class ColorTextIndex(
 private fun SkillListContentPreview() {
     PreviewLayout {
         val skill = SkillDetail(
+            skillId = 1001511,
             name = stringResource(id = R.string.debug_short_text),
             desc = stringResource(id = R.string.debug_long_text),
-            castTime = 10.0,
-        )
-        skill.actions = arrayListOf(SkillActionDetail(), SkillActionDetail())
+            castTime = 0.2345,
+        ).also {
+            it.skillIndexType = SkillIndexType.MAIN_SKILL_1_PLUS
+            it.actions = arrayListOf(
+                SkillActionDetail(
+                    atk = 1000,
+                    level = 200,
+                    actionId = 1,
+                    classId = 1,
+                    actionType = 10,
+                    actionDetail1 = 20,
+                    actionDetail2 = 1,
+                    actionValue1 = 1.0,
+                    actionValue2 = 0.23,
+                    actionValue3 = 0.23,
+                    actionValue4 = 12.0,
+                    actionValue7 = 1.0,
+                    targetAssignment = 2,
+                    targetArea = 3,
+                    targetRange = 2160,
+                    targetType = 3,
+                    targetCount = 99
+                )
+            )
+        }
 
         SkillListContent(
             uiState = SkillListUiState(
@@ -633,7 +663,7 @@ private fun SkillListContentPreview() {
             filterSkillCount = 0,
             unitType = UnitType.CHARACTER,
             property = CharacterProperty(),
-            toSummonDetail = { _, _, _, _, _ -> },
+            toSummonDetail = {},
             toCharacterVideo = null
         )
     }

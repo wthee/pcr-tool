@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.intArrayList
@@ -269,7 +270,11 @@ class CharacterDetailViewModel @Inject constructor(
             }
         } else {
             //专武详情页面
-            "${CharacterDetailModuleType.UNIT_ICON.id}-${CharacterDetailModuleType.UNIQUE_EQUIP.id}-${CharacterDetailModuleType.SKILL.id}-"
+            """
+                ${CharacterDetailModuleType.UNIT_ICON.id}-
+                ${CharacterDetailModuleType.UNIQUE_EQUIP.id}-
+                ${CharacterDetailModuleType.SKILL.id}-
+            """.deleteSpace
         }
     }
 

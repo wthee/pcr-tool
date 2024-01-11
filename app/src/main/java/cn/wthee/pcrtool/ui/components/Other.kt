@@ -437,22 +437,22 @@ fun BottomSearchBar(
                     modifier = Modifier.padding(Dimen.largePadding),
                     elevation = Dimen.popupMenuElevation,
                 ) {
-                    Column(
-                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    MainText(
+                        text = stringResource(id = R.string.search_suggestion),
+                        modifier = Modifier
+                            .padding(vertical = Dimen.largePadding)
+                            .align(Alignment.CenterHorizontally)
+                    )
+
+                    SuggestionChipGroup(
+                        modifier = Modifier.padding(Dimen.mediumPadding),
+                        items = defaultKeywordList ?: arrayListOf()
                     ) {
-                        MainText(text = stringResource(id = R.string.search_suggestion))
-
-                        SuggestionChipGroup(
-                            defaultKeywordList ?: arrayListOf(),
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            changeKeyword(it)
-                            keyboardController?.hide()
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
+                        changeKeyword(it)
+                        keyboardController?.hide()
+                        focusRequester.freeFocus()
+                        changeSearchBar(false)
                     }
-
                 }
             }
 

@@ -13,8 +13,8 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "start_time") var startTime: String = "2021-01-01",
     @ColumnInfo(name = "min_phase") var minPhase: Int = 1,
     @ColumnInfo(name = "max_phase") var maxPhase: Int = 1,
-    @ColumnInfo(name = "enemy_ids") var enemyIds: String = "",
-    @ColumnInfo(name = "unit_ids") var unitIds: String = "",
+    @ColumnInfo(name = "enemy_ids") var enemyIds: String = "0-0-0-0-0",
+    @ColumnInfo(name = "unit_ids") var unitIds: String = "0-0-0-0-0",
     @Ignore
     var enemyIdList: List<Int> = arrayListOf(0, 0, 0, 0, 0),
     @Ignore

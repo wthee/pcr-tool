@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.MyApplication
@@ -63,6 +64,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -543,23 +545,24 @@ fun PvpIconItem(
  */
 @Composable
 fun PvpUnitIconLine(
+    modifier: Modifier = Modifier,
     ids: List<Int>,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit
 ) {
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    Row(
-        modifier = Modifier
-            .padding(mediumPadding)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+    VerticalStaggeredGrid(
+        modifier = modifier,
+        fixCount = 5,
+        contentPadding = mediumPadding,
+        verticalContentPadding = 0.dp
     ) {
         ids.forEach {
             Box(
                 modifier = Modifier
-                    .padding(horizontal = Dimen.smallPadding)
-                    .weight(1f),
+                    .padding(horizontal = if (floatWindow) 0.dp else Dimen.smallPadding)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 MainIcon(

@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -130,7 +132,7 @@ private fun CharacterSummonDetailContent(
         uiState.attrs?.let {
             Column {
                 //属性
-                AttrList(attrs = it.sumAttr.summonAttr())
+                AttrList(attrs = it.sumAttr.summonAttr(LocalContext.current))
 
                 //技能循环
                 MainText(
@@ -139,23 +141,27 @@ private fun CharacterSummonDetailContent(
                         .padding(top = Dimen.largePadding * 2)
                         .align(Alignment.CenterHorizontally)
                 )
-                SkillLoopScreen(
-                    attackPatternList = uiState.attackPatternList,
-                    unitType = UnitType.CHARACTER_SUMMON,
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
+                //预览模式隐藏
+                if (!LocalInspectionMode.current) {
+                    SkillLoopScreen(
+                        attackPatternList = uiState.attackPatternList,
+                        unitType = UnitType.CHARACTER_SUMMON,
+                        modifier = Modifier.padding(
+                            top = Dimen.largePadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
                     )
-                )
 
-                //技能信息
-                SkillListScreen(
-                    unitId = unitId,
-                    atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
-                    unitType = UnitType.CHARACTER_SUMMON,
-                    property = property
-                )
+                    //技能信息
+                    SkillListScreen(
+                        unitId = unitId,
+                        atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
+                        unitType = UnitType.CHARACTER_SUMMON,
+                        property = property
+                    )
+                }
+
                 CommonSpacer()
             }
         }
@@ -164,18 +170,20 @@ private fun CharacterSummonDetailContent(
 
 
 /**
- * @see [SkillLoopItemContentPreview]
+ * @see [SkillLoopScreen] 技能循环预览
+ * @see [SkillListScreen] 技能列表预览
  */
 @CombinedPreviews
 @Composable
-private fun SkillLoopItemContentPreview() {
+private fun CharacterSummonDetailContentPreview() {
     PreviewLayout {
         CharacterSummonDetailContent(
             uiState = SkillSummonUiState(
                 summonData = SummonData(unitName = stringResource(id = R.string.debug_name)),
                 attrs = AllAttrData(
                     sumAttr = Attr().also {
-                        it.atk = 1000.0
+                        it.atk = 2345.0
+                        it.magicStr = 2345.0
                     }
                 ),
                 attackPatternList = emptyList()

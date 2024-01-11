@@ -174,7 +174,7 @@ fun Overview(
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> EventInProgressSection(
-                            eventLayoutState = uiState.eventLayoutState,
+                            eventExpandState = uiState.eventExpandState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
                             updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
@@ -183,7 +183,7 @@ fun Overview(
                         )
 
                         OverviewType.COMING_SOON_EVENT -> EventComingSoonSection(
-                            eventLayoutState = uiState.eventLayoutState,
+                            eventExpandState = uiState.eventExpandState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
                             updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
@@ -255,7 +255,7 @@ fun Overview(
 
                 //进行中
                 EventInProgressSection(
-                    eventLayoutState = uiState.eventLayoutState,
+                    eventExpandState = uiState.eventExpandState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
                     updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,
@@ -265,7 +265,7 @@ fun Overview(
 
                 //活动预告
                 EventComingSoonSection(
-                    eventLayoutState = uiState.eventLayoutState,
+                    eventExpandState = uiState.eventExpandState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
                     updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,

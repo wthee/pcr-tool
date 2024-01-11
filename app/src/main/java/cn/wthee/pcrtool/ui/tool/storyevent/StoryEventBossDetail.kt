@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
 @Composable
 fun StoryEventBossDetail(
     enemyId: Int,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit),
+    toSummonDetail: ((String) -> Unit),
     storyEventBossViewModel: StoryEventBossViewModel = hiltViewModel()
 ) {
 
@@ -66,8 +66,8 @@ fun StoryEventBossDetail(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             EnemyDetailScreen(
-                enemyId + uiState.modeIndex,
-                toSummonDetail,
+                enemyId = enemyId + uiState.modeIndex,
+                toSummonDetail = toSummonDetail,
             )
         }
     }

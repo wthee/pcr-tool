@@ -10,10 +10,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.home.Section
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.tool.news.NewsItem
 
 
@@ -28,12 +31,29 @@ fun NewsSection(
     orderStr: String,
     newsSectionViewModel: NewsSectionViewModel = hiltViewModel()
 ) {
-    val id = OverviewType.NEWS.id
     val uiState by newsSectionViewModel.uiState.collectAsStateWithLifecycle()
     AppResumeEffect {
         newsSectionViewModel.getNewsOverview()
     }
 
+    NewsSectionContent(
+        isEditMode = isEditMode,
+        orderStr = orderStr,
+        updateOrderData = updateOrderData,
+        toNews = toNews,
+        uiState = uiState
+    )
+}
+
+@Composable
+private fun NewsSectionContent(
+    isEditMode: Boolean,
+    orderStr: String,
+    updateOrderData: (Int) -> Unit,
+    toNews: () -> Unit,
+    uiState: NewsSectionUiState
+) {
+    val id = OverviewType.NEWS.id
     Section(
         id = id,
         titleId = R.string.tool_news,
@@ -66,5 +86,36 @@ fun NewsSection(
                 }
             }
         }
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun NewsSectionContentPreview() {
+    PreviewLayout {
+        NewsSectionContent(
+            uiState = NewsSectionUiState(
+                newsList = arrayListOf(
+                    NewsTable(
+                        id = 1,
+                        title = stringResource(id = R.string.debug_short_text)
+                    ),
+                    NewsTable(
+                        id = 1,
+                        title = stringResource(id = R.string.debug_long_text)
+                    ),
+                    NewsTable(
+                        id = 1,
+                        title = stringResource(id = R.string.debug_short_text)
+                    ),
+                ),
+                loadingState = LoadingState.Success
+            ),
+            isEditMode = false,
+            orderStr = "${OverviewType.NEWS.id}",
+            updateOrderData = { },
+            toNews = { }
+        )
     }
 }

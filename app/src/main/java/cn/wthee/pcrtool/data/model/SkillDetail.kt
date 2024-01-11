@@ -12,13 +12,13 @@ import cn.wthee.pcrtool.utils.getString
  */
 @Suppress("RegExpRedundantEscape")
 data class SkillDetail(
-    val skillId: Int = 1,
+    val skillId: Int = -1,
     val name: String = "?",
     val desc: String = "?",
-    val iconType: Int = 1,
+    val iconType: Int = 0,
     val castTime: Double = 0.0,
-    val level: Int = 1,
-    val atk: Int = 100,
+    val level: Int = 0,
+    val atk: Int = 0,
     val bossUbCooltime: Double = 0.0,
     var enemySkillIndex: Int = 0,
 ) {

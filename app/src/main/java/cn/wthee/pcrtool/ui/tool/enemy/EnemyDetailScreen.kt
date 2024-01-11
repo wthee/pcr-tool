@@ -61,7 +61,7 @@ import cn.wthee.pcrtool.utils.px2dp
 @Composable
 fun EnemyDetailScreen(
     enemyId: Int,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
     enemyDetailViewModel: EnemyDetailViewModel = hiltViewModel()
 ) {
     val uiState by enemyDetailViewModel.uiState.collectAsStateWithLifecycle()
@@ -95,7 +95,7 @@ fun EnemyDetailContent(
     partEnemyList: List<EnemyParameterPro>?,
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val openDialog = remember {
@@ -103,9 +103,9 @@ fun EnemyDetailContent(
     }
     //基础或部位信息
     val attrList = if (isMultiEnemy) {
-        enemyData.attr.multiplePartEnemy(isPreview = LocalInspectionMode.current)
+        enemyData.attr.multiplePartEnemy(context)
     } else {
-        enemyData.attr.enemy(isPreview = LocalInspectionMode.current)
+        enemyData.attr.enemy(context)
     }
     //部位最大攻击力
     var partAtk = 0
@@ -233,7 +233,7 @@ fun EnemySkillList(
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
 ) {
 
     Column(
@@ -296,7 +296,7 @@ private fun EnemyDetailContentPreview() {
             null,
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
-            toSummonDetail = { _, _, _, _, _ -> }
+            toSummonDetail = {}
         )
     }
 }

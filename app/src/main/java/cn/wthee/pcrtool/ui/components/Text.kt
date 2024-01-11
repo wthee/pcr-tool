@@ -273,7 +273,7 @@ fun RankText(
             style = MaterialTheme.typography.titleSmall,
             modifier = modifier
                 .background(color = color, shape = MaterialTheme.shapes.extraSmall)
-                .padding(horizontal = Dimen.exSmallPadding)
+                .padding(horizontal = Dimen.smallPadding)
         )
     }
 }

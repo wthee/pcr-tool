@@ -154,7 +154,11 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
 @CombinedPreviews
 @Composable
 private fun AttrListPreview() {
-    val mockData = arrayListOf(AttrValue(), AttrValue(), AttrValue())
+    val mockData = arrayListOf(
+        AttrValue(stringResource(id = R.string.attr_atk), 23456.0),
+        AttrValue(stringResource(id = R.string.attr_magic_def), 23456.0),
+        AttrValue(stringResource(id = R.string.attr_def), 23456.0),
+    )
     PreviewLayout {
         AttrList(attrs = mockData)
     }

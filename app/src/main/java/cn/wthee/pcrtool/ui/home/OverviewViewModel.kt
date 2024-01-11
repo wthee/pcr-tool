@@ -34,7 +34,7 @@ data class OverviewScreenUiState(
     //排序数量
     val orderData: String = "",
     //日程点击展开状态
-    val eventLayoutState: Int = 0,
+    val eventExpandState: Int = 0,
     //编辑模式
     val isEditMode: Boolean = false,
     //设置菜单弹窗
@@ -192,10 +192,10 @@ class OverviewScreenViewModel @Inject constructor(
     fun updateOrderData(id: Int) {
         viewModelScope.launch {
             editOrder(
-                MyApplication.context,
-                viewModelScope,
-                id,
-                MainPreferencesKeys.SP_OVERVIEW_ORDER
+                context = MyApplication.context,
+                scope = viewModelScope,
+                id = id,
+                key = MainPreferencesKeys.SP_OVERVIEW_ORDER
             ) { data ->
                 _uiState.update {
                     it.copy(
@@ -292,11 +292,11 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 更新日程展开布局状态
      */
-    fun updateEventLayoutState(eventLayoutState: Int) {
+    fun updateEventLayoutState(eventExpandState: Int) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    eventLayoutState = eventLayoutState
+                    eventExpandState = eventExpandState
                 )
             }
         }

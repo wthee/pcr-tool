@@ -182,7 +182,7 @@ fun AllToolMenuScreen(
                         actions = actions,
                         isEditMode = isEditMode,
                         isHome = false,
-                        updateOrderData = toolSectionViewModel::updateOrderData
+                        updateToolOrderData = toolSectionViewModel::updateToolOrderData
                     )
                     //编辑提示
                     Subtitle2(
@@ -219,7 +219,7 @@ fun AllToolMenuScreen(
                         actions = actions,
                         group = it,
                         isEditMode = isEditMode,
-                        updateOrderData = toolSectionViewModel::updateOrderData
+                        updateOrderData = toolSectionViewModel::updateToolOrderData
                     )
                 }
                 item {

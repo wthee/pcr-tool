@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.home.event
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.db.repository.ClanBattleRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.view.BirthdayData
@@ -67,6 +68,7 @@ data class EventSectionUiState(
 class EventSectionViewModel @Inject constructor(
     private val eventRepository: EventRepository,
     private val gachaRepository: GachaRepository,
+    private val clanBattleRepository: ClanBattleRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EventSectionUiState())
@@ -159,16 +161,30 @@ class EventSectionViewModel @Inject constructor(
                     state.copy(
                         inProgressClanBattleList = data.filter {
                             isInProgress(today, it.startTime, it.getFixedEndTime())
+                        }.map {
+                            it.addClanBattleInfo()
                         }
                     )
                 } else {
                     state.copy(
                         comingSoonClanBattleList = data.filter {
                             isComingSoon(today, it.startTime)
+                        }.map {
+                            it.addClanBattleInfo()
                         }
                     )
                 }
             }
+        }
+    }
+
+    /**
+     * 设置公会战详情信息
+     */
+    private suspend fun ClanBattleEvent.addClanBattleInfo() = this.also {
+        val clanList = clanBattleRepository.getClanBattleList(id, 2)
+        if (clanList.isNotEmpty()) {
+            clanBattleInfo = clanList[0]
         }
     }
 

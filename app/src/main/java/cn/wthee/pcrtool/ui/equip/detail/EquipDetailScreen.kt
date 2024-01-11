@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -139,7 +139,7 @@ private fun EquipDetailContent(
                 )
             }
             //属性
-            AttrList(attrs = equipMaxData.attr.allNotZero(isPreview = LocalInspectionMode.current))
+            AttrList(attrs = equipMaxData.attr.allNotZero(LocalContext.current))
 
         }
     }

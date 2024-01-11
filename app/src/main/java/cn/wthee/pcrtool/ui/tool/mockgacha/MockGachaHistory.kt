@@ -167,42 +167,43 @@ private fun MockGachaHistoryItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //up 角色
-                val idList = arrayListOf<Int>()
-                gachaData.pickUpIds.intArrayList.forEach { unitId ->
-                    idList.add(unitId + 30)
-                }
-                GridIconList(
-                    idList = idList,
-                    iconResourceType = IconResourceType.CHARACTER,
-                    onClickItem = { }
-                )
-                Row(
-                    modifier = Modifier
-                        .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //删除操作
-                    IconTextButton(
-                        icon = MainIconType.DELETE,
-                        text = stringResource(R.string.delete_gacha),
-                        contentColor = colorRed
-                    ) {
-                        openDialog.value = true
-                    }
-                    //日期
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.last_gacha_date,
-                            resultCount,
-                            gachaData.lastUpdateTime
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+            //up 角色
+            val idList = arrayListOf<Int>()
+            gachaData.pickUpIds.intArrayList.forEach { unitId ->
+                idList.add(unitId + 30)
+            }
+            GridIconList(
+                idList = idList,
+                iconResourceType = IconResourceType.CHARACTER,
+                onClickItem = { }
+            )
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.mediumPadding,
+                        bottom = Dimen.smallPadding
                     )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //删除操作
+                IconTextButton(
+                    icon = MainIconType.DELETE,
+                    text = stringResource(R.string.delete_gacha),
+                    contentColor = colorRed
+                ) {
+                    openDialog.value = true
                 }
-
+                //日期
+                CaptionText(
+                    text = stringResource(
+                        id = R.string.last_gacha_date,
+                        resultCount,
+                        gachaData.lastUpdateTime
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

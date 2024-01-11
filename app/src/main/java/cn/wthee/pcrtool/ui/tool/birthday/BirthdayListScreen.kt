@@ -158,14 +158,12 @@ fun BirthdayItem(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //图标
-                GridIconList(
-                    idList = idList,
-                    iconResourceType = IconResourceType.CHARACTER,
-                    onClickItem = toCharacterDetail
-                )
-            }
+            //图标
+            GridIconList(
+                idList = idList,
+                iconResourceType = IconResourceType.CHARACTER,
+                onClickItem = toCharacterDetail
+            )
         }
     }
 }

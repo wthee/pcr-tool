@@ -110,9 +110,9 @@ enum class MainIconType(val icon: ImageVector) {
     UP(Icons.Rounded.KeyboardArrowUp),
 
     /**
-     * 主菜单
+     * 添加
      */
-    MAIN(Icons.Rounded.Add),
+    ADD(Icons.Rounded.Add),
 
     /**
      * 返回

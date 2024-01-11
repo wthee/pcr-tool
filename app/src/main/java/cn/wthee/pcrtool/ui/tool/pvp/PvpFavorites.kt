@@ -143,34 +143,31 @@ private fun PvpFavoriteItem(
                 }
             }
         }
+        //队伍角色图标
         MainCard {
-            //队伍角色图标
-            Column(
-                modifier = Modifier.padding(top = mediumPadding, bottom = mediumPadding)
-            ) {
-                //进攻
-                MainTitleText(
-                    text = stringResource(id = R.string.team_win),
-                    backgroundColor = colorGold,
-                    modifier = Modifier.padding(start = mediumPadding)
-                )
-                PvpUnitIconLine(
-                    itemData.getAtkIds(),
-                    floatWindow,
-                    toCharacter
-                )
-                //防守
-                MainTitleText(
-                    text = stringResource(id = R.string.team_lose),
-                    backgroundColor = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.padding(start = mediumPadding, top = mediumPadding)
-                )
-                PvpUnitIconLine(
-                    itemData.getDefIds(),
-                    floatWindow,
-                    toCharacter
-                )
-            }
+            //进攻
+            MainTitleText(
+                text = stringResource(id = R.string.team_win),
+                backgroundColor = colorGold,
+                modifier = Modifier.padding(mediumPadding)
+            )
+            PvpUnitIconLine(
+                ids = itemData.getAtkIds(),
+                floatWindow = floatWindow,
+                toCharacter = toCharacter
+            )
+            //防守
+            MainTitleText(
+                text = stringResource(id = R.string.team_lose),
+                backgroundColor = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.padding(mediumPadding)
+            )
+            PvpUnitIconLine(
+                modifier = Modifier.padding(bottom = mediumPadding),
+                ids = itemData.getDefIds(),
+                floatWindow = floatWindow,
+                toCharacter = toCharacter
+            )
         }
     }
 

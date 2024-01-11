@@ -34,6 +34,7 @@ import kotlin.math.max
  */
 @Composable
 fun GridIconList(
+    modifier: Modifier = Modifier,
     idList: List<Int>?,
     detailIdList: List<Int> = arrayListOf(),
     iconResourceType: IconResourceType,
@@ -48,9 +49,10 @@ fun GridIconList(
     onClickItem: ((Int) -> Unit)? = null
 ) {
     VerticalStaggeredGrid(
-        modifier = Modifier.padding(paddingValues),
+        modifier = modifier.padding(paddingValues),
         itemWidth = itemWidth,
         contentPadding = contentPadding,
+        verticalContentPadding = Dimen.smallPadding,
         fixCount = if (LocalInspectionMode.current) 5 else fixCount
     ) {
         idList?.forEachIndexed { index, it ->
@@ -105,11 +107,7 @@ fun IconItem(
     }
 
     Column(
-        modifier = Modifier
-            .padding(
-                bottom = Dimen.mediumPadding
-            )
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainIcon(
@@ -147,8 +145,8 @@ fun IconListContent(
         MainText(
             text = title,
             modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
+                .padding(vertical = Dimen.largePadding)
+                .align(Alignment.CenterHorizontally)
         )
 
         //图标

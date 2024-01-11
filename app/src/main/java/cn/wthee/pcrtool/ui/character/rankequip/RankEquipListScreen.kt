@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.character.rankequip
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -94,37 +93,36 @@ private fun RankEquipListItem(
 ) {
     val allIds = unitPromotion.getAllOrderIds()
 
+    //图标列表
     MainCard(
         modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
             updateCurrentRank(unitPromotion.promotionLevel)
         }
     ) {
-        //图标列表
-        Column(
+        //RANK
+        RankText(
+            rank = unitPromotion.promotionLevel,
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            //RANK
-            RankText(
-                rank = unitPromotion.promotionLevel,
-                modifier = Modifier.padding(Dimen.mediumPadding),
-                type = if (unitPromotion.promotionLevel == currentRank) 1 else 0
-            )
+                .padding(
+                    horizontal = Dimen.exSmallPadding,
+                    vertical = Dimen.mediumPadding
+                )
+                .align(Alignment.CenterHorizontally),
+            type = if (unitPromotion.promotionLevel == currentRank) 1 else 0
+        )
 
-            VerticalStaggeredGrid(fixCount = 2) {
-                allIds.forEach {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        MainIcon(
-                            modifier = Modifier.padding(Dimen.smallPadding),
-                            data = ImageRequestHelper.getInstance()
-                                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it)
-                        )
-                    }
+        VerticalStaggeredGrid(fixCount = 2) {
+            allIds.forEach {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MainIcon(
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        data = ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it)
+                    )
                 }
             }
         }

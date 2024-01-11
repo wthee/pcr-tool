@@ -106,26 +106,23 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //描述
-                Subtitle1(
-                    text = freeGachaInfo.getDescComposable(),
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    )
+            //描述
+            Subtitle1(
+                text = freeGachaInfo.getDescComposable(),
+                modifier = Modifier.padding(
+                    top = Dimen.mediumPadding,
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding
                 )
+            )
 
-                //结束日期
-                CaptionText(
-                    text = freeGachaInfo.endTime.fixJpTime,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = Dimen.mediumPadding)
-
-                )
-            }
+            //结束日期
+            CaptionText(
+                text = freeGachaInfo.endTime.fixJpTime,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
+            )
         }
     }
 

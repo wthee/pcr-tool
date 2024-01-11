@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.navigation.NavActions
  */
 @Composable
 fun EventComingSoonSection(
-    eventLayoutState: Int,
+    eventExpandState: Int,
     updateOrderData: (Int) -> Unit,
     updateEventLayoutState : (Int) -> Unit,
     actions: NavActions,
@@ -31,7 +31,7 @@ fun EventComingSoonSection(
     CalendarEventLayout(
         isEditMode = isEditMode,
         calendarType = EventType.COMING_SOON,
-        eventLayoutState = eventLayoutState,
+        eventExpandState = eventExpandState,
         actions = actions,
         orderStr = orderStr,
         eventList = uiState.comingSoonEventList,

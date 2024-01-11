@@ -54,8 +54,10 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -224,7 +226,7 @@ fun VideoPlayer(url: String) {
 @Composable
 private fun ToolButtonContent(
     url: String,
-    exoPlayer: ExoPlayer,
+    exoPlayer: ExoPlayer?,
     loading: Boolean,
     playing: Boolean,
     playError: Boolean
@@ -265,8 +267,8 @@ private fun ToolButtonContent(
     val current =
         (currentPosition / 1000).toString().fillZero(2)
     //视频长度
-    val duration = if (exoPlayer.duration < 0) {
-        "00.00"
+    val duration = if (exoPlayer == null || exoPlayer.duration < 0) {
+        "00"
     } else {
         (exoPlayer.duration / 1000).toString().fillZero(2)
     }
@@ -278,7 +280,7 @@ private fun ToolButtonContent(
     var selectedSpeed by remember(url) {
         mutableFloatStateOf(1f)
     }
-    exoPlayer.setPlaybackSpeed(selectedSpeed)
+    exoPlayer?.setPlaybackSpeed(selectedSpeed)
 
     //下载进度
     var downloadProgress by remember {
@@ -303,7 +305,7 @@ private fun ToolButtonContent(
                     icon = MainIconType.VIDEO_PAUSE
                 ) {
                     play = false
-                    exoPlayer.pause()
+                    exoPlayer?.pause()
                 }
             } else {
                 IconTextButton(
@@ -311,7 +313,7 @@ private fun ToolButtonContent(
                     icon = MainIconType.VIDEO_PLAY
                 ) {
                     play = true
-                    exoPlayer.play()
+                    exoPlayer?.play()
                 }
             }
         }
@@ -486,13 +488,30 @@ private fun getVideoFileName(url: String): String {
 /**
  * 播放进度
  */
-private fun currentDurationFlow(player: ExoPlayer) = flow {
+private fun currentDurationFlow(player: ExoPlayer?) = flow {
     val offset = 25L
-    if (player.isPlaying) {
-        while (player.currentPosition + offset <= player.duration) {
-            delay(50L)
-            emit(player.currentPosition + offset)
+    if (player != null) {
+        if (player.isPlaying) {
+            while (player.currentPosition + offset <= player.duration) {
+                delay(50L)
+                emit(player.currentPosition + offset)
+            }
+            player.seekToDefaultPosition()
         }
-        player.seekToDefaultPosition()
     }
 }.conflate()
+
+
+@CombinedPreviews
+@Composable
+private fun VideoScreenPreview() {
+    PreviewLayout {
+        ToolButtonContent(
+            url = "123",
+            exoPlayer = null,
+            loading = false,
+            playing = true,
+            playError = false
+        )
+    }
+}

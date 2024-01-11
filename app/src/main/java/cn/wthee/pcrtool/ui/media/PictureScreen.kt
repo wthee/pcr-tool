@@ -44,10 +44,13 @@ import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
+import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.placeholder
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -422,5 +425,37 @@ private fun getFileName(url: String): String {
         type + url.split('/').last().split('.')[0] + ".jpg"
     } catch (e: Exception) {
         System.currentTimeMillis().toString()
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun PictureScreenContentPreview() {
+    PreviewLayout {
+        PictureScreenContent(
+            uiState = PictureUiState(
+                pageCount = 3,
+                unitCardList = arrayListOf("1"),
+                storyCardList = arrayListOf("1"),
+                comicList = arrayListOf("1"),
+                storyLoadState = LoadingState.Success,
+                comicLoadState = LoadingState.Success,
+            )
+        )
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun DialogPreview() {
+    PreviewLayout {
+        PreviewPictureDialog(
+            openPreviewDialog = remember {
+                mutableStateOf(true)
+            },
+            picUrl = "",
+            ratio = RATIO
+        )
     }
 }

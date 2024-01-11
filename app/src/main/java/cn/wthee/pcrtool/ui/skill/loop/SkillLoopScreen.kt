@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -166,7 +167,8 @@ private fun SkillLoopItemContent(
                     text = type,
                     color = getSkillColor(type = type),
                     modifier = Modifier.padding(top = Dimen.smallPadding),
-                    maxLines = 1
+                    maxLines = 1,
+                    textAlign = TextAlign.Center
                 )
 
                 //准备时间
@@ -174,7 +176,9 @@ private fun SkillLoopItemContent(
                     text = stringResource(
                         id = R.string.cast_time,
                         castTime.toBigDecimal().stripTrailingZeros().toPlainString()
-                    )
+                    ),
+                    maxLines = 1,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -188,13 +192,13 @@ private fun SkillLoopItemContentPreview() {
     PreviewLayout {
         SkillLoopItemContent(
             loop = SkillLoop(
-                0,
-                1,
-                stringResource(R.string.before_loop),
-                arrayListOf(1001, 1002)
+                unitId = 0,
+                patternId = 1,
+                loopTitle = stringResource(R.string.before_loop),
+                loopList = arrayListOf(1, 1001, 1002, 1001, 1002, 1002, 1)
             ),
-            hashMapOf(),
-            0.0
+            skillMap = hashMapOf(),
+            atkCastTime = 0.2345
         )
     }
 }

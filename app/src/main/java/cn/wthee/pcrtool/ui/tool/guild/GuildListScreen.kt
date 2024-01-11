@@ -136,26 +136,25 @@ private fun GuildItem(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         )
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-                //内容
-                if (guild.getDesc() != Constants.UNKNOWN) {
-                    MainContentText(
-                        text = guild.getDesc(),
-                        modifier = Modifier.padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.mediumPadding,
-                            end = Dimen.mediumPadding
-                        ),
-                        textAlign = TextAlign.Start
-                    )
-                }
-                //角色图标列表
-                GridIconList(
-                    idList = idList,
-                    iconResourceType = IconResourceType.CHARACTER,
-                    onClickItem = toCharacterDetail
+            //内容
+            if (guild.getDesc() != Constants.UNKNOWN) {
+                MainContentText(
+                    text = guild.getDesc(),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
+                    ),
+                    textAlign = TextAlign.Start
                 )
             }
+            //角色图标列表
+            GridIconList(
+                modifier = Modifier.padding(bottom = Dimen.commonItemPadding),
+                idList = idList,
+                iconResourceType = IconResourceType.CHARACTER,
+                onClickItem = toCharacterDetail
+            )
         }
     }
 

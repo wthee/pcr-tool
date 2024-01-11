@@ -42,6 +42,7 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
         var useIpOnFlag = false
 
         //视频缓存
+        @SuppressLint("UnsafeOptInUsageError")
         lateinit var simpleCache: SimpleCache
 
     }

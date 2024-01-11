@@ -453,7 +453,7 @@ private fun SelectTypeFabPreview() {
         SelectTypeFab(
             openDialog = true,
             changeDialog = {},
-            icon = MainIconType.MAIN,
+            icon = MainIconType.ADD,
             tabs = arrayListOf(debugText, debugText2, debugText),
             selectedIndex = 2,
             changeSelect = {}
@@ -461,7 +461,7 @@ private fun SelectTypeFabPreview() {
         SelectTypeFab(
             openDialog = false,
             changeDialog = {},
-            icon = MainIconType.MAIN,
+            icon = MainIconType.ADD,
             tabs = arrayListOf(debugText, debugText2, debugText),
             selectedIndex = 2,
             changeSelect = {}

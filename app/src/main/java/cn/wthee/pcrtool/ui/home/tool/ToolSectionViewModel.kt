@@ -52,7 +52,7 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
     /**
      * 更新排序
      */
-    fun updateOrderData(orderData: String) {
+    fun updateToolOrderData(orderData: String) {
         _uiState.update {
             it.copy(
                 toolOrderData = orderData,

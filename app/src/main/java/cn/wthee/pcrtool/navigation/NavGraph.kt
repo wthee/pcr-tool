@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.SummonProperty
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainSettings
 import cn.wthee.pcrtool.ui.character.CharacterListScreen
@@ -64,7 +65,7 @@ import cn.wthee.pcrtool.ui.tool.gacha.GachaListScreen
 import cn.wthee.pcrtool.ui.tool.guild.GuildListScreen
 import cn.wthee.pcrtool.ui.tool.leaderboard.LeaderboardScreen
 import cn.wthee.pcrtool.ui.tool.leadertier.LeaderTierScreen
-import cn.wthee.pcrtool.ui.tool.loadcomic.LoadComicListScreen
+import cn.wthee.pcrtool.ui.tool.loadcomic.LoadComicScreen
 import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
 import cn.wthee.pcrtool.ui.tool.news.NewsScreen
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
@@ -75,6 +76,7 @@ import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
 import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import cn.wthee.pcrtool.ui.tool.website.WebsiteScreen
+import cn.wthee.pcrtool.utils.JsonUtil
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -498,20 +500,12 @@ fun NavGraph(
 
             //公会战详情
             composable(
-                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.TOOL_CLAN_Battle_ID}}/{${NavRoute.TOOL_CLAN_BOSS_INDEX}}/{${NavRoute.TOOL_CLAN_BOSS_MIN_PHASE}}/{${NavRoute.TOOL_CLAN_BOSS_MAX_PHASE}}",
-                arguments = listOf(navArgument(NavRoute.TOOL_CLAN_Battle_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_INDEX) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE) {
-                    type = NavType.IntType
+                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.CLAN_BATTLE_PROPERTY}}",
+                arguments = listOf(navArgument(NavRoute.CLAN_BATTLE_PROPERTY) {
+                    type = NavType.StringType
                 }),
             ) {
-                val arguments = requireNotNull(it.arguments)
                 ClanBattleDetailScreen(
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_INDEX),
                     actions.toSummonDetail
                 )
             }
@@ -576,27 +570,23 @@ fun NavGraph(
 
             //召唤物信息
             bottomSheet(
-                route = "${NavRoute.SUMMON_DETAIL}/{${NavRoute.UNIT_ID}}/{${NavRoute.UNIT_TYPE}}/{${NavRoute.LEVEL}}/{${NavRoute.RANK}}/{${NavRoute.RARITY}}",
-                arguments = listOf(navArgument(NavRoute.UNIT_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.UNIT_TYPE) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.LEVEL) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.RANK) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.RARITY) {
-                    type = NavType.IntType
+                route = "${NavRoute.SUMMON_DETAIL}/{${NavRoute.SUMMON_PROPERTY}}",
+                arguments = listOf(navArgument(NavRoute.SUMMON_PROPERTY) {
+                    type = NavType.StringType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                SkillSummonScreen(
-                    id = arguments.getInt(NavRoute.UNIT_ID),
-                    unitType = UnitType.getByValue(arguments.getInt(NavRoute.UNIT_TYPE)),
-                    level = arguments.getInt(NavRoute.LEVEL),
-                    rank = arguments.getInt(NavRoute.RANK),
-                    rarity = arguments.getInt(NavRoute.RARITY)
-                )
+                val summonProperty =
+                    JsonUtil.fromJson<SummonProperty>(arguments.getString(NavRoute.SUMMON_PROPERTY))
+                summonProperty?.let {
+                    SkillSummonScreen(
+                        id = summonProperty.id,
+                        unitType = UnitType.getByValue(summonProperty.type),
+                        level = summonProperty.level,
+                        rank = summonProperty.rank,
+                        rarity = summonProperty.rarity
+                    )
+                }
             }
 
             //技能循环信息
@@ -756,7 +746,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.LOAD_COMIC_LIST
             ) {
-                LoadComicListScreen()
+                LoadComicScreen()
             }
         }
     }
@@ -886,9 +876,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 公会战 BOSS
      */
-    val toClanBossInfo: (Int, Int, Int, Int) -> Unit =
-        { clanId: Int, index: Int, minPhase: Int, maxPhase: Int ->
-            navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${minPhase}/${maxPhase}")
+    val toClanBossInfo: (String) -> Unit =
+        { property ->
+            navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${property}")
         }
 
     /**
@@ -1014,10 +1004,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 召唤物信息
      */
-    val toSummonDetail: (Int, Int, Int, Int, Int) -> Unit =
-        { unitId, unitType, level, rank, rarity ->
-            navController.navigate("${NavRoute.SUMMON_DETAIL}/${unitId}/${unitType}/${level}/${rank}/${rarity}")
-        }
+    val toSummonDetail: (String) -> Unit = { property ->
+        navController.navigate("${NavRoute.SUMMON_DETAIL}/${property}")
+    }
 
     /**
      * 装备统计
