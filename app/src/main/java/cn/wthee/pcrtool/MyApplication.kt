@@ -16,9 +16,7 @@ import cn.wthee.pcrtool.utils.VideoCache
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import coil3.annotation.ExperimentalCoilApi
 import coil3.disk.DiskCache
-import coil3.fetch.NetworkFetcher
 import coil3.request.CachePolicy
 import coil3.request.allowHardware
 import dagger.hilt.android.HiltAndroidApp
@@ -75,12 +73,8 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
         simpleCache = VideoCache().init(this)
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(context)
-            .components {
-                add(NetworkFetcher.Factory())
-            }
             .allowHardware(false)
             //禁用内存缓存
             .memoryCachePolicy(CachePolicy.DISABLED)
