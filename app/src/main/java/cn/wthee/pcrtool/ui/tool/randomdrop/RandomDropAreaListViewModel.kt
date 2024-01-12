@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.quest
+package cn.wthee.pcrtool.ui.tool.randomdrop
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle

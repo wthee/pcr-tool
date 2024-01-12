@@ -37,11 +37,11 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableHeader
-import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -97,7 +97,6 @@ fun LeaderboardScreen(
     LaunchedEffect(sort.intValue, asc.value, onlyLast.value) {
         leaderBoardViewModel.refreshLeader(filter)
     }
-
 
 
     MainScaffold(
@@ -416,6 +415,8 @@ fun LeaderCharacterIcon(
     tipText: String,
     toCharacterDetail: (Int) -> Unit
 ) {
+    val context = LocalContext.current
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         //角色图标
         MainIcon(
@@ -436,11 +437,17 @@ fun LeaderCharacterIcon(
 
         //wiki页面
         if (!placeholder) {
-            IconTextButton(
-                text = "wiki"
-            ) {
-                BrowserUtil.open(url)
-            }
+            CaptionText(
+                text = "wiki",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(top = Dimen.exSmallPadding)
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable {
+                        VibrateUtil(context).single()
+                        BrowserUtil.open(url)
+                    }
+            )
         }
 
     }
@@ -498,14 +505,31 @@ fun getLeaderUnknownTip(hasUnitId: Boolean): String {
 @Composable
 private fun LeaderboardItemPreview() {
     PreviewLayout {
+        SortTitleGroup(
+            sort = remember {
+                mutableIntStateOf(0)
+            },
+            asc = remember {
+                mutableStateOf(false)
+            }
+        )
+
         LeaderboardItem(
-            LeaderboardData(
+            leader = LeaderboardData(
+                unitId = 1,
                 quest = "SS+",
                 pvp = "S",
-                clan = "A"
+                clan = "A",
+                tower = "A",
+                updateTime = "2023-02-02 22:33:44"
             ),
-            1,
-            null,
+            index = 1,
+            basicInfo = CharacterInfo(
+                id = 1,
+                name = stringResource(id = R.string.debug_name),
+                position = 100,
+                uniqueEquipType = 2
+            ),
         ) {}
     }
 }

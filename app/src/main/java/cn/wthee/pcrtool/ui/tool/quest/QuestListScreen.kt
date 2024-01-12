@@ -48,6 +48,7 @@ import cn.wthee.pcrtool.ui.theme.colorCyan
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaContent
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
@@ -406,7 +407,11 @@ fun AreaItem(
         verticalContentPadding = Dimen.commonItemPadding
     ) {
         odds.forEach {
-            EquipWithOddCompose(selectedId, it, searchEquipIdList)
+            EquipWithOddCompose(
+                selectedId = selectedId,
+                oddData = it,
+                searchEquipIdList = searchEquipIdList
+            )
         }
     }
 }

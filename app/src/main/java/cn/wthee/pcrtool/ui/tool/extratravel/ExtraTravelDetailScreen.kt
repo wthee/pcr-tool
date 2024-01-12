@@ -200,11 +200,11 @@ private fun ExtraEquipRewardIconGrid(
 private fun ExtraEquipSubGroupPreview() {
     PreviewLayout {
         ExtraEquipGroup(
-            1,
-            "selected",
-            arrayListOf(1, 2, 3, 4),
-            arrayListOf(1000, 20000, 3333, 444444),
-            2
+            category = 1,
+            categoryName = stringResource(id = R.string.debug_short_text),
+            equipIdList = arrayListOf(1, 2, 3, 4),
+            dropOddsList = arrayListOf(1000, 20000, 3333, 444444),
+            selectedId = 2
         ) { }
     }
 }

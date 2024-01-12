@@ -12,7 +12,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -138,6 +140,7 @@ fun TravelQuestHeader(
     questData: ExtraEquipQuestData,
     showTitle: Boolean = true
 ) {
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -152,7 +155,11 @@ fun TravelQuestHeader(
         )
         //标题
         if (showTitle) {
-            Subtitle1(text = questData.getQuestName())
+            Subtitle1(
+                text = questData.getQuestName(),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+            )
         }
         //其它参数
         VerticalStaggeredGrid(
@@ -168,11 +175,11 @@ fun TravelQuestHeader(
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_time),
-                toTimeText(questData.travelTime * 1000)
+                toTimeText(questData.travelTime * 1000, context)
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_time_decrease_limit),
-                toTimeText(questData.travelTimeDecreaseLimit * 1000)
+                toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
             )
         }
     }
@@ -182,23 +189,25 @@ fun TravelQuestHeader(
 @Composable
 private fun TravelItemPreview() {
     PreviewLayout {
+        val quest = ExtraEquipQuestData(
+            1,
+            1,
+            stringResource(id = R.string.debug_short_text),
+            10,
+            1000,
+            2000,
+            1,
+            1,
+            1
+        )
+
         TravelItem(
             travelData = ExtraTravelData(
                 travelAreaId = 1,
                 travelAreaName = stringResource(id = R.string.debug_short_text),
                 questCount = 1,
                 questList = arrayListOf(
-                    ExtraEquipQuestData(
-                        1,
-                        1,
-                        stringResource(id = R.string.debug_short_text),
-                        10,
-                        1000,
-                        2000,
-                        1,
-                        1,
-                        1
-                    )
+                    quest, quest, quest
                 )
             ),
             toExtraEquipTravelAreaDetail = {}

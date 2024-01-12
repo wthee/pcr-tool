@@ -204,7 +204,7 @@ fun EnemyDetailContent(
     //描述文本弹窗
     MainAlertDialog(
         modifier = Modifier
-            .heightIn(max = ScreenUtil.getHeight().px2dp * RATIO_GOLDEN),
+            .heightIn(max = px2dp(context, ScreenUtil.getHeight()) * RATIO_GOLDEN),
         openDialog = openDialog,
         title = stringResource(id = R.string.description),
         content = {
@@ -282,18 +282,22 @@ fun EnemySkillList(
 }
 
 
+/**
+ * @see [SkillLoopScreen] 技能循环预览
+ * @see [cn.wthee.pcrtool.ui.skill.SkillListScreen] 技能列表预览
+ */
 @CombinedPreviews
 @Composable
 private fun EnemyDetailContentPreview() {
     PreviewLayout {
         EnemyDetailContent(
-            EnemyParameterPro(
+            enemyData = EnemyParameterPro(
                 name = stringResource(id = R.string.debug_short_text),
                 comment = stringResource(id = R.string.debug_long_text),
                 level = 100
             ),
-            false,
-            null,
+            isMultiEnemy = false,
+            partEnemyList = null,
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
             toSummonDetail = {}

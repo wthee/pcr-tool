@@ -96,7 +96,6 @@ class MockGachaViewModel @Inject constructor(
             }
         }
         getGachaUnits()
-        getHistory()
     }
 
 
@@ -216,7 +215,7 @@ class MockGachaViewModel @Inject constructor(
     /**
      * 获取历史记录
      */
-    private fun getHistory() {
+    fun getHistory() {
         viewModelScope.launch {
             val data = mockGachaRepository.getHistory(MainActivity.regionType.value)
             _uiState.update {

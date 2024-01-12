@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
+import cn.wthee.pcrtool.data.enums.CalendarEventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CaptionText
@@ -189,6 +190,13 @@ fun CalendarEventItem(calendar: CalendarEvent) {
 @Composable
 private fun CalendarEventItemPreview() {
     PreviewLayout {
-        CalendarEventItem(CalendarEvent())
+        CalendarEventItem(
+            CalendarEvent(
+                type = CalendarEventType.H_DROP.type.toString(),
+                value = 3000,
+                startTime = "2030-01-01 00:00:00",
+                endTime = "2031-01-01 00:00:00"
+            )
+        )
     }
 }

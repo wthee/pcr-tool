@@ -45,6 +45,10 @@ fun MainCard(
                 Modifier
             }
         )
+    //阴影
+    val cardElevation = CardDefaults.elevatedCardElevation(
+        defaultElevation = elevation
+    )
 
     if (onClick != null) {
         ElevatedCard(
@@ -56,7 +60,7 @@ fun MainCard(
             content = content,
             shape = shape,
             colors = CardDefaults.cardColors(containerColor = containerColor),
-            elevation = CardDefaults.elevatedCardElevation()
+            elevation = cardElevation
         )
     } else {
         ElevatedCard(
@@ -64,7 +68,7 @@ fun MainCard(
             content = content,
             shape = shape,
             colors = CardDefaults.cardColors(containerColor = containerColor),
-            elevation = CardDefaults.elevatedCardElevation()
+            elevation = cardElevation
         )
     }
 }

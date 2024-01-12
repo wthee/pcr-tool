@@ -160,6 +160,7 @@ fun BirthdayItem(
         MainCard {
             //图标
             GridIconList(
+                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
                 idList = idList,
                 iconResourceType = IconResourceType.CHARACTER,
                 onClickItem = toCharacterDetail

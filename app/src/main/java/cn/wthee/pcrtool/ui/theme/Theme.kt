@@ -1,20 +1,22 @@
 package cn.wthee.pcrtool.ui.theme
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.MainActivity
 
@@ -97,23 +99,23 @@ fun PCRToolComposeTheme(
 /**
  * 预览正常、深色模式
  */
-@Preview(
-    name = "dark theme",
-    group = "dark",
-    uiMode = UI_MODE_NIGHT_YES,
-    showBackground = true
-)
+//@Preview(
+//    name = "dark theme",
+//    group = "dark",
+//    uiMode = UI_MODE_NIGHT_YES,
+//    showBackground = true
+//)
 @Preview(
     name = "normal",
     group = "light",
     showBackground = true
 )
-@Preview(
-    name = "tablet",
-    group = "tablet",
-    device = Devices.TABLET,
-    showBackground = true
-)
+//@Preview(
+//    name = "tablet",
+//    group = "tablet",
+//    device = Devices.TABLET,
+//    showBackground = true
+//)
 annotation class CombinedPreviews
 
 /**
@@ -121,6 +123,7 @@ annotation class CombinedPreviews
  */
 @Composable
 fun PreviewLayout(
+    modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     themeType: Int = 0,
     content: @Composable ColumnScope.() -> Unit
@@ -135,19 +138,19 @@ fun PreviewLayout(
             .fillMaxWidth()
     ) {
         //正常主题
-        if (themeType == 0 || themeType == 1) {
-            MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
-                Column(horizontalAlignment = horizontalAlignment) {
-                    content()
-                }
-            }
-        }
-
-        Divider(
-            modifier = Modifier
-                .padding(vertical = Dimen.mediumPadding)
-                .height(Dimen.divLineHeight)
-        )
+//        if (themeType == 0 || themeType == 1) {
+//            MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
+//                Column(horizontalAlignment = horizontalAlignment) {
+//                    content()
+//                }
+//            }
+//        }
+//
+//        Divider(
+//            modifier = Modifier
+//                .padding(vertical = Dimen.mediumPadding)
+//                .height(Dimen.divLineHeight)
+//        )
 
         //动态色彩主题
         if (themeType == 0 || themeType == 2) {

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.quest
+package cn.wthee.pcrtool.ui.tool.randomdrop
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.tool.quest.AreaItem
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
 

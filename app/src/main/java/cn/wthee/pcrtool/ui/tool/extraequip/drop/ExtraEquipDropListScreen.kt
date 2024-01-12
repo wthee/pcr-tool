@@ -89,7 +89,8 @@ private fun ExtraEquipDropListContent(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.Top
         ) {
             val questData = dropList[pagerState.currentPage]
             TravelQuestItem(
@@ -112,25 +113,28 @@ private fun ExtraEquipDropListContentPreview() {
                 travelQuestId = 1,
                 category = 1,
                 categoryName = stringResource(id = R.string.debug_short_text),
-                subRewardIds = "1",
-                subRewardDrops = "1"
+                subRewardIds = "1-2-3",
+                subRewardDrops = "1234-2323-4567"
             )
+        )
+        val questData = ExtraEquipQuestData(
+            travelQuestId = 1,
+            travelAreaId = 1,
+            travelQuestName = stringResource(id = R.string.debug_short_text),
+            limitUnitNum = 10,
+            travelTime = 1000,
+            travelTimeDecreaseLimit = 2000,
+            travelDecreaseFlag = 1,
+            needPower = 1,
+            iconId = 1
         )
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             ExtraEquipDropListContent(
                 dropList = arrayListOf(
-                    ExtraEquipQuestData(
-                        travelQuestId = 1,
-                        travelAreaId = 1,
-                        travelQuestName = stringResource(id = R.string.debug_short_text),
-                        limitUnitNum = 10,
-                        travelTime = 1000,
-                        travelTimeDecreaseLimit = 2000,
-                        travelDecreaseFlag = 1,
-                        needPower = 1,
-                        iconId = 1
-                    )
+                    questData,
+                    questData,
+                    questData
                 ),
                 equipId = 1,
                 subRewardListMap = data

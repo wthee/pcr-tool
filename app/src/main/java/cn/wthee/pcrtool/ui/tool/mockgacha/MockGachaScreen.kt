@@ -46,9 +46,11 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.TabData
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageRequestHelper
@@ -63,7 +65,7 @@ import java.util.UUID
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MockGacha(
+fun MockGachaScreen(
     pagerState: PagerState = rememberPagerState { 2 },
     mockGachaViewModel: MockGachaViewModel = hiltViewModel(),
 ) {
@@ -75,20 +77,12 @@ fun MockGacha(
         stringResource(id = R.string.gacha_pick_up_fes),
         stringResource(id = R.string.gacha_pick_up_single),
     )
-    //类型
-    val pageTabs = arrayListOf(
-        TabData(tab = stringResource(id = R.string.character)),
-        TabData(tab = stringResource(id = R.string.title_history))
-    )
 
     //卡池信息
     val showResult = uiState.showResult
     // 类型
     val mockGachaType = uiState.mockGachaType
 
-    //滚动状态
-    val unitScrollState = rememberScrollState()
-    val historyScrollState = rememberLazyGridState()
 
     //返回拦截
     BackHandler(uiState.showResult) {
@@ -98,7 +92,12 @@ fun MockGacha(
     MainScaffold(
         secondLineFab = {
             //抽取
-            MockGachaFabContent(uiState, showResult, mockGachaType, mockGachaViewModel)
+            MockGachaFabContent(
+                uiState = uiState,
+                showResult = showResult,
+                mockGachaType = mockGachaType,
+                mockGachaViewModel = mockGachaViewModel
+            )
         },
         fabWithCustomPadding = {
             //卡池类型选择
@@ -140,76 +139,114 @@ fun MockGacha(
             }
         },
     ) {
-        Column(
-            modifier = Modifier
-                .padding(top = Dimen.largePadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            //模拟抽卡顶部
-            MockGachaHeader(uiState, mockGachaType, showResult, mockGachaViewModel)
+        MockGachaContent(
+            gachaId = uiState.gachaId,
+            pickUpList = uiState.pickUpList,
+            unitsInGacha = uiState.unitsInGacha,
+            mockGachaType = mockGachaType,
+            showResult = showResult,
+            updatePickUpList = mockGachaViewModel::updatePickUpList,
+            pagerState = pagerState
+        )
 
-            if (showResult) {
-                //抽卡结果
-                MockGachaResult(
-                    uiState.gachaId,
-                    uiState.pickUpList.getIds(),
-                    mockGachaType
-                )
-            } else {
-                MainTabRow(
-                    pagerState = pagerState,
-                    tabs = pageTabs,
-                    modifier = Modifier
-                        .fillMaxWidth(RATIO_GOLDEN)
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    if (pagerState.currentPage == 0) {
-                        unitScrollState.scrollTo(0)
-                    } else {
-                        historyScrollState.scrollToItem(0)
-                    }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun MockGachaContent(
+    gachaId: String,
+    pickUpList: List<GachaUnitInfo>,
+    unitsInGacha: UnitsInGacha?,
+    mockGachaType: MockGachaType,
+    showResult: Boolean,
+    updatePickUpList: (GachaUnitInfo) -> Unit,
+    pagerState: PagerState
+) {
+    //滚动状态
+    val unitScrollState = rememberScrollState()
+    val historyScrollState = rememberLazyGridState()
+
+    //类型
+    val pageTabs = arrayListOf(
+        TabData(tab = stringResource(id = R.string.character)),
+        TabData(tab = stringResource(id = R.string.title_history))
+    )
+
+    Column(
+        modifier = Modifier
+            .padding(top = Dimen.largePadding)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        //模拟抽卡顶部
+        MockGachaHeader(
+            pickUpList = pickUpList,
+            mockGachaType = mockGachaType,
+            showResult = showResult,
+            updatePickUpList = updatePickUpList
+        )
+
+        if (showResult) {
+            //抽卡结果
+            MockGachaResult(
+                gachaId = gachaId,
+                pickUpUnitIds = pickUpList.getIds(),
+                mockGachaType = mockGachaType
+            )
+        } else {
+            MainTabRow(
+                pagerState = pagerState,
+                tabs = pageTabs,
+                modifier = Modifier
+                    .fillMaxWidth(RATIO_GOLDEN)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                if (pagerState.currentPage == 0) {
+                    unitScrollState.scrollTo(0)
+                } else {
+                    historyScrollState.scrollToItem(0)
                 }
+            }
 
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .padding(top = Dimen.mediumPadding)
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.Top
-                ) { pageIndex ->
-                    when (pageIndex) {
-                        0 -> //角色选择
-                            uiState.unitsInGacha?.let {
-                                ToSelectMockGachaUnitList(
-                                    unitScrollState,
-                                    mockGachaType,
-                                    it
-                                )
-                            }
-
-                        else -> {
-                            //历史记录展示
-                            MockGachaHistory(historyScrollState)
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .padding(top = Dimen.mediumPadding)
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.Top
+            ) { pageIndex ->
+                when (pageIndex) {
+                    0 -> //角色选择
+                        unitsInGacha?.let {
+                            ToSelectMockGachaUnitList(
+                                scrollState = unitScrollState,
+                                mockGachaType = mockGachaType,
+                                allUnits = it,
+                                updatePickUpList = updatePickUpList
+                            )
                         }
+
+                    else -> {
+                        //历史记录展示
+                        MockGachaHistory(historyScrollState)
                     }
                 }
             }
         }
-
     }
 }
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 private fun MockGachaHeader(
-    uiState: MockGachaUiState,
+    pickUpList: List<GachaUnitInfo>,
     mockGachaType: MockGachaType,
     showResult: Boolean,
-    mockGachaViewModel: MockGachaViewModel
+    updatePickUpList: (GachaUnitInfo) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        FadeAnimation(uiState.pickUpList.isEmpty()) {
+        FadeAnimation(pickUpList.isEmpty()) {
             MainText(
                 text = when (mockGachaType) {
                     MockGachaType.PICK_UP -> stringResource(id = R.string.tip_to_pick_up_normal)
@@ -218,12 +255,12 @@ private fun MockGachaHeader(
                 }
             )
         }
-        ExpandAnimation(uiState.pickUpList.isNotEmpty()) {
+        ExpandAnimation(pickUpList.isNotEmpty()) {
             //选中的角色
             FlowRow(
                 modifier = Modifier.animateContentSize(defaultSpring())
             ) {
-                uiState.pickUpList.forEachIndexed { index, gachaUnitInfo ->
+                pickUpList.forEachIndexed { index, gachaUnitInfo ->
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.padding(top = Dimen.smallPadding)
@@ -235,10 +272,10 @@ private fun MockGachaHeader(
                         ) {
                             //更新选中
                             if (!showResult) {
-                                mockGachaViewModel.updatePickUpList(gachaUnitInfo)
+                                updatePickUpList(gachaUnitInfo)
                             }
                         }
-                        if (mockGachaType == MockGachaType.PICK_UP_SINGLE && index == uiState.pickUpList.size - 1) {
+                        if (mockGachaType == MockGachaType.PICK_UP_SINGLE && index == pickUpList.size - 1) {
                             SelectText(
                                 selected = true,
                                 text = stringResource(id = R.string.selected_mark)
@@ -325,7 +362,8 @@ private fun MockGachaFabContent(
 private fun ToSelectMockGachaUnitList(
     scrollState: ScrollState,
     mockGachaType: MockGachaType,
-    allUnits: UnitsInGacha
+    allUnits: UnitsInGacha,
+    updatePickUpList: (GachaUnitInfo) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -334,12 +372,24 @@ private fun ToSelectMockGachaUnitList(
     ) {
         if (mockGachaType == MockGachaType.FES) {
             // Fes
-            ToSelectMockGachaUnitGroup(allUnits.fesLimit, stringResource(R.string.gacha_fes))
+            ToSelectMockGachaUnitGroup(
+                gachaUnitList = allUnits.fesLimit,
+                title = stringResource(R.string.gacha_fes),
+                updatePickUpList = updatePickUpList
+            )
         } else {
             // 限定
-            ToSelectMockGachaUnitGroup(allUnits.limit, stringResource(R.string.gacha_limit))
+            ToSelectMockGachaUnitGroup(
+                gachaUnitList = allUnits.limit,
+                title = stringResource(R.string.gacha_limit),
+                updatePickUpList = updatePickUpList
+            )
             // 常驻
-            ToSelectMockGachaUnitGroup(allUnits.normal3, stringResource(R.string.gacha_normal))
+            ToSelectMockGachaUnitGroup(
+                gachaUnitList = allUnits.normal3,
+                title = stringResource(R.string.gacha_normal),
+                updatePickUpList = updatePickUpList
+            )
         }
         CommonSpacer()
         CommonSpacer()
@@ -353,7 +403,7 @@ private fun ToSelectMockGachaUnitList(
 private fun ToSelectMockGachaUnitGroup(
     gachaUnitList: List<GachaUnitInfo>,
     title: String,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel()
+    updatePickUpList: (GachaUnitInfo) -> Unit
 ) {
     val idList = gachaUnitList.map {
         it.unitId + (if (it.rarity == 1) 10 else 30)
@@ -377,7 +427,44 @@ private fun ToSelectMockGachaUnitGroup(
         iconResourceType = IconResourceType.CHARACTER
     ) { unitId ->
         gachaUnitList.find { it.unitId / 100 == unitId / 100 }?.let {
-            mockGachaViewModel.updatePickUpList(it)
+            updatePickUpList(it)
         }
+    }
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@CombinedPreviews
+@Composable
+private fun MockGachaContentPreview() {
+    PreviewLayout {
+        val gachaList = arrayListOf<GachaUnitInfo>()
+        val gachaLimitList = arrayListOf<GachaUnitInfo>()
+        for (i in 0..10) {
+            gachaList.add(
+                GachaUnitInfo(1, "", 0, 3)
+            )
+            gachaLimitList.add(
+                GachaUnitInfo(1, "", 1, 3)
+            )
+        }
+
+        MockGachaContent(
+            gachaId = "",
+            pickUpList = arrayListOf(),
+            unitsInGacha = UnitsInGacha(
+                normal1 = arrayListOf(),
+                normal2 = arrayListOf(),
+                normal3 = gachaList,
+                limit = gachaLimitList,
+                fesLimit = arrayListOf(),
+            ),
+            mockGachaType = MockGachaType.PICK_UP,
+            showResult = false,
+            pagerState = rememberPagerState {
+                2
+            },
+            updatePickUpList = {}
+        )
     }
 }

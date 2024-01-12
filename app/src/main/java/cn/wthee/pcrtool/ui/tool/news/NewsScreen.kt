@@ -217,6 +217,11 @@ fun NewsItem(
 @Composable
 private fun NewsItemPreview() {
     PreviewLayout {
-        NewsItem(news = NewsTable(title = "?"))
+        NewsItem(
+            news = NewsTable(
+                id = 1,
+                title = stringResource(id = R.string.debug_long_text)
+            )
+        )
     }
 }

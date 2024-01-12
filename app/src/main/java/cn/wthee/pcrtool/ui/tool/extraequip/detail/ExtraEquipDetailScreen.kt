@@ -22,6 +22,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.AttrDefaultInt
+import cn.wthee.pcrtool.data.db.view.AttrInt
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentData
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -60,7 +62,6 @@ fun ExtraEquipDetail(
     toExtraEquipDrop: (Int) -> Unit,
     extraEquipDetailViewModel: ExtraEquipDetailViewModel = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
     val uiState by extraEquipDetailViewModel.uiState.collectAsStateWithLifecycle()
 
     //初始收藏信息
@@ -70,54 +71,82 @@ fun ExtraEquipDetail(
 
     MainScaffold(
         fab = {
-            //装备收藏
-            MainSmallFab(
-                iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
-            ) {
-                scope.launch {
-                    extraEquipDetailViewModel.updateFavoriteId()
-                }
-            }
-
-            //关联角色
-            if (uiState.unitIdList.isNotEmpty()) {
-                MainSmallFab(
-                    iconType = MainIconType.CHARACTER,
-                    text = uiState.unitIdList.size.toString()
-                ) {
-                    toExtraEquipUnit(uiState.category)
-                }
-            }
-
-            //掉落信息
-            MainSmallFab(
-                iconType = MainIconType.EXTRA_EQUIP_DROP
-            ) {
-                toExtraEquipDrop(equipId)
-            }
+            FabContent(
+                equipId = equipId,
+                favorite = uiState.favorite,
+                unitIdList = uiState.unitIdList,
+                category = uiState.category,
+                updateFavoriteId = extraEquipDetailViewModel::updateFavoriteId,
+                toExtraEquipUnit = toExtraEquipUnit,
+                toExtraEquipDrop = toExtraEquipDrop,
+            )
         }
     ) {
-        Column {
-            StateBox(stateType = uiState.loadingState) {
-                uiState.equipData?.let { extraEquipmentData ->
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        //基本信息
-                        if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
-                            ExtraEquipBasicInfo(extraEquipmentData, uiState.favorite)
-                        }
-                        //被动技能
-                        uiState.skillList?.let { ExtraEquipSkill(it) }
-
-                        CommonSpacer()
+        StateBox(stateType = uiState.loadingState) {
+            uiState.equipData?.let { extraEquipmentData ->
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    //基本信息
+                    if (extraEquipmentData.equipmentId != UNKNOWN_EQUIP_ID) {
+                        ExtraEquipBasicInfo(extraEquipmentData, uiState.favorite)
                     }
+                    //被动技能
+                    uiState.skillList?.let { ExtraEquipSkill(it) }
+
+                    CommonSpacer()
                 }
             }
         }
     }
 
+}
+
+/**
+ * fab
+ */
+@Composable
+private fun FabContent(
+    equipId: Int,
+    favorite: Boolean,
+    unitIdList: List<Int>,
+    category: Int,
+    updateFavoriteId: () -> Unit,
+    toExtraEquipUnit: (Int) -> Unit,
+    toExtraEquipDrop: (Int) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+
+    //装备收藏
+    MainSmallFab(
+        iconType = if (favorite) {
+            MainIconType.FAVORITE_FILL
+        } else {
+            MainIconType.FAVORITE_LINE
+        },
+    ) {
+        scope.launch {
+            updateFavoriteId()
+        }
+    }
+
+    //关联角色
+    if (unitIdList.isNotEmpty()) {
+        MainSmallFab(
+            iconType = MainIconType.CHARACTER,
+            text = unitIdList.size.toString()
+        ) {
+            toExtraEquipUnit(category)
+        }
+    }
+
+    //掉落信息
+    MainSmallFab(
+        iconType = MainIconType.EXTRA_EQUIP_DROP
+    ) {
+        toExtraEquipDrop(equipId)
+    }
 }
 
 /**
@@ -244,8 +273,34 @@ private fun ExtraEquipBasicInfoPreview() {
                     equipmentId = 1,
                     equipmentName = stringResource(id = R.string.debug_short_text),
                     description = stringResource(id = R.string.debug_long_text),
+                    attrDefault = AttrDefaultInt().also {
+                        it.hp = 2345
+                        it.atk = 3456
+                    },
+                    attr = AttrInt().also {
+                        it.hp = 2345
+                        it.atk = 3456
+                    }
                 ),
                 true
+            )
+        }
+    }
+}
+
+@CombinedPreviews
+@Composable
+private fun FabContentPreview() {
+    PreviewLayout {
+        Row {
+            FabContent(
+                equipId = 1,
+                favorite = true,
+                unitIdList = arrayListOf(1, 2, 3),
+                category = 2,
+                updateFavoriteId = {},
+                toExtraEquipUnit = {},
+                toExtraEquipDrop = {}
             )
         }
     }

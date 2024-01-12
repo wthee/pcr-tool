@@ -179,7 +179,7 @@ private fun WebsiteGroup(
     ) {
         MainText(
             text = groupData.typeName,
-            modifier = Modifier.padding(top = Dimen.largePadding * 2, bottom = Dimen.mediumPadding)
+            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding)
         )
         if (websiteList.isEmpty()) {
             CenterTipText(text = stringResource(id = R.string.no_data))
@@ -188,7 +188,12 @@ private fun WebsiteGroup(
                 itemWidth = getItemWidth(),
                 contentPadding = Dimen.mediumPadding,
                 modifier = Modifier
-                    .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
+                    .padding(
+                        top = Dimen.mediumPadding,
+                        bottom = Dimen.largePadding,
+                        start = Dimen.commonItemPadding,
+                        end = Dimen.commonItemPadding
+                    )
                     .animateContentSize(defaultSpring())
             ) {
                 websiteList.forEach {

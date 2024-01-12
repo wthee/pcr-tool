@@ -186,7 +186,8 @@ private fun ComicItem(data: ComicData) {
             )
             Subtitle1(
                 text = data.title,
-                selectable = true
+                selectable = true,
+                textAlign = TextAlign.Center
             )
         }
 
@@ -304,7 +305,7 @@ private fun ComicTocList(
             }
         }
 
-        //输入
+        //region 输入框
         OutlinedTextField(
             modifier = Modifier
                 .padding(Dimen.smallPadding)
@@ -360,6 +361,7 @@ private fun ComicTocList(
                 }
             )
         )
+        // endregion
     }
 
 }

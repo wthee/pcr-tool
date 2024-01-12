@@ -291,8 +291,16 @@ private fun LeaderItem(
 private fun LeaderItemPreview() {
     PreviewLayout {
         LeaderItem(
-            LeaderTierItem(),
-            null
+            leader = LeaderTierItem(
+                name = stringResource(id = R.string.debug_name),
+
+                ),
+            basicInfo = CharacterInfo(
+                id = 1,
+                name = stringResource(id = R.string.debug_name),
+                position = 100,
+                uniqueEquipType = 2
+            )
         ) {}
     }
 }

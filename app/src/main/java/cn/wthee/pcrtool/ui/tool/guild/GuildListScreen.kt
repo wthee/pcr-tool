@@ -194,6 +194,12 @@ private fun compareUnit(masterName: String) = Comparator<GuildMemberInfo> { gm1,
 @Composable
 private fun GuildItemPreview() {
     PreviewLayout {
-        GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
+        GuildItem(
+            guild = GuildAllMember(
+                guildName = stringResource(id = R.string.debug_short_text),
+                description = stringResource(id = R.string.debug_long_text)
+            ),
+            toCharacterDetail = {}
+        )
     }
 }
