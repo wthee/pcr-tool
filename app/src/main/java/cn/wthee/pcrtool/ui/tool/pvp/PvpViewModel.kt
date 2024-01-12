@@ -3,17 +3,21 @@ package cn.wthee.pcrtool.ui.tool.pvp
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.calcDate
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +27,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -37,8 +44,6 @@ data class PvpUiState(
     val pvpResult: ResponseData<List<PvpResultData>>? = null,
     //收藏信息
     val favoritesList: List<PvpFavoriteData> = emptyList(),
-//    //结果显示
-//    val showResult: Boolean = false,
     //所有收藏信息
     val allFavoritesList: List<PvpFavoriteData> = emptyList(),
     //历史记录
@@ -46,6 +51,7 @@ data class PvpUiState(
     //最近使用的角色
     val recentlyUsedUnitList: List<PvpCharacterData> = emptyList(),
     val requesting: Boolean = false,
+    val idArray: JsonArray? = null
 )
 
 /**
@@ -88,7 +94,7 @@ class PvpViewModel @Inject constructor(
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String) {
+    private fun getFavoritesList(defs: String) {
         viewModelScope.launch {
             val data = pvpRepository.getLikedList(defs, MainActivity.regionType.value)
             _uiState.update {
@@ -220,7 +226,7 @@ class PvpViewModel @Inject constructor(
     /**
      * 查询
      */
-    fun getPVPData(ids: JsonArray) {
+    private fun getPvpData(ids: JsonArray) {
         viewModelScope.launch {
             if (_uiState.value.pvpResult == null && !_uiState.value.requesting) {
                 _uiState.update {
@@ -228,18 +234,90 @@ class PvpViewModel @Inject constructor(
                         requesting = true
                     )
                 }
-                val data = apiRepository.getPVPData(ids)
+                val data = apiRepository.getPvpData(ids)
 
                 _uiState.update {
                     it.copy(
                         pvpResult = data,
-                        requesting = false
+                        requesting = false,
+                        idArray = ids
                     )
                 }
             }
         }
     }
 
+    /**
+     * 重新查询
+     */
+    fun research() {
+        viewModelScope.launch {
+            resetResult()
+            _uiState.value.idArray?.let { getPvpData(it) }
+        }
+    }
+
+    /**
+     * 从收藏或历史搜索
+     */
+    fun searchByDefs(defs: List<Int>) {
+        viewModelScope.launch {
+            resetResult()
+            val selectedData = getPvpCharacterByIds(defs)
+            val selectedIds = selectedData as ArrayList<PvpCharacterData>
+            selectedIds.sortWith(comparePvpCharacterData())
+            MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
+            searchByCharacterList(selectedIds)
+        }
+    }
+
+    /**
+     * 处理数据后搜索
+     */
+    fun searchByCharacterList(characterDataList: List<PvpCharacterData>? = null) {
+        viewModelScope.launch {
+            val list = characterDataList ?: MainActivity.navViewModel.selectedPvpData.value
+            if (list == null || list.contains(PvpCharacterData())) {
+                ToastUtil.short(getString(R.string.tip_select_5))
+                return@launch
+            }
+            resetResult()
+            //加载数据
+            val defIds = list.subList(0, 5).getIdStr()
+
+            var unSplitDefIds = ""
+            var isError = false
+
+            val idArray = buildJsonArray {
+                for (sel in list.subList(0, 5)) {
+                    if (sel.unitId == 0) {
+                        isError = true
+                        return@buildJsonArray
+                    }
+                    add(sel.unitId)
+                    unSplitDefIds += "${sel.unitId}-"
+                }
+            }
+
+            if (!isError) {
+                MainActivity.navViewModel.showResult.postValue(true)
+                //搜索
+                getPvpData(idArray)
+                getFavoritesList(defIds)
+
+                //添加搜索记录
+                insert(
+                    PvpHistoryData(
+                        id = UUID.randomUUID().toString(),
+                        defs = "${MainActivity.regionType.value}@$unSplitDefIds",
+                        date = getToday(),
+                    )
+                )
+            } else {
+                ToastUtil.short(getString(R.string.tip_select_5))
+            }
+        }
+    }
     /**
      * 竞技场角色信息
      */
@@ -254,13 +332,12 @@ class PvpViewModel @Inject constructor(
             //加载常用角色
             getRecentlyUsedUnitList(data)
         }
-
     }
 
     /**
      * 角色站位
      */
-    suspend fun getPvpCharacterByIds(ids: List<Int>) =
+    private suspend fun getPvpCharacterByIds(ids: List<Int>) =
         try {
             unitRepository.getCharacterByIds(ids).filter { it.position > 0 }
         } catch (e: Exception) {

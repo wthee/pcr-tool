@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -23,11 +22,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -51,9 +52,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
+import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -65,13 +70,15 @@ import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.spanCount
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -81,38 +88,22 @@ import kotlin.math.max
  *
  * @param floatWindow 是否为悬浮窗
  * @param initSpanCount 列数
- * @param selectListState 角色列表滚动状态
- * @param usedListState 常用列表滚动状态
- * @param resultListState 查询结果列表滚动状态
- * @param favoritesListState 收藏列表滚动状态
- * @param historyListState 历史查询列表滚动状态
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PvpSearchCompose(
+fun PvpSearchScreen(
     floatWindow: Boolean,
     initSpanCount: Int = 0,
-    pagerState: PagerState,
-    selectListState: LazyGridState,
-    usedListState: LazyGridState,
-    resultListState: LazyGridState,
-    favoritesListState: LazyGridState,
-    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
-    val tip = stringResource(id = R.string.tip_select_5)
     val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
 
-    //获取数据
-    val characterDataList = uiState.allUnitList
     //显示类型
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
+
+    val resultListState = rememberLazyGridState()
 
 
     //返回拦截
@@ -121,12 +112,6 @@ fun PvpSearchCompose(
         pvpViewModel.changeRequesting(false)
     }
 
-    val tabs = arrayListOf(
-        TabData(tab = stringResource(id = R.string.character)),
-        TabData(tab = stringResource(id = R.string.title_recently_used)),
-        TabData(tab = stringResource(id = R.string.title_favorite)),
-        TabData(tab = stringResource(id = R.string.title_history)),
-    )
     //动态调整 spanCount
     val itemWidth = (Dimen.iconSize + Dimen.largePadding * 2)
     val appWidth = LocalView.current.width
@@ -135,6 +120,13 @@ fun PvpSearchCompose(
         spanCount(size.width, itemWidth)
     } else {
         initSpanCount
+    }
+
+    //重置查询结果
+    LaunchedEffect(selectedIds) {
+        if (selectedIds.contains(PvpCharacterData())) {
+            navViewModel.showResult.postValue(false)
+        }
     }
 
     MainScaffold(
@@ -154,88 +146,153 @@ fun PvpSearchCompose(
         fab = {
             //底部悬浮按钮
             if (!showResult && !floatWindow) {
-                PvpSearchFabContent(context, scope, resultListState, pvpViewModel)
+                PvpSearchFabContent(
+                    resultListState = resultListState,
+                    searchByCharacterList = pvpViewModel::searchByCharacterList
+                )
             }
         }
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            //标题
-            if (!floatWindow) {
-                PvpSearchHeader()
+        PvpSearchContent(
+            floatWindow = floatWindow,
+            showResult = showResult,
+            spanCount = spanCount,
+            characterDataList = uiState.allUnitList,
+            selectedIds = selectedIds,
+            resultListState = resultListState,
+            result = uiState.pvpResult,
+            favoritesList = uiState.favoritesList,
+            allFavoritesList = uiState.allFavoritesList,
+            recentlyUsedUnitList = uiState.recentlyUsedUnitList,
+            historyList = uiState.historyList,
+            research = pvpViewModel::research,
+            delete = pvpViewModel::delete,
+            insert = pvpViewModel::insert,
+            toCharacter = toCharacter,
+            searchByDefs = pvpViewModel::searchByDefs
+        )
+    }
+
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun PvpSearchContent(
+    floatWindow: Boolean,
+    showResult: Boolean,
+    spanCount: Int,
+    characterDataList: List<PvpCharacterData>,
+    selectedIds: ArrayList<PvpCharacterData>,
+    resultListState: LazyGridState,
+    result: ResponseData<List<PvpResultData>>?,
+    favoritesList: List<PvpFavoriteData>,
+    allFavoritesList: List<PvpFavoriteData>,
+    recentlyUsedUnitList: List<PvpCharacterData>,
+    historyList: List<PvpHistoryData>,
+    research: () -> Unit,
+    delete: (String, String) -> Unit,
+    insert: (PvpFavoriteData) -> Unit,
+    toCharacter: (Int) -> Unit,
+    searchByDefs: (List<Int>) -> Unit,
+) {
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
+
+    val tabs = arrayListOf(
+        TabData(tab = stringResource(id = R.string.character)),
+        TabData(tab = stringResource(id = R.string.title_recently_used)),
+        TabData(tab = stringResource(id = R.string.title_favorite)),
+        TabData(tab = stringResource(id = R.string.title_history)),
+    )
+
+    val pagerState = rememberPagerState { 4 }
+    val selectListState = rememberLazyGridState()
+    val usedListState = rememberLazyGridState()
+    val favoritesListState = rememberLazyGridState()
+    val historyListState = rememberLazyGridState()
+
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        //标题
+        if (!floatWindow) {
+            PvpSearchHeader()
+        }
+        //已选择列表
+        PvpSearchSelectedContent(mediumPadding, selectedIds, floatWindow)
+
+        //展示查询结果页面或选择角色页面
+        if (showResult) {
+            PvpSearchResult(
+                result = result,
+                favoritesList = favoritesList,
+                resultListState = resultListState,
+                floatWindow = floatWindow,
+                research = research,
+                delete = delete,
+                insert = insert
+            )
+        } else {
+            //查询、收藏、历史
+            MainTabRow(
+                pagerState = pagerState,
+                tabs = tabs,
+                modifier = Modifier
+                    .padding(horizontal = mediumPadding)
+                    .fillMaxWidth(1f)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                when (pagerState.currentPage) {
+                    0 -> selectListState.scrollToItem(0)
+                    1 -> usedListState.scrollToItem(0)
+                    2 -> favoritesListState.scrollToItem(0)
+                    3 -> historyListState.scrollToItem(0)
+                }
             }
-            //已选择列表
-            PvpSearchSelectedContent(mediumPadding, selectedIds, floatWindow)
 
-            //展示查询结果页面或选择角色页面
-            if (showResult) {
-                if (!selectedIds.contains(PvpCharacterData()) && selectedIds.size == 5) {
-                    PvpSearchResult(resultListState, selectedIds, floatWindow, pvpViewModel)
-                } else {
-                    ToastUtil.short(tip)
-                    navViewModel.showResult.postValue(false)
-                }
-            } else {
-                //查询、收藏、历史
-                MainTabRow(
-                    pagerState = pagerState,
-                    tabs = tabs,
-                    modifier = Modifier
-                        .padding(horizontal = mediumPadding)
-                        .fillMaxWidth(1f)
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    when (pagerState.currentPage) {
-                        0 -> selectListState.scrollToItem(0)
-                        1 -> usedListState.scrollToItem(0)
-                        2 -> favoritesListState.scrollToItem(0)
-                        3 -> historyListState.scrollToItem(0)
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.padding(top = mediumPadding)
+            ) { pageIndex ->
+                when (pageIndex) {
+                    0 -> PvpToSelectList(
+                        spanCount = spanCount,
+                        selectListState = selectListState,
+                        selectedIds = selectedIds,
+                        floatWindow = floatWindow,
+                        characterDataList = characterDataList
+                    )
+
+                    1 -> PvpRecentlyUsedList(
+                        spanCount = spanCount,
+                        usedListState = usedListState,
+                        selectedIds = selectedIds,
+                        floatWindow = floatWindow,
+                        recentlyUsedUnitList = recentlyUsedUnitList
+                    )
+
+                    2 -> {
+                        PvpFavorites(
+                            allFavoritesList = allFavoritesList,
+                            favoritesListState = favoritesListState,
+                            toCharacter = toCharacter,
+                            floatWindow = floatWindow,
+                            delete = delete,
+                            searchByDefs = searchByDefs
+                        )
                     }
-                }
 
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.padding(top = mediumPadding)
-                ) { pageIndex ->
-                    when (pageIndex) {
-                        0 -> PvpToSelectList(
-                            spanCount = spanCount,
-                            selectListState = selectListState,
-                            selectedIds = selectedIds,
+                    else -> {
+                        PvpSearchHistory(
+                            historyList = historyList,
+                            historyListState = historyListState,
                             floatWindow = floatWindow,
-                            characterDataList = characterDataList
+                            toCharacter = toCharacter,
+                            searchByDefs = searchByDefs
                         )
-
-                        1 -> PvpRecentlyUsedList(
-                            spanCount = spanCount,
-                            usedListState = usedListState,
-                            selectedIds = selectedIds,
-                            floatWindow = floatWindow,
-                            pvpViewModel = pvpViewModel
-                        )
-
-                        2 -> {
-                            PvpFavorites(
-                                favoritesListState = favoritesListState,
-                                toCharacter = toCharacter,
-                                pvpViewModel = pvpViewModel,
-                                floatWindow = floatWindow
-                            )
-                        }
-
-                        else -> {
-                            PvpSearchHistory(
-                                historyListState = historyListState,
-                                toCharacter = toCharacter,
-                                pvpViewModel = pvpViewModel,
-                                floatWindow = floatWindow
-                            )
-                        }
                     }
                 }
             }
         }
     }
-
 }
 
 /**
@@ -307,11 +364,12 @@ private fun PvpSearchHeader() {
  */
 @Composable
 private fun PvpSearchFabContent(
-    context: Context,
-    scope: CoroutineScope,
     resultListState: LazyGridState,
-    pvpViewModel: PvpViewModel
+    searchByCharacterList: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
     //悬浮窗
     MainSmallFab(
         iconType = MainIconType.FLOAT
@@ -347,12 +405,10 @@ private fun PvpSearchFabContent(
             scope.launch {
                 resultListState.scrollToItem(0)
             }
-
         } catch (_: Exception) {
 
         }
-        pvpViewModel.resetResult()
-        navViewModel.showResult.postValue(true)
+        searchByCharacterList()
     }
 }
 
@@ -487,7 +543,7 @@ fun PvpIconItem(
     floatWindow: Boolean
 ) {
     //角色图标
-    val icon = if (pvpCharacterData.unitId == 0) {
+    val icon = if (pvpCharacterData.unitId == -1) {
         R.drawable.unknown_gray
     } else {
         ImageRequestHelper.getInstance().getMaxIconUrl(pvpCharacterData.unitId)
@@ -507,6 +563,7 @@ fun PvpIconItem(
             selectedIds.forEach {
                 newList.add(it)
             }
+
             //点击选择或取消选择
             if (selected) {
                 var cancelSelectIndex = 0
@@ -517,6 +574,11 @@ fun PvpIconItem(
                 }
                 newList[cancelSelectIndex] = PvpCharacterData()
             } else {
+
+                if (!newList.contains(PvpCharacterData())) {
+                    ToastUtil.short(getString(R.string.tip_selected_5))
+                }
+
                 val unSelected = newList.find { it.position == 999 }
                 if (unSelected != null) {
                     //可以选择
@@ -616,5 +678,41 @@ fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
         o2.unitId.compareTo(o1.unitId)
     } else {
         p
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun PvpSearchScreenContentPreview() {
+    PreviewLayout {
+        PvpSearchContent(
+            floatWindow = false,
+            showResult = false,
+            spanCount = 0,
+            characterDataList = arrayListOf(
+                PvpCharacterData(unitId = 11, position = 100),
+                PvpCharacterData(unitId = 22, position = 400),
+                PvpCharacterData(unitId = 33, position = 700),
+            ),
+            selectedIds = arrayListOf(
+                PvpCharacterData(),
+                PvpCharacterData(),
+                PvpCharacterData(),
+                PvpCharacterData(),
+                PvpCharacterData(),
+            ),
+            resultListState = rememberLazyGridState(),
+            result = null,
+            favoritesList = arrayListOf(),
+            allFavoritesList = arrayListOf(),
+            recentlyUsedUnitList = arrayListOf(),
+            historyList = arrayListOf(),
+            research = {},
+            delete = { _, _ -> },
+            insert = {},
+            toCharacter = {},
+            searchByDefs = {}
+        )
     }
 }

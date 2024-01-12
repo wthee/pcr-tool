@@ -14,17 +14,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
-import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -46,12 +42,13 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun PvpFavorites(
+    allFavoritesList: List<PvpFavoriteData>,
     favoritesListState: LazyGridState,
-    toCharacter: (Int) -> Unit,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel
+    delete: (String, String) -> Unit,
+    searchByDefs: (List<Int>) -> Unit,
+    toCharacter: (Int) -> Unit
 ) {
-    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
     val itemWidth = getItemWidth(floatWindow)
 
     Box(
@@ -59,22 +56,23 @@ fun PvpFavorites(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (uiState.allFavoritesList.isNotEmpty()) {
+        if (allFavoritesList.isNotEmpty()) {
             LazyVerticalGrid(
                 state = favoritesListState,
                 columns = GridCells.Adaptive(itemWidth)
             ) {
                 items(
-                    items = uiState.allFavoritesList,
+                    items = allFavoritesList,
                     key = {
                         it.id
                     }
                 ) { data ->
                     PvpFavoriteItem(
-                        data,
-                        floatWindow,
-                        toCharacter,
-                        pvpViewModel
+                        itemData = data,
+                        floatWindow = floatWindow,
+                        toCharacter = toCharacter,
+                        delete = delete,
+                        searchByDefs = searchByDefs
                     )
                 }
                 item {
@@ -94,7 +92,8 @@ private fun PvpFavoriteItem(
     itemData: PvpFavoriteData,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit,
-    pvpViewModel: PvpViewModel?
+    delete: (String, String) -> Unit,
+    searchByDefs: (List<Int>) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
@@ -107,11 +106,11 @@ private fun PvpFavoriteItem(
         )
     ) {
         Row(
-            modifier = Modifier.padding(bottom = mediumPadding),
-            verticalAlignment = Alignment.Bottom
+            modifier = Modifier.padding(bottom = mediumPadding)
         ) {
             //日期
             MainTitleText(
+                modifier = Modifier.align(Alignment.CenterVertically),
                 text = itemData.date.formatTime.toDate
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -122,7 +121,7 @@ private fun PvpFavoriteItem(
             ) {
                 //点击取消收藏
                 scope.launch {
-                    pvpViewModel?.delete(itemData.atks, itemData.defs)
+                    delete(itemData.atks, itemData.defs)
                 }
             }
             Spacer(modifier = Modifier.width(largePadding))
@@ -131,16 +130,7 @@ private fun PvpFavoriteItem(
                 data = MainIconType.PVP_SEARCH,
                 size = Dimen.fabIconSize
             ) {
-                //重置页面
-                scope.launch {
-                    pvpViewModel?.resetResult()
-                    val selectedData =
-                        pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
-                    val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortWith(comparePvpCharacterData())
-                    navViewModel.selectedPvpData.postValue(selectedIds)
-                    navViewModel.showResult.postValue(true)
-                }
+                searchByDefs(itemData.getDefIds())
             }
         }
         //队伍角色图标
@@ -186,16 +176,18 @@ private fun PvpFavoriteItemPreview() {
     )
     PreviewLayout {
         PvpFavoriteItem(
-            data,
-            false,
-            { },
-            null,
+            itemData = data,
+            floatWindow = false,
+            toCharacter = { },
+            delete = { _, _ -> },
+            searchByDefs = {}
         )
         PvpFavoriteItem(
-            data,
-            true,
-            { },
-            null,
+            itemData = data,
+            floatWindow = true,
+            toCharacter = { },
+            delete = { _, _ -> },
+            searchByDefs = {}
         )
     }
 }

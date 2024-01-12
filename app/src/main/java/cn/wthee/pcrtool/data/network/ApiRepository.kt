@@ -72,7 +72,7 @@ class ApiRepository {
     /**
      * 竞技场查询接口
      */
-    suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpResultData>> =
+    suspend fun getPvpData(ids: JsonArray): ResponseData<List<PvpResultData>> =
         postCatching("pvp/search") {
             setBody(
                 buildJsonObject {

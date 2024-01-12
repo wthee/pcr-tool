@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -66,11 +64,11 @@ import cn.wthee.pcrtool.ui.tool.guild.GuildListScreen
 import cn.wthee.pcrtool.ui.tool.leaderboard.LeaderboardScreen
 import cn.wthee.pcrtool.ui.tool.leadertier.LeaderTierScreen
 import cn.wthee.pcrtool.ui.tool.loadcomic.LoadComicScreen
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaScreen
 import cn.wthee.pcrtool.ui.tool.news.NewsScreen
-import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchScreen
 import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
-import cn.wthee.pcrtool.ui.tool.quest.RandomDropAreaListScreen
+import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
 import cn.wthee.pcrtool.ui.tool.tweet.TweetList
@@ -514,21 +512,8 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_PVP
             ) {
-                val pagerState = rememberPagerState { 4 }
-                val selectListState = rememberLazyGridState()
-                val usedListState = rememberLazyGridState()
-                val resultListState = rememberLazyGridState()
-                val favoritesListState = rememberLazyGridState()
-                val historyListState = rememberLazyGridState()
-
-                PvpSearchCompose(
+                PvpSearchScreen(
                     floatWindow = false,
-                    pagerState = pagerState,
-                    selectListState = selectListState,
-                    usedListState = usedListState,
-                    resultListState = resultListState,
-                    favoritesListState = favoritesListState,
-                    historyListState = historyListState,
                     toCharacter = actions.toCharacterDetail
                 )
             }
@@ -633,7 +618,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_MOCK_GACHA,
             ) {
-                MockGacha()
+                MockGachaScreen()
             }
 
             //模拟抽卡
@@ -648,8 +633,7 @@ fun NavGraph(
                     }
                 )
             ) {
-                val arguments = requireNotNull(it.arguments)
-                MockGacha()
+                MockGachaScreen()
             }
 
             //生日日程

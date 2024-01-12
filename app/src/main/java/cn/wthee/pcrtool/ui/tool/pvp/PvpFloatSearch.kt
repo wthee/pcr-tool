@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,12 +32,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
     val scope = rememberCoroutineScope()
     val min = navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = navViewModel.showResult.observeAsState().value ?: false
-    val pagerState = rememberPagerState { 4 }
-    val selectListState = rememberLazyGridState()
-    val usedListState = rememberLazyGridState()
     val resultListState = rememberLazyGridState()
-    val favoritesListState = rememberLazyGridState()
-    val historyListState = rememberLazyGridState()
     val actions = NavActions(navController)
 
     PCRToolComposeTheme {
@@ -81,8 +75,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                             } catch (_: Exception) {
 
                             }
-                            pvpViewModel.resetResult()
-                            navViewModel.showResult.postValue(true)
+                            pvpViewModel.searchByCharacterList()
                         }
                     }
                 }
@@ -90,15 +83,9 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
 
             if (!min) {
                 MainCard(modifier = Modifier) {
-                    PvpSearchCompose(
+                    PvpSearchScreen(
                         floatWindow = true,
                         initSpanCount = spanCount,
-                        pagerState = pagerState,
-                        selectListState = selectListState,
-                        usedListState = usedListState,
-                        resultListState = resultListState,
-                        favoritesListState = favoritesListState,
-                        historyListState = historyListState,
                         toCharacter = actions.toCharacterDetail
                     )
                 }

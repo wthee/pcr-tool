@@ -13,17 +13,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
-import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -35,7 +30,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.toDate
-import kotlinx.coroutines.launch
 
 
 /**
@@ -43,14 +37,12 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun PvpSearchHistory(
+    historyList: List<PvpHistoryData>,
     historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel
+    searchByDefs: (List<Int>) -> Unit
 ) {
-    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
-
-    val historyDataList = uiState.historyList
     val itemWidth = getItemWidth(floatWindow)
 
 
@@ -59,13 +51,16 @@ fun PvpSearchHistory(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        if (historyDataList.isNotEmpty()) {
+        if (historyList.isNotEmpty()) {
             LazyVerticalGrid(
                 state = historyListState, columns = GridCells.Adaptive(itemWidth)
             ) {
-                items(historyDataList) { data ->
+                items(historyList) { data ->
                     PvpHistoryItem(
-                        data, floatWindow, toCharacter, pvpViewModel
+                        itemData = data,
+                        floatWindow = floatWindow,
+                        toCharacter = toCharacter,
+                        searchByDefs = searchByDefs
                     )
                 }
                 item {
@@ -88,9 +83,8 @@ private fun PvpHistoryItem(
     itemData: PvpHistoryData,
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit,
-    pvpViewModel: PvpViewModel?
+    searchByDefs: (List<Int>) -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     val largePadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
@@ -112,14 +106,7 @@ private fun PvpHistoryItem(
             MainIcon(
                 data = MainIconType.PVP_SEARCH, size = Dimen.fabIconSize
             ) {
-                scope.launch {
-                    pvpViewModel?.resetResult()
-                    val selectedData = pvpViewModel?.getPvpCharacterByIds(itemData.getDefIds())
-                    val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortWith(comparePvpCharacterData())
-                    navViewModel.selectedPvpData.postValue(selectedIds)
-                    navViewModel.showResult.postValue(true)
-                }
+                searchByDefs(itemData.getDefIds())
             }
         }
         //防守队伍角色图标
@@ -144,16 +131,16 @@ private fun PvpHistoryItemPreview() {
     )
     PreviewLayout {
         PvpHistoryItem(
-            data,
-            false,
-            { },
-            null,
+            itemData = data,
+            floatWindow = false,
+            toCharacter = { },
+            searchByDefs = {},
         )
         PvpHistoryItem(
-            data,
-            true,
-            { },
-            null,
+            itemData = data,
+            floatWindow = true,
+            toCharacter = { },
+            searchByDefs = {},
         )
     }
 }
