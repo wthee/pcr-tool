@@ -86,7 +86,7 @@ data class SkillActionDetail(
         val skillActionText = SkillActionText(
             actionId = actionId,
             tag = tag,
-            action = "(${actionId % 10}) $formatDescText",
+            action = "(${actionId % 100}) $formatDescText",
             summonUnitId = summonUnitId,
             showCoe = showCoe,
             level = level,
@@ -161,13 +161,14 @@ data class SkillActionDetail(
                     }
                 )
 
-                //无视防御
-                val ignoreDef = if (actionValue7 > 0) {
-                    val def = " [${actionValue7.toInt()}] "
-                    getString(R.string.skill_ignore_def, def)
-                } else {
-                    ""
-                }
+                //无视防御，fixme 需优化逻辑，龙拳为0但需要显示，106501108 106501109
+                val ignoreDef =
+                    if (actionValue7 > 0 || actionId == 106501108 || actionId == 106501109) {
+                        val def = " [${actionValue7.toInt()}] "
+                        getString(R.string.skill_ignore_def, def)
+                    } else {
+                        ""
+                    }
 
                 val value =
                     getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
@@ -861,6 +862,7 @@ data class SkillActionDetail(
 
                     else -> UNKNOWN
                 }
+
                 //上限判断
                 if (actionValue4.toInt() != 0) {
                     val limitValue = getValueText(4, actionValue4, actionValue5, hideIndex = true)

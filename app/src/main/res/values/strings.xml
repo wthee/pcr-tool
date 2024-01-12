@@ -572,7 +572,7 @@
     <string name="skill_adaptive_lower_defense">(适应物理/魔法防御中较低的防御)</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
-    <string name="skill_ignore_def">；无视目标%s防御力 </string>
+    <string name="skill_ignore_def">；无视目标{7}%s防御力 </string>
     <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s%s%s</string>
     <string name="skill_forward">向前</string>
     <string name="skill_backward">向后</string>
