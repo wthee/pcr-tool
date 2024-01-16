@@ -35,7 +35,7 @@ class MediaDownloadHelper(private val context: Context) {
         const val DIR = "/storage/emulated/0"
 
         //文件夹名
-        private const val baseDir = "pcr"
+        private const val SAVE_DIR = "pcr"
 
         /**
          * 获取保存路径
@@ -46,7 +46,7 @@ class MediaDownloadHelper(private val context: Context) {
             } else {
                 Environment.DIRECTORY_PICTURES
             }
-            return DIR + File.separator + environment + File.separator + baseDir
+            return DIR + File.separator + environment + File.separator + SAVE_DIR
         }
     }
 
@@ -157,7 +157,7 @@ class MediaDownloadHelper(private val context: Context) {
                     }
                     contentValues.put(
                         MediaStore.MediaColumns.RELATIVE_PATH,
-                        environment + File.separator + baseDir
+                        environment + File.separator + SAVE_DIR
                     )
                 } else {
                     if (isVideo) {

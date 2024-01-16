@@ -972,13 +972,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 技能列表
-     */
-    val toAllSkillList = {
-        navController.navigate(NavRoute.ALL_SKILL)
-    }
-
-    /**
      * 战力系数
      */
     val toCoe = {

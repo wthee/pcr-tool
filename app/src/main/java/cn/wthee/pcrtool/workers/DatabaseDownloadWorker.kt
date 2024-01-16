@@ -69,14 +69,16 @@ class DatabaseDownloadWorker(
         try {
             //创建下载请求
             val httpResponse: HttpResponse =
-                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName) {
+                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName + "f") {
                     onDownload { bytesSentTotal, contentLength ->
                         progress = (bytesSentTotal * 100.0 / contentLength).toInt()
-                        if (contentLength < 100) {
+                        if (contentLength < 1000) {
+                            //文件大小异常
                             progress = -3
                         }
                         //更新下载进度
                         setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
+                        //取消通知
                         if (progress == -3 || progress == 100) {
                             notificationManager.cancelAll()
                         }

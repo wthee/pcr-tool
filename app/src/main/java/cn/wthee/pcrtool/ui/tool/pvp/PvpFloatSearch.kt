@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -26,7 +25,6 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场查询（悬浮窗）
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val scope = rememberCoroutineScope()

@@ -7,8 +7,6 @@ import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.utils.Constants.COIL_DIR
 import cn.wthee.pcrtool.utils.Constants.VIDEO_DIR
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 /**
  * 文件路径获取
@@ -100,21 +98,6 @@ object FileUtil {
         if (db.exists()) {
             db.delete()
         }
-    }
-
-    /**
-     * 保存文件
-     */
-    fun save(input: InputStream, output: File) {
-        val out = FileOutputStream(output)
-        val byte = ByteArray(256)
-        var line: Int
-        while (input.read(byte).also { line = it } > 0) {
-            out.write(byte, 0, line)
-        }
-        out.flush()
-        out.close()
-        input.close()
     }
 
     /**

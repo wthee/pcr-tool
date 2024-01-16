@@ -358,7 +358,7 @@ class PvpViewModel @Inject constructor(
     /**
      * 改变请求状态
      */
-    fun resetResult() {
+    private fun resetResult() {
         _uiState.update {
             it.copy(
                 pvpResult = null

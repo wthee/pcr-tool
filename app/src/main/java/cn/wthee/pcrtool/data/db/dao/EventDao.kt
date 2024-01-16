@@ -7,7 +7,6 @@ import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
-import cn.wthee.pcrtool.data.db.view.EventStoryDetail
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.db.view.StoryEventData
 
@@ -65,14 +64,6 @@ interface EventDao {
         """
     )
     suspend fun getAllEvents(limit: Int): List<StoryEventData>
-
-    /**
-     * 获取活动剧情列表
-     * @param storyId 剧情活动编号
-     */
-    @SkipQueryVerification
-    @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
-    suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>
 
     /**
      * 获取加倍活动信息

@@ -503,7 +503,6 @@ private fun DbVersionOtherContent(
 
         //重新下载数据
         MainCard(
-            modifier = Modifier.height(IntrinsicSize.Min),
             fillMaxWidth = false,
             elevation = Dimen.popupMenuElevation,
             onClick = {
@@ -524,7 +523,8 @@ private fun DbVersionOtherContent(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ) {
             Row(
-                modifier = Modifier.padding(Dimen.mediumPadding),
+                modifier = Modifier
+                    .padding(Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MainIcon(
@@ -801,7 +801,7 @@ private fun ChangeDbComposePreview() {
             showChangeDb = true,
             dbError = false,
             dbVersion = DatabaseVersion(
-                truthVersion = "202302022223",
+                truthVersion = "20230202222356574",
                 hash = "",
                 desc = stringResource(id = R.string.debug_name),
                 time = "2020-02-02"
@@ -841,7 +841,7 @@ private fun ChangeDbCompose2Preview() {
             showChangeDb = false,
             dbError = true,
             dbVersion = DatabaseVersion(
-                truthVersion = "202302022223",
+                truthVersion = "",
                 hash = "",
                 desc = stringResource(id = R.string.debug_name),
                 time = "2020-02-02"
