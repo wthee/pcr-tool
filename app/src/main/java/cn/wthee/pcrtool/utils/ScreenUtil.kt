@@ -49,7 +49,8 @@ object ScreenUtil {
  * @param width 总宽度
  * @param itemDp 子项宽度
  */
-fun spanCount(width: Int, itemDp: Dp) = max(1, width / dp2px(itemDp.value))
+fun spanCount(width: Int, itemDp: Dp, context: Context = MyApplication.context) =
+    max(1, width / dp2px(itemDp.value, context))
 
 /**
  *  获取 像素 的dp

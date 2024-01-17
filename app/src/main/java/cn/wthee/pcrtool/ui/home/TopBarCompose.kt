@@ -8,6 +8,8 @@ import android.provider.Settings
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -325,6 +327,7 @@ private fun DownloadingContent(
 /**
  * 更新内容
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun UpdateContent(
     appNotice: AppNotice,
@@ -351,10 +354,18 @@ private fun UpdateContent(
             )
 
             Spacer(modifier = Modifier.weight(1f))
+            //爱发电
+            val afdUrl = stringResource(id = R.string.afd_url)
+            IconTextButton(
+                icon = MainIconType.SPONSOR,
+                text = stringResource(id = R.string.sponsor),
+            ) {
+                BrowserUtil.open(afdUrl)
+            }
             //反馈群
             IconTextButton(
                 icon = MainIconType.SUPPORT,
-                text = stringResource(id = R.string.qq_group),
+                text = stringResource(id = R.string.to_feedback),
             ) {
                 joinQQGroup(context)
             }
@@ -375,7 +386,7 @@ private fun UpdateContent(
             //github下载链接
             val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
 
-            Row(
+            FlowRow(
                 modifier = Modifier
                     .padding(
                         top = Dimen.largePadding,

@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,7 +45,7 @@ fun MediaGridList(
     noDataText: String = stringResource(id = R.string.no_data),
     showTitle: Boolean = true,
     itemWidth: Dp = getItemWidth(),
-    scrollState: LazyGridState = rememberLazyGridState(),
+    scrollState: LazyStaggeredGridState = rememberLazyStaggeredGridState(),
     itemContent: @Composable (String) -> Unit
 ) {
 
@@ -81,7 +81,10 @@ fun MediaGridList(
             }
         ) {
             //正常加载
-            LazyVerticalGrid(state = scrollState, columns = GridCells.Adaptive(itemWidth)) {
+            LazyVerticalStaggeredGrid(
+                state = scrollState,
+                columns = StaggeredGridCells.Adaptive(itemWidth)
+            ) {
                 items(urlList) {
                     itemContent(it)
                 }

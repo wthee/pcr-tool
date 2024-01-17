@@ -44,7 +44,8 @@ fun ChipGroup(
                 selected = selectIndex.value == index,
                 selectIndex = selectIndex,
                 text = chipData.text,
-                selectedColor = chipData.color
+                selectedColor = chipData.color,
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
             )
         }
     }

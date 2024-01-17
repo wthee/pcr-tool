@@ -15,16 +15,17 @@ import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cake
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.CardGiftcard
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Celebration
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.CloudOff
+import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContactSupport
 import androidx.compose.material.icons.rounded.CreditCard
-import androidx.compose.material.icons.rounded.DataObject
 import androidx.compose.material.icons.rounded.DataUsage
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.DeleteForever
@@ -86,7 +87,6 @@ import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material.icons.rounded.TrackChanges
 import androidx.compose.material.icons.rounded.UnfoldMore
 import androidx.compose.material.icons.rounded.Upcoming
-import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WorkspacePremium
@@ -417,12 +417,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 项目详情
      */
-    GITHUB_PROJECT(Icons.Rounded.DataObject),
+    GITHUB_PROJECT(Icons.Rounded.Code),
 
     /**
      * 认证
      */
-    VERIFIED(Icons.Rounded.Verified),
+    SPONSOR(Icons.Rounded.CardGiftcard),
 
     /**
      * 编辑

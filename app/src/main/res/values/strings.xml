@@ -180,7 +180,6 @@
     <string name="colosseum">斗技场</string>
     <string name="result">数值变化</string>
     <string name="character_name">角色名</string>
-    <string name="twitter">查看原文</string>
     <string name="tweet">日服情报</string>
     <string name="comic">漫画</string>
     <string name="comic_4">4格漫画</string>
@@ -199,6 +198,7 @@
     <string name="random_drop_area_1">（前半）</string>
     <string name="random_drop_area_2">（后半）</string>
     <string name="qq_group">反馈交流群</string>
+    <string name="to_feedback">反馈</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
     <string name="clean_image_cache">清除缓存</string>
@@ -207,6 +207,7 @@
     <string name="confirm_clean_cache">清除缓存后，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
     <string name="afd">爱发电</string>
+    <string name="sponsor">支持</string>
     <string name="afd_url">https://afdian.net/a/wthee</string>
     <string name="tip_afd">期待你的关注与支持</string>
     <string name="please">✪ ω ✪</string>

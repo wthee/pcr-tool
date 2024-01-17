@@ -182,13 +182,13 @@ fun MainSettings() {
                 }
             )
             //- 爱发电
-            val sponsorUrl = stringResource(id = R.string.afd_url)
+            val afdUrl = stringResource(id = R.string.afd_url)
             SettingCommonItem(
-                iconType = MainIconType.VERIFIED,
+                iconType = MainIconType.SPONSOR,
                 title = stringResource(id = R.string.afd),
                 summary = stringResource(id = R.string.tip_afd),
                 onClick = {
-                    BrowserUtil.open(sponsorUrl)
+                    BrowserUtil.open(afdUrl)
                 }
             ) {
                 Subtitle2(

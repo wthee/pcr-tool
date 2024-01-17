@@ -220,6 +220,7 @@ class PvpViewModel @Inject constructor(
                 pvpRepository.insert(data)
             }
             getHistory()
+            getRecentlyUsedUnitList(_uiState.value.allUnitList)
         }
     }
 

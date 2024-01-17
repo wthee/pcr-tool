@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.loadcomic
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,7 +37,7 @@ fun LoadComicScreen(
     loadComicViewModel: LoadComicViewModel = hiltViewModel()
 ) {
     val uiState by loadComicViewModel.uiState.collectAsStateWithLifecycle()
-    val scrollState = rememberLazyGridState()
+    val scrollState = rememberLazyStaggeredGridState()
     val coroutineScope = rememberCoroutineScope()
 
     MainScaffold(
@@ -97,7 +97,7 @@ fun LoadComicScreen(
 @Composable
 private fun LoadComicContent(
     comicList: ArrayList<String>,
-    scrollState: LazyGridState
+    scrollState: LazyStaggeredGridState
 ) {
     MediaGridList(
         urlList = comicList,
@@ -124,7 +124,7 @@ private fun LoadComicContentPreview() {
     PreviewLayout {
         LoadComicContent(
             comicList = arrayListOf("1", "2", "3"),
-            scrollState = rememberLazyGridState()
+            scrollState = rememberLazyStaggeredGridState()
         )
     }
 }

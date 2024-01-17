@@ -60,6 +60,7 @@ import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import java.util.regex.Pattern
+import kotlin.math.min
 
 /**
  * 推特列表
@@ -194,11 +195,14 @@ private fun TweetItem(data: TweetData) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             MainTitleText(text = data.date)
-
         }
 
 
-        MainCard {
+        MainCard(
+            onClick = {
+                BrowserUtil.open(data.link)
+            }
+        ) {
             //来源
             val jpInfoUrl = stringResource(id = R.string.jp_info_url)
             IconTextButton(
@@ -269,26 +273,13 @@ private fun TweetItem(data: TweetData) {
                 )
             }
 
-            //相关链接跳转
-            IconTextButton(
-                icon = MainIconType.BROWSER,
-                text = stringResource(id = R.string.twitter),
-                modifier = Modifier
-                    .padding(bottom = Dimen.smallPadding, end = Dimen.smallPadding)
-                    .align(Alignment.End)
-            ) {
-                BrowserUtil.open(data.link)
-            }
-
             //图片
             if (photos.isNotEmpty()) {
                 if (photos.size > 1) {
-                    VerticalStaggeredGrid(fixCount = 3) {
+                    VerticalStaggeredGrid(fixCount = min(photos.size, 3)) {
                         photos.forEach {
                             Box(
-                                modifier = Modifier
-                                    .padding(Dimen.exSmallPadding)
-                                    .aspectRatio(1f)
+                                modifier = Modifier.aspectRatio(1f)
                             ) {
                                 PictureItem(
                                     modifier = Modifier.fillMaxWidth(),
