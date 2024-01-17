@@ -13,9 +13,9 @@ hilt {
 }
 
 val composeBom = "2023.10.01"
-val composeCompilerVersion = "1.5.6"
-val appVersionCode = 381
-val appVersionName = "3.8.1"
+val composeCompilerVersion = "1.5.7"
+val appVersionCode = 382
+val appVersionName = "3.8.2"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -138,7 +138,7 @@ dependencies {
     implementation("androidx.browser:browser:1.7.0")
 
     //Bugly
-    implementation("com.tencent.bugly:crashreport:4.1.9.2")
+    implementation("com.tencent.bugly:crashreport:4.1.9.3")
 
     //Coil
     val coilVersion = "3.0.0-alpha02"

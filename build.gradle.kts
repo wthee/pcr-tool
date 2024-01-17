@@ -6,7 +6,7 @@ plugins {
 
 buildscript {
     val kotlinVersion by extra("1.9.21")
-    val hiltVersion by extra("2.49")
+    val hiltVersion by extra("2.50")
     val ktorVersion by extra("2.3.7")
 
     repositories {
