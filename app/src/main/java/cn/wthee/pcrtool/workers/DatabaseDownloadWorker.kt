@@ -69,7 +69,7 @@ class DatabaseDownloadWorker(
         try {
             //创建下载请求
             val httpResponse: HttpResponse =
-                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName + "f") {
+                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName) {
                     onDownload { bytesSentTotal, contentLength ->
                         progress = (bytesSentTotal * 100.0 / contentLength).toInt()
                         if (contentLength < 1000) {

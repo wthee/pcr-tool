@@ -206,12 +206,13 @@ fun SkillItemContent(
     toSummonDetail: ((String) -> Unit)? = null,
     isExtraEquipSKill: Boolean = false
 ) {
-    //是否显示参数判断
+    //获取动作数据
     val actionData = remember(skillDetail.skillId, skillDetail.level, skillDetail.atk) {
         skillDetail.getActionInfo()
     }
 
     try {
+        //是否显示参数判断
         val showCoeIndex = skillDetail.getActionIndexWithCoe()
         actionData.mapIndexed { index, skillActionText ->
             val s = showCoeIndex.filter {
@@ -220,6 +221,7 @@ fun SkillItemContent(
             val show = s.isNotEmpty()
             val str = skillActionText.action
             if (show) {
+                //显示系数文本
                 //系数表达式开始位置
                 var startIndex = str.indexOfFirst { ch -> ch == '<' }
                 if (startIndex == -1) {
@@ -228,9 +230,8 @@ fun SkillItemContent(
                 if (startIndex != -1) {
                     var coeExpr = str.substring(startIndex, str.length)
                     Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
-                        if (s[0].type == 0) {
-                            coeExpr = coeExpr.replace(it.value, "")
-                        } else if (s[0].coe != it.value) {
+                        if (s[0].type == 0 || (s[0].type == 1 && s[0].coe != it.value)) {
+                            //隐藏不需要的系数文本
                             coeExpr = coeExpr.replace(it.value, "")
                         }
                     }
@@ -238,6 +239,7 @@ fun SkillItemContent(
                         str.substring(0, startIndex) + coeExpr
                 }
             } else {
+                //隐藏系数文本
                 skillActionText.action =
                     str.replace(Regex("\\{.*?\\}"), "")
             }

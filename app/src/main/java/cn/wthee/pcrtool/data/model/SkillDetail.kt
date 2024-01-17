@@ -78,7 +78,7 @@ data class SkillDetail(
 }
 
 /**
- * @param actionIndex 动作下标
+ * @param actionIndex 需在表达式中显示系数的动作下标
  * @param type 类型0表达式中系数，如<{1}100+10*攻击力>、1描述中的系数，如：动作(1)的系数{1}
  * @param coe 系数
  */

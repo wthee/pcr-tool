@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -57,6 +58,7 @@ import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
 import java.util.regex.Pattern
 
 /**
@@ -176,7 +178,7 @@ fun TweetList(
 @Composable
 private fun TweetItem(data: TweetData) {
     val photos = data.getImageList()
-
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.padding(
@@ -249,6 +251,7 @@ private fun TweetItem(data: TweetData) {
                         annotatedLinkString
                             .getStringAnnotations("URL", it, it)
                             .firstOrNull()?.let { stringAnnotation ->
+                                VibrateUtil(context).single()
                                 BrowserUtil.open(stringAnnotation.item)
                             }
                     }
@@ -312,9 +315,9 @@ private fun TweetItem(data: TweetData) {
 }
 
 private val urlPattern: Pattern = Pattern.compile(
-    "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-            + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-            + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+    "(?:^|\\W)((ht|f)tp(s?)://|www\\.)"
+            + "(([\\w\\-]+\\.)+([\\w\\-.~]+/?)*"
+            + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]*$~@!:/{};']*)",
     Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
 )
 
