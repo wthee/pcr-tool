@@ -1,6 +1,19 @@
 package cn.wthee.pcrtool.data.enums
 
+import androidx.compose.ui.graphics.Color
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.ui.theme.colorBlue
+import cn.wthee.pcrtool.ui.theme.colorCopper
+import cn.wthee.pcrtool.ui.theme.colorCyan
+import cn.wthee.pcrtool.ui.theme.colorGold
+import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPink
+import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.utils.Constants
 
 /**
  * 立绘类型
@@ -91,7 +104,8 @@ enum class ToolMenuType(val id: Int) {
     LEADER(210),
     TWEET(211),
     COMIC(212),
-//    ALL_SKILL(213),
+
+    //    ALL_SKILL(213),
     ALL_EQUIP(214),
     MOCK_GACHA(215),
     BIRTHDAY(216),
@@ -102,6 +116,7 @@ enum class ToolMenuType(val id: Int) {
     LEADER_TIER(221),
     ALL_QUEST(222),
     UNIQUE_EQUIP(223),
+    LOAD_COMIC(224),
     ;
 
 
@@ -114,17 +129,17 @@ enum class ToolMenuType(val id: Int) {
 /**
  * 站位
  */
-enum class PositionType {
-    UNKNOWN,
-    POSITION_0_299,
-    POSITION_300_599,
-    POSITION_600_999;
+enum class PositionType(val type: Int, val typeNameId: Int, val color: Color, val iconId: Int) {
+    UNKNOWN(0, R.string.unknown, colorGray, R.drawable.unknown_item),
+    POSITION_FRONT(1, R.string.position_0, colorRed, R.drawable.ic_position_0),
+    POSITION_MIDDLE(2, R.string.position_1, colorGold, R.drawable.ic_position_1),
+    POSITION_BACK(2, R.string.position_2, colorCyan, R.drawable.ic_position_2), ;
 
     companion object {
         fun getPositionType(position: Int) = when (position) {
-            in 1..299 -> POSITION_0_299
-            in 300..599 -> POSITION_300_599
-            in 600..9999 -> POSITION_600_999
+            in 1..299 -> POSITION_FRONT
+            in 300..599 -> POSITION_MIDDLE
+            in 600..9999 -> POSITION_BACK
             else -> UNKNOWN
         }
     }
@@ -351,5 +366,106 @@ enum class VideoType(val value: Int, val typeName: Int) {
     companion object {
         fun getByValue(value: Int) = entries
             .find { it.value == value } ?: UNKNOWN
+    }
+}
+
+
+/**
+ * 图标类型
+ */
+enum class IconResourceType {
+    CHARACTER,
+    EQUIP,
+    UNIQUE_EQUIP,
+    EX_EQUIP,
+    ;
+}
+
+/**
+ * 角色获取类型
+ */
+enum class CharacterLimitType(val type: Int, val color: Color, val typeNameId: Int) {
+    NORMAL(1, colorGold, R.string.type_normal),
+    LIMIT(2, colorRed, R.string.type_limit),
+    EVENT(3, colorGreen, R.string.type_event_limit),
+    EXTRA(4, colorCyan, R.string.type_extra_character);
+
+    companion object {
+        fun getByType(type: Int) = CharacterLimitType.entries
+            .find { it.type == type } ?: NORMAL
+    }
+}
+
+/**
+ * 装备品级、RANk 颜色
+ */
+enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
+    UNKNOWN(0, colorGray, R.string.unknown),
+    BLUE(1, colorBlue, R.string.color_blue),
+    COPPER(2, colorCopper, R.string.color_copper),
+    SILVER(3, colorSilver, R.string.color_silver),
+    GOLD(4, colorGold, R.string.color_gold),
+    PURPLE(5, colorPurple, R.string.color_purple),
+    RED(6, colorRed, R.string.color_red),
+    GREEN(7, colorGreen, R.string.color_green),
+    ORANGE(8, colorOrange, R.string.color_orange),
+    CYAN(9, colorCyan, R.string.color_cyan),
+    ;
+
+    companion object {
+        fun getByType(type: Int) = RankColor.entries
+            .find { it.type == type } ?: UNKNOWN
+
+
+        /**
+         * rank 颜色
+         * @param rank rank数值
+         */
+        fun getRankColor(rank: Int): Color {
+            return when (rank) {
+                1 -> BLUE.color
+                in 2..3 -> COPPER.color
+                in 4..6 -> SILVER.color
+                in 7..10 -> GOLD.color
+                in 11..17 -> PURPLE.color
+                in 18..20 -> RED.color
+                in 21..23 -> GREEN.color
+                in 24..27 -> ORANGE.color
+                in 28..99 -> CYAN.color
+                else -> UNKNOWN.color
+            }
+        }
+    }
+}
+
+/**
+ * ex装备品级
+ */
+enum class ExtraEquipLevelColor(val type: Int, val color: Color, val typeName: String) {
+    UNKNOWN(0, colorGray, Constants.UNKNOWN),
+    COPPER(1, colorCopper, "★1"),
+    SILVER(2, colorSilver, "★2"),
+    GOLD(3, colorGold, "★3"),
+    PINK(4, colorPink, "★4"),
+    ;
+
+    companion object {
+        fun getByType(type: Int) = ExtraEquipLevelColor.entries
+            .find { it.type == type } ?: UNKNOWN
+    }
+}
+
+/**
+ * 攻击类型
+ */
+enum class AtkType(val type: Int, val color: Color, val typeNameId: Int) {
+    UNKNOWN(0, colorGray, R.string.unknown),
+    PHYSICAL(1, colorGold, R.string.physical),
+    MAGIC(2, colorPurple, R.string.magic)
+    ;
+
+    companion object {
+        fun getByType(type: Int) = AtkType.entries
+            .find { it.type == type } ?: UNKNOWN
     }
 }

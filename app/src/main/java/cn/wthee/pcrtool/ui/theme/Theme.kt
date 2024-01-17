@@ -5,11 +5,18 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.MainActivity
 
@@ -103,12 +110,12 @@ fun PCRToolComposeTheme(
     group = "light",
     showBackground = true
 )
-@Preview(
-    name = "tablet",
-    group = "tablet",
-    device = Devices.TABLET,
-    showBackground = true
-)
+//@Preview(
+//    name = "tablet",
+//    group = "tablet",
+//    device = Devices.TABLET,
+//    showBackground = true
+//)
 annotation class CombinedPreviews
 
 /**
@@ -116,33 +123,51 @@ annotation class CombinedPreviews
  */
 @Composable
 fun PreviewLayout(
+    modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    themeType: Int = 0,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val dynamicColor =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && MainActivity.dynamicColorOnFlag
 
-    Column(horizontalAlignment = horizontalAlignment) {
+    Column(
+        horizontalAlignment = horizontalAlignment,
+        modifier = Modifier
+            .padding(Dimen.mediumPadding)
+            .fillMaxWidth()
+    ) {
         //正常主题
-        MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
-            Column {
-                content()
-            }
-        }
-        //动态色彩主题
-//        MaterialTheme(
-//            if (dynamicColor && isSystemInDarkTheme()) {
-//                dynamicDarkColorScheme(LocalContext.current)
-//            } else if (dynamicColor) {
-//                dynamicLightColorScheme(LocalContext.current)
-//            } else {
-//                LightColorPalette
-//            }
-//        ) {
-//            Column {
-//                content()
+//        if (themeType == 0 || themeType == 1) {
+//            MaterialTheme(if (isSystemInDarkTheme()) DarkColorPalette else LightColorPalette) {
+//                Column(horizontalAlignment = horizontalAlignment) {
+//                    content()
+//                }
 //            }
 //        }
+//
+//        Divider(
+//            modifier = Modifier
+//                .padding(vertical = Dimen.mediumPadding)
+//                .height(Dimen.divLineHeight)
+//        )
+
+        //动态色彩主题
+        if (themeType == 0 || themeType == 2) {
+            MaterialTheme(
+                if (dynamicColor && isSystemInDarkTheme()) {
+                    dynamicDarkColorScheme(LocalContext.current)
+                } else if (dynamicColor) {
+                    dynamicLightColorScheme(LocalContext.current)
+                } else {
+                    LightColorPalette
+                }
+            ) {
+                Column(horizontalAlignment = horizontalAlignment) {
+                    content()
+                }
+            }
+        }
     }
 
 }

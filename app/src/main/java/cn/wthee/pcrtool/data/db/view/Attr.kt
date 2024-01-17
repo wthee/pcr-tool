@@ -1,9 +1,12 @@
 package cn.wthee.pcrtool.data.db.view
 
+import android.content.Context
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.getString
 import kotlin.random.Random
 
 /**
@@ -153,47 +156,39 @@ data class Attr(
     /**
      * 全部属性
      */
-    fun all(isPreview: Boolean = false): ArrayList<AttrValue> {
-        return if (isPreview) {
-            arrayListOf(
-                AttrValue(value = 100.0),
-                AttrValue(value = 1000.0),
-                AttrValue(value = 10000.0)
-            )
-        } else {
-            val attrs = arrayListOf<AttrValue>()
-            for (i in 0..16) {
-                val value = when (i) {
-                    0 -> this.hp
-                    1 -> this.lifeSteal
-                    2 -> this.atk
-                    3 -> this.magicStr
-                    4 -> this.def
-                    5 -> this.magicDef
-                    6 -> this.physicalCritical
-                    7 -> this.magicCritical
-                    8 -> this.physicalPenetrate
-                    9 -> this.magicPenetrate
-                    10 -> this.accuracy
-                    11 -> this.dodge
-                    12 -> this.waveHpRecovery
-                    13 -> this.hpRecoveryRate
-                    14 -> this.waveEnergyRecovery
-                    15 -> this.energyRecoveryRate
-                    16 -> this.energyReduceRate
-                    else -> 0.0
-                }
-                attrs.add(AttrValue(Constants.ATTR[i], value))
+    fun all(context: Context = MyApplication.context): ArrayList<AttrValue> {
+        val attrs = arrayListOf<AttrValue>()
+        for (i in 0..16) {
+            val value = when (i) {
+                0 -> this.hp
+                1 -> this.lifeSteal
+                2 -> this.atk
+                3 -> this.magicStr
+                4 -> this.def
+                5 -> this.magicDef
+                6 -> this.physicalCritical
+                7 -> this.magicCritical
+                8 -> this.physicalPenetrate
+                9 -> this.magicPenetrate
+                10 -> this.accuracy
+                11 -> this.dodge
+                12 -> this.waveHpRecovery
+                13 -> this.hpRecoveryRate
+                14 -> this.waveEnergyRecovery
+                15 -> this.energyRecoveryRate
+                16 -> this.energyReduceRate
+                else -> 0.0
             }
-            attrs
+            attrs.add(AttrValue(getString(context = context, id = Constants.ATTR[i]), value))
         }
+        return attrs
     }
 
     /**
      * 非零属性
      */
-    fun allNotZero(isPreview: Boolean = false): List<AttrValue> {
-        val attrs = all(isPreview)
+    fun allNotZero(context: Context = MyApplication.context): List<AttrValue> {
+        val attrs = all(context)
         attrs.removeAll { it.value == 0.0 }
         return attrs
     }
@@ -201,8 +196,8 @@ data class Attr(
     /**
      * 非零属性
      */
-    fun summonAttr(): List<AttrValue> {
-        val attrs = all()
+    fun summonAttr(context: Context = MyApplication.context): List<AttrValue> {
+        val attrs = all(context)
         val newList = arrayListOf<AttrValue>()
         val toShowIndex = arrayListOf(0, 2, 3, 4, 5)
         toShowIndex.forEach { showIndex ->

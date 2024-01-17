@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,18 +25,12 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场查询（悬浮窗）
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val scope = rememberCoroutineScope()
     val min = navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = navViewModel.showResult.observeAsState().value ?: false
-    val pagerState = rememberPagerState { 4 }
-    val selectListState = rememberLazyGridState()
-    val usedListState = rememberLazyGridState()
     val resultListState = rememberLazyGridState()
-    val favoritesListState = rememberLazyGridState()
-    val historyListState = rememberLazyGridState()
     val actions = NavActions(navController)
 
     PCRToolComposeTheme {
@@ -64,44 +56,34 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         navViewModel.floatServiceRun.postValue(false)
                     }
                 }
-                //查询
-                if (!min && !showResult) {
+                if (!min) {
                     MainSmallFab(
-                        iconType = MainIconType.PVP_SEARCH
+                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.PVP_SEARCH
                     ) {
-                        try {
-                            scope.launch {
-                                resultListState.scrollToItem(0)
-                            }
-                        } catch (_: Exception) {
+                        if (showResult) {
+                            //返回
+                            navViewModel.showResult.postValue(false)
+                            pvpViewModel.changeRequesting(false)
+                        } else {
+                            //查询
+                            try {
+                                scope.launch {
+                                    resultListState.scrollToItem(0)
+                                }
+                            } catch (_: Exception) {
 
+                            }
+                            pvpViewModel.searchByCharacterList()
                         }
-                        pvpViewModel.resetResult()
-                        navViewModel.showResult.postValue(true)
-                    }
-                }
-                //返回
-                if (!min && showResult) {
-                    MainSmallFab(
-                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.BACK
-                    ) {
-                        navViewModel.showResult.postValue(false)
-                        pvpViewModel.changeRequesting(false)
                     }
                 }
             }
 
             if (!min) {
                 MainCard(modifier = Modifier) {
-                    PvpSearchCompose(
+                    PvpSearchScreen(
                         floatWindow = true,
                         initSpanCount = spanCount,
-                        pagerState = pagerState,
-                        selectListState = selectListState,
-                        usedListState = usedListState,
-                        resultListState = resultListState,
-                        favoritesListState = favoritesListState,
-                        historyListState = historyListState,
                         toCharacter = actions.toCharacterDetail
                     )
                 }

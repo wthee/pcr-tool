@@ -65,6 +65,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 /**
@@ -191,7 +192,7 @@ fun StoryEventItemContent(
     val today = getToday()
     val sd = event.startTime.formatTime.fixJpTime
     val ed = event.endTime.formatTime.fixJpTime
-    val previewEvent = sd.substring(0, 10) == "2030/12/30"
+    val previewEvent = sd.toDate == "2030/12/30"
     val days = ed.days(sd, showDay = false)
     if (days == "0") {
         showDays = false
@@ -248,7 +249,7 @@ fun StoryEventItemContent(
             )
             if (!previewEvent) {
                 MainTitleText(
-                    text = sd.substring(0, 10),
+                    text = sd.toDate,
                     modifier = Modifier.padding(end = Dimen.smallPadding),
                 )
             }
@@ -263,93 +264,89 @@ fun StoryEventItemContent(
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //banner 图片
-                if (inProgress || isSub || !hasTeaser(event.eventId)) {
-                    MainImage(
-                        data = ImageRequestHelper.getInstance()
-                            .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
-                        contentScale = ContentScale.FillBounds,
-                        ratio = RATIO_BANNER
-                    )
-                } else {
-                    MainImage(
-                        data = ImageRequestHelper.getInstance()
-                            .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
-                        ratio = RATIO_TEASER,
-                    )
-                }
-
-                //标题
-                Subtitle1(
-                    text = event.getEventTitle(),
-                    modifier = Modifier.padding(Dimen.mediumPadding),
-                    textAlign = TextAlign.Start,
-                    selectable = true
+            //banner 图片
+            if (inProgress || isSub || !hasTeaser(event.eventId)) {
+                MainImage(
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(EVENT_BANNER, event.originalEventId, forceJpType = false),
+                    contentScale = ContentScale.FillBounds,
+                    ratio = RATIO_BANNER
                 )
+            } else {
+                MainImage(
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(EVENT_TEASER, event.eventId, forceJpType = false),
+                    ratio = RATIO_TEASER,
+                )
+            }
 
-                //boss、掉落角色图标
-                if (event.getUnitIdList().isNotEmpty()) {
-                    Row {
-                        //sp boss 图标，处理id 311403 -> 311400
-                        if (!isSub && event.bossUnitId != 0) {
-                            MainIcon(
-                                data = ImageRequestHelper.getInstance()
-                                    .getUrl(
-                                        ImageRequestHelper.ICON_UNIT,
-                                        event.bossUnitId / 10 * 10
-                                    ),
-                                modifier = Modifier.padding(start = Dimen.mediumPadding)
-                            ) {
-                                toEventEnemyDetail(event.bossEnemyId)
-                            }
+            //标题
+            Subtitle1(
+                text = event.getEventTitle(),
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                textAlign = TextAlign.Start,
+                selectable = true
+            )
+
+            //boss、掉落角色图标
+            if (event.getUnitIdList().isNotEmpty()) {
+                Row {
+                    //sp boss 图标，处理id 311403 -> 311400
+                    if (!isSub && event.bossUnitId != 0) {
+                        MainIcon(
+                            data = ImageRequestHelper.getInstance()
+                                .getUrl(
+                                    ImageRequestHelper.ICON_UNIT,
+                                    event.bossUnitId / 10 * 10
+                                ),
+                            modifier = Modifier.padding(start = Dimen.mediumPadding)
+                        ) {
+                            toEventEnemyDetail(event.bossEnemyId)
                         }
-                        Spacer(modifier = Modifier.weight(1f))
-                        //活动掉落角色图标
-                        event.getUnitIdList().forEach { itemId ->
-                            val unitId = itemId % 10000 * 100 + 1
-                            MainIcon(
-                                data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
-                                modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
-                            ) {
-                                toCharacterDetail(unitId)
-                            }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    //活动掉落角色图标
+                    event.getUnitIdList().forEach { itemId ->
+                        val unitId = itemId % 10000 * 100 + 1
+                        MainIcon(
+                            data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
+                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
+                        ) {
+                            toCharacterDetail(unitId)
                         }
                     }
                 }
+            }
 
-                Row(
-                    modifier = Modifier
-                        .padding(
-                            start = Dimen.smallPadding,
-                            end = Dimen.mediumPadding,
-                            top = Dimen.smallPadding
-                        )
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //查看立绘
-                    IconTextButton(
-                        icon = MainIconType.PREVIEW_IMAGE,
-                        text = stringResource(R.string.story_pic)
-                    ) {
-                        toAllPics(event.storyId, AllPicsType.STORY.type)
-                    }
-                    //结束日期
-                    CaptionText(
-                        text = if (isSub) {
-                            stringResource(R.string.no_limit)
-                        } else {
-                            ed
-                        },
-                        modifier = Modifier.weight(1f)
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.mediumPadding,
+                        top = Dimen.smallPadding
                     )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //查看立绘
+                IconTextButton(
+                    icon = MainIconType.PREVIEW_IMAGE,
+                    text = stringResource(R.string.story_pic)
+                ) {
+                    toAllPics(event.storyId, AllPicsType.STORY.type)
                 }
-
+                //结束日期
+                CaptionText(
+                    text = if (isSub) {
+                        stringResource(R.string.no_limit)
+                    } else {
+                        ed
+                    },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
-
 }
 
 /**

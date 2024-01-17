@@ -7,17 +7,22 @@ import androidx.media3.datasource.cache.SimpleCache
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.ui.dataStoreSetting
-import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.BuglyInitializer
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.SERVER_DOMAIN
+import cn.wthee.pcrtool.utils.Constants.SERVER_IP
+import cn.wthee.pcrtool.utils.SslUtil
 import cn.wthee.pcrtool.utils.VideoCache
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.request.CachePolicy
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.request.CachePolicy
+import coil3.request.allowHardware
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import okio.Path.Companion.toOkioPath
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import javax.net.ssl.HttpsURLConnection
@@ -27,16 +32,17 @@ import javax.net.ssl.HttpsURLConnection
  * 应用初始
  */
 @HiltAndroidApp
-class MyApplication : Application(), ImageLoaderFactory {
+class MyApplication : Application(), SingletonImageLoader.Factory {
 
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         var backupMode = false
-        var URL_DOMAIN = "wthee.xyz"
+        var URL_DOMAIN = SERVER_DOMAIN
         var useIpOnFlag = false
 
         //视频缓存
+        @SuppressLint("UnsafeOptInUsageError")
         lateinit var simpleCache: SimpleCache
 
     }
@@ -53,7 +59,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] ?: false
             //使用ip访问
             if (useIpOnFlag) {
-                URL_DOMAIN = "96.45.190.76"
+                URL_DOMAIN = SERVER_IP
             }
         }
 
@@ -68,29 +74,25 @@ class MyApplication : Application(), ImageLoaderFactory {
         simpleCache = VideoCache().init(this)
     }
 
-    override fun newImageLoader(): ImageLoader {
+    override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(context)
             .allowHardware(false)
             //禁用内存缓存
             .memoryCachePolicy(CachePolicy.DISABLED)
             .diskCache {
                 //调整缓存位置，避免缓存被系统自动清除
+                val path = context.filesDir.resolve(Constants.COIL_DIR).toOkioPath()
                 DiskCache.Builder()
                     .maxSizePercent(0.04)
-                    .directory(context.filesDir.resolve(Constants.COIL_DIR))
+                    .directory(path)
                     .build()
-            }
-            //禁用后，优先从本地缓存STANDARD_MEMORY_MULTIPLIER
-            .respectCacheHeaders(false)
-            .okHttpClient {
-                ApiUtil.buildClient()
             }
             .build()
     }
 
     private fun disableSSLCertificateChecking() {
         try {
-            val ssl = ApiUtil.getSSL()
+            val ssl = SslUtil.getSsl()
             HttpsURLConnection.setDefaultSSLSocketFactory(ssl.first.socketFactory)
             HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
         } catch (e: KeyManagementException) {

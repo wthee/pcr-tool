@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.Context
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.ui.MainActivity
@@ -40,18 +42,23 @@ val String.formatTime: String
         }
     }
 
+/**
+ * 截取日期年月日
+ */
+val String.toDate: String
+    get() = if (this.isNotBlank()) {
+        this.substring(0, kotlin.math.min(10, this.length))
+    } else {
+        ""
+    }
+
+/**
+ * 日期格式化 yyyy/MM/dd HH:mm:ss
+ */
 val String.simpleDateFormat: String
     get() {
         val d = df1.parse(this)!!.time
         return df1.format(Date(d))
-    }
-
-/**
- * 毫秒转日期字符串 UTC +8
- */
-val Long.simpleDateFormat: String
-    get() {
-        return df1.format(Date(this))
     }
 
 /**
@@ -146,23 +153,23 @@ fun String.dates(str2: String): String {
 /**
  * 秒数转时分秒字符串
  */
-fun toTimeText(time: Long): String {
+fun toTimeText(time: Long, context: Context = MyApplication.context): String {
     val day = time / (60 * 60 * 1000 * 24)
     val hour = time / (60 * 60 * 1000) - day * 24
     val minute = time % (60 * 60 * 1000) / (60 * 1000)
 
     val dayText = if (day > 0) {
-        getString(R.string.day, day)
+        getString(context, R.string.day, day)
     } else {
         ""
     }
     val hourText = if (hour > 0) {
-        getString(R.string.hour, hour)
+        getString(context, R.string.hour, hour)
     } else {
         ""
     }
     val minText = if (minute > 0) {
-        getString(R.string.minute, minute)
+        getString(context, R.string.minute, minute)
     } else {
         ""
     }

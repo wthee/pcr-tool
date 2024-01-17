@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import kotlin.math.max
@@ -20,17 +18,12 @@ import kotlin.math.max
  */
 @Composable
 fun PvpRecentlyUsedList(
+    recentlyUsedUnitList: List<PvpCharacterData>,
     spanCount: Int,
     usedListState: LazyGridState,
     selectedIds: ArrayList<PvpCharacterData>,
-    floatWindow: Boolean,
-    pvpViewModel: PvpViewModel,
+    floatWindow: Boolean
 ) {
-    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
-
-    //常用角色
-    val recentlyUsedUnitList = uiState.recentlyUsedUnitList
-
 
     //常用角色一览
     Column(

@@ -7,29 +7,23 @@ import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
-import cn.wthee.pcrtool.data.network.FileService
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.database.updateLocalDataBaseVersion
-import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
-import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
-import cn.wthee.pcrtool.utils.DownloadListener
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.UnzippedUtil
 import cn.wthee.pcrtool.utils.getString
+import io.ktor.client.call.body
+import io.ktor.client.plugins.onDownload
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.coroutineScope
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
 import java.io.File
 
 /**
@@ -50,7 +44,6 @@ class DatabaseDownloadWorker(
 
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
-    private lateinit var service: Call<ResponseBody>
 
     companion object {
         const val KEY_FILE = "KEY_FILE"
@@ -65,62 +58,38 @@ class DatabaseDownloadWorker(
         val region = inputData.getInt(KEY_REGION, 2)
         val fileName = inputData.getString(KEY_FILE)
         setForegroundAsync(createForegroundInfo())
-        val result = download(version, region, fileName ?: "")
-        if (result == Result.success()) {
-            //通知更新数据
-            handler.sendEmptyMessage(region)
-        } else if (result == Result.failure()) {
-            WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_DB_WORK)
-        }
-        return@coroutineScope result
+        return@coroutineScope download(version, region, fileName ?: "")
     }
 
 
-    private fun download(version: String, region: Int, fileName: String): Result {
-        var response: Response<ResponseBody>? = null
-        var progress = -3
+    private suspend fun download(version: String, region: Int, fileName: String): Result {
+        val responseBody: ByteArray?
+        var progress = -2
 
         try {
-            //创建Retrofit服务
-            service = ApiUtil.createWithClient(
-                FileService::class.java,
-                Constants.DATABASE_URL,
-                ApiUtil.buildDownloadClient(object : DownloadListener {
-                    //下载进度
-                    override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
-                        try {
-                            //更新下载进度
-                            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
-                        } catch (_: Exception) {
-
+            //创建下载请求
+            val httpResponse: HttpResponse =
+                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName) {
+                    onDownload { bytesSentTotal, contentLength ->
+                        progress = (bytesSentTotal * 100.0 / contentLength).toInt()
+                        if (contentLength < 1000) {
+                            //文件大小异常
+                            progress = -3
                         }
                         //更新下载进度
-//                        notification.setProgress(100, progress, false)
-//                            .setContentTitle(
-//                                "$downloadNotice ${currSize / 1024}  / ${totalSize / 1024}"
-//                            )
-//                        notificationManager.notify(noticeId, notification.build())
+                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
+                        //取消通知
+                        if (progress == -3 || progress == 100) {
+                            notificationManager.cancelAll()
+                        }
                     }
-
-                    override fun onFinish() {
-                        //下载完成
-                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, 100).build())
-                        notificationManager.cancelAll()
-                    }
-
-                    override fun onErrorSize() {
-                        //远程文件大小异常
-                        progress = -3
-                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, -3).build())
-                    }
-                })
-            ).getFile(fileName)
-            //下载文件
-            response = service.execute()
+                }
+            responseBody = httpResponse.body()!!
         } catch (e: Exception) {
-            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
+            return Result.failure(Data.Builder().putInt(KEY_PROGRESS, progress).build())
         }
+
         try {
             //创建数据库文件夹
             val file = File(folderPath)
@@ -135,7 +104,7 @@ class DatabaseDownloadWorker(
                 FileUtil.deleteBr(region)
             }
             //保存
-            FileUtil.save(response!!.body()!!.byteStream(), db)
+            db.writeBytes(responseBody)
             //关闭数据库
             AppBasicDatabase.close()
             //删除旧的wal
@@ -153,9 +122,8 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
-            setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
             LogReportUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
-            return Result.failure()
+            return Result.failure(Data.Builder().putInt(KEY_PROGRESS, -2).build())
         }
     }
 

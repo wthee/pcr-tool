@@ -2,14 +2,12 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -25,12 +23,9 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
@@ -39,8 +34,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,8 +48,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -63,38 +60,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.AtkType
+import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.data.model.ResponseData
-import cn.wthee.pcrtool.data.network.isResultError
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.character.getAtkColor
-import cn.wthee.pcrtool.ui.character.getAtkText
-import cn.wthee.pcrtool.ui.character.getLimitTypeColor
-import cn.wthee.pcrtool.ui.character.getLimitTypeText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorBlue
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.ui.theme.colorWhite
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.ui.theme.noShape
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -102,7 +86,7 @@ import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
-import com.google.accompanist.pager.HorizontalPagerIndicator
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -128,7 +112,7 @@ fun StateBox(
         }
     },
     errorContent: @Composable () -> Unit = {
-        CenterTipText(stringResource(id = R.string.not_installed))
+        CenterTipText(stringResource(id = R.string.data_get_error))
     },
     noDataContent: @Composable () -> Unit = {
         CenterTipText(stringResource(id = R.string.no_data))
@@ -167,6 +151,8 @@ fun StateBox(
 fun MainScaffold(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentAlignment: Alignment = Alignment.TopStart,
+    shape: Shape = noShape(),
     fillMaxSize: Boolean = true,
     onMainFabClick: (() -> Unit)? = null,
     mainFabIcon: MainIconType = MainIconType.BACK,
@@ -188,7 +174,8 @@ fun MainScaffold(
             modifier.fillMaxSize()
         } else {
             modifier
-        }).background(backgroundColor)
+        }).background(color = backgroundColor, shape),
+        contentAlignment = contentAlignment
     ) {
         //主要内容
         content()
@@ -205,8 +192,7 @@ fun MainScaffold(
         ) {
             //fab 第二行
             Column(
-                modifier = Modifier
-                    .navigationBarsPadding()
+                modifier = Modifier.navigationBarsPadding()
             ) {
                 secondLineFab()
             }
@@ -247,7 +233,6 @@ fun MainScaffold(
             }
         }
 
-
     }
 }
 
@@ -263,107 +248,6 @@ fun CommonSpacer() {
     )
 }
 
-/**
- * 位置颜色
- * @param position 角色占位
- */
-@Composable
-fun getPositionColor(position: Int) = when (PositionType.getPositionType(position)) {
-    PositionType.POSITION_0_299 -> colorRed
-    PositionType.POSITION_300_599 -> colorGold
-    PositionType.POSITION_600_999 -> colorCyan
-    PositionType.UNKNOWN -> MaterialTheme.colorScheme.primary
-}
-
-/**
- * rank 颜色
- * @param rank rank数值
- */
-@Composable
-fun getRankColor(rank: Int): Color {
-    return when (rank) {
-        1 -> colorBlue
-        in 2..3 -> colorCopper
-        in 4..6 -> colorSilver
-        in 7..10 -> colorGold
-        in 11..17 -> colorPurple
-        in 18..20 -> colorRed
-        in 21..23 -> colorGreen
-        in 24..27 -> colorOrange
-        in 28..99 -> colorCyan
-        else -> colorGray
-    }
-}
-
-/**
- * 带指示器图标
- * @param urls 最大5个
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun IconHorizontalPagerIndicator(pagerState: PagerState, urls: List<String>) {
-    val scope = rememberCoroutineScope()
-    Box(
-        modifier = Modifier.fillMaxWidth(urls.size * 0.2f),
-        contentAlignment = Alignment.Center
-    ) {
-        //显示指示器
-        Row {
-            urls.forEachIndexed { index, url ->
-                val modifier = if (pagerState.currentPage == index) {
-                    Modifier
-                        .padding(horizontal = Dimen.mediumPadding)
-                        .border(
-                            width = Dimen.border,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = MaterialTheme.shapes.extraSmall
-                        )
-                } else {
-                    Modifier.padding(horizontal = Dimen.mediumPadding)
-                }
-
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    MainIcon(
-                        modifier = modifier,
-                        data = url,
-                    ) {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-/**
- * 指示器
- */
-/**
- * 指示器
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun MainHorizontalPagerIndicator(
-    modifier: Modifier = Modifier,
-    pagerState: PagerState,
-    pageCount: Int
-) {
-    HorizontalPagerIndicator(
-        modifier = modifier.navigationBarsPadding(),
-        pagerState = pagerState,
-        pageCount = pageCount,
-        indicatorWidth = Dimen.indicatorSize,
-        activeColor = MaterialTheme.colorScheme.primary,
-        indicatorShape = CutCornerShape(50),
-        spacing = 1.dp
-    )
-}
-
-/**
- * 加载中-圆形
- */
 /**
  * 加载中-圆形
  */
@@ -394,8 +278,8 @@ fun CircularProgressCompose(
     progress: Float,
     modifier: Modifier = Modifier,
     size: Dp = Dimen.menuIconSize,
+    strokeWidth: Dp = Dimen.strokeWidth,
     color: Color = MaterialTheme.colorScheme.primary
-
 ) {
     Box(contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
@@ -404,7 +288,7 @@ fun CircularProgressCompose(
                 .size(size)
                 .padding(Dimen.exSmallPadding),
             color = color,
-            strokeWidth = Dimen.strokeWidth,
+            strokeWidth = strokeWidth
         )
         Text(
             text = (progress * 100).toInt().toString(),
@@ -415,9 +299,6 @@ fun CircularProgressCompose(
 
 }
 
-/**
- * 加载中-直线
- */
 /**
  * 加载中-直线
  */
@@ -434,9 +315,6 @@ fun LinearProgressCompose(
     )
 }
 
-/**
- * 加载中进度-直线
- */
 /**
  * 加载中进度-直线
  */
@@ -559,22 +437,22 @@ fun BottomSearchBar(
                     modifier = Modifier.padding(Dimen.largePadding),
                     elevation = Dimen.popupMenuElevation,
                 ) {
-                    Column(
-                        modifier = Modifier.padding(Dimen.mediumPadding)
+                    MainText(
+                        text = stringResource(id = R.string.search_suggestion),
+                        modifier = Modifier
+                            .padding(vertical = Dimen.largePadding)
+                            .align(Alignment.CenterHorizontally)
+                    )
+
+                    SuggestionChipGroup(
+                        modifier = Modifier.padding(Dimen.mediumPadding),
+                        items = defaultKeywordList ?: arrayListOf()
                     ) {
-                        MainText(text = stringResource(id = R.string.search_suggestion))
-
-                        SuggestionChipGroup(
-                            defaultKeywordList ?: arrayListOf(),
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            changeKeyword(it)
-                            keyboardController?.hide()
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
+                        changeKeyword(it)
+                        keyboardController?.hide()
+                        focusRequester.freeFocus()
+                        changeSearchBar(false)
                     }
-
                 }
             }
 
@@ -635,54 +513,6 @@ fun BottomSearchBar(
 }
 
 /**
- * 通用布局（涉及网络请求）
- *
- * @param fabContent 右下fab内容，加载成功后显示
- * @param placeholder 占位布局
- * @param content 内容
- */
-@Composable
-fun <T> CommonResponseBox(
-    responseData: ResponseData<T>?,
-    fabContent: @Composable (BoxScope.(T) -> Unit)? = null,
-    placeholder: @Composable (ColumnScope.() -> Unit)? = null,
-    content: @Composable (BoxScope.(T) -> Unit)
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        FadeAnimation(visible = isResultError(responseData)) {
-            CenterTipText(text = stringResource(id = R.string.response_error))
-        }
-        FadeAnimation(visible = responseData?.data != null) {
-            content(responseData!!.data!!)
-        }
-        if (responseData == null) {
-            FadeAnimation(placeholder == null) {
-                CircularProgressCompose(
-                    modifier = Modifier
-                        .padding(vertical = Dimen.largePadding)
-                        .align(Alignment.Center)
-                )
-            }
-            FadeAnimation(placeholder != null) {
-                if (placeholder != null) {
-                    Column {
-                        placeholder()
-                    }
-                }
-            }
-        }
-
-        if (responseData?.data != null && fabContent != null) {
-            fabContent(responseData.data!!)
-        }
-    }
-}
-
-/**
  * 日程标题
  * @param showDays 显示天数
  * @param showOverdueColor 过期日程颜色变灰色
@@ -720,7 +550,7 @@ fun EventTitle(
 
     //日期
     MainTitleText(
-        text = sd.substring(0, 10),
+        text = sd.toDate,
         modifier = Modifier.padding(end = Dimen.smallPadding),
         backgroundColor = color
     )
@@ -780,40 +610,8 @@ fun EventTitleCountdown(
 }
 
 /**
- * 装备适用角色
- */
-@Composable
-fun UnitList(unitIds: List<Int>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Dimen.mediumPadding),
-        state = rememberLazyListState()
-    ) {
-        //标题
-        item {
-            MainText(
-                text = stringResource(R.string.extra_equip_unit),
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth()
-            )
-        }
-
-        //角色图标
-        item {
-            GridIconList(unitIds, isSubLayout = false) {}
-        }
-
-        item {
-            CommonSpacer()
-        }
-    }
-}
-
-/**
  * 角色标签行
- *
+ *@param showUniqueEquipType 是否显示专用装备图标
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -824,6 +622,7 @@ fun CharacterTagRow(
     tipText: String? = null,
     endText: String? = null,
     endTextColor: Color? = null,
+    showUniqueEquipType: Boolean = true,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
     FlowRow(
@@ -832,6 +631,24 @@ fun CharacterTagRow(
         verticalArrangement = Arrangement.Center
     ) {
         if (!unknown) {
+
+            //专用装备
+            if (showUniqueEquipType && basicInfo!!.uniqueEquipType != 0) {
+                MainIcon(
+                    modifier = Modifier
+                        .padding(
+                            start = Dimen.smallPadding
+                        )
+                        .align(Alignment.CenterVertically),
+                    data = if (basicInfo.uniqueEquipType == 1) {
+                        R.drawable.ic_unique_equip
+                    } else {
+                        R.drawable.ic_unique_equip2
+                    },
+                    size = Dimen.smallIconSize,
+                )
+            }
+
             //位置
             CharacterPositionTag(
                 modifier = Modifier
@@ -842,22 +659,23 @@ fun CharacterTagRow(
                 position = basicInfo!!.position
             )
 
-
+            val limitType = CharacterLimitType.getByType(basicInfo.limitType)
             Row {
                 //获取方式
                 CharacterTag(
                     modifier = Modifier.padding(Dimen.smallPadding),
-                    text = getLimitTypeText(limitType = basicInfo.limitType),
-                    backgroundColor = getLimitTypeColor(limitType = basicInfo.limitType)
+                    text = stringResource(id = limitType.typeNameId),
+                    backgroundColor = limitType.color
                 )
                 //攻击
+                val atkType = AtkType.getByType(basicInfo.atkType)
                 CharacterTag(
                     modifier = Modifier.padding(
                         bottom = Dimen.smallPadding,
                         top = Dimen.smallPadding
                     ),
-                    text = getAtkText(atkType = basicInfo.atkType),
-                    backgroundColor = getAtkColor(atkType = basicInfo.atkType)
+                    text = stringResource(id = atkType.typeNameId),
+                    backgroundColor = atkType.color
                 )
             }
 
@@ -913,7 +731,8 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-    val positionText = getPositionText(position)
+//    val positionText =
+//        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //位置图标
@@ -923,28 +742,10 @@ fun CharacterPositionTag(
         //位置
         CharacterTag(
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            text = positionText,
-            backgroundColor = getPositionColor(position)
+            text = position.toString(),
+            backgroundColor = PositionType.getPositionType(position).color
         )
     }
-}
-
-/**
- * 获取位置描述
- */
-@Composable
-private fun getPositionText(position: Int): String {
-    var positionText = ""
-    val pos = when (PositionType.getPositionType(position)) {
-        PositionType.POSITION_0_299 -> stringResource(id = R.string.position_0)
-        PositionType.POSITION_300_599 -> stringResource(id = R.string.position_1)
-        PositionType.POSITION_600_999 -> stringResource(id = R.string.position_2)
-        PositionType.UNKNOWN -> Constants.UNKNOWN
-    }
-    if (pos != Constants.UNKNOWN) {
-        positionText = "$pos $position"
-    }
-    return positionText
 }
 
 /**
@@ -989,71 +790,86 @@ fun CharacterTag(
 }
 
 /**
- * 从桌面返回监听
+ * 头部（滑动隐藏）
+ *
+ * @param url title点击跳转url
+ * @param title 标题 蓝底白字
+ * @param startText 标题后文字
+ * @param endText 末尾文字
+ * @param extraContent 额外内容
  */
 @Composable
-fun AppResumeEffect(firstLoad: Boolean, handler: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
+fun ExpandableHeader(
+    scrollState: LazyListState,
+    url: String? = null,
+    title: String,
+    startText: String,
+    endText: String? = null,
+    extraContent: (@Composable () -> Unit)? = null
+) {
+    val context = LocalContext.current
+    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
-    DisposableEffect(lifecycleOwner, firstLoad) {
-        var recreate = false
-        val observer = LifecycleEventObserver { _, e ->
-            if (e == Lifecycle.Event.ON_PAUSE) {
-                recreate = false
-            }
-            if (e == Lifecycle.Event.ON_CREATE) {
-                recreate = true
-            }
-            //首次加载 或 从桌面重新进入（不经过 ON_CREATE）
-            if ((firstLoad && e == Lifecycle.Event.ON_RESUME) || (!recreate && e == Lifecycle.Event.ON_RESUME)) {
-                handler()
+
+    Column {
+        //标题
+        ExpandAnimation(visible = showTitle) {
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = Dimen.largePadding,
+                    vertical = Dimen.mediumPadding
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainTitleText(
+                    text = title,
+                    modifier = Modifier
+                        .clickable(url != null) {
+                            VibrateUtil(context).single()
+                            BrowserUtil.open(url!!)
+                        }
+                )
+
+                CaptionText(
+                    text = startText,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+                if (endText != null) {
+                    CaptionText(
+                        text = endText,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+        //额外内容，不折叠
+        if (extraContent != null) {
+            extraContent()
         }
     }
 }
 
 
-/**
- * 生命周期监听
- * fixme 多个事件避免重复调用
- */
-@Composable
-fun LifecycleEffect(vararg events: Lifecycle.Event, handler: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, e ->
-            if (events.contains(e)) {
-                handler()
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
-    val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
-        MainTitleText(text = text)
-        MainButton(text = text) {}
-        SubButton(text = text) {}
-        RankText(rank = 21)
-        SelectText(text = text, selected = true)
-        IconTextButton(icon = MainIconType.MORE, text = text)
-        CommonTitleContentText(title = text, content = text)
-        MainTabRow(
-            pagerState = rememberPagerState { 2 },
-            tabs = arrayListOf(text, text)
+        CircularProgressCompose(progress = 0.31f)
+        LinearProgressCompose(progress = 0.31f)
+        EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
+        EventTitleCountdown(
+            today = "2023/12/13 22:22:22",
+            sd = "2023/12/12 22:22:22",
+            ed = "2023/12/15 22:22:22",
+            inProgress = true,
+            comingSoon = false
+        )
+        EventTitleCountdown(
+            today = "2023/12/10 22:22:22",
+            sd = "2023/12/12 22:22:22",
+            ed = "2023/12/15 22:22:22",
+            inProgress = false,
+            comingSoon = true
         )
     }
 }
@@ -1062,9 +878,30 @@ private fun AllPreview() {
 @Composable
 private fun CharacterTagPreview() {
     PreviewLayout {
-        CharacterTag(
-            text = getLimitTypeText(limitType = 1),
-            backgroundColor = getLimitTypeColor(limitType = 1)
+        val text = stringResource(id = R.string.debug_short_text)
+        Column(modifier = Modifier.width(150.dp)) {
+            CharacterTagRow(
+                unknown = false,
+                basicInfo = CharacterInfo(
+                    position = 123,
+                    atkType = 1,
+                    limitType = 2,
+                    uniqueEquipType = 2
+                ),
+                tipText = text,
+                endText = text,
+            )
+        }
+        CharacterTagRow(
+            unknown = false,
+            basicInfo = CharacterInfo(
+                position = 123,
+                atkType = 1,
+                limitType = 2,
+                uniqueEquipType = 2
+            ),
+            tipText = text,
+            endText = text,
         )
     }
 }

@@ -12,13 +12,13 @@ import cn.wthee.pcrtool.utils.getString
  */
 @Suppress("RegExpRedundantEscape")
 data class SkillDetail(
-    val skillId: Int = 1,
+    val skillId: Int = -1,
     val name: String = "?",
     val desc: String = "?",
-    val iconType: Int = 1,
+    val iconType: Int = 0,
     val castTime: Double = 0.0,
-    val level: Int = 1,
-    val atk: Int = 100,
+    val level: Int = 0,
+    val atk: Int = 0,
     val bossUbCooltime: Double = 0.0,
     var enemySkillIndex: Int = 0,
 ) {
@@ -78,7 +78,7 @@ data class SkillDetail(
 }
 
 /**
- * @param actionIndex 动作下标
+ * @param actionIndex 需在表达式中显示系数的动作下标
  * @param type 类型0表达式中系数，如<{1}100+10*攻击力>、1描述中的系数，如：动作(1)的系数{1}
  * @param coe 系数
  */

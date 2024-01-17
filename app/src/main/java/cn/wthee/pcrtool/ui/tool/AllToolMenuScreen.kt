@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,31 +25,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.ui.home.module.ToolMenu
-import cn.wthee.pcrtool.ui.home.module.ToolMenuData
-import cn.wthee.pcrtool.ui.home.module.getAction
-import cn.wthee.pcrtool.ui.home.module.getToolMenuData
+import cn.wthee.pcrtool.ui.home.tool.ToolMenu
+import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
+import cn.wthee.pcrtool.ui.home.tool.ToolSectionViewModel
+import cn.wthee.pcrtool.ui.home.tool.getAction
+import cn.wthee.pcrtool.ui.home.tool.getToolMenuData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.utils.editOrder
 import cn.wthee.pcrtool.utils.intArrayList
@@ -70,7 +76,11 @@ private data class ToolMenuGroup(
  * 全部工具
  */
 @Composable
-fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
+fun AllToolMenuScreen(
+    initEditMode: Boolean,
+    actions: NavActions,
+    toolSectionViewModel: ToolSectionViewModel = hiltViewModel()
+) {
 
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
@@ -103,6 +113,7 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
     searchList.addItem(ToolMenuType.WEBSITE)
     searchList.addItem(ToolMenuType.TWEET)
     searchList.addItem(ToolMenuType.COMIC)
+    searchList.addItem(ToolMenuType.LOAD_COMIC)
     itemGroupList.add(
         ToolMenuGroup(
             stringResource(id = R.string.search_api),
@@ -137,6 +148,11 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
         )
     )
 
+    val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
+    LifecycleEffect(Lifecycle.Event.ON_CREATE) {
+        toolSectionViewModel.getToolOrderData()
+    }
+
     MainScaffold(
         fab = {
             //编辑
@@ -160,7 +176,14 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
                         )
                         .fillMaxWidth()
                 ) {
-                    ToolMenu(actions = actions, isEditMode = isEditMode, isHome = false)
+                    ToolMenu(
+                        toolOrderData = uiState.toolOrderData,
+                        loadingState = LoadingState.Success,
+                        actions = actions,
+                        isEditMode = isEditMode,
+                        isHome = false,
+                        updateToolOrderData = toolSectionViewModel::updateToolOrderData
+                    )
                     //编辑提示
                     Subtitle2(
                         text = stringResource(R.string.tip_click_to_add),
@@ -181,7 +204,7 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
                         shape = shapeTop()
                     )
                     .background(
-                        shape = if (isEditMode) shapeTop() else RoundedCornerShape(0.dp),
+                        shape = if (isEditMode) shapeTop() else noShape(),
                         color = if (isEditMode) MaterialTheme.colorScheme.surface else Color.Transparent
                     ),
                 state = scrollState
@@ -195,7 +218,8 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
                     MenuGroup(
                         actions = actions,
                         group = it,
-                        isEditMode = isEditMode
+                        isEditMode = isEditMode,
+                        updateOrderData = toolSectionViewModel::updateToolOrderData
                     )
                 }
                 item {
@@ -216,7 +240,8 @@ fun AllToolMenuScreen(initEditMode: Boolean, actions: NavActions) {
 private fun MenuGroup(
     actions: NavActions,
     group: ToolMenuGroup,
-    isEditMode: Boolean
+    isEditMode: Boolean,
+    updateOrderData: (String) -> Unit
 ) {
     val context = LocalContext.current
     val toolOrderData = remember {
@@ -238,12 +263,19 @@ private fun MenuGroup(
         if (group.groupDesc != "") {
             CaptionText(text = group.groupDesc)
         }
-        VerticalGrid(
+        VerticalStaggeredGrid(
             itemWidth = (Dimen.iconSize * 3),
+            contentPadding = Dimen.mediumPadding,
             modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
         ) {
             group.toolList.forEach {
-                MenuItem(actions, it, toolOrderData, isEditMode)
+                MenuItem(
+                    actions = actions,
+                    toolMenuData = it,
+                    orderStr = toolOrderData,
+                    isEditMode = isEditMode,
+                    updateOrderData = updateOrderData
+                )
             }
         }
     }
@@ -254,7 +286,8 @@ private fun MenuItem(
     actions: NavActions,
     toolMenuData: ToolMenuData,
     orderStr: String,
-    isEditMode: Boolean
+    isEditMode: Boolean,
+    updateOrderData: (String) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -262,7 +295,6 @@ private fun MenuItem(
 
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = if (isEditMode) {
             {
                 editOrder(
@@ -270,7 +302,9 @@ private fun MenuItem(
                     scope,
                     toolMenuData.type.id,
                     MainPreferencesKeys.SP_TOOL_ORDER
-                )
+                ) {
+                    updateOrderData(it)
+                }
             }
         } else {
             getAction(actions, toolMenuData)
@@ -324,6 +358,8 @@ private fun MenuGroupPreview() {
                 stringResource(id = R.string.debug_short_text),
             ),
             isEditMode = true
-        )
+        ) {
+
+        }
     }
 }

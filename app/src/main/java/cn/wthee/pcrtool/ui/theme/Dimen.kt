@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.theme
 
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.ui.components.getItemWidth
 
 object Dimen {
 
@@ -34,8 +35,6 @@ object Dimen {
 
     val textFabMargin = 3.dp
 
-    val fabMarginSecondLineEnd = fabMargin + textFabMargin
-
     val smallIconSize = 18.dp
 
     val textIconSize = 20.dp
@@ -43,6 +42,9 @@ object Dimen {
     val mediumIconSize = 32.dp
 
     val iconSize = 48.dp
+
+    //网格图标宽度
+    val iconItemWidth = iconSize + commonItemPadding * 2
 
     val largeIconSize = 56.dp
 
@@ -58,17 +60,15 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
-    val homeDataChangeWidth = 100.dp
+    val selectFabMinWidth = 100.dp
 
     val skillActionMinHeight = 16.dp
-
-    val border = 4.dp
 
     val fabTextMaxWidth = 100.dp
 
     val attrWidth = 165.dp
 
-    val rankTextWidth = 48.dp
+    val rankTextWidth = 56.dp
 
     val strokeWidth = 3.dp
 
@@ -76,7 +76,11 @@ object Dimen {
 
     val linearProgressHeight = 6.dp
 
-    val tweetImgHeight = 128.dp
-
     val indicatorSize = 7.dp
+
+    //子项最大宽度
+    val itemMaxWidth = getItemWidth() * 1.3f
+
+    //首页图标大小（装备等）
+    val homeIconItemWidth = iconSize + largePadding * 2
 }

@@ -20,13 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.RankColor
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
@@ -235,7 +240,7 @@ fun CaptionText(
         style = style,
         modifier = modifier,
         maxLines = maxLines,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Ellipsis
     )
 }
 
@@ -248,25 +253,29 @@ fun CaptionText(
 fun RankText(
     modifier: Modifier = Modifier,
     rank: Int,
-    style: TextStyle = MaterialTheme.typography.titleMedium,
     textAlign: TextAlign = TextAlign.Center,
     type: Int = 0
 ) {
-    val color = getRankColor(rank)
+    val color = RankColor.getRankColor(rank)
     val text = getFormatText(rank)
     if (type == 0) {
         Text(
-            text = text, textAlign = textAlign, color = color, style = style, modifier = modifier
+            modifier = modifier,
+            text = text,
+            textAlign = textAlign,
+            color = color,
+            style = MaterialTheme.typography.titleSmall
         )
     } else {
-        MainTitleText(
+        Text(
             text = text,
-            textStyle = MaterialTheme.typography.titleMedium,
-            backgroundColor = color,
+            color = colorWhite,
+            style = MaterialTheme.typography.titleSmall,
             modifier = modifier
+                .background(color = color, shape = MaterialTheme.shapes.extraSmall)
+                .padding(horizontal = Dimen.smallPadding)
         )
     }
-
 }
 
 /**
@@ -442,5 +451,24 @@ fun CommonGroupTitle(
             )
         }
 
+    }
+}
+
+
+@CombinedPreviews
+@Composable
+private fun AllTextPreview() {
+    val text = stringResource(id = R.string.debug_short_text)
+    PreviewLayout {
+        MainTitleText(text = "MainTitleText $text")
+        MainContentText(text = "MainContentText $text")
+        MainText(text = "MainText $text")
+        Subtitle1(text = "Subtitle1 $text")
+        Subtitle2(text = "Subtitle2 $text")
+        CaptionText(text = "CaptionText $text")
+        HeaderText(text = "HeaderText $text")
+        RankText(rank = 21)
+        SelectText(text = "SelectText $text", selected = true)
+        CommonTitleContentText(title = "Title $text", content = "Content $text")
     }
 }

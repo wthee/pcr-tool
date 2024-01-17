@@ -9,7 +9,9 @@ import cn.wthee.pcrtool.data.db.repository.EnemyRepository
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBattleTargetCountData
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.model.ClanBattleProperty
 import cn.wthee.pcrtool.navigation.NavRoute
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +28,8 @@ import javax.inject.Inject
 data class ClanBattleDetailUiState(
     //公会战列表
     val clanBattleList: List<ClanBattleInfo> = emptyList(),
+    //当前选中boss下标
+    val bossIndex: Int = 0,
     //当前阶段
     val phaseIndex: Int = 0,
     val minPhase: Int = 0,
@@ -46,20 +50,24 @@ class ClanBattleDetailViewModel @Inject constructor(
     private val enemyRepository: EnemyRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val clanBattleId: Int? = savedStateHandle[NavRoute.TOOL_CLAN_Battle_ID]
-    private val minPhase: Int? = savedStateHandle[NavRoute.TOOL_CLAN_BOSS_MIN_PHASE]
-    private val maxPhase: Int? = savedStateHandle[NavRoute.TOOL_CLAN_BOSS_MAX_PHASE]
+    private val clanBattleProperty: ClanBattleProperty? =
+        JsonUtil.fromJson(savedStateHandle[NavRoute.CLAN_BATTLE_PROPERTY])
+    private val clanBattleId: Int? = clanBattleProperty?.clanBattleId
+    private val minPhase: Int? = clanBattleProperty?.minPhase
+    private val maxPhase: Int? = clanBattleProperty?.maxPhase
+    private val index: Int? = clanBattleProperty?.index
 
     private val _uiState = MutableStateFlow(ClanBattleDetailUiState())
     val uiState: StateFlow<ClanBattleDetailUiState> = _uiState.asStateFlow()
 
     init {
-        if (minPhase != null && maxPhase != null && clanBattleId != null) {
+        if (minPhase != null && maxPhase != null && clanBattleId != null && index != null) {
             _uiState.update {
                 it.copy(
                     phaseIndex = maxPhase - minPhase,
                     minPhase = minPhase,
-                    maxPhase = maxPhase
+                    maxPhase = maxPhase,
+                    bossIndex = index
                 )
             }
             getClanBattleInfo(clanBattleId, maxPhase)

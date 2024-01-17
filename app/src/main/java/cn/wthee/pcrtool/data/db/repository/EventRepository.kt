@@ -19,8 +19,6 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
         emptyList()
     }
 
-    suspend fun getStoryDetails(storyId: Int) = eventDao.getStoryDetails(storyId)
-
     suspend fun getDropEvent(limit: Int) = try {
         eventDao.getDropEvent(limit)
     } catch (e: Exception) {

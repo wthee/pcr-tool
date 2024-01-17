@@ -19,9 +19,9 @@ import cn.wthee.pcrtool.utils.intArrayList
  */
 data class CalendarEvent(
     @ColumnInfo(name = "type") val type: String = "",
-    @ColumnInfo(name = "value") val value: Int = 1500,
-    @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",
-    @ColumnInfo(name = "end_time") val endTime: String = "2021-01-07 00:00:00",
+    @ColumnInfo(name = "value") val value: Int = 0,
+    @ColumnInfo(name = "start_time") val startTime: String = "",
+    @ColumnInfo(name = "end_time") val endTime: String = "",
 ) {
     /*
      * 去零

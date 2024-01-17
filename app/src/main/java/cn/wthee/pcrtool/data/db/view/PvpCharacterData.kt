@@ -7,7 +7,7 @@ import androidx.room.Ignore
  *  角色位置
  */
 data class PvpCharacterData(
-    @ColumnInfo(name = "unit_id") var unitId: Int = 0,
+    @ColumnInfo(name = "unit_id") var unitId: Int = -1,
     @ColumnInfo(name = "position") var position: Int = 999,
     @ColumnInfo(name = "type") var type: Int = -1,
     @Ignore var count: Int = 0

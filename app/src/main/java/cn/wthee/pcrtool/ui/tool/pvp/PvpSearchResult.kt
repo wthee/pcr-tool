@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,14 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
-import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
-import cn.wthee.pcrtool.data.db.view.PvpCharacterData
-import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -39,8 +34,8 @@ import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SubButton
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -49,9 +44,7 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
-import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
-import java.util.UUID
 import kotlin.math.round
 
 
@@ -60,64 +53,28 @@ import kotlin.math.round
  */
 @Composable
 fun PvpSearchResult(
+    result: ResponseData<List<PvpResultData>>?,
+    favoritesList: List<PvpFavoriteData>,
     resultListState: LazyGridState,
-    selectedIds: List<PvpCharacterData>,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel
+    research: () -> Unit,
+    delete: (String, String) -> Unit,
+    insert: (PvpFavoriteData) -> Unit,
 ) {
-    val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
-
-    val defIds = selectedIds.subList(0, 5).getIdStr()
-    //展示搜索结果
-    val idArray = JsonArray()
-    for (sel in selectedIds.subList(0, 5)) {
-        idArray.add(sel.unitId)
-    }
-    val result = uiState.pvpResult
     val placeholder = result == null
 
-    //加载数据
-    LaunchedEffect(selectedIds) {
-        pvpViewModel.getPVPData(idArray)
-        pvpViewModel.getFavoritesList(defIds)
-    }
-
     //收藏信息
-    val favorites = uiState.favoritesList
-    val favoritesList = arrayListOf<String>()
-    favorites.forEach { data ->
-        favoritesList.add(data.atks)
+    val favoritesAtkList = arrayListOf<String>()
+    favoritesList.forEach { data ->
+        favoritesAtkList.add(data.atks)
     }
 
-    //获取数据
-    LaunchedEffect(selectedIds) {
-        //添加搜索记录
-        var unSplitDefIds = ""
-        var isError = false
-        for (sel in selectedIds.subList(0, 5)) {
-            if (sel.unitId == 0) {
-                isError = true
-            }
-            idArray.add(sel.unitId)
-            unSplitDefIds += "${sel.unitId}-"
-        }
-        if (!isError) {
-            pvpViewModel.insert(
-                PvpHistoryData(
-                    UUID.randomUUID().toString(),
-                    "${MainActivity.regionType.value}@$unSplitDefIds",
-                    getToday(),
-                )
-            )
-        }
-    }
     val context = LocalContext.current
     val vibrated = remember {
         mutableStateOf(false)
     }
     //宽度
     val itemWidth = getItemWidth(floatWindow)
-
 
     Box(
         modifier = Modifier
@@ -152,11 +109,12 @@ fun PvpSearchResult(
                                 }
                             ) { index, item ->
                                 PvpResultItem(
-                                    favoritesList.contains(item.atk),
-                                    index + 1,
-                                    item,
-                                    floatWindow,
-                                    pvpViewModel
+                                    liked = favoritesAtkList.contains(item.atk),
+                                    i = index + 1,
+                                    item = item,
+                                    floatWindow = floatWindow,
+                                    delete = delete,
+                                    insert = insert
                                 )
                             }
                             item {
@@ -178,13 +136,12 @@ fun PvpSearchResult(
                 ) {
                     CenterTipText(
                         text = stringResource(id = R.string.data_get_error)
-                    ){
+                    ) {
                         SubButton(
                             text = stringResource(id = R.string.pvp_research),
                             modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
-                            pvpViewModel.resetResult()
-                            pvpViewModel.getPVPData(idArray)
+                            research()
                         }
                     }
                 }
@@ -204,11 +161,12 @@ fun PvpSearchResult(
                 ) {
                     items(10) {
                         PvpResultItem(
-                            false,
-                            0,
-                            PvpResultData(),
-                            floatWindow,
-                            pvpViewModel
+                            liked = false,
+                            i = 0,
+                            item = PvpResultData(),
+                            floatWindow = floatWindow,
+                            delete = delete,
+                            insert = insert
                         )
                     }
                     item {
@@ -231,7 +189,8 @@ private fun PvpResultItem(
     i: Int,
     item: PvpResultData,
     floatWindow: Boolean,
-    viewModel: PvpViewModel?
+    delete: (String, String) -> Unit,
+    insert: (PvpFavoriteData) -> Unit,
 ) {
     val placeholder = item.id == ""
     val scope = rememberCoroutineScope()
@@ -251,22 +210,22 @@ private fun PvpResultItem(
         ) {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
-                modifier = Modifier.commonPlaceholder(visible = placeholder)
+                modifier = Modifier.placeholder(visible = placeholder)
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
             if (!placeholder) {
                 MainIcon(
-                    data = if (liked) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                    data = if (liked) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
                     size = Dimen.fabIconSize
                 ) {
                     scope.launch {
                         if (liked) {
                             //已收藏，取消收藏
-                            viewModel?.delete(item.atk, item.def)
+                            delete(item.atk, item.def)
                         } else {
                             //未收藏，添加收藏
-                            viewModel?.insert(
+                            insert(
                                 PvpFavoriteData(
                                     item.id,
                                     item.atk,
@@ -282,43 +241,42 @@ private fun PvpResultItem(
         }
 
         MainCard(
-            modifier = Modifier.commonPlaceholder(visible = placeholder)
+            modifier = Modifier.placeholder(visible = placeholder)
         ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }
-            Column {
-                //点赞信息
-                Row(
-                    modifier = Modifier.padding(horizontal = mediumPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainContentText(
-                        text = "${upRatio}%",
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    MainContentText(
-                        text = item.up.toString(),
-                        color = colorGreen,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(0.3f)
-                    )
-                    MainContentText(
-                        text = item.down.toString(),
-                        color = colorRed,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
-                    )
-                }
-                //队伍角色图标
-                //进攻
-                PvpUnitIconLine(
-                    item.getIdList(0),
-                    floatWindow
-                ) { }
+            //点赞信息
+            Row(
+                modifier = Modifier.padding(horizontal = mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MainContentText(
+                    text = "${upRatio}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(0.3f)
+                )
+                MainContentText(
+                    text = item.up.toString(),
+                    color = colorGreen,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(0.3f)
+                )
+                MainContentText(
+                    text = item.down.toString(),
+                    color = colorRed,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
+                )
             }
+            //队伍角色图标
+            //进攻
+            PvpUnitIconLine(
+                modifier = Modifier.padding(bottom = mediumPadding),
+                ids = item.getIdList(0),
+                floatWindow = floatWindow
+            ) { }
         }
 
     }
@@ -327,7 +285,7 @@ private fun PvpResultItem(
 
 @CombinedPreviews
 @Composable
-private fun PvpResultItemPreview(){
+private fun PvpResultItemPreview() {
     val data = PvpResultData(
         "id",
         "1-2-3-4-5",
@@ -338,18 +296,20 @@ private fun PvpResultItemPreview(){
     )
     PreviewLayout {
         PvpResultItem(
-            false,
-            0,
-            data,
-            false,
-            null
+            liked = false,
+            i = 0,
+            item = data,
+            floatWindow = false,
+            delete = { _, _ -> },
+            insert = {}
         )
         PvpResultItem(
-            true,
-            0,
-            data,
-            true,
-            null
+            liked = true,
+            i = 0,
+            item = data,
+            floatWindow = true,
+            delete = { _, _ -> },
+            insert = {}
         )
     }
 }

@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.data.model
 
+import androidx.compose.ui.graphics.Color
+
 /**
  * chip
  */
 data class ChipData(
-    val index: Int,
     val text: String,
+    val color: Color? = null,
 )

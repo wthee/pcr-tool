@@ -5,6 +5,9 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
+/**
+ * 敌人参数
+ */
 data class EnemyParameterPro(
     @PrimaryKey
     @ColumnInfo(name = "enemy_id") var enemyId: Int = 0,

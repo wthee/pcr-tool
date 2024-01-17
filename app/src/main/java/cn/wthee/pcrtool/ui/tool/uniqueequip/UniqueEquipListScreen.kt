@@ -38,6 +38,7 @@ import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -131,8 +132,8 @@ fun UniqueEquipListScreen(
                     MainTabRow(
                         pagerState = pagerState,
                         tabs = arrayListOf(
-                            getIndex(1) + uniqueEquips1!!.size,
-                            getIndex(2) + uniqueEquips2!!.size
+                            TabData(tab = getIndex(1), count = uniqueEquips1!!.size),
+                            TabData(tab = getIndex(2), count = uniqueEquips2!!.size)
                         ),
                         modifier = Modifier
                             .fillMaxWidth(RATIO_GOLDEN)
@@ -203,7 +204,8 @@ private fun UniqueEquipItem(
         )
     ) {
         MainIcon(
-            data = ImageRequestHelper.getInstance().getEquipPic(equip.equipId)
+            data = ImageRequestHelper.getInstance()
+                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId)
         ) {
             toUniqueEquipDetail(equip.unitId)
         }
@@ -233,7 +235,7 @@ private fun UniqueEquipItem(
                     selectable = true
                 )
 
-                UnitIconAndTag(basicInfo)
+                UnitIconAndTag(basicInfo = basicInfo, showUniqueEquipType = false)
 
             }
         }
@@ -247,7 +249,8 @@ private fun UniqueEquipItem(
  */
 @Composable
 fun UnitIconAndTag(
-    basicInfo: CharacterInfo?
+    basicInfo: CharacterInfo?,
+    showUniqueEquipType: Boolean
 ) {
     basicInfo?.let {
         Row(
@@ -270,7 +273,8 @@ fun UnitIconAndTag(
 
                 CharacterTagRow(
                     modifier = Modifier.padding(top = Dimen.smallPadding),
-                    basicInfo = basicInfo
+                    basicInfo = basicInfo,
+                    showUniqueEquipType = showUniqueEquipType
                 )
             }
         }

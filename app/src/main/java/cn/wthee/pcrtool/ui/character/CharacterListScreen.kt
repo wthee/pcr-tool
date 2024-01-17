@@ -32,19 +32,22 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableFab
+import cn.wthee.pcrtool.ui.components.IconListContent
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -56,26 +59,24 @@ import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.TrapezoidShape
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorCyan
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGreen
-import cn.wthee.pcrtool.ui.theme.colorPurple
-import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.fixedStr
 import cn.wthee.pcrtool.utils.formatTime
-import com.google.gson.Gson
+import cn.wthee.pcrtool.utils.toDate
+import coil3.BitmapImage
+import coil3.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * 角色列表
@@ -104,6 +105,39 @@ fun CharacterListScreen(
                 resetFilter = characterListViewModel::resetFilter,
                 toFilterCharacter = toFilterCharacter
             )
+        },
+        secondLineFab = {
+            //已收藏
+            if (uiState.favoriteIdList.isNotEmpty()) {
+                ExpandableFab(
+                    expanded = uiState.openDialog,
+                    onClick = {
+                        characterListViewModel.changeDialog(true)
+                    },
+                    icon = MainIconType.FAVORITE_FILL,
+                    text = uiState.favoriteIdList.size.toString(),
+                    isSecondLineFab = true
+                ) {
+                    IconListContent(
+                        idList = uiState.favoriteIdList,
+                        title = stringResource(id = R.string.favorite),
+                        iconResourceType = IconResourceType.CHARACTER,
+                        onClickItem = toCharacterDetail
+                    )
+                }
+            }
+        },
+        enableClickClose = uiState.openDialog,
+        onCloseClick = {
+            characterListViewModel.changeDialog(false)
+        },
+        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        onMainFabClick = {
+            if (uiState.openDialog) {
+                characterListViewModel.changeDialog(false)
+            } else {
+                navigateUp()
+            }
         }
     ) {
         StateBox(
@@ -112,8 +146,8 @@ fun CharacterListScreen(
             CharacterListContent(
                 characterList = uiState.characterList,
                 scrollState = scrollState,
-                starIdList = uiState.starIdList,
-                toDetail = toCharacterDetail
+                favoriteIdList = uiState.favoriteIdList,
+                toCharacterDetail = toCharacterDetail
             )
         }
     }
@@ -123,8 +157,8 @@ fun CharacterListScreen(
 private fun CharacterListContent(
     characterList: List<CharacterInfo>?,
     scrollState: LazyGridState,
-    starIdList: ArrayList<Int>,
-    toDetail: (Int) -> Unit
+    favoriteIdList: List<Int>,
+    toCharacterDetail: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(getItemWidth()),
@@ -140,10 +174,10 @@ private fun CharacterListContent(
                 CharacterItemContent(
                     unitId = it.id,
                     character = it,
-                    loved = starIdList.contains(it.id),
+                    favorite = favoriteIdList.contains(it.id),
                     modifier = Modifier.padding(Dimen.mediumPadding),
                 ) {
-                    toDetail(it.id)
+                    toCharacterDetail(it.id)
                 }
             }
         }
@@ -187,7 +221,7 @@ private fun CharacterListFabContent(
         text = "$count"
     ) {
         filter?.let {
-            toFilterCharacter(Gson().toJson(filter))
+            toFilterCharacter(Json.encodeToString(filter))
         }
     }
 
@@ -196,12 +230,13 @@ private fun CharacterListFabContent(
 /**
  * 角色列表项
  */
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CharacterItemContent(
+    modifier: Modifier = Modifier,
     unitId: Int,
     character: CharacterInfo?,
-    loved: Boolean,
-    modifier: Modifier = Modifier,
+    favorite: Boolean,
     onClick: () -> Unit
 ) {
 
@@ -228,7 +263,7 @@ fun CharacterItemContent(
 
 
     MainCard(
-        modifier = modifier.commonPlaceholder(character?.id == -1),
+        modifier = modifier.placeholder(character?.id == -1),
         onClick = onClick
     ) {
         Box(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -241,7 +276,8 @@ fun CharacterItemContent(
             ) { result ->
                 imageLoadSuccess = true
                 //取色
-                Palette.from(result.drawable.toBitmap()).generate { palette ->
+                val bitmap = ((result.image) as BitmapImage).bitmap
+                Palette.from(bitmap).generate { palette ->
                     palette?.let {
                         cardMaskColor = Color(it.getDominantColor(Color.Transparent.toArgb()))
                     }
@@ -327,16 +363,6 @@ fun CharacterItemContent(
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
-                            //生日
-                            Subtitle2(
-                                text = stringResource(
-                                    id = R.string.date_m_d,
-                                    character.birthMonth.fixedStr,
-                                    character.birthDay.fixedStr
-                                ),
-                                fontWeight = FontWeight.Bold,
-                                color = textColor
-                            )
                             //体重
                             Subtitle2(
                                 text = "${character.weight.fixedStr} KG",
@@ -349,7 +375,16 @@ fun CharacterItemContent(
                                 fontWeight = FontWeight.Bold,
                                 color = textColor
                             )
-
+                            //生日
+                            Subtitle2(
+                                text = stringResource(
+                                    id = R.string.date_m_d,
+                                    character.birthMonth.fixedStr,
+                                    character.birthDay.fixedStr
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                color = textColor
+                            )
                         }
 
                         //获取方式等
@@ -367,7 +402,7 @@ fun CharacterItemContent(
 
                         //最近登场日期
                         CaptionText(
-                            text = character.startTime.formatTime.substring(0, 10),
+                            text = character.startTime.formatTime.toDate,
                             color = textColor,
                             modifier = Modifier.padding(
                                 end = Dimen.mediumPadding,
@@ -379,9 +414,9 @@ fun CharacterItemContent(
             }
 
             //收藏标识
-            FadeAnimation(visible = loved && (imageLoadSuccess || imageLoadError)) {
+            FadeAnimation(visible = favorite && (imageLoadSuccess || imageLoadError)) {
                 MainIcon(
-                    data = MainIconType.LOVE_FILL,
+                    data = MainIconType.FAVORITE_FILL,
                     size = Dimen.textIconSize,
                     modifier = Modifier.padding(Dimen.mediumPadding)
                 )
@@ -389,72 +424,6 @@ fun CharacterItemContent(
         }
     }
 }
-
-
-/**
- * 获取限定类型
- */
-@Composable
-fun getLimitTypeText(limitType: Int) = when (limitType) {
-    2 -> {
-        stringResource(id = R.string.type_limit)
-    }
-
-    3 -> {
-        stringResource(id = R.string.type_event_limit)
-    }
-
-    4 -> {
-        stringResource(id = R.string.type_extra_character)
-
-    }
-
-    else -> {
-        stringResource(id = R.string.type_normal)
-    }
-}
-
-/**
- * 获取限定类型颜色
- */
-fun getLimitTypeColor(limitType: Int) = when (limitType) {
-    2 -> {
-        colorRed
-    }
-
-    3 -> {
-        colorGreen
-    }
-
-    4 -> {
-        colorCyan
-    }
-
-    else -> {
-        colorGold
-    }
-}
-
-
-/**
- * 攻击类型
- */
-@Composable
-fun getAtkText(atkType: Int) = when (atkType) {
-    1 -> stringResource(id = R.string.physical)
-    2 -> stringResource(id = R.string.magic)
-    else -> stringResource(id = R.string.unknown)
-}
-
-/**
- * 攻击颜色
- */
-fun getAtkColor(atkType: Int) = when (atkType) {
-    1 -> colorGold
-    2 -> colorPurple
-    else -> colorCopper
-}
-
 
 /**
  * 角色名称
@@ -467,22 +436,24 @@ private fun CharacterName(
     isBorder: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val mModifier = if (isBorder) {
-        modifier
-            .padding(
-                start = Dimen.mediumPadding + Dimen.textElevation,
-                end = Dimen.mediumPadding,
-                top = Dimen.mediumPadding + Dimen.textElevation,
-                bottom = Dimen.mediumPadding
-            )
-
-    } else {
-        modifier
-            .padding(Dimen.mediumPadding)
-    }
 
     Column(
-        modifier = mModifier
+        modifier = modifier
+            .then(
+                if (isBorder) {
+                    Modifier
+                        .padding(
+                            start = Dimen.mediumPadding + Dimen.textElevation,
+                            end = Dimen.mediumPadding,
+                            top = Dimen.mediumPadding + Dimen.textElevation,
+                            bottom = Dimen.mediumPadding
+                        )
+
+                } else {
+                    Modifier
+                        .padding(Dimen.mediumPadding)
+                }
+            )
             .fillMaxWidth(RATIO_GOLDEN)
     ) {
         Subtitle1(
@@ -503,16 +474,18 @@ private fun CharacterName(
 
 @CombinedPreviews
 @Composable
-private fun CharacterItemPreview() {
+fun CharacterItemPreview() {
     PreviewLayout {
         CharacterItemContent(
             unitId = 100101,
             character = CharacterInfo(
                 id = 100101,
                 position = 100,
-                name = stringResource(id = R.string.debug_name)
+                name = stringResource(id = R.string.debug_name),
+                startTime = "2022-02-03 22:22:22",
+                uniqueEquipType = 2
             ),
-            loved = true,
+            favorite = true,
         ) {}
     }
 }

@@ -55,6 +55,7 @@
     <string name="basic">基本</string>
     <string name="story">剧情</string>
     <string name="no_story_info">暂无剧情信息</string>
+    <string name="no_comic_info">暂无漫画信息</string>
     <string name="character_birthday">角色生日：%s</string>
     <string name="value_100_m">%s亿</string>
     <string name="value_10_k">%d万</string>
@@ -73,7 +74,7 @@
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
     <string name="dynamic_color">动态色彩</string>
-    <string name="content_api_request_error">请切换网络后重试~\n</string>
+    <string name="content_api_request_error">请切换网络后重试~</string>
     <string name="use_ip">网络调整</string>
     <string name="use_ip_tip_on">已调整访问地址。设置变更后将自动关闭应用</string>
     <string name="use_ip_tip_off">若一直提示网络请求异常，可尝试开启。设置变更后将自动关闭应用</string>
@@ -99,7 +100,9 @@
     <string name="leader_source_url">https://gamewith.jp/pricone-re/article/show/93068</string>
     <string name="title_spine">模型预览</string>
     <string name="spine_tip">可预览游戏内角色、BOSS模型</string>
-
+    <string name="random_drop_source">蘭德索爾圖書館</string>
+    <string name="random_drop_tip">额外掉落数据来源</string>
+    <string name="random_drop_source_url">https://pcredivewiki.tw/Other/MapExtraDrop</string>
 
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
@@ -117,9 +120,9 @@
     <string name="magic">魔法</string>
     <string name="unknown">\?</string>
     <string name="all">全部</string>
-    <string name="title_love">收藏</string>
+    <string name="title_favorite">收藏</string>
     <string name="title_history">历史</string>
-    <string name="loved">已收藏</string>
+    <string name="favorite">已收藏</string>
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
@@ -137,19 +140,20 @@
     <string name="type_event_limit">活动</string>
     <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
+    <string name="id">编号</string>
 
     <!--装备相关-->
     <string name="equip_require_level">需求等级：%s</string>
     <string name="equip_name">装备名</string>
-    <string name="love_equip">收藏装备</string>
-    <string name="love_equip_material">收藏素材</string>
+    <string name="favorite_equip">收藏装备</string>
+    <string name="favorite_equip_material">收藏素材</string>
     <string name="tool_equip">装备</string>
     <string name="equip_material">合成素材</string>
     <string name="equip_max_select_count">最多可选 %d 个装备</string>
     <string name="equip_search">开始查询</string>
     <string name="equip_search_mode">掉落查询</string>
     <string name="tip_equip_search">请先选择装备</string>
-    <string name="picked_equip">已选择：</string>
+    <string name="picked_equip">已选择</string>
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
@@ -176,9 +180,9 @@
     <string name="colosseum">斗技场</string>
     <string name="result">数值变化</string>
     <string name="character_name">角色名</string>
-    <string name="twitter">查看原文</string>
     <string name="tweet">日服情报</string>
     <string name="comic">漫画</string>
+    <string name="comic_4">4格漫画</string>
     <string name="comic_toc">目录</string>
     <string name="comic_toc_index">第%d话</string>
     <string name="comic_input_hint">输入跳转，如：382</string>
@@ -194,6 +198,7 @@
     <string name="random_drop_area_1">（前半）</string>
     <string name="random_drop_area_2">（后半）</string>
     <string name="qq_group">反馈交流群</string>
+    <string name="to_feedback">反馈</string>
     <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
     <string name="clean_image_cache">清除缓存</string>
@@ -201,9 +206,10 @@
     <string name="cache_size">占用：%s\n数量：%d</string>
     <string name="confirm_clean_cache">清除缓存后，下次打开应用将通过网络重新加载图片</string>
     <string name="github">GitHub</string>
-    <string name="coolapk">酷安</string>
-    <string name="coolapk_url">https://www.coolapk.com/apk/cn.wthee.pcrtool</string>
-    <string name="tip_coolapk">应用上架地址，期待你的关注与评价</string>
+    <string name="afd">爱发电</string>
+    <string name="sponsor">支持</string>
+    <string name="afd_url">https://afdian.net/a/wthee</string>
+    <string name="tip_afd">期待你的关注与支持</string>
     <string name="please">✪ ω ✪</string>
     <string name="github_project_url">https://github.com/wthee/pcr-tool</string>
     <string name="tip_github">项目开源代码</string>
@@ -233,7 +239,8 @@
     <string name="tool_unique_equip">专用装备</string>
     <string name="search_unique_equip">装备名/角色名</string>
     <string name="character_detail">角色详情</string>
-    <string name="filter_by_start_date">选择日期</string>
+    <string name="tool_load_comic">过场漫画</string>
+    <string name="description">描述</string>
 
     <!--竞技场查询-->
     <string name="pvp_search">查询</string>
@@ -244,6 +251,7 @@
     <string name="team_win">进攻</string>
     <string name="team_lose">防守</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
+    <string name="tip_selected_5">已选择 5 名角色~</string>
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
     <string name="pvp_no_history">暂无查询历史</string>
@@ -254,7 +262,6 @@
     <!--操作-->
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
-    <string name="reset">重置</string>
     <string name="to_add_tool">添加功能</string>
     <string name="edit">管理功能</string>
     <string name="done">完成</string>
@@ -482,11 +489,11 @@
     <string name="skill_status_1601">隐匿状态</string>
     <string name="skill_status_1700">魔法防御减少状态</string>
     <string name="skill_status_721_6107">龙之眼状态</string>
-    <string name="skill_status_1300">魔法攻击</string>
     <string name="skill_status_1800">多目标状态</string>
     <string name="skill_status_1900">护盾展开</string>
-    <string name="skill_status_2001">魔法攻击</string>
     <string name="skill_status_3137">界雷</string>
+    <string name="skill_status_physical_atk">物理攻击</string>
+    <string name="skill_status_magic_atk">魔法攻击</string>
 
     <!--技能目标类型相关-->
     <string name="skill_target_none">目标</string>
@@ -534,6 +541,7 @@
 
     <!--技能描述相关-->
     <string name="skill_action">动作</string>
+    <string name="skill_action_d">动作(%d)</string>
     <string name="skill_effect_time">，持续 %s 秒</string>
     <string name="skill_all">所有</string>
     <string name="skill_level_text">技能等级</string>
@@ -566,7 +574,7 @@
     <string name="skill_adaptive_lower_defense">(适应物理/魔法防御中较低的防御)</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
-    <string name="skill_ignore_def">；无视目标%s防御力 </string>
+    <string name="skill_ignore_def">；无视目标{7}%s防御力 </string>
     <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s%s%s</string>
     <string name="skill_forward">向前</string>
     <string name="skill_backward">向后</string>
@@ -633,6 +641,7 @@
     <string name="skill_action_if_alone_not">%s多于一名时，使用动作(%d)</string>
     <string name="skill_action_if_hp_below">%s的HP在 [%d%%] 以下时，使用动作(%d)</string>
     <string name="skill_action_if_hp_above">%s的HP在 [%d%%] 以上时，使用动作(%d)</string>
+    <string name="skill_action_if_unit_atk_type">%s是 [%s] 对象时，使用动作(%d)</string>
     <string name="skill_action_random_1">随机：[%d%%] 的概率使用动作(%d)，否则使用动作(%d)</string>
     <string name="skill_action_random_2">随机：[%d%%] 的概率使用动作(%d)</string>
     <string name="skill_action_type_desc_24">复活%s，并回复其 [%d%%]HP</string>
@@ -683,7 +692,8 @@
     <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
-    <string name="skill_action_type_desc_42">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
+    <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
+    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s</string>
     <string name="skill_action_type_desc_44">战斗开始 [%d] 秒后入场</string>
     <string name="skill_action_type_desc_45">技能计数加 [1]%s</string>
     <string name="skill_action_type_desc_46_1">对%s造成最大HP %s 伤害</string>
@@ -800,7 +810,6 @@
 
     <!--排行评级查询-->
     <string name="leader_need_sync">未关联</string>
-    <string name="leader_new_character">新登场</string>
     <string name="only_jp">日服评价，仅供参考</string>
     <string name="tool_leader_tier">角色评级</string>
     <string name="leader_tier_0">综合评级</string>
@@ -809,7 +818,7 @@
     <string name="leader_tier_d">T%s</string>
 
     <!--测试用-->
-    <string name="debug_short_text">测试文本测试文本</string>
+    <string name="debug_short_text">测试文本测试文本测试文本</string>
     <string name="debug_long_text">测试文本测试文本测试文本测试文本，测试文本测试文本测试文本，测试文本测试</string>
     <string name="debug_name">测试名称（类型）</string>
 
@@ -817,13 +826,11 @@
 
 
     <!-- 应用更新 -->
-    <string name="download_apk_error">无法获取安装包，请确保网络正常或尝试其他方式下载更新</string>
+    <string name="download_apk_error">获取安装包失败，请重试~</string>
     <string name="install_apk_error">安装失败</string>
-    <string name="title_download_apk">正在下载最新安装包</string>
     <string name="download_apk">立即更新</string>
     <string name="download_apk_from_github">从Github更新</string>
     <string name="apk_url">https://github.com/wthee/pcr-tool/releases/download/v%s/app-official-release.apk</string>
-    <string name="update_apk">应用更新</string>
     <string name="request_install">正在请求应用安装权限，开启权限后请重新更新~</string>
 
     <!-- 视频播放 -->
@@ -831,9 +838,12 @@
     <string name="play_error">播放出错或资源不存在</string>
     <string name="video_resource_error">资源不存在</string>
     <string name="download_video">下载视频</string>
-    <string name="downloaded_video">已保存</string>
+    <string name="saved">已保存</string>
 
     <string name="title_download_file">正在下载</string>
     <string name="download_file_notice">文件下载通知</string>
+    <string name="preview_spine_type">预览类型</string>
+    <string name="preview_spine_battle">战斗</string>
+    <string name="preview_spine_room">小屋</string>
 
 </resources>

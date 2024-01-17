@@ -13,19 +13,21 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.utils.VibrateUtil
 
 /**
  * ChipGroup
  *
- * @param items chip 数据列表
+ * @param items 文本列表
  * @param selectIndex 选择位置状态
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -37,7 +39,14 @@ fun ChipGroup(
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(item = chipData, selectIndex, index)
+            MainChip(
+                index = index,
+                selected = selectIndex.value == index,
+                selectIndex = selectIndex,
+                text = chipData.text,
+                selectedColor = chipData.color,
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+            )
         }
     }
 }
@@ -78,39 +87,44 @@ fun SuggestionChipGroup(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
+fun MainChip(
+    modifier: Modifier = Modifier,
+    index: Int,
+    selected: Boolean,
+    selectIndex: MutableState<Int>,
+    text: String,
+    selectedColor: Color?
+) {
     val context = LocalContext.current
-    val isSelected = selectIndex.value == index
-    //字体颜色
-    val textColor = if (isSelected) {
-        //选中字体颜色
-        colorWhite
-    } else {
-        //未选中字体颜色
-        MaterialTheme.colorScheme.onSurface
-    }
-
 
     ElevatedFilterChip(
-        selected = isSelected,
+        selected = selected,
         onClick = {
             VibrateUtil(context).single()
             selectIndex.value = index
         },
-        modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+        modifier = modifier,
         colors = FilterChipDefaults.elevatedFilterChipColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            selectedContainerColor = MaterialTheme.colorScheme.primary
+            selectedContainerColor = selectedColor ?: MaterialTheme.colorScheme.primary
         ),
         label = {
             CaptionText(
-                text = item.text,
-                color = textColor
+                text = text,
+                color = if (selected) {
+                    //选中字体颜色
+                    colorWhite
+                } else {
+                    //未选中字体颜色
+                    selectedColor ?: MaterialTheme.colorScheme.onSurface
+                }
             )
-        }
+        },
+//        border = FilterChipDefaults.filterChipBorder(
+//            borderColor = selectedColor ?: MaterialTheme.colorScheme.onSurface
+//        )
     )
 }
-
 
 @CombinedPreviews
 @Composable
@@ -119,8 +133,9 @@ private fun ChipGroupPreview() {
     val selectIndex = remember {
         mutableIntStateOf(3)
     }
+    mockData.add(ChipData("chip"))
     for (i in 0..10) {
-        mockData.add(ChipData(i, "chip $i"))
+        mockData.add(ChipData("chip $i", colorPurple))
     }
     PreviewLayout {
         ChipGroup(items = mockData, selectIndex = selectIndex)

@@ -29,18 +29,18 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
-import cn.wthee.pcrtool.ui.components.CommonResponseBox
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
-import cn.wthee.pcrtool.ui.components.VerticalGrid
-import cn.wthee.pcrtool.ui.components.commonPlaceholder
+import cn.wthee.pcrtool.ui.components.TabData
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -48,6 +48,7 @@ import cn.wthee.pcrtool.ui.theme.colorCyan
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
+import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaContent
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.intArrayList
@@ -70,7 +71,8 @@ fun QuestListScreen(
                 questList = it,
                 equipId = 0,
                 searchEquipIdList = searchEquipIds.intArrayList,
-                randomDropResponseData = uiState.randomDropResponseData
+                randomDropList = uiState.randomDropList,
+                loadingState = uiState.loadingState,
             )
         }
     }
@@ -86,21 +88,19 @@ fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
     searchEquipIdList: List<Int> = arrayListOf(),
-    randomDropResponseData: ResponseData<List<RandomEquipDropArea>>?
+    randomDropList: List<RandomEquipDropArea>?,
+    loadingState: LoadingState
 ) {
     var pagerCount = 0
     //tab文本
-    val tabs = arrayListOf<String>()
-    //tab颜色
-    val colorList = arrayListOf<Color>()
+    val tabs = arrayListOf<TabData>()
 
     //普通
     val normal = stringResource(id = R.string.normal)
     val normalList = questList.filterAndSortSearch(type = 1, searchEquipIdList = searchEquipIdList)
     if (normalList.isNotEmpty()) {
         pagerCount++
-        tabs.add(normal)
-        colorList.add(colorCyan)
+        tabs.add(TabData(tab = normal, color = colorCyan))
     }
     val normalListScrollState = rememberLazyListState()
 
@@ -109,8 +109,7 @@ fun QuestPager(
     val hardList = questList.filterAndSortSearch(type = 2, searchEquipIdList = searchEquipIdList)
     if (hardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(hard)
-        colorList.add(colorRed)
+        tabs.add(TabData(tab = hard, color = colorRed))
     }
     val hardListScrollState = rememberLazyListState()
 
@@ -120,15 +119,14 @@ fun QuestPager(
         questList.filterAndSortSearch(type = 3, searchEquipIdList = searchEquipIdList)
     if (veryHardList.isNotEmpty()) {
         pagerCount++
-        tabs.add(veryHard)
-        colorList.add(colorPurple)
+        tabs.add(TabData(tab = veryHard, color = colorPurple))
     }
     val veryHardListScrollState = rememberLazyListState()
 
     //随机掉落
     val randomDrop = stringResource(id = R.string.random_area)
     val randomList =
-        randomDropResponseData?.data?.filter {
+        randomDropList?.filter {
             if (searchEquipIdList.isNotEmpty()) {
                 getRandomQuestMatchCount(it, searchEquipIdList) > 0
             } else {
@@ -139,8 +137,7 @@ fun QuestPager(
         }
     if (randomList?.isNotEmpty() == true) {
         pagerCount++
-        tabs.add(randomDrop)
-        colorList.add(colorGreen)
+        tabs.add(TabData(tab = randomDrop, color = colorGreen))
     }
     val randomListScrollState = rememberLazyListState()
 
@@ -175,7 +172,8 @@ fun QuestPager(
                                 .weight(1f)
                         ) {
                             MainIcon(
-                                data = ImageRequestHelper.getInstance().getEquipPic(it),
+                                data = ImageRequestHelper.getInstance()
+                                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it),
                             )
                         }
                     }
@@ -187,21 +185,21 @@ fun QuestPager(
                 MainTabRow(
                     pagerState = pagerState,
                     tabs = tabs,
-                    colorList = colorList,
                     modifier = Modifier
                         .padding(horizontal = Dimen.mediumPadding)
                         .fillMaxWidth(tabs.size * 0.25f)
                 ) {
-                    when (tabs[it]) {
+                    when (tabs[it].tab) {
                         normal -> normalListScrollState.scrollToItem(0)
                         hard -> hardListScrollState.scrollToItem(0)
                         veryHard -> veryHardListScrollState.scrollToItem(0)
                         randomDrop -> randomListScrollState.scrollToItem(0)
                     }
                 }
-                if (randomDropResponseData == null) {
+                if (loadingState == LoadingState.Loading) {
                     CircularProgressCompose(
-                        size = Dimen.smallIconSize
+                        size = Dimen.smallIconSize,
+                        strokeWidth = Dimen.smallStrokeWidth
                     )
                 }
             }
@@ -212,9 +210,9 @@ fun QuestPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { pagerIndex ->
-                if (tabs[pagerIndex] == randomDrop) {
+                if (tabs[pagerIndex].tab == randomDrop) {
                     //随机掉落
-                    CommonResponseBox(responseData = randomDropResponseData) {
+                    if (loadingState == LoadingState.Success) {
                         RandomDropAreaContent(
                             selectId = equipId,
                             areaList = randomList!!,
@@ -226,7 +224,7 @@ fun QuestPager(
                     //主线掉落
                     val list: List<QuestDetail>
                     val scrollState: LazyListState
-                    when (tabs[pagerIndex]) {
+                    when (tabs[pagerIndex].tab) {
                         normal -> {
                             list = normalList
                             scrollState = normalListScrollState
@@ -396,21 +394,24 @@ fun AreaItem(
         backgroundColor = color,
         modifier = Modifier
             .padding(Dimen.mediumPadding)
-            .commonPlaceholder(placeholder)
+            .placeholder(placeholder)
     )
 
-    VerticalGrid(
+    VerticalStaggeredGrid(
         modifier = Modifier
             .padding(
-                start = Dimen.commonItemPadding,
-                end = Dimen.commonItemPadding
+                horizontal = Dimen.commonItemPadding
             )
-            .commonPlaceholder(placeholder),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding
+            .placeholder(placeholder),
+        itemWidth = Dimen.iconItemWidth,
+        verticalContentPadding = Dimen.commonItemPadding
     ) {
         odds.forEach {
-            EquipWithOddCompose(selectedId, it, searchEquipIdList)
+            EquipWithOddCompose(
+                selectedId = selectedId,
+                oddData = it,
+                searchEquipIdList = searchEquipIdList
+            )
         }
     }
 }
@@ -427,9 +428,7 @@ private fun EquipWithOddCompose(
 ) {
 
     Column(
-        modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val selected =
@@ -437,7 +436,7 @@ private fun EquipWithOddCompose(
         Box(contentAlignment = Alignment.Center) {
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getEquipPic(oddData.equipId)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, oddData.equipId)
             )
             if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd == 0) {
                 SelectText(
@@ -460,23 +459,40 @@ private fun EquipWithOddCompose(
     }
 }
 
-
 @CombinedPreviews
 @Composable
-private fun AreaItemPreview() {
+fun QuestPagerPreview() {
     PreviewLayout {
-        AreaItem(
-            1,
-            arrayListOf(
-                EquipmentIdWithOdds(1, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
-                EquipmentIdWithOdds(0, 20),
+        QuestPager(
+            equipId = 1,
+            questList = arrayListOf(
+                QuestDetail(
+                    questId = 1,
+                    questType = 1,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                ),
+                QuestDetail(
+                    questId = 1,
+                    questType = 2,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                ),
+                QuestDetail(
+                    questId = 1,
+                    questType = 3,
+                    rewards = "1-2-3",
+                    odds = "20-30-40"
+                )
             ),
-            "1-1"
+            randomDropList = arrayListOf(
+                RandomEquipDropArea(
+                    area = 1,
+                    equipIds = "1-2-3",
+                    type = 4
+                )
+            ),
+            loadingState = LoadingState.Success
         )
     }
 }

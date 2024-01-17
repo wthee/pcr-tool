@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,14 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -50,23 +47,26 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.SettingCommonItem
+import cn.wthee.pcrtool.ui.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.ExpandableFab
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.home.module.CharacterSection
-import cn.wthee.pcrtool.ui.home.module.EquipSection
-import cn.wthee.pcrtool.ui.home.module.EventComingSoonSection
-import cn.wthee.pcrtool.ui.home.module.EventInProgressSection
-import cn.wthee.pcrtool.ui.home.module.NewsSection
-import cn.wthee.pcrtool.ui.home.module.ToolSection
-import cn.wthee.pcrtool.ui.home.module.UniqueEquipSection
+import cn.wthee.pcrtool.ui.home.character.CharacterSection
+import cn.wthee.pcrtool.ui.home.equip.EquipSection
+import cn.wthee.pcrtool.ui.home.event.EventComingSoonSection
+import cn.wthee.pcrtool.ui.home.event.EventInProgressSection
+import cn.wthee.pcrtool.ui.home.news.NewsSection
+import cn.wthee.pcrtool.ui.home.tool.ToolSection
+import cn.wthee.pcrtool.ui.home.uniqueequip.UniqueEquipSection
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -75,8 +75,6 @@ import cn.wthee.pcrtool.ui.theme.ScaleBottomEndAnimation
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.ui.tool.SettingCommonItem
-import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.utils.joinQQGroup
@@ -94,26 +92,9 @@ fun Overview(
 ) {
     val uiState by overviewScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    //初始化加载六星数据
-    LaunchedEffect(uiState.firstLoad) {
-        if (uiState.firstLoad) {
-            //初始化六星id
-            overviewScreenViewModel.getR6Ids()
-        }
-    }
-
     //从桌面重新打开时，更新校验
-    AppResumeEffect(uiState.firstLoad) {
-        //数据库校验
-        MainScope().launch {
-            DatabaseUpdater.checkDBVersion(
-                fixDb = false,
-                updateDbDownloadState = overviewScreenViewModel::updateDbDownloadState,
-                updateDbVersionText = overviewScreenViewModel::updateDbVersionText
-            )
-        }
-        //应用更新校验
-        overviewScreenViewModel.checkUpdate()
+    AppResumeEffect {
+        overviewScreenViewModel.initCheck()
     }
 
 
@@ -152,12 +133,12 @@ fun Overview(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             TopBarCompose(
                 isEditMode = uiState.isEditMode,
-                updateApp = uiState.updateApp,
+                appUpdateData = uiState.appUpdateData,
                 apkDownloadState = uiState.apkDownloadState,
                 isExpanded = uiState.isAppNoticeExpanded,
                 updateApkDownloadState = overviewScreenViewModel::updateApkDownloadState,
                 changeEditMode = overviewScreenViewModel::changeEditMode,
-                updateAppNoticeLayoutState = overviewScreenViewModel::updateAppNoticeLayoutState,
+                updateExpanded = overviewScreenViewModel::updateExpanded,
             )
             if (!uiState.isEditMode) {
                 uiState.orderData.intArrayList.forEach {
@@ -193,7 +174,7 @@ fun Overview(
                         )
 
                         OverviewType.IN_PROGRESS_EVENT -> EventInProgressSection(
-                            eventLayoutState = uiState.eventLayoutState,
+                            eventExpandState = uiState.eventExpandState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
                             updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
@@ -202,7 +183,7 @@ fun Overview(
                         )
 
                         OverviewType.COMING_SOON_EVENT -> EventComingSoonSection(
-                            eventLayoutState = uiState.eventLayoutState,
+                            eventExpandState = uiState.eventExpandState,
                             updateOrderData = overviewScreenViewModel::updateOrderData,
                             updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                             actions = actions,
@@ -274,7 +255,7 @@ fun Overview(
 
                 //进行中
                 EventInProgressSection(
-                    eventLayoutState = uiState.eventLayoutState,
+                    eventExpandState = uiState.eventExpandState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
                     updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,
@@ -284,7 +265,7 @@ fun Overview(
 
                 //活动预告
                 EventComingSoonSection(
-                    eventLayoutState = uiState.eventLayoutState,
+                    eventExpandState = uiState.eventExpandState,
                     updateOrderData = overviewScreenViewModel::updateOrderData,
                     updateEventLayoutState = overviewScreenViewModel::updateEventLayoutState,
                     actions = actions,
@@ -316,14 +297,6 @@ private fun ChangeDbCompose(
     updateDbVersionText: (DatabaseVersion?) -> Unit,
     onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
-    //展开边距修正
-    val mFabModifier = if (showChangeDb) {
-        Modifier.padding(start = Dimen.textFabMargin, end = Dimen.textFabMargin)
-    } else {
-        Modifier
-    }
 
     //远程数据文件异常
     val remoteDbSizeError = downloadState == -3
@@ -350,40 +323,25 @@ private fun ChangeDbCompose(
         }
 
         //数据切换
-        SmallFloatingActionButton(
-            modifier = mFabModifier
-                .animateContentSize(defaultSpring())
-                .padding(
-                    start = Dimen.mediumPadding,
-                    end = Dimen.fabMarginEnd,
-                    top = Dimen.fabMargin,
-                    bottom = Dimen.fabMargin
-                ),
-            shape = if (showChangeDb) MaterialTheme.shapes.medium else CircleShape,
+        ExpandableFab(
+            paddingValues = PaddingValues(
+                start = Dimen.mediumPadding,
+                end = Dimen.fabMarginEnd,
+                top = Dimen.fabMargin,
+                bottom = Dimen.fabMargin
+            ),
+            expanded = showChangeDb,
             onClick = {
-                //非加载中可点击，加载中禁止点击
-                VibrateUtil(context).single()
                 if (downloadState <= -2) {
                     onClick()
                 }
             },
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = if (showChangeDb) {
-                    Dimen.popupMenuElevation
-                } else {
-                    Dimen.fabElevation
-                }
-            ),
-        ) {
-            if (showChangeDb) {
-                //选择
-                DbVersionSelectContent(tintColor)
-            } else {
+            customFabContent = {
                 //加载相关
                 when (downloadState) {
                     -3 -> {
                         MainIcon(
-                            data = MainIconType.DB_ERROR,
+                            data = MainIconType.REMOTE_DB_ERROR,
                             tint = tintColor,
                             size = Dimen.fabIconSize
                         )
@@ -415,6 +373,8 @@ private fun ChangeDbCompose(
                     }
                 }
             }
+        ) {
+            DbVersionSelectContent(tintColor)
         }
     }
 }
@@ -436,7 +396,7 @@ private fun DbVersionSelectContent(
 
     Column(
         modifier = Modifier
-            .width(Dimen.homeDataChangeWidth)
+            .width(Dimen.selectFabMinWidth)
             .padding(bottom = Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
@@ -503,13 +463,15 @@ private fun DbVersionOtherContent(
                 stringResource(R.string.db_diff_content_none)
             } else {
                 dbVersion.desc
-            },
+            }
         )
 
         Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
 
         Row(
-            modifier = Modifier.widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .widthIn(min = Dimen.dataChangeWidth + Dimen.iconSize)
         ) {
 
             //数据更新时间
@@ -520,16 +482,20 @@ private fun DbVersionOtherContent(
                 } else {
                     stringResource(id = R.string.unknown)
                 },
-                modifier = Modifier.width(60.dp)
+                modifier = Modifier
+                    .width(60.dp)
+                    .fillMaxHeight()
             )
 
             Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
 
-            //数据版本
+            //数据版本号
             DbVersionContentItem(
                 title = stringResource(id = R.string.db_diff_version),
                 content = dbVersion?.truthVersion ?: stringResource(id = R.string.unknown),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .widthIn(max = Dimen.dataChangeWidth)
             )
         }
 
@@ -537,7 +503,6 @@ private fun DbVersionOtherContent(
 
         //重新下载数据
         MainCard(
-            modifier = Modifier.height(IntrinsicSize.Min),
             fillMaxWidth = false,
             elevation = Dimen.popupMenuElevation,
             onClick = {
@@ -558,7 +523,8 @@ private fun DbVersionOtherContent(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ) {
             Row(
-                modifier = Modifier.padding(Dimen.mediumPadding),
+                modifier = Modifier
+                    .padding(Dimen.mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MainIcon(
@@ -600,8 +566,7 @@ private fun DbVersionContentItem(
     onClick: (() -> Unit)? = null
 ) {
     MainCard(
-        modifier = modifier
-            .height(IntrinsicSize.Min),
+        modifier = modifier.height(IntrinsicSize.Min),
         fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
         onClick = onClick,
@@ -618,13 +583,11 @@ private fun DbVersionContentItem(
             color = color,
             style = MaterialTheme.typography.bodyMedium,
         )
-
         CaptionText(
             text = content,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
-                .weight(1f)
                 .padding(
                     start = Dimen.mediumPadding,
                     end = Dimen.mediumPadding,
@@ -640,6 +603,7 @@ private fun DbVersionContentItem(
  */
 @Composable
 fun Section(
+    modifier: Modifier = Modifier,
     id: Int,
     @StringRes titleId: Int,
     iconType: MainIconType? = null,
@@ -657,38 +621,47 @@ fun Section(
     //首页排序
     val index = orderStr.intArrayList.indexOf(id)
 
-    val modifier = if (onClick == null) {
-        Modifier
-    } else {
-        Modifier
-            .padding(horizontal = Dimen.mediumPadding)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = {
-                VibrateUtil(context).single()
-                if (contentVisible) {
-                    onClick()
-                }
-            })
-            .background(
-                color = if (hasAdded) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = MaterialTheme.shapes.medium
-            )
-    }
+    val rowModifier = Modifier
+        .then(
+            if (onClick == null) {
+                Modifier
+            } else {
+                Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable(onClick = {
+                        VibrateUtil(context).single()
+                        if (contentVisible) {
+                            onClick()
+                        }
+                    })
+                    .background(
+                        color = if (hasAdded) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            Color.Transparent
+                        },
+                        shape = MaterialTheme.shapes.medium
+                    )
+            }
+        )
+        .padding(Dimen.mediumPadding)
 
 
     Column(
-        modifier = if (animOnFlag) {
-            Modifier
-                .padding(top = Dimen.largePadding)
-                .animateContentSize(defaultSpring())
-        } else {
-            Modifier
-                .padding(top = Dimen.largePadding)
-        }
+        modifier = modifier.then(
+            if (animOnFlag) {
+                Modifier
+                    .padding(top = Dimen.largePadding)
+                    .animateContentSize(defaultSpring())
+            } else {
+                Modifier
+                    .padding(top = Dimen.largePadding)
+            }
+        )
     ) {
         Row(
-            modifier = modifier
-                .padding(Dimen.mediumPadding),
+            modifier = rowModifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             //首页序号，编辑时显示
@@ -720,7 +693,6 @@ fun Section(
             if (!isEditMode) {
                 Row(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -767,12 +739,13 @@ private fun SettingDropMenu(
         MainCard(
             fillMaxWidth = false,
             modifier = Modifier
+                .padding(Dimen.smallPadding)
                 .width(IntrinsicSize.Max)
                 .padding(
                     end = Dimen.fabMargin,
                     bottom = Dimen.fabMarginLargeBottom
                 ),
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             SettingSwitchCompose(
@@ -796,6 +769,7 @@ private fun SettingDropMenu(
                     wrapWidth = true
                 )
             }
+            Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             SettingCommonItem(
                 modifier = Modifier.padding(horizontal = Dimen.smallPadding),
                 iconType = R.drawable.ic_launcher_foreground,
@@ -821,28 +795,64 @@ private fun SettingDropMenu(
 
 @CombinedPreviews
 @Composable
-private fun DbVersionContentItemPreview() {
+private fun ChangeDbComposePreview() {
     PreviewLayout {
-        Column(
-            modifier = Modifier
-                .height(IntrinsicSize.Min)
-                .width(Dimen.dataChangeWidth)
+        ChangeDbCompose(
+            showChangeDb = true,
+            dbError = false,
+            dbVersion = DatabaseVersion(
+                truthVersion = "20230202222356574",
+                hash = "",
+                desc = stringResource(id = R.string.debug_name),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
         ) {
-            DbVersionContentItem(
-                title = stringResource(id = R.string.data_file_error),
-                content = stringResource(id = R.string.data_file_error_desc),
-                color = colorRed
-            )
+
         }
+
     }
-
 }
-
 
 @CombinedPreviews
 @Composable
-private fun DbVersionListPreview() {
+private fun ChangeDbCompose2Preview() {
     PreviewLayout {
-        DbVersionSelectContent(MaterialTheme.colorScheme.primary)
+        ChangeDbCompose(
+            showChangeDb = true,
+            dbError = true,
+            dbVersion = DatabaseVersion(
+                truthVersion = "1002342",
+                hash = "",
+                desc = stringResource(id = R.string.debug_long_text),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
+        ) {
+
+        }
+        ChangeDbCompose(
+            showChangeDb = false,
+            dbError = true,
+            dbVersion = DatabaseVersion(
+                truthVersion = "",
+                hash = "",
+                desc = stringResource(id = R.string.debug_name),
+                time = "2020-02-02"
+            ),
+            downloadState = -2,
+            updateDbDownloadState = {},
+            closeAllDialog = {},
+            updateDbVersionText = {}
+        ) {
+
+        }
+
     }
 }

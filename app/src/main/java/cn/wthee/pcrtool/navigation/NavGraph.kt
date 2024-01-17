@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,62 +16,65 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import cn.wthee.pcrtool.data.enums.UnitType
+import cn.wthee.pcrtool.data.model.SummonProperty
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterDetailScreen
-import cn.wthee.pcrtool.ui.character.CharacterExtraEquipScreen
-import cn.wthee.pcrtool.ui.character.CharacterListFilterScreen
+import cn.wthee.pcrtool.ui.MainSettings
 import cn.wthee.pcrtool.ui.character.CharacterListScreen
-import cn.wthee.pcrtool.ui.character.CharacterSkillLoopScreen
-import cn.wthee.pcrtool.ui.character.CharacterStatusCoeScreen
-import cn.wthee.pcrtool.ui.character.CharacterStoryAttrScreen
-import cn.wthee.pcrtool.ui.character.RankCompareScreen
-import cn.wthee.pcrtool.ui.character.RankEquipCountScreen
-import cn.wthee.pcrtool.ui.character.RankEquipListScreen
-import cn.wthee.pcrtool.ui.equip.EquipDetailScreen
-import cn.wthee.pcrtool.ui.equip.EquipListFilterScreen
+import cn.wthee.pcrtool.ui.character.detail.CharacterDetailScreen
+import cn.wthee.pcrtool.ui.character.equipcount.RankEquipCountScreen
+import cn.wthee.pcrtool.ui.character.extraequip.CharacterExtraEquipScreen
+import cn.wthee.pcrtool.ui.character.filter.CharacterListFilterScreen
+import cn.wthee.pcrtool.ui.character.profile.CharacterBasicInfo
+import cn.wthee.pcrtool.ui.character.rankcompare.RankCompareScreen
+import cn.wthee.pcrtool.ui.character.rankequip.RankEquipListScreen
+import cn.wthee.pcrtool.ui.character.skillloop.CharacterSkillLoopScreen
+import cn.wthee.pcrtool.ui.character.statuscoe.CharacterStatusCoeScreen
+import cn.wthee.pcrtool.ui.character.story.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.equip.EquipListScreen
-import cn.wthee.pcrtool.ui.equip.EquipMaterialDropInfoScreen
-import cn.wthee.pcrtool.ui.equip.EquipUnitListScreen
+import cn.wthee.pcrtool.ui.equip.detail.EquipDetailScreen
+import cn.wthee.pcrtool.ui.equip.drop.EquipMaterialDropInfoScreen
+import cn.wthee.pcrtool.ui.equip.filter.EquipListFilterScreen
+import cn.wthee.pcrtool.ui.equip.unit.EquipUnitListScreen
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.media.PictureScreen
 import cn.wthee.pcrtool.ui.media.VideoScreen
-import cn.wthee.pcrtool.ui.skill.SkillSummonScreen
+import cn.wthee.pcrtool.ui.skill.summon.SkillSummonScreen
 import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.ui.tool.AllToolMenuScreen
-import cn.wthee.pcrtool.ui.tool.BirthdayListScreen
-import cn.wthee.pcrtool.ui.tool.CalendarEventListScreen
-import cn.wthee.pcrtool.ui.tool.ComicListScreen
-import cn.wthee.pcrtool.ui.tool.FreeGachaListScreen
-import cn.wthee.pcrtool.ui.tool.GachaListScreen
-import cn.wthee.pcrtool.ui.tool.GuildListScreen
-import cn.wthee.pcrtool.ui.tool.LeaderTierScreen
-import cn.wthee.pcrtool.ui.tool.LeaderboardScreen
-import cn.wthee.pcrtool.ui.tool.MainSettings
-import cn.wthee.pcrtool.ui.tool.NewsScreen
-import cn.wthee.pcrtool.ui.tool.TweetList
-import cn.wthee.pcrtool.ui.tool.WebsiteScreen
+import cn.wthee.pcrtool.ui.tool.birthday.BirthdayListScreen
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleDetailScreen
 import cn.wthee.pcrtool.ui.tool.clan.ClanBattleListScreen
+import cn.wthee.pcrtool.ui.tool.comic.ComicListScreen
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDetail
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipDropListScreen
+import cn.wthee.pcrtool.ui.tool.event.CalendarEventListScreen
 import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipList
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipListFilterScreen
-import cn.wthee.pcrtool.ui.tool.extraequip.ExtraEquipUnitListScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.detail.ExtraEquipDetail
+import cn.wthee.pcrtool.ui.tool.extraequip.drop.ExtraEquipDropListScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.filter.ExtraEquipListFilterScreen
+import cn.wthee.pcrtool.ui.tool.extraequip.unit.ExtraEquipUnitListScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelDetailScreen
 import cn.wthee.pcrtool.ui.tool.extratravel.ExtraTravelListScreen
-import cn.wthee.pcrtool.ui.tool.mockgacha.MockGacha
-import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
+import cn.wthee.pcrtool.ui.tool.freegacha.FreeGachaListScreen
+import cn.wthee.pcrtool.ui.tool.gacha.GachaListScreen
+import cn.wthee.pcrtool.ui.tool.guild.GuildListScreen
+import cn.wthee.pcrtool.ui.tool.leaderboard.LeaderboardScreen
+import cn.wthee.pcrtool.ui.tool.leadertier.LeaderTierScreen
+import cn.wthee.pcrtool.ui.tool.loadcomic.LoadComicScreen
+import cn.wthee.pcrtool.ui.tool.mockgacha.MockGachaScreen
+import cn.wthee.pcrtool.ui.tool.news.NewsScreen
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchScreen
 import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
-import cn.wthee.pcrtool.ui.tool.quest.RandomDropAreaListScreen
+import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
+import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
+import cn.wthee.pcrtool.ui.tool.website.WebsiteScreen
+import cn.wthee.pcrtool.utils.JsonUtil
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -460,7 +461,7 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_GACHA
             ) {
-                GachaListScreen(actions.toCharacterDetail, actions.toMockGacha)
+                GachaListScreen(actions.toCharacterDetail, actions.toMockGachaFromList)
             }
 
             //免费十连
@@ -497,20 +498,12 @@ fun NavGraph(
 
             //公会战详情
             composable(
-                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.TOOL_CLAN_Battle_ID}}/{${NavRoute.TOOL_CLAN_BOSS_INDEX}}/{${NavRoute.TOOL_CLAN_BOSS_MIN_PHASE}}/{${NavRoute.TOOL_CLAN_BOSS_MAX_PHASE}}",
-                arguments = listOf(navArgument(NavRoute.TOOL_CLAN_Battle_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_INDEX) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MIN_PHASE) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.TOOL_CLAN_BOSS_MAX_PHASE) {
-                    type = NavType.IntType
+                route = "${NavRoute.TOOL_CLAN_BOSS_INFO}/{${NavRoute.CLAN_BATTLE_PROPERTY}}",
+                arguments = listOf(navArgument(NavRoute.CLAN_BATTLE_PROPERTY) {
+                    type = NavType.StringType
                 }),
             ) {
-                val arguments = requireNotNull(it.arguments)
                 ClanBattleDetailScreen(
-                    arguments.getInt(NavRoute.TOOL_CLAN_BOSS_INDEX),
                     actions.toSummonDetail
                 )
             }
@@ -519,21 +512,8 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_PVP
             ) {
-                val pagerState = rememberPagerState { 4 }
-                val selectListState = rememberLazyGridState()
-                val usedListState = rememberLazyGridState()
-                val resultListState = rememberLazyGridState()
-                val favoritesListState = rememberLazyGridState()
-                val historyListState = rememberLazyGridState()
-
-                PvpSearchCompose(
+                PvpSearchScreen(
                     floatWindow = false,
-                    pagerState = pagerState,
-                    selectListState = selectListState,
-                    usedListState = usedListState,
-                    resultListState = resultListState,
-                    favoritesListState = favoritesListState,
-                    historyListState = historyListState,
                     toCharacter = actions.toCharacterDetail
                 )
             }
@@ -575,27 +555,23 @@ fun NavGraph(
 
             //召唤物信息
             bottomSheet(
-                route = "${NavRoute.SUMMON_DETAIL}/{${NavRoute.UNIT_ID}}/{${NavRoute.UNIT_TYPE}}/{${NavRoute.LEVEL}}/{${NavRoute.RANK}}/{${NavRoute.RARITY}}",
-                arguments = listOf(navArgument(NavRoute.UNIT_ID) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.UNIT_TYPE) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.LEVEL) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.RANK) {
-                    type = NavType.IntType
-                }, navArgument(NavRoute.RARITY) {
-                    type = NavType.IntType
+                route = "${NavRoute.SUMMON_DETAIL}/{${NavRoute.SUMMON_PROPERTY}}",
+                arguments = listOf(navArgument(NavRoute.SUMMON_PROPERTY) {
+                    type = NavType.StringType
                 })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                SkillSummonScreen(
-                    id = arguments.getInt(NavRoute.UNIT_ID),
-                    unitType = UnitType.getByValue(arguments.getInt(NavRoute.UNIT_TYPE)),
-                    level = arguments.getInt(NavRoute.LEVEL),
-                    rank = arguments.getInt(NavRoute.RANK),
-                    rarity = arguments.getInt(NavRoute.RARITY)
-                )
+                val summonProperty =
+                    JsonUtil.fromJson<SummonProperty>(arguments.getString(NavRoute.SUMMON_PROPERTY))
+                summonProperty?.let {
+                    SkillSummonScreen(
+                        id = summonProperty.id,
+                        unitType = UnitType.getByValue(summonProperty.type),
+                        level = summonProperty.level,
+                        rank = summonProperty.rank,
+                        rarity = summonProperty.rarity
+                    )
+                }
             }
 
             //技能循环信息
@@ -642,7 +618,22 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_MOCK_GACHA,
             ) {
-                MockGacha()
+                MockGachaScreen()
+            }
+
+            //模拟抽卡
+            composable(
+                route = "${NavRoute.TOOL_MOCK_GACHA_FROM_LIST}/{${NavRoute.MOCK_GACHA_TYPE}}/{${NavRoute.PICKUP_LIST}}",
+                arguments = listOf(
+                    navArgument(NavRoute.MOCK_GACHA_TYPE) {
+                        type = NavType.IntType
+                    },
+                    navArgument(NavRoute.PICKUP_LIST) {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                MockGachaScreen()
             }
 
             //生日日程
@@ -733,6 +724,13 @@ fun NavGraph(
                 })
             ) {
                 CharacterDetailScreen(actions)
+            }
+
+            //过场漫画列表
+            composable(
+                route = NavRoute.LOAD_COMIC_LIST
+            ) {
+                LoadComicScreen()
             }
         }
     }
@@ -862,9 +860,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 公会战 BOSS
      */
-    val toClanBossInfo: (Int, Int, Int, Int) -> Unit =
-        { clanId: Int, index: Int, minPhase: Int, maxPhase: Int ->
-            navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}/${minPhase}/${maxPhase}")
+    val toClanBossInfo: (String) -> Unit =
+        { property ->
+            navController.navigate("${NavRoute.TOOL_CLAN_BOSS_INFO}/${property}")
         }
 
     /**
@@ -974,13 +972,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 技能列表
-     */
-    val toAllSkillList = {
-        navController.navigate(NavRoute.ALL_SKILL)
-    }
-
-    /**
      * 战力系数
      */
     val toCoe = {
@@ -990,10 +981,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 召唤物信息
      */
-    val toSummonDetail: (Int, Int, Int, Int, Int) -> Unit =
-        { unitId, unitType, level, rank, rarity ->
-            navController.navigate("${NavRoute.SUMMON_DETAIL}/${unitId}/${unitType}/${level}/${rank}/${rarity}")
-        }
+    val toSummonDetail: (String) -> Unit = { property ->
+        navController.navigate("${NavRoute.SUMMON_DETAIL}/${property}")
+    }
 
     /**
      * 装备统计
@@ -1021,6 +1011,13 @@ class NavActions(navController: NavHostController) {
      */
     val toMockGacha = {
         navController.navigate(NavRoute.TOOL_MOCK_GACHA)
+    }
+
+    /**
+     * 模拟抽卡（从卡池列表跳转）
+     */
+    val toMockGachaFromList: (Int, String) -> Unit = { type, list ->
+        navController.navigate("${NavRoute.TOOL_MOCK_GACHA_FROM_LIST}/${type}/${list}")
     }
 
     /**
@@ -1113,4 +1110,12 @@ class NavActions(navController: NavHostController) {
     val toFilterExtraEquip: (String) -> Unit = { filter ->
         navController.navigate("${NavRoute.FILTER_EXTRA_EQUIP}/${filter}")
     }
+
+    /**
+     * 过场漫画列表
+     */
+    val toLoadComicList = {
+        navController.navigate(NavRoute.LOAD_COMIC_LIST)
+    }
+
 }

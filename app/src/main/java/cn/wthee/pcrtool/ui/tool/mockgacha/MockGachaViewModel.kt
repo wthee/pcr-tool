@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.R
@@ -16,8 +17,8 @@ import cn.wthee.pcrtool.data.model.UnitsInGacha
 import cn.wthee.pcrtool.data.model.getIdsStr
 import cn.wthee.pcrtool.data.model.getRaritysStr
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
@@ -66,22 +67,26 @@ data class MockGachaUiState(
 class MockGachaViewModel @Inject constructor(
     private val gachaRepository: GachaRepository,
     private val unitRepository: UnitRepository,
-    private val mockGachaRepository: MockGachaRepository
+    private val mockGachaRepository: MockGachaRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val mockGachaType: Int? = savedStateHandle[NavRoute.MOCK_GACHA_TYPE]
+    private val pickUpList: List<GachaUnitInfo>? = JsonUtil.fromJson(
+        savedStateHandle[NavRoute.PICKUP_LIST]
+    )
 
-    //模拟抽卡最大up数
-    private val MOCK_GACHA_MAX_UP_COUNT = 12
+    companion object {
+        //模拟抽卡fes最大up数
+        private const val MOCK_GACHA_FES_MAX_UP_COUNT = 2
 
-    //模拟抽卡fes最大up数
-    private val MOCK_GACHA_FES_MAX_UP_COUNT = 2
+        //模拟抽卡最大up数
+        private const val MOCK_GACHA_MAX_UP_COUNT = 12
+    }
 
     private val _uiState = MutableStateFlow(MockGachaUiState())
     val uiState: StateFlow<MockGachaUiState> = _uiState.asStateFlow()
 
     init {
-        val mockGachaType: Int? = getData(NavRoute.MOCK_GACHA_TYPE, true)
-        val pickUpList: List<GachaUnitInfo>? = getData(NavRoute.PICKUP_LIST, true)
-
         if (mockGachaType != null && pickUpList != null) {
             _uiState.update {
                 it.copy(
@@ -91,14 +96,13 @@ class MockGachaViewModel @Inject constructor(
             }
         }
         getGachaUnits()
-        getHistory()
     }
 
 
     /**
      * 获取卡池角色
      */
-    fun getGachaUnits() {
+    private fun getGachaUnits() {
         viewModelScope.launch {
             try {
                 val fesUnitInfo = gachaRepository.getFesUnitIdList()

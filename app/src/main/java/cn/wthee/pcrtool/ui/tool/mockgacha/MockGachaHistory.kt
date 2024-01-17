@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -21,18 +19,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.MockGachaProData
+import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainTitleText
@@ -44,6 +44,7 @@ import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
 /**
@@ -52,10 +53,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun MockGachaHistory(
     scrollState: LazyGridState,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(),
 ) {
     val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
-
+    LifecycleEffect(Lifecycle.Event.ON_RESUME) {
+        mockGachaViewModel.getHistory()
+    }
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +71,14 @@ fun MockGachaHistory(
                 it.gachaId
             }
         ) {
-            MockGachaHistoryItem(it)
+            MockGachaHistoryItem(
+                gachaData = it,
+                changeGachaId = mockGachaViewModel::changeGachaId,
+                changeShowResult = mockGachaViewModel::changeShowResult,
+                changeSelect = mockGachaViewModel::changeSelect,
+                updatePickUpList = mockGachaViewModel::updatePickUpList,
+                deleteGachaByGachaId = mockGachaViewModel::deleteGachaByGachaId,
+            )
         }
         item {
             CommonSpacer()
@@ -86,7 +96,11 @@ fun MockGachaHistory(
 @Composable
 private fun MockGachaHistoryItem(
     gachaData: MockGachaProData,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    changeGachaId: (String) -> Unit,
+    changeShowResult: (Boolean) -> Unit,
+    changeSelect: (Int) -> Unit,
+    updatePickUpList: (List<GachaUnitInfo>) -> Unit,
+    deleteGachaByGachaId: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val openDialog = remember {
@@ -116,26 +130,30 @@ private fun MockGachaHistoryItem(
     ) {
         //标题
         FlowRow(
-            modifier = Modifier.padding(bottom = Dimen.smallPadding),
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.padding(bottom = Dimen.smallPadding)
         ) {
             MainTitleText(
-                text = gachaData.createTime.formatTime.substring(0, 10)
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = gachaData.createTime.formatTime.toDate
             )
             //up个数
             if (upCount > 0) {
                 MainTitleText(
+                    modifier = Modifier
+                        .padding(start = Dimen.smallPadding)
+                        .align(Alignment.CenterVertically),
                     text = "UP：$upCount",
-                    backgroundColor = colorRed,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                    backgroundColor = colorRed
                 )
             }
             //3星个数
             if (start3Count > 0) {
                 MainTitleText(
+                    modifier = Modifier
+                        .padding(start = Dimen.smallPadding)
+                        .align(Alignment.CenterVertically),
                     text = "★3：$start3Count",
                     backgroundColor = colorGold,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -145,62 +163,61 @@ private fun MockGachaHistoryItem(
                 text = stringResource(id = R.string.go_to_mock)
             ) {
                 scope.launch {
-                    mockGachaViewModel.changeGachaId(gachaData.gachaId)
+                    changeGachaId(gachaData.gachaId)
                     //卡池详情
                     val newPickUpList = arrayListOf<GachaUnitInfo>()
                     gachaData.pickUpIds.intArrayList.forEach {
                         newPickUpList.add(
                             GachaUnitInfo(
-                                it,
-                                "",
-                                -1,
-                                3
+                                unitId = it,
+                                unitName = "",
+                                isLimited = -1,
+                                rarity = 3
                             )
                         )
                     }
-                    mockGachaViewModel.updatePickUpList(newPickUpList)
-                    mockGachaViewModel.changeSelect(gachaData.gachaType)
+                    updatePickUpList(newPickUpList)
+                    changeSelect(gachaData.gachaType)
                     //显示卡池结果
-                    mockGachaViewModel.changeShowResult(true)
+                    changeShowResult(true)
                 }
             }
         }
 
         MainCard {
-            Column(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
-                //up 角色
-                val idList = arrayListOf<Int>()
-                gachaData.pickUpIds.intArrayList.forEach { unitId ->
-                    idList.add(unitId + 30)
-                }
-                GridIconList(
-                    icons = idList
-                )
-                Row(
-                    modifier = Modifier
-                        .padding(start = Dimen.smallPadding, end = Dimen.mediumPadding)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+            //up 角色
+            val idList = arrayListOf<Int>()
+            gachaData.pickUpIds.intArrayList.forEach { unitId ->
+                idList.add(unitId + 30)
+            }
+            GridIconList(
+                idList = idList,
+                iconResourceType = IconResourceType.CHARACTER,
+                onClickItem = { }
+            )
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = Dimen.mediumPadding)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //删除操作
+                IconTextButton(
+                    icon = MainIconType.DELETE,
+                    text = stringResource(R.string.delete_gacha),
+                    contentColor = colorRed
                 ) {
-                    //删除操作
-                    IconTextButton(
-                        icon = MainIconType.DELETE,
-                        text = stringResource(R.string.delete_gacha),
-                        contentColor = colorRed
-                    ) {
-                        openDialog.value = true
-                    }
-                    //日期
-                    CaptionText(
-                        text = stringResource(
-                            id = R.string.last_gacha_date,
-                            resultCount,
-                            gachaData.lastUpdateTime
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    openDialog.value = true
                 }
-
+                //日期
+                CaptionText(
+                    text = stringResource(
+                        id = R.string.last_gacha_date,
+                        resultCount,
+                        gachaData.lastUpdateTime
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -212,7 +229,7 @@ private fun MockGachaHistoryItem(
         title = stringResource(id = R.string.title_dialog_delete),
         text = stringResource(id = R.string.tip_delete_gacha),
     ) {
-        mockGachaViewModel.deleteGachaByGachaId(gachaData.gachaId)
+        deleteGachaByGachaId(gachaData.gachaId)
     }
 
 }
@@ -223,13 +240,19 @@ private fun MockGachaHistoryItem(
 private fun MockGachaHistoryItemPreview() {
     PreviewLayout {
         MockGachaHistoryItem(
-            MockGachaProData(
+            gachaData = MockGachaProData(
                 gachaType = 1,
                 pickUpIds = "1-2",
                 resultUnitIds = "1-2-3-4-5-5-4-3-2-1",
                 resultUnitRaritys = "1-2-3-1-2-3-1-2-3-1",
-                createTime = "2020/01/01 00:00:00"
-            )
+                createTime = "2020/01/01 00:00:00",
+                lastUpdateTime = "2023-02-02 22:33:44"
+            ),
+            changeGachaId = {},
+            changeShowResult = {},
+            changeSelect = {},
+            updatePickUpList = {},
+            deleteGachaByGachaId = {}
         )
     }
 }

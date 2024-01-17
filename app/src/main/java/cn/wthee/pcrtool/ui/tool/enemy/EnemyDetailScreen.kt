@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
@@ -34,15 +34,14 @@ import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
-import cn.wthee.pcrtool.ui.components.MainButton
+import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
-import cn.wthee.pcrtool.ui.skill.SkillLoopScreen
+import cn.wthee.pcrtool.ui.skill.loop.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -62,7 +61,7 @@ import cn.wthee.pcrtool.utils.px2dp
 @Composable
 fun EnemyDetailScreen(
     enemyId: Int,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
     enemyDetailViewModel: EnemyDetailViewModel = hiltViewModel()
 ) {
     val uiState by enemyDetailViewModel.uiState.collectAsStateWithLifecycle()
@@ -96,7 +95,7 @@ fun EnemyDetailContent(
     partEnemyList: List<EnemyParameterPro>?,
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val openDialog = remember {
@@ -104,9 +103,9 @@ fun EnemyDetailContent(
     }
     //基础或部位信息
     val attrList = if (isMultiEnemy) {
-        enemyData.attr.multiplePartEnemy(isPreview = LocalInspectionMode.current)
+        enemyData.attr.multiplePartEnemy(context)
     } else {
-        enemyData.attr.enemy(isPreview = LocalInspectionMode.current)
+        enemyData.attr.enemy(context)
     }
     //部位最大攻击力
     var partAtk = 0
@@ -203,41 +202,26 @@ fun EnemyDetailContent(
     }
 
     //描述文本弹窗
-    if (openDialog.value) {
-        AlertDialog(
-            title = {
-                Column(
-                    modifier = Modifier
-                        .heightIn(max = ScreenUtil.getHeight().px2dp.dp * RATIO_GOLDEN)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    MainContentText(
-                        text = enemyData.getDesc(),
-                        textAlign = TextAlign.Start,
-                        selectable = true
-                    )
-                }
-            },
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            confirmButton = {
-                //复制
-                MainButton(text = stringResource(R.string.copy_all)) {
-                    copyText(context, enemyData.getDesc())
-                    openDialog.value = false
-                }
-            },
-            dismissButton = {
-                //取消
-                SubButton(
-                    text = stringResource(id = R.string.cancel)
-                ) {
-                    openDialog.value = false
-                }
-            })
-    }
-
+    MainAlertDialog(
+        modifier = Modifier
+            .heightIn(max = px2dp(context, ScreenUtil.getHeight()) * RATIO_GOLDEN),
+        openDialog = openDialog,
+        title = stringResource(id = R.string.description),
+        content = {
+            SelectionContainer(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = enemyData.getDesc()
+                )
+            }
+        },
+        confirmText = stringResource(R.string.copy_all),
+        dismissText = stringResource(R.string.cancel),
+        onConfirm = {
+            copyText(context, enemyData.getDesc())
+        }
+    )
 }
 
 
@@ -249,7 +233,7 @@ fun EnemySkillList(
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
     unitType: UnitType,
-    toSummonDetail: ((Int, Int, Int, Int, Int) -> Unit)? = null,
+    toSummonDetail: ((String) -> Unit)? = null,
 ) {
 
     Column(
@@ -298,21 +282,25 @@ fun EnemySkillList(
 }
 
 
+/**
+ * @see [SkillLoopScreen] 技能循环预览
+ * @see [cn.wthee.pcrtool.ui.skill.SkillListScreen] 技能列表预览
+ */
 @CombinedPreviews
 @Composable
 private fun EnemyDetailContentPreview() {
     PreviewLayout {
         EnemyDetailContent(
-            EnemyParameterPro(
+            enemyData = EnemyParameterPro(
                 name = stringResource(id = R.string.debug_short_text),
                 comment = stringResource(id = R.string.debug_long_text),
                 level = 100
             ),
-            false,
-            null,
+            isMultiEnemy = false,
+            partEnemyList = null,
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
-            toSummonDetail = { _, _, _, _, _ -> }
+            toSummonDetail = {}
         )
     }
 }

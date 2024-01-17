@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.SelectText
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -77,16 +77,21 @@ fun TravelQuestItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         //标题
-        questData?.let { TravelQuestHeader(it, showTitle = selectedId == 0) }
+        questData?.let {
+            TravelQuestHeader(
+                questData = it,
+                showTitle = selectedId == 0
+            )
+        }
         //掉落
         subRewardList?.forEach { subRewardData ->
             ExtraEquipGroup(
-                subRewardData.category,
-                subRewardData.categoryName,
-                subRewardData.subRewardIds.intArrayList,
-                subRewardData.subRewardDrops.intArrayList,
-                selectedId,
-                toExtraEquipDetail
+                category = subRewardData.category,
+                categoryName = subRewardData.categoryName,
+                equipIdList = subRewardData.subRewardIds.intArrayList,
+                dropOddsList = subRewardData.subRewardDrops.intArrayList,
+                selectedId = selectedId,
+                toExtraEquipDetail = toExtraEquipDetail
             )
         }
         CommonSpacer()
@@ -130,7 +135,12 @@ fun ExtraEquipGroup(
         }
     )
 
-    ExtraEquipRewardIconGrid(equipIdList, dropOddsList, selectedId, toExtraEquipDetail)
+    ExtraEquipRewardIconGrid(
+        equipIdList = equipIdList,
+        dropOddList = dropOddsList,
+        selectedId = selectedId,
+        toExtraEquipDetail = toExtraEquipDetail
+    )
 
 }
 
@@ -145,20 +155,17 @@ private fun ExtraEquipRewardIconGrid(
     selectedId: Int,
     toExtraEquipDetail: ((Int) -> Unit)?
 ) {
-    VerticalGrid(
+    VerticalStaggeredGrid(
         modifier = Modifier.padding(
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
+            horizontal = Dimen.commonItemPadding
         ),
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.mediumPadding
+        itemWidth = Dimen.iconItemWidth,
+        verticalContentPadding = Dimen.commonItemPadding
     ) {
         equipIdList.forEachIndexed { index, equipId ->
             val selected = selectedId == equipId
             Column(
-                modifier = Modifier
-                    .padding(bottom = Dimen.mediumPadding)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MainIcon(
@@ -193,11 +200,11 @@ private fun ExtraEquipRewardIconGrid(
 private fun ExtraEquipSubGroupPreview() {
     PreviewLayout {
         ExtraEquipGroup(
-            1,
-            "selected",
-            arrayListOf(1, 2, 3, 4),
-            arrayListOf(1000, 20000, 3333, 444444),
-            2
+            category = 1,
+            categoryName = stringResource(id = R.string.debug_short_text),
+            equipIdList = arrayListOf(1, 2, 3, 4),
+            dropOddsList = arrayListOf(1000, 20000, 3333, 444444),
+            selectedId = 2
         ) { }
     }
 }

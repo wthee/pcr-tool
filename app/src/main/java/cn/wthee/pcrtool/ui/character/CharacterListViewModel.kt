@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
 import cn.wthee.pcrtool.ui.LoadingState
 import cn.wthee.pcrtool.ui.updateLoadingState
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +28,9 @@ data class CharacterListUiState(
     val characterList: List<CharacterInfo>? = null,
     val filter: FilterCharacter? = null,
     //收藏的角色编号
-    val starIdList: ArrayList<Int> = arrayListOf(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val favoriteIdList: List<Int> = arrayListOf(),
+    val loadingState: LoadingState = LoadingState.Loading,
+    val openDialog: Boolean = false
 )
 
 /**
@@ -69,13 +70,20 @@ class CharacterListViewModel @Inject constructor(
     fun initFilter() {
         viewModelScope.launch {
             val filterData = getData<String>(NavRoute.FILTER_DATA)
-            val filter: FilterCharacter? = GsonUtil.fromJson(filterData)
-            val starIdList = FilterCharacter.getStarIdList()
+            val filter: FilterCharacter? = JsonUtil.fromJson(filterData)
+            val idList = unitRepository.getUnitIdList()
+            val favoriteIdList = FilterCharacter.getFavoriteIdList().filter { id ->
+                //筛选出当前区服版本下的收藏角色
+                idList.find {
+                    it == id
+                } != null
+            }
+
             val initFilter = filter ?: FilterCharacter()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    starIdList = starIdList
+                    favoriteIdList = favoriteIdList
                 )
             }
 
@@ -102,5 +110,17 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 弹窗状态更新
+     */
+    fun changeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openDialog = openDialog
+                )
+            }
+        }
+    }
 }
 

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.mockgacha
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,7 +50,7 @@ fun MockGachaResult(
     gachaId: String,
     pickUpUnitIds: List<Int>,
     mockGachaType: MockGachaType,
-    mockGachaViewModel: MockGachaViewModel = hiltViewModel(LocalContext.current as ComponentActivity),
+    mockGachaViewModel: MockGachaViewModel = hiltViewModel(),
 ) {
     val uiState by mockGachaViewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(gachaId) {

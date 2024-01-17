@@ -8,6 +8,8 @@ import android.provider.Settings
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +45,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.SettingCommonItem
+import cn.wthee.pcrtool.ui.SettingSwitchCompose
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.HeaderText
@@ -63,8 +67,6 @@ import cn.wthee.pcrtool.ui.theme.RATIO_GOLDEN
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.ui.tool.SettingCommonItem
-import cn.wthee.pcrtool.ui.tool.SettingSwitchCompose
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_APK_NAME
@@ -80,16 +82,23 @@ import java.io.File
 /**
  * 顶部工具栏
  *
+ * @param isEditMode 是否编辑模式
+ * @param apkDownloadState 应用下载状态 [cn.wthee.pcrtool.ui.home.OverviewScreenUiState.apkDownloadState]
+ * @param appUpdateData 应用更新内容
+ * @param isExpanded 是否展开
+ * @param changeEditMode 变更编辑模式 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.changeEditMode]
+ * @param updateApkDownloadState 更新下载状态 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.updateApkDownloadState]
+ * @param updateExpanded 更新展开状态 [cn.wthee.pcrtool.ui.home.OverviewScreenViewModel.updateExpanded]
  */
 @Composable
 fun TopBarCompose(
     isEditMode: Boolean,
     apkDownloadState: Int,
-    updateApp: AppNotice,
+    appUpdateData: AppNotice,
     isExpanded: Boolean,
     changeEditMode: () -> Unit,
     updateApkDownloadState: (Int) -> Unit,
-    updateAppNoticeLayoutState: (Boolean) -> Unit
+    updateExpanded: (Boolean) -> Unit
 ) {
 
     //Toolbar
@@ -109,6 +118,11 @@ fun TopBarCompose(
                 text = stringResource(id = R.string.app_name)
             )
 
+            //异常时显示版本号
+            if (appUpdateData.id == -2) {
+                CaptionText(text = "v" + BuildConfig.VERSION_NAME)
+            }
+
             //数据版本，测试用
             if (BuildConfig.DEBUG) {
                 CaptionText(text = MainActivity.regionType.name)
@@ -120,7 +134,7 @@ fun TopBarCompose(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //应用更新
-                when (updateApp.id) {
+                when (appUpdateData.id) {
                     -1 -> {
                         //校验更新中
                         CircularProgressIndicator(
@@ -140,20 +154,23 @@ fun TopBarCompose(
                             size = Dimen.fabIconSize,
                             modifier = Modifier.padding(start = Dimen.smallPadding)
                         ) {
-                            updateAppNoticeLayoutState(!isExpanded)
+                            updateExpanded(!isExpanded)
                         }
                     }
 
                     else -> {
                         //提示
-                        if (updateApp.id == 0 && !isExpanded) {
+                        if (appUpdateData.id == 0 && !isExpanded) {
                             IconTextButton(
                                 icon = MainIconType.APP_UPDATE,
-                                text = stringResource(R.string.find_new_release, updateApp.title),
+                                text = stringResource(
+                                    R.string.find_new_release,
+                                    appUpdateData.title
+                                ),
                                 contentColor = colorGreen,
                                 iconSize = Dimen.fabIconSize
                             ) {
-                                updateAppNoticeLayoutState(true)
+                                updateExpanded(true)
                             }
                         } else {
                             MainIcon(
@@ -162,7 +179,7 @@ fun TopBarCompose(
                                 size = Dimen.fabIconSize,
                                 modifier = Modifier.padding(start = Dimen.smallPadding)
                             ) {
-                                updateAppNoticeLayoutState(!isExpanded)
+                                updateExpanded(!isExpanded)
                             }
                         }
 
@@ -184,9 +201,9 @@ fun TopBarCompose(
     }
 
     //更新卡片布局
-    ExpandAnimation(visible = isExpanded || updateApp.id == -2 || apkDownloadState > -2) {
+    ExpandAnimation(visible = isExpanded || appUpdateData.id == -2 || apkDownloadState > -2) {
         AppUpdateContent(
-            appNotice = updateApp,
+            appUpdateData = appUpdateData,
             apkDownloadState = apkDownloadState,
             updateApkDownloadState = updateApkDownloadState
         )
@@ -198,7 +215,7 @@ fun TopBarCompose(
  */
 @Composable
 private fun AppUpdateContent(
-    appNotice: AppNotice,
+    appUpdateData: AppNotice,
     apkDownloadState: Int,
     updateApkDownloadState: (Int) -> Unit
 ) {
@@ -256,12 +273,12 @@ private fun AppUpdateContent(
             ),
             fillMaxWidth = !downloading
         ) {
-            if (appNotice.id != -2) {
+            if (appUpdateData.id != -2) {
                 if (downloading) {
                     //下载相关
                     DownloadingContent(apkDownloadState)
                 } else {
-                    if (appNotice.id == -1) {
+                    if (appUpdateData.id == -1) {
                         //加载中
                         CircularProgressCompose(
                             modifier = Modifier
@@ -270,7 +287,7 @@ private fun AppUpdateContent(
                         )
                     } else {
                         //正常展示更新内容
-                        UpdateContent(appNotice, updateApkDownloadState)
+                        UpdateContent(appUpdateData, updateApkDownloadState)
                     }
                 }
             } else {
@@ -310,6 +327,7 @@ private fun DownloadingContent(
 /**
  * 更新内容
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun UpdateContent(
     appNotice: AppNotice,
@@ -336,10 +354,18 @@ private fun UpdateContent(
             )
 
             Spacer(modifier = Modifier.weight(1f))
+            //爱发电
+            val afdUrl = stringResource(id = R.string.afd_url)
+            IconTextButton(
+                icon = MainIconType.SPONSOR,
+                text = stringResource(id = R.string.sponsor),
+            ) {
+                BrowserUtil.open(afdUrl)
+            }
             //反馈群
             IconTextButton(
                 icon = MainIconType.SUPPORT,
-                text = stringResource(id = R.string.qq_group),
+                text = stringResource(id = R.string.to_feedback),
             ) {
                 joinQQGroup(context)
             }
@@ -360,7 +386,7 @@ private fun UpdateContent(
             //github下载链接
             val githubReleaseUrl = stringResource(id = R.string.apk_url, appNotice.title)
 
-            Row(
+            FlowRow(
                 modifier = Modifier
                     .padding(
                         top = Dimen.largePadding,
@@ -457,6 +483,10 @@ private fun downloadApk(
                         WorkInfo.State.RUNNING -> {
                             val value = workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
                             updateApkDownloadState(value)
+                        }
+
+                        WorkInfo.State.FAILED -> {
+                            updateApkDownloadState(-3)
                         }
 
                         else -> Unit

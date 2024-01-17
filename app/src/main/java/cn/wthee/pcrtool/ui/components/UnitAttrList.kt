@@ -12,11 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.AttrValueType
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorGreen
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.int
 
 
@@ -24,11 +29,14 @@ import cn.wthee.pcrtool.utils.int
  * 属性列表
  */
 @Composable
-fun AttrList(attrs: List<AttrValue>, attrValueType: AttrValueType = AttrValueType.INT) {
-    VerticalGrid(
+fun AttrList(
+    attrs: List<AttrValue>,
+    attrValueType: AttrValueType = AttrValueType.INT,
+    itemWidth: Dp = Dimen.attrWidth
+) {
+    VerticalStaggeredGrid(
         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
-        contentPadding = Dimen.largePadding,
-        itemWidth = Dimen.attrWidth
+        itemWidth = itemWidth
     ) {
         attrs.forEach { attr ->
             val valueText = fixedAttrValueText(attr.value, attrValueType)
@@ -49,16 +57,17 @@ fun AttrCompare(
 ) {
 
     Column(
-        modifier = if (!isExtraEquip) {
-            Modifier
-                .padding(Dimen.mediumPadding)
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        } else {
-            Modifier
-                .padding(Dimen.mediumPadding)
-                .fillMaxWidth()
-        }
+        modifier = Modifier
+            .padding(Dimen.mediumPadding)
+            .fillMaxWidth()
+            .then(
+                if (!isExtraEquip) {
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                } else {
+                    Modifier
+                }
+            )
     ) {
         compareData.forEach {
             Row(modifier = Modifier.padding(Dimen.smallPadding)) {
@@ -108,9 +117,11 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
         in 100000000..Int.MAX_VALUE -> {
             stringResource(R.string.value_100_m, (attrValue.toInt() / 100000000f).toString())
         }
+
         in 100000 until 100000000 -> {
             stringResource(R.string.value_10_k, attrValue.toInt() / 10000)
         }
+
         else -> {
             when (attrValueType) {
                 AttrValueType.INT -> attrValue.int.toString()
@@ -143,7 +154,11 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
 @CombinedPreviews
 @Composable
 private fun AttrListPreview() {
-    val mockData = arrayListOf(AttrValue(), AttrValue(), AttrValue())
+    val mockData = arrayListOf(
+        AttrValue(stringResource(id = R.string.attr_atk), 23456.0),
+        AttrValue(stringResource(id = R.string.attr_magic_def), 23456.0),
+        AttrValue(stringResource(id = R.string.attr_def), 23456.0),
+    )
     PreviewLayout {
         AttrList(attrs = mockData)
     }

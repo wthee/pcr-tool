@@ -29,6 +29,7 @@ object NavRoute {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_MOCK_GACHA = "toolMockGacha"
+    const val TOOL_MOCK_GACHA_FROM_LIST = "toolMockGachaFromList"
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
     const val COMIC = "comic"
@@ -51,12 +52,9 @@ object NavRoute {
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     //专用装备2等级
     const val UNIQUE_EQUIP_LEVEL2 = "uniqueEquipLevel2"
-    const val TOOL_CLAN_Battle_ID = "toolClanBattleID"
-    const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
-    const val TOOL_CLAN_BOSS_MAX_PHASE = "toolClanBattleMaxPhase"
-    const val TOOL_CLAN_BOSS_MIN_PHASE = "toolClanBattleMinPhase"
+    const val CLAN_BATTLE_PROPERTY = "clanBattleProperty"
     const val SUMMON_DETAIL = "summonDetail"
-    const val UNIT_TYPE = "unitType"
+    const val SUMMON_PROPERTY = "summonProperty"
     const val TOOL_EQUIP_AREA = "toolArea"
     const val TOOL_MORE = "toolMore"
     const val TOOL_MORE_EDIT_MODE = "toolMoreEditMode"
@@ -97,4 +95,6 @@ object NavRoute {
 
     const val MOCK_GACHA_TYPE = "mockGachaType"
     const val PICKUP_LIST = "pickUpList"
+
+    const val LOAD_COMIC_LIST = "loadComicList"
 }

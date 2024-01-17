@@ -15,7 +15,8 @@ data class ClanBattleEvent(
     @ColumnInfo(name = "id") var id: Int = 1,
     @ColumnInfo(name = "release_month") var releaseMonth: Int = 0,
     @ColumnInfo(name = "start_time") var startTime: String = "2020/01/01 00:00:00",
-    @Ignore var endTime: String = "2020/01/07 00:00:00"
+    @Ignore var endTime: String = "2020/01/07 00:00:00",
+    @Ignore var clanBattleInfo: ClanBattleInfo? = null
 ) {
     /**
      * 获取结束日期，开始加5天

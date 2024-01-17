@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.media
 
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,22 +10,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -57,9 +54,12 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.SelectText
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.MediaDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -89,13 +89,8 @@ fun VideoScreen(
 
 
     MainScaffold {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-        ) {
-            MediaGridList(urlList = urlList, title = typeName) {
-                VideoPlayer(url = it)
-            }
+        MediaGridList(urlList = urlList, title = typeName) {
+            VideoPlayer(url = it)
         }
     }
 
@@ -231,7 +226,7 @@ fun VideoPlayer(url: String) {
 @Composable
 private fun ToolButtonContent(
     url: String,
-    exoPlayer: ExoPlayer,
+    exoPlayer: ExoPlayer?,
     loading: Boolean,
     playing: Boolean,
     playError: Boolean
@@ -266,14 +261,14 @@ private fun ToolButtonContent(
         play = true
     }
 
-    //播放进度 fixme 性能优化
+    //播放进度
     val currentPosition = currentDurationFlow(exoPlayer).collectAsState(initial = 0L).value
     //当前进度
     val current =
         (currentPosition / 1000).toString().fillZero(2)
     //视频长度
-    val duration = if (exoPlayer.duration < 0) {
-        "00.00"
+    val duration = if (exoPlayer == null || exoPlayer.duration < 0) {
+        "00"
     } else {
         (exoPlayer.duration / 1000).toString().fillZero(2)
     }
@@ -285,11 +280,18 @@ private fun ToolButtonContent(
     var selectedSpeed by remember(url) {
         mutableFloatStateOf(1f)
     }
-    exoPlayer.setPlaybackSpeed(selectedSpeed)
+    exoPlayer?.setPlaybackSpeed(selectedSpeed)
+
+    //下载进度
+    var downloadProgress by remember {
+        mutableIntStateOf(0)
+    }
 
     //功能按钮
     Row(
-        modifier = Modifier.padding(top = Dimen.smallPadding),
+        modifier = Modifier
+            .padding(top = Dimen.smallPadding)
+            .heightIn(min = Dimen.menuIconSize),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (!playError) {
@@ -303,7 +305,7 @@ private fun ToolButtonContent(
                     icon = MainIconType.VIDEO_PAUSE
                 ) {
                     play = false
-                    exoPlayer.pause()
+                    exoPlayer?.pause()
                 }
             } else {
                 IconTextButton(
@@ -311,7 +313,7 @@ private fun ToolButtonContent(
                     icon = MainIconType.VIDEO_PLAY
                 ) {
                     play = true
-                    exoPlayer.play()
+                    exoPlayer?.play()
                 }
             }
         }
@@ -333,9 +335,9 @@ private fun ToolButtonContent(
         val videoError = stringResource(R.string.video_resource_error)
         if (!downloading) {
             IconTextButton(
-                text = stringResource(id = if (saved) R.string.downloaded_video else R.string.download_video),
+                text = stringResource(id = if (saved) R.string.saved else R.string.download_video),
                 icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
-                modifier = Modifier.padding(start = Dimen.smallPadding)
+                modifier = Modifier.padding(end = Dimen.smallPadding)
             ) {
                 //权限校验
                 checkPermissions(context, permissions) {
@@ -361,25 +363,10 @@ private fun ToolButtonContent(
             }
         } else {
             //下载中
-            Row(
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .clip(MaterialTheme.shapes.small)
-                    .padding(Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircularProgressCompose(
-                    size = Dimen.textIconSize,
-                    strokeWidth = Dimen.smallStrokeWidth
-                )
-
-                Text(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    text = stringResource(id = R.string.title_download_file),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            CircularProgressCompose(
+                modifier = Modifier.padding(end = Dimen.smallPadding),
+                progress = maxOf(0f, downloadProgress / 100f)
+            )
         }
     }
 
@@ -425,11 +412,14 @@ private fun ToolButtonContent(
         openDialog.value = false
         //开始下载
         MediaDownloadHelper(MyApplication.context).downloadVideo(
-            url,
-            fileName,
-            lifecycleOwner,
-            onFinished = {
+            url = url,
+            fileName = fileName,
+            lifecycleOwner = lifecycleOwner,
+            onDownloadFinished = {
                 downloading = false
+            },
+            onDownloading = {
+                downloadProgress = it
             },
             onDownloadFailure = {
                 downloading = false
@@ -485,9 +475,9 @@ private fun MainPlayView(
 private fun getVideoFileName(url: String): String {
     return try {
         val type = when {
-            url.contains("card") -> "card"
-            url.contains("skill") -> "skill"
-            else -> ""
+            url.contains(ImageRequestHelper.CARD_MOVIE) -> "card"
+            url.contains(ImageRequestHelper.SKILL_MOVIE) -> "skill"
+            else -> Constants.UNKNOWN
         } + "_"
         type + url.split('/').last().split('.')[0] + ".mp4"
     } catch (e: Exception) {
@@ -498,14 +488,30 @@ private fun getVideoFileName(url: String): String {
 /**
  * 播放进度
  */
-private fun currentDurationFlow(player: ExoPlayer) = flow {
+private fun currentDurationFlow(player: ExoPlayer?) = flow {
     val offset = 25L
-    if (player.isPlaying) {
-        while (player.currentPosition + offset <= player.duration) {
-            Log.e("play position", "${player.currentPosition + offset} / ${player.duration}")
-            delay(50L)
-            emit(player.currentPosition + offset)
+    if (player != null) {
+        if (player.isPlaying) {
+            while (player.currentPosition + offset <= player.duration) {
+                delay(50L)
+                emit(player.currentPosition + offset)
+            }
+            player.seekToDefaultPosition()
         }
-        player.seekToDefaultPosition()
     }
 }.conflate()
+
+
+@CombinedPreviews
+@Composable
+private fun VideoScreenPreview() {
+    PreviewLayout {
+        ToolButtonContent(
+            url = "123",
+            exoPlayer = null,
+            loading = false,
+            playing = true,
+            playError = false
+        )
+    }
+}

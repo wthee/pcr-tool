@@ -1,13 +1,20 @@
 ## PCR Tool
 
-- 下载地址：[酷安](https://www.coolapk.com/apk/273453)
-  | [Release](https://github.com/wthee/pcr-tool/releases)
+- 下载地址：[Release](https://github.com/wthee/pcr-tool/releases)
 - 资源获取工具：[Unity Texture Toolkit](https://github.com/esterTion/unity-texture-toolkit)
 - 竞技场查询数据：[公主连结Re: Dive Fan Club](https://pcrdfans.com)
 - 排行榜数据：[GameWith](https://gamewith.jp/pricone-re/article/show/93068)
 - 感谢大佬的开源项目！[静流笔记|ShizuruNotes](https://github.com/MalitsPlus/ShizuruNotes)
+- QQ 交流群：775966246
 
 > 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
+
+## 分支说明
+
+- **master-compose** 主分支：新版本发布时，会更新该分支代码
+- **beta-compose** 测试分支（最新代码）：下一版本发布前，代码会提交至该分支
+- **pre-release** 预发布分支：下一版本发布前，修复影响使用 bug 时，会更新该分支，并重新发布
+- ~~master-xml 已废弃~~
 
 ## 支持
 
@@ -16,6 +23,17 @@
 ## 更新记录
 
 ### 3.X.X
+
+#### 3.8.2
+
+- 新增：[过场漫画] 预览功能
+- 新增：[漫画] 和 [日服情报] 图片保存功能
+- 新增：图片预览手势操作功能（移动、旋转、缩放）
+- 新增：[模型预览] 导出 Spine 文件功能
+- 优化：部分技能描述
+- 优化：页面细节
+- 修复：已知 BUG
+- 重要调整：图片加载框架（应用更新后若无法加载图片，请在应用内设置页面清除缓存）
 
 #### 3.8.1
 

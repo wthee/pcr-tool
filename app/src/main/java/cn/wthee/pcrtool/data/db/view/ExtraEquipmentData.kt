@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.data.db.view
 
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.AttrCompareData
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 
@@ -41,34 +43,33 @@ data class ExtraEquipmentData(
     companion object {
         fun unknown() =
             ExtraEquipmentData(
-                UNKNOWN_EQUIP_ID,
-                "?",
-                0,
-                "",
-                "",
-                0,
-                0,
-                0,
-                0,
-                0,
-                AttrDefaultInt(),
-                AttrInt()
+                equipmentId = UNKNOWN_EQUIP_ID,
+                equipmentName = "?",
+                category = 0,
+                categoryName = "",
+                description = "",
+                clanFlag = 0,
+                rarity = 0,
+                passiveSkillId1 = 0,
+                passiveSkillId2 = 0,
+                passiveSkillPower = 0,
+                attrDefault = AttrDefaultInt(),
+                attr = AttrInt()
             )
-
     }
 
     /**
      * 属性整合
      */
-    fun fixAttrList(isPreview: Boolean = false): List<AttrCompareData> {
+    fun fixAttrList(context: Context = MyApplication.context): List<AttrCompareData> {
         val dataList = arrayListOf<AttrCompareData>()
-        this.attrDefault.allNotZero(isPreview).forEachIndexed { index, attrValue ->
+        this.attrDefault.toAttrInt().allNotZero(context).forEachIndexed { index, attrValue ->
             dataList.add(
                 AttrCompareData(
-                    attrValue.title,
-                    attrValue.value,
-                    this.attr.allNotZero(isPreview)[index].value,
-                    0.0
+                    title = attrValue.title,
+                    attr0 = attrValue.value,
+                    attr1 = this.attr.allNotZero(context)[index].value,
+                    attrCompare = 0.0
                 )
             )
         }

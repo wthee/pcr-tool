@@ -6,10 +6,8 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.ComicData
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppComicDatabase
-import retrofit2.HttpException
-import java.io.IOException
 
 /**
  * 漫画加载
@@ -19,7 +17,7 @@ import java.io.IOException
 class ComicRemoteMediator(
     private val keyword: String,
     private val database: AppComicDatabase,
-    private val repository: MyAPIRepository
+    private val repository: ApiRepository
 ) : RemoteMediator<Int, ComicData>() {
 
     private val comicDao = database.getComicDao()
@@ -36,7 +34,7 @@ class ComicRemoteMediator(
             }
 
             //获取数据
-            val response = repository.getComic(
+            val response = repository.getComicList(
                 after,
                 keyword
             ).data
@@ -56,9 +54,7 @@ class ComicRemoteMediator(
             return MediatorResult.Success(
                 endOfPaginationReached = isEndOfList
             )
-        } catch (e: IOException) {
-            return MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
     }

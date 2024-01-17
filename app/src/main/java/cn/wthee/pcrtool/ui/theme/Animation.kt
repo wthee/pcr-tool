@@ -116,7 +116,7 @@ fun ScaleBottomEndAnimation(
         modifier = modifier,
         enter = if (animOnFlag) {
             scaleIn(
-                animationSpec = defaultTween(300),
+                animationSpec = defaultSpring(),
                 transformOrigin = TransformOrigin(1f, 1f)
             ) + myFadeIn
         } else {
@@ -124,10 +124,10 @@ fun ScaleBottomEndAnimation(
         },
         exit = if (animOnFlag) {
             scaleOut(
-                animationSpec = defaultTween(180),
+                animationSpec = defaultSpring(),
                 transformOrigin = TransformOrigin(1f, 1f),
-                targetScale = 0.6f
-            ) + fadeOut(defaultTween(180))
+                targetScale = 0.3f
+            ) + myFadeOut
         } else {
             noAnimOut()
         },

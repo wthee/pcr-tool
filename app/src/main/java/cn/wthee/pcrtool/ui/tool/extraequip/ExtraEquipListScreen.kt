@@ -8,14 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -24,11 +22,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipmentBasicInfo
+import cn.wthee.pcrtool.data.enums.ExtraEquipLevelColor
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -37,26 +37,19 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.colorCopper
-import cn.wthee.pcrtool.ui.theme.colorGold
-import cn.wthee.pcrtool.ui.theme.colorGray
-import cn.wthee.pcrtool.ui.theme.colorPink
-import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * ex装备列表
  */
-@OptIn(
-    ExperimentalMaterialApi::class
-)
 @Composable
 fun ExtraEquipList(
     extraEquipmentViewModel: ExtraEquipListViewModel = hiltViewModel(),
@@ -87,11 +80,14 @@ fun ExtraEquipList(
     ) {
         StateBox(
             stateType = uiState.loadingState,
+            errorContent = {
+                CenterTipText(text = stringResource(R.string.not_installed))
+            }
         ) {
             if (uiState.equipList != null && uiState.filter != null) {
                 ExtraEquipListContent(
                     equipList = uiState.equipList!!,
-                    starIdList = uiState.starIdList,
+                    favoriteIdList = uiState.favoriteIdList,
                     scrollState = scrollState,
                     toExtraEquipDetail = toExtraEquipDetail
                 )
@@ -103,7 +99,7 @@ fun ExtraEquipList(
 @Composable
 private fun ExtraEquipListContent(
     equipList: List<ExtraEquipmentBasicInfo>,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     scrollState: LazyListState,
     toExtraEquipDetail: (Int) -> Unit
 ) {
@@ -128,7 +124,7 @@ private fun ExtraEquipListContent(
         ) { equipGroupData ->
             ExtraEquipGroup(
                 equipGroupData = equipGroupData,
-                starIdList = starIdList,
+                favoriteIdList = favoriteIdList,
                 toExtraEquipDetail = toExtraEquipDetail
             )
         }
@@ -172,7 +168,7 @@ private fun ExtraEquipListFabContent(
         text = "$count"
     ) {
         filter?.let {
-            toFilterExtraEquip(Gson().toJson(filter))
+            toFilterExtraEquip(Json.encodeToString(filter))
         }
     }
 }
@@ -183,7 +179,7 @@ private fun ExtraEquipListFabContent(
 @Composable
 private fun ExtraEquipGroup(
     equipGroupData: ExtraEquipGroupData,
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     toExtraEquipDetail: (Int) -> Unit
 ) {
     //分组标题
@@ -194,7 +190,7 @@ private fun ExtraEquipGroup(
                 equipGroupData.category
             ),
         iconSize = Dimen.smallIconSize,
-        backgroundColor = getEquipColor(equipGroupData.rarity),
+        backgroundColor = ExtraEquipLevelColor.getByType(equipGroupData.rarity).color,
         titleStart = stringResource(
             id = R.string.extra_equip_rarity_and_type,
             equipGroupData.rarity,
@@ -205,17 +201,16 @@ private fun ExtraEquipGroup(
     )
 
     //分组内容
-    VerticalGrid(
+    VerticalStaggeredGrid(
         itemWidth = Dimen.iconSize * 3,
-        contentPadding = Dimen.largePadding,
+        contentPadding = Dimen.mediumPadding,
         modifier = Modifier.padding(
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
-        ),
+            horizontal = Dimen.commonItemPadding
+        )
     ) {
         equipGroupData.equipIdList.forEach { equip ->
             ExtraEquipItem(
-                starIdList = starIdList,
+                favoriteIdList = favoriteIdList,
                 equip = equip,
                 toExtraEquipDetail = toExtraEquipDetail
             )
@@ -228,7 +223,7 @@ private fun ExtraEquipGroup(
  */
 @Composable
 private fun ExtraEquipItem(
-    starIdList: List<Int>,
+    favoriteIdList: List<Int>,
     equip: ExtraEquipmentBasicInfo,
     toExtraEquipDetail: (Int) -> Unit
 ) {
@@ -236,18 +231,12 @@ private fun ExtraEquipItem(
 
     Row(
         modifier = Modifier
-            .padding(
-                start = Dimen.smallPadding,
-                end = Dimen.smallPadding,
-                bottom = Dimen.mediumPadding
-            )
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraSmall)
             .clickable {
                 VibrateUtil(context).single()
                 toExtraEquipDetail(equip.equipmentId)
             }
-            .padding(Dimen.smallPadding)
     ) {
         MainIcon(
             data = ImageRequestHelper.getInstance()
@@ -259,7 +248,7 @@ private fun ExtraEquipItem(
             maxLines = 2,
             selectable = true,
             modifier = Modifier.padding(start = Dimen.smallPadding),
-            color = if (starIdList.contains(equip.equipmentId)) {
+            color = if (favoriteIdList.contains(equip.equipmentId)) {
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.onSurface
@@ -267,21 +256,6 @@ private fun ExtraEquipItem(
         )
     }
 }
-
-
-/**
- * 装备品级颜色
- */
-private fun getEquipColor(colorType: Int): Color {
-    return when (colorType) {
-        1 -> colorCopper
-        2 -> colorSilver
-        3 -> colorGold
-        4 -> colorPink
-        else -> colorGray
-    }
-}
-
 
 @CombinedPreviews
 @Composable
@@ -299,7 +273,7 @@ private fun ExtraEquipGroupPreview() {
                     ExtraEquipmentBasicInfo(equipmentName = text)
                 )
             ),
-            starIdList = arrayListOf(1)
+            favoriteIdList = arrayListOf(1)
         ) { }
     }
 }

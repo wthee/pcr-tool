@@ -1,11 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("com.google.devtools.ksp") version "1.9.21-1.0.16" apply false
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 buildscript {
     val kotlinVersion by extra("1.9.21")
-    val hiltVersion by extra("2.49")
+    val hiltVersion by extra("2.50")
+    val ktorVersion by extra("2.3.7")
 
     repositories {
         google()

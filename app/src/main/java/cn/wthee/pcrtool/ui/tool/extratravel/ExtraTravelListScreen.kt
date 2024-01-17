@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,13 +12,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraTravelData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.CommonTitleContentText
@@ -30,7 +31,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalGrid
+import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -68,7 +69,12 @@ fun ExtraTravelListScreen(
             }
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(
+            stateType = uiState.loadingState,
+            errorContent = {
+                CenterTipText(text = stringResource(R.string.not_installed))
+            }
+        ) {
             uiState.areaList?.let { areaList ->
                 LazyColumn(state = scrollState) {
                     items(areaList) {
@@ -104,28 +110,21 @@ private fun TravelItem(
     )
 
     //quest列表
-    VerticalGrid(
+    VerticalStaggeredGrid(
         itemWidth = getItemWidth() / 2,
-        contentPadding = Dimen.largePadding,
-        modifier = Modifier.padding(
-            start = Dimen.commonItemPadding,
-            end = Dimen.commonItemPadding
-        ),
+        contentPadding = Dimen.mediumPadding,
+        modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
     ) {
         travelData.questList.forEachIndexed { _, questData ->
-            MainCard(modifier = Modifier.padding(Dimen.mediumPadding),
+            MainCard(
                 onClick = {
                     toExtraEquipTravelAreaDetail(questData.travelQuestId)
                 }
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    TravelQuestHeader(
-                        questData = questData
-                    )
-                }
+                TravelQuestHeader(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    questData = questData
+                )
             }
         }
     }
@@ -137,15 +136,17 @@ private fun TravelItem(
  */
 @Composable
 fun TravelQuestHeader(
+    modifier: Modifier = Modifier,
     questData: ExtraEquipQuestData,
     showTitle: Boolean = true
 ) {
+    val context = LocalContext.current
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .padding(vertical = Dimen.mediumPadding)
+            .padding(vertical = Dimen.mediumPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //图标
         MainIcon(
@@ -154,11 +155,14 @@ fun TravelQuestHeader(
         )
         //标题
         if (showTitle) {
-            Subtitle1(text = questData.getQuestName())
+            Subtitle1(
+                text = questData.getQuestName(),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = Dimen.smallPadding)
+            )
         }
         //其它参数
-        VerticalGrid(
-            contentPadding = Dimen.smallPadding,
+        VerticalStaggeredGrid(
             itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(
@@ -171,11 +175,11 @@ fun TravelQuestHeader(
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_time),
-                toTimeText(questData.travelTime * 1000)
+                toTimeText(questData.travelTime * 1000, context)
             )
             CommonTitleContentText(
                 stringResource(id = R.string.travel_time_decrease_limit),
-                toTimeText(questData.travelTimeDecreaseLimit * 1000)
+                toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
             )
         }
     }
@@ -185,23 +189,25 @@ fun TravelQuestHeader(
 @Composable
 private fun TravelItemPreview() {
     PreviewLayout {
+        val quest = ExtraEquipQuestData(
+            1,
+            1,
+            stringResource(id = R.string.debug_short_text),
+            10,
+            1000,
+            2000,
+            1,
+            1,
+            1
+        )
+
         TravelItem(
             travelData = ExtraTravelData(
                 travelAreaId = 1,
                 travelAreaName = stringResource(id = R.string.debug_short_text),
                 questCount = 1,
                 questList = arrayListOf(
-                    ExtraEquipQuestData(
-                        1,
-                        1,
-                        stringResource(id = R.string.debug_short_text),
-                        10,
-                        1000,
-                        2000,
-                        1,
-                        1,
-                        1
-                    )
+                    quest, quest, quest
                 )
             ),
             toExtraEquipTravelAreaDetail = {}

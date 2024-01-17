@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -11,14 +13,26 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
+data class TabData(
+    var tab: String,
+    var count: Int? = null,
+    var isLoading: Boolean = false,
+    var color: Color? = null
+)
 
 /**
  * 通用 TabRow
@@ -30,16 +44,11 @@ import kotlinx.coroutines.launch
 fun MainTabRow(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    tabs: List<String>,
+    tabs: List<TabData>,
     scrollable: Boolean = false,
-    colorList: ArrayList<Color> = arrayListOf(),
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
-    val contentColor = if (colorList.isNotEmpty()) {
-        colorList[pagerState.currentPage]
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
+    val contentColor = tabs[pagerState.currentPage].color ?: MaterialTheme.colorScheme.primary
 
     if (scrollable) {
         ScrollableTabRow(
@@ -54,7 +63,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
+            TabItemList(pagerState, tabs, onClickCurrentTab)
         }
     } else {
         TabRow(
@@ -69,7 +78,7 @@ fun MainTabRow(
             },
             modifier = modifier
         ) {
-            MainTabList(pagerState, tabs, colorList, onClickCurrentTab)
+            TabItemList(pagerState, tabs, onClickCurrentTab)
         }
     }
 
@@ -80,16 +89,24 @@ fun MainTabRow(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MainTabList(
+private fun TabItemList(
     pagerState: PagerState,
-    tabs: List<String>,
-    colorList: ArrayList<Color>,
+    tabs: List<TabData>,
     onClickCurrentTab: (suspend CoroutineScope.(Int) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    tabs.forEachIndexed { index, s ->
+    tabs.forEachIndexed { index, tab ->
+        val color = if (tab.color != null) {
+            tab.color!!
+        } else {
+            if (pagerState.currentPage == index) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
+        }
         Tab(
             selected = pagerState.currentPage == index,
             onClick = {
@@ -101,20 +118,58 @@ private fun MainTabList(
                         pagerState.scrollToPage(index)
                     }
                 }
-            }) {
-            Subtitle1(
-                text = s,
-                modifier = Modifier.padding(Dimen.smallPadding),
-                color = if (colorList.isNotEmpty()) {
-                    colorList[index]
-                } else {
-                    if (pagerState.currentPage == index) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
+            }
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Subtitle1(
+                    text = tab.tab,
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    color = color
+                )
+                tab.count?.let {
+                    Subtitle2(
+                        text = it.toString(),
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        color = color
+                    )
                 }
-            )
+
+                if (tab.isLoading) {
+                    CircularProgressCompose(
+                        size = Dimen.smallIconSize,
+                        strokeWidth = Dimen.smallStrokeWidth
+                    )
+                }
+            }
+
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@CombinedPreviews
+@Composable
+private fun TabRowPreview() {
+    PreviewLayout {
+        MainTabRow(
+            pagerState = rememberPagerState {
+                3
+            },
+            tabs = arrayListOf(
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                    count = 10,
+                    color = MaterialTheme.colorScheme.primary,
+                    isLoading = true
+                ),
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                    count = 2,
+                ),
+                TabData(
+                    tab = stringResource(id = R.string.debug_short_text),
+                )
+            )
+        )
     }
 }

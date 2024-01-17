@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -18,9 +17,6 @@ import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.colorAlphaWhiteStart
 import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 
 /**
  * 点击组件之外内容关闭
@@ -62,16 +58,4 @@ fun Modifier.clickClose(
     } else {
         Modifier
     }
-}
-
-/**
- * 通用 placeholder
- */
-@Suppress("DEPRECATION")
-fun Modifier.commonPlaceholder(visible: Boolean, shape: Shape? = null): Modifier = composed {
-    Modifier.placeholder(
-        visible = visible,
-        highlight = PlaceholderHighlight.shimmer(),
-        shape = shape
-    )
 }

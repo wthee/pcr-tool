@@ -1,10 +1,12 @@
 package cn.wthee.pcrtool.data.model
 
 import cn.wthee.pcrtool.utils.stringArrayList
+import kotlinx.serialization.Serializable
 
 /**
  * 竞技场查询结果
  */
+@Serializable
 data class PvpResultData(
     val id: String = "",
     val atk: String = "",

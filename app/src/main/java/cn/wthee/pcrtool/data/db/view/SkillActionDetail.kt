@@ -84,15 +84,15 @@ data class SkillActionDetail(
             else -> false
         }
         val skillActionText = SkillActionText(
-            actionId,
-            tag,
-            "(${actionId % 10}) $formatDescText",
-            summonUnitId,
-            showCoe,
-            level,
-            atk,
-            isTpLimitAction,
-            isOtherLimitAction
+            actionId = actionId,
+            tag = tag,
+            action = "(${actionId % 100}) $formatDescText",
+            summonUnitId = summonUnitId,
+            showCoe = showCoe,
+            level = level,
+            atk = atk,
+            isTpLimitAction = isTpLimitAction,
+            isOtherLimitAction = isOtherLimitAction
         )
         if (BuildConfig.DEBUG) {
             skillActionText.debugText = getDebugText()
@@ -161,13 +161,14 @@ data class SkillActionDetail(
                     }
                 )
 
-                //无视防御
-                val ignoreDef = if (actionValue7 > 0) {
-                    val def = " [${actionValue7.toInt()}] "
-                    getString(R.string.skill_ignore_def, def)
-                } else {
-                    ""
-                }
+                //无视防御，fixme 需优化逻辑，龙拳为0但需要显示，106501108 106501109
+                val ignoreDef =
+                    if (actionValue7 > 0 || actionId == 106501108 || actionId == 106501109) {
+                        val def = " [${actionValue7.toInt()}] "
+                        getString(R.string.skill_ignore_def, def)
+                    } else {
+                        ""
+                    }
 
                 val value =
                     getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
@@ -608,7 +609,7 @@ data class SkillActionDetail(
                         )
                     } else {
                         when (actionDetail1) {
-                            in 600..699, 710 -> {
+                            in 600..699, 710, 6145 -> {
                                 getString(
                                     R.string.skill_action_if_mark,
                                     getTarget(),
@@ -633,6 +634,24 @@ data class SkillActionDetail(
                                 )
                             }
 
+                            2000, 1300 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_physical_atk),
+                                    actionDetail2 % 10
+                                )
+                            }
+
+                            2001 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_magic_atk),
+                                    actionDetail2 % 10
+                                )
+                            }
+
                             else -> UNKNOWN
                         }
                     }
@@ -647,7 +666,7 @@ data class SkillActionDetail(
                         )
                     } else {
                         when (actionDetail1) {
-                            in 600..699, 710 -> {
+                            in 600..699, 710, 6145 -> {
                                 getString(
                                     R.string.skill_action_if_mark_not,
                                     getTarget(),
@@ -668,6 +687,24 @@ data class SkillActionDetail(
                                     R.string.skill_action_if_hp_above,
                                     getTarget(),
                                     actionDetail1 - 900,
+                                    actionDetail3 % 10
+                                )
+                            }
+
+                            2000, 1300 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_magic_atk),
+                                    actionDetail3 % 10
+                                )
+                            }
+
+                            2001 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_physical_atk),
                                     actionDetail3 % 10
                                 )
                             }
@@ -825,6 +862,7 @@ data class SkillActionDetail(
 
                     else -> UNKNOWN
                 }
+
                 //上限判断
                 if (actionValue4.toInt() != 0) {
                     val limitValue = getValueText(4, actionValue4, actionValue5, hideIndex = true)
@@ -922,6 +960,24 @@ data class SkillActionDetail(
                                 )
                             }
 
+                            2000, 1300 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_physical_atk),
+                                    actionDetail2 % 10
+                                )
+                            }
+
+                            2001 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_magic_atk),
+                                    actionDetail2 % 10
+                                )
+                            }
+
                             else -> getString(
                                 R.string.skill_action_if_status,
                                 getTarget(),
@@ -1010,6 +1066,24 @@ data class SkillActionDetail(
                                     R.string.skill_action_sp_if_skill_count_not,
                                     getTarget(),
                                     actionDetail1 % 10,
+                                    actionDetail3 % 10
+                                )
+                            }
+
+                            2000, 1300 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_magic_atk),
+                                    actionDetail3 % 10
+                                )
+                            }
+
+                            2001 -> {
+                                getString(
+                                    R.string.skill_action_if_unit_atk_type,
+                                    getTarget(),
+                                    getString(R.string.skill_status_physical_atk),
                                     actionDetail3 % 10
                                 )
                             }
@@ -1188,10 +1262,27 @@ data class SkillActionDetail(
                         val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
 
                         getString(
-                            R.string.skill_action_type_desc_42,
+                            R.string.skill_action_type_desc_42_2,
                             actionValue4.toInt(),
                             value,
                             actionDetail2 % 10
+                        )
+                    }
+
+                    14 -> {
+                        val value = getValueText(1, actionValue1, actionValue2, 0.0, percent = "%")
+                        var actionText = getString(id = R.string.skill_action_d, actionDetail2 % 10)
+                        if (actionDetail3 != 0) {
+                            actionText += "、" + getString(
+                                id = R.string.skill_action_d,
+                                actionDetail3 % 10
+                            )
+                        }
+                        getString(
+                            R.string.skill_action_type_desc_42_14,
+                            actionValue4.toInt(),
+                            value,
+                            actionText
                         )
                     }
 
@@ -2000,10 +2091,8 @@ data class SkillActionDetail(
             1700 -> R.string.skill_status_1700
             721, 6107 -> R.string.skill_status_721_6107
             1513 -> R.string.skill_ailment_13
-            1300 -> R.string.skill_status_1300
             1800 -> R.string.skill_status_1800
             1900 -> R.string.skill_status_1900
-            2001 -> R.string.skill_status_2001
             3137 -> R.string.skill_status_3137
             else -> R.string.unknown
         }

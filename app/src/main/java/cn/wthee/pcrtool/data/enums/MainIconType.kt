@@ -9,20 +9,23 @@ import androidx.compose.material.icons.rounded.Animation
 import androidx.compose.material.icons.rounded.Api
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.AutoAwesomeMotion
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cake
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.CardGiftcard
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Celebration
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.CloudDownload
+import androidx.compose.material.icons.rounded.CloudOff
+import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.CompareArrows
 import androidx.compose.material.icons.rounded.ContactSupport
 import androidx.compose.material.icons.rounded.CreditCard
-import androidx.compose.material.icons.rounded.DataObject
 import androidx.compose.material.icons.rounded.DataUsage
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.DeleteForever
@@ -74,11 +77,9 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Signpost
-import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.material.icons.rounded.Stream
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
-import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.SyncProblem
 import androidx.compose.material.icons.rounded.Timeline
 import androidx.compose.material.icons.rounded.Toc
@@ -86,7 +87,6 @@ import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material.icons.rounded.TrackChanges
 import androidx.compose.material.icons.rounded.UnfoldMore
 import androidx.compose.material.icons.rounded.Upcoming
-import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WorkspacePremium
@@ -110,9 +110,9 @@ enum class MainIconType(val icon: ImageVector) {
     UP(Icons.Rounded.KeyboardArrowUp),
 
     /**
-     * 主菜单
+     * 添加
      */
-    MAIN(Icons.Rounded.Add),
+    ADD(Icons.Rounded.Add),
 
     /**
      * 返回
@@ -133,11 +133,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 重置
      */
     RESET(Icons.Rounded.RestartAlt),
-
-    /**
-     * 同步
-     */
-    SYNC(Icons.Rounded.Sync),
 
     /**
      * 回到顶部
@@ -172,12 +167,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 未收藏
      */
-    LOVE_LINE(Icons.Rounded.FavoriteBorder),
+    FAVORITE_LINE(Icons.Rounded.FavoriteBorder),
 
     /**
      * 收藏
      */
-    LOVE_FILL(Icons.Rounded.Favorite),
+    FAVORITE_FILL(Icons.Rounded.Favorite),
 
     /**
      * 角色介绍
@@ -310,6 +305,11 @@ enum class MainIconType(val icon: ImageVector) {
     DB_ERROR(Icons.Rounded.SyncProblem),
 
     /**
+     * 远程数据异常
+     */
+    REMOTE_DB_ERROR(Icons.Rounded.CloudOff),
+
+    /**
      * 反馈交流群
      */
     SUPPORT(Icons.Rounded.ContactSupport),
@@ -390,6 +390,11 @@ enum class MainIconType(val icon: ImageVector) {
     COMIC(Icons.Rounded.Looks4),
 
     /**
+     * 漫画信息
+     */
+    LOAD_COMIC(Icons.Rounded.AutoAwesomeMotion),
+
+    /**
      * 漫画目录
      */
     COMIC_NAV(Icons.Rounded.Toc),
@@ -412,12 +417,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 项目详情
      */
-    GITHUB_PROJECT(Icons.Rounded.DataObject),
+    GITHUB_PROJECT(Icons.Rounded.Code),
 
     /**
-     * 发布详情
+     * 认证
      */
-    COOLAPK_APP_STORE(Icons.Rounded.Verified),
+    SPONSOR(Icons.Rounded.CardGiftcard),
 
     /**
      * 编辑
@@ -543,11 +548,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 动画
      */
     MOVIE(Icons.Rounded.Movie),
-
-    /**
-     * 视频倍速
-     */
-    VIDEO_SPEED(Icons.Rounded.SlowMotionVideo),
 
     /**
      * 播放

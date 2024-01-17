@@ -1,11 +1,12 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.MyApplication
 import kotlin.math.max
 
@@ -45,19 +46,19 @@ object ScreenUtil {
 
 /**
  * 计算 spanCount
+ * @param width 总宽度
+ * @param itemDp 子项宽度
  */
-val Dp.spanCount: Int
-    @Composable
-    get() = max(1, LocalView.current.width / this.value.dp2pxNotComposable)
+fun spanCount(width: Int, itemDp: Dp, context: Context = MyApplication.context) =
+    max(1, width / dp2px(itemDp.value, context))
 
 /**
  *  获取 像素 的dp
  */
-val Int.px2dp: Int
-    get() {
-        val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this / scale + 0.5f).toInt()
-    }
+fun px2dp(context: Context, px: Int): Dp {
+    val scale: Float = context.resources.displayMetrics.density
+    return (px / scale).dp
+}
 
 /**
  *  获取dp的像素，Composable
@@ -73,9 +74,8 @@ val Float.dp2px: Int
 /**
  *  获取dp的像素，非 Composable
  */
-val Float.dp2pxNotComposable: Int
-    get() {
-        val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this * scale + 0.5f).toInt()
-    }
+fun dp2px(dp: Float, context: Context = MyApplication.context): Int {
+    val scale: Float = context.resources.displayMetrics.density
+    return (dp * scale + 0.5f).toInt()
+}
 

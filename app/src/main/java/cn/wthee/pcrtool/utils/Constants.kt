@@ -24,7 +24,8 @@ object Constants {
     //视频缓存
     const val VIDEO_DIR = "video_cache"
 
-    const val mediaType = "application/json; charset=utf-8"
+    const val SERVER_DOMAIN = "wthee.xyz"
+    const val SERVER_IP = "96.45.190.76"
 
     //数据库资源地址
     var DATABASE_URL = "https://$URL_DOMAIN/db/"
@@ -86,42 +87,45 @@ object Constants {
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(
-        getString(R.string.attr_hp),
-        getString(R.string.attr_life_steal),
-        getString(R.string.attr_atk),
-        getString(R.string.attr_magic_str),
-        getString(R.string.attr_def),
-        getString(R.string.attr_magic_def),
-        getString(R.string.attr_physical_critical),
-        getString(R.string.attr_magic_critical),
-        getString(R.string.attr_physical_penetrate),
-        getString(R.string.attr_magic_penetrate),
-        getString(R.string.attr_accuracy),
-        getString(R.string.attr_dodge),
-        getString(R.string.attr_wave_hp_recovery),
-        getString(R.string.attr_hp_recovery_rate),
-        getString(R.string.attr_wave_energy_recovery),
-        getString(R.string.attr_energy_recovery_rate),
-        getString(R.string.attr_energy_reduce_rate),
+        R.string.attr_hp,
+        R.string.attr_life_steal,
+        R.string.attr_atk,
+        R.string.attr_magic_str,
+        R.string.attr_def,
+        R.string.attr_magic_def,
+        R.string.attr_physical_critical,
+        R.string.attr_magic_critical,
+        R.string.attr_physical_penetrate,
+        R.string.attr_magic_penetrate,
+        R.string.attr_accuracy,
+        R.string.attr_dodge,
+        R.string.attr_wave_hp_recovery,
+        R.string.attr_hp_recovery_rate,
+        R.string.attr_wave_energy_recovery,
+        R.string.attr_energy_recovery_rate,
+        R.string.attr_energy_reduce_rate,
     )
 
     const val UNKNOWN = "?"
 
 
     // 异常
-    const val EXCEPTION_API = "api exception:"
-    const val EXCEPTION_DOWNLOAD_DB = "db download exception:"
-    const val EXCEPTION_DOWNLOAD_FILE = "file download exception:"
-    const val EXCEPTION_SAVE_DB = "db file save exception:"
-    const val EXCEPTION_FILE_SAVE = "file saveexception:"
-    const val EXCEPTION_LOAD_ATTR = "character attr exception:"
-    const val EXCEPTION_UNIT_NULL = "character info exception:"
-    const val EXCEPTION_SKILL = "skill exception:"
-    const val EXCEPTION_PVP_SERVICE = "pvp search exception:"
-    const val EXCEPTION_DATA_CHANGE = "db change exception:"
+    const val EXCEPTION_API = "api exception: "
+    const val EXCEPTION_DOWNLOAD_DB = "db download exception: "
+    const val EXCEPTION_DOWNLOAD_FILE = "file download exception: "
+    const val EXCEPTION_SAVE_DB = "db file save exception: "
+    const val EXCEPTION_FILE_SAVE = "file save exception: "
+    const val EXCEPTION_LOAD_ATTR = "character attr exception: "
+    const val EXCEPTION_UNIT_NULL = "character info exception: "
+    const val EXCEPTION_SKILL = "skill exception: "
+    const val EXCEPTION_PVP_SERVICE = "pvp search exception: "
+    const val EXCEPTION_DATA_CHANGE = "db change exception: "
 
     //任务
     const val DOWNLOAD_DB_WORK = "updateDatabase"
     const val DOWNLOAD_APK_WORK = "updateApk"
     const val DOWNLOAD_FILE_WORK = "downloadFile"
+
+    //应用版本
+    const val APP_VERSION = "app-version"
 }

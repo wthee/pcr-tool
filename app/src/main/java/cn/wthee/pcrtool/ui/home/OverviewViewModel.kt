@@ -7,12 +7,15 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.dataStoreMain
+import cn.wthee.pcrtool.utils.Constants.SERVER_DOMAIN
 import cn.wthee.pcrtool.utils.editOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,12 +31,10 @@ import javax.inject.Inject
  */
 @Immutable
 data class OverviewScreenUiState(
-    //首次加载
-    val firstLoad: Boolean = true,
     //排序数量
     val orderData: String = "",
     //日程点击展开状态
-    val eventLayoutState: Int = 0,
+    val eventExpandState: Int = 0,
     //编辑模式
     val isEditMode: Boolean = false,
     //设置菜单弹窗
@@ -41,7 +42,7 @@ data class OverviewScreenUiState(
     //数据切换弹窗
     val showChangeDb: Boolean = false,
     //顶部通知信息
-    val updateApp: AppNotice = AppNotice(id = -1),
+    val appUpdateData: AppNotice = AppNotice(id = -1),
     /**
      * apk下载状态
      * -4: 安装包安装失败
@@ -76,7 +77,7 @@ data class OverviewScreenUiState(
 @HiltViewModel
 class OverviewScreenViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
-    private val apiRepository: MyAPIRepository
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
     private val defaultOrder = "0-1-6-2-3-4-5-"
 
@@ -84,7 +85,23 @@ class OverviewScreenViewModel @Inject constructor(
     val uiState: StateFlow<OverviewScreenUiState> = _uiState.asStateFlow()
 
     init {
+        initCheck()
         getOrderData()
+    }
+
+    fun initCheck() {
+        //初始化六星id
+        getR6Ids()
+        //数据库校验
+        MainScope().launch {
+            DatabaseUpdater.checkDBVersion(
+                fixDb = false,
+                updateDbDownloadState = this@OverviewScreenViewModel::updateDbDownloadState,
+                updateDbVersionText = this@OverviewScreenViewModel::updateDbVersionText
+            )
+        }
+        //应用更新校验
+        checkUpdate()
     }
 
     /**
@@ -175,10 +192,10 @@ class OverviewScreenViewModel @Inject constructor(
     fun updateOrderData(id: Int) {
         viewModelScope.launch {
             editOrder(
-                MyApplication.context,
-                viewModelScope,
-                id,
-                MainPreferencesKeys.SP_OVERVIEW_ORDER
+                context = MyApplication.context,
+                scope = viewModelScope,
+                id = id,
+                key = MainPreferencesKeys.SP_OVERVIEW_ORDER
             ) { data ->
                 _uiState.update {
                     it.copy(
@@ -192,14 +209,14 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 六星 id 列表
      */
-    fun getR6Ids() {
+    private fun getR6Ids() {
         viewModelScope.launch {
             var dbError = false
             val r6Ids = unitRepository.getR6Ids()
 
-            if(r6Ids == null){
+            if (r6Ids == null) {
                 dbError = true
-            }else{
+            } else {
                 MainActivity.r6Ids = r6Ids
             }
 
@@ -218,27 +235,28 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 应用、数据库更新校验
      */
-    fun checkUpdate() {
+    private fun checkUpdate() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    updateApp = AppNotice(id = -1),
-                    firstLoad = false
+                    appUpdateData = AppNotice(id = -1)
                 )
             }
 
             //应用更新
             try {
                 val data = apiRepository.getUpdateContent().data ?: AppNotice(id = -2)
+                //将下载链接中的域名，根据设置替换为ip
+                data.url = data.url.replace(SERVER_DOMAIN, MyApplication.URL_DOMAIN)
                 _uiState.update {
                     it.copy(
-                        updateApp = data
+                        appUpdateData = data
                     )
                 }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
-                        updateApp = AppNotice(id = -2)
+                        appUpdateData = AppNotice(id = -2)
                     )
                 }
             }
@@ -261,7 +279,7 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 更新应用通知布局状态
      */
-    fun updateAppNoticeLayoutState(isAppNoticeExpanded: Boolean) {
+    fun updateExpanded(isAppNoticeExpanded: Boolean) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -274,11 +292,11 @@ class OverviewScreenViewModel @Inject constructor(
     /**
      * 更新日程展开布局状态
      */
-    fun updateEventLayoutState(eventLayoutState: Int) {
+    fun updateEventLayoutState(eventExpandState: Int) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    eventLayoutState = eventLayoutState
+                    eventExpandState = eventExpandState
                 )
             }
         }
