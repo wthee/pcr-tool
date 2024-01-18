@@ -10,7 +10,7 @@
 | chara_identity                | 角色身份            | 同一角色，不同换皮      |
 | chara_story_status            | 角色剧情故事属性        |                |
 | clan_battle_2_map_data        | 公会战各阶段基本信息      |                |
-| clan_battle_schedule          | 公会战日程信息         |                |
+| clan_battle_schedule          | 公会战日程信          |                |
 | colosseum_schedule_data       | 斗技场日程           |                |
 | daily_mission_data            | 每日任务            |                |
 | enemy_m_parts                 | 敌人多部位信息         |                |
@@ -42,7 +42,7 @@
 | secret_dungeon_schedule       | 特殊地下城日程         |                |
 | shiori_event_list             | 支线活动            |                |
 | skill_action                  | 技能动作            |                |
-| skill_data                    | 技能详细            |                |
+| skill_data                    | 技能详情            |                |
 | spskill_label_data            | 特殊技能标签          |                |
 | story_detail                  | 角色剧情详情          |                |
 | tdf_schedule                  | 次元断层日程          |                |
