@@ -118,7 +118,7 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
             stringResource(R.string.value_100_m, (attrValue.toInt() / 100000000f).toString())
         }
 
-        in 100000 until 100000000 -> {
+        in 1000000 until 100000000 -> {
             stringResource(R.string.value_10_k, attrValue.toInt() / 10000)
         }
 
