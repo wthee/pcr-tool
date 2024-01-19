@@ -24,3 +24,4 @@
 
 - [使用的数据表](DATATABLE.md)
 - [更新记录](CHANGELOG.md)
+- [游戏数据](https://github.com/wthee/pcr-tool-sql-diff)
