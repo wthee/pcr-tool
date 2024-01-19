@@ -15,7 +15,7 @@ object Constants {
     //属性变化等级，300级后，回避等属性转换为其他属性
     const val OTHER_LIMIT_LEVEL = 300
 
-    //本地数据库版本
+    //本地数据库版本，需强制更新数据库文件时，需更改该版本号
     const val SQLITE_VERSION = 374
 
     //图片缓存

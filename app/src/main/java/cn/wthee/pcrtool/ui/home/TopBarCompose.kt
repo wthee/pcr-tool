@@ -438,7 +438,7 @@ private fun downloadApk(
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.data =
                     Uri.parse(
-                        java.lang.String.format(
+                        String.format(
                             "package:%s",
                             context.packageName
                         )
