@@ -40,8 +40,7 @@ fun ClanBattleDetailScreen(
     clanBattleDetailViewModel: ClanBattleDetailViewModel = hiltViewModel()
 ) {
     val uiState by clanBattleDetailViewModel.uiState.collectAsStateWithLifecycle()
-    val pagerState =
-        rememberPagerState(initialPage = uiState.bossIndex) { 5 }
+    val pagerState = rememberPagerState(initialPage = uiState.bossIndex) { 5 }
 
 
     MainScaffold(
@@ -112,11 +111,17 @@ private fun ClanBattleDetailContent(
                     .getUrl(ImageRequestHelper.ICON_UNIT, it)
             )
         }
+        //图标指示器
         IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList)
         //BOSS信息
-        HorizontalPager(state = pagerState) { pagerIndex ->
-            if (bossDataList.isNotEmpty()) {
-                val enemy = bossDataList[pagerIndex]
+        if (bossDataList.isNotEmpty()) {
+            HorizontalPager(state = pagerState) {
+                /**
+                 * fixme 页面滑动问题
+                 * PagerScope#page 滑动时不准确，导致数据加载异常
+                 * 暂时替换为 pagerState.currentPage
+                 */
+                val enemy = bossDataList[pagerState.currentPage]
                 if (!LocalInspectionMode.current) {
                     EnemyDetailScreen(
                         enemyId = enemy.enemyId,
