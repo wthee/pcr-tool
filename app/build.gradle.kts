@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.10.01"
-val composeCompilerVersion = "1.5.7"
+val composeBom = "2024.01.00"
+val composeCompilerVersion = "1.5.8"
 val appVersionCode = 382
 val appVersionName = "3.8.2"
 val appId = "cn.wthee.pcrtool"
@@ -110,6 +110,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
@@ -123,13 +124,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material3:material3:1.2.0-beta02")
 
     //Accompanist
-    val accompanistVersion = "0.32.0"
-    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    val accompanistVersion = "0.34.0"
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
@@ -141,9 +140,9 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9.3")
 
     //Coil
-    val coilVersion = "3.0.0-alpha02"
-    implementation("io.coil-kt.coil3:coil-network:$coilVersion")
+    val coilVersion = "3.0.0-alpha03"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
+    implementation("io.coil-kt.coil3:coil-network-ktor:$coilVersion")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0-beta01")

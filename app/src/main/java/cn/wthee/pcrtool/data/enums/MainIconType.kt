@@ -1,6 +1,17 @@
 package cn.wthee.pcrtool.data.enums
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.CompareArrows
+import androidx.compose.material.icons.automirrored.rounded.ContactSupport
+import androidx.compose.material.icons.automirrored.rounded.EventNote
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
+import androidx.compose.material.icons.automirrored.rounded.Help
+import androidx.compose.material.icons.automirrored.rounded.ManageSearch
+import androidx.compose.material.icons.automirrored.rounded.NavigateBefore
+import androidx.compose.material.icons.automirrored.rounded.NavigateNext
+import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
+import androidx.compose.material.icons.automirrored.rounded.ReceiptLong
+import androidx.compose.material.icons.automirrored.rounded.Toc
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AllInclusive
@@ -23,8 +34,6 @@ import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.Code
-import androidx.compose.material.icons.rounded.CompareArrows
-import androidx.compose.material.icons.rounded.ContactSupport
 import androidx.compose.material.icons.rounded.CreditCard
 import androidx.compose.material.icons.rounded.DataUsage
 import androidx.compose.material.icons.rounded.DateRange
@@ -36,8 +45,6 @@ import androidx.compose.material.icons.rounded.DownloadDone
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.EventAvailable
-import androidx.compose.material.icons.rounded.EventNote
-import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Favorite
@@ -46,28 +53,22 @@ import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Handyman
-import androidx.compose.material.icons.rounded.Help
 import androidx.compose.material.icons.rounded.HourglassTop
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Looks4
-import androidx.compose.material.icons.rounded.ManageSearch
 import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material.icons.rounded.MiscellaneousServices
 import androidx.compose.material.icons.rounded.Movie
-import androidx.compose.material.icons.rounded.NavigateBefore
-import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material.icons.rounded.NotificationsNone
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Pets
 import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.PlaylistAdd
 import androidx.compose.material.icons.rounded.Public
-import androidx.compose.material.icons.rounded.ReceiptLong
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material.icons.rounded.RestartAlt
@@ -82,7 +83,6 @@ import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
 import androidx.compose.material.icons.rounded.SyncProblem
 import androidx.compose.material.icons.rounded.Timeline
-import androidx.compose.material.icons.rounded.Toc
 import androidx.compose.material.icons.rounded.Token
 import androidx.compose.material.icons.rounded.TrackChanges
 import androidx.compose.material.icons.rounded.UnfoldMore
@@ -117,7 +117,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 返回
      */
-    BACK(Icons.Rounded.NavigateBefore),
+    BACK(Icons.AutoMirrored.Rounded.NavigateBefore),
 
     /**
      * 完成
@@ -142,7 +142,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 更多
      */
-    MORE(Icons.Rounded.NavigateNext),
+    MORE(Icons.AutoMirrored.Rounded.NavigateNext),
 
     /**
      * 功能
@@ -212,7 +212,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 卡池
      */
-    GACHA(Icons.Rounded.ReceiptLong),
+    GACHA(Icons.AutoMirrored.Rounded.ReceiptLong),
 
     /**
      * 模拟卡池
@@ -272,7 +272,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * RANK 对比
      */
-    RANK_COMPARE(Icons.Rounded.CompareArrows),
+    RANK_COMPARE(Icons.AutoMirrored.Rounded.CompareArrows),
 
     /**
      * 日历 - 进行中
@@ -282,12 +282,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 日历
      */
-    CALENDAR(Icons.Rounded.EventNote),
+    CALENDAR(Icons.AutoMirrored.Rounded.EventNote),
 
     /**
      * 竞技场查询
      */
-    PVP_SEARCH(Icons.Rounded.ManageSearch),
+    PVP_SEARCH(Icons.AutoMirrored.Rounded.ManageSearch),
 
     /**
      * 新版本更新
@@ -312,12 +312,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 反馈交流群
      */
-    SUPPORT(Icons.Rounded.ContactSupport),
+    SUPPORT(Icons.AutoMirrored.Rounded.ContactSupport),
 
     /**
      * 添加对战信息
      */
-    PVP_ADD(Icons.Rounded.PlaylistAdd),
+    PVP_ADD(Icons.AutoMirrored.Rounded.PlaylistAdd),
 
     /**
      * 剩余时间
@@ -342,7 +342,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 悬浮窗关闭
      */
-    FLOAT_CLOSE(Icons.Rounded.ExitToApp),
+    FLOAT_CLOSE(Icons.AutoMirrored.Rounded.ExitToApp),
 
     /**
      * 悬浮窗最小化
@@ -397,12 +397,12 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 漫画目录
      */
-    COMIC_NAV(Icons.Rounded.Toc),
+    COMIC_NAV(Icons.AutoMirrored.Rounded.Toc),
 
     /**
      * 帮助
      */
-    HELP(Icons.Rounded.Help),
+    HELP(Icons.AutoMirrored.Rounded.Help),
 
     /**
      * 信息

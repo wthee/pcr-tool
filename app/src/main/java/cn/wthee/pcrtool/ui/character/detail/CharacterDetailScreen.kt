@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -715,7 +714,7 @@ private fun OtherToolsContent(
  * 角色等级
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
+    ExperimentalLayoutApi::class
 )
 @Composable
 private fun ColumnScope.LevelContent(

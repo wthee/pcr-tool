@@ -41,7 +41,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -164,17 +163,22 @@ fun MainScaffold(
     secondLineFab: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
+
     //返回拦截
     BackHandler(enableClickClose) {
         onCloseClick()
     }
 
     Box(
-        modifier = (if (fillMaxSize) {
-            modifier.fillMaxSize()
-        } else {
-            modifier
-        }).background(color = backgroundColor, shape),
+        modifier = modifier
+            .then(
+                if (fillMaxSize) {
+                    Modifier.fillMaxSize()
+                } else {
+                    Modifier
+                }
+            )
+            .background(color = backgroundColor, shape = shape),
         contentAlignment = contentAlignment
     ) {
         //主要内容
@@ -281,7 +285,9 @@ fun CircularProgressCompose(
 ) {
     Box(contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = progress,
+            progress = {
+                progress
+            },
             modifier = modifier
                 .size(size)
                 .padding(Dimen.exSmallPadding),
@@ -323,7 +329,9 @@ fun LinearProgressCompose(
     color: Color = MaterialTheme.colorScheme.primary
 ) {
     LinearProgressIndicator(
-        progress = progress,
+        progress = {
+            progress
+        },
         modifier = modifier
             .height(Dimen.linearProgressHeight)
             .clip(MaterialTheme.shapes.medium),
@@ -338,7 +346,7 @@ fun LinearProgressCompose(
  * @param fabText 不为空时，fab将显示该文本
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
+    ExperimentalLayoutApi::class
 )
 @Composable
 fun BottomSearchBar(
