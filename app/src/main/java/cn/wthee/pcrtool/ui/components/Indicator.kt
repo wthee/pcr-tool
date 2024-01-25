@@ -60,11 +60,12 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urlList: List<String>) 
                 ) {
                     MainIcon(
                         data = url,
-                    ) {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
+                        onClick = {
+                            scope.launch {
+                                pagerState.scrollToPage(index)
+                            }
                         }
-                    }
+                    )
                 }
             }
         }

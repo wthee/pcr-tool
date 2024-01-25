@@ -25,7 +25,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankSelectType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainContentText
@@ -72,11 +72,12 @@ fun RankEquipCountScreen(
             MainSmallFab(
                 iconType = MainIconType.EQUIP_CALC,
                 text = "${uiState.equipmentMaterialList?.size ?: 0} · $allCount",
-            ) {
-                scope.launch {
-                    scrollState.scrollToItem(0)
+                onClick = {
+                    scope.launch {
+                        scrollState.scrollToItem(0)
+                    }
                 }
-            }
+            )
         },
         secondLineFab = {
             //RANK 选择
@@ -109,7 +110,7 @@ fun RankEquipCountScreen(
             rank0 = uiState.rank0,
             rank1 = uiState.rank1,
             isAllUnit = uiState.isAllUnit,
-            loadingState = uiState.loadingState,
+            loadState = uiState.loadState,
             equipmentMaterialList = uiState.equipmentMaterialList,
             scrollState = scrollState,
             favoriteIdList = uiState.favoriteIdList,
@@ -124,7 +125,7 @@ private fun RankEquipCountContent(
     rank0: Int,
     rank1: Int,
     isAllUnit: Boolean,
-    loadingState: LoadingState,
+    loadState: LoadState,
     equipmentMaterialList: List<EquipmentMaterial>?,
     scrollState: LazyGridState,
     favoriteIdList: List<Int>,
@@ -161,8 +162,8 @@ private fun RankEquipCountContent(
             contentPadding = PaddingValues(horizontal = Dimen.mediumPadding),
             state = scrollState
         ) {
-            when (loadingState) {
-                LoadingState.Success -> {
+            when (loadState) {
+                LoadState.Success -> {
                     items(
                         items = equipmentMaterialList!!,
                         key = {
@@ -177,7 +178,7 @@ private fun RankEquipCountContent(
                     }
                 }
 
-                LoadingState.Loading -> {
+                LoadState.Loading -> {
                     items(count = 10) {
                         EquipCountItem(
                             item = EquipmentMaterial(),
@@ -187,7 +188,7 @@ private fun RankEquipCountContent(
                     }
                 }
 
-                LoadingState.Error -> {
+                LoadState.Error -> {
                     items(count = 10) {
                         EquipCountItem(
                             item = EquipmentMaterial(-1),
@@ -197,7 +198,7 @@ private fun RankEquipCountContent(
                     }
                 }
 
-                LoadingState.NoData -> {}
+                LoadState.NoData -> {}
             }
             items(10) {
                 CommonSpacer()
@@ -221,10 +222,11 @@ private fun EquipCountItem(
         MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ImageRequestHelper.ICON_EQUIPMENT, item.id),
-            modifier = Modifier.placeholder(placeholder)
-        ) {
-            toEquipMaterial(item.id, item.name)
-        }
+            modifier = Modifier.placeholder(placeholder),
+            onClick = {
+                toEquipMaterial(item.id, item.name)
+            }
+        )
         SelectText(
             selected = favorite,
             text = item.count.toString(),
@@ -241,7 +243,7 @@ private fun RankEquipCountContentPreview() {
             rank0 = 1,
             rank1 = 22,
             isAllUnit = false,
-            loadingState = LoadingState.Success,
+            loadState = LoadState.Success,
             equipmentMaterialList = arrayListOf(EquipmentMaterial(1), EquipmentMaterial(2)),
             scrollState = rememberLazyGridState(),
             favoriteIdList = arrayListOf(1),

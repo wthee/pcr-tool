@@ -58,9 +58,9 @@ fun ChipGroup(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SuggestionChipGroup(
-    items: List<KeywordData>,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    items: List<KeywordData>
 ) {
     val context = LocalContext.current
 

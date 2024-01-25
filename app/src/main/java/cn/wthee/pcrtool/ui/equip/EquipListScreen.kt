@@ -126,7 +126,7 @@ fun EquipListScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
         ) {
             if (uiState.equipList != null && uiState.filter != null) {
                 EquipListContent(
@@ -201,14 +201,15 @@ private fun EquipSearchFabContent(
                     val tipSearch = stringResource(id = R.string.tip_equip_search)
                     MainSmallFab(
                         iconType = MainIconType.SEARCH,
-                        text = stringResource(id = R.string.equip_search)
-                    ) {
-                        if (searchEquipIdList.isNotEmpty()) {
-                            toSearchEquipQuest(searchEquipIdList.listJoinStr)
-                        } else {
-                            ToastUtil.short(tipSearch)
+                        text = stringResource(id = R.string.equip_search),
+                        onClick = {
+                            if (searchEquipIdList.isNotEmpty()) {
+                                toSearchEquipQuest(searchEquipIdList.listJoinStr)
+                            } else {
+                                ToastUtil.short(tipSearch)
+                            }
                         }
-                    }
+                    )
                 }
 
             }
@@ -217,9 +218,10 @@ private fun EquipSearchFabContent(
             MainSmallFab(
                 iconType = MainIconType.SEARCH,
                 text = stringResource(id = R.string.equip_search_mode),
-            ) {
-                changeSearchMode()
-            }
+                onClick = {
+                    changeSearchMode()
+                }
+            )
         }
     }
 }
@@ -236,31 +238,34 @@ private fun EquipListFabContent(
 
     //回到顶部
     MainSmallFab(
-        iconType = MainIconType.TOP
-    ) {
-        coroutineScope.launch {
-            scrollState.scrollToItem(0)
+        iconType = MainIconType.TOP,
+        onClick = {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
         }
-    }
+    )
 
     //重置筛选
     if (filter?.isFilter() == true) {
         MainSmallFab(
-            iconType = MainIconType.RESET
-        ) {
-            resetFilter()
-        }
+            iconType = MainIconType.RESET,
+            onClick = {
+                resetFilter()
+            }
+        )
     }
 
     // 数量显示&筛选按钮
     MainSmallFab(
         iconType = MainIconType.EQUIP,
-        text = "$count"
-    ) {
-        filter?.let {
-            toFilterEquip(Json.encodeToString(filter))
+        text = "$count",
+        onClick = {
+            filter?.let {
+                toFilterEquip(Json.encodeToString(filter))
+            }
         }
-    }
+    )
 }
 
 @Composable

@@ -351,11 +351,12 @@ private fun PvpSearchHeader() {
         //添加信息
         IconTextButton(
             icon = MainIconType.PVP_ADD,
-            text = stringResource(id = R.string.pvp_upload)
-        ) {
-            //打开网页
-            BrowserUtil.open(addUrl)
-        }
+            text = stringResource(id = R.string.pvp_upload),
+            onClick = {
+                //打开网页
+                BrowserUtil.open(addUrl)
+            }
+        )
     }
 }
 
@@ -372,44 +373,46 @@ private fun PvpSearchFabContent(
 
     //悬浮窗
     MainSmallFab(
-        iconType = MainIconType.FLOAT
-    ) {
-        val homeIntent = Intent(Intent.ACTION_MAIN)
-        homeIntent.addCategory(Intent.CATEGORY_HOME)
-        if (Settings.canDrawOverlays(context)) {
-            //启动悬浮服务
-            val serviceIntent = Intent(context, PvpFloatService::class.java)
-            navViewModel.floatServiceRun.postValue(true)
-            context.stopService(serviceIntent)
-            context.startActivity(homeIntent)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
+        iconType = MainIconType.FLOAT,
+        onClick = {
+            val homeIntent = Intent(Intent.ACTION_MAIN)
+            homeIntent.addCategory(Intent.CATEGORY_HOME)
+            if (Settings.canDrawOverlays(context)) {
+                //启动悬浮服务
+                val serviceIntent = Intent(context, PvpFloatService::class.java)
+                navViewModel.floatServiceRun.postValue(true)
+                context.stopService(serviceIntent)
+                context.startActivity(homeIntent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent)
+                } else {
+                    context.startService(serviceIntent)
+                }
             } else {
-                context.startService(serviceIntent)
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:${MyApplication.context.packageName}")
+                )
+                context.startActivity(intent)
             }
-        } else {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:${MyApplication.context.packageName}")
-            )
-            context.startActivity(intent)
         }
-    }
+    )
     //查询
     MainSmallFab(
         iconType = MainIconType.PVP_SEARCH,
-        text = stringResource(id = R.string.pvp_search)
-    ) {
-        //查询
-        try {
-            scope.launch {
-                resultListState.scrollToItem(0)
-            }
-        } catch (_: Exception) {
+        text = stringResource(id = R.string.pvp_search),
+        onClick = {
+            //查询
+            try {
+                scope.launch {
+                    resultListState.scrollToItem(0)
+                }
+            } catch (_: Exception) {
 
+            }
+            searchByCharacterList()
         }
-        searchByCharacterList()
-    }
+    )
 }
 
 /**
@@ -521,12 +524,13 @@ private fun PvpToSelectList(
                 MainIcon(
                     data = it,
                     size = Dimen.fabIconSize,
-                    modifier = Modifier.padding(Dimen.smallPadding)
-                ) {
-                    scope.launch {
-                        selectListState.scrollToItem(positions[index])
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    onClick = {
+                        scope.launch {
+                            selectListState.scrollToItem(positions[index])
+                        }
                     }
-                }
+                )
             }
         }
     }
@@ -557,37 +561,38 @@ fun PvpIconItem(
     ) {
         //图标
         MainIcon(
-            data = icon
-        ) {
-            val newList = arrayListOf<PvpCharacterData>()
-            selectedIds.forEach {
-                newList.add(it)
-            }
+            data = icon,
+            onClick = {
+                val newList = arrayListOf<PvpCharacterData>()
+                selectedIds.forEach {
+                    newList.add(it)
+                }
 
-            //点击选择或取消选择
-            if (selected) {
-                var cancelSelectIndex = 0
-                newList.forEachIndexed { index, sel ->
-                    if (pvpCharacterData.unitId == sel.unitId) {
-                        cancelSelectIndex = index
+                //点击选择或取消选择
+                if (selected) {
+                    var cancelSelectIndex = 0
+                    newList.forEachIndexed { index, sel ->
+                        if (pvpCharacterData.unitId == sel.unitId) {
+                            cancelSelectIndex = index
+                        }
+                    }
+                    newList[cancelSelectIndex] = PvpCharacterData()
+                } else {
+
+                    if (!newList.contains(PvpCharacterData())) {
+                        ToastUtil.short(getString(R.string.tip_selected_5))
+                    }
+
+                    val unSelected = newList.find { it.position == 999 }
+                    if (unSelected != null) {
+                        //可以选择
+                        newList[0] = pvpCharacterData
                     }
                 }
-                newList[cancelSelectIndex] = PvpCharacterData()
-            } else {
-
-                if (!newList.contains(PvpCharacterData())) {
-                    ToastUtil.short(getString(R.string.tip_selected_5))
-                }
-
-                val unSelected = newList.find { it.position == 999 }
-                if (unSelected != null) {
-                    //可以选择
-                    newList[0] = pvpCharacterData
-                }
+                newList.sortWith(comparePvpCharacterData())
+                navViewModel.selectedPvpData.postValue(newList)
             }
-            newList.sortWith(comparePvpCharacterData())
-            navViewModel.selectedPvpData.postValue(newList)
-        }
+        )
 
         //位置
         val position =
@@ -629,12 +634,13 @@ fun PvpUnitIconLine(
             ) {
                 MainIcon(
                     data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
-                    wrapSize = true
-                ) {
-                    if (!floatWindow) {
-                        toCharacter(it)
+                    wrapSize = true,
+                    onClick = {
+                        if (!floatWindow) {
+                            toCharacter(it)
+                        }
                     }
-                }
+                )
             }
         }
     }

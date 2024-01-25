@@ -7,6 +7,9 @@ import androidx.core.net.toUri
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 
+/**
+ * 再浏览器中打开
+ */
 object BrowserUtil {
 
     /**

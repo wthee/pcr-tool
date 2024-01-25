@@ -9,8 +9,8 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ data class CharacterListUiState(
     val filter: FilterCharacter? = null,
     //收藏的角色编号
     val favoriteIdList: List<Int> = arrayListOf(),
-    val loadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
     val openDialog: Boolean = false
 )
 
@@ -58,7 +58,7 @@ class CharacterListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     characterList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }
@@ -104,7 +104,7 @@ class CharacterListViewModel @Inject constructor(
                 it.copy(
                     filter = filter,
                     characterList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

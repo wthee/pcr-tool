@@ -59,18 +59,19 @@ fun ExtraTravelListScreen(
             MainSmallFab(
                 iconType = MainIconType.EXTRA_EQUIP_DROP,
                 text = stringResource(id = R.string.tool_travel),
-            ) {
-                scope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             errorContent = {
                 CenterTipText(text = stringResource(R.string.not_installed))
             }

@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.db.view.startTime
 
 
 /**
- * 日常相关排序
+ * 日程相关排序
  */
 fun <T> compareAllTypeEvent(today: String? = null) = Comparator<T> { o1, o2 ->
     var sd1 = ""

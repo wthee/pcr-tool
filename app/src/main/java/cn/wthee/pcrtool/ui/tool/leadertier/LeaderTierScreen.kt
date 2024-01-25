@@ -25,9 +25,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableHeader
@@ -74,26 +73,20 @@ fun LeaderTierScreen(
             MainSmallFab(
                 iconType = MainIconType.LEADER_TIER,
                 text = uiState.size.toString(),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                scope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
 
         },
         secondLineFab = {
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 //切换类型
                 SelectTypeFab(
                     icon = MainIconType.CLAN_SECTION,
@@ -130,7 +123,7 @@ fun LeaderTierScreen(
             )
 
             StateBox(
-                stateType = uiState.loadingState,
+                stateType = uiState.loadState,
                 loadingContent = {
                     VerticalStaggeredGrid(
                         itemWidth = Dimen.iconSize * 4,

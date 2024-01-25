@@ -8,7 +8,9 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-
+/**
+ * SSL 配置
+ */
 object SslUtil {
 
     @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")

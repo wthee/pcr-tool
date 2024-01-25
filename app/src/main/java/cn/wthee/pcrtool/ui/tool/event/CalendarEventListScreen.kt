@@ -78,24 +78,28 @@ fun CalendarEventListScreen(
         fab = {
             //重置
             if (uiState.dateRange.hasFilter()) {
-                MainSmallFab(iconType = MainIconType.RESET) {
-                    calendarEventListViewModel.reset()
-                    dateRangePickerState.setSelection(null, null)
-                }
+                MainSmallFab(
+                    iconType = MainIconType.RESET,
+                    onClick = {
+                        calendarEventListViewModel.reset()
+                        dateRangePickerState.setSelection(null, null)
+                    }
+                )
             }
 
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.CALENDAR,
                 text = stringResource(id = R.string.tool_event),
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -106,7 +110,7 @@ fun CalendarEventListScreen(
             }
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             CalendarEventListContent(
                 scrollState = scrollState,
                 calendarEventList = uiState.calendarEventList!!

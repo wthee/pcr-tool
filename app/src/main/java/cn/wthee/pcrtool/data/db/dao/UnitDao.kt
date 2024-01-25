@@ -94,7 +94,7 @@ interface UnitDao {
             LEFT JOIN quest_data ON quest_data.quest_id LIKE '13%' AND quest_data.daily_limit <> 0 AND quest_data.reward_image_1 = 32000 + unit_data.unit_id / 100 % 1000
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
-            unit_data.unit_name like '%' || :unitName || '%'
+            (unit_data.unit_name like '%' || :unitName || '%' OR unit_data.unit_id = :unitName)
         AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
         AND 1 = CASE

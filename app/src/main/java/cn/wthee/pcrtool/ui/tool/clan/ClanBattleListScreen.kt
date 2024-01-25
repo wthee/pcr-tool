@@ -80,18 +80,19 @@ fun ClanBattleListScreen(
             MainSmallFab(
                 iconType = MainIconType.CLAN,
                 text = stringResource(id = R.string.tool_clan),
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             loadingContent = {
                 LazyVerticalGrid(
                     state = rememberLazyGridState(),
@@ -224,21 +225,22 @@ fun ClanBattleItem(
                         contentAlignment = Alignment.Center
                     ) {
                         MainIcon(
-                            data = ImageRequestHelper.getInstance().getUrl(ICON_UNIT, it)
-                        ) {
-                            if (!placeholder) {
-                                toClanBossInfo(
-                                    Json.encodeToString(
-                                        ClanBattleProperty(
-                                            clanBattleId = clanBattleInfo.clanBattleId,
-                                            index = index,
-                                            minPhase = clanBattleInfo.minPhase,
-                                            maxPhase = clanBattleInfo.maxPhase,
+                            data = ImageRequestHelper.getInstance().getUrl(ICON_UNIT, it),
+                            onClick = {
+                                if (!placeholder) {
+                                    toClanBossInfo(
+                                        Json.encodeToString(
+                                            ClanBattleProperty(
+                                                clanBattleId = clanBattleInfo.clanBattleId,
+                                                index = index,
+                                                minPhase = clanBattleInfo.minPhase,
+                                                maxPhase = clanBattleInfo.maxPhase,
+                                            )
                                         )
                                     )
-                                )
+                                }
                             }
-                        }
+                        )
                         //多目标提示
                         val targetCount = clanBattleInfo.getMultiCount(index)
                         if (targetCount > 0) {

@@ -133,27 +133,15 @@ val Double.intStr: String
     }
 
 /**
- * 复制
+ * 复制文本
  */
 fun copyText(context: Context, text: String) {
-    //复制群号
     val clipboardManager =
         context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val mClipData = ClipData.newPlainText("OcrText", text)
     clipboardManager.setPrimaryClip(mClipData)
     ToastUtil.short(getString(R.string.copy_success))
 }
-
-/**
- * 服务器版本名称
- */
-fun getRegionName(region: RegionType) = getString(
-    id = when (region) {
-        RegionType.CN -> R.string.db_cn
-        RegionType.TW -> R.string.db_tw
-        RegionType.JP -> R.string.db_jp
-    }
-)
 
 /**
  * 获取文本
@@ -173,6 +161,7 @@ fun getString(
     vararg formatArgs: Any
 ) =
     context.getString(id, *formatArgs)
+
 /**
  * 格式化文本
  * 999 -> ?

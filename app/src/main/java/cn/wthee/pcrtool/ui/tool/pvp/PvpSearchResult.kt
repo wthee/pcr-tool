@@ -139,10 +139,11 @@ fun PvpSearchResult(
                     ) {
                         SubButton(
                             text = stringResource(id = R.string.pvp_research),
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            research()
-                        }
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            onClick = {
+                                research()
+                            }
+                        )
                     }
                 }
 
@@ -216,27 +217,32 @@ private fun PvpResultItem(
             //收藏
             if (!placeholder) {
                 MainIcon(
-                    data = if (liked) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
-                    size = Dimen.fabIconSize
-                ) {
-                    scope.launch {
-                        if (liked) {
-                            //已收藏，取消收藏
-                            delete(item.atk, item.def)
-                        } else {
-                            //未收藏，添加收藏
-                            insert(
-                                PvpFavoriteData(
-                                    item.id,
-                                    item.atk,
-                                    item.def,
-                                    getToday(true),
-                                    MainActivity.regionType.value
+                    data = if (liked) {
+                        MainIconType.FAVORITE_FILL
+                    } else {
+                        MainIconType.FAVORITE_LINE
+                    },
+                    size = Dimen.fabIconSize,
+                    onClick = {
+                        scope.launch {
+                            if (liked) {
+                                //已收藏，取消收藏
+                                delete(item.atk, item.def)
+                            } else {
+                                //未收藏，添加收藏
+                                insert(
+                                    PvpFavoriteData(
+                                        item.id,
+                                        item.atk,
+                                        item.def,
+                                        getToday(true),
+                                        MainActivity.regionType.value
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
+                )
             }
         }
 

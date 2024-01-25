@@ -17,8 +17,14 @@ import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.dataStoreSetting
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.getRegionCode
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
@@ -63,10 +69,6 @@ object DatabaseUpdater {
             updateDbDownloadState(-2)
             return
         }
-//        if(version.status == -2){
-//            //取消
-//            return
-//        }
         //更新版本文本内容
         updateDbVersionText(version.data)
         //下载数据库

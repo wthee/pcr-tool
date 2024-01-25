@@ -92,24 +92,28 @@ fun GachaListScreen(
         fab = {
             //重置
             if (uiState.dateRange.hasFilter()) {
-                MainSmallFab(iconType = MainIconType.RESET) {
-                    gachaListViewModel.reset()
-                    dateRangePickerState.setSelection(null, null)
-                }
+                MainSmallFab(
+                    iconType = MainIconType.RESET,
+                    onClick = {
+                        gachaListViewModel.reset()
+                        dateRangePickerState.setSelection(null, null)
+                    }
+                )
             }
 
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.GACHA,
                 text = stringResource(id = R.string.tool_gacha),
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -120,7 +124,7 @@ fun GachaListScreen(
             }
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             GachaListContent(
                 scrollState = scrollState,
                 gachaList = uiState.gachaList!!,
@@ -255,14 +259,15 @@ fun GachaItem(
                 if (!isMixedGachaPool) {
                     IconTextButton(
                         icon = MainIconType.MOCK_GACHA,
-                        text = stringResource(R.string.tool_mock_gacha)
-                    ) {
-                        //跳转
-                        toMockGachaFromList(
-                            mockGachaType.type,
-                            Json.encodeToString(gachaInfo.getMockGachaPickUpUnitList())
-                        )
-                    }
+                        text = stringResource(R.string.tool_mock_gacha),
+                        onClick = {
+                            //跳转
+                            toMockGachaFromList(
+                                mockGachaType.type,
+                                Json.encodeToString(gachaInfo.getMockGachaPickUpUnitList())
+                            )
+                        }
+                    )
                 }
                 //结束日期
                 CaptionText(

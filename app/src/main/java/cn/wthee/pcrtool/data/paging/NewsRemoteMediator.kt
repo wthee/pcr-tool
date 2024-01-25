@@ -8,6 +8,7 @@ import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.DateRange
 
 /**
@@ -15,7 +16,6 @@ import cn.wthee.pcrtool.ui.components.DateRange
  */
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
-    private val region: Int,
     private val keyword: String,
     private val dateRange: DateRange,
     private val database: AppNewsDatabase,
@@ -44,17 +44,16 @@ class NewsRemoteMediator(
 
             //获取数据
             val response = repository.getNewsList(
-                region,
-                after,
-                keyword,
-                dateRange.startDate,
-                dateRange.endDate
+                after = after,
+                keyword = keyword,
+                startTime = dateRange.startDate,
+                endTime = dateRange.endDate
             ).data
             val isEndOfList = response?.isEmpty() ?: false
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    newsDao.deleteByRegionAndQuery(region, keyword)
+                    newsDao.deleteByRegionAndQuery(MainActivity.regionType.value, keyword)
                 }
 
                 //保存到本地

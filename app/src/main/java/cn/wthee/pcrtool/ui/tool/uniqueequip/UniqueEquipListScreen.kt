@@ -126,7 +126,7 @@ fun UniqueEquipListScreen(
             uniqueEquipListViewModel.changeSearchBar(false)
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             Column {
                 if (pagerCount == 2) {
                     MainTabRow(
@@ -205,10 +205,11 @@ private fun UniqueEquipItem(
     ) {
         MainIcon(
             data = ImageRequestHelper.getInstance()
-                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId)
-        ) {
-            toUniqueEquipDetail(equip.unitId)
-        }
+                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId),
+            onClick = {
+                toUniqueEquipDetail(equip.unitId)
+            }
+        )
 
         Column {
 

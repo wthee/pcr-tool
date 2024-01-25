@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,6 +53,7 @@ import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableFab
+import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -415,13 +415,14 @@ private fun DbVersionSelectContent(
                     .fillMaxWidth()
                     .padding(horizontal = Dimen.smallPadding)
                     .padding(vertical = Dimen.mediumPadding),
-                selectedColor = color
-            ) {
-                coroutineScope.launch {
-                    //正常切换
-                    DatabaseUpdater.changeDatabase(regionType)
+                selectedColor = color,
+                onClick = {
+                    coroutineScope.launch {
+                        //正常切换
+                        DatabaseUpdater.changeDatabase(regionType)
+                    }
                 }
-            }
+            )
 
         }
     }
@@ -463,7 +464,8 @@ private fun DbVersionOtherContent(
                 stringResource(R.string.db_diff_content_none)
             } else {
                 dbVersion.desc
-            }
+            },
+            color = color
         )
 
         Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
@@ -483,8 +485,9 @@ private fun DbVersionOtherContent(
                     stringResource(id = R.string.unknown)
                 },
                 modifier = Modifier
-                    .width(60.dp)
                     .fillMaxHeight()
+                    .width(60.dp),
+                color = color
             )
 
             Spacer(modifier = Modifier.width(Dimen.commonItemPadding))
@@ -495,7 +498,8 @@ private fun DbVersionOtherContent(
                 content = dbVersion?.truthVersion ?: stringResource(id = R.string.unknown),
                 modifier = Modifier
                     .weight(1f)
-                    .widthIn(max = Dimen.dataChangeWidth)
+                    .widthIn(max = Dimen.dataChangeWidth),
+                color = color
             )
         }
 
@@ -505,6 +509,7 @@ private fun DbVersionOtherContent(
         MainCard(
             fillMaxWidth = false,
             elevation = Dimen.popupMenuElevation,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
             onClick = {
                 MainScope().launch {
                     //重新下载
@@ -519,36 +524,23 @@ private fun DbVersionOtherContent(
                     }
                 }
                 closeAllDialog()
-            },
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(Dimen.mediumPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MainIcon(
-                    data = MainIconType.DOWNLOAD,
-                    size = Dimen.smallIconSize,
-                    tint = color
-                )
-
-                Text(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    text = if (remoteDbSizeError) {
-                        stringResource(id = R.string.remote_data_file_error)
-                    } else if (dbError) {
-                        stringResource(id = R.string.data_file_error)
-                    } else {
-                        stringResource(id = R.string.data_file_error_desc)
-                    },
-                    color = color,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Start
-                )
             }
+        ) {
+            IconTextButton(
+                modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                text = if (remoteDbSizeError) {
+                    stringResource(id = R.string.remote_data_file_error)
+                } else if (dbError) {
+                    stringResource(id = R.string.data_file_error)
+                } else {
+                    stringResource(id = R.string.data_file_error_desc)
+                },
+                contentColor = color,
+                icon = MainIconType.DOWNLOAD,
+                textStyle = MaterialTheme.typography.bodySmall,
+                maxLines = 2
+            )
         }
-
     }
 
 }
@@ -562,14 +554,12 @@ private fun DbVersionContentItem(
     title: String,
     content: String,
     color: Color = MaterialTheme.colorScheme.primary,
-    fillMaxWidth: Boolean = true,
-    onClick: (() -> Unit)? = null
+    fillMaxWidth: Boolean = true
 ) {
     MainCard(
-        modifier = modifier.height(IntrinsicSize.Min),
+        modifier = modifier,
         fillMaxWidth = fillMaxWidth,
         elevation = Dimen.popupMenuElevation,
-        onClick = onClick,
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
         MainText(

@@ -117,21 +117,23 @@ private fun PvpFavoriteItem(
             //取消收藏
             MainIcon(
                 data = MainIconType.FAVORITE_FILL,
-                size = Dimen.fabIconSize
-            ) {
-                //点击取消收藏
-                scope.launch {
-                    delete(itemData.atks, itemData.defs)
+                size = Dimen.fabIconSize,
+                onClick = {
+                    //点击取消收藏
+                    scope.launch {
+                        delete(itemData.atks, itemData.defs)
+                    }
                 }
-            }
+            )
             Spacer(modifier = Modifier.width(largePadding))
             //搜索
             MainIcon(
                 data = MainIconType.PVP_SEARCH,
-                size = Dimen.fabIconSize
-            ) {
-                searchByDefs(itemData.getDefIds())
-            }
+                size = Dimen.fabIconSize,
+                onClick = {
+                    searchByDefs(itemData.getDefIds())
+                }
+            )
         }
         //队伍角色图标
         MainCard {

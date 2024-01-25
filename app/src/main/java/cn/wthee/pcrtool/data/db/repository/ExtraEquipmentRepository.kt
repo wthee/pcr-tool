@@ -90,5 +90,4 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
         null
     }
 
-    suspend fun getAllEquipSkillIdList() = equipmentDao.getAllEquipSkillIdList()
 }

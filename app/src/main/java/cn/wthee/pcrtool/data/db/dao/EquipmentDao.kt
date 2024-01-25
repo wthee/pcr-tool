@@ -241,7 +241,7 @@ interface EquipmentDao {
     suspend fun getUniqueEquipInfoV2(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
 
     /**
-     * 获取专武信息（等级大于260）
+     * 获取专武信息（等级大于260或300）
      * @param unitId 角色编号
      */
     @SkipQueryVerification
@@ -275,7 +275,7 @@ interface EquipmentDao {
     suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int): Attr?
 
     /**
-     * 获取专武信息（等级大于260）
+     * 获取专武信息（等级大于260或300）
      * @param unitId 角色编号
      */
     @SkipQueryVerification

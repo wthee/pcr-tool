@@ -152,10 +152,11 @@ fun TopBarCompose(
                             data = MainIconType.REQUEST_ERROR,
                             tint = colorRed,
                             size = Dimen.fabIconSize,
-                            modifier = Modifier.padding(start = Dimen.smallPadding)
-                        ) {
-                            updateExpanded(!isExpanded)
-                        }
+                            modifier = Modifier.padding(start = Dimen.smallPadding),
+                            onClick = {
+                                updateExpanded(!isExpanded)
+                            }
+                        )
                     }
 
                     else -> {
@@ -168,19 +169,21 @@ fun TopBarCompose(
                                     appUpdateData.title
                                 ),
                                 contentColor = colorGreen,
-                                iconSize = Dimen.fabIconSize
-                            ) {
-                                updateExpanded(true)
-                            }
+                                iconSize = Dimen.fabIconSize,
+                                onClick = {
+                                    updateExpanded(true)
+                                }
+                            )
                         } else {
                             MainIcon(
                                 data = if (isExpanded) MainIconType.CLOSE else MainIconType.NOTICE,
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 size = Dimen.fabIconSize,
-                                modifier = Modifier.padding(start = Dimen.smallPadding)
-                            ) {
-                                updateExpanded(!isExpanded)
-                            }
+                                modifier = Modifier.padding(start = Dimen.smallPadding),
+                                onClick = {
+                                    updateExpanded(!isExpanded)
+                                }
+                            )
                         }
 
                     }
@@ -190,10 +193,11 @@ fun TopBarCompose(
                 MainIcon(
                     data = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    size = Dimen.fabIconSize
-                ) {
-                    changeEditMode()
-                }
+                    size = Dimen.fabIconSize,
+                    onClick = {
+                        changeEditMode()
+                    }
+                )
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
 
@@ -359,16 +363,18 @@ private fun UpdateContent(
             IconTextButton(
                 icon = MainIconType.SPONSOR,
                 text = stringResource(id = R.string.sponsor),
-            ) {
-                BrowserUtil.open(afdUrl)
-            }
+                onClick = {
+                    BrowserUtil.open(afdUrl)
+                }
+            )
             //反馈群
             IconTextButton(
                 icon = MainIconType.SUPPORT,
                 text = stringResource(id = R.string.to_feedback),
-            ) {
-                joinQQGroup(context)
-            }
+                onClick = {
+                    joinQQGroup(context)
+                }
+            )
         }
 
         //日期
@@ -399,18 +405,19 @@ private fun UpdateContent(
                 //从GitHub下载
                 SubButton(
                     text = stringResource(id = R.string.download_apk_from_github),
-                ) {
-                    downloadApk(githubReleaseUrl, context, updateApkDownloadState, owner)
-                }
+                    onClick = {
+                        downloadApk(githubReleaseUrl, context, updateApkDownloadState, owner)
+                    }
+                )
 
                 //从服务器下载
                 MainButton(
                     text = stringResource(id = R.string.download_apk),
                     containerColor = colorGreen,
-                ) {
-                    downloadApk(appNotice.url, context, updateApkDownloadState, owner)
-                }
-
+                    onClick = {
+                        downloadApk(appNotice.url, context, updateApkDownloadState, owner)
+                    }
+                )
             }
         }
 

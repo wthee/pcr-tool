@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 data class RankEquipListUiState(
     val currentRank: Int = 0,
     val rankEquipList: List<UnitPromotion>? = emptyList(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -61,7 +61,7 @@ class RankEquipListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     rankEquipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

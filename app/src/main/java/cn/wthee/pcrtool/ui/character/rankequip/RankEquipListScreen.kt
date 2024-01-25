@@ -41,7 +41,7 @@ fun RankEquipListScreen(
     MainScaffold(
         mainFabIcon = MainIconType.OK
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             uiState.rankEquipList?.let {
                 RankEquipListContent(
                     currentRank = uiState.currentRank,

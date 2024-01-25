@@ -286,6 +286,7 @@ fun RankText(
 @Composable
 fun SelectText(
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     selected: Boolean,
     text: String,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
@@ -293,8 +294,7 @@ fun SelectText(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     padding: Dp = Dimen.smallPadding,
     margin: Dp = Dimen.smallPadding,
-    textAlign: TextAlign = TextAlign.Center,
-    onClick: (() -> Unit)? = null
+    textAlign: TextAlign = TextAlign.Center
 ) {
     val context = LocalContext.current
     val mModifier = if (selected) {

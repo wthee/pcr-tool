@@ -103,24 +103,28 @@ fun StoryEventListScreen(
         fab = {
             //重置
             if (uiState.dateRange.hasFilter()) {
-                MainSmallFab(iconType = MainIconType.RESET) {
-                    storyEventListViewModel.reset()
-                    dateRangePickerState.setSelection(null, null)
-                }
+                MainSmallFab(
+                    iconType = MainIconType.RESET,
+                    onClick = {
+                        storyEventListViewModel.reset()
+                        dateRangePickerState.setSelection(null, null)
+                    }
+                )
             }
 
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.EVENT,
                 text = stringResource(id = R.string.tool_event),
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -131,7 +135,7 @@ fun StoryEventListScreen(
             }
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             StoryEventListContent(
                 scrollState = scrollState,
                 storyList = uiState.storyList!!,
@@ -299,10 +303,11 @@ fun StoryEventItemContent(
                                     ImageRequestHelper.ICON_UNIT,
                                     event.bossUnitId / 10 * 10
                                 ),
-                            modifier = Modifier.padding(start = Dimen.mediumPadding)
-                        ) {
-                            toEventEnemyDetail(event.bossEnemyId)
-                        }
+                            modifier = Modifier.padding(start = Dimen.mediumPadding),
+                            onClick = {
+                                toEventEnemyDetail(event.bossEnemyId)
+                            }
+                        )
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     //活动掉落角色图标
@@ -310,10 +315,11 @@ fun StoryEventItemContent(
                         val unitId = itemId % 10000 * 100 + 1
                         MainIcon(
                             data = ImageRequestHelper.getInstance().getMaxIconUrl(unitId),
-                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
-                        ) {
-                            toCharacterDetail(unitId)
-                        }
+                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                            onClick = {
+                                toCharacterDetail(unitId)
+                            }
+                        )
                     }
                 }
             }
@@ -331,10 +337,11 @@ fun StoryEventItemContent(
                 //查看立绘
                 IconTextButton(
                     icon = MainIconType.PREVIEW_IMAGE,
-                    text = stringResource(R.string.story_pic)
-                ) {
-                    toAllPics(event.storyId, AllPicsType.STORY.type)
-                }
+                    text = stringResource(R.string.story_pic),
+                    onClick = {
+                        toAllPics(event.storyId, AllPicsType.STORY.type)
+                    }
+                )
                 //结束日期
                 CaptionText(
                     text = if (isSub) {

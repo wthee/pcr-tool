@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +31,8 @@ data class PictureUiState(
     val storyCardList: ArrayList<String> = arrayListOf(),
     //过场漫画
     val comicList: ArrayList<String> = arrayListOf(),
-    val storyLoadState: LoadingState = LoadingState.Loading,
-    val comicLoadState: LoadingState = LoadingState.Loading,
+    val storyLoadState: LoadState = LoadState.Loading,
+    val comicLoadState: LoadState = LoadState.Loading,
     val pageCount: Int = 1
 )
 
@@ -114,13 +114,13 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             storyCardList = list,
-                            storyLoadState = updateLoadingState(list)
+                            storyLoadState = updateLoadState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            storyLoadState = LoadingState.Error
+                            storyLoadState = LoadState.Error
                         )
                     }
                 }
@@ -148,13 +148,13 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             comicList = list,
-                            comicLoadState = updateLoadingState(list)
+                            comicLoadState = updateLoadState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            comicLoadState = LoadingState.Error
+                            comicLoadState = LoadState.Error
                         )
                     }
                 }

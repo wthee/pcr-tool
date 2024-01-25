@@ -49,7 +49,6 @@ fun RankCompareScreen(
                 iconType = MainIconType.RANK_COMPARE,
                 text = stringResource(id = R.string.rank_compare)
             )
-
         },
         secondLineFab = {
             //RANK 选择

@@ -51,18 +51,19 @@ fun FreeGachaListScreen(
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.FREE_GACHA,
-                text = stringResource(id = R.string.tool_free_gacha)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                text = stringResource(id = R.string.tool_free_gacha),
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Adaptive(getItemWidth()),

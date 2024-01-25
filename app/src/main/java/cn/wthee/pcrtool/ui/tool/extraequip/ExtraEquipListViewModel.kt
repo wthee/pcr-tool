@@ -9,8 +9,8 @@ import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ data class ExtraEquipListUiState(
     val filter: FilterExtraEquipment? = null,
     //收藏的编号
     val favoriteIdList: List<Int> = emptyList(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -55,7 +55,7 @@ class ExtraEquipListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     equipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }
@@ -94,7 +94,7 @@ class ExtraEquipListViewModel @Inject constructor(
                 it.copy(
                     filter = filter,
                     equipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

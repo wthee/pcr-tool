@@ -108,14 +108,12 @@ class ApiRepository {
 
     /**
      * 查询公告信息
-     * @param region 区服 2：b服，3：台服，4：日服
      * @param after 查询该id前的数据
      * @param keyword 关键词
      * @param startTime 开始时间 格式如：2020/01/01 00:00:00
      * @param endTime 结束时间
      */
     suspend fun getNewsList(
-        region: Int,
         after: Int?,
         keyword: String,
         startTime: String,
@@ -124,7 +122,7 @@ class ApiRepository {
         postCatching("news/v2") {
             setBody(
                 buildJsonObject {
-                    put("region", region)
+                    put("region", MainActivity.regionType.value)
                     put("after", after)
                     put("keyword", keyword)
                     put("startTime", startTime)

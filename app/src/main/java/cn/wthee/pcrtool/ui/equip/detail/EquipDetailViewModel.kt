@@ -14,9 +14,9 @@ import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,8 +43,8 @@ data class EquipDetailUiState(
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
     val favorite: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading,
-    val materialLoadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
+    val materialLoadState: LoadState = LoadState.Loading,
 )
 
 /**
@@ -84,8 +84,8 @@ class EquipDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     equipData = data,
-                    loadingState = it.loadingState.isSuccess(data != null),
-                    materialLoadingState = it.materialLoadingState.isNoData(data == null)
+                    loadState = it.loadState.isSuccess(data != null),
+                    materialLoadState = it.materialLoadState.isNoData(data == null)
                 )
             }
             if (data != null) {
@@ -110,7 +110,7 @@ class EquipDetailViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 materialList = list,
-                materialLoadingState = updateLoadingState(list)
+                materialLoadState = updateLoadState(list)
             )
         }
     }

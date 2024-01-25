@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -22,6 +23,7 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  * 点击组件之外内容关闭
  *
  */
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.clickClose(
     openDialog: Boolean,

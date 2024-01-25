@@ -37,7 +37,7 @@ fun CharacterStatusCoeScreen(characterStatusCoeViewModel: CharacterStatusCoeView
     val uiState by characterStatusCoeViewModel.uiState.collectAsStateWithLifecycle()
 
     MainScaffold {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             uiState.coeValue?.let { coe ->
                 CharacterStatusCoeContent(coe)
             }

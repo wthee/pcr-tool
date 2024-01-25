@@ -39,7 +39,7 @@ fun ExtraEquipDropListScreen(
 
     MainScaffold {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             noDataContent = {
                 CenterTipText(text = stringResource(id = R.string.extra_equip_no_drop_quest))
             }

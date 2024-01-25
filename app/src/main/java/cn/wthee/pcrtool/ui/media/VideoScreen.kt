@@ -134,7 +134,7 @@ fun VideoPlayer(url: String) {
     //视频源
     val mediaSource = ProgressiveMediaSource.Factory(
         CacheDataSource.Factory()
-            .setCache(MyApplication.simpleCache)
+            .setCache(MyApplication.videoCache)
             .setUpstreamDataSourceFactory(
                 DefaultHttpDataSource.Factory()
             )
@@ -302,19 +302,21 @@ private fun ToolButtonContent(
             if (play) {
                 IconTextButton(
                     text = progress,
-                    icon = MainIconType.VIDEO_PAUSE
-                ) {
-                    play = false
-                    exoPlayer?.pause()
-                }
+                    icon = MainIconType.VIDEO_PAUSE,
+                    onClick = {
+                        play = false
+                        exoPlayer?.pause()
+                    }
+                )
             } else {
                 IconTextButton(
                     text = progress,
-                    icon = MainIconType.VIDEO_PLAY
-                ) {
-                    play = true
-                    exoPlayer?.play()
-                }
+                    icon = MainIconType.VIDEO_PLAY,
+                    onClick = {
+                        play = true
+                        exoPlayer?.play()
+                    }
+                )
             }
         }
 
@@ -323,9 +325,10 @@ private fun ToolButtonContent(
             IconTextButton(
                 text = "",
                 icon = MainIconType.BROWSER,
-            ) {
-                BrowserUtil.open(url)
-            }
+                onClick = {
+                    BrowserUtil.open(url)
+                }
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -337,30 +340,31 @@ private fun ToolButtonContent(
             IconTextButton(
                 text = stringResource(id = if (saved) R.string.saved else R.string.download_video),
                 icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
-                modifier = Modifier.padding(end = Dimen.smallPadding)
-            ) {
-                //权限校验
-                checkPermissions(context, permissions) {
-                    //已保存
-                    if (saved) {
-                        ToastUtil.short(
-                            getString(
-                                R.string.video_exist,
-                                targetFile.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                modifier = Modifier.padding(end = Dimen.smallPadding),
+                onClick = {
+                    //权限校验
+                    checkPermissions(context, permissions) {
+                        //已保存
+                        if (saved) {
+                            ToastUtil.short(
+                                getString(
+                                    R.string.video_exist,
+                                    targetFile.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                                )
                             )
-                        )
-                        return@checkPermissions
-                    }
+                            return@checkPermissions
+                        }
 
-                    if (loading) {
-                        ToastUtil.short(videoLoading)
-                    } else if (playError) {
-                        ToastUtil.short(videoError)
-                    } else {
-                        openDialog.value = true
+                        if (loading) {
+                            ToastUtil.short(videoLoading)
+                        } else if (playError) {
+                            ToastUtil.short(videoError)
+                        } else {
+                            openDialog.value = true
+                        }
                     }
                 }
-            }
+            )
         } else {
             //下载中
             CircularProgressCompose(
@@ -389,10 +393,11 @@ private fun ToolButtonContent(
                 text = it.toString(),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(Dimen.smallPadding),
-                margin = 0.dp
-            ) {
-                selectedSpeed = it
-            }
+                margin = 0.dp,
+                onClick = {
+                    selectedSpeed = it
+                }
+            )
         }
     }
 

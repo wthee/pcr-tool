@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -97,13 +97,13 @@ private fun PictureScreenContent(uiState: PictureUiState) {
         uiState.pageCount
     }
     val storyCount = when (uiState.storyLoadState) {
-        LoadingState.Success -> uiState.storyCardList.size
-        LoadingState.NoData -> 0
+        LoadState.Success -> uiState.storyCardList.size
+        LoadState.NoData -> 0
         else -> null
     }
     val comicCount = when (uiState.comicLoadState) {
-        LoadingState.Success -> uiState.comicList.size
-        LoadingState.NoData -> 0
+        LoadState.Success -> uiState.comicList.size
+        LoadState.NoData -> 0
         else -> null
     }
 
@@ -113,7 +113,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
             TabData(
                 tab = stringResource(id = R.string.story),
                 count = storyCount,
-                isLoading = uiState.storyLoadState == LoadingState.Loading
+                isLoading = uiState.storyLoadState == LoadState.Loading
             )
         )
     } else {
@@ -126,12 +126,12 @@ private fun PictureScreenContent(uiState: PictureUiState) {
             TabData(
                 tab = stringResource(id = R.string.story),
                 count = storyCount,
-                isLoading = uiState.storyLoadState == LoadingState.Loading
+                isLoading = uiState.storyLoadState == LoadState.Loading
             ),
             TabData(
                 tab = stringResource(id = R.string.comic),
                 count = comicCount,
-                isLoading = uiState.comicLoadState == LoadingState.Loading
+                isLoading = uiState.comicLoadState == LoadState.Loading
             )
         )
     }
@@ -171,7 +171,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                     MediaGridList(
                         urlList = uiState.storyCardList,
                         title = tabs[index].tab,
-                        loading = uiState.storyLoadState,
+                        loadState = uiState.storyLoadState,
                         showTitle = uiState.pageCount == 1,
                         noDataText = stringResource(id = R.string.no_story_info)
                     ) {
@@ -190,7 +190,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                     MediaGridList(
                         urlList = uiState.comicList,
                         title = tabs[index].tab,
-                        loading = uiState.comicLoadState,
+                        loadState = uiState.comicLoadState,
                         showTitle = false,
                         noDataText = stringResource(id = R.string.no_comic_info)
                     ) {
@@ -321,17 +321,18 @@ private fun PreviewPictureDialog(
                 //重置
                 FadeAnimation(scale != 1f || rotation != 0f || offset != Offset.Zero) {
                     MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        scope.launch {
-                            transformableState.transform {
-                                transformBy()
+                        iconType = MainIconType.RESET,
+                        onClick = {
+                            scope.launch {
+                                transformableState.transform {
+                                    transformBy()
+                                }
+                                scale = 1f
+                                rotation = 0f
+                                offset = Offset.Zero
                             }
-                            scale = 1f
-                            rotation = 0f
-                            offset = Offset.Zero
                         }
-                    }
+                    )
                 }
                 //保存
                 MainSmallFab(
@@ -342,31 +343,32 @@ private fun PreviewPictureDialog(
                         } else {
                             R.string.title_dialog_save_img
                         }
-                    )
-                ) {
-                    checkPermissions(context, permissions) {
-                        //已保存
-                        if (saved) {
-                            ToastUtil.short(
-                                getString(
-                                    R.string.pic_exist,
-                                    file.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                    ),
+                    onClick = {
+                        checkPermissions(context, permissions) {
+                            //已保存
+                            if (saved) {
+                                ToastUtil.short(
+                                    getString(
+                                        R.string.pic_exist,
+                                        file.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                                    )
                                 )
-                            )
-                            return@checkPermissions
-                        }
-                        if (!success) {
-                            ToastUtil.short(unLoadToast)
-                        } else {
-                            MediaDownloadHelper(context).saveMedia(
-                                bitmap = loadedPic.value,
-                                displayName = displayName
-                            ) {
-                                saved = true
+                                return@checkPermissions
+                            }
+                            if (!success) {
+                                ToastUtil.short(unLoadToast)
+                            } else {
+                                MediaDownloadHelper(context).saveMedia(
+                                    bitmap = loadedPic.value,
+                                    displayName = displayName
+                                ) {
+                                    saved = true
+                                }
                             }
                         }
                     }
-                }
+                )
             },
             onMainFabClick = {
                 openPreviewDialog.value = false
@@ -439,8 +441,8 @@ private fun PictureScreenContentPreview() {
                 unitCardList = arrayListOf("1"),
                 storyCardList = arrayListOf("1"),
                 comicList = arrayListOf("1"),
-                storyLoadState = LoadingState.Success,
-                comicLoadState = LoadingState.Success,
+                storyLoadState = LoadState.Success,
+                comicLoadState = LoadState.Success,
             )
         )
     }

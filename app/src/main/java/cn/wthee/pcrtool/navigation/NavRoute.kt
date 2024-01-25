@@ -33,7 +33,6 @@ object NavRoute {
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
     const val COMIC = "comic"
-    const val ALL_SKILL = "allSkill"
     const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"

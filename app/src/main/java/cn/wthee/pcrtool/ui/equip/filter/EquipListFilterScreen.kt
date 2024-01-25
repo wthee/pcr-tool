@@ -76,8 +76,10 @@ private fun EquipListFilterContent(
     colorNum: Int,
     updateFilter: (FilterEquip) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    //装备名称
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
 
@@ -128,15 +130,22 @@ private fun EquipListFilterContent(
             trailingIcon = {
                 MainIcon(
                     data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
-                ) {
-                    keyboardController?.hide()
-                }
+                    size = Dimen.fabIconSize,
+                    onClick = {
+                        keyboardController?.hide()
+                        scope.launch {
+                            navigateUpSheet()
+                        }
+                    }
+                )
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
+                    scope.launch {
+                        navigateUpSheet()
+                    }
                 }
             ),
             maxLines = 1,

@@ -44,38 +44,41 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         MainIconType.FLOAT_MIN
                     },
                     vibrate = !showResult || !min,
-                    iconScale = FixedScale(SCALE_LOGO)
-                ) {
-                    navViewModel.floatSearchMin.postValue(!min)
-                }
+                    iconScale = FixedScale(SCALE_LOGO),
+                    onClick = {
+                        navViewModel.floatSearchMin.postValue(!min)
+                    }
+                )
                 //退出
                 if (!min) {
                     MainSmallFab(
-                        iconType = MainIconType.FLOAT_CLOSE
-                    ) {
-                        navViewModel.floatServiceRun.postValue(false)
-                    }
+                        iconType = MainIconType.FLOAT_CLOSE,
+                        onClick = {
+                            navViewModel.floatServiceRun.postValue(false)
+                        }
+                    )
                 }
                 if (!min) {
                     MainSmallFab(
-                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.PVP_SEARCH
-                    ) {
-                        if (showResult) {
-                            //返回
-                            navViewModel.showResult.postValue(false)
-                            pvpViewModel.changeRequesting(false)
-                        } else {
-                            //查询
-                            try {
-                                scope.launch {
-                                    resultListState.scrollToItem(0)
-                                }
-                            } catch (_: Exception) {
+                        iconType = if (showResult) MainIconType.CLOSE else MainIconType.PVP_SEARCH,
+                        onClick = {
+                            if (showResult) {
+                                //返回
+                                navViewModel.showResult.postValue(false)
+                                pvpViewModel.changeRequesting(false)
+                            } else {
+                                //查询
+                                try {
+                                    scope.launch {
+                                        resultListState.scrollToItem(0)
+                                    }
+                                } catch (_: Exception) {
 
+                                }
+                                pvpViewModel.searchByCharacterList()
                             }
-                            pvpViewModel.searchByCharacterList()
                         }
-                    }
+                    )
                 }
             }
 

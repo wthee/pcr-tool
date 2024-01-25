@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.QuestRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.UniqueEquipBasicData
 import cn.wthee.pcrtool.data.model.KeywordData
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @Immutable
 data class UniqueEquipListUiState(
     val uniqueEquipList: List<UniqueEquipBasicData>? = null,
-    val loadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
     //搜索弹窗
     val openSearch: Boolean = false,
     //快捷搜索关键词
@@ -64,7 +64,7 @@ class UniqueEquipListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     uniqueEquipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

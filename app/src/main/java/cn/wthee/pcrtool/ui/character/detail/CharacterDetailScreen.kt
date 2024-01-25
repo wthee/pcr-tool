@@ -67,7 +67,7 @@ import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.character.CharacterItemContent
 import cn.wthee.pcrtool.ui.character.CharacterItemPreview
 import cn.wthee.pcrtool.ui.character.skillloop.CharacterSkillLoopScreen
@@ -128,7 +128,7 @@ fun CharacterDetailScreen(
     MainScaffold(
         fab = {
             CharacterDetailFabContent(
-                loadingState = uiState.loadingState,
+                loadState = uiState.loadState,
                 currentId = uiState.currentId,
                 showAllInfo = uiState.showAllInfo,
                 isEditMode = uiState.isEditMode,
@@ -142,7 +142,7 @@ fun CharacterDetailScreen(
         },
         secondLineFab = {
             ChangeCutinFabContent(
-                loadingState = uiState.loadingState,
+                loadState = uiState.loadState,
                 cutinId = uiState.cutinId,
                 showAllInfo = uiState.showAllInfo,
                 isCutinSkill = uiState.isCutinSkill,
@@ -159,7 +159,7 @@ fun CharacterDetailScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             errorContent = {
                 //未登场角色
                 CenterTipText(text = stringResource(R.string.unknown_character))
@@ -175,7 +175,7 @@ fun CharacterDetailScreen(
         }
 
         //页面指示器
-        if (uiState.pageCount == 2 && !uiState.isEditMode && uiState.loadingState == LoadingState.Success) {
+        if (uiState.pageCount == 2 && !uiState.isEditMode && uiState.loadState == LoadState.Success) {
             MainHorizontalPagerIndicator(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -197,7 +197,7 @@ fun CharacterDetailScreen(
  */
 @Composable
 private fun CharacterDetailFabContent(
-    loadingState: LoadingState,
+    loadState: LoadState,
     currentId: Int,
     showAllInfo: Boolean,
     isEditMode: Boolean,
@@ -208,15 +208,16 @@ private fun CharacterDetailFabContent(
     toCharacterSkillLoop: (Int) -> Unit,
     toCharacterDetail: (Int) -> Unit,
 ) {
-    if (loadingState == LoadingState.Success) {
+    if (loadState == LoadState.Success) {
         if (showAllInfo) {
             if (!isEditMode) {
                 //编辑
                 MainSmallFab(
                     iconType = MainIconType.EDIT_TOOL,
-                ) {
-                    changeEditMode(true)
-                }
+                    onClick = {
+                        changeEditMode(true)
+                    }
+                )
 
                 //收藏
                 MainSmallFab(
@@ -225,43 +226,46 @@ private fun CharacterDetailFabContent(
                     } else {
                         MainIconType.FAVORITE_LINE
                     },
-                ) {
-                    updateFavoriteCharacterId()
-                }
+                    onClick = {
+                        updateFavoriteCharacterId()
+                    }
+                )
             }
 
             //技能循环
             if (!orderData.contains(CharacterDetailModuleType.SKILL_LOOP.id.toString())) {
                 MainSmallFab(
                     iconType = MainIconType.SKILL_LOOP,
-                ) {
-                    if (!isEditMode) {
-                        toCharacterSkillLoop(currentId)
+                    onClick = {
+                        if (!isEditMode) {
+                            toCharacterSkillLoop(currentId)
+                        }
                     }
-                }
+                )
             }
 
         } else {
             //切换详情，专用装备跳转过来时，显示该按钮
             MainSmallFab(
                 iconType = MainIconType.CHARACTER,
-                text = stringResource(id = R.string.character_detail)
-            ) {
-                toCharacterDetail(currentId)
-            }
+                text = stringResource(id = R.string.character_detail),
+                onClick = {
+                    toCharacterDetail(currentId)
+                }
+            )
         }
     }
 }
 
 @Composable
 private fun ChangeCutinFabContent(
-    loadingState: LoadingState,
+    loadState: LoadState,
     cutinId: Int,
     showAllInfo: Boolean,
     isCutinSkill: Boolean,
     changeCutin: () -> Unit,
 ) {
-    if (loadingState == LoadingState.Success && cutinId != 0 && showAllInfo) {
+    if (loadState == LoadState.Success && cutinId != 0 && showAllInfo) {
         //角色技能形态
         MainSmallFab(
             modifier = Modifier.padding(
@@ -278,9 +282,10 @@ private fun ChangeCutinFabContent(
             } else {
                 ""
             },
-        ) {
-            changeCutin()
-        }
+            onClick = {
+                changeCutin()
+            }
+        )
     }
 }
 
@@ -514,10 +519,13 @@ private fun CharacterCard(
     ) {
         //卡面信息
         CharacterItemContent(
-            unitId = unitId, character = basicInfo, favorite = favorite
-        ) {
-            toAllPics(unitId, AllPicsType.CHARACTER.type)
-        }
+            unitId = unitId,
+            character = basicInfo,
+            favorite = favorite,
+            onClick = {
+                toAllPics(unitId, AllPicsType.CHARACTER.type)
+            }
+        )
     }
 
 }
@@ -548,39 +556,43 @@ private fun ToolsContent(
         //资料
         IconTextButton(
             icon = MainIconType.CHARACTER_INTRO,
-            text = stringResource(id = R.string.character_basic_info)
-        ) {
-            toCharacterBasicInfo(unitId)
-        }
+            text = stringResource(id = R.string.character_basic_info),
+            onClick = {
+                toCharacterBasicInfo(unitId)
+            }
+        )
         //立绘预览
         IconTextButton(
             icon = MainIconType.PREVIEW_IMAGE,
             text = stringResource(id = R.string.character_pic),
-            modifier = Modifier.padding(end = Dimen.smallPadding)
-        ) {
-            toAllPics(unitId, AllPicsType.CHARACTER.type)
-        }
+            modifier = Modifier.padding(end = Dimen.smallPadding),
+            onClick = {
+                toAllPics(unitId, AllPicsType.CHARACTER.type)
+            }
+        )
         //模型预览
         IconTextButton(
             icon = MainIconType.PREVIEW_UNIT_SPINE,
-            text = stringResource(id = R.string.spine_preview)
-        ) {
-            if (idList.size > 1) {
-                //弹窗选择
-                openDialog.value = true
-            } else {
-                val id = if (cutinId != 0) cutinId else unitId
-                BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+            text = stringResource(id = R.string.spine_preview),
+            onClick = {
+                if (idList.size > 1) {
+                    //弹窗选择
+                    openDialog.value = true
+                } else {
+                    val id = if (cutinId != 0) cutinId else unitId
+                    BrowserUtil.open(Constants.PREVIEW_UNIT_URL + id)
+                }
             }
-        }
+        )
         //动态卡面
         IconTextButton(
             icon = MainIconType.MOVIE,
             text = stringResource(id = R.string.character_card_video),
-            modifier = Modifier.padding(end = Dimen.smallPadding)
-        ) {
-            toCharacterVideo(unitId, VideoType.CHARACTER_CARD.value)
-        }
+            modifier = Modifier.padding(end = Dimen.smallPadding),
+            onClick = {
+                toCharacterVideo(unitId, VideoType.CHARACTER_CARD.value)
+            }
+        )
     }
 
     if (openDialog.value) {
@@ -669,30 +681,33 @@ private fun OtherToolsContent(
         IconTextButton(
             icon = MainIconType.RANK_COMPARE,
             text = stringResource(id = R.string.rank_compare),
-        ) {
-            toCharacterRankCompare(
-                unitId,
-                maxRank,
-                currentValue.level,
-                currentValue.rarity,
-                currentValue.uniqueEquipmentLevel,
-                currentValue.uniqueEquipmentLevel2,
-            )
-        }
+            onClick = {
+                toCharacterRankCompare(
+                    unitId,
+                    maxRank,
+                    currentValue.level,
+                    currentValue.rarity,
+                    currentValue.uniqueEquipmentLevel,
+                    currentValue.uniqueEquipmentLevel2,
+                )
+            }
+        )
         //装备统计
         IconTextButton(
             icon = MainIconType.EQUIP_CALC,
             text = stringResource(id = R.string.calc_equip_count),
-        ) {
-            toCharacterEquipCount(unitId)
-        }
+            onClick = {
+                toCharacterEquipCount(unitId)
+            }
+        )
         //ex装备
         IconTextButton(
             icon = MainIconType.EXTRA_EQUIP,
             text = stringResource(id = R.string.tool_extra_equip),
-        ) {
-            toCharacterExtraEquip(unitId)
-        }
+            onClick = {
+                toCharacterExtraEquip(unitId)
+            }
+        )
     }
 }
 
@@ -761,14 +776,16 @@ private fun ColumnScope.LevelContent(
         textStyle = MaterialTheme.typography.bodyMedium,
         trailingIcon = {
             MainIcon(
-                data = MainIconType.OK, size = Dimen.fabIconSize
-            ) {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-                if (inputLevel.value != "") {
-                    updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
+                data = MainIconType.OK,
+                size = Dimen.fabIconSize,
+                onClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                    if (inputLevel.value != "") {
+                        updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
+                    }
                 }
-            }
+            )
         },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,
@@ -962,20 +979,22 @@ private fun EquipContent(
             val id3 = equips[1].equipmentId
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id6)
-            ) {
-                if (id6 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id6)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id6),
+                onClick = {
+                    if (id6 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id6)
+                    }
                 }
-            }
+            )
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id3)
-            ) {
-                if (id3 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id3)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id3),
+                onClick = {
+                    if (id3 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id3)
+                    }
                 }
-            }
+            )
         }
         //装备 5、 2
         Row(
@@ -988,12 +1007,13 @@ private fun EquipContent(
             val id5 = equips[2].equipmentId
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id5)
-            ) {
-                if (id5 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id5)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id5),
+                onClick = {
+                    if (id5 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id5)
+                    }
                 }
-            }
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (currentValue.rank < maxRank) {
                     MainIcon(
@@ -1015,10 +1035,11 @@ private fun EquipContent(
                     modifier = Modifier.padding(
                         vertical = Dimen.largePadding * 2
                     ),
-                    useBrush = true
-                ) {
-                    toCharacterRankEquip(unitId, rank)
-                }
+                    useBrush = true,
+                    onClick = {
+                        toCharacterRankEquip(unitId, rank)
+                    }
+                )
                 if (rank > 1) {
                     MainIcon(
                         data = MainIconType.MORE,
@@ -1036,13 +1057,13 @@ private fun EquipContent(
             val id2 = equips[3].equipmentId
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id2)
-            ) {
-                if (id2 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id2)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id2),
+                onClick = {
+                    if (id2 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id2)
+                    }
                 }
-            }
-
+            )
         }
         //装备 4、 1
         Row(
@@ -1054,21 +1075,22 @@ private fun EquipContent(
             val id1 = equips[5].equipmentId
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id4)
-            ) {
-                if (id4 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id4)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id4),
+                onClick = {
+                    if (id4 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id4)
+                    }
                 }
-
-            }
+            )
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id1)
-            ) {
-                if (id1 != UNKNOWN_EQUIP_ID) {
-                    toEquipDetail(id1)
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, id1),
+                onClick = {
+                    if (id1 != UNKNOWN_EQUIP_ID) {
+                        toEquipDetail(id1)
+                    }
                 }
-            }
+            )
         }
     }
 }
@@ -1095,10 +1117,11 @@ private fun StarSelectContent(
             MainIcon(
                 data = iconId,
                 size = Dimen.textIconSize,
-                modifier = Modifier.padding(Dimen.smallPadding)
-            ) {
-                updateCurrentValue(currentValue.copy(rarity = i))
-            }
+                modifier = Modifier.padding(Dimen.smallPadding),
+                onClick = {
+                    updateCurrentValue(currentValue.copy(rarity = i))
+                }
+            )
 
         }
     }
@@ -1110,7 +1133,7 @@ private fun FabContentPreview() {
     PreviewLayout {
         Row {
             CharacterDetailFabContent(
-                loadingState = LoadingState.Success,
+                loadState = LoadState.Success,
                 currentId = 101001,
                 showAllInfo = true,
                 isEditMode = false,

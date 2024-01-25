@@ -134,10 +134,11 @@ private fun ExtraEquipListFilterContent(
             trailingIcon = {
                 MainIcon(
                     data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
-                ) {
-                    keyboardController?.hide()
-                }
+                    size = Dimen.fabIconSize,
+                    onClick = {
+                        keyboardController?.hide()
+                    }
+                )
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(

@@ -137,18 +137,20 @@ fun UniqueEquipDetail(
                 textStyle = MaterialTheme.typography.bodyMedium,
                 trailingIcon = {
                     MainIcon(
-                        data = MainIconType.OK, size = Dimen.fabIconSize
-                    ) {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        if (inputLevel.value != "") {
-                            if (slot == 1) {
-                                updateCurrentValue(currentValue.copy(uniqueEquipmentLevel = inputLevel.value.toInt()))
-                            } else {
-                                updateCurrentValue(currentValue.copy(uniqueEquipmentLevel2 = inputLevel.value.toInt()))
+                        data = MainIconType.OK,
+                        size = Dimen.fabIconSize,
+                        onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            if (inputLevel.value != "") {
+                                if (slot == 1) {
+                                    updateCurrentValue(currentValue.copy(uniqueEquipmentLevel = inputLevel.value.toInt()))
+                                } else {
+                                    updateCurrentValue(currentValue.copy(uniqueEquipmentLevel2 = inputLevel.value.toInt()))
+                                }
                             }
                         }
-                    }
+                    )
                 },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done, keyboardType = KeyboardType.Number

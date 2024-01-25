@@ -43,7 +43,7 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
 
         //视频缓存
         @SuppressLint("UnsafeOptInUsageError")
-        lateinit var simpleCache: SimpleCache
+        lateinit var videoCache: SimpleCache
 
     }
 
@@ -51,9 +51,11 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+
         //忽略证书校验
         disableSSLCertificateChecking()
 
+        //使用ip或域名访问
         runBlocking {
             val preferences = dataStoreSetting.data.first()
             useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] ?: false
@@ -63,15 +65,16 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
             }
         }
 
-        //Bugly
+        //Bugly 初始化
         BuglyInitializer().create(this)
-        //数据库
+
+        //数据库检查
         if (!BuildConfig.DEBUG) {
             backupMode = tryOpenDatabase() == 0
         }
 
         //初始化视频缓存
-        simpleCache = VideoCache().init(this)
+        videoCache = VideoCache().init(this)
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {

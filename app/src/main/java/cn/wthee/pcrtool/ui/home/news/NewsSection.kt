@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.StateBox
@@ -69,7 +69,7 @@ private fun NewsSectionContent(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             loadingContent = {
                 for (i in 0 until 3) {
                     NewsItem(news = NewsTable())
@@ -110,7 +110,7 @@ private fun NewsSectionContentPreview() {
                         title = stringResource(id = R.string.debug_short_text)
                     ),
                 ),
-                loadingState = LoadingState.Success
+                loadState = LoadState.Success
             ),
             isEditMode = false,
             orderStr = "${OverviewType.NEWS.id}",

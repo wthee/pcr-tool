@@ -160,28 +160,29 @@ private fun MockGachaHistoryItem(
             //去抽卡
             IconTextButton(
                 icon = MainIconType.MOCK_GACHA_PAY,
-                text = stringResource(id = R.string.go_to_mock)
-            ) {
-                scope.launch {
-                    changeGachaId(gachaData.gachaId)
-                    //卡池详情
-                    val newPickUpList = arrayListOf<GachaUnitInfo>()
-                    gachaData.pickUpIds.intArrayList.forEach {
-                        newPickUpList.add(
-                            GachaUnitInfo(
-                                unitId = it,
-                                unitName = "",
-                                isLimited = -1,
-                                rarity = 3
+                text = stringResource(id = R.string.go_to_mock),
+                onClick = {
+                    scope.launch {
+                        changeGachaId(gachaData.gachaId)
+                        //卡池详情
+                        val newPickUpList = arrayListOf<GachaUnitInfo>()
+                        gachaData.pickUpIds.intArrayList.forEach {
+                            newPickUpList.add(
+                                GachaUnitInfo(
+                                    unitId = it,
+                                    unitName = "",
+                                    isLimited = -1,
+                                    rarity = 3
+                                )
                             )
-                        )
+                        }
+                        updatePickUpList(newPickUpList)
+                        changeSelect(gachaData.gachaType)
+                        //显示卡池结果
+                        changeShowResult(true)
                     }
-                    updatePickUpList(newPickUpList)
-                    changeSelect(gachaData.gachaType)
-                    //显示卡池结果
-                    changeShowResult(true)
                 }
-            }
+            )
         }
 
         MainCard {
@@ -205,10 +206,11 @@ private fun MockGachaHistoryItem(
                 IconTextButton(
                     icon = MainIconType.DELETE,
                     text = stringResource(R.string.delete_gacha),
-                    contentColor = colorRed
-                ) {
-                    openDialog.value = true
-                }
+                    contentColor = colorRed,
+                    onClick = {
+                        openDialog.value = true
+                    }
+                )
                 //日期
                 CaptionText(
                     text = stringResource(

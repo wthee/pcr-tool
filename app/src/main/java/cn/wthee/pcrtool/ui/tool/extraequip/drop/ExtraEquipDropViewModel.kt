@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
 import cn.wthee.pcrtool.data.db.view.ExtraEquipQuestData
 import cn.wthee.pcrtool.data.db.view.ExtraEquipSubRewardData
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 data class ExtraEquipDropUiState(
     val dropList: List<ExtraEquipQuestData>? = emptyList(),
     val subRewardListMap: HashMap<Int, List<ExtraEquipSubRewardData>>? = null,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -63,7 +63,7 @@ class ExtraEquipDropViewModel @Inject constructor(
                 it.copy(
                     dropList = list,
                     subRewardListMap = map,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

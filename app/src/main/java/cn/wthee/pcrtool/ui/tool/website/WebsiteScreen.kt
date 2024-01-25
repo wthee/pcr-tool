@@ -26,9 +26,8 @@ import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -47,7 +46,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.getRegionName
 import kotlinx.coroutines.launch
 
 
@@ -73,7 +71,7 @@ fun WebsiteScreen(
     MainScaffold(
         secondLineFab = {
             //切换类型
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 SelectTypeFab(
                     icon = MainIconType.FILTER,
                     tabs = tabs,
@@ -90,22 +88,16 @@ fun WebsiteScreen(
             MainSmallFab(
                 iconType = MainIconType.WEBSITE_BOOKMARK,
                 text = stringResource(id = R.string.tool_website),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -121,7 +113,7 @@ fun WebsiteScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             loadingContent = {
                 VerticalStaggeredGrid(
                     itemWidth = getItemWidth(),
@@ -215,7 +207,7 @@ private fun WebsiteItem(data: WebsiteData) {
         if (data.region == 1) {
             stringResource(id = R.string.all)
         } else {
-            getRegionName(RegionType.getByValue(data.region))
+            stringResource(RegionType.getByValue(data.region).stringId)
         }
     }
 

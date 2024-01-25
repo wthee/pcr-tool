@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.JsonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +41,7 @@ data class ExtraEquipDetailUiState(
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
     val favorite: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
     //技能
     val skillList: List<SkillDetail>? = null
 )
@@ -80,7 +80,7 @@ class ExtraEquipDetailViewModel @Inject constructor(
                 it.copy(
                     equipData = data,
                     category = data?.category ?: 0,
-                    loadingState = it.loadingState.isSuccess(data != null)
+                    loadState = it.loadState.isSuccess(data != null)
                 )
             }
             if (data != null) {

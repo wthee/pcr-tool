@@ -17,6 +17,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
+/**
+ * 接口请求 client
+ */
 object ApiClient {
     private const val TIMEOUT_NORMAL_SECOND = 10 * 1000L
     private const val MAX_RETRY = 1

@@ -48,14 +48,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableFab
 import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.RATIO_COMIC
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle1
@@ -116,22 +114,16 @@ fun ComicListScreen(
                 MainSmallFab(
                     iconType = MainIconType.COMIC,
                     text = count.toString(),
-                    extraContent = if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
-                        //加载提示
-                        {
-                            CircularProgressCompose()
+                    onClick = {
+                        scope.launch {
+                            try {
+                                pagerState.scrollToPage(0)
+                            } catch (_: Exception) {
+                            }
                         }
-                    } else {
-                        null
-                    }
-                ) {
-                    scope.launch {
-                        try {
-                            pagerState.scrollToPage(0)
-                        } catch (_: Exception) {
-                        }
-                    }
-                }
+                    },
+                    loading = lazyPagingItems.loadState.refresh == LoadState.Loading
+                )
             },
             mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
             onMainFabClick = {
@@ -148,13 +140,16 @@ fun ComicListScreen(
         ) {
             HorizontalPager(
                 modifier = Modifier.align(Alignment.Center),
-                state = pagerState
-            ) { pagerIndex ->
-                if (items[pagerIndex] == null) {
-                    MainText(text = "$pagerIndex")
-                } else {
-                    ComicItem(items[pagerIndex]!!)
+                state = pagerState,
+                key = {
+                    if (items.isEmpty()) {
+                        it
+                    } else {
+                        items[it]?.id ?: it
+                    }
                 }
+            ) { pagerIndex ->
+                items[pagerIndex]?.let { ComicItem(it) }
             }
         }
     }
@@ -238,7 +233,9 @@ private fun ComicIndexChange(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -297,11 +294,12 @@ private fun ComicTocList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(Dimen.mediumPadding),
-                    textAlign = TextAlign.Start
-                ) {
-                    changeSelect(index)
-                    changeDialog(false)
-                }
+                    textAlign = TextAlign.Start,
+                    onClick = {
+                        changeSelect(index)
+                        changeDialog(false)
+                    }
+                )
             }
         }
 
@@ -335,14 +333,16 @@ private fun ComicTocList(
             trailingIcon = {
                 if (isImeVisible) {
                     MainIcon(
-                        data = MainIconType.OK, size = Dimen.fabIconSize
-                    ) {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        if (input.value != "") {
-                            changeSelect(pageCount - input.value.toInt())
+                        data = MainIconType.OK,
+                        size = Dimen.fabIconSize,
+                        onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            if (input.value != "") {
+                                changeSelect(pageCount - input.value.toInt())
+                            }
                         }
-                    }
+                    )
                 }
             },
             shape = MaterialTheme.shapes.medium,

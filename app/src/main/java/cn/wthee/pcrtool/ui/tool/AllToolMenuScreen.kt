@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -159,11 +159,12 @@ fun AllToolMenuScreen(
             MainSmallFab(
                 iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
                 text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
-            ) {
-                coroutineScope.launch {
-                    isEditMode = !isEditMode
+                onClick = {
+                    coroutineScope.launch {
+                        isEditMode = !isEditMode
+                    }
                 }
-            }
+            )
         }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -178,7 +179,7 @@ fun AllToolMenuScreen(
                 ) {
                     ToolMenu(
                         toolOrderData = uiState.toolOrderData,
-                        loadingState = LoadingState.Success,
+                        loadState = LoadState.Success,
                         actions = actions,
                         isEditMode = isEditMode,
                         isHome = false,

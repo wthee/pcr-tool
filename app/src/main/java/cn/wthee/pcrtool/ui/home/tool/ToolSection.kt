@@ -28,7 +28,7 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -105,7 +105,7 @@ private fun ToolSectionContent(
     ) {
         ToolMenu(
             toolOrderData = uiState.toolOrderData,
-            loadingState = uiState.loadingState,
+            loadState = uiState.loadState,
             actions = actions,
             isEditMode = isEditMode,
             updateToolOrderData = updateToolOrderData
@@ -121,7 +121,7 @@ private fun ToolSectionContent(
 @Composable
 fun ToolMenu(
     toolOrderData: String?,
-    loadingState: LoadingState,
+    loadState: LoadState,
     actions: NavActions,
     isEditMode: Boolean = false,
     isHome: Boolean = true,
@@ -129,7 +129,7 @@ fun ToolMenu(
 ) {
 
     StateBox(
-        stateType = loadingState,
+        stateType = loadState,
         errorContent = {
             if (!isEditMode && isHome) {
                 Box(
@@ -140,10 +140,11 @@ fun ToolMenu(
                 ) {
                     IconTextButton(
                         icon = MainIconType.ADD,
-                        text = stringResource(R.string.to_add_tool)
-                    ) {
-                        actions.toToolMore(true)
-                    }
+                        text = stringResource(R.string.to_add_tool),
+                        onClick = {
+                            actions.toToolMore(true)
+                        }
+                    )
                 }
             }
         }
@@ -340,7 +341,7 @@ private fun ToolSectionContentPreview() {
                     ${ToolMenuType.FREE_GACHA.id}-
                     ${ToolMenuType.GUILD.id}-
                 """.deleteSpace,
-                loadingState = LoadingState.Success
+                loadState = LoadState.Success
             ),
             actions = NavActions(NavHostController(LocalContext.current)),
             isEditMode = false,
@@ -353,7 +354,7 @@ private fun ToolSectionContentPreview() {
         ToolSectionContent(
             uiState = ToolSectionUiState(
                 toolOrderData = "",
-                loadingState = LoadingState.Error
+                loadState = LoadState.Error
             ),
             actions = NavActions(NavHostController(LocalContext.current)),
             isEditMode = false,

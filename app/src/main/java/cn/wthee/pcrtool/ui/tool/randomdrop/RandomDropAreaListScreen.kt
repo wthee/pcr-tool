@@ -17,8 +17,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableHeader
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -49,22 +48,16 @@ fun RandomDropAreaListScreen(
             MainSmallFab(
                 iconType = MainIconType.RANDOM_AREA,
                 text = stringResource(id = R.string.random_area),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                scope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
         Column {
@@ -76,7 +69,7 @@ fun RandomDropAreaListScreen(
             )
 
             StateBox(
-                stateType = uiState.loadingState,
+                stateType = uiState.loadState,
                 loadingContent = {
                     Column {
                         for (i in 0..10) {

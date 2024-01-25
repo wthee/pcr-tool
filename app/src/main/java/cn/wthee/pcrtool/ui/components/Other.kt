@@ -68,7 +68,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -101,7 +101,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun StateBox(
-    stateType: LoadingState,
+    stateType: LoadState,
     loadingContent: @Composable (() -> Unit)? = {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressCompose(
@@ -120,13 +120,13 @@ fun StateBox(
     successContent: @Composable () -> Unit
 ) {
     when (stateType) {
-        LoadingState.Loading -> if (loadingContent != null) {
+        LoadState.Loading -> if (loadingContent != null) {
             loadingContent()
         }
 
-        LoadingState.NoData -> noDataContent()
-        LoadingState.Error -> errorContent()
-        LoadingState.Success -> successContent()
+        LoadState.NoData -> noDataContent()
+        LoadState.Error -> errorContent()
+        LoadState.Success -> successContent()
     }
 }
 
@@ -221,15 +221,16 @@ fun MainScaffold(
                         .padding(
                             end = Dimen.fabMargin,
                             bottom = Dimen.fabMargin
-                        )
-                ) {
-                    if (onMainFabClick != null) {
-                        onMainFabClick()
-                    } else {
-                        //默认返回操作
-                        navigateUp()
+                        ),
+                    onClick = {
+                        if (onMainFabClick != null) {
+                            onMainFabClick()
+                        } else {
+                            //默认返回操作
+                            navigateUp()
+                        }
                     }
-                }
+                )
             }
         }
 
@@ -268,10 +269,7 @@ fun CircularProgressCompose(
 }
 
 /**
- * 加载中-圆形
- */
-/**
- * 加载中-圆形
+ * 加载中-圆形带进度
  */
 @Composable
 fun CircularProgressCompose(
@@ -392,35 +390,38 @@ fun BottomSearchBar(
                 //回到顶部
                 onTopClick?.let {
                     MainSmallFab(
-                        iconType = MainIconType.TOP
-                    ) {
-                        coroutineScope.launch {
-                            onTopClick()
+                        iconType = MainIconType.TOP,
+                        onClick = {
+                            coroutineScope.launch {
+                                onTopClick()
+                            }
                         }
-                    }
+                    )
                 }
 
                 //重置
                 if (showReset) {
                     MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        changeKeyword("")
-                        if (onResetClick != null) {
-                            onResetClick()
+                        iconType = MainIconType.RESET,
+                        onClick = {
+                            changeKeyword("")
+                            if (onResetClick != null) {
+                                onResetClick()
+                            }
                         }
-                    }
+                    )
                 }
 
                 //搜索
                 MainSmallFab(
                     iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
-                    text = fabText ?: keyword
-                ) {
-                    keyboardController?.show()
-                    changeSearchBar(true)
-                    focusRequester.requestFocus()
-                }
+                    text = fabText ?: keyword,
+                    onClick = {
+                        keyboardController?.show()
+                        changeSearchBar(true)
+                        focusRequester.requestFocus()
+                    }
+                )
             }
         }
 
@@ -446,13 +447,14 @@ fun BottomSearchBar(
 
                     SuggestionChipGroup(
                         modifier = Modifier.padding(Dimen.mediumPadding),
-                        items = defaultKeywordList ?: arrayListOf()
-                    ) {
-                        changeKeyword(it)
-                        keyboardController?.hide()
-                        focusRequester.freeFocus()
-                        changeSearchBar(false)
-                    }
+                        items = defaultKeywordList ?: arrayListOf(),
+                        onClick = {
+                            changeKeyword(it)
+                            keyboardController?.hide()
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    )
                 }
             }
 
@@ -481,13 +483,14 @@ fun BottomSearchBar(
                     trailingIcon = {
                         MainIcon(
                             data = MainIconType.SEARCH,
-                            size = Dimen.fabIconSize
-                        ) {
-                            keyboardController?.hide()
-                            changeKeyword(keywordInputState.value)
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
+                            size = Dimen.fabIconSize,
+                            onClick = {
+                                keyboardController?.hide()
+                                changeKeyword(keywordInputState.value)
+                                focusRequester.freeFocus()
+                                changeSearchBar(false)
+                            }
+                        )
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
@@ -731,9 +734,6 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-//    val positionText =
-//        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
-
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         //位置图标
         PositionIcon(

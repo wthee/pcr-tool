@@ -118,12 +118,12 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
 fun MainIcon(
     modifier: Modifier = Modifier,
     data: Any,
+    onClick: (() -> Unit)? = null,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colorScheme.primary,
     colorFilter: ColorFilter? = null,
     wrapSize: Boolean = false,
-    contentScale: ContentScale = ContentScale.FillWidth,
-    onClick: (() -> Unit)? = null
+    contentScale: ContentScale = ContentScale.FillWidth
 ) {
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.extraSmall

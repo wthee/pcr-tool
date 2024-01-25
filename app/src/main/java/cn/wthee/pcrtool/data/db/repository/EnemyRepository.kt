@@ -38,8 +38,6 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
         null
     }
 
-    suspend fun getAllBossIds() = enemyDao.getAllBossIds()
-
     suspend fun getMultiTargetEnemyInfo(enemyId: Int) = try {
         enemyDao.getMultiTargetEnemyInfo(enemyId)
     } catch (e: Exception) {

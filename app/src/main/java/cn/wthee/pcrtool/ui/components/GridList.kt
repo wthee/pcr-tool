@@ -42,7 +42,7 @@ fun GridIconList(
     contentPadding: Dp = Dimen.exSmallPadding,
     fixCount: Int = 0,
     paddingValues: PaddingValues = PaddingValues(
-        top = Dimen.mediumPadding,
+        top = Dimen.smallPadding,
         start = Dimen.smallPadding,
         end = Dimen.smallPadding
     ),

@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.ApiRepository
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.utils.fixedLeaderDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +33,7 @@ data class LeaderTierUiState(
     val leaderTierType: LeaderTierType = LeaderTierType.ALL,
     val leaderTierMap: HashMap<Int, ResponseData<LeaderTierData>> = hashMapOf(),
     val openDialog: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -70,7 +70,7 @@ class LeaderTierViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    loadingState = LoadingState.Loading
+                    loadState = LoadState.Loading
                 )
             }
 
@@ -105,7 +105,7 @@ class LeaderTierViewModel @Inject constructor(
                     date = leaderTierMap[type]?.data?.desc?.fixedLeaderDate ?: "",
                     leaderTierMap = leaderTierMap,
                     leaderTierType = LeaderTierType.getByValue(type),
-                    loadingState = it.loadingState.isSuccess(leaderTierMap[type]?.data != null)
+                    loadState = it.loadState.isSuccess(leaderTierMap[type]?.data != null)
                 )
             }
         }

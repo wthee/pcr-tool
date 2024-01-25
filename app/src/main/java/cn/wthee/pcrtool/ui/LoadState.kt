@@ -4,7 +4,7 @@ package cn.wthee.pcrtool.ui
 /**
  * 页面状态：共用
  */
-enum class LoadingState {
+enum class LoadState {
     Loading,
     Success,
     NoData,
@@ -17,8 +17,8 @@ enum class LoadingState {
     fun isNoData(noData: Boolean) = if (noData) NoData else this
 }
 
-fun <T> updateLoadingState(list: List<T>?) = when {
-    !list.isNullOrEmpty() -> LoadingState.Success
-    list != null && list.isEmpty() -> LoadingState.NoData
-    else -> LoadingState.Error
+fun <T> updateLoadState(list: List<T>?) = when {
+    !list.isNullOrEmpty() -> LoadState.Success
+    list != null && list.isEmpty() -> LoadState.NoData
+    else -> LoadState.Error
 }

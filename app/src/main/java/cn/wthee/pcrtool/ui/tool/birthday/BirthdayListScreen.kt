@@ -67,18 +67,19 @@ fun BirthdayListScreen(
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.BIRTHDAY,
-                text = stringResource(id = R.string.tool_birthday)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                text = stringResource(id = R.string.tool_birthday),
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
@@ -160,7 +161,7 @@ fun BirthdayItem(
         MainCard {
             //图标
             GridIconList(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
                 idList = idList,
                 iconResourceType = IconResourceType.CHARACTER,
                 onClickItem = toCharacterDetail
