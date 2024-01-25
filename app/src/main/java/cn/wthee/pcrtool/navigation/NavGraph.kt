@@ -1,15 +1,17 @@
 package cn.wthee.pcrtool.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,10 +41,9 @@ import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.media.PictureScreen
 import cn.wthee.pcrtool.ui.media.VideoScreen
 import cn.wthee.pcrtool.ui.skill.summon.SkillSummonScreen
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
+import cn.wthee.pcrtool.ui.theme.maskAlpha
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.ui.tool.AllToolMenuScreen
 import cn.wthee.pcrtool.ui.tool.birthday.BirthdayListScreen
@@ -141,8 +142,9 @@ fun NavGraph(
     ModalBottomSheetLayout(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.Transparent)
             .padding(top = statusBarHeight),
-        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+        scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = maskAlpha),
         sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator
     ) {
