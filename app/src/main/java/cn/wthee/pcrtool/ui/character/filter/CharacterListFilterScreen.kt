@@ -4,12 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,11 +12,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -37,7 +29,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.navigation.navigateUpSheet
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainInputText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -45,7 +37,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorPink
-import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
 
@@ -77,7 +68,6 @@ fun CharacterListFilterScreen(
 }
 
 @Composable
-@OptIn(ExperimentalComposeUiApi::class)
 private fun CharacterListFilterContent(
     filter: FilterCharacter,
     raceList: List<String>,
@@ -168,48 +158,15 @@ private fun CharacterListFilterContent(
             .verticalScroll(rememberScrollState())
     ) {
         //角色名搜索
-        val keyboardController = LocalSoftwareKeyboardController.current
-        OutlinedTextField(
-            value = textState.value,
-            shape = MaterialTheme.shapes.medium,
-            onValueChange = { textState.value = it.deleteSpace },
-            textStyle = MaterialTheme.typography.labelLarge,
-            leadingIcon = {
-                MainIcon(
-                    data = MainIconType.CHARACTER,
-                    size = Dimen.fabIconSize
-                )
-            },
-            trailingIcon = {
-                MainIcon(
-                    data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize,
-                    onClick = {
-                        keyboardController?.hide()
-                        scope.launch {
-                            navigateUpSheet()
-                        }
-                    }
-                )
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                    scope.launch {
-                        navigateUpSheet()
-                    }
+        MainInputText(
+            textState = textState,
+            leadingIcon = MainIconType.CHARACTER,
+            onDone = {
+                scope.launch {
+                    navigateUpSheet()
                 }
-            ),
-            maxLines = 1,
-            singleLine = true,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.character_name),
-                    style = MaterialTheme.typography.labelLarge
-                )
             },
-            modifier = Modifier.fillMaxWidth()
+            label = stringResource(id = R.string.character_name)
         )
         //排序类型
         MainText(

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -22,11 +20,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -35,18 +30,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,6 +61,7 @@ import cn.wthee.pcrtool.ui.components.AttrList
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.IconTextButton
+import cn.wthee.pcrtool.ui.components.LevelInputText
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainAlertDialog
 import cn.wthee.pcrtool.ui.components.MainHorizontalPagerIndicator
@@ -89,7 +77,6 @@ import cn.wthee.pcrtool.ui.skill.SkillListScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipDetail
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UnitIconAndTag
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -97,7 +84,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 
@@ -404,10 +390,12 @@ private fun CharacterDetailContent(
                         )
 
                         //等级
-                        CharacterDetailModuleType.LEVEL -> LevelContent(
-                            currentValue = uiState.currentValue,
-                            uiState.maxValue.level,
-                            updateCurrentValue = updateCurrentValue
+                        CharacterDetailModuleType.LEVEL -> LevelInputText(
+                            text = uiState.currentValue.level.toString(),
+                            maxLevel = uiState.maxValue.level,
+                            onDone = { level ->
+                                updateCurrentValue(uiState.currentValue.copy(level = level))
+                            }
                         )
 
                         //属性
@@ -708,111 +696,6 @@ private fun OtherToolsContent(
             }
         )
     }
-}
-
-/**
- * 角色等级
- */
-@OptIn(
-    ExperimentalLayoutApi::class
-)
-@Composable
-private fun ColumnScope.LevelContent(
-    currentValue: CharacterProperty,
-    maxLevel: Int,
-    updateCurrentValue: (CharacterProperty) -> Unit
-) {
-    val context = LocalContext.current
-
-    //角色等级
-    val inputLevel = remember {
-        mutableStateOf("")
-    }
-    //输入框管理
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
-    val isImeVisible = WindowInsets.isImeVisible
-
-    //等级
-    Text(
-        text = currentValue.level.toString(),
-        color = MaterialTheme.colorScheme.primary,
-        style = MaterialTheme.typography.titleLarge,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(0.3f)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable {
-                VibrateUtil(context).single()
-                if (isImeVisible) {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                } else {
-                    focusRequester.requestFocus()
-                    keyboardController?.show()
-                }
-            })
-    //等级输入框
-    OutlinedTextField(
-        value = inputLevel.value,
-        onValueChange = {
-            var filterStr = ""
-            it.deleteSpace.forEach { ch ->
-                if (Regex("\\d").matches(ch.toString())) {
-                    filterStr += ch
-                }
-            }
-            inputLevel.value = when {
-                filterStr == "" -> ""
-                filterStr.toInt() < 1 -> "1"
-                filterStr.toInt() in 1..maxLevel -> filterStr
-                else -> maxLevel.toString()
-            }
-        },
-        shape = MaterialTheme.shapes.medium,
-        textStyle = MaterialTheme.typography.bodyMedium,
-        trailingIcon = {
-            MainIcon(
-                data = MainIconType.OK,
-                size = Dimen.fabIconSize,
-                onClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                    if (inputLevel.value != "") {
-                        updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
-                    }
-                }
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Number
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-                if (inputLevel.value != "") {
-                    updateCurrentValue(currentValue.copy(level = inputLevel.value.toInt()))
-                }
-            }
-        ),
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .then(
-                if (isImeVisible) {
-                    Modifier
-                        .padding(Dimen.smallPadding)
-                } else {
-                    Modifier
-                        .height(1.dp)
-                        .alpha(0f)
-                }
-            )
-            .animateContentSize(defaultTween())
-    )
 }
 
 /**
@@ -1183,17 +1066,6 @@ private fun OtherToolsContentPreview() {
     }
 }
 
-@CombinedPreviews
-@Composable
-private fun LevelContentPreview() {
-    PreviewLayout {
-        LevelContent(
-            currentValue = CharacterProperty(),
-            maxLevel = 100,
-            updateCurrentValue = {}
-        )
-    }
-}
 
 @CombinedPreviews
 @Composable

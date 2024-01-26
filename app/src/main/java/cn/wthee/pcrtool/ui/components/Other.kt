@@ -24,14 +24,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,7 +52,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -80,7 +77,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
@@ -387,7 +383,7 @@ fun BottomSearchBar(
     }
 
 
-    Box {
+    Box(contentAlignment = Alignment.BottomCenter) {
         Row(
             horizontalArrangement = Arrangement.End,
             modifier = modifier
@@ -435,6 +431,7 @@ fun BottomSearchBar(
 
         Column(
             modifier = modifier
+                .widthIn(max = Dimen.itemMaxWidth)
                 .imePadding(),
             verticalArrangement = Arrangement.Bottom,
         ) {
@@ -471,52 +468,20 @@ fun BottomSearchBar(
                 modifier = Modifier.padding(Dimen.largePadding),
                 elevation = Dimen.popupMenuElevation,
             ) {
-                OutlinedTextField(
+                MainInputText(
                     modifier = Modifier
                         .fillMaxWidth(if (openSearch) 1f else 0.1f)
                         .heightIn(max = if (openSearch) Dp.Unspecified else 0.dp)
                         .padding(Dimen.smallPadding)
                         .focusRequester(focusRequester)
                         .alpha(if (openSearch) 1f else 0f),
-                    value = keywordInputState.value,
-                    shape = MaterialTheme.shapes.medium,
-                    onValueChange = { keywordInputState.value = it.deleteSpace },
-                    textStyle = MaterialTheme.typography.labelLarge,
-                    leadingIcon = {
-                        MainIcon(
-                            data = leadingIcon,
-                            size = Dimen.fabIconSize
-                        )
+                    textState = keywordInputState,
+                    onDone = {
+                        changeKeyword(keywordInputState.value)
+                        changeSearchBar(false)
                     },
-                    trailingIcon = {
-                        MainIcon(
-                            data = MainIconType.SEARCH,
-                            size = Dimen.fabIconSize,
-                            onClick = {
-                                keyboardController?.hide()
-                                changeKeyword(keywordInputState.value)
-                                focusRequester.freeFocus()
-                                changeSearchBar(false)
-                            }
-                        )
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                            changeKeyword(keywordInputState.value)
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
-                    ),
-                    label = {
-                        Text(
-                            text = stringResource(id = labelStringId),
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    },
-                    maxLines = 1,
-                    singleLine = true,
+                    leadingIcon = leadingIcon,
+                    label = stringResource(id = labelStringId)
                 )
             }
         }

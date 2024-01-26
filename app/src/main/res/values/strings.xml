@@ -61,6 +61,7 @@
     <string name="value_10_k">%d万</string>
     <string name="unit_level">等级：%d</string>
     <string name="title_unit_level">等级</string>
+    <string name="input_level">请输入等级</string>
     <string name="order_character_detail">未选中模块显示在次要页面（退出编辑后滑动切换）</string>
     <string name="character_card">角色卡片</string>
     <string name="character_other_tool">其他功能（装备统计等）</string>
