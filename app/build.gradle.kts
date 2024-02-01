@@ -129,8 +129,6 @@ dependencies {
 
     //Accompanist
     val accompanistVersion = "0.34.0"
-    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
