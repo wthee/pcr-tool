@@ -2,11 +2,8 @@ package cn.wthee.pcrtool.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -136,14 +133,12 @@ fun NavGraph(
     navController: NavHostController,
     actions: NavActions,
 ) {
-    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
-
 
     ModalBottomSheetLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
-            .padding(top = statusBarHeight),
+            .statusBarsPadding(),
         scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = maskAlpha),
         sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator

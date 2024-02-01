@@ -47,32 +47,25 @@ fun MainTitleText(
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     maxLines: Int = Int.MAX_VALUE,
-    selectable: Boolean = false,
+    selectable: Boolean = false
 ) {
-    if (selectable) {
-        SelectionContainer(modifier = modifier) {
-            Text(
-                text = text,
-                color = colorWhite,
-                style = textStyle,
-                maxLines = maxLines,
-                modifier = modifier
-                    .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
-                    .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
-            )
-        }
-    } else {
+    val content: @Composable () -> Unit = {
         Text(
             text = text,
             color = colorWhite,
             style = textStyle,
             maxLines = maxLines,
-            modifier = modifier
+            modifier = if (selectable) Modifier else modifier
                 .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
-                .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
+                .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
         )
     }
 
+    if (selectable) {
+        SelectionContainer(modifier = modifier, content = content)
+    } else {
+        content()
+    }
 }
 
 /**
@@ -87,27 +80,22 @@ fun MainContentText(
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE
 ) {
-    if (selectable) {
-        SelectionContainer(modifier = modifier) {
-            Text(
-                text = text,
-                textAlign = textAlign,
-                color = color,
-                style = MaterialTheme.typography.bodyLarge,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = maxLines
-            )
-        }
-    } else {
+    val content: @Composable () -> Unit = {
         Text(
             text = text,
             textAlign = textAlign,
             color = color,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier,
+            modifier = if (selectable) Modifier else modifier,
             overflow = TextOverflow.Ellipsis,
             maxLines = maxLines
         )
+    }
+
+    if (selectable) {
+        SelectionContainer(modifier = modifier, content = content)
+    } else {
+        content()
     }
 }
 
@@ -123,27 +111,22 @@ fun MainText(
     style: TextStyle = MaterialTheme.typography.titleMedium,
     selectable: Boolean = false,
 ) {
-    if (selectable) {
-        SelectionContainer(modifier = modifier) {
-            Text(
-                text = text,
-                color = color,
-                style = style,
-                textAlign = textAlign,
-                fontWeight = FontWeight.Black,
-            )
-        }
-    } else {
+    val content: @Composable () -> Unit = {
         Text(
             text = text,
             color = color,
             style = style,
             textAlign = textAlign,
             fontWeight = FontWeight.Black,
-            modifier = modifier
+            modifier = if (selectable) Modifier else modifier
         )
     }
 
+    if (selectable) {
+        SelectionContainer(modifier = modifier, content = content)
+    } else {
+        content()
+    }
 }
 
 /**
@@ -158,27 +141,22 @@ fun Subtitle1(
     maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign = TextAlign.Start,
 ) {
-    if (selectable) {
-        SelectionContainer(modifier = modifier) {
-            Text(
-                text = text,
-                color = color,
-                textAlign = textAlign,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = maxLines,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    } else {
+    val content: @Composable () -> Unit = {
         Text(
             text = text,
             color = color,
             textAlign = textAlign,
             style = MaterialTheme.typography.titleMedium,
-            modifier = modifier,
+            modifier = if (selectable) Modifier else modifier,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
         )
+    }
+
+    if (selectable) {
+        SelectionContainer(modifier = modifier, content = content)
+    } else {
+        content()
     }
 }
 
@@ -195,29 +173,22 @@ fun Subtitle2(
     textAlign: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal
 ) {
-    if (selectable) {
-        SelectionContainer(modifier = modifier) {
-            Text(
-                text = text,
-                color = color,
-                textAlign = textAlign,
-                style = MaterialTheme.typography.titleSmall,
-                maxLines = maxLines,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = fontWeight
-            )
-        }
-    } else {
+    val content: @Composable () -> Unit = {
         Text(
             text = text,
             color = color,
             textAlign = textAlign,
             style = MaterialTheme.typography.titleSmall,
-            modifier = modifier,
+            modifier = if (selectable) Modifier else modifier,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis,
             fontWeight = fontWeight
         )
+    }
+    if (selectable) {
+        SelectionContainer(modifier = modifier, content = content)
+    } else {
+        content()
     }
 }
 
@@ -370,9 +341,9 @@ fun CenterTipText(text: String, content: (@Composable () -> Unit)? = null) {
  * 通用标题内容组件，用例：角色属性
  */
 @Composable
-fun CommonTitleContentText(title: String, content: String) {
+fun CommonTitleContentText(modifier: Modifier = Modifier, title: String, content: String) {
     Row(
-        modifier = Modifier.padding(
+        modifier = modifier.padding(
             top = Dimen.smallPadding,
             start = Dimen.commonItemPadding,
             end = Dimen.commonItemPadding

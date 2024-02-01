@@ -187,7 +187,7 @@ fun UniqueEquipListScreen(
 
 
 /**
- * 装备
+ * 专用装备
  */
 @Composable
 private fun UniqueEquipItem(
@@ -203,6 +203,7 @@ private fun UniqueEquipItem(
             end = Dimen.largePadding,
         )
     ) {
+        //装备图标
         MainIcon(
             data = ImageRequestHelper.getInstance()
                 .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId),
@@ -213,6 +214,7 @@ private fun UniqueEquipItem(
 
         Column {
 
+            //装备名称
             MainTitleText(
                 text = equip.equipName,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -220,6 +222,7 @@ private fun UniqueEquipItem(
             )
 
 
+            //装备描述及关联角色信息
             MainCard(
                 modifier = Modifier.padding(
                     start = Dimen.mediumPadding,

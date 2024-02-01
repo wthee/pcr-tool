@@ -180,7 +180,9 @@ fun ClanBattleItem(
                 //日期
                 MainTitleText(
                     text = getClanBattleDate(clanBattleInfo),
-                    modifier = Modifier.placeholder(visible = placeholder)
+                    modifier = Modifier
+                        .placeholder(visible = placeholder)
+                        .align(Alignment.CenterVertically),
                 )
                 //阶段数
                 MainTitleText(
@@ -197,7 +199,9 @@ fun ClanBattleItem(
                 //标题
                 MainTitleText(
                     text = stringResource(id = R.string.tool_clan),
-                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                    modifier = Modifier
+                        .padding(end = Dimen.smallPadding)
+                        .align(Alignment.CenterVertically),
                     backgroundColor = colorOrange
                 )
                 //首页显示倒计时

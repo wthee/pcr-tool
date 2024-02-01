@@ -128,7 +128,7 @@ private fun CharacterStatusCoeContent(coe: UnitStatusCoefficient) {
                 value = coe.ub_evolution_coefficient.toDouble()
             )
         )
-        AttrList(attrs = skillCoeList, itemWidth = getItemWidth())
+        AttrList(attrs = skillCoeList, itemWidth = getItemWidth(), fixSpanCount = 1)
         CommonSpacer()
     }
 }

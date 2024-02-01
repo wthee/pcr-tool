@@ -1,15 +1,22 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -22,7 +29,77 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.spanCount
 import kotlin.math.max
+
+/**
+ * 网格列表
+ *
+ * @param fixSpanCount 固定列数
+ */
+@Composable
+fun VerticalGridList(
+    modifier: Modifier = Modifier,
+    itemCount: Int,
+    itemWidth: Dp,
+    fixSpanCount: Int? = null,
+    contentPadding: Dp = 0.dp,
+    content: @Composable() (Int) -> Unit
+) {
+    val context = LocalContext.current
+    var columns by remember {
+        mutableIntStateOf(fixSpanCount ?: 2)
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(
+                if (fixSpanCount == null) {
+                    Modifier.onSizeChanged {
+                        columns = max(
+                            2,
+                            spanCount(
+                                width = it.width,
+                                itemDp = itemWidth + contentPadding * 2,
+                                context = context
+                            )
+                        )
+                    }
+                } else {
+                    Modifier
+                }
+            )
+    ) {
+        var rows = (itemCount / columns)
+        if (itemCount.mod(columns) > 0) {
+            rows += 1
+        }
+
+        for (rowId in 0 until rows) {
+            val firstIndex = rowId * columns
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                for (columnId in 0 until columns) {
+                    val index = firstIndex + columnId
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(contentPadding)
+                    ) {
+                        if (index < itemCount) {
+                            content(index)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 /**

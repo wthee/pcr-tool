@@ -221,7 +221,9 @@ fun GachaItem(
                     gachaInfo.fixTypeName()
                 },
                 backgroundColor = color,
-                modifier = Modifier.padding(end = Dimen.smallPadding)
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically)
             )
             EventTitle(startTime = gachaInfo.startTime, endTime = gachaInfo.endTime)
         }

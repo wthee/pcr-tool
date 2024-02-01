@@ -249,22 +249,35 @@ fun StoryEventItemContent(
             MainTitleText(
                 text = type,
                 backgroundColor = typeColor,
-                modifier = Modifier.padding(end = Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
             )
             if (!previewEvent) {
                 MainTitleText(
                     text = sd.toDate,
-                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                    modifier = Modifier
+                        .padding(end = Dimen.smallPadding)
+                        .align(Alignment.CenterVertically),
                 )
             }
             if (showDays) {
                 MainTitleText(
                     text = stringResource(R.string.day, days.toInt()),
-                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                    modifier = Modifier
+                        .padding(end = Dimen.smallPadding)
+                        .align(Alignment.CenterVertically)
                 )
             }
             //计时
-            EventTitleCountdown(today, sd, ed, inProgress, comingSoon && (!previewEvent))
+            EventTitleCountdown(
+                today = today,
+                sd = sd,
+                ed = ed,
+                inProgress = inProgress,
+                comingSoon = comingSoon && (!previewEvent),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
         }
 
         MainCard {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -262,7 +263,7 @@ fun PictureItem(
 
 /**
  * 图片预览弹窗
- * fixme 小窗模式底部显示异常（dialog导致问题）；横屏导致 fab错位
+ * fixme 小窗模式底部显示异常（dialog导致问题）
  */
 @Composable
 @OptIn(ExperimentalCoilApi::class)
@@ -316,6 +317,7 @@ private fun PreviewPictureDialog(
         ),
     ) {
         MainScaffold(
+            modifier = Modifier.navigationBarsPadding(),
             contentAlignment = Alignment.Center,
             fab = {
                 //重置

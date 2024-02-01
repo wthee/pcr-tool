@@ -33,6 +33,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
 import kotlinx.coroutines.launch
 
 /**
@@ -119,7 +120,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
 
             //结束日期
             CaptionText(
-                text = freeGachaInfo.endTime.fixJpTime,
+                text = freeGachaInfo.endTime.formatTime.fixJpTime,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)

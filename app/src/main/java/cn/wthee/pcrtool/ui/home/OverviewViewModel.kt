@@ -101,7 +101,7 @@ class OverviewScreenViewModel @Inject constructor(
             )
         }
         //应用更新校验
-        checkUpdate()
+        checkAppUpdate()
     }
 
     /**
@@ -233,9 +233,9 @@ class OverviewScreenViewModel @Inject constructor(
     }
 
     /**
-     * 应用、数据库更新校验
+     * 应用更新校验
      */
-    private fun checkUpdate() {
+    private fun checkAppUpdate() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(

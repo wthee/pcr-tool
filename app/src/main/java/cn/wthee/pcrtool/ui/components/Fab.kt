@@ -55,6 +55,7 @@ import kotlinx.coroutines.launch
  * @param hasNavBarPadding 适配导航栏
  * @param loading true 显示圆形加载中进度条
  * @param iconScale 图标缩放，非ImageVector才生效
+ * @param vibrate 点击振动
  */
 @Composable
 fun MainSmallFab(

@@ -383,7 +383,9 @@ private fun ToolButtonContent(
             selected = false,
             text = stringResource(id = R.string.video_play_speed),
             textStyle = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(Dimen.smallPadding),
+            modifier = Modifier
+                .padding(Dimen.smallPadding)
+                .align(Alignment.CenterVertically),
             margin = 0.dp,
             textColor = MaterialTheme.colorScheme.primary
         )
@@ -392,7 +394,9 @@ private fun ToolButtonContent(
                 selected = it == selectedSpeed,
                 text = it.toString(),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
                 margin = 0.dp,
                 onClick = {
                     selectedSpeed = it

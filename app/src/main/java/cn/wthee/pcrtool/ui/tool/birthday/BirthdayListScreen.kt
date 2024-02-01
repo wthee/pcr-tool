@@ -124,7 +124,9 @@ fun BirthdayItem(
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),
                 backgroundColor = colorRed,
-                modifier = Modifier.padding(end = Dimen.smallPadding)
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically)
             )
             MainTitleText(
                 text = stringResource(
@@ -133,13 +135,16 @@ fun BirthdayItem(
                     data.day.toString().fixedStr
                 ),
                 backgroundColor = colorRed,
-                modifier = Modifier.padding(end = Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
             )
 
             //计时
             if (data.month != 999) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
                     if (comingSoon && !LocalInspectionMode.current) {
                         MainIcon(

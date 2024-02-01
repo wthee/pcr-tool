@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +71,9 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -493,8 +496,9 @@ fun BottomSearchBar(
  * @param showDays 显示天数
  * @param showOverdueColor 过期日程颜色变灰色
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun EventTitle(
+fun FlowRowScope.EventTitle(
     startTime: String,
     endTime: String,
     showDays: Boolean = true,
@@ -527,7 +531,9 @@ fun EventTitle(
     //日期
     MainTitleText(
         text = sd.toDate,
-        modifier = Modifier.padding(end = Dimen.smallPadding),
+        modifier = Modifier
+            .padding(end = Dimen.smallPadding)
+            .align(Alignment.CenterVertically),
         backgroundColor = color
     )
     //天数，预览时不显示
@@ -535,12 +541,21 @@ fun EventTitle(
         val days = ed.days(sd)
         MainTitleText(
             text = days,
-            modifier = Modifier.padding(end = Dimen.smallPadding),
+            modifier = Modifier
+                .padding(end = Dimen.smallPadding)
+                .align(Alignment.CenterVertically),
             backgroundColor = color
         )
     }
     //计时
-    EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
+    EventTitleCountdown(
+        today = today,
+        sd = sd,
+        ed = ed,
+        inProgress = inProgress,
+        comingSoon = comingSoon,
+        modifier = Modifier.align(Alignment.CenterVertically)
+    )
 }
 
 /**
@@ -552,9 +567,12 @@ fun EventTitleCountdown(
     sd: String,
     ed: String,
     inProgress: Boolean,
-    comingSoon: Boolean
+    comingSoon: Boolean,
+    modifier: Modifier = Modifier,
+    debugText: String? = null
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (inProgress) {
@@ -563,7 +581,7 @@ fun EventTitleCountdown(
                 size = Dimen.smallIconSize,
             )
             MainContentText(
-                text = ed.dates(today),
+                text = debugText ?: ed.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.primary
@@ -576,7 +594,7 @@ fun EventTitleCountdown(
                 tint = colorPurple
             )
             MainContentText(
-                text = sd.dates(today),
+                text = debugText ?: sd.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = colorPurple
@@ -636,7 +654,7 @@ fun CharacterTagRow(
             )
 
             val limitType = CharacterLimitType.getByType(basicInfo.limitType)
-            Row {
+            Row(modifier = Modifier.align(Alignment.CenterVertically)) {
                 //获取方式
                 CharacterTag(
                     modifier = Modifier.padding(Dimen.smallPadding),
@@ -670,7 +688,11 @@ fun CharacterTagRow(
             }
 
         } else {
-            Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(bottom = Dimen.smallPadding)
+            ) {
                 if (tipText != null) {
                     //提示
                     CharacterTag(
@@ -823,27 +845,46 @@ fun ExpandableHeader(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
     PreviewLayout {
         CircularProgressCompose(progress = 0.31f)
         LinearProgressCompose(progress = 0.31f)
-        EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
-        EventTitleCountdown(
-            today = "2023/12/13 22:22:22",
-            sd = "2023/12/12 22:22:22",
-            ed = "2023/12/15 22:22:22",
-            inProgress = true,
-            comingSoon = false
-        )
-        EventTitleCountdown(
-            today = "2023/12/10 22:22:22",
-            sd = "2023/12/12 22:22:22",
-            ed = "2023/12/15 22:22:22",
-            inProgress = false,
-            comingSoon = true
-        )
+        FlowRow {
+            MainTitleText(
+                text = stringResource(id = R.string.tool_clan),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
+                backgroundColor = colorOrange
+            )
+            MainTitleText(
+                text = stringResource(id = R.string.title_birth),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
+                backgroundColor = colorRed
+            )
+            EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
+            EventTitleCountdown(
+                today = "2023/12/13 22:22:22",
+                sd = "2023/12/12 22:22:22",
+                ed = "2023/12/15 22:22:22",
+                inProgress = true,
+                comingSoon = false,
+                debugText = "22天33时"
+            )
+            EventTitleCountdown(
+                today = "2023/12/10 22:22:22",
+                sd = "2023/12/12 22:22:22",
+                ed = "2023/12/15 22:22:22",
+                inProgress = false,
+                comingSoon = true,
+                debugText = "22天33时"
+            )
+        }
     }
 }
 

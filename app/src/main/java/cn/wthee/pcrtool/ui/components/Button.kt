@@ -94,7 +94,8 @@ fun SubButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }) {
+        }
+    ) {
         Text(text = text, color = color, style = textStyle)
     }
 }

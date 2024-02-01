@@ -167,20 +167,20 @@ fun TravelQuestHeader(
             itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(
-                stringResource(id = R.string.travel_limit_unit_num),
-                questData.limitUnitNum.toString()
+                title = stringResource(id = R.string.travel_limit_unit_num),
+                content = questData.limitUnitNum.toString()
             )
             CommonTitleContentText(
-                stringResource(id = R.string.travel_need_power),
-                stringResource(id = R.string.value_10_k, questData.needPower / 10000)
+                title = stringResource(id = R.string.travel_need_power),
+                content = stringResource(id = R.string.value_10_k, questData.needPower / 10000)
             )
             CommonTitleContentText(
-                stringResource(id = R.string.travel_time),
-                toTimeText(questData.travelTime * 1000, context)
+                title = stringResource(id = R.string.travel_time),
+                content = toTimeText(questData.travelTime * 1000, context)
             )
             CommonTitleContentText(
-                stringResource(id = R.string.travel_time_decrease_limit),
-                toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
+                title = stringResource(id = R.string.travel_time_decrease_limit),
+                content = toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
             )
         }
     }

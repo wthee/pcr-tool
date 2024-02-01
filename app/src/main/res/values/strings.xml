@@ -200,7 +200,7 @@
     <string name="random_drop_area_2">（后半）</string>
     <string name="qq_group">反馈交流群</string>
     <string name="to_feedback">反馈</string>
-    <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
+    <string name="qq_group_summary">有任何问题或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
     <string name="clean_image_cache">清除缓存</string>
     <string name="tip_clean_cache">加载缓存，可减少网络数据使用。正常使用中请勿清除</string>
