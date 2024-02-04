@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.tool.news
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -166,7 +167,8 @@ fun NewsScreen(
  */
 @Composable
 fun NewsItem(
-    news: NewsTable
+    news: NewsTable,
+    fillMaxHeight: Boolean = false
 ) {
     val placeholder = news.id == -1
     val tag = news.getTag()
@@ -194,7 +196,14 @@ fun NewsItem(
         }
         MainCard(modifier = Modifier
             .placeholder(visible = placeholder)
-            .heightIn(min = Dimen.cardHeight),
+            .heightIn(min = Dimen.cardHeight)
+            .then(
+                if (fillMaxHeight) {
+                    Modifier.fillMaxHeight()
+                } else {
+                    Modifier
+                }
+            ),
             onClick = {
                 if (!placeholder) {
                     BrowserUtil.open(news.url)

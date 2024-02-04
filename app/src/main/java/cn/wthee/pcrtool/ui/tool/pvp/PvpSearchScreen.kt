@@ -69,7 +69,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -617,32 +617,28 @@ fun PvpUnitIconLine(
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit
 ) {
-    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = modifier,
-        fixCount = 5,
-        contentPadding = mediumPadding,
+        itemCount = ids.size,
+        itemWidth = 0.dp,
+        fixColumns = 5,
+        contentPadding = if (floatWindow) {
+            Dimen.smallPadding
+        } else {
+            Dimen.largePadding
+        },
         verticalContentPadding = 0.dp
     ) {
-        ids.forEach {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = if (floatWindow) 0.dp else Dimen.smallPadding)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
-                    wrapSize = true,
-                    onClick = {
-                        if (!floatWindow) {
-                            toCharacter(it)
-                        }
-                    }
-                )
+        MainIcon(
+            data = ImageRequestHelper.getInstance().getMaxIconUrl(ids[it]),
+            wrapSize = true,
+            onClick = {
+                if (!floatWindow) {
+                    toCharacter(ids[it])
+                }
             }
-        }
+        )
     }
 }
 

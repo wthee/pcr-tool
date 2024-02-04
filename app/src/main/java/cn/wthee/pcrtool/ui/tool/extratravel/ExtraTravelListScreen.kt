@@ -31,7 +31,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -111,22 +111,22 @@ private fun TravelItem(
     )
 
     //quest列表
-    VerticalStaggeredGrid(
+    VerticalGridList(
         itemWidth = getItemWidth() / 2,
+        itemCount = travelData.questList.size,
         contentPadding = Dimen.mediumPadding,
         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
     ) {
-        travelData.questList.forEachIndexed { _, questData ->
-            MainCard(
-                onClick = {
-                    toExtraEquipTravelAreaDetail(questData.travelQuestId)
-                }
-            ) {
-                TravelQuestHeader(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    questData = questData
-                )
+        val questData = travelData.questList[it]
+        MainCard(
+            onClick = {
+                toExtraEquipTravelAreaDetail(questData.travelQuestId)
             }
+        ) {
+            TravelQuestHeader(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                questData = questData
+            )
         }
     }
 }
@@ -163,24 +163,25 @@ fun TravelQuestHeader(
             )
         }
         //其它参数
-        VerticalStaggeredGrid(
+        val titleList = arrayListOf(
+            stringResource(id = R.string.travel_limit_unit_num),
+            stringResource(id = R.string.travel_need_power),
+            stringResource(id = R.string.travel_time),
+            stringResource(id = R.string.travel_time_decrease_limit)
+        )
+        val contentList = arrayListOf(
+            questData.limitUnitNum.toString(),
+            stringResource(id = R.string.value_10_k, questData.needPower / 10000),
+            toTimeText(questData.travelTime * 1000, context),
+            toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
+        )
+        VerticalGridList(
+            itemCount = titleList.size,
             itemWidth = getItemWidth() / 2
         ) {
             CommonTitleContentText(
-                title = stringResource(id = R.string.travel_limit_unit_num),
-                content = questData.limitUnitNum.toString()
-            )
-            CommonTitleContentText(
-                title = stringResource(id = R.string.travel_need_power),
-                content = stringResource(id = R.string.value_10_k, questData.needPower / 10000)
-            )
-            CommonTitleContentText(
-                title = stringResource(id = R.string.travel_time),
-                content = toTimeText(questData.travelTime * 1000, context)
-            )
-            CommonTitleContentText(
-                title = stringResource(id = R.string.travel_time_decrease_limit),
-                content = toTimeText(questData.travelTimeDecreaseLimit * 1000, context)
+                title = titleList[it],
+                content = contentList[it]
             )
         }
     }

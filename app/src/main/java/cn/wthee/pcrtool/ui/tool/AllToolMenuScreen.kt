@@ -44,7 +44,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.tool.ToolMenu
 import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
@@ -134,19 +134,21 @@ fun AllToolMenuScreen(
     //其它
     val otherList = arrayListOf<ToolMenuData>()
     otherList.addItem(ToolMenuType.MOCK_GACHA)
+    otherList.addItem(ToolMenuType.ALL_QUEST)
+    otherList.addItem(ToolMenuType.ALL_EQUIP)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
     //测试
-    val betaList = arrayListOf<ToolMenuData>()
-    betaList.addItem(ToolMenuType.ALL_EQUIP)
-    betaList.addItem(ToolMenuType.ALL_QUEST)
-    itemGroupList.add(
-        ToolMenuGroup(
-            stringResource(id = R.string.beta_tool_group),
-            betaList,
-            stringResource(id = R.string.beta_tool_group_title)
-        )
-    )
+//    val betaList = arrayListOf<ToolMenuData>()
+//    betaList.addItem(ToolMenuType.ALL_EQUIP)
+//    betaList.addItem(ToolMenuType.ALL_QUEST)
+//    itemGroupList.add(
+//        ToolMenuGroup(
+//            stringResource(id = R.string.beta_tool_group),
+//            betaList,
+//            stringResource(id = R.string.beta_tool_group_title)
+//        )
+//    )
 
     val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
     LifecycleEffect(Lifecycle.Event.ON_CREATE) {
@@ -264,20 +266,19 @@ private fun MenuGroup(
         if (group.groupDesc != "") {
             CaptionText(text = group.groupDesc)
         }
-        VerticalStaggeredGrid(
-            itemWidth = (Dimen.iconSize * 3),
-            contentPadding = Dimen.mediumPadding,
-            modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
+        VerticalGridList(
+            modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding),
+            itemCount = group.toolList.size,
+            itemWidth = Dimen.iconSize * 3,
+            contentPadding = Dimen.mediumPadding
         ) {
-            group.toolList.forEach {
-                MenuItem(
-                    actions = actions,
-                    toolMenuData = it,
-                    orderStr = toolOrderData,
-                    isEditMode = isEditMode,
-                    updateOrderData = updateOrderData
-                )
-            }
+            MenuItem(
+                actions = actions,
+                toolMenuData = group.toolList[it],
+                orderStr = toolOrderData,
+                isEditMode = isEditMode,
+                updateOrderData = updateOrderData
+            )
         }
     }
 }

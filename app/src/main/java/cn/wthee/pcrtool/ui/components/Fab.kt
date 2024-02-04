@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -399,28 +398,26 @@ private fun RankSelectItem(
     targetType: RankSelectType,
     currentRank: Int
 ) {
-
-    VerticalStaggeredGrid(
+    val list = rankList.filter {
+        targetType == RankSelectType.DEFAULT ||
+                (targetType == RankSelectType.LIMIT && it >= currentRank)
+    }
+    VerticalGridList(
+        itemCount = list.size,
         itemWidth = Dimen.rankTextWidth,
         contentPadding = Dimen.smallPadding
     ) {
-        rankList.filter {
-            targetType == RankSelectType.DEFAULT ||
-                    (targetType == RankSelectType.LIMIT && it >= currentRank)
-        }.forEachIndexed { index, rank ->
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                val rankColor = RankColor.getRankColor(rank = rank)
-                val selected = selectIndex.value == index
+        val rank = list[it]
+        val rankColor = RankColor.getRankColor(rank = rank)
+        val selected = selectIndex.value == it
 
-                MainChip(
-                    index = index,
-                    selected = selected,
-                    selectIndex = selectIndex,
-                    text = rankFillBlank(rank),
-                    selectedColor = rankColor
-                )
-            }
-        }
+        MainChip(
+            index = it,
+            selected = selected,
+            selectIndex = selectIndex,
+            text = rankFillBlank(rank),
+            selectedColor = rankColor
+        )
     }
 }
 

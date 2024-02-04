@@ -37,7 +37,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -204,20 +204,19 @@ private fun ExtraEquipGroup(
     )
 
     //分组内容
-    VerticalStaggeredGrid(
+    VerticalGridList(
+        itemCount = equipGroupData.equipIdList.size,
         itemWidth = Dimen.iconSize * 3,
         contentPadding = Dimen.mediumPadding,
         modifier = Modifier.padding(
             horizontal = Dimen.commonItemPadding
         )
     ) {
-        equipGroupData.equipIdList.forEach { equip ->
-            ExtraEquipItem(
-                favoriteIdList = favoriteIdList,
-                equip = equip,
-                toExtraEquipDetail = toExtraEquipDetail
-            )
-        }
+        ExtraEquipItem(
+            favoriteIdList = favoriteIdList,
+            equip = equipGroupData.equipIdList[it],
+            toExtraEquipDetail = toExtraEquipDetail
+        )
     }
 }
 

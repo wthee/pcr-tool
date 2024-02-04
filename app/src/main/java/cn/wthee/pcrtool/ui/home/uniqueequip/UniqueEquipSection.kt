@@ -99,8 +99,7 @@ private fun UniqueEquipSectionContent(
                 idList = list.map { it.equipId },
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
-                itemWidth = Dimen.homeIconItemWidth,
-                fixCount = equipSpanCount,
+                fixColumns = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )
@@ -111,8 +110,7 @@ private fun UniqueEquipSectionContent(
                 idList = list.map { it.equipId },
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
-                itemWidth = Dimen.homeIconItemWidth,
-                fixCount = equipSpanCount,
+                fixColumns = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )

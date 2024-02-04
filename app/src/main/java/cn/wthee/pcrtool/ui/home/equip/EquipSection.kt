@@ -96,9 +96,8 @@ private fun EquipSectionContent(
             paddingValues = PaddingValues(top = Dimen.mediumPadding),
             idList = uiState.equipIdList,
             iconResourceType = IconResourceType.EQUIP,
-            itemWidth = Dimen.homeIconItemWidth,
             contentPadding = 0.dp,
-            fixCount = equipSpanCount,
+            fixColumns = equipSpanCount,
             onClickItem = toEquipDetail
         )
     }

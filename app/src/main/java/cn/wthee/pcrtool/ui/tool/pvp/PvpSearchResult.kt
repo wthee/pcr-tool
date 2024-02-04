@@ -183,6 +183,8 @@ fun PvpSearchResult(
 
 /**
  * 查询结果 Item
+ *
+ * @param i 序号
  */
 @Composable
 private fun PvpResultItem(
@@ -247,7 +249,10 @@ private fun PvpResultItem(
         }
 
         MainCard(
-            modifier = Modifier.placeholder(visible = placeholder)
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                shape = MaterialTheme.shapes.medium
+            )
         ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
@@ -280,7 +285,7 @@ private fun PvpResultItem(
             //进攻
             PvpUnitIconLine(
                 modifier = Modifier.padding(bottom = mediumPadding),
-                ids = item.getIdList(0),
+                ids = if (placeholder) arrayListOf(-1) else item.getIdList(0),
                 floatWindow = floatWindow
             ) { }
         }

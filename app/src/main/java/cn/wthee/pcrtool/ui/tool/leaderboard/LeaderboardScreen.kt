@@ -442,6 +442,7 @@ fun LeaderCharacterIcon(
                         VibrateUtil(context).single()
                         BrowserUtil.open(url)
                     }
+                    .padding(horizontal = Dimen.exSmallPadding)
             )
         }
 

@@ -33,13 +33,13 @@ fun AttrList(
     attrs: List<AttrValue>,
     attrValueType: AttrValueType = AttrValueType.INT,
     itemWidth: Dp = Dimen.attrWidth,
-    fixSpanCount: Int? = null,
+    fixColumns: Int = 0,
 ) {
     VerticalGridList(
         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
         itemCount = attrs.size,
         itemWidth = itemWidth,
-        fixSpanCount = fixSpanCount
+        fixColumns = fixColumns
     ) {
         val attr = attrs[it]
         val valueText = fixedAttrValueText(attr.value, attrValueType)

@@ -4,6 +4,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -38,7 +40,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -115,17 +117,18 @@ fun WebsiteScreen(
         StateBox(
             stateType = uiState.loadState,
             loadingContent = {
-                VerticalStaggeredGrid(
+                VerticalGridList(
+                    itemCount = 10,
                     itemWidth = getItemWidth(),
                     contentPadding = Dimen.mediumPadding,
                     modifier = Modifier.padding(
                         top = Dimen.mediumPadding,
-                        bottom = Dimen.largePadding
+                        bottom = Dimen.largePadding,
+                        start = Dimen.commonItemPadding,
+                        end = Dimen.commonItemPadding
                     )
                 ) {
-                    for (i in 0..10) {
-                        WebsiteItem(data = WebsiteData())
-                    }
+                    WebsiteItem(data = WebsiteData())
                 }
             }
         ) {
@@ -176,7 +179,8 @@ private fun WebsiteGroup(
         if (websiteList.isEmpty()) {
             CenterTipText(text = stringResource(id = R.string.no_data))
         } else {
-            VerticalStaggeredGrid(
+            VerticalGridList(
+                itemCount = websiteList.size,
                 itemWidth = getItemWidth(),
                 contentPadding = Dimen.mediumPadding,
                 modifier = Modifier
@@ -188,9 +192,7 @@ private fun WebsiteGroup(
                     )
                     .animateContentSize(defaultSpring())
             ) {
-                websiteList.forEach {
-                    WebsiteItem(data = it)
-                }
+                WebsiteItem(data = websiteList[it])
             }
         }
     }
@@ -236,6 +238,7 @@ private fun WebsiteItem(data: WebsiteData) {
             modifier = Modifier
                 .padding(top = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight)
+                .fillMaxHeight()
                 .placeholder(placeholder),
             onClick = {
                 if (!placeholder) {
@@ -258,6 +261,8 @@ private fun WebsiteItem(data: WebsiteData) {
                     modifier = Modifier.padding(start = Dimen.mediumPadding)
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             Row(
                 modifier = Modifier
@@ -289,8 +294,6 @@ private fun WebsiteItem(data: WebsiteData) {
             }
         }
     }
-
-
 }
 
 
@@ -298,11 +301,37 @@ private fun WebsiteItem(data: WebsiteData) {
 @Composable
 private fun WebsiteItemPreview() {
     PreviewLayout {
-        WebsiteItem(
-            WebsiteData(
-                title = stringResource(id = R.string.debug_long_text),
-                summary = stringResource(id = R.string.debug_short_text)
-            )
-        )
+        VerticalGridList(
+            itemCount = 2,
+            fixColumns = 2,
+            itemWidth = getItemWidth(),
+            contentPadding = Dimen.mediumPadding,
+            modifier = Modifier
+                .padding(
+                    top = Dimen.mediumPadding,
+                    bottom = Dimen.largePadding,
+                    start = Dimen.commonItemPadding,
+                    end = Dimen.commonItemPadding
+                )
+                .animateContentSize(defaultSpring())
+        ) {
+            if (it == 0) {
+                WebsiteItem(
+                    data = WebsiteData(
+                        id = 1,
+                        title = stringResource(id = R.string.debug_long_text),
+                        summary = stringResource(id = R.string.debug_short_text)
+                    )
+                )
+            } else {
+                WebsiteItem(
+                    data = WebsiteData(
+                        id = 2,
+                        title = stringResource(id = R.string.debug_long_text) + stringResource(id = R.string.debug_short_text),
+                        summary = stringResource(id = R.string.debug_short_text)
+                    )
+                )
+            }
+        }
     }
 }

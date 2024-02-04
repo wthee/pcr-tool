@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -156,25 +156,18 @@ fun ToolMenu(
             }
         }
 
-        VerticalStaggeredGrid(
+        VerticalGridList(
+            itemCount = toolList.size,
             itemWidth = Dimen.menuItemSize,
             contentPadding = Dimen.mediumPadding,
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
-            toolList.forEach {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    MenuItem(
-                        actions = actions,
-                        toolMenuData = it,
-                        isEditMode = isEditMode,
-                        updateOrderData = updateToolOrderData
-                    )
-                }
-            }
+            MenuItem(
+                actions = actions,
+                toolMenuData = toolList[it],
+                isEditMode = isEditMode,
+                updateOrderData = updateToolOrderData
+            )
         }
     }
 }

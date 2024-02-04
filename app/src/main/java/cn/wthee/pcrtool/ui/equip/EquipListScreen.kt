@@ -46,7 +46,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -311,48 +311,28 @@ private fun EquipListContent(
             )
 
             //分组内容
-            if (!searchEquipMode) {
-                VerticalStaggeredGrid(
-                    itemWidth = Dimen.iconSize * 3,
-                    contentPadding = Dimen.mediumPadding,
-                    modifier = Modifier.padding(
+            VerticalGridList(
+                itemCount = equipGroupData.equipIdList.size,
+                itemWidth = if (searchEquipMode) Dimen.iconSize else Dimen.iconSize * 3,
+                contentPadding = Dimen.mediumPadding,
+                modifier = if (searchEquipMode) {
+                    Modifier
+                } else {
+                    Modifier.padding(
                         horizontal = Dimen.commonItemPadding
                     )
-                ) {
-                    equipGroupData.equipIdList.forEach { equip ->
-                        EquipItem(
-                            favoriteIdList = favoriteIdList,
-                            equip = equip,
-                            toEquipDetail = toEquipDetail,
-                            toEquipMaterial = toEquipMaterial,
-                            searchEquipMode = false,
-                            searchEquipIdList = searchEquipIdList,
-                            selectEquip = selectEquip
-                        )
-                    }
                 }
-            } else {
-                VerticalStaggeredGrid(
-                    itemWidth = Dimen.iconItemWidth,
-                    verticalContentPadding = Dimen.commonItemPadding,
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.commonItemPadding
-                    )
-                ) {
-                    equipGroupData.equipIdList.forEach { equip ->
-                        EquipItem(
-                            favoriteIdList = favoriteIdList,
-                            equip = equip,
-                            toEquipDetail = toEquipDetail,
-                            toEquipMaterial = toEquipMaterial,
-                            searchEquipMode = true,
-                            searchEquipIdList = searchEquipIdList,
-                            selectEquip = selectEquip
-                        )
-                    }
-                }
+            ) {
+                EquipItem(
+                    favoriteIdList = favoriteIdList,
+                    equip = equipGroupData.equipIdList[it],
+                    toEquipDetail = toEquipDetail,
+                    toEquipMaterial = toEquipMaterial,
+                    searchEquipMode = searchEquipMode,
+                    searchEquipIdList = searchEquipIdList,
+                    selectEquip = selectEquip
+                )
             }
-
         }
 
         items(2) {

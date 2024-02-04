@@ -39,7 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -397,22 +397,21 @@ fun AreaItem(
             .placeholder(placeholder)
     )
 
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = Modifier
             .padding(
                 horizontal = Dimen.commonItemPadding
             )
             .placeholder(placeholder),
+        itemCount = odds.size,
         itemWidth = Dimen.iconItemWidth,
         verticalContentPadding = Dimen.commonItemPadding
     ) {
-        odds.forEach {
-            EquipWithOddCompose(
-                selectedId = selectedId,
-                oddData = it,
-                searchEquipIdList = searchEquipIdList
-            )
-        }
+        EquipWithOddCompose(
+            selectedId = selectedId,
+            oddData = odds[it],
+            searchEquipIdList = searchEquipIdList
+        )
     }
 }
 
