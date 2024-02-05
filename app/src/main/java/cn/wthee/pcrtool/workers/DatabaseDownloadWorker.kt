@@ -101,7 +101,7 @@ class DatabaseDownloadWorker(
             val db = File(dbZipPath)
             if (db.exists()) {
                 //删除已有数据库文件
-                FileUtil.deleteBr(region)
+                FileUtil.deleteBr(RegionType.getByValue(region))
             }
             //保存
             db.writeBytes(responseBody)
@@ -109,9 +109,6 @@ class DatabaseDownloadWorker(
             AppBasicDatabase.close()
             //删除旧的wal
             FileUtil.apply {
-                delete(getDatabaseBackupWalPath(RegionType.CN))
-                delete(getDatabaseBackupWalPath(RegionType.TW))
-                delete(getDatabaseBackupWalPath(RegionType.JP))
                 delete(getDatabaseWalPath(RegionType.CN))
                 delete(getDatabaseWalPath(RegionType.TW))
                 delete(getDatabaseWalPath(RegionType.JP))

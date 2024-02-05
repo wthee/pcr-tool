@@ -5,13 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.db.dao.*
-import cn.wthee.pcrtool.data.db.entity.ExperienceUnit
+import cn.wthee.pcrtool.data.db.dao.ClanBattleDao
+import cn.wthee.pcrtool.data.db.dao.EnemyDao
+import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.dao.EventDao
+import cn.wthee.pcrtool.data.db.dao.ExtraEquipmentDao
+import cn.wthee.pcrtool.data.db.dao.GachaDao
+import cn.wthee.pcrtool.data.db.dao.QuestDao
+import cn.wthee.pcrtool.data.db.dao.SkillDao
+import cn.wthee.pcrtool.data.db.dao.UnitDao
+import cn.wthee.pcrtool.data.db.entity.FakeEntity
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_CN
-import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_JP
-import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_TW
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_CN
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_JP
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_TW
@@ -19,7 +24,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_TW
 
 @Database(
     entities = [
-        ExperienceUnit::class
+        FakeEntity::class
     ],
     version = Constants.SQLITE_VERSION,
     exportSchema = false
@@ -50,19 +55,10 @@ abstract class AppBasicDatabase : RoomDatabase() {
         fun getInstance(type: RegionType): AppBasicDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(
-                    if (MyApplication.backupMode) {
-                        when (type) {
-                            RegionType.CN -> DATABASE_BACKUP_NAME_CN
-                            RegionType.TW -> DATABASE_BACKUP_NAME_TW
-                            RegionType.JP -> DATABASE_BACKUP_NAME_JP
-                        }
-
-                    } else {
-                        when (type) {
-                            RegionType.CN -> DATABASE_NAME_CN
-                            RegionType.TW -> DATABASE_NAME_TW
-                            RegionType.JP -> DATABASE_NAME_JP
-                        }
+                    when (type) {
+                        RegionType.CN -> DATABASE_NAME_CN
+                        RegionType.TW -> DATABASE_NAME_TW
+                        RegionType.JP -> DATABASE_NAME_JP
                     }
                 ).also { instance = it }
             }

@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Context
 import androidx.media3.datasource.cache.SimpleCache
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
-import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.ui.dataStoreSetting
 import cn.wthee.pcrtool.utils.BuglyInitializer
 import cn.wthee.pcrtool.utils.Constants
@@ -37,24 +36,19 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        var backupMode = false
         var URL_DOMAIN = SERVER_DOMAIN
         var useIpOnFlag = false
-
         //视频缓存
         @SuppressLint("UnsafeOptInUsageError")
         lateinit var videoCache: SimpleCache
-
     }
 
 
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-
         //忽略证书校验
         disableSSLCertificateChecking()
-
         //使用ip或域名访问
         runBlocking {
             val preferences = dataStoreSetting.data.first()
@@ -64,15 +58,8 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
                 URL_DOMAIN = SERVER_IP
             }
         }
-
         //Bugly 初始化
         BuglyInitializer().create(this)
-
-        //数据库检查
-        if (!BuildConfig.DEBUG) {
-            backupMode = tryOpenDatabase() == 0
-        }
-
         //初始化视频缓存
         videoCache = VideoCache().init(this)
     }

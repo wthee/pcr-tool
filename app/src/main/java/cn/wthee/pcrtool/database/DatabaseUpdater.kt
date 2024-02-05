@@ -94,42 +94,16 @@ object DatabaseUpdater {
         val localVersion = runBlocking {
             MyApplication.context.dataStoreSetting.data.first()[localVersionKey] ?: ""
         }
-        //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-        val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
                 || (FileUtil.dbNotExists(region) || localVersion == "0")  //数据库wal被清空
                 || fixDb
-
-        //下载远程备份
-        val toDownloadRemoteBackup =
-            remoteBackupMode && File(FileUtil.getDatabaseBackupPath(region)).length() < 1024 * 1024
-        if (toDownload || toDownloadRemoteBackup) {
+        if (toDownload) {
             //远程备份时
             val fileName = when (region) {
-                RegionType.CN -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
-                    }
-                }
-
-                RegionType.TW -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
-                    }
-                }
-
-                RegionType.JP -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
-                    }
-                }
+                RegionType.CN -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
+                RegionType.TW -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
+                RegionType.JP -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
             }
             //开始下载
             try {
