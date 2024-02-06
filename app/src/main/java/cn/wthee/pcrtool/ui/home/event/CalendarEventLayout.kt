@@ -129,7 +129,7 @@ fun CalendarEventLayout(
                         event = it,
                         toCharacterDetail = actions.toCharacterDetail,
                         toEventEnemyDetail = actions.toEventEnemyDetail,
-                        toAllPics = actions.toAllPics
+                        toAllStoryEventPics = actions.toAllStoryEventPics
                     )
                 }
                 eventList.forEach {

@@ -76,7 +76,7 @@ import kotlinx.coroutines.launch
 fun StoryEventListScreen(
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
-    toAllPics: (Int, Int) -> Unit,
+    toAllStoryEventPics: (Int, Int, Int, Int) -> Unit,
     storyEventListViewModel: StoryEventListViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -141,7 +141,7 @@ fun StoryEventListScreen(
                 storyList = uiState.storyList!!,
                 toCharacterDetail = toCharacterDetail,
                 toEventEnemyDetail = toEventEnemyDetail,
-                toAllPics = toAllPics
+                toAllStoryEventPics = toAllStoryEventPics
             )
         }
 
@@ -154,7 +154,7 @@ private fun StoryEventListContent(
     storyList: List<StoryEventData>,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
-    toAllPics: (Int, Int) -> Unit
+    toAllStoryEventPics: (Int, Int, Int, Int) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         state = scrollState,
@@ -170,7 +170,7 @@ private fun StoryEventListContent(
                 event = it,
                 toCharacterDetail = toCharacterDetail,
                 toEventEnemyDetail = toEventEnemyDetail,
-                toAllPics = toAllPics
+                toAllStoryEventPics = toAllStoryEventPics
             )
         }
         items(2) {
@@ -188,7 +188,7 @@ fun StoryEventItemContent(
     event: StoryEventData,
     toCharacterDetail: (Int) -> Unit,
     toEventEnemyDetail: (Int) -> Unit,
-    toAllPics: (Int, Int) -> Unit
+    toAllStoryEventPics: (Int, Int, Int, Int) -> Unit,
 ) {
     val type: String
     val typeColor: Color
@@ -280,7 +280,16 @@ fun StoryEventItemContent(
             )
         }
 
-        MainCard {
+        MainCard(
+            onClick = {
+                toAllStoryEventPics(
+                    event.storyId,
+                    event.originalEventId,
+                    event.eventId,
+                    AllPicsType.STORY.type
+                )
+            }
+        ) {
             //banner 图片
             if (inProgress || isSub || !hasTeaser(event.eventId)) {
                 MainImage(
@@ -352,7 +361,12 @@ fun StoryEventItemContent(
                     icon = MainIconType.PREVIEW_IMAGE,
                     text = stringResource(R.string.story_pic),
                     onClick = {
-                        toAllPics(event.storyId, AllPicsType.STORY.type)
+                        toAllStoryEventPics(
+                            event.storyId,
+                            event.originalEventId,
+                            event.eventId,
+                            AllPicsType.STORY.type
+                        )
                     }
                 )
                 //结束日期
@@ -407,7 +421,7 @@ private fun StoryEventListContentPreview() {
             ),
             toCharacterDetail = { },
             toEventEnemyDetail = { },
-            toAllPics = { _, _ -> }
+            toAllStoryEventPics = { _, _, _, _ -> }
         )
     }
 }

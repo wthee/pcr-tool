@@ -199,6 +199,22 @@ fun NavGraph(
                 PictureScreen()
             }
 
+            //剧情活动图片详情
+            bottomSheet(
+                route = "${NavRoute.ALL_STORY_EVENT_PICS}/{${NavRoute.STORY_ID}}/{${NavRoute.ORIGINAL_EVENT_ID}}/{${NavRoute.EVENT_ID}}/{${NavRoute.ALL_PICS_TYPE}}",
+                arguments = listOf(navArgument(NavRoute.STORY_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.ORIGINAL_EVENT_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.EVENT_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.ALL_PICS_TYPE) {
+                    type = NavType.IntType
+                })
+            ) {
+                PictureScreen()
+            }
+
             //角色资料
             bottomSheet(
                 route = "${NavRoute.CHARACTER_BASIC_INFO}/{${NavRoute.UNIT_ID}}",
@@ -475,7 +491,7 @@ fun NavGraph(
                 StoryEventListScreen(
                     toCharacterDetail = actions.toCharacterDetail,
                     toEventEnemyDetail = actions.toEventEnemyDetail,
-                    toAllPics = actions.toAllPics
+                    toAllStoryEventPics = actions.toAllStoryEventPics
                 )
             }
 
@@ -758,6 +774,14 @@ class NavActions(navController: NavHostController) {
     val toAllPics: (Int, Int) -> Unit = { unitId: Int, type: Int ->
         navController.navigate("${NavRoute.ALL_PICS}/${unitId}/${type}")
     }
+
+    /**
+     * 剧情活动图片详情
+     */
+    val toAllStoryEventPics: (Int, Int, Int, Int) -> Unit =
+        { storyId: Int, originalEventId: Int, eventId: Int, type: Int ->
+            navController.navigate("${NavRoute.ALL_STORY_EVENT_PICS}/${storyId}/${originalEventId}/${eventId}/${type}")
+        }
 
     /**
      * 装备详情

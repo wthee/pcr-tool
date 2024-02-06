@@ -31,6 +31,8 @@ data class PictureUiState(
     val storyCardList: ArrayList<String> = arrayListOf(),
     //过场漫画
     val comicList: ArrayList<String> = arrayListOf(),
+    //剧情活动 banner
+    val bannerList: ArrayList<String> = arrayListOf(),
     val storyLoadState: LoadState = LoadState.Loading,
     val comicLoadState: LoadState = LoadState.Loading,
     val pageCount: Int = 1
@@ -47,7 +49,9 @@ class PictureViewModel @Inject constructor(
 ) : ViewModel() {
 
     //角色或剧情id
-    private val id: Int? = savedStateHandle[NavRoute.UNIT_ID]
+    private val id: Int? = savedStateHandle[NavRoute.UNIT_ID] ?: savedStateHandle[NavRoute.STORY_ID]
+    private val originalEventId: Int? = savedStateHandle[NavRoute.ORIGINAL_EVENT_ID]
+    private val eventId: Int? = savedStateHandle[NavRoute.EVENT_ID]
 
     //类型
     private val type: Int? = savedStateHandle[NavRoute.ALL_PICS_TYPE]
@@ -68,9 +72,18 @@ class PictureViewModel @Inject constructor(
                 getUnitCardList(id)
                 //过场漫画
                 getComicList(id)
+            } else {
+                _uiState.update {
+                    it.copy(
+                        pageCount = 2
+                    )
+                }
+                //剧情 banner
+                getStoryBannerList()
             }
             //剧情立绘
             getStoryCardList(id, type)
+
 
         }
     }
@@ -124,6 +137,39 @@ class PictureViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 剧情 banner
+     */
+    private fun getStoryBannerList() {
+        viewModelScope.launch {
+            val list = arrayListOf<String>()
+            originalEventId?.let {
+                list.add(
+                    ImageRequestHelper.getInstance()
+                        .getUrl(
+                            ImageRequestHelper.EVENT_BANNER,
+                            originalEventId,
+                            forceJpType = false
+                        )
+                )
+            }
+            eventId?.let {
+                val isSub = eventId / 10000 == 2
+                if (!isSub) {
+                    list.add(
+                        ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.EVENT_TEASER, eventId, forceJpType = false)
+                    )
+                }
+            }
+            _uiState.update {
+                it.copy(
+                    bannerList = list
+                )
             }
         }
     }

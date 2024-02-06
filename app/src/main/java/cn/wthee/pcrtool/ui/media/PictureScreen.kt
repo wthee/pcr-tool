@@ -46,6 +46,8 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.RATIO_BANNER
+import cn.wthee.pcrtool.ui.components.RATIO_TEASER
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -108,13 +110,17 @@ private fun PictureScreenContent(uiState: PictureUiState) {
         else -> null
     }
 
-    val tabs = if (uiState.pageCount == 1) {
+    val tabs = if (uiState.pageCount == 2) {
         //剧情活动
         arrayListOf(
             TabData(
                 tab = stringResource(id = R.string.story),
                 count = storyCount,
                 isLoading = uiState.storyLoadState == LoadState.Loading
+            ),
+            TabData(
+                tab = stringResource(id = R.string.other),
+                count = uiState.bannerList.size
             )
         )
     } else {
@@ -173,7 +179,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                         urlList = uiState.storyCardList,
                         title = tabs[index].tab,
                         loadState = uiState.storyLoadState,
-                        showTitle = uiState.pageCount == 1,
+                        showTitle = false,
                         noDataText = stringResource(id = R.string.no_story_info)
                     ) {
                         PictureItem(
@@ -207,6 +213,36 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                         )
                     }
                 }
+                //剧情活动 banner
+                stringResource(id = R.string.other) -> {
+                    MediaGridList(
+                        urlList = uiState.bannerList,
+                        title = tabs[index].tab,
+                        loadState = LoadState.Success,
+                        showTitle = false
+                    ) {
+                        val isBanner = it.contains(ImageRequestHelper.EVENT_BANNER)
+                        PictureItem(
+                            picUrl = it,
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = Dimen.largePadding,
+                                    vertical = Dimen.mediumPadding
+                                ),
+                            contentScale = if (isBanner) {
+                                ContentScale.FillWidth
+                            } else {
+                                ContentScale.Fit
+                            },
+                            showShadow = !isBanner,
+                            ratio = if (isBanner) {
+                                RATIO_BANNER
+                            } else {
+                                RATIO_TEASER
+                            },
+                        )
+                    }
+                }
             }
         }
     }
@@ -225,7 +261,8 @@ fun PictureItem(
     picUrl: String,
     ratio: Float? = null,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
-    contentScale: ContentScale = ContentScale.FillWidth
+    contentScale: ContentScale = ContentScale.FillWidth,
+    showShadow: Boolean = true,
 ) {
     val context = LocalContext.current
     val placeholder = picUrl == ""
@@ -242,7 +279,13 @@ fun PictureItem(
         ratio = ratio,
         modifier = modifier
             .clip(shape)
-            .shadow(elevation = Dimen.cardElevation, shape = shape)
+            .then(
+                if (showShadow) {
+                    Modifier.shadow(elevation = Dimen.cardElevation, shape = shape)
+                } else {
+                    Modifier
+                }
+            )
             .clickable(!placeholder) {
                 //预览
                 VibrateUtil(context).single()
@@ -419,6 +462,8 @@ private fun getFileName(url: String): String {
     return try {
         val type = when {
             url.contains(ImageRequestHelper.CARD_STORY) -> "story"
+            url.contains(ImageRequestHelper.EVENT_BANNER) -> "banner"
+            url.contains(ImageRequestHelper.EVENT_TEASER) -> "teaser"
             url.contains(ImageRequestHelper.CARD_ACTUAL_PROFILE) -> "unit_actual"
             url.contains(ImageRequestHelper.COMIC) -> "comic"
             url.contains(ImageRequestHelper.COMIC_ZH) -> "comic"
