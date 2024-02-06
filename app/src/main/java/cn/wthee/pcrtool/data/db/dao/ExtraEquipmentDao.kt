@@ -325,29 +325,4 @@ interface ExtraEquipmentDao {
     )
     suspend fun getCharacterExtraEquipList(unitId: Int): List<CharacterExtraEquipData>
 
-    /**
-     * 获取所有装备技能id
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            a.passive_skill_id_1 AS skill_id 
-        FROM
-            ex_equipment_data AS a 
-        WHERE
-            a.passive_skill_id_1 <> 0 
-        GROUP BY
-            a.passive_skill_id_1 UNION
-        SELECT
-            a.passive_skill_id_2 AS skill_id 
-        FROM
-            ex_equipment_data AS a 
-        WHERE
-            a.passive_skill_id_2 <> 0 
-        GROUP BY
-            a.passive_skill_id_2
-    """
-    )
-    suspend fun getAllEquipSkillIdList(): List<Int>
 }

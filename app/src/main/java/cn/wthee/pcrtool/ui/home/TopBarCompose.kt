@@ -356,8 +356,16 @@ private fun UpdateContent(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
-
             Spacer(modifier = Modifier.weight(1f))
+            //项目地址
+            val gitUrl = stringResource(id = R.string.github_project_url)
+            IconTextButton(
+                icon = MainIconType.GITHUB_PROJECT,
+                text = stringResource(id = R.string.github),
+                onClick = {
+                    BrowserUtil.open(gitUrl)
+                }
+            )
             //爱发电
             val afdUrl = stringResource(id = R.string.afd_url)
             IconTextButton(
@@ -541,7 +549,7 @@ private fun ColorText(modifier: Modifier = Modifier, message: String) {
         },
         textAlign = TextAlign.Start,
         modifier = modifier.padding(top = Dimen.largePadding, bottom = Dimen.mediumPadding),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyMedium,
     )
 }
 

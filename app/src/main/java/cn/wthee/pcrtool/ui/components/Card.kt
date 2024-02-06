@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  * 卡片布局
  * @param onClick 自带点击振动
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,

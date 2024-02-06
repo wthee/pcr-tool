@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
@@ -22,7 +21,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  *
  */
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
-@OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.clickClose(
     openDialog: Boolean,
     onClose: (()->Unit)? = null

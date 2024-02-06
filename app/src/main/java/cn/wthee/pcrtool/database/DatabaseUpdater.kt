@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
 import androidx.datastore.preferences.core.edit
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -30,7 +29,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
 
 /**
  * 数据库更新
@@ -185,58 +183,3 @@ fun updateLocalDataBaseVersion(ver: String) {
     }
 }
 
-/**
- * 尝试打开本地数据库
- *
- * 1：正常打开  0：启用备用数据库
- */
-fun tryOpenDatabase(): Int {
-    val msg: String
-    val open: () -> Unit
-    when (MainActivity.regionType) {
-        RegionType.CN -> {
-            msg = "db error: cn"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
-            }
-        }
-
-        RegionType.TW -> {
-            msg = "db error: tw"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
-            }
-        }
-
-        RegionType.JP -> {
-            msg = "db error: jp"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
-            }
-        }
-    }
-    try {
-        //尝试打开数据库
-        if (File(FileUtil.getDatabasePath(MainActivity.regionType)).exists()) {
-            open()
-        }
-    } catch (e: Exception) {
-        //启用远程备份数据库
-        MainScope().launch {
-            ToastUtil.short(getString(R.string.database_remote_backup))
-            LogReportUtil.upload(e, msg)
-        }
-        return 0
-    }
-    //正常打开
-    return 1
-}
-
-/**
- * 打开数据库
- */
-fun openDatabase(helper: SupportSQLiteOpenHelper) {
-    helper.use {
-        it.readableDatabase
-    }
-}
