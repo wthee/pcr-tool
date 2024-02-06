@@ -138,7 +138,7 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9.3")
 
     //Coil
-    val coilVersion = "3.0.0-alpha03"
+    val coilVersion = "3.0.0-alpha04"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
     implementation("io.coil-kt.coil3:coil-network-ktor:$coilVersion")
 
@@ -151,10 +151,11 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //ktor
-    implementation("io.ktor:ktor-client-core:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-client-content-negotiation:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-client-android:${rootProject.extra["ktorVersion"]}")
+    val ktorVersion = "2.3.8"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-android:$ktorVersion")
 
     //Lifecycle
     val lifecycleVersion = "2.7.0"
