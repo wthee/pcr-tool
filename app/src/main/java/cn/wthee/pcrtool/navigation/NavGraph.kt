@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -525,8 +527,21 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_PVP
             ) {
+                val pagerState = rememberPagerState { 4 }
+                val selectListState = rememberLazyGridState()
+                val usedListState = rememberLazyGridState()
+                val resultListState = rememberLazyGridState()
+                val favoritesListState = rememberLazyGridState()
+                val historyListState = rememberLazyGridState()
+
                 PvpSearchScreen(
                     floatWindow = false,
+                    pagerState = pagerState,
+                    selectListState = selectListState,
+                    usedListState = usedListState,
+                    resultListState = resultListState,
+                    favoritesListState = favoritesListState,
+                    historyListState = historyListState,
                     toCharacter = actions.toCharacterDetail
                 )
             }

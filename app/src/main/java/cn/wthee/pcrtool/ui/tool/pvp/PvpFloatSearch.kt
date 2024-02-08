@@ -1,9 +1,11 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,12 +27,18 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场查询（悬浮窗）
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val scope = rememberCoroutineScope()
     val min = navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = navViewModel.showResult.observeAsState().value ?: false
+    val pagerState = rememberPagerState { 4 }
+    val selectListState = rememberLazyGridState()
+    val usedListState = rememberLazyGridState()
     val resultListState = rememberLazyGridState()
+    val favoritesListState = rememberLazyGridState()
+    val historyListState = rememberLazyGridState()
     val actions = NavActions(navController)
 
     PCRToolComposeTheme {
@@ -87,6 +95,12 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     PvpSearchScreen(
                         floatWindow = true,
                         initSpanCount = spanCount,
+                        pagerState = pagerState,
+                        selectListState = selectListState,
+                        usedListState = usedListState,
+                        resultListState = resultListState,
+                        favoritesListState = favoritesListState,
+                        historyListState = historyListState,
                         toCharacter = actions.toCharacterDetail
                     )
                 }

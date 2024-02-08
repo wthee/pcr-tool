@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -85,14 +86,26 @@ import kotlin.math.max
 
 /**
  * 竞技场查询
- *
+ * listState 用于记录滚动位置（悬浮窗）
  * @param floatWindow 是否为悬浮窗
  * @param initSpanCount 列数
+ * @param selectListState 角色列表滚动状态
+ * @param usedListState 常用列表滚动状态
+ * @param resultListState 查询结果列表滚动状态
+ * @param favoritesListState 收藏列表滚动状态
+ * @param historyListState 历史查询列表滚动状态
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpSearchScreen(
     floatWindow: Boolean,
     initSpanCount: Int = 0,
+    pagerState: PagerState,
+    selectListState: LazyGridState,
+    usedListState: LazyGridState,
+    resultListState: LazyGridState,
+    favoritesListState: LazyGridState,
+    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
@@ -102,8 +115,6 @@ fun PvpSearchScreen(
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
-
-    val resultListState = rememberLazyGridState()
 
 
     //返回拦截
@@ -159,7 +170,12 @@ fun PvpSearchScreen(
             spanCount = spanCount,
             characterDataList = uiState.allUnitList,
             selectedIds = selectedIds,
+            pagerState = pagerState,
+            selectListState = selectListState,
+            usedListState = usedListState,
             resultListState = resultListState,
+            favoritesListState = favoritesListState,
+            historyListState = historyListState,
             result = uiState.pvpResult,
             favoritesList = uiState.favoritesList,
             allFavoritesList = uiState.allFavoritesList,
@@ -183,7 +199,12 @@ private fun PvpSearchContent(
     spanCount: Int,
     characterDataList: List<PvpCharacterData>,
     selectedIds: ArrayList<PvpCharacterData>,
+    pagerState: PagerState,
+    selectListState: LazyGridState,
+    usedListState: LazyGridState,
     resultListState: LazyGridState,
+    favoritesListState: LazyGridState,
+    historyListState: LazyGridState,
     result: ResponseData<List<PvpResultData>>?,
     favoritesList: List<PvpFavoriteData>,
     allFavoritesList: List<PvpFavoriteData>,
@@ -203,12 +224,6 @@ private fun PvpSearchContent(
         TabData(tab = stringResource(id = R.string.title_favorite)),
         TabData(tab = stringResource(id = R.string.title_history)),
     )
-
-    val pagerState = rememberPagerState { 4 }
-    val selectListState = rememberLazyGridState()
-    val usedListState = rememberLazyGridState()
-    val favoritesListState = rememberLazyGridState()
-    val historyListState = rememberLazyGridState()
 
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -684,6 +699,7 @@ fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun PvpSearchScreenContentPreview() {
@@ -704,7 +720,14 @@ private fun PvpSearchScreenContentPreview() {
                 PvpCharacterData(),
                 PvpCharacterData(),
             ),
+            pagerState = rememberPagerState {
+                4
+            },
+            selectListState = rememberLazyGridState(),
+            usedListState = rememberLazyGridState(),
             resultListState = rememberLazyGridState(),
+            favoritesListState = rememberLazyGridState(),
+            historyListState = rememberLazyGridState(),
             result = null,
             favoritesList = arrayListOf(),
             allFavoritesList = arrayListOf(),
