@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -224,6 +225,10 @@ fun IconItem(
                 null
             }
         )
+
+        if (BuildConfig.DEBUG) {
+            CaptionText(text = (detailId ?: mId).toString())
+        }
     }
 
 }

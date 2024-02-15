@@ -102,7 +102,9 @@ fun ColumnScope.LevelInputText(
     //等级输入框
     ExpandAnimation(!done) {
         OutlinedTextField(
-            modifier = Modifier.focusRequester(focusRequester),
+            modifier = Modifier
+                .padding(vertical = Dimen.smallPadding)
+                .focusRequester(focusRequester),
             value = inputLevel.value,
             onValueChange = {
                 var filterStr = ""

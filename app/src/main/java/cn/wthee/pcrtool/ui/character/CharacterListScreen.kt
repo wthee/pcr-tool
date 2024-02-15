@@ -123,7 +123,10 @@ fun CharacterListScreen(
                         idList = uiState.favoriteIdList,
                         title = stringResource(id = R.string.favorite),
                         iconResourceType = IconResourceType.CHARACTER,
-                        onClickItem = toCharacterDetail
+                        onClickItem = {
+                            characterListViewModel.changeDialog(false)
+                            toCharacterDetail(it)
+                        }
                     )
                 }
             }
@@ -415,6 +418,7 @@ fun CharacterItemContent(
                             color = textColor,
                             modifier = Modifier.padding(
                                 end = Dimen.mediumPadding,
+                                top = Dimen.mediumPadding,
                                 bottom = Dimen.smallPadding
                             )
                         )
