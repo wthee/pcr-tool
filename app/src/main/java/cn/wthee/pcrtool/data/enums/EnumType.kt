@@ -411,7 +411,7 @@ enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
     GREEN(7, colorGreen, R.string.color_green),
     ORANGE(8, colorOrange, R.string.color_orange),
     CYAN(9, colorCyan, R.string.color_cyan),
-    PINK(10, colorPink, R.string.color_purple),
+    PINK(10, colorPink, R.string.color_pink),
     ;
 
     companion object {
