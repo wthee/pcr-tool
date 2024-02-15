@@ -12,10 +12,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2024.01.00"
-val composeCompilerVersion = "1.5.8"
-val appVersionCode = 382
-val appVersionName = "3.8.2"
+val composeBom = "2024.02.00"
+val composeCompilerVersion = "1.5.9"
+val appVersionCode = 383
+val appVersionName = "3.8.3"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -125,7 +125,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.material:material")
-    implementation("androidx.compose.material3:material3:1.2.0-beta02")
+    implementation("androidx.compose.material3:material3:1.2.0")
 
     //Accompanist
     val accompanistVersion = "0.34.0"
@@ -167,12 +167,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //media3
-    val media3Version = "1.2.0"
+    val media3Version = "1.2.1"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     //Paging3
     val pagingVersion = "3.2.1"
