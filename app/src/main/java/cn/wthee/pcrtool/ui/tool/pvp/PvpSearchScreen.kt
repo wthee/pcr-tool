@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -69,7 +70,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -85,14 +86,26 @@ import kotlin.math.max
 
 /**
  * 竞技场查询
- *
+ * listState 用于记录滚动位置（悬浮窗）
  * @param floatWindow 是否为悬浮窗
  * @param initSpanCount 列数
+ * @param selectListState 角色列表滚动状态
+ * @param usedListState 常用列表滚动状态
+ * @param resultListState 查询结果列表滚动状态
+ * @param favoritesListState 收藏列表滚动状态
+ * @param historyListState 历史查询列表滚动状态
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpSearchScreen(
     floatWindow: Boolean,
     initSpanCount: Int = 0,
+    pagerState: PagerState,
+    selectListState: LazyGridState,
+    usedListState: LazyGridState,
+    resultListState: LazyGridState,
+    favoritesListState: LazyGridState,
+    historyListState: LazyGridState,
     toCharacter: (Int) -> Unit,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
@@ -102,8 +115,6 @@ fun PvpSearchScreen(
     val showResult = navViewModel.showResult.observeAsState().value ?: false
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
-
-    val resultListState = rememberLazyGridState()
 
 
     //返回拦截
@@ -159,7 +170,12 @@ fun PvpSearchScreen(
             spanCount = spanCount,
             characterDataList = uiState.allUnitList,
             selectedIds = selectedIds,
+            pagerState = pagerState,
+            selectListState = selectListState,
+            usedListState = usedListState,
             resultListState = resultListState,
+            favoritesListState = favoritesListState,
+            historyListState = historyListState,
             result = uiState.pvpResult,
             favoritesList = uiState.favoritesList,
             allFavoritesList = uiState.allFavoritesList,
@@ -183,7 +199,12 @@ private fun PvpSearchContent(
     spanCount: Int,
     characterDataList: List<PvpCharacterData>,
     selectedIds: ArrayList<PvpCharacterData>,
+    pagerState: PagerState,
+    selectListState: LazyGridState,
+    usedListState: LazyGridState,
     resultListState: LazyGridState,
+    favoritesListState: LazyGridState,
+    historyListState: LazyGridState,
     result: ResponseData<List<PvpResultData>>?,
     favoritesList: List<PvpFavoriteData>,
     allFavoritesList: List<PvpFavoriteData>,
@@ -203,12 +224,6 @@ private fun PvpSearchContent(
         TabData(tab = stringResource(id = R.string.title_favorite)),
         TabData(tab = stringResource(id = R.string.title_history)),
     )
-
-    val pagerState = rememberPagerState { 4 }
-    val selectListState = rememberLazyGridState()
-    val usedListState = rememberLazyGridState()
-    val favoritesListState = rememberLazyGridState()
-    val historyListState = rememberLazyGridState()
 
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -351,11 +366,12 @@ private fun PvpSearchHeader() {
         //添加信息
         IconTextButton(
             icon = MainIconType.PVP_ADD,
-            text = stringResource(id = R.string.pvp_upload)
-        ) {
-            //打开网页
-            BrowserUtil.open(addUrl)
-        }
+            text = stringResource(id = R.string.pvp_upload),
+            onClick = {
+                //打开网页
+                BrowserUtil.open(addUrl)
+            }
+        )
     }
 }
 
@@ -372,44 +388,46 @@ private fun PvpSearchFabContent(
 
     //悬浮窗
     MainSmallFab(
-        iconType = MainIconType.FLOAT
-    ) {
-        val homeIntent = Intent(Intent.ACTION_MAIN)
-        homeIntent.addCategory(Intent.CATEGORY_HOME)
-        if (Settings.canDrawOverlays(context)) {
-            //启动悬浮服务
-            val serviceIntent = Intent(context, PvpFloatService::class.java)
-            navViewModel.floatServiceRun.postValue(true)
-            context.stopService(serviceIntent)
-            context.startActivity(homeIntent)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
+        iconType = MainIconType.FLOAT,
+        onClick = {
+            val homeIntent = Intent(Intent.ACTION_MAIN)
+            homeIntent.addCategory(Intent.CATEGORY_HOME)
+            if (Settings.canDrawOverlays(context)) {
+                //启动悬浮服务
+                val serviceIntent = Intent(context, PvpFloatService::class.java)
+                navViewModel.floatServiceRun.postValue(true)
+                context.stopService(serviceIntent)
+                context.startActivity(homeIntent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent)
+                } else {
+                    context.startService(serviceIntent)
+                }
             } else {
-                context.startService(serviceIntent)
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:${MyApplication.context.packageName}")
+                )
+                context.startActivity(intent)
             }
-        } else {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:${MyApplication.context.packageName}")
-            )
-            context.startActivity(intent)
         }
-    }
+    )
     //查询
     MainSmallFab(
         iconType = MainIconType.PVP_SEARCH,
-        text = stringResource(id = R.string.pvp_search)
-    ) {
-        //查询
-        try {
-            scope.launch {
-                resultListState.scrollToItem(0)
-            }
-        } catch (_: Exception) {
+        text = stringResource(id = R.string.pvp_search),
+        onClick = {
+            //查询
+            try {
+                scope.launch {
+                    resultListState.scrollToItem(0)
+                }
+            } catch (_: Exception) {
 
+            }
+            searchByCharacterList()
         }
-        searchByCharacterList()
-    }
+    )
 }
 
 /**
@@ -521,12 +539,13 @@ private fun PvpToSelectList(
                 MainIcon(
                     data = it,
                     size = Dimen.fabIconSize,
-                    modifier = Modifier.padding(Dimen.smallPadding)
-                ) {
-                    scope.launch {
-                        selectListState.scrollToItem(positions[index])
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    onClick = {
+                        scope.launch {
+                            selectListState.scrollToItem(positions[index])
+                        }
                     }
-                }
+                )
             }
         }
     }
@@ -557,37 +576,38 @@ fun PvpIconItem(
     ) {
         //图标
         MainIcon(
-            data = icon
-        ) {
-            val newList = arrayListOf<PvpCharacterData>()
-            selectedIds.forEach {
-                newList.add(it)
-            }
+            data = icon,
+            onClick = {
+                val newList = arrayListOf<PvpCharacterData>()
+                selectedIds.forEach {
+                    newList.add(it)
+                }
 
-            //点击选择或取消选择
-            if (selected) {
-                var cancelSelectIndex = 0
-                newList.forEachIndexed { index, sel ->
-                    if (pvpCharacterData.unitId == sel.unitId) {
-                        cancelSelectIndex = index
+                //点击选择或取消选择
+                if (selected) {
+                    var cancelSelectIndex = 0
+                    newList.forEachIndexed { index, sel ->
+                        if (pvpCharacterData.unitId == sel.unitId) {
+                            cancelSelectIndex = index
+                        }
+                    }
+                    newList[cancelSelectIndex] = PvpCharacterData()
+                } else {
+
+                    if (!newList.contains(PvpCharacterData())) {
+                        ToastUtil.short(getString(R.string.tip_selected_5))
+                    }
+
+                    val unSelected = newList.find { it.position == 999 }
+                    if (unSelected != null) {
+                        //可以选择
+                        newList[0] = pvpCharacterData
                     }
                 }
-                newList[cancelSelectIndex] = PvpCharacterData()
-            } else {
-
-                if (!newList.contains(PvpCharacterData())) {
-                    ToastUtil.short(getString(R.string.tip_selected_5))
-                }
-
-                val unSelected = newList.find { it.position == 999 }
-                if (unSelected != null) {
-                    //可以选择
-                    newList[0] = pvpCharacterData
-                }
+                newList.sortWith(comparePvpCharacterData())
+                navViewModel.selectedPvpData.postValue(newList)
             }
-            newList.sortWith(comparePvpCharacterData())
-            navViewModel.selectedPvpData.postValue(newList)
-        }
+        )
 
         //位置
         val position =
@@ -612,31 +632,28 @@ fun PvpUnitIconLine(
     floatWindow: Boolean,
     toCharacter: (Int) -> Unit
 ) {
-    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = modifier,
-        fixCount = 5,
-        contentPadding = mediumPadding,
+        itemCount = ids.size,
+        itemWidth = 0.dp,
+        fixColumns = 5,
+        contentPadding = if (floatWindow) {
+            Dimen.smallPadding
+        } else {
+            Dimen.largePadding
+        },
         verticalContentPadding = 0.dp
     ) {
-        ids.forEach {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = if (floatWindow) 0.dp else Dimen.smallPadding)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance().getMaxIconUrl(it),
-                    wrapSize = true
-                ) {
-                    if (!floatWindow) {
-                        toCharacter(it)
-                    }
+        MainIcon(
+            data = ImageRequestHelper.getInstance().getMaxIconUrl(ids[it]),
+            wrapSize = true,
+            onClick = {
+                if (!floatWindow) {
+                    toCharacter(ids[it])
                 }
             }
-        }
+        )
     }
 }
 
@@ -682,6 +699,7 @@ fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun PvpSearchScreenContentPreview() {
@@ -702,7 +720,14 @@ private fun PvpSearchScreenContentPreview() {
                 PvpCharacterData(),
                 PvpCharacterData(),
             ),
+            pagerState = rememberPagerState {
+                4
+            },
+            selectListState = rememberLazyGridState(),
+            usedListState = rememberLazyGridState(),
             resultListState = rememberLazyGridState(),
+            favoritesListState = rememberLazyGridState(),
+            historyListState = rememberLazyGridState(),
             result = null,
             favoritesList = arrayListOf(),
             allFavoritesList = arrayListOf(),

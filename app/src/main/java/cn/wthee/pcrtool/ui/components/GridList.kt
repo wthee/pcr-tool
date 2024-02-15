@@ -1,28 +1,131 @@
 package cn.wthee.pcrtool.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
+import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.spanCount
 import kotlin.math.max
+
+/**
+ * 网格列表
+ *
+ * @param fixColumns 固定列数
+ * @param minRowHeight 最小固有尺寸
+ */
+@Composable
+fun VerticalGridList(
+    modifier: Modifier = Modifier,
+    itemCount: Int,
+    itemWidth: Dp,
+    fixColumns: Int = 0,
+    contentPadding: Dp = 0.dp,
+    verticalContentPadding: Dp = contentPadding,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    minRowHeight: Boolean = true,
+    content: @Composable (Int) -> Unit
+) {
+    val context = LocalContext.current
+    var size by remember { mutableStateOf(IntSize(width = ScreenUtil.getWidth(), height = 0)) }
+    //列数
+    val columns = max(
+        1,
+        if (fixColumns != 0) {
+            fixColumns
+        } else {
+            spanCount(
+                width = size.width,
+                itemDp = itemWidth + contentPadding * 2,
+                context = context
+            )
+        }
+    )
+
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(
+                if (fixColumns == 0) {
+                    Modifier.onSizeChanged {
+                        size = it
+                    }
+                } else {
+                    Modifier
+                }
+            )
+    ) {
+        var rows = (itemCount / columns)
+        if (itemCount.mod(columns) > 0) {
+            rows += 1
+        }
+
+        for (rowId in 0 until rows) {
+            val firstIndex = rowId * columns
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (minRowHeight) {
+                            Modifier.height(IntrinsicSize.Min)
+                        } else {
+                            Modifier
+                        }
+                    ),
+                verticalAlignment = verticalAlignment
+            ) {
+                for (columnId in 0 until columns) {
+                    val index = firstIndex + columnId
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(
+                                horizontal = contentPadding,
+                                vertical = verticalContentPadding
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (index < itemCount) {
+                            content(index)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
 
 
 /**
@@ -40,26 +143,27 @@ fun GridIconList(
     iconResourceType: IconResourceType,
     itemWidth: Dp = Dimen.iconSize,
     contentPadding: Dp = Dimen.exSmallPadding,
-    fixCount: Int = 0,
+    fixColumns: Int = 0,
     paddingValues: PaddingValues = PaddingValues(
-        top = Dimen.mediumPadding,
+        top = Dimen.smallPadding,
         start = Dimen.smallPadding,
         end = Dimen.smallPadding
     ),
     onClickItem: ((Int) -> Unit)? = null
 ) {
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = modifier.padding(paddingValues),
+        itemCount = idList?.size ?: 0,
         itemWidth = itemWidth,
         contentPadding = contentPadding,
         verticalContentPadding = Dimen.smallPadding,
-        fixCount = if (LocalInspectionMode.current) 5 else fixCount
+        fixColumns = fixColumns
     ) {
-        idList?.forEachIndexed { index, it ->
+        if (idList != null) {
             IconItem(
-                id = it,
+                id = idList[it],
                 detailId = if (detailIdList.isNotEmpty()) {
-                    detailIdList[index]
+                    detailIdList[it]
                 } else {
                     null
                 },
@@ -121,6 +225,10 @@ fun IconItem(
                 null
             }
         )
+
+        if (BuildConfig.DEBUG) {
+            CaptionText(text = (detailId ?: mId).toString())
+        }
     }
 
 }

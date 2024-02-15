@@ -7,6 +7,7 @@ object NavRoute {
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
     const val ALL_PICS = "allPics"
+    const val ALL_STORY_EVENT_PICS = "allStoryEventPics"
     const val ALL_PICS_TYPE = "allPicsType"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val CHARACTER_STORY_DETAIL = "characterStoryDetail"
@@ -33,7 +34,6 @@ object NavRoute {
     const val MAIN_SETTINGS = "mainSettings"
     const val TWEET = "tweet"
     const val COMIC = "comic"
-    const val ALL_SKILL = "allSkill"
     const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
@@ -97,4 +97,9 @@ object NavRoute {
     const val PICKUP_LIST = "pickUpList"
 
     const val LOAD_COMIC_LIST = "loadComicList"
+    const val STORY_ID = "stroyId"
+    const val EVENT_ID = "eventId"
+    const val ORIGINAL_EVENT_ID = "originalEventId"
+    const val TALENT_LIST = "talentList"
+
 }

@@ -27,7 +27,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ExtraEquipGroupData
 import cn.wthee.pcrtool.data.model.FilterExtraEquipment
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -37,7 +37,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -67,7 +67,7 @@ fun ExtraEquipList(
 
     MainScaffold(
         fab = {
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 ExtraEquipListFabContent(
                     count = uiState.equipList?.size ?: 0,
                     scrollState = scrollState,
@@ -79,7 +79,7 @@ fun ExtraEquipList(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             errorContent = {
                 CenterTipText(text = stringResource(R.string.not_installed))
             }
@@ -146,31 +146,34 @@ private fun ExtraEquipListFabContent(
 
     //回到顶部
     MainSmallFab(
-        iconType = MainIconType.TOP
-    ) {
-        coroutineScope.launch {
-            scrollState.scrollToItem(0)
+        iconType = MainIconType.TOP,
+        onClick = {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
         }
-    }
+    )
 
     //重置筛选
     if (filter?.isFilter() == true) {
         MainSmallFab(
-            iconType = MainIconType.RESET
-        ) {
-            resetFilter()
-        }
+            iconType = MainIconType.RESET,
+            onClick = {
+                resetFilter()
+            }
+        )
     }
 
     // 数量显示&筛选按钮
     MainSmallFab(
         iconType = MainIconType.EXTRA_EQUIP,
-        text = "$count"
-    ) {
-        filter?.let {
-            toFilterExtraEquip(Json.encodeToString(filter))
+        text = "$count",
+        onClick = {
+            filter?.let {
+                toFilterExtraEquip(Json.encodeToString(filter))
+            }
         }
-    }
+    )
 }
 
 /**
@@ -201,20 +204,19 @@ private fun ExtraEquipGroup(
     )
 
     //分组内容
-    VerticalStaggeredGrid(
+    VerticalGridList(
+        itemCount = equipGroupData.equipIdList.size,
         itemWidth = Dimen.iconSize * 3,
         contentPadding = Dimen.mediumPadding,
         modifier = Modifier.padding(
             horizontal = Dimen.commonItemPadding
         )
     ) {
-        equipGroupData.equipIdList.forEach { equip ->
-            ExtraEquipItem(
-                favoriteIdList = favoriteIdList,
-                equip = equip,
-                toExtraEquipDetail = toExtraEquipDetail
-            )
-        }
+        ExtraEquipItem(
+            favoriteIdList = favoriteIdList,
+            equip = equipGroupData.equipIdList[it],
+            toExtraEquipDetail = toExtraEquipDetail
+        )
     }
 }
 

@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -44,7 +44,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.home.tool.ToolMenu
 import cn.wthee.pcrtool.ui.home.tool.ToolMenuData
@@ -101,6 +101,7 @@ fun AllToolMenuScreen(
     dataList.addItem(ToolMenuType.EXTRA_EQUIP)
     dataList.addItem(ToolMenuType.TRAVEL_AREA)
     dataList.addItem(ToolMenuType.UNIQUE_EQUIP)
+    dataList.addItem(ToolMenuType.TALENT_LIST)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询
@@ -134,19 +135,21 @@ fun AllToolMenuScreen(
     //其它
     val otherList = arrayListOf<ToolMenuData>()
     otherList.addItem(ToolMenuType.MOCK_GACHA)
+    otherList.addItem(ToolMenuType.ALL_QUEST)
+    otherList.addItem(ToolMenuType.ALL_EQUIP)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.other), otherList))
 
     //测试
-    val betaList = arrayListOf<ToolMenuData>()
-    betaList.addItem(ToolMenuType.ALL_EQUIP)
-    betaList.addItem(ToolMenuType.ALL_QUEST)
-    itemGroupList.add(
-        ToolMenuGroup(
-            stringResource(id = R.string.beta_tool_group),
-            betaList,
-            stringResource(id = R.string.beta_tool_group_title)
-        )
-    )
+//    val betaList = arrayListOf<ToolMenuData>()
+//    betaList.addItem(ToolMenuType.ALL_EQUIP)
+//    betaList.addItem(ToolMenuType.ALL_QUEST)
+//    itemGroupList.add(
+//        ToolMenuGroup(
+//            stringResource(id = R.string.beta_tool_group),
+//            betaList,
+//            stringResource(id = R.string.beta_tool_group_title)
+//        )
+//    )
 
     val uiState by toolSectionViewModel.uiState.collectAsStateWithLifecycle()
     LifecycleEffect(Lifecycle.Event.ON_CREATE) {
@@ -159,11 +162,12 @@ fun AllToolMenuScreen(
             MainSmallFab(
                 iconType = if (isEditMode) MainIconType.OK else MainIconType.EDIT_TOOL,
                 text = stringResource(id = if (isEditMode) R.string.done else R.string.edit),
-            ) {
-                coroutineScope.launch {
-                    isEditMode = !isEditMode
+                onClick = {
+                    coroutineScope.launch {
+                        isEditMode = !isEditMode
+                    }
                 }
-            }
+            )
         }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -178,7 +182,7 @@ fun AllToolMenuScreen(
                 ) {
                     ToolMenu(
                         toolOrderData = uiState.toolOrderData,
-                        loadingState = LoadingState.Success,
+                        loadState = LoadState.Success,
                         actions = actions,
                         isEditMode = isEditMode,
                         isHome = false,
@@ -263,20 +267,19 @@ private fun MenuGroup(
         if (group.groupDesc != "") {
             CaptionText(text = group.groupDesc)
         }
-        VerticalStaggeredGrid(
-            itemWidth = (Dimen.iconSize * 3),
-            contentPadding = Dimen.mediumPadding,
-            modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
+        VerticalGridList(
+            modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding),
+            itemCount = group.toolList.size,
+            itemWidth = Dimen.iconSize * 3,
+            contentPadding = Dimen.mediumPadding
         ) {
-            group.toolList.forEach {
-                MenuItem(
-                    actions = actions,
-                    toolMenuData = it,
-                    orderStr = toolOrderData,
-                    isEditMode = isEditMode,
-                    updateOrderData = updateOrderData
-                )
-            }
+            MenuItem(
+                actions = actions,
+                toolMenuData = group.toolList[it],
+                orderStr = toolOrderData,
+                isEditMode = isEditMode,
+                updateOrderData = updateOrderData
+            )
         }
     }
 }

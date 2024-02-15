@@ -36,7 +36,7 @@ fun CharacterStoryAttrScreen(characterStoryViewModel: CharacterStoryViewModel = 
     val uiState by characterStoryViewModel.uiState.collectAsStateWithLifecycle()
 
     MainScaffold {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             CharacterStoryAttrContent(storyMap = uiState.storyMap)
         }
     }

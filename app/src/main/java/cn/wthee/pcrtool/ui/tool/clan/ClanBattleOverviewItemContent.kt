@@ -2,10 +2,13 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
@@ -46,6 +49,7 @@ fun ClanBattleOverviewItemContent(
 /**
  * 无boss信息
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ClanBattleNoBossContent(clanBattleEvent: ClanBattleEvent) {
     Column(
@@ -55,17 +59,19 @@ private fun ClanBattleNoBossContent(clanBattleEvent: ClanBattleEvent) {
         )
     ) {
         //标题
-        Row(
+        FlowRow(
             modifier = Modifier.padding(bottom = Dimen.mediumPadding)
         ) {
             //标题
             MainTitleText(
                 text = stringResource(id = R.string.tool_clan),
-                modifier = Modifier.padding(end = Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
                 backgroundColor = colorOrange
             )
             //显示倒计时
-            EventTitle(
+            this.EventTitle(
                 clanBattleEvent.startTime.formatTime,
                 clanBattleEvent.getFixedEndTime(),
                 showDays = false

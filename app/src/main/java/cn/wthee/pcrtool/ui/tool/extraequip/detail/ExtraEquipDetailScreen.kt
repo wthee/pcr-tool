@@ -82,7 +82,7 @@ fun ExtraEquipDetail(
             )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             uiState.equipData?.let { extraEquipmentData ->
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -125,28 +125,31 @@ private fun FabContent(
         } else {
             MainIconType.FAVORITE_LINE
         },
-    ) {
-        scope.launch {
-            updateFavoriteId()
+        onClick = {
+            scope.launch {
+                updateFavoriteId()
+            }
         }
-    }
+    )
 
     //关联角色
     if (unitIdList.isNotEmpty()) {
         MainSmallFab(
             iconType = MainIconType.CHARACTER,
-            text = unitIdList.size.toString()
-        ) {
-            toExtraEquipUnit(category)
-        }
+            text = unitIdList.size.toString(),
+            onClick = {
+                toExtraEquipUnit(category)
+            }
+        )
     }
 
     //掉落信息
     MainSmallFab(
-        iconType = MainIconType.EXTRA_EQUIP_DROP
-    ) {
-        toExtraEquipDrop(equipId)
-    }
+        iconType = MainIconType.EXTRA_EQUIP_DROP,
+        onClick = {
+            toExtraEquipDrop(equipId)
+        }
+    )
 }
 
 /**

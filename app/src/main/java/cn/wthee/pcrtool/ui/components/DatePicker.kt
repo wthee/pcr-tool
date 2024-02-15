@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DatePickerFormatter
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.DateRangePickerState
@@ -90,8 +90,10 @@ fun DateRangePickerCompose(
                     value = MaterialTheme.typography.titleMedium
                 ) {
                     DateRangePickerDefaults.DateRangePickerHeadline(
-                        dateRangePickerState,
-                        remember { DatePickerFormatter() },
+                        selectedStartDateMillis = dateRangePickerState.selectedStartDateMillis,
+                        selectedEndDateMillis = dateRangePickerState.selectedEndDateMillis,
+                        displayMode = dateRangePickerState.displayMode,
+                        dateFormatter = remember { DatePickerDefaults.dateFormatter() },
                         modifier = Modifier.padding(
                             PaddingValues(
                                 start = Dimen.largePadding,

@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -39,12 +40,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.RATIO
+import cn.wthee.pcrtool.ui.components.RATIO_BANNER
+import cn.wthee.pcrtool.ui.components.RATIO_TEASER
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -97,23 +100,27 @@ private fun PictureScreenContent(uiState: PictureUiState) {
         uiState.pageCount
     }
     val storyCount = when (uiState.storyLoadState) {
-        LoadingState.Success -> uiState.storyCardList.size
-        LoadingState.NoData -> 0
+        LoadState.Success -> uiState.storyCardList.size
+        LoadState.NoData -> 0
         else -> null
     }
     val comicCount = when (uiState.comicLoadState) {
-        LoadingState.Success -> uiState.comicList.size
-        LoadingState.NoData -> 0
+        LoadState.Success -> uiState.comicList.size
+        LoadState.NoData -> 0
         else -> null
     }
 
-    val tabs = if (uiState.pageCount == 1) {
+    val tabs = if (uiState.pageCount == 2) {
         //剧情活动
         arrayListOf(
             TabData(
                 tab = stringResource(id = R.string.story),
                 count = storyCount,
-                isLoading = uiState.storyLoadState == LoadingState.Loading
+                isLoading = uiState.storyLoadState == LoadState.Loading
+            ),
+            TabData(
+                tab = stringResource(id = R.string.other),
+                count = uiState.bannerList.size
             )
         )
     } else {
@@ -126,12 +133,12 @@ private fun PictureScreenContent(uiState: PictureUiState) {
             TabData(
                 tab = stringResource(id = R.string.story),
                 count = storyCount,
-                isLoading = uiState.storyLoadState == LoadingState.Loading
+                isLoading = uiState.storyLoadState == LoadState.Loading
             ),
             TabData(
                 tab = stringResource(id = R.string.comic),
                 count = comicCount,
-                isLoading = uiState.comicLoadState == LoadingState.Loading
+                isLoading = uiState.comicLoadState == LoadState.Loading
             )
         )
     }
@@ -171,8 +178,8 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                     MediaGridList(
                         urlList = uiState.storyCardList,
                         title = tabs[index].tab,
-                        loading = uiState.storyLoadState,
-                        showTitle = uiState.pageCount == 1,
+                        loadState = uiState.storyLoadState,
+                        showTitle = false,
                         noDataText = stringResource(id = R.string.no_story_info)
                     ) {
                         PictureItem(
@@ -190,7 +197,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                     MediaGridList(
                         urlList = uiState.comicList,
                         title = tabs[index].tab,
-                        loading = uiState.comicLoadState,
+                        loadState = uiState.comicLoadState,
                         showTitle = false,
                         noDataText = stringResource(id = R.string.no_comic_info)
                     ) {
@@ -203,6 +210,36 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                                 ),
                             shape = noShape(),
                             ratio = 1f
+                        )
+                    }
+                }
+                //剧情活动 banner
+                stringResource(id = R.string.other) -> {
+                    MediaGridList(
+                        urlList = uiState.bannerList,
+                        title = tabs[index].tab,
+                        loadState = LoadState.Success,
+                        showTitle = false
+                    ) {
+                        val isBanner = it.contains(ImageRequestHelper.EVENT_BANNER)
+                        PictureItem(
+                            picUrl = it,
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = Dimen.largePadding,
+                                    vertical = Dimen.mediumPadding
+                                ),
+                            contentScale = if (isBanner) {
+                                ContentScale.FillWidth
+                            } else {
+                                ContentScale.Fit
+                            },
+                            showShadow = !isBanner,
+                            ratio = if (isBanner) {
+                                RATIO_BANNER
+                            } else {
+                                RATIO_TEASER
+                            },
                         )
                     }
                 }
@@ -224,7 +261,8 @@ fun PictureItem(
     picUrl: String,
     ratio: Float? = null,
     shape: CornerBasedShape = MaterialTheme.shapes.medium,
-    contentScale: ContentScale = ContentScale.FillWidth
+    contentScale: ContentScale = ContentScale.FillWidth,
+    showShadow: Boolean = true,
 ) {
     val context = LocalContext.current
     val placeholder = picUrl == ""
@@ -241,7 +279,13 @@ fun PictureItem(
         ratio = ratio,
         modifier = modifier
             .clip(shape)
-            .shadow(elevation = Dimen.cardElevation, shape = shape)
+            .then(
+                if (showShadow) {
+                    Modifier.shadow(elevation = Dimen.cardElevation, shape = shape)
+                } else {
+                    Modifier
+                }
+            )
             .clickable(!placeholder) {
                 //预览
                 VibrateUtil(context).single()
@@ -262,7 +306,7 @@ fun PictureItem(
 
 /**
  * 图片预览弹窗
- * fixme 小窗模式底部显示异常（dialog导致问题）；横屏导致 fab错位
+ * fixme 小窗模式底部显示异常（dialog导致问题）
  */
 @Composable
 @OptIn(ExperimentalCoilApi::class)
@@ -316,22 +360,24 @@ private fun PreviewPictureDialog(
         ),
     ) {
         MainScaffold(
+            modifier = Modifier.navigationBarsPadding(),
             contentAlignment = Alignment.Center,
             fab = {
                 //重置
                 FadeAnimation(scale != 1f || rotation != 0f || offset != Offset.Zero) {
                     MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        scope.launch {
-                            transformableState.transform {
-                                transformBy()
+                        iconType = MainIconType.RESET,
+                        onClick = {
+                            scope.launch {
+                                transformableState.transform {
+                                    transformBy()
+                                }
+                                scale = 1f
+                                rotation = 0f
+                                offset = Offset.Zero
                             }
-                            scale = 1f
-                            rotation = 0f
-                            offset = Offset.Zero
                         }
-                    }
+                    )
                 }
                 //保存
                 MainSmallFab(
@@ -342,31 +388,32 @@ private fun PreviewPictureDialog(
                         } else {
                             R.string.title_dialog_save_img
                         }
-                    )
-                ) {
-                    checkPermissions(context, permissions) {
-                        //已保存
-                        if (saved) {
-                            ToastUtil.short(
-                                getString(
-                                    R.string.pic_exist,
-                                    file.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                    ),
+                    onClick = {
+                        checkPermissions(context, permissions) {
+                            //已保存
+                            if (saved) {
+                                ToastUtil.short(
+                                    getString(
+                                        R.string.pic_exist,
+                                        file.absolutePath.replace(MediaDownloadHelper.DIR, "")
+                                    )
                                 )
-                            )
-                            return@checkPermissions
-                        }
-                        if (!success) {
-                            ToastUtil.short(unLoadToast)
-                        } else {
-                            MediaDownloadHelper(context).saveMedia(
-                                bitmap = loadedPic.value,
-                                displayName = displayName
-                            ) {
-                                saved = true
+                                return@checkPermissions
+                            }
+                            if (!success) {
+                                ToastUtil.short(unLoadToast)
+                            } else {
+                                MediaDownloadHelper(context).saveMedia(
+                                    bitmap = loadedPic.value,
+                                    displayName = displayName
+                                ) {
+                                    saved = true
+                                }
                             }
                         }
                     }
-                }
+                )
             },
             onMainFabClick = {
                 openPreviewDialog.value = false
@@ -415,6 +462,8 @@ private fun getFileName(url: String): String {
     return try {
         val type = when {
             url.contains(ImageRequestHelper.CARD_STORY) -> "story"
+            url.contains(ImageRequestHelper.EVENT_BANNER) -> "banner"
+            url.contains(ImageRequestHelper.EVENT_TEASER) -> "teaser"
             url.contains(ImageRequestHelper.CARD_ACTUAL_PROFILE) -> "unit_actual"
             url.contains(ImageRequestHelper.COMIC) -> "comic"
             url.contains(ImageRequestHelper.COMIC_ZH) -> "comic"
@@ -439,8 +488,8 @@ private fun PictureScreenContentPreview() {
                 unitCardList = arrayListOf("1"),
                 storyCardList = arrayListOf("1"),
                 comicList = arrayListOf("1"),
-                storyLoadState = LoadingState.Success,
-                comicLoadState = LoadingState.Success,
+                storyLoadState = LoadState.Success,
+                comicLoadState = LoadState.Success,
             )
         )
     }

@@ -76,7 +76,6 @@ class NewsViewModel @Inject constructor(
                             pageSize = pageSize
                         ),
                         remoteMediator = NewsRemoteMediator(
-                            region = MainActivity.regionType.value,
                             keyword = keyword,
                             dateRange = dateRange,
                             database = database,

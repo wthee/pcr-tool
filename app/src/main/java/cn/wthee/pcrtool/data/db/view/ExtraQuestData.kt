@@ -18,16 +18,17 @@ data class ExtraEquipQuestData(
     @ColumnInfo(name = "need_power") val needPower: Int,
     @ColumnInfo(name = "icon_id") val iconId: Int
 ){
-
     /**
-     * 获取area
+     * 获取标题
      */
-    fun getAreaOrder() = travelAreaId % 10
+    fun getTitle() = "${travelAreaId % 10}-${travelQuestId % 10} ${getQuestName()}"
 
     /**
      * 获取名称
      */
-    fun getQuestName() = travelQuestName.replace("\\n", "·")
+
+
+    private fun getQuestName() = travelQuestName.replace("\\n", "·")
 }
 
 /**

@@ -18,6 +18,9 @@ object FileUtil {
      */
     fun getDatabaseDir(context: Context = MyApplication.context) = getAppDir(context) + "/databases"
 
+    /**
+     * 其他文件下载所在文件夹
+     */
     fun getDownloadDir(context: Context = MyApplication.context) = getAppDir(context) + "/download"
 
     /**
@@ -51,17 +54,6 @@ object FileUtil {
             RegionType.JP -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
         }
 
-
-    /**
-     * 数据库备份路径
-     */
-    fun getDatabaseBackupPath(region: RegionType) =
-        getDatabaseDir() + "/" + when (region) {
-            RegionType.CN -> Constants.DATABASE_BACKUP_NAME_CN
-            RegionType.TW -> Constants.DATABASE_BACKUP_NAME_TW
-            RegionType.JP -> Constants.DATABASE_BACKUP_NAME_JP
-        }
-
     /**
      * wal 文件路径
      */
@@ -70,16 +62,6 @@ object FileUtil {
             RegionType.CN -> Constants.DATABASE_WAL_CN
             RegionType.TW -> Constants.DATABASE_WAL_TW
             RegionType.JP -> Constants.DATABASE_WAL_JP
-        }
-
-    /**
-     * 备份 wal 文件路径
-     */
-    fun getDatabaseBackupWalPath(region: RegionType) =
-        getDatabaseDir() + "/" + when (region) {
-            RegionType.CN -> Constants.DATABASE_WAL_BACKUP_CN
-            RegionType.TW -> Constants.DATABASE_WAL_BACKUP_TW
-            RegionType.JP -> Constants.DATABASE_WAL_BACKUP_JP
         }
 
     /**
@@ -93,8 +75,8 @@ object FileUtil {
     /**
      * 删除数据库文件
      */
-    fun deleteBr(type: Int) {
-        val db = File(getDatabaseBrPath(RegionType.getByValue(type)))
+    fun deleteBr(type: RegionType) {
+        val db = File(getDatabaseBrPath(type))
         if (db.exists()) {
             db.delete()
         }

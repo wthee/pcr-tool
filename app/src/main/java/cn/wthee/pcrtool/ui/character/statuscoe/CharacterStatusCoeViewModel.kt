@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @Immutable
 data class CharacterStatusCoeUiState(
     val coeValue: UnitStatusCoefficient? = null,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -51,7 +51,7 @@ class CharacterStatusCoeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     coeValue = data,
-                    loadingState = it.loadingState.isSuccess(data != null)
+                    loadState = it.loadState.isSuccess(data != null)
                 )
             }
         }

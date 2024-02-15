@@ -61,6 +61,7 @@
     <string name="value_10_k">%d万</string>
     <string name="unit_level">等级：%d</string>
     <string name="title_unit_level">等级</string>
+    <string name="input_level">请输入等级</string>
     <string name="order_character_detail">未选中模块显示在次要页面（退出编辑后滑动切换）</string>
     <string name="character_card">角色卡片</string>
     <string name="character_other_tool">其他功能（装备统计等）</string>
@@ -116,8 +117,16 @@
     <string name="position_1">中卫</string>
     <string name="position_0">前卫</string>
     <string name="atk_type">攻击类型</string>
+    <string name="talent_type">天赋类型</string>
+    <string name="unit_talent">角色天赋</string>
     <string name="physical">物理</string>
     <string name="magic">魔法</string>
+    <string name="element_type">属性</string>
+    <string name="fire">火</string>
+    <string name="water">水</string>
+    <string name="wind">风</string>
+    <string name="light">光</string>
+    <string name="dark">暗</string>
     <string name="unknown">\?</string>
     <string name="all">全部</string>
     <string name="title_favorite">收藏</string>
@@ -199,7 +208,7 @@
     <string name="random_drop_area_2">（后半）</string>
     <string name="qq_group">反馈交流群</string>
     <string name="to_feedback">反馈</string>
-    <string name="qq_group_summary">有任何意见或建议，可在群内反馈</string>
+    <string name="qq_group_summary">有任何问题或建议，可在群内反馈</string>
     <string name="to_join_qq_group">加入QQ群</string>
     <string name="clean_image_cache">清除缓存</string>
     <string name="tip_clean_cache">加载缓存，可减少网络数据使用。正常使用中请勿清除</string>
@@ -384,7 +393,6 @@
     <string name="travel_time">所需时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
     <string name="ex_equip_drop_odd">%.2f%%</string>
-    <string name="extra_area_quest">区域%d：%s</string>
 
 
     <!--技能相关-->
@@ -405,6 +413,7 @@
     <string name="color_green">绿</string>
     <string name="color_orange">橙</string>
     <string name="color_cyan">青</string>
+    <string name="color_pink">粉</string>
 
 
     <!--中文数字-->

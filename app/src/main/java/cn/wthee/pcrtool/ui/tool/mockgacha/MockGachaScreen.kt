@@ -116,10 +116,11 @@ fun MockGachaScreen(
                     text = stringResource(id = R.string.reset_record),
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                ) {
-                    mockGachaViewModel.deleteGachaResultByGachaId(uiState.gachaId)
-                }
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+                    onClick = {
+                        mockGachaViewModel.deleteGachaResultByGachaId(uiState.gachaId)
+                    }
+                )
             }
         },
         enableClickClose = uiState.openDialog,
@@ -268,13 +269,14 @@ private fun MockGachaHeader(
                         MainIcon(
                             data = ImageRequestHelper.getInstance()
                                 .getUnitIconUrl(gachaUnitInfo.unitId, 3),
-                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding)
-                        ) {
-                            //更新选中
-                            if (!showResult) {
-                                updatePickUpList(gachaUnitInfo)
+                            modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+                            onClick = {
+                                //更新选中
+                                if (!showResult) {
+                                    updatePickUpList(gachaUnitInfo)
+                                }
                             }
-                        }
+                        )
                         if (mockGachaType == MockGachaType.PICK_UP_SINGLE && index == pickUpList.size - 1) {
                             SelectText(
                                 selected = true,
@@ -311,9 +313,8 @@ private fun MockGachaFabContent(
         val tipSingleError = stringResource(id = R.string.tip_to_mock_single)
         MainSmallFab(
             iconType = MainIconType.MOCK_GACHA_PAY,
-            text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock)
-        ) {
-            if (uiState.pickUpList.isNotEmpty()) {
+            text = if (showResult) "-1500" else stringResource(id = R.string.go_to_mock),
+            onClick = {
                 val mockGachaHelper = MockGachaHelper(
                     pickUpType = mockGachaType,
                     pickUpList = uiState.pickUpList,
@@ -351,7 +352,7 @@ private fun MockGachaFabContent(
                     mockGachaViewModel.addMockResult(uiState.gachaId, result)
                 }
             }
-        }
+        )
     }
 }
 

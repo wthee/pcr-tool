@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home.news
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -10,10 +9,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.StateBox
+import cn.wthee.pcrtool.ui.components.VerticalGridList
+import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -69,9 +70,12 @@ private fun NewsSectionContent(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             loadingContent = {
-                for (i in 0 until 3) {
+                VerticalGridList(
+                    itemCount = 3,
+                    itemWidth = getItemWidth(),
+                ) {
                     NewsItem(news = NewsTable())
                 }
             },
@@ -79,10 +83,12 @@ private fun NewsSectionContent(
                 CenterTipText(stringResource(id = R.string.data_get_error))
             }
         ) {
-            //fixme 优化横屏显示效果
-            Column {
-                uiState.newsList?.forEach {
-                    NewsItem(news = it)
+            uiState.newsList?.let { newsList ->
+                VerticalGridList(
+                    itemCount = newsList.size,
+                    itemWidth = getItemWidth(),
+                ) {
+                    NewsItem(news = newsList[it], fillMaxHeight = true)
                 }
             }
         }
@@ -110,7 +116,7 @@ private fun NewsSectionContentPreview() {
                         title = stringResource(id = R.string.debug_short_text)
                     ),
                 ),
-                loadingState = LoadingState.Success
+                loadState = LoadState.Success
             ),
             isEditMode = false,
             orderStr = "${OverviewType.NEWS.id}",

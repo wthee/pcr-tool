@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.model.FilterLeaderboard
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.ApiRepository
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.getToday
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ data class LeaderboardUiState(
     val currentList: List<LeaderboardData> = emptyList(),
     //筛选
     val filterLeader: FilterLeaderboard = FilterLeaderboard(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -67,7 +67,7 @@ class LeaderboardViewModel @Inject constructor(
                         FilterLeaderboard(),
                         responseData.data
                     ) ?: emptyList(),
-                    loadingState = it.loadingState.isSuccess(responseData.data != null)
+                    loadState = it.loadState.isSuccess(responseData.data != null)
                 )
             }
         }

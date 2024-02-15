@@ -15,10 +15,8 @@ val colorBlack = Color(0xFF0D0F0F)
 val colorGray = Color(0xFF9C9C9C)
 
 //遮罩颜色
-val colorAlphaBlack = Color(0, 0, 0, 166)
-val colorAlphaBlackStart = Color(0, 0, 0, 64)
-val colorAlphaWhite = Color(255, 255, 255, 166)
-val colorAlphaWhiteStart = Color(255, 255, 255, 64)
+const val maskAlpha = 0.7f
+const val maskStartAlpha = 0.3f
 
 //其它颜色
 /**
@@ -67,6 +65,6 @@ val colorOrange = Color(0xFFFF883E)
 val colorCyan = Color(0xFF65B0FA)
 
 /**
- * 粉、ex装备4星
+ * 粉、ex装备4星、Rank 32 ~
  */
 val colorPink = Color(0xFFFFB6C1)

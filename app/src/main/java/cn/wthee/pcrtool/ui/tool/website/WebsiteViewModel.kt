@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.data.network.ApiRepository
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ data class WebsiteUiState(
     val websiteResponseData: ResponseData<List<WebsiteGroupData>>? = null,
     val type: Int = 0,
     val openDialog: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -52,7 +52,7 @@ class WebsiteViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     websiteResponseData = responseData,
-                    loadingState = it.loadingState.isSuccess(responseData.data != null)
+                    loadState = it.loadState.isSuccess(responseData.data != null)
                 )
             }
         }

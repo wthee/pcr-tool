@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +31,7 @@ data class RankEquipCountUiState(
     val isAllUnit: Boolean = false,
     //收藏信息
     val favoriteIdList: List<Int> = emptyList(),
-    val loadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
     val openDialog: Boolean = false
 )
 
@@ -96,7 +96,7 @@ class RankEquipCountViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     equipmentMaterialList = data,
-                    loadingState = updateLoadingState(data)
+                    loadState = updateLoadState(data)
                 )
             }
         }

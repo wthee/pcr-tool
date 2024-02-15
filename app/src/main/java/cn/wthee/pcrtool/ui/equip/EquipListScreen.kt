@@ -46,7 +46,7 @@ import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -57,6 +57,7 @@ import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGray
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorOrange
+import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
@@ -126,7 +127,7 @@ fun EquipListScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
         ) {
             if (uiState.equipList != null && uiState.filter != null) {
                 EquipListContent(
@@ -201,14 +202,15 @@ private fun EquipSearchFabContent(
                     val tipSearch = stringResource(id = R.string.tip_equip_search)
                     MainSmallFab(
                         iconType = MainIconType.SEARCH,
-                        text = stringResource(id = R.string.equip_search)
-                    ) {
-                        if (searchEquipIdList.isNotEmpty()) {
-                            toSearchEquipQuest(searchEquipIdList.listJoinStr)
-                        } else {
-                            ToastUtil.short(tipSearch)
+                        text = stringResource(id = R.string.equip_search),
+                        onClick = {
+                            if (searchEquipIdList.isNotEmpty()) {
+                                toSearchEquipQuest(searchEquipIdList.listJoinStr)
+                            } else {
+                                ToastUtil.short(tipSearch)
+                            }
                         }
-                    }
+                    )
                 }
 
             }
@@ -217,9 +219,10 @@ private fun EquipSearchFabContent(
             MainSmallFab(
                 iconType = MainIconType.SEARCH,
                 text = stringResource(id = R.string.equip_search_mode),
-            ) {
-                changeSearchMode()
-            }
+                onClick = {
+                    changeSearchMode()
+                }
+            )
         }
     }
 }
@@ -236,31 +239,34 @@ private fun EquipListFabContent(
 
     //回到顶部
     MainSmallFab(
-        iconType = MainIconType.TOP
-    ) {
-        coroutineScope.launch {
-            scrollState.scrollToItem(0)
+        iconType = MainIconType.TOP,
+        onClick = {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
         }
-    }
+    )
 
     //重置筛选
     if (filter?.isFilter() == true) {
         MainSmallFab(
-            iconType = MainIconType.RESET
-        ) {
-            resetFilter()
-        }
+            iconType = MainIconType.RESET,
+            onClick = {
+                resetFilter()
+            }
+        )
     }
 
     // 数量显示&筛选按钮
     MainSmallFab(
         iconType = MainIconType.EQUIP,
-        text = "$count"
-    ) {
-        filter?.let {
-            toFilterEquip(Json.encodeToString(filter))
+        text = "$count",
+        onClick = {
+            filter?.let {
+                toFilterEquip(Json.encodeToString(filter))
+            }
         }
-    }
+    )
 }
 
 @Composable
@@ -306,48 +312,28 @@ private fun EquipListContent(
             )
 
             //分组内容
-            if (!searchEquipMode) {
-                VerticalStaggeredGrid(
-                    itemWidth = Dimen.iconSize * 3,
-                    contentPadding = Dimen.mediumPadding,
-                    modifier = Modifier.padding(
+            VerticalGridList(
+                itemCount = equipGroupData.equipIdList.size,
+                itemWidth = if (searchEquipMode) Dimen.iconSize else Dimen.iconSize * 3,
+                contentPadding = Dimen.mediumPadding,
+                modifier = if (searchEquipMode) {
+                    Modifier
+                } else {
+                    Modifier.padding(
                         horizontal = Dimen.commonItemPadding
                     )
-                ) {
-                    equipGroupData.equipIdList.forEach { equip ->
-                        EquipItem(
-                            favoriteIdList = favoriteIdList,
-                            equip = equip,
-                            toEquipDetail = toEquipDetail,
-                            toEquipMaterial = toEquipMaterial,
-                            searchEquipMode = false,
-                            searchEquipIdList = searchEquipIdList,
-                            selectEquip = selectEquip
-                        )
-                    }
                 }
-            } else {
-                VerticalStaggeredGrid(
-                    itemWidth = Dimen.iconItemWidth,
-                    verticalContentPadding = Dimen.commonItemPadding,
-                    modifier = Modifier.padding(
-                        horizontal = Dimen.commonItemPadding
-                    )
-                ) {
-                    equipGroupData.equipIdList.forEach { equip ->
-                        EquipItem(
-                            favoriteIdList = favoriteIdList,
-                            equip = equip,
-                            toEquipDetail = toEquipDetail,
-                            toEquipMaterial = toEquipMaterial,
-                            searchEquipMode = true,
-                            searchEquipIdList = searchEquipIdList,
-                            selectEquip = selectEquip
-                        )
-                    }
-                }
+            ) {
+                EquipItem(
+                    favoriteIdList = favoriteIdList,
+                    equip = equipGroupData.equipIdList[it],
+                    toEquipDetail = toEquipDetail,
+                    toEquipMaterial = toEquipMaterial,
+                    searchEquipMode = searchEquipMode,
+                    searchEquipIdList = searchEquipIdList,
+                    selectEquip = selectEquip
+                )
             }
-
         }
 
         items(2) {
@@ -437,6 +423,7 @@ private fun getEquipColor(colorType: Int): Color {
         7 -> colorGreen
         8 -> colorOrange
         9 -> colorCyan
+        10 -> colorPink
         else -> colorGray
     }
 }

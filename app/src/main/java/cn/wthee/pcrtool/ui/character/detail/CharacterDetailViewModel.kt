@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
@@ -77,7 +77,7 @@ data class CharacterDetailUiState(
     //战力系数
     val coeValue: UnitStatusCoefficient? = null,
     //加载状态
-    val loadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
     //页面数量
     val pageCount: Int = 0,
     //多人卡id
@@ -134,7 +134,7 @@ class CharacterDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     basicInfo = data,
-                    loadingState = it.loadingState.isNoData(data == null)
+                    loadState = it.loadState.isNoData(data == null)
                 )
             }
         }
@@ -187,7 +187,7 @@ class CharacterDetailViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         maxValue = maxValue,
-                        loadingState = it.loadingState.isError(maxValue.level == -1)
+                        loadState = it.loadState.isError(maxValue.level == -1)
                     )
                 }
             } catch (e: Exception) {
@@ -195,7 +195,7 @@ class CharacterDetailViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         maxValue = CharacterProperty(level = -1),
-                        loadingState = LoadingState.Error
+                        loadState = LoadState.Error
                     )
                 }
             }
@@ -215,7 +215,7 @@ class CharacterDetailViewModel @Inject constructor(
             if (allAttr == null) {
                 _uiState.update {
                     it.copy(
-                        loadingState = LoadingState.Error
+                        loadState = LoadState.Error
                     )
                 }
             } else {
@@ -226,7 +226,7 @@ class CharacterDetailViewModel @Inject constructor(
                             allAttr.sumAttr.atk.int,
                             allAttr.sumAttr.magicStr.int
                         ),
-                        loadingState = it.loadingState.isSuccess(allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty())
+                        loadState = it.loadState.isSuccess(allAttr.sumAttr.hp > 1 && allAttr.equips.isNotEmpty())
                     )
                 }
             }

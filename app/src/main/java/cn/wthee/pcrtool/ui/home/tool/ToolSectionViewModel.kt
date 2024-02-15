@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @Immutable
 data class ToolSectionUiState(
     val toolOrderData: String? = null,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -44,7 +44,7 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
         _uiState.update {
             it.copy(
                 toolOrderData = orderData,
-                loadingState = it.loadingState.isSuccess(orderData != "")
+                loadState = it.loadState.isSuccess(orderData != "")
             )
         }
     }
@@ -56,7 +56,7 @@ class ToolSectionViewModel @Inject constructor() : ViewModel() {
         _uiState.update {
             it.copy(
                 toolOrderData = orderData,
-                loadingState = it.loadingState.isSuccess(orderData != "")
+                loadState = it.loadState.isSuccess(orderData != "")
             )
         }
     }

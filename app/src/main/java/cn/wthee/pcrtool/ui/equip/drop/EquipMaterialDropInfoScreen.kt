@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainScaffold
@@ -50,12 +50,13 @@ fun EquipMaterialDropInfoScreen(
             //装备素材收藏
             MainSmallFab(
                 iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
-                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip_material)
-            ) {
-                scope.launch {
-                    equipMaterialDropInfoViewModel.updateFavoriteId()
+                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip_material),
+                onClick = {
+                    scope.launch {
+                        equipMaterialDropInfoViewModel.updateFavoriteId()
+                    }
                 }
-            }
+            )
         }
     ) {
         EquipMaterialDropInfoContent(
@@ -64,7 +65,7 @@ fun EquipMaterialDropInfoScreen(
             dropQuestList = uiState.dropQuestList,
             favorite = uiState.favorite,
             randomDropList = uiState.randomDropList,
-            randomDropLoadingState = uiState.randomDropLoadingState,
+            randomDropLoadState = uiState.randomDropLoadState,
         )
     }
 
@@ -77,7 +78,7 @@ private fun EquipMaterialDropInfoContent(
     dropQuestList: List<QuestDetail>?,
     favorite: Boolean,
     randomDropList: List<RandomEquipDropArea>?,
-    randomDropLoadingState: LoadingState
+    randomDropLoadState: LoadState
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -122,7 +123,7 @@ private fun EquipMaterialDropInfoContent(
                         questList = dropQuestList,
                         equipId = it,
                         randomDropList = randomDropList,
-                        loadingState = randomDropLoadingState
+                        loadState = randomDropLoadState
                     )
                 }
             } else {
@@ -145,7 +146,7 @@ private fun EquipMaterialDropInfoContentPreview() {
             dropQuestList = arrayListOf(QuestDetail(questId = 1)),
             favorite = true,
             randomDropList = null,
-            randomDropLoadingState = LoadingState.Error
+            randomDropLoadState = LoadState.Error
         )
         QuestPagerPreview()
     }

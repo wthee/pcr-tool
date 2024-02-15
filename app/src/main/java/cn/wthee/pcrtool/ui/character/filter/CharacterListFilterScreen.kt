@@ -4,12 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,11 +12,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -31,13 +23,14 @@ import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.navigation.navigateUpSheet
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainInputText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -45,7 +38,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorPink
-import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
 
@@ -71,19 +63,21 @@ fun CharacterListFilterScreen(
             filter = uiState.filter,
             raceList = uiState.raceList,
             guildList = uiState.guildList,
+            hasTalent = uiState.hasTalent,
             updateFilter = characterListFilterViewModel::updateFilter
         )
     }
 }
 
 @Composable
-@OptIn(ExperimentalComposeUiApi::class)
 private fun CharacterListFilterContent(
     filter: FilterCharacter,
     raceList: List<String>,
     guildList: List<GuildData>,
+    hasTalent: Boolean,
     updateFilter: (FilterCharacter) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     //名称
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
@@ -124,6 +118,12 @@ private fun CharacterListFilterContent(
     }
     filter.atk = atkIndex.intValue
 
+    //天赋类型
+    val talentIndex = remember {
+        mutableIntStateOf(filter.talentType)
+    }
+    filter.talentType = talentIndex.intValue
+
     //公会
     val guildIndex = remember {
         mutableIntStateOf(filter.guild)
@@ -153,7 +153,7 @@ private fun CharacterListFilterContent(
     LaunchedEffect(
         textState.value, sortTypeIndex.intValue, sortAscIndex.intValue, favoriteIndex.intValue,
         r6Index.intValue, positionIndex.intValue, atkIndex.intValue, guildIndex.intValue,
-        raceIndex.intValue, typeIndex.intValue, uniqueEquipTypeIndex.intValue
+        raceIndex.intValue, typeIndex.intValue, uniqueEquipTypeIndex.intValue, talentIndex.intValue
     ) {
         updateFilter(filter)
     }
@@ -167,41 +167,15 @@ private fun CharacterListFilterContent(
             .verticalScroll(rememberScrollState())
     ) {
         //角色名搜索
-        val keyboardController = LocalSoftwareKeyboardController.current
-        OutlinedTextField(
-            value = textState.value,
-            shape = MaterialTheme.shapes.medium,
-            onValueChange = { textState.value = it.deleteSpace },
-            textStyle = MaterialTheme.typography.labelLarge,
-            leadingIcon = {
-                MainIcon(
-                    data = MainIconType.CHARACTER,
-                    size = Dimen.fabIconSize
-                )
-            },
-            trailingIcon = {
-                MainIcon(
-                    data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
-                ) {
-                    keyboardController?.hide()
+        MainInputText(
+            textState = textState,
+            leadingIcon = MainIconType.CHARACTER,
+            onDone = {
+                scope.launch {
+                    navigateUpSheet()
                 }
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            ),
-            maxLines = 1,
-            singleLine = true,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.character_name),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
+            label = stringResource(id = R.string.character_name)
         )
         //排序类型
         MainText(
@@ -328,6 +302,32 @@ private fun CharacterListFilterContent(
             selectIndex = positionIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        //天赋类型
+        if (hasTalent) {
+            MainText(
+                text = stringResource(id = R.string.talent_type),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val talentChipData = arrayListOf(
+                ChipData(stringResource(id = R.string.all))
+            )
+            TalentType.entries.forEachIndexed { index, talentType ->
+                if (index != 0) {
+                    talentChipData.add(
+                        ChipData(
+                            text = stringResource(id = talentType.typeNameId),
+                            color = talentType.color
+                        )
+                    )
+                }
+            }
+            ChipGroup(
+                items = talentChipData,
+                selectIndex = talentIndex,
+                modifier = Modifier.padding(Dimen.smallPadding)
+            )
+        }
+
         //攻击类型
         MainText(
             text = stringResource(id = R.string.atk_type),
@@ -423,6 +423,7 @@ private fun CharacterListFilterContentPreview() {
             updateFilter = {},
             guildList = emptyList(),
             raceList = emptyList(),
+            hasTalent = true
         )
     }
 }

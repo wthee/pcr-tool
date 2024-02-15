@@ -39,7 +39,7 @@ fun ExtraEquipDropListScreen(
 
     MainScaffold {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             noDataContent = {
                 CenterTipText(text = stringResource(id = R.string.extra_equip_no_drop_quest))
             }
@@ -69,11 +69,7 @@ private fun ExtraEquipDropListContent(
         dropList.forEach {
             tabs.add(
                 TabData(
-                    tab = stringResource(
-                        id = R.string.extra_area_quest,
-                        it.getAreaOrder(),
-                        it.getQuestName()
-                    )
+                    tab = it.getTitle()
                 )
             )
         }

@@ -33,6 +33,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
 import kotlinx.coroutines.launch
 
 /**
@@ -51,18 +52,19 @@ fun FreeGachaListScreen(
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.FREE_GACHA,
-                text = stringResource(id = R.string.tool_free_gacha)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                text = stringResource(id = R.string.tool_free_gacha),
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Adaptive(getItemWidth()),
@@ -118,7 +120,7 @@ fun FreeGachaItem(freeGachaInfo: FreeGachaInfo) {
 
             //结束日期
             CaptionText(
-                text = freeGachaInfo.endTime.fixJpTime,
+                text = freeGachaInfo.endTime.formatTime.fixJpTime,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)

@@ -207,10 +207,11 @@ private fun TweetItem(data: TweetData) {
             val jpInfoUrl = stringResource(id = R.string.jp_info_url)
             IconTextButton(
                 text = "@" + stringResource(id = R.string.title_jp_info),
-                contentColor = MaterialTheme.colorScheme.primary
-            ) {
-                BrowserUtil.open(jpInfoUrl)
-            }
+                contentColor = MaterialTheme.colorScheme.primary,
+                onClick = {
+                    BrowserUtil.open(jpInfoUrl)
+                }
+            )
 
             //文本
             if (data.tweet.contains("http")) {

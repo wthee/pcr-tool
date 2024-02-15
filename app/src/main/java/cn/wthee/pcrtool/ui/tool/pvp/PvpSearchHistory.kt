@@ -104,10 +104,12 @@ private fun PvpHistoryItem(
             )
             Spacer(modifier = Modifier.weight(1f))
             MainIcon(
-                data = MainIconType.PVP_SEARCH, size = Dimen.fabIconSize
-            ) {
-                searchByDefs(itemData.getDefIds())
-            }
+                data = MainIconType.PVP_SEARCH,
+                size = Dimen.fabIconSize,
+                onClick = {
+                    searchByDefs(itemData.getDefIds())
+                }
+            )
         }
         //防守队伍角色图标
         MainCard {

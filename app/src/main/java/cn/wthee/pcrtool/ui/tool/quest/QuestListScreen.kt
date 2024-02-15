@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
@@ -39,7 +39,7 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTabRow
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -72,7 +72,7 @@ fun QuestListScreen(
                 equipId = 0,
                 searchEquipIdList = searchEquipIds.intArrayList,
                 randomDropList = uiState.randomDropList,
-                loadingState = uiState.loadingState,
+                loadState = uiState.loadState,
             )
         }
     }
@@ -89,7 +89,7 @@ fun QuestPager(
     equipId: Int,
     searchEquipIdList: List<Int> = arrayListOf(),
     randomDropList: List<RandomEquipDropArea>?,
-    loadingState: LoadingState
+    loadState: LoadState
 ) {
     var pagerCount = 0
     //tab文本
@@ -196,7 +196,7 @@ fun QuestPager(
                         randomDrop -> randomListScrollState.scrollToItem(0)
                     }
                 }
-                if (loadingState == LoadingState.Loading) {
+                if (loadState == LoadState.Loading) {
                     CircularProgressCompose(
                         size = Dimen.smallIconSize,
                         strokeWidth = Dimen.smallStrokeWidth
@@ -212,7 +212,7 @@ fun QuestPager(
             ) { pagerIndex ->
                 if (tabs[pagerIndex].tab == randomDrop) {
                     //随机掉落
-                    if (loadingState == LoadingState.Success) {
+                    if (loadState == LoadState.Success) {
                         RandomDropAreaContent(
                             selectId = equipId,
                             areaList = randomList!!,
@@ -397,22 +397,21 @@ fun AreaItem(
             .placeholder(placeholder)
     )
 
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = Modifier
             .padding(
                 horizontal = Dimen.commonItemPadding
             )
             .placeholder(placeholder),
+        itemCount = odds.size,
         itemWidth = Dimen.iconItemWidth,
         verticalContentPadding = Dimen.commonItemPadding
     ) {
-        odds.forEach {
-            EquipWithOddCompose(
-                selectedId = selectedId,
-                oddData = it,
-                searchEquipIdList = searchEquipIdList
-            )
-        }
+        EquipWithOddCompose(
+            selectedId = selectedId,
+            oddData = odds[it],
+            searchEquipIdList = searchEquipIdList
+        )
     }
 }
 
@@ -492,7 +491,7 @@ fun QuestPagerPreview() {
                     type = 4
                 )
             ),
-            loadingState = LoadingState.Success
+            loadState = LoadState.Success
         )
     }
 }

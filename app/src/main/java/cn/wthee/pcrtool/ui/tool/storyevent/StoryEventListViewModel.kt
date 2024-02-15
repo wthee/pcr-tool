@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.StoryEventData
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.DateRange
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareAllTypeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ data class StoryEventListUiState(
     val openDialog: Boolean = false,
     //剧情活动列表
     val storyList: List<StoryEventData>? = null,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -91,7 +91,7 @@ class StoryEventListViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         storyList = list,
-                        loadingState = updateLoadingState(list)
+                        loadState = updateLoadState(list)
                     )
                 }
             } catch (e: Exception) {

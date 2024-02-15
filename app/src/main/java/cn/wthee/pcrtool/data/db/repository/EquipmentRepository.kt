@@ -78,7 +78,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     }
 
     /**
-     * 获取专用装备信息
+     * 获取专用装备信息（包括专用装备1、2）
      *
      * @param unitId 角色编号
      * @param lv 专用装备1等级
@@ -90,14 +90,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             val tpBonusAttr =
                 getUniqueEquipBonus(
                     unitId = unitId,
-                    lv = lv - Constants.TP_LIMIT_LEVEL,
+                    offsetLv = lv - Constants.TP_LIMIT_LEVEL,
                     minLv = Constants.TP_LIMIT_LEVEL
                 )
             // 回避等相关301 ~
             val otherBonusAttr =
                 getUniqueEquipBonus(
                     unitId = unitId,
-                    lv = lv - Constants.OTHER_LIMIT_LEVEL,
+                    offsetLv = lv - Constants.OTHER_LIMIT_LEVEL,
                     minLv = Constants.OTHER_LIMIT_LEVEL
                 )
 
@@ -112,20 +112,20 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                 lv
             }
 
-            val equipmentMaxData = getUniqueEquip(unitId = unitId, lv = level, lv2 = lv2)
+            val maxDataList = getUniqueEquip(unitId = unitId, lv = level, lv2 = lv2)
             // 专武1奖励属性不为空，计算总属性：初始属性 + 奖励属性
-            if (equipmentMaxData.isNotEmpty() && equipmentMaxData[0].equipmentId % 10 == 1) {
+            if (maxDataList.isNotEmpty() && maxDataList[0].equipmentId % 10 == 1) {
                 if (tpBonusAttr != null) {
-                    equipmentMaxData[0].isTpLimitAction = true
-                    equipmentMaxData[0].attr = equipmentMaxData[0].attr.add(tpBonusAttr)
+                    maxDataList[0].isTpLimitAction = true
+                    maxDataList[0].attr = maxDataList[0].attr.add(tpBonusAttr)
                 }
                 if (otherBonusAttr != null) {
-                    equipmentMaxData[0].isOtherLimitAction = true
-                    equipmentMaxData[0].attr = equipmentMaxData[0].attr.add(otherBonusAttr)
+                    maxDataList[0].isOtherLimitAction = true
+                    maxDataList[0].attr = maxDataList[0].attr.add(otherBonusAttr)
                 }
             }
 
-            equipmentMaxData
+            maxDataList
         } else {
             getUniqueEquip(unitId = unitId, lv = lv, lv2 = lv2)
         }
@@ -141,9 +141,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     ): List<UniqueEquipmentMaxData> {
         val list = arrayListOf<UniqueEquipmentMaxData>()
         try {
+            //专用装备1
             equipmentDao.getUniqueEquipInfoV2(unitId = unitId, lv = lv, slot = 1)?.let {
                 list.add(it)
             }
+            //专用装备2
             equipmentDao.getUniqueEquipInfoV2(unitId = unitId, lv = lv2 + 1, slot = 2)?.let {
                 list.add(it)
             }
@@ -158,10 +160,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     /**
      * 查询两张专武关联表，适配不同游戏版本
      */
-    private suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int) = try {
-        equipmentDao.getUniqueEquipBonusV2(unitId = unitId, lv = lv, minLv = minLv)
+    private suspend fun getUniqueEquipBonus(unitId: Int, offsetLv: Int, minLv: Int) = try {
+        equipmentDao.getUniqueEquipBonusV2(unitId = unitId, lv = offsetLv, minLv = minLv)
     } catch (e: Exception) {
-        equipmentDao.getUniqueEquipBonus(unitId = unitId, lv = lv, minLv = minLv)
+        equipmentDao.getUniqueEquipBonus(unitId = unitId, lv = offsetLv, minLv = minLv)
     }
 
     suspend fun getUniqueEquipMaxLv(slot: Int) = equipmentDao.getUniqueEquipMaxLv(slot)

@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +29,7 @@ data class CharacterProfileUiState(
     val homePageCommentList: List<CharacterHomePageComment> = emptyList(),
     //公会小屋交流文本
     val roomCommentList: List<RoomCommentData> = emptyList(),
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -69,7 +69,7 @@ class CharacterProfileViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     profile = data,
-                    loadingState =  it.loadingState.isSuccess(data != null)
+                    loadState = it.loadState.isSuccess(data != null)
                 )
             }
         }

@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.character.rankequip
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
@@ -22,7 +21,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.RankText
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -41,7 +40,7 @@ fun RankEquipListScreen(
     MainScaffold(
         mainFabIcon = MainIconType.OK
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             uiState.rankEquipList?.let {
                 RankEquipListContent(
                     currentRank = uiState.currentRank,
@@ -112,19 +111,16 @@ private fun RankEquipListItem(
             type = if (unitPromotion.promotionLevel == currentRank) 1 else 0
         )
 
-        VerticalStaggeredGrid(fixCount = 2) {
-            allIds.forEach {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    MainIcon(
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        data = ImageRequestHelper.getInstance()
-                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, it)
-                    )
-                }
-            }
+        VerticalGridList(
+            itemCount = allIds.size,
+            fixColumns = 2,
+            itemWidth = 0.dp
+        ) {
+            MainIcon(
+                modifier = Modifier.padding(Dimen.smallPadding),
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, allIds[it])
+            )
         }
     }
 }

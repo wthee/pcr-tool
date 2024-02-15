@@ -4,6 +4,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -26,9 +28,8 @@ import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.WebsiteData
 import cn.wthee.pcrtool.data.model.WebsiteGroupData
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
@@ -39,7 +40,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -47,7 +48,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.getRegionName
 import kotlinx.coroutines.launch
 
 
@@ -73,7 +73,7 @@ fun WebsiteScreen(
     MainScaffold(
         secondLineFab = {
             //切换类型
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 SelectTypeFab(
                     icon = MainIconType.FILTER,
                     tabs = tabs,
@@ -90,22 +90,16 @@ fun WebsiteScreen(
             MainSmallFab(
                 iconType = MainIconType.WEBSITE_BOOKMARK,
                 text = stringResource(id = R.string.tool_website),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
@@ -121,19 +115,20 @@ fun WebsiteScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             loadingContent = {
-                VerticalStaggeredGrid(
+                VerticalGridList(
+                    itemCount = 10,
                     itemWidth = getItemWidth(),
                     contentPadding = Dimen.mediumPadding,
                     modifier = Modifier.padding(
                         top = Dimen.mediumPadding,
-                        bottom = Dimen.largePadding
+                        bottom = Dimen.largePadding,
+                        start = Dimen.commonItemPadding,
+                        end = Dimen.commonItemPadding
                     )
                 ) {
-                    for (i in 0..10) {
-                        WebsiteItem(data = WebsiteData())
-                    }
+                    WebsiteItem(data = WebsiteData())
                 }
             }
         ) {
@@ -184,7 +179,8 @@ private fun WebsiteGroup(
         if (websiteList.isEmpty()) {
             CenterTipText(text = stringResource(id = R.string.no_data))
         } else {
-            VerticalStaggeredGrid(
+            VerticalGridList(
+                itemCount = websiteList.size,
                 itemWidth = getItemWidth(),
                 contentPadding = Dimen.mediumPadding,
                 modifier = Modifier
@@ -196,9 +192,7 @@ private fun WebsiteGroup(
                     )
                     .animateContentSize(defaultSpring())
             ) {
-                websiteList.forEach {
-                    WebsiteItem(data = it)
-                }
+                WebsiteItem(data = websiteList[it])
             }
         }
     }
@@ -215,7 +209,7 @@ private fun WebsiteItem(data: WebsiteData) {
         if (data.region == 1) {
             stringResource(id = R.string.all)
         } else {
-            getRegionName(RegionType.getByValue(data.region))
+            stringResource(RegionType.getByValue(data.region).stringId)
         }
     }
 
@@ -244,6 +238,7 @@ private fun WebsiteItem(data: WebsiteData) {
             modifier = Modifier
                 .padding(top = Dimen.mediumPadding)
                 .heightIn(min = Dimen.cardHeight)
+                .fillMaxHeight()
                 .placeholder(placeholder),
             onClick = {
                 if (!placeholder) {
@@ -266,6 +261,8 @@ private fun WebsiteItem(data: WebsiteData) {
                     modifier = Modifier.padding(start = Dimen.mediumPadding)
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             Row(
                 modifier = Modifier
@@ -297,8 +294,6 @@ private fun WebsiteItem(data: WebsiteData) {
             }
         }
     }
-
-
 }
 
 
@@ -306,11 +301,37 @@ private fun WebsiteItem(data: WebsiteData) {
 @Composable
 private fun WebsiteItemPreview() {
     PreviewLayout {
-        WebsiteItem(
-            WebsiteData(
-                title = stringResource(id = R.string.debug_long_text),
-                summary = stringResource(id = R.string.debug_short_text)
-            )
-        )
+        VerticalGridList(
+            itemCount = 2,
+            fixColumns = 2,
+            itemWidth = getItemWidth(),
+            contentPadding = Dimen.mediumPadding,
+            modifier = Modifier
+                .padding(
+                    top = Dimen.mediumPadding,
+                    bottom = Dimen.largePadding,
+                    start = Dimen.commonItemPadding,
+                    end = Dimen.commonItemPadding
+                )
+                .animateContentSize(defaultSpring())
+        ) {
+            if (it == 0) {
+                WebsiteItem(
+                    data = WebsiteData(
+                        id = 1,
+                        title = stringResource(id = R.string.debug_long_text),
+                        summary = stringResource(id = R.string.debug_short_text)
+                    )
+                )
+            } else {
+                WebsiteItem(
+                    data = WebsiteData(
+                        id = 2,
+                        title = stringResource(id = R.string.debug_long_text) + stringResource(id = R.string.debug_short_text),
+                        summary = stringResource(id = R.string.debug_short_text)
+                    )
+                )
+            }
+        }
     }
 }

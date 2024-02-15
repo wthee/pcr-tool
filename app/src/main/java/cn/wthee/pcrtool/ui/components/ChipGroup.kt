@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ElevatedSuggestionChip
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -58,9 +57,9 @@ fun ChipGroup(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SuggestionChipGroup(
-    items: List<KeywordData>,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    items: List<KeywordData>
 ) {
     val context = LocalContext.current
 
@@ -85,7 +84,6 @@ fun SuggestionChipGroup(
 /**
  * 可选中的 ChipItem
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainChip(
     modifier: Modifier = Modifier,

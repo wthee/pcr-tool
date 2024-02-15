@@ -12,9 +12,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.StateBox
@@ -46,22 +45,16 @@ fun LoadComicScreen(
             MainSmallFab(
                 iconType = MainIconType.LOAD_COMIC,
                 text = uiState.comicList?.size.toString(),
-                extraContent = if (uiState.loadState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
         StateBox(

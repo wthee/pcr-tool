@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
 import cn.wthee.pcrtool.navigation.setData
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.getString
@@ -39,7 +39,7 @@ data class EquipListUiState(
     //搜索装备编号
     val searchEquipIdList: List<Int> = emptyList(),
     val openSearchDialog: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -67,7 +67,7 @@ class EquipListViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     equipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }
@@ -109,7 +109,7 @@ class EquipListViewModel @Inject constructor(
                     openSearchDialog = false,
                     searchEquipMode = false,
                     searchEquipIdList = emptyList(),
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

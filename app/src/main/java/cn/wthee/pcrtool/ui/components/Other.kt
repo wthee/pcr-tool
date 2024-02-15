@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -21,17 +22,16 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +41,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -55,7 +54,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -66,22 +64,24 @@ import cn.wthee.pcrtool.data.enums.AtkType
 import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorPurple
+import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorWhite
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.utils.fixJpTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
@@ -101,7 +101,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun StateBox(
-    stateType: LoadingState,
+    stateType: LoadState,
     loadingContent: @Composable (() -> Unit)? = {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressCompose(
@@ -120,13 +120,13 @@ fun StateBox(
     successContent: @Composable () -> Unit
 ) {
     when (stateType) {
-        LoadingState.Loading -> if (loadingContent != null) {
+        LoadState.Loading -> if (loadingContent != null) {
             loadingContent()
         }
 
-        LoadingState.NoData -> noDataContent()
-        LoadingState.Error -> errorContent()
-        LoadingState.Success -> successContent()
+        LoadState.NoData -> noDataContent()
+        LoadState.Error -> errorContent()
+        LoadState.Success -> successContent()
     }
 }
 
@@ -164,17 +164,22 @@ fun MainScaffold(
     secondLineFab: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
+
     //返回拦截
     BackHandler(enableClickClose) {
         onCloseClick()
     }
 
     Box(
-        modifier = (if (fillMaxSize) {
-            modifier.fillMaxSize()
-        } else {
-            modifier
-        }).background(color = backgroundColor, shape),
+        modifier = modifier
+            .then(
+                if (fillMaxSize) {
+                    Modifier.fillMaxSize()
+                } else {
+                    Modifier
+                }
+            )
+            .background(color = backgroundColor, shape = shape),
         contentAlignment = contentAlignment
     ) {
         //主要内容
@@ -221,15 +226,16 @@ fun MainScaffold(
                         .padding(
                             end = Dimen.fabMargin,
                             bottom = Dimen.fabMargin
-                        )
-                ) {
-                    if (onMainFabClick != null) {
-                        onMainFabClick()
-                    } else {
-                        //默认返回操作
-                        navigateUp()
+                        ),
+                    onClick = {
+                        if (onMainFabClick != null) {
+                            onMainFabClick()
+                        } else {
+                            //默认返回操作
+                            navigateUp()
+                        }
                     }
-                }
+                )
             }
         }
 
@@ -268,10 +274,7 @@ fun CircularProgressCompose(
 }
 
 /**
- * 加载中-圆形
- */
-/**
- * 加载中-圆形
+ * 加载中-圆形带进度
  */
 @Composable
 fun CircularProgressCompose(
@@ -283,7 +286,9 @@ fun CircularProgressCompose(
 ) {
     Box(contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            progress = progress,
+            progress = {
+                progress
+            },
             modifier = modifier
                 .size(size)
                 .padding(Dimen.exSmallPadding),
@@ -325,7 +330,9 @@ fun LinearProgressCompose(
     color: Color = MaterialTheme.colorScheme.primary
 ) {
     LinearProgressIndicator(
-        progress = progress,
+        progress = {
+            progress
+        },
         modifier = modifier
             .height(Dimen.linearProgressHeight)
             .clip(MaterialTheme.shapes.medium),
@@ -340,7 +347,7 @@ fun LinearProgressCompose(
  * @param fabText 不为空时，fab将显示该文本
  */
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class
+    ExperimentalLayoutApi::class
 )
 @Composable
 fun BottomSearchBar(
@@ -381,7 +388,7 @@ fun BottomSearchBar(
     }
 
 
-    Box {
+    Box(contentAlignment = Alignment.BottomCenter) {
         Row(
             horizontalArrangement = Arrangement.End,
             modifier = modifier
@@ -392,40 +399,44 @@ fun BottomSearchBar(
                 //回到顶部
                 onTopClick?.let {
                     MainSmallFab(
-                        iconType = MainIconType.TOP
-                    ) {
-                        coroutineScope.launch {
-                            onTopClick()
+                        iconType = MainIconType.TOP,
+                        onClick = {
+                            coroutineScope.launch {
+                                onTopClick()
+                            }
                         }
-                    }
+                    )
                 }
 
                 //重置
                 if (showReset) {
                     MainSmallFab(
-                        iconType = MainIconType.RESET
-                    ) {
-                        changeKeyword("")
-                        if (onResetClick != null) {
-                            onResetClick()
+                        iconType = MainIconType.RESET,
+                        onClick = {
+                            changeKeyword("")
+                            if (onResetClick != null) {
+                                onResetClick()
+                            }
                         }
-                    }
+                    )
                 }
 
                 //搜索
                 MainSmallFab(
                     iconType = if (fabText != null) leadingIcon else MainIconType.SEARCH,
-                    text = fabText ?: keyword
-                ) {
-                    keyboardController?.show()
-                    changeSearchBar(true)
-                    focusRequester.requestFocus()
-                }
+                    text = fabText ?: keyword,
+                    onClick = {
+                        keyboardController?.show()
+                        changeSearchBar(true)
+                        focusRequester.requestFocus()
+                    }
+                )
             }
         }
 
         Column(
             modifier = modifier
+                .widthIn(max = Dimen.itemMaxWidth)
                 .imePadding(),
             verticalArrangement = Arrangement.Bottom,
         ) {
@@ -446,13 +457,14 @@ fun BottomSearchBar(
 
                     SuggestionChipGroup(
                         modifier = Modifier.padding(Dimen.mediumPadding),
-                        items = defaultKeywordList ?: arrayListOf()
-                    ) {
-                        changeKeyword(it)
-                        keyboardController?.hide()
-                        focusRequester.freeFocus()
-                        changeSearchBar(false)
-                    }
+                        items = defaultKeywordList ?: arrayListOf(),
+                        onClick = {
+                            changeKeyword(it)
+                            keyboardController?.hide()
+                            focusRequester.freeFocus()
+                            changeSearchBar(false)
+                        }
+                    )
                 }
             }
 
@@ -461,51 +473,20 @@ fun BottomSearchBar(
                 modifier = Modifier.padding(Dimen.largePadding),
                 elevation = Dimen.popupMenuElevation,
             ) {
-                OutlinedTextField(
+                MainInputText(
                     modifier = Modifier
                         .fillMaxWidth(if (openSearch) 1f else 0.1f)
                         .heightIn(max = if (openSearch) Dp.Unspecified else 0.dp)
                         .padding(Dimen.smallPadding)
                         .focusRequester(focusRequester)
                         .alpha(if (openSearch) 1f else 0f),
-                    value = keywordInputState.value,
-                    shape = MaterialTheme.shapes.medium,
-                    onValueChange = { keywordInputState.value = it.deleteSpace },
-                    textStyle = MaterialTheme.typography.labelLarge,
-                    leadingIcon = {
-                        MainIcon(
-                            data = leadingIcon,
-                            size = Dimen.fabIconSize
-                        )
+                    textState = keywordInputState,
+                    onDone = {
+                        changeKeyword(keywordInputState.value)
+                        changeSearchBar(false)
                     },
-                    trailingIcon = {
-                        MainIcon(
-                            data = MainIconType.SEARCH,
-                            size = Dimen.fabIconSize
-                        ) {
-                            keyboardController?.hide()
-                            changeKeyword(keywordInputState.value)
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                            changeKeyword(keywordInputState.value)
-                            focusRequester.freeFocus()
-                            changeSearchBar(false)
-                        }
-                    ),
-                    label = {
-                        Text(
-                            text = stringResource(id = labelStringId),
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    },
-                    maxLines = 1,
-                    singleLine = true,
+                    leadingIcon = leadingIcon,
+                    label = stringResource(id = labelStringId)
                 )
             }
         }
@@ -517,8 +498,9 @@ fun BottomSearchBar(
  * @param showDays 显示天数
  * @param showOverdueColor 过期日程颜色变灰色
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun EventTitle(
+fun FlowRowScope.EventTitle(
     startTime: String,
     endTime: String,
     showDays: Boolean = true,
@@ -551,7 +533,9 @@ fun EventTitle(
     //日期
     MainTitleText(
         text = sd.toDate,
-        modifier = Modifier.padding(end = Dimen.smallPadding),
+        modifier = Modifier
+            .padding(end = Dimen.smallPadding)
+            .align(Alignment.CenterVertically),
         backgroundColor = color
     )
     //天数，预览时不显示
@@ -559,12 +543,21 @@ fun EventTitle(
         val days = ed.days(sd)
         MainTitleText(
             text = days,
-            modifier = Modifier.padding(end = Dimen.smallPadding),
+            modifier = Modifier
+                .padding(end = Dimen.smallPadding)
+                .align(Alignment.CenterVertically),
             backgroundColor = color
         )
     }
     //计时
-    EventTitleCountdown(today, sd, ed, inProgress, comingSoon)
+    EventTitleCountdown(
+        today = today,
+        sd = sd,
+        ed = ed,
+        inProgress = inProgress,
+        comingSoon = comingSoon,
+        modifier = Modifier.align(Alignment.CenterVertically)
+    )
 }
 
 /**
@@ -576,9 +569,12 @@ fun EventTitleCountdown(
     sd: String,
     ed: String,
     inProgress: Boolean,
-    comingSoon: Boolean
+    comingSoon: Boolean,
+    modifier: Modifier = Modifier,
+    debugText: String? = null
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (inProgress) {
@@ -587,7 +583,7 @@ fun EventTitleCountdown(
                 size = Dimen.smallIconSize,
             )
             MainContentText(
-                text = ed.dates(today),
+                text = debugText ?: ed.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.primary
@@ -600,7 +596,7 @@ fun EventTitleCountdown(
                 tint = colorPurple
             )
             MainContentText(
-                text = sd.dates(today),
+                text = debugText ?: sd.dates(today),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
                 textAlign = TextAlign.Start,
                 color = colorPurple
@@ -628,55 +624,83 @@ fun CharacterTagRow(
     FlowRow(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         if (!unknown) {
+            val limitType = CharacterLimitType.getByType(basicInfo!!.limitType)
 
-            //专用装备
-            if (showUniqueEquipType && basicInfo!!.uniqueEquipType != 0) {
-                MainIcon(
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+                //专用装备
+                if (showUniqueEquipType && basicInfo.uniqueEquipType != 0) {
+                    MainIcon(
+                        modifier = Modifier
+                            .padding(horizontal = Dimen.exSmallPadding)
+                            .align(Alignment.CenterVertically),
+                        data = if (basicInfo.uniqueEquipType == 1) {
+                            R.drawable.ic_unique_equip
+                        } else {
+                            R.drawable.ic_unique_equip2
+                        },
+                        size = Dimen.smallIconSize,
+                    )
+                }
+
+                //位置
+                CharacterPositionTag(
                     modifier = Modifier
-                        .padding(
-                            start = Dimen.smallPadding
-                        )
+                        .padding(Dimen.exSmallPadding)
                         .align(Alignment.CenterVertically),
-                    data = if (basicInfo.uniqueEquipType == 1) {
-                        R.drawable.ic_unique_equip
-                    } else {
-                        R.drawable.ic_unique_equip2
-                    },
-                    size = Dimen.smallIconSize,
+                    position = basicInfo.position
                 )
             }
 
-            //位置
-            CharacterPositionTag(
-                modifier = Modifier
-                    .padding(
-                        start = Dimen.smallPadding
-                    )
-                    .align(Alignment.CenterVertically),
-                position = basicInfo!!.position
-            )
 
-            val limitType = CharacterLimitType.getByType(basicInfo.limitType)
-            Row {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+
+                //天赋类型
+                val talentType = TalentType.getByType(basicInfo.talentId)
+                //攻击
+                val atkType = AtkType.getByType(basicInfo.atkType)
+
+                CharacterTag(
+                    modifier = Modifier
+                        .padding(horizontal = Dimen.exSmallPadding)
+                        .align(Alignment.CenterVertically),
+                    text = stringResource(
+                        id = if (talentType != TalentType.UNKNOWN) {
+                            talentType.typeNameId
+                        } else {
+                            atkType.typeNameId
+                        }
+                    ),
+                    backgroundColor = if (talentType != TalentType.UNKNOWN) {
+                        talentType.color
+                    } else {
+                        atkType.color
+                    }
+                ) {
+                    MainIcon(
+                        modifier = Modifier.offset(x = -Dimen.smallPadding),
+                        data = atkType.iconId,
+                        size = Dimen.smallIconSize,
+                    )
+                }
+
                 //获取方式
                 CharacterTag(
-                    modifier = Modifier.padding(Dimen.smallPadding),
+                    modifier = Modifier
+                        .padding(horizontal = Dimen.exSmallPadding)
+                        .align(Alignment.CenterVertically),
                     text = stringResource(id = limitType.typeNameId),
                     backgroundColor = limitType.color
                 )
-                //攻击
-                val atkType = AtkType.getByType(basicInfo.atkType)
-                CharacterTag(
-                    modifier = Modifier.padding(
-                        bottom = Dimen.smallPadding,
-                        top = Dimen.smallPadding
-                    ),
-                    text = stringResource(id = atkType.typeNameId),
-                    backgroundColor = atkType.color
-                )
+
             }
 
             //日期
@@ -694,7 +718,11 @@ fun CharacterTagRow(
             }
 
         } else {
-            Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(bottom = Dimen.smallPadding)
+            ) {
                 if (tipText != null) {
                     //提示
                     CharacterTag(
@@ -731,19 +759,16 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-//    val positionText =
-//        stringResource(id = PositionType.getPositionType(position).typeNameId) + " $position"
-
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+    //位置
+    CharacterTag(
+        modifier = modifier,
+        text = position.toString(),
+        backgroundColor = PositionType.getPositionType(position).color
+    ) {
         //位置图标
         PositionIcon(
-            position = position
-        )
-        //位置
-        CharacterTag(
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-            text = position.toString(),
-            backgroundColor = PositionType.getPositionType(position).color
+            position = position,
+            modifier = Modifier.offset(x = -Dimen.smallPadding)
         )
     }
 }
@@ -764,28 +789,26 @@ fun CharacterTag(
     endAlignment: Boolean = false,
     leadingContent: @Composable (() -> Unit)? = null
 ) {
-    Box(
+    Row(
         modifier = modifier
             .clip(CircleShape)
             .background(color = backgroundColor, shape = CircleShape)
             .padding(horizontal = Dimen.mediumPadding),
-        contentAlignment = if (endAlignment) Alignment.CenterEnd else Alignment.Center
+        horizontalArrangement = if (endAlignment) Arrangement.End else Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            leadingContent?.let {
-                it()
-                Spacer(modifier = Modifier.padding(start = Dimen.smallPadding))
-            }
-
-            Text(
-                text = text,
-                color = textColor,
-                style = style,
-                fontWeight = fontWeight,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        leadingContent?.let {
+            it()
         }
+
+        Text(
+            text = text,
+            color = textColor,
+            style = style,
+            fontWeight = fontWeight,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -850,27 +873,46 @@ fun ExpandableHeader(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @CombinedPreviews
 @Composable
 private fun AllPreview() {
     PreviewLayout {
         CircularProgressCompose(progress = 0.31f)
         LinearProgressCompose(progress = 0.31f)
-        EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
-        EventTitleCountdown(
-            today = "2023/12/13 22:22:22",
-            sd = "2023/12/12 22:22:22",
-            ed = "2023/12/15 22:22:22",
-            inProgress = true,
-            comingSoon = false
-        )
-        EventTitleCountdown(
-            today = "2023/12/10 22:22:22",
-            sd = "2023/12/12 22:22:22",
-            ed = "2023/12/15 22:22:22",
-            inProgress = false,
-            comingSoon = true
-        )
+        FlowRow {
+            MainTitleText(
+                text = stringResource(id = R.string.tool_clan),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
+                backgroundColor = colorOrange
+            )
+            MainTitleText(
+                text = stringResource(id = R.string.title_birth),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
+                backgroundColor = colorRed
+            )
+            EventTitle(startTime = "2023-12-12 22:22:22", endTime = "2023-12-15 22:22:22")
+            EventTitleCountdown(
+                today = "2023/12/13 22:22:22",
+                sd = "2023/12/12 22:22:22",
+                ed = "2023/12/15 22:22:22",
+                inProgress = true,
+                comingSoon = false,
+                debugText = "22天33时"
+            )
+            EventTitleCountdown(
+                today = "2023/12/10 22:22:22",
+                sd = "2023/12/12 22:22:22",
+                ed = "2023/12/15 22:22:22",
+                inProgress = false,
+                comingSoon = true,
+                debugText = "22天33时"
+            )
+        }
     }
 }
 
@@ -898,7 +940,8 @@ private fun CharacterTagPreview() {
                 position = 123,
                 atkType = 1,
                 limitType = 2,
-                uniqueEquipType = 2
+                uniqueEquipType = 2,
+                talentId = 1
             ),
             tipText = text,
             endText = text,

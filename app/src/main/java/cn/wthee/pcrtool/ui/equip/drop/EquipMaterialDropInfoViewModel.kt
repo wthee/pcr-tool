@@ -15,9 +15,9 @@ import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,8 +49,8 @@ data class EquipMaterialDetailUiState(
     val unitIdList: List<Int> = emptyList(),
     //收藏角色
     val favorite: Boolean = false,
-    val loadingState: LoadingState = LoadingState.Loading,
-    val randomDropLoadingState: LoadingState = LoadingState.Loading,
+    val loadState: LoadState = LoadState.Loading,
+    val randomDropLoadState: LoadState = LoadState.Loading,
     //额外掉落
     val randomDropList: List<RandomEquipDropArea>? = null
 )
@@ -103,7 +103,7 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     dropQuestList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }
@@ -138,13 +138,13 @@ class EquipMaterialDropInfoViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             randomDropList = filterList,
-                            randomDropLoadingState = updateLoadingState(filterList)
+                            randomDropLoadState = updateLoadState(filterList)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            randomDropLoadingState = LoadingState.Error
+                            randomDropLoadState = LoadState.Error
                         )
                     }
                 }

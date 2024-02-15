@@ -96,6 +96,23 @@ class UnitRepository @Inject constructor(
                 else -> filterList
             }
 
+            //筛选天赋类型
+            val talentIdList = getTalentIdList(0)
+            filterList.forEach {
+                it.talentId = if (talentIdList.isNotEmpty()) {
+                    talentIdList.find { talent -> talent.unitId == it.id }?.talentId ?: 0
+                } else {
+                    0
+                }
+            }
+            filterList = when (filter.talentType) {
+                1, 2, 3, 4, 5 -> filterList.filter {
+                    it.talentId == filter.talentType
+                }
+
+                else -> filterList
+            }
+
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
@@ -167,7 +184,15 @@ class UnitRepository @Inject constructor(
         //获取专用装备信息
         val uniqueEquipList = equipmentRepository.getUniqueEquipList("", 0, unitId = data.id)
         data.uniqueEquipType = uniqueEquipList?.size ?: 0
+        //获取天赋类型
+        val talentIdList = getTalentIdList(unitId)
+        data.talentId = if (talentIdList.isNotEmpty()) {
+            talentIdList[0].talentId
+        } else {
+            0
+        }
 
+        //返回数据
         data
     } catch (e: Exception) {
         LogReportUtil.upload(
@@ -375,13 +400,18 @@ class UnitRepository @Inject constructor(
             try {
                 val equipIds =
                     unitDao.getRankEquipment(unitId = unitId, rank = rank).getAllOrderIds()
-                val eqs = arrayListOf<EquipmentMaxData>()
-                equipIds.forEach {
-                    if (it == ImageRequestHelper.UNKNOWN_EQUIP_ID || it == 0) {
-                        eqs.add(EquipmentMaxData.unknown())
-                    } else {
-                        equipmentRepository.getEquipmentData(it)?.let { equip ->
-                            eqs.add(equip)
+                val eqs = arrayListOf(
+                    EquipmentMaxData(),
+                    EquipmentMaxData(),
+                    EquipmentMaxData(),
+                    EquipmentMaxData(),
+                    EquipmentMaxData(),
+                    EquipmentMaxData(),
+                )
+                equipIds.forEachIndexed { index, id ->
+                    if (!(id == ImageRequestHelper.UNKNOWN_EQUIP_ID || id == 0)) {
+                        equipmentRepository.getEquipmentData(id)?.let { equip ->
+                            eqs[index] = equip
                         }
                     }
                 }
@@ -552,4 +582,11 @@ class UnitRepository @Inject constructor(
         )
         null
     }
+
+    suspend fun getTalentIdList(unitId: Int) = try {
+        unitDao.getTalentIdList(unitId)
+    } catch (_: Exception) {
+        arrayListOf()
+    }
+
 }

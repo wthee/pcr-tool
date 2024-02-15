@@ -158,10 +158,11 @@ fun EnemyDetailContent(
             icon = MainIconType.PREVIEW_UNIT_SPINE,
             text = stringResource(id = R.string.spine_preview),
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-        ) {
-            BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
-        }
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
+            }
+        )
         //描述
         MainContentText(
             text = enemyData.getDesc(),

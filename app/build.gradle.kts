@@ -12,10 +12,10 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2023.10.01"
-val composeCompilerVersion = "1.5.7"
-val appVersionCode = 382
-val appVersionName = "3.8.2"
+val composeBom = "2024.02.00"
+val composeCompilerVersion = "1.5.9"
+val appVersionCode = 383
+val appVersionName = "3.8.3"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -110,6 +110,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
@@ -123,15 +124,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material3:material3:1.2.0")
 
     //Accompanist
-    val accompanistVersion = "0.32.0"
-    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    val accompanistVersion = "0.34.0"
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
 
     //Browser
@@ -141,9 +138,9 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:4.1.9.3")
 
     //Coil
-    val coilVersion = "3.0.0-alpha02"
-    implementation("io.coil-kt.coil3:coil-network:$coilVersion")
+    val coilVersion = "3.0.0-alpha04"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
+    implementation("io.coil-kt.coil3:coil-network-ktor:$coilVersion")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.0-beta01")
@@ -154,10 +151,11 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //ktor
-    implementation("io.ktor:ktor-client-core:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-client-content-negotiation:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:${rootProject.extra["ktorVersion"]}")
-    implementation("io.ktor:ktor-client-android:${rootProject.extra["ktorVersion"]}")
+    val ktorVersion = "2.3.8"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-android:$ktorVersion")
 
     //Lifecycle
     val lifecycleVersion = "2.7.0"
@@ -169,12 +167,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //media3
-    val media3Version = "1.2.0"
+    val media3Version = "1.2.1"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     //Paging3
     val pagingVersion = "3.2.1"

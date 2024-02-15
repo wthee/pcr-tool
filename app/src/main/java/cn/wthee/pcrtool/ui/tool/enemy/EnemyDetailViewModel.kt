@@ -48,6 +48,9 @@ class EnemyDetailViewModel @Inject constructor(
     val uiState: StateFlow<EnemyDetailUiState> = _uiState.asStateFlow()
 
     fun loadData(enemyId: Int) {
+        //重置数据
+        _uiState.value = EnemyDetailUiState()
+        //获取数据
         getEnemyAttr(enemyId)
         getMultiTargetEnemyInfo(enemyId)
     }

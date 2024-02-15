@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.IconResourceType
@@ -122,7 +123,10 @@ fun CharacterListScreen(
                         idList = uiState.favoriteIdList,
                         title = stringResource(id = R.string.favorite),
                         iconResourceType = IconResourceType.CHARACTER,
-                        onClickItem = toCharacterDetail
+                        onClickItem = {
+                            characterListViewModel.changeDialog(false)
+                            toCharacterDetail(it)
+                        }
                     )
                 }
             }
@@ -141,7 +145,7 @@ fun CharacterListScreen(
         }
     ) {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
         ) {
             CharacterListContent(
                 characterList = uiState.characterList,
@@ -176,9 +180,10 @@ private fun CharacterListContent(
                     character = it,
                     favorite = favoriteIdList.contains(it.id),
                     modifier = Modifier.padding(Dimen.mediumPadding),
-                ) {
-                    toCharacterDetail(it.id)
-                }
+                    onClick = {
+                        toCharacterDetail(it.id)
+                    }
+                )
             }
         }
 
@@ -200,30 +205,33 @@ private fun CharacterListFabContent(
 
     //回到顶部
     MainSmallFab(
-        iconType = MainIconType.TOP
-    ) {
-        coroutineScope.launch {
-            scrollState.scrollToItem(0)
+        iconType = MainIconType.TOP,
+        onClick = {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
         }
-    }
+    )
     //重置筛选
     if (filter?.isFilter() == true) {
         MainSmallFab(
-            iconType = MainIconType.RESET
-        ) {
-            resetFilter()
-        }
+            iconType = MainIconType.RESET,
+            onClick = {
+                resetFilter()
+            }
+        )
     }
 
     // 数量显示&筛选按钮
     MainSmallFab(
         iconType = MainIconType.CHARACTER,
-        text = "$count"
-    ) {
-        filter?.let {
-            toFilterCharacter(Json.encodeToString(filter))
+        text = "$count",
+        onClick = {
+            filter?.let {
+                toFilterCharacter(Json.encodeToString(filter))
+            }
         }
-    }
+    )
 
 }
 
@@ -234,10 +242,10 @@ private fun CharacterListFabContent(
 @Composable
 fun CharacterItemContent(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
     unitId: Int,
     character: CharacterInfo?,
-    favorite: Boolean,
-    onClick: () -> Unit
+    favorite: Boolean
 ) {
 
     //图片是否加载成功
@@ -348,6 +356,10 @@ fun CharacterItemContent(
                             ),
                         horizontalAlignment = Alignment.End,
                     ) {
+                        if (BuildConfig.DEBUG) {
+                            CaptionText(text = character.id.toString())
+                        }
+
                         Column(
                             modifier = Modifier
                                 .padding(
@@ -406,6 +418,7 @@ fun CharacterItemContent(
                             color = textColor,
                             modifier = Modifier.padding(
                                 end = Dimen.mediumPadding,
+                                top = Dimen.mediumPadding,
                                 bottom = Dimen.smallPadding
                             )
                         )
@@ -486,7 +499,8 @@ fun CharacterItemPreview() {
                 uniqueEquipType = 2
             ),
             favorite = true,
-        ) {}
+            onClick = {}
+        )
     }
 }
 

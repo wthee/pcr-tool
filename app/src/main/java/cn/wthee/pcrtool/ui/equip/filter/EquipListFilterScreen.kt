@@ -4,12 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,11 +12,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -32,13 +24,12 @@ import cn.wthee.pcrtool.data.model.FilterEquip
 import cn.wthee.pcrtool.navigation.navigateUpSheet
 import cn.wthee.pcrtool.ui.components.ChipGroup
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainInputText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
 
@@ -69,15 +60,15 @@ fun EquipListFilterScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun EquipListFilterContent(
     filter: FilterEquip,
     colorNum: Int,
     updateFilter: (FilterEquip) -> Unit
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val scope = rememberCoroutineScope()
 
+    //装备名称
     val textState = remember { mutableStateOf(filter.name) }
     filter.name = textState.value
 
@@ -114,40 +105,15 @@ private fun EquipListFilterContent(
             .verticalScroll(rememberScrollState())
     ) {
         //装备名搜索
-        OutlinedTextField(
-            value = textState.value,
-            shape = MaterialTheme.shapes.medium,
-            onValueChange = { textState.value = it.deleteSpace },
-            textStyle = MaterialTheme.typography.labelLarge,
-            leadingIcon = {
-                MainIcon(
-                    data = MainIconType.EQUIP,
-                    size = Dimen.fabIconSize
-                )
-            },
-            trailingIcon = {
-                MainIcon(
-                    data = MainIconType.SEARCH,
-                    size = Dimen.fabIconSize
-                ) {
-                    keyboardController?.hide()
+        MainInputText(
+            textState = textState,
+            onDone = {
+                scope.launch {
+                    navigateUpSheet()
                 }
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            ),
-            maxLines = 1,
-            singleLine = true,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.equip_name),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
+            leadingIcon = MainIconType.EQUIP,
+            label = stringResource(id = R.string.equip_name)
         )
         //装备类型
         MainText(

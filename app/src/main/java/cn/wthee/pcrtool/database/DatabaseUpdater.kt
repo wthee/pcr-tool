@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
 import androidx.datastore.preferences.core.edit
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -17,14 +16,19 @@ import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.dataStoreSetting
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_DB_WORK
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.LogReportUtil
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.getRegionCode
+import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
 
 /**
  * 数据库更新
@@ -63,10 +67,6 @@ object DatabaseUpdater {
             updateDbDownloadState(-2)
             return
         }
-//        if(version.status == -2){
-//            //取消
-//            return
-//        }
         //更新版本文本内容
         updateDbVersionText(version.data)
         //下载数据库
@@ -92,42 +92,16 @@ object DatabaseUpdater {
         val localVersion = runBlocking {
             MyApplication.context.dataStoreSetting.data.first()[localVersionKey] ?: ""
         }
-        //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-        val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
                 || (FileUtil.dbNotExists(region) || localVersion == "0")  //数据库wal被清空
                 || fixDb
-
-        //下载远程备份
-        val toDownloadRemoteBackup =
-            remoteBackupMode && File(FileUtil.getDatabaseBackupPath(region)).length() < 1024 * 1024
-        if (toDownload || toDownloadRemoteBackup) {
+        if (toDownload) {
             //远程备份时
             val fileName = when (region) {
-                RegionType.CN -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
-                    }
-                }
-
-                RegionType.TW -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
-                    }
-                }
-
-                RegionType.JP -> {
-                    if (remoteBackupMode) {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
-                    } else {
-                        Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
-                    }
-                }
+                RegionType.CN -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
+                RegionType.TW -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
+                RegionType.JP -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
             }
             //开始下载
             try {
@@ -209,58 +183,3 @@ fun updateLocalDataBaseVersion(ver: String) {
     }
 }
 
-/**
- * 尝试打开本地数据库
- *
- * 1：正常打开  0：启用备用数据库
- */
-fun tryOpenDatabase(): Int {
-    val msg: String
-    val open: () -> Unit
-    when (MainActivity.regionType) {
-        RegionType.CN -> {
-            msg = "db error: cn"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
-            }
-        }
-
-        RegionType.TW -> {
-            msg = "db error: tw"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
-            }
-        }
-
-        RegionType.JP -> {
-            msg = "db error: jp"
-            open = {
-                openDatabase(AppBasicDatabase.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
-            }
-        }
-    }
-    try {
-        //尝试打开数据库
-        if (File(FileUtil.getDatabasePath(MainActivity.regionType)).exists()) {
-            open()
-        }
-    } catch (e: Exception) {
-        //启用远程备份数据库
-        MainScope().launch {
-            ToastUtil.short(getString(R.string.database_remote_backup))
-            LogReportUtil.upload(e, msg)
-        }
-        return 0
-    }
-    //正常打开
-    return 1
-}
-
-/**
- * 打开数据库
- */
-fun openDatabase(helper: SupportSQLiteOpenHelper) {
-    helper.use {
-        it.readableDatabase
-    }
-}

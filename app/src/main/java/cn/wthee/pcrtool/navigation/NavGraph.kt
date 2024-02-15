@@ -1,15 +1,16 @@
 package cn.wthee.pcrtool.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,10 +40,9 @@ import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.media.PictureScreen
 import cn.wthee.pcrtool.ui.media.VideoScreen
 import cn.wthee.pcrtool.ui.skill.summon.SkillSummonScreen
-import cn.wthee.pcrtool.ui.theme.colorAlphaBlack
-import cn.wthee.pcrtool.ui.theme.colorAlphaWhite
 import cn.wthee.pcrtool.ui.theme.enterTransition
 import cn.wthee.pcrtool.ui.theme.exitTransition
+import cn.wthee.pcrtool.ui.theme.maskAlpha
 import cn.wthee.pcrtool.ui.theme.shapeTop
 import cn.wthee.pcrtool.ui.tool.AllToolMenuScreen
 import cn.wthee.pcrtool.ui.tool.birthday.BirthdayListScreen
@@ -71,6 +71,7 @@ import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
 import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
+import cn.wthee.pcrtool.ui.tool.talent.UnitTalentListScreen
 import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import cn.wthee.pcrtool.ui.tool.website.WebsiteScreen
@@ -135,14 +136,13 @@ fun NavGraph(
     navController: NavHostController,
     actions: NavActions,
 ) {
-    val statusBarHeight = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
-
 
     ModalBottomSheetLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = statusBarHeight),
-        scrimColor = if (isSystemInDarkTheme()) colorAlphaBlack else colorAlphaWhite,
+            .background(Color.Transparent)
+            .statusBarsPadding(),
+        scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = maskAlpha),
         sheetShape = shapeTop(),
         bottomSheetNavigator = bottomSheetNavigator
     ) {
@@ -194,6 +194,22 @@ fun NavGraph(
             bottomSheet(
                 route = "${NavRoute.ALL_PICS}/{${NavRoute.UNIT_ID}}/{${NavRoute.ALL_PICS_TYPE}}",
                 arguments = listOf(navArgument(NavRoute.UNIT_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.ALL_PICS_TYPE) {
+                    type = NavType.IntType
+                })
+            ) {
+                PictureScreen()
+            }
+
+            //剧情活动图片详情
+            bottomSheet(
+                route = "${NavRoute.ALL_STORY_EVENT_PICS}/{${NavRoute.STORY_ID}}/{${NavRoute.ORIGINAL_EVENT_ID}}/{${NavRoute.EVENT_ID}}/{${NavRoute.ALL_PICS_TYPE}}",
+                arguments = listOf(navArgument(NavRoute.STORY_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.ORIGINAL_EVENT_ID) {
+                    type = NavType.IntType
+                }, navArgument(NavRoute.EVENT_ID) {
                     type = NavType.IntType
                 }, navArgument(NavRoute.ALL_PICS_TYPE) {
                     type = NavType.IntType
@@ -478,7 +494,7 @@ fun NavGraph(
                 StoryEventListScreen(
                     toCharacterDetail = actions.toCharacterDetail,
                     toEventEnemyDetail = actions.toEventEnemyDetail,
-                    toAllPics = actions.toAllPics
+                    toAllStoryEventPics = actions.toAllStoryEventPics
                 )
             }
 
@@ -512,8 +528,21 @@ fun NavGraph(
             composable(
                 route = NavRoute.TOOL_PVP
             ) {
+                val pagerState = rememberPagerState { 4 }
+                val selectListState = rememberLazyGridState()
+                val usedListState = rememberLazyGridState()
+                val resultListState = rememberLazyGridState()
+                val favoritesListState = rememberLazyGridState()
+                val historyListState = rememberLazyGridState()
+
                 PvpSearchScreen(
                     floatWindow = false,
+                    pagerState = pagerState,
+                    selectListState = selectListState,
+                    usedListState = usedListState,
+                    resultListState = resultListState,
+                    favoritesListState = favoritesListState,
+                    historyListState = historyListState,
                     toCharacter = actions.toCharacterDetail
                 )
             }
@@ -732,6 +761,15 @@ fun NavGraph(
             ) {
                 LoadComicScreen()
             }
+
+            //角色天赋列表
+            composable(
+                route = NavRoute.TALENT_LIST
+            ) {
+                UnitTalentListScreen(
+                    toCharacterDetail = actions.toCharacterDetail
+                )
+            }
         }
     }
 }
@@ -761,6 +799,14 @@ class NavActions(navController: NavHostController) {
     val toAllPics: (Int, Int) -> Unit = { unitId: Int, type: Int ->
         navController.navigate("${NavRoute.ALL_PICS}/${unitId}/${type}")
     }
+
+    /**
+     * 剧情活动图片详情
+     */
+    val toAllStoryEventPics: (Int, Int, Int, Int) -> Unit =
+        { storyId: Int, originalEventId: Int, eventId: Int, type: Int ->
+            navController.navigate("${NavRoute.ALL_STORY_EVENT_PICS}/${storyId}/${originalEventId}/${eventId}/${type}")
+        }
 
     /**
      * 装备详情
@@ -1118,4 +1164,11 @@ class NavActions(navController: NavHostController) {
         navController.navigate(NavRoute.LOAD_COMIC_LIST)
     }
 
+
+    /**
+     * 角色天赋列表
+     */
+    val toUnitTalentList = {
+        navController.navigate(NavRoute.TALENT_LIST)
+    }
 }

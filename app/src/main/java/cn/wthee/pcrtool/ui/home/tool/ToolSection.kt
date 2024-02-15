@@ -28,13 +28,13 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.ToolMenuType
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavActions
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -105,7 +105,7 @@ private fun ToolSectionContent(
     ) {
         ToolMenu(
             toolOrderData = uiState.toolOrderData,
-            loadingState = uiState.loadingState,
+            loadState = uiState.loadState,
             actions = actions,
             isEditMode = isEditMode,
             updateToolOrderData = updateToolOrderData
@@ -121,7 +121,7 @@ private fun ToolSectionContent(
 @Composable
 fun ToolMenu(
     toolOrderData: String?,
-    loadingState: LoadingState,
+    loadState: LoadState,
     actions: NavActions,
     isEditMode: Boolean = false,
     isHome: Boolean = true,
@@ -129,7 +129,7 @@ fun ToolMenu(
 ) {
 
     StateBox(
-        stateType = loadingState,
+        stateType = loadState,
         errorContent = {
             if (!isEditMode && isHome) {
                 Box(
@@ -140,10 +140,11 @@ fun ToolMenu(
                 ) {
                     IconTextButton(
                         icon = MainIconType.ADD,
-                        text = stringResource(R.string.to_add_tool)
-                    ) {
-                        actions.toToolMore(true)
-                    }
+                        text = stringResource(R.string.to_add_tool),
+                        onClick = {
+                            actions.toToolMore(true)
+                        }
+                    )
                 }
             }
         }
@@ -155,25 +156,18 @@ fun ToolMenu(
             }
         }
 
-        VerticalStaggeredGrid(
+        VerticalGridList(
+            itemCount = toolList.size,
             itemWidth = Dimen.menuItemSize,
             contentPadding = Dimen.mediumPadding,
             modifier = Modifier.animateContentSize(defaultSpring())
         ) {
-            toolList.forEach {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    MenuItem(
-                        actions = actions,
-                        toolMenuData = it,
-                        isEditMode = isEditMode,
-                        updateOrderData = updateToolOrderData
-                    )
-                }
-            }
+            MenuItem(
+                actions = actions,
+                toolMenuData = toolList[it],
+                isEditMode = isEditMode,
+                updateOrderData = updateToolOrderData
+            )
         }
     }
 }
@@ -257,6 +251,7 @@ fun getAction(
             ToolMenuType.ALL_QUEST -> actions.toAllQuest()
             ToolMenuType.UNIQUE_EQUIP -> actions.toUniqueEquipList()
             ToolMenuType.LOAD_COMIC -> actions.toLoadComicList()
+            ToolMenuType.TALENT_LIST -> actions.toUnitTalentList()
         }
     }
 
@@ -319,6 +314,11 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
             R.string.tool_load_comic,
             MainIconType.LOAD_COMIC
         )
+
+        ToolMenuType.TALENT_LIST -> ToolMenuData(
+            R.string.unit_talent,
+            MainIconType.TALENT
+        )
     }
     //设置模块类别
     tool.type = toolMenuType
@@ -340,7 +340,7 @@ private fun ToolSectionContentPreview() {
                     ${ToolMenuType.FREE_GACHA.id}-
                     ${ToolMenuType.GUILD.id}-
                 """.deleteSpace,
-                loadingState = LoadingState.Success
+                loadState = LoadState.Success
             ),
             actions = NavActions(NavHostController(LocalContext.current)),
             isEditMode = false,
@@ -353,7 +353,7 @@ private fun ToolSectionContentPreview() {
         ToolSectionContent(
             uiState = ToolSectionUiState(
                 toolOrderData = "",
-                loadingState = LoadingState.Error
+                loadState = LoadState.Error
             ),
             actions = NavActions(NavHostController(LocalContext.current)),
             isEditMode = false,

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication.Companion.URL_DOMAIN
 import cn.wthee.pcrtool.R
 
@@ -15,8 +14,8 @@ object Constants {
     //属性变化等级，300级后，回避等属性转换为其他属性
     const val OTHER_LIMIT_LEVEL = 300
 
-    //本地数据库版本
-    const val SQLITE_VERSION = 374
+    //本地数据库版本，需强制更新数据库文件时，需更改该版本号
+    const val SQLITE_VERSION = 383
 
     //图片缓存
     const val COIL_DIR = "coil_image_cache"
@@ -43,33 +42,15 @@ object Constants {
     const val DATABASE_NAME_CN = "redive_cn.db"
     const val DATABASE_WAL_CN = "redive_cn.db-wal"
 
-    //国服备份数据库
-    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN =
-        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_CN
-    const val DATABASE_BACKUP_NAME_CN = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_CN
-    const val DATABASE_WAL_BACKUP_CN = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_CN
-
     //台服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_TW = "redive_tw.db.br"
     const val DATABASE_NAME_TW = "redive_tw.db"
     const val DATABASE_WAL_TW = "redive_tw.db-wal"
 
-    //台服备份数据库
-    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW =
-        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_TW
-    const val DATABASE_BACKUP_NAME_TW = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_TW
-    const val DATABASE_WAL_BACKUP_TW = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_TW
-
     //日服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
     const val DATABASE_NAME_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
-
-    //日服备份数据库
-    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP =
-        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_JP
-    const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
-    const val DATABASE_WAL_BACKUP_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
 
     //安装包名称
     const val DOWNLOAD_APK_NAME = "pcrtool.apk"

@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.SelectText
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -155,41 +155,41 @@ private fun ExtraEquipRewardIconGrid(
     selectedId: Int,
     toExtraEquipDetail: ((Int) -> Unit)?
 ) {
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = Modifier.padding(
             horizontal = Dimen.commonItemPadding
         ),
-        itemWidth = Dimen.iconItemWidth,
-        verticalContentPadding = Dimen.commonItemPadding
+        itemCount = equipIdList.size,
+        itemWidth = Dimen.iconSize,
+        contentPadding = Dimen.commonItemPadding
     ) {
-        equipIdList.forEachIndexed { index, equipId ->
-            val selected = selectedId == equipId
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MainIcon(
-                    data = ImageRequestHelper.getInstance()
-                        .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equipId),
-                    onClick = if (toExtraEquipDetail != null) {
-                        {
-                            toExtraEquipDetail(equipId)
-                        }
-                    } else {
-                        null
+        val equipId = equipIdList[it]
+        val selected = selectedId == equipId
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_EXTRA_EQUIPMENT, equipId),
+                onClick = if (toExtraEquipDetail != null) {
+                    {
+                        toExtraEquipDetail(equipId)
                     }
-                )
-                if (dropOddList.isNotEmpty()) {
-                    SelectText(
-                        selected = selected,
-                        text = stringResource(
-                            id = R.string.ex_equip_drop_odd,
-                            dropOddList[index] / 10000f
-                        )
-                    )
+                } else {
+                    null
                 }
-
+            )
+            if (dropOddList.isNotEmpty()) {
+                SelectText(
+                    selected = selected,
+                    text = stringResource(
+                        id = R.string.ex_equip_drop_odd,
+                        dropOddList[it] / 10000f
+                    )
+                )
             }
+
         }
     }
 }

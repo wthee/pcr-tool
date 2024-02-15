@@ -35,11 +35,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableHeader
 import cn.wthee.pcrtool.ui.components.MainCard
@@ -63,7 +62,6 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.getRegionName
 import cn.wthee.pcrtool.utils.toDate
 import kotlinx.coroutines.launch
 
@@ -104,37 +102,32 @@ fun LeaderboardScreen(
             //重置
             if (sort.intValue != 0 || asc.value || onlyLast.value) {
                 MainSmallFab(
-                    iconType = MainIconType.RESET
-                ) {
-                    sort.intValue = 0
-                    asc.value = false
-                    onlyLast.value = false
-                }
+                    iconType = MainIconType.RESET,
+                    onClick = {
+                        sort.intValue = 0
+                        asc.value = false
+                        onlyLast.value = false
+                    }
+                )
             }
 
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.LEADER,
                 text = (uiState.currentList.size).toString(),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         },
         secondLineFab = {
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 //切换显示
                 MainSmallFab(
                     iconType = MainIconType.FILTER,
@@ -147,10 +140,11 @@ fun LeaderboardScreen(
                         .padding(
                             end = Dimen.fabMargin,
                             bottom = Dimen.fabMarginLargeBottom
-                        )
-                ) {
-                    onlyLast.value = !onlyLast.value
-                }
+                        ),
+                    onClick = {
+                        onlyLast.value = !onlyLast.value
+                    }
+                )
             }
         }
     ) {
@@ -166,7 +160,7 @@ fun LeaderboardScreen(
             }
 
             StateBox(
-                stateType = uiState.loadingState,
+                stateType = uiState.loadState,
                 loadingContent = {
                     Column {
                         for (i in 0..10) {
@@ -426,14 +420,15 @@ fun LeaderCharacterIcon(
             } else {
                 R.drawable.unknown_item
             },
-            modifier = Modifier.placeholder(placeholder)
-        ) {
-            if (!unknown) {
-                unitId?.let { toCharacterDetail(it) }
-            } else {
-                ToastUtil.short(tipText)
+            modifier = Modifier.placeholder(placeholder),
+            onClick = {
+                if (!unknown) {
+                    unitId?.let { toCharacterDetail(it) }
+                } else {
+                    ToastUtil.short(tipText)
+                }
             }
-        }
+        )
 
         //wiki页面
         if (!placeholder) {
@@ -447,6 +442,7 @@ fun LeaderCharacterIcon(
                         VibrateUtil(context).single()
                         BrowserUtil.open(url)
                     }
+                    .padding(Dimen.exSmallPadding)
             )
         }
 
@@ -488,8 +484,7 @@ fun getLeaderUnknownTip(hasUnitId: Boolean): String {
     val regionName = if (LocalInspectionMode.current) {
         ""
     } else {
-        getRegionName(MainActivity.regionType)
-
+        stringResource(MainActivity.regionType.stringId)
     }
     return if (!hasUnitId) {
         stringResource(id = R.string.leader_need_sync)

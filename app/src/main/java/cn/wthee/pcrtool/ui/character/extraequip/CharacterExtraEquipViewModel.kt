@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.ExtraEquipmentRepository
 import cn.wthee.pcrtool.data.db.view.CharacterExtraEquipData
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @Immutable
 data class CharacterExtraEquipUiState(
     val extraEquipList: List<CharacterExtraEquipData>? = null,
-    val loadingState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -58,7 +58,7 @@ class CharacterExtraEquipViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     extraEquipList = list,
-                    loadingState = updateLoadingState(list)
+                    loadState = updateLoadState(list)
                 )
             }
         }

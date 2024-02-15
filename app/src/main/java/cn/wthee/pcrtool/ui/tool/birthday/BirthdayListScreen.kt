@@ -67,18 +67,19 @@ fun BirthdayListScreen(
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.BIRTHDAY,
-                text = stringResource(id = R.string.tool_birthday)
-            ) {
-                coroutineScope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                text = stringResource(id = R.string.tool_birthday),
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState, columns = StaggeredGridCells.Adaptive(getItemWidth())
             ) {
@@ -123,7 +124,9 @@ fun BirthdayItem(
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),
                 backgroundColor = colorRed,
-                modifier = Modifier.padding(end = Dimen.smallPadding)
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically)
             )
             MainTitleText(
                 text = stringResource(
@@ -132,13 +135,16 @@ fun BirthdayItem(
                     data.day.toString().fixedStr
                 ),
                 backgroundColor = colorRed,
-                modifier = Modifier.padding(end = Dimen.smallPadding),
+                modifier = Modifier
+                    .padding(end = Dimen.smallPadding)
+                    .align(Alignment.CenterVertically),
             )
 
             //计时
             if (data.month != 999) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
                     if (comingSoon && !LocalInspectionMode.current) {
                         MainIcon(
@@ -160,7 +166,7 @@ fun BirthdayItem(
         MainCard {
             //图标
             GridIconList(
-                modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
                 idList = idList,
                 iconResourceType = IconResourceType.CHARACTER,
                 onClickItem = toCharacterDetail

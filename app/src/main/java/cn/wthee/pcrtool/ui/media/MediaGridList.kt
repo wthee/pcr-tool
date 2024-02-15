@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainText
@@ -31,7 +31,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
  * 媒体文件预览列表
  *
  * @param urlList 资源地址
- * @param loading 加载中
+ * @param loadState 加载中
  * @param title 标题
  * @param showTitle 是否显示
  * @param itemWidth 子项宽度
@@ -40,7 +40,7 @@ import cn.wthee.pcrtool.ui.theme.PreviewLayout
 @Composable
 fun MediaGridList(
     urlList: List<String>,
-    loading: LoadingState = LoadingState.Success,
+    loadState: LoadState = LoadState.Success,
     title: String = "",
     noDataText: String = stringResource(id = R.string.no_data),
     showTitle: Boolean = true,
@@ -72,7 +72,7 @@ fun MediaGridList(
         }
 
         StateBox(
-            stateType = loading,
+            stateType = loadState,
             noDataContent = {
                 CenterTipText(noDataText)
             },

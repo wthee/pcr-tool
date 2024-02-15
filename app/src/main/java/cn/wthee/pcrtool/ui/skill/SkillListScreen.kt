@@ -126,9 +126,13 @@ private fun SkillListContent(
         }
         //角色技能动画
         if (unitType == UnitType.CHARACTER && toCharacterVideo != null) {
-            IconTextButton(icon = MainIconType.MOVIE, text = stringResource(R.string.ub_video)) {
-                toCharacterVideo(unitId, VideoType.UB_SKILL.value)
-            }
+            IconTextButton(
+                icon = MainIconType.MOVIE,
+                text = stringResource(R.string.ub_video),
+                onClick = {
+                    toCharacterVideo(unitId, VideoType.UB_SKILL.value)
+                }
+            )
         }
 
         //普通技能
@@ -542,20 +546,21 @@ fun SkillActionItem(
             if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
                 IconTextButton(
                     icon = MainIconType.SUMMON,
-                    text = stringResource(R.string.to_summon)
-                ) {
-                    toSummonDetail(
-                        Json.encodeToString(
-                            SummonProperty(
-                                id = skillAction.summonUnitId,
-                                type = unitType.type,
-                                level = property.level,
-                                rank = property.rank,
-                                rarity = property.rarity
+                    text = stringResource(R.string.to_summon),
+                    onClick = {
+                        toSummonDetail(
+                            Json.encodeToString(
+                                SummonProperty(
+                                    id = skillAction.summonUnitId,
+                                    type = unitType.type,
+                                    level = property.level,
+                                    rank = property.rank,
+                                    rarity = property.rarity
+                                )
                             )
                         )
-                    )
-                }
+                    }
+                )
             }
             //技能等级超过tp限制等级的，添加标识
             if (skillAction.isTpLimitAction) {

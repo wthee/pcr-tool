@@ -34,12 +34,12 @@ import cn.wthee.pcrtool.utils.VibrateUtil
  */
 @Composable
 fun MainButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     text: String,
     color: Color = colorWhite,
     containerColor: Color = MaterialTheme.colorScheme.primary,
-    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    onClick: () -> Unit
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge
 ) {
     val context = LocalContext.current
 
@@ -65,12 +65,12 @@ fun MainButton(
  */
 @Composable
 fun SubButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onSurface,
     useBrush: Boolean = false,
-    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
-    onClick: () -> Unit
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge
 ) {
     val context = LocalContext.current
 
@@ -94,7 +94,8 @@ fun SubButton(
         onClick = {
             VibrateUtil(context).single()
             onClick()
-        }) {
+        }
+    ) {
         Text(text = text, color = color, style = textStyle)
     }
 }
@@ -105,25 +106,29 @@ fun SubButton(
 @Composable
 fun IconTextButton(
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     icon: MainIconType? = null,
     text: String,
     contentColor: Color = MaterialTheme.colorScheme.primary,
     iconSize: Dp = Dimen.textIconSize,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    maxLines: Int = 1,
-    onClick: (() -> Unit)? = null
+    maxLines: Int = 1
 ) {
     val context = LocalContext.current
 
     Row(
         modifier = modifier
             .clip(MaterialTheme.shapes.small)
-            .clickable(enabled = onClick != null) {
-                VibrateUtil(context).single()
+            .then(
                 if (onClick != null) {
-                    onClick()
+                    Modifier.clickable {
+                        VibrateUtil(context).single()
+                        onClick()
+                    }
+                } else {
+                    Modifier
                 }
-            }
+            )
             .padding(Dimen.smallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -155,9 +160,17 @@ fun IconTextButton(
 fun Preview() {
     PreviewLayout {
         val text = stringResource(id = R.string.debug_short_text)
-        MainButton(text = text) {}
-        SubButton(text = text, color = MaterialTheme.colorScheme.primary, useBrush = false) {}
-        SubButton(text = text, color = MaterialTheme.colorScheme.primary, useBrush = true) {}
-        IconTextButton(text = text, icon = MainIconType.ADD) {}
+        MainButton(text = text, onClick = {})
+        SubButton(
+            text = text,
+            color = MaterialTheme.colorScheme.primary,
+            useBrush = false,
+            onClick = {})
+        SubButton(
+            text = text,
+            color = MaterialTheme.colorScheme.primary,
+            useBrush = true,
+            onClick = {})
+        IconTextButton(text = text, icon = MainIconType.ADD)
     }
 }

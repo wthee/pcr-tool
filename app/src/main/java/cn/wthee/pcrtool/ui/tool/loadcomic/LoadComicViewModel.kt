@@ -4,8 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.network.ApiRepository
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @Immutable
 data class LoadComicUiState(
     val comicList: ArrayList<String>? = null,
-    val loadState: LoadingState = LoadingState.Loading
+    val loadState: LoadState = LoadState.Loading
 )
 
 /**
@@ -56,13 +56,13 @@ class LoadComicViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             comicList = list,
-                            loadState = updateLoadingState(list)
+                            loadState = updateLoadState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            loadState = LoadingState.Error
+                            loadState = LoadState.Error
                         )
                     }
                 }

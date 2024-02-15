@@ -126,7 +126,7 @@ fun UniqueEquipListScreen(
             uniqueEquipListViewModel.changeSearchBar(false)
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             Column {
                 if (pagerCount == 2) {
                     MainTabRow(
@@ -187,7 +187,7 @@ fun UniqueEquipListScreen(
 
 
 /**
- * 装备
+ * 专用装备
  */
 @Composable
 private fun UniqueEquipItem(
@@ -203,15 +203,18 @@ private fun UniqueEquipItem(
             end = Dimen.largePadding,
         )
     ) {
+        //装备图标
         MainIcon(
             data = ImageRequestHelper.getInstance()
-                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId)
-        ) {
-            toUniqueEquipDetail(equip.unitId)
-        }
+                .getUrl(ImageRequestHelper.ICON_EQUIPMENT, equip.equipId),
+            onClick = {
+                toUniqueEquipDetail(equip.unitId)
+            }
+        )
 
         Column {
 
+            //装备名称
             MainTitleText(
                 text = equip.equipName,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
@@ -219,6 +222,7 @@ private fun UniqueEquipItem(
             )
 
 
+            //装备描述及关联角色信息
             MainCard(
                 modifier = Modifier.padding(
                     start = Dimen.mediumPadding,

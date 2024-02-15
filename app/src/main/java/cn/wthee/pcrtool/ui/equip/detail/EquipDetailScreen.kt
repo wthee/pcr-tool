@@ -30,7 +30,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -65,26 +65,28 @@ fun EquipDetailScreen(
             //装备收藏
             MainSmallFab(
                 iconType = if (uiState.favorite) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
-                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip)
-            ) {
-                scope.launch {
-                    equipDetailViewModel.updateFavoriteId()
+                text = if (uiState.favorite) "" else stringResource(id = R.string.favorite_equip),
+                onClick = {
+                    scope.launch {
+                        equipDetailViewModel.updateFavoriteId()
+                    }
                 }
-            }
+            )
 
             //关联角色
             if (uiState.unitIdList.isNotEmpty()) {
                 MainSmallFab(
                     iconType = MainIconType.CHARACTER,
-                    text = uiState.unitIdList.size.toString()
-                ) {
-                    toEquipUnit(equipId)
-                }
+                    text = uiState.unitIdList.size.toString(),
+                    onClick = {
+                        toEquipUnit(equipId)
+                    }
+                )
             }
         }
     ) {
         Column {
-            StateBox(stateType = uiState.loadingState) {
+            StateBox(stateType = uiState.loadState) {
                 uiState.equipData?.let {
                     EquipDetailContent(
                         equipId = equipId,
@@ -95,7 +97,7 @@ fun EquipDetailScreen(
             }
 
             //合成素材
-            StateBox(stateType = uiState.materialLoadingState) {
+            StateBox(stateType = uiState.materialLoadState) {
                 EquipMaterialListContent(
                     materialList = uiState.materialList,
                     favoriteIdList = uiState.favoriteIdList,
@@ -166,24 +168,28 @@ private fun EquipMaterialListContent(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        VerticalStaggeredGrid(itemWidth = Dimen.iconSize, contentPadding = Dimen.mediumPadding) {
-            materialList.forEach { material ->
-                val favorite = favoriteIdList.contains(material.id)
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    MainIcon(
-                        data = ImageRequestHelper.getInstance()
-                            .getUrl(ImageRequestHelper.ICON_EQUIPMENT, material.id)
-                    ) {
+        VerticalGridList(
+            itemCount = materialList.size,
+            itemWidth = Dimen.iconSize,
+            contentPadding = Dimen.commonItemPadding
+        ) {
+            val material = materialList[it]
+            val favorite = favoriteIdList.contains(material.id)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MainIcon(
+                    data = ImageRequestHelper.getInstance()
+                        .getUrl(ImageRequestHelper.ICON_EQUIPMENT, material.id),
+                    onClick = {
                         toEquipMaterial(material.id, material.name)
                     }
-                    SelectText(
-                        selected = favorite,
-                        text = material.count.toString()
-                    )
-                }
+                )
+                SelectText(
+                    selected = favorite,
+                    text = material.count.toString()
+                )
             }
         }
     }

@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.data.db.view.NoGuildMemberInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SummonData
+import cn.wthee.pcrtool.data.db.view.TalentData
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.UnitPromotionStatus
@@ -94,7 +95,7 @@ interface UnitDao {
             LEFT JOIN quest_data ON quest_data.quest_id LIKE '13%' AND quest_data.daily_limit <> 0 AND quest_data.reward_image_1 = 32000 + unit_data.unit_id / 100 % 1000
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
-            unit_data.unit_name like '%' || :unitName || '%'
+            (unit_data.unit_name like '%' || :unitName || '%' OR unit_data.unit_id = :unitName)
         AND unit_data.search_area_width > 0
         AND unit_profile.unit_id < $maxUnitId
         AND 1 = CASE
@@ -537,7 +538,17 @@ interface UnitDao {
                 a.chara_id_7,
                 a.chara_id_8,
                 a.chara_id_9,
-                a.chara_id_10 
+                a.chara_id_10,
+                a.chara_id_11,
+                a.chara_id_12,
+                a.chara_id_13,
+                a.chara_id_14,
+                a.chara_id_15,
+                a.chara_id_16,
+                a.chara_id_17,
+                a.chara_id_18,
+                a.chara_id_19,
+                a.chara_id_20 
             )
             LEFT JOIN story_detail AS c ON a.story_id = c.story_id
         WHERE b.unit_id = :unitId
@@ -667,4 +678,27 @@ interface UnitDao {
     """
     )
     suspend fun getAtkCastTime(unitId: Int): Double?
+
+    /**
+     * 获取所有角色天赋id
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            setting_id,
+            unit_talent.unit_id,
+            talent_id,
+            search_area_width,
+            atk_type
+        FROM
+            unit_talent
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_talent.unit_id
+        WHERE (0 = :unitId OR unit_talent.unit_id = :unitId) AND unit_talent.unit_id < $maxUnitId
+        AND search_area_width > 0
+        ORDER BY search_area_width, atk_type
+        """
+    )
+    suspend fun getTalentIdList(unitId: Int): List<TalentData>
 }

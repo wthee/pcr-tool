@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,8 +52,9 @@ import kotlinx.coroutines.launch
  * 通用悬浮按钮
  *
  * @param hasNavBarPadding 适配导航栏
- * @param extraContent 不为空时，将替换text内容
+ * @param loading true 显示圆形加载中进度条
  * @param iconScale 图标缩放，非ImageVector才生效
+ * @param vibrate 点击振动
  */
 @Composable
 fun MainSmallFab(
@@ -62,13 +62,15 @@ fun MainSmallFab(
     modifier: Modifier = Modifier,
     text: String = "",
     hasNavBarPadding: Boolean = true,
-    extraContent: (@Composable () -> Unit)? = null,
     iconScale: ContentScale = ContentScale.FillWidth,
     vibrate: Boolean = true,
-    onClick: () -> Unit = {}
+    tintColor: Color? = null,
+    onClick: () -> Unit = {},
+    loading: Boolean = false
 ) {
     val context = LocalContext.current
-    val isTextFab = text != "" && extraContent == null
+    val isTextFab = text != "" && !loading
+    val contentColor = tintColor ?: MaterialTheme.colorScheme.primary
 
 
     SmallFloatingActionButton(
@@ -96,6 +98,7 @@ fun MainSmallFab(
                     Modifier
                 }
             ),
+        contentColor = contentColor
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -106,11 +109,12 @@ fun MainSmallFab(
             }).animateContentSize(defaultTween())
         ) {
 
-            if (extraContent == null) {
+            if (!loading) {
                 MainIcon(
                     data = iconType,
                     size = Dimen.fabIconSize,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    colorFilter = ColorFilter.tint(contentColor),
+                    tint = contentColor,
                     contentScale = iconScale
                 )
 
@@ -130,12 +134,12 @@ fun MainSmallFab(
                             }
                         )
                         .widthIn(max = Dimen.fabTextMaxWidth),
-                    color = MaterialTheme.colorScheme.primary,
+                    color = contentColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             } else {
-                extraContent()
+                CircularProgressCompose()
             }
         }
     }
@@ -293,13 +297,14 @@ fun SelectTypeFab(
                     selectedColor = selectedColor,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(Dimen.mediumPadding)
-                ) {
-                    coroutineScope.launch {
-                        changeSelect(index)
+                        .padding(Dimen.mediumPadding),
+                    onClick = {
+                        coroutineScope.launch {
+                            changeSelect(index)
+                        }
+                        changeDialog(false)
                     }
-                    changeDialog(false)
-                }
+                )
             }
         }
     }
@@ -393,28 +398,26 @@ private fun RankSelectItem(
     targetType: RankSelectType,
     currentRank: Int
 ) {
-
-    VerticalStaggeredGrid(
+    val list = rankList.filter {
+        targetType == RankSelectType.DEFAULT ||
+                (targetType == RankSelectType.LIMIT && it >= currentRank)
+    }
+    VerticalGridList(
+        itemCount = list.size,
         itemWidth = Dimen.rankTextWidth,
         contentPadding = Dimen.smallPadding
     ) {
-        rankList.filter {
-            targetType == RankSelectType.DEFAULT ||
-                    (targetType == RankSelectType.LIMIT && it >= currentRank)
-        }.forEachIndexed { index, rank ->
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                val rankColor = RankColor.getRankColor(rank = rank)
-                val selected = selectIndex.value == index
+        val rank = list[it]
+        val rankColor = RankColor.getRankColor(rank = rank)
+        val selected = selectIndex.value == it
 
-                MainChip(
-                    index = index,
-                    selected = selected,
-                    selectIndex = selectIndex,
-                    text = rankFillBlank(rank),
-                    selectedColor = rankColor
-                )
-            }
-        }
+        MainChip(
+            index = it,
+            selected = selected,
+            selectIndex = selectIndex,
+            text = rankFillBlank(rank),
+            selectedColor = rankColor
+        )
     }
 }
 
@@ -434,12 +437,8 @@ private fun rankFillBlank(rank: Int): String {
 private fun FabComposePreview() {
     PreviewLayout {
         Row {
-            MainSmallFab(iconType = MainIconType.ANIMATION) {
-
-            }
-            MainSmallFab(iconType = MainIconType.ANIMATION, text = "fab") {
-
-            }
+            MainSmallFab(iconType = MainIconType.ANIMATION)
+            MainSmallFab(iconType = MainIconType.ANIMATION, text = "fab")
         }
     }
 }

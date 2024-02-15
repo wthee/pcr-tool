@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.navigation.NavRoute
-import cn.wthee.pcrtool.ui.LoadingState
-import cn.wthee.pcrtool.ui.updateLoadingState
+import cn.wthee.pcrtool.ui.LoadState
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +31,10 @@ data class PictureUiState(
     val storyCardList: ArrayList<String> = arrayListOf(),
     //过场漫画
     val comicList: ArrayList<String> = arrayListOf(),
-    val storyLoadState: LoadingState = LoadingState.Loading,
-    val comicLoadState: LoadingState = LoadingState.Loading,
+    //剧情活动 banner
+    val bannerList: ArrayList<String> = arrayListOf(),
+    val storyLoadState: LoadState = LoadState.Loading,
+    val comicLoadState: LoadState = LoadState.Loading,
     val pageCount: Int = 1
 )
 
@@ -47,7 +49,9 @@ class PictureViewModel @Inject constructor(
 ) : ViewModel() {
 
     //角色或剧情id
-    private val id: Int? = savedStateHandle[NavRoute.UNIT_ID]
+    private val id: Int? = savedStateHandle[NavRoute.UNIT_ID] ?: savedStateHandle[NavRoute.STORY_ID]
+    private val originalEventId: Int? = savedStateHandle[NavRoute.ORIGINAL_EVENT_ID]
+    private val eventId: Int? = savedStateHandle[NavRoute.EVENT_ID]
 
     //类型
     private val type: Int? = savedStateHandle[NavRoute.ALL_PICS_TYPE]
@@ -68,9 +72,18 @@ class PictureViewModel @Inject constructor(
                 getUnitCardList(id)
                 //过场漫画
                 getComicList(id)
+            } else {
+                _uiState.update {
+                    it.copy(
+                        pageCount = 2
+                    )
+                }
+                //剧情 banner
+                getStoryBannerList()
             }
             //剧情立绘
             getStoryCardList(id, type)
+
 
         }
     }
@@ -114,16 +127,49 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             storyCardList = list,
-                            storyLoadState = updateLoadingState(list)
+                            storyLoadState = updateLoadState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            storyLoadState = LoadingState.Error
+                            storyLoadState = LoadState.Error
                         )
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 剧情 banner
+     */
+    private fun getStoryBannerList() {
+        viewModelScope.launch {
+            val list = arrayListOf<String>()
+            originalEventId?.let {
+                list.add(
+                    ImageRequestHelper.getInstance()
+                        .getUrl(
+                            ImageRequestHelper.EVENT_BANNER,
+                            originalEventId,
+                            forceJpType = false
+                        )
+                )
+            }
+            eventId?.let {
+                val isSub = eventId / 10000 == 2
+                if (!isSub) {
+                    list.add(
+                        ImageRequestHelper.getInstance()
+                            .getUrl(ImageRequestHelper.EVENT_TEASER, eventId, forceJpType = false)
+                    )
+                }
+            }
+            _uiState.update {
+                it.copy(
+                    bannerList = list
+                )
             }
         }
     }
@@ -148,13 +194,13 @@ class PictureViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             comicList = list,
-                            comicLoadState = updateLoadingState(list)
+                            comicLoadState = updateLoadState(list)
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
-                            comicLoadState = LoadingState.Error
+                            comicLoadState = LoadState.Error
                         )
                     }
                 }

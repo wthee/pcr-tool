@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.skill.loop
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -25,7 +23,7 @@ import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainTitleText
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.skill.getSkillColor
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -118,69 +116,65 @@ private fun SkillLoopItemContent(
 ) {
     val loopList = loop.loopList.filter { it != 0 }
 
+    //标题
+    MainTitleText(text = loop.loopTitle)
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        //标题
-        MainTitleText(text = loop.loopTitle)
-        Spacer(modifier = Modifier.weight(1f))
-    }
-
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = Modifier
             .padding(top = Dimen.mediumPadding),
+        itemCount = loopList.size,
         itemWidth = Dimen.iconItemWidth,
-        verticalContentPadding = Dimen.commonItemPadding
+        verticalContentPadding = Dimen.commonItemPadding,
+        verticalAlignment = Alignment.Top
     ) {
-        loopList.forEach {
-            val type: String
-            val url: Any
-            val skillBasicData = skillMap[it]
-            //准备时间
-            val castTime: Double
+        val skillId = loopList[it]
+        val type: String
+        val url: Any
+        val skillBasicData = skillMap[skillId]
+        //准备时间
+        val castTime: Double
 
-            if (it == 1) {
-                type = stringResource(id = R.string.normal_attack)
-                url = R.drawable.unknown_item
-                castTime = atkCastTime
+        if (skillId == 1) {
+            type = stringResource(id = R.string.normal_attack)
+            url = R.drawable.unknown_item
+            castTime = atkCastTime
+        } else {
+            type = when (skillId / 1000) {
+                1 -> stringResource(id = R.string.skill_index, skillId % 10)
+                2 -> "SP" + stringResource(id = R.string.skill_index, skillId % 10)
+                else -> ""
+            }
+
+            url = if (skillBasicData == null) {
+                R.drawable.unknown_item
             } else {
-                type = when (it / 1000) {
-                    1 -> stringResource(id = R.string.skill_index, it % 10)
-                    2 -> "SP" + stringResource(id = R.string.skill_index, it % 10)
-                    else -> ""
-                }
-
-                url = if (skillBasicData == null) {
-                    R.drawable.unknown_item
-                } else {
-                    ImageRequestHelper.getInstance()
-                        .getUrl(ImageRequestHelper.ICON_SKILL, skillBasicData.iconType)
-                }
-                castTime = skillBasicData?.skillCastTime ?: 0.0
+                ImageRequestHelper.getInstance()
+                    .getUrl(ImageRequestHelper.ICON_SKILL, skillBasicData.iconType)
             }
+            castTime = skillBasicData?.skillCastTime ?: 0.0
+        }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MainIcon(data = url)
-                CaptionText(
-                    text = type,
-                    color = getSkillColor(type = type),
-                    modifier = Modifier.padding(top = Dimen.smallPadding),
-                    maxLines = 1,
-                    textAlign = TextAlign.Center
-                )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            MainIcon(data = url)
+            CaptionText(
+                text = type,
+                color = getSkillColor(type = type),
+                modifier = Modifier.padding(top = Dimen.smallPadding),
+                maxLines = 1,
+                textAlign = TextAlign.Center
+            )
 
-                //准备时间
-                CaptionText(
-                    text = stringResource(
-                        id = R.string.cast_time,
-                        castTime.toBigDecimal().stripTrailingZeros().toPlainString()
-                    ),
-                    maxLines = 1,
-                    textAlign = TextAlign.Center
-                )
-            }
+            //准备时间
+            CaptionText(
+                text = stringResource(
+                    id = R.string.cast_time,
+                    castTime.toBigDecimal().stripTrailingZeros().toPlainString()
+                ),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -198,7 +192,7 @@ private fun SkillLoopItemContentPreview() {
                 loopList = arrayListOf(1, 1001, 1002, 1001, 1002, 1002, 1)
             ),
             skillMap = hashMapOf(),
-            atkCastTime = 0.2345
+            atkCastTime = 0.234567
         )
     }
 }

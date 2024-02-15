@@ -56,17 +56,18 @@ fun GuildListScreen(
             MainSmallFab(
                 iconType = MainIconType.GUILD,
                 text = stringResource(id = R.string.tool_guild),
-            ) {
-                scope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                onClick = {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
         }
     ) {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Adaptive(getItemWidth())
@@ -150,7 +151,7 @@ private fun GuildItem(
             }
             //角色图标列表
             GridIconList(
-                modifier = Modifier.padding(bottom = Dimen.commonItemPadding),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
                 idList = idList,
                 iconResourceType = IconResourceType.CHARACTER,
                 onClickItem = toCharacterDetail

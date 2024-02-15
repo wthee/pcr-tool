@@ -56,7 +56,7 @@ fun MainTabRow(
             containerColor = Color.Transparent,
             contentColor = contentColor,
             indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
+                TabRowDefaults.SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     color = contentColor
                 )
@@ -71,7 +71,7 @@ fun MainTabRow(
             containerColor = Color.Transparent,
             contentColor = contentColor,
             indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
+                TabRowDefaults.SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     color = contentColor
                 )

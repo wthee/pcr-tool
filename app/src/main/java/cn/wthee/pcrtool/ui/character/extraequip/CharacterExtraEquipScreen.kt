@@ -36,7 +36,7 @@ fun CharacterExtraEquipScreen(
 
     MainScaffold {
         StateBox(
-            stateType = uiState.loadingState,
+            stateType = uiState.loadState,
             errorContent = {
                 CenterTipText(text = stringResource(R.string.not_installed))
             }

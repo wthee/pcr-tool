@@ -60,7 +60,7 @@ fun CharacterBasicInfo(
 
 
     MainScaffold {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

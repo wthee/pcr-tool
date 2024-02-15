@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home.uniqueequip
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -94,22 +95,22 @@ private fun UniqueEquipSectionContent(
     ) {
         uiState.uniqueEquipList1?.let { list ->
             GridIconList(
+                paddingValues = PaddingValues(top = Dimen.mediumPadding),
                 idList = list.map { it.equipId },
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
-                itemWidth = Dimen.homeIconItemWidth,
-                fixCount = equipSpanCount,
+                fixColumns = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )
         }
         uiState.uniqueEquipList2?.let { list ->
             GridIconList(
+                paddingValues = PaddingValues(top = Dimen.mediumPadding),
                 idList = list.map { it.equipId },
                 detailIdList = list.map { it.unitId },
                 iconResourceType = IconResourceType.UNIQUE_EQUIP,
-                itemWidth = Dimen.homeIconItemWidth,
-                fixCount = equipSpanCount,
+                fixColumns = equipSpanCount,
                 contentPadding = 0.dp,
                 onClickItem = toUniqueEquipDetail
             )

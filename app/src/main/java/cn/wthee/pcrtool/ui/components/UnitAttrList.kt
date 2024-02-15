@@ -32,16 +32,18 @@ import cn.wthee.pcrtool.utils.int
 fun AttrList(
     attrs: List<AttrValue>,
     attrValueType: AttrValueType = AttrValueType.INT,
-    itemWidth: Dp = Dimen.attrWidth
+    itemWidth: Dp = Dimen.attrWidth,
+    fixColumns: Int = 0,
 ) {
-    VerticalStaggeredGrid(
+    VerticalGridList(
         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding),
-        itemWidth = itemWidth
+        itemCount = attrs.size,
+        itemWidth = itemWidth,
+        fixColumns = fixColumns
     ) {
-        attrs.forEach { attr ->
-            val valueText = fixedAttrValueText(attr.value, attrValueType)
-            CommonTitleContentText(attr.title, valueText)
-        }
+        val attr = attrs[it]
+        val valueText = fixedAttrValueText(attr.value, attrValueType)
+        CommonTitleContentText(title = attr.title, content = valueText)
     }
 }
 
@@ -118,7 +120,7 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
             stringResource(R.string.value_100_m, (attrValue.toInt() / 100000000f).toString())
         }
 
-        in 100000 until 100000000 -> {
+        in 1000000 until 100000000 -> {
             stringResource(R.string.value_10_k, attrValue.toInt() / 10000)
         }
 
@@ -155,9 +157,10 @@ fun fixedAttrValueText(attrValue: Double, attrValueType: AttrValueType, title: S
 @Composable
 private fun AttrListPreview() {
     val mockData = arrayListOf(
-        AttrValue(stringResource(id = R.string.attr_atk), 23456.0),
-        AttrValue(stringResource(id = R.string.attr_magic_def), 23456.0),
-        AttrValue(stringResource(id = R.string.attr_def), 23456.0),
+        AttrValue(stringResource(id = R.string.debug_short_text), 1223456789.0),
+        AttrValue(stringResource(id = R.string.attr_atk), 234567.0),
+        AttrValue(stringResource(id = R.string.attr_magic_str), 2345678.0),
+        AttrValue(stringResource(id = R.string.attr_magic_def), 45678.0),
     )
     PreviewLayout {
         AttrList(attrs = mockData)

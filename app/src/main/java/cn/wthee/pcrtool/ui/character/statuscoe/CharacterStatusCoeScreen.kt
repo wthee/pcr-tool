@@ -37,7 +37,7 @@ fun CharacterStatusCoeScreen(characterStatusCoeViewModel: CharacterStatusCoeView
     val uiState by characterStatusCoeViewModel.uiState.collectAsStateWithLifecycle()
 
     MainScaffold {
-        StateBox(stateType = uiState.loadingState) {
+        StateBox(stateType = uiState.loadState) {
             uiState.coeValue?.let { coe ->
                 CharacterStatusCoeContent(coe)
             }
@@ -128,7 +128,7 @@ private fun CharacterStatusCoeContent(coe: UnitStatusCoefficient) {
                 value = coe.ub_evolution_coefficient.toDouble()
             )
         )
-        AttrList(attrs = skillCoeList, itemWidth = getItemWidth())
+        AttrList(attrs = skillCoeList, itemWidth = getItemWidth(), fixColumns = 1)
         CommonSpacer()
     }
 }

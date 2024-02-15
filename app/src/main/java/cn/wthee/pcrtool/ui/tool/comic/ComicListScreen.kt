@@ -3,12 +3,8 @@ package cn.wthee.pcrtool.ui.tool.comic
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -18,11 +14,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,14 +23,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,14 +36,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableFab
-import cn.wthee.pcrtool.ui.components.MainContentText
-import cn.wthee.pcrtool.ui.components.MainIcon
+import cn.wthee.pcrtool.ui.components.MainInputText
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.RATIO_COMIC
 import cn.wthee.pcrtool.ui.components.SelectText
 import cn.wthee.pcrtool.ui.components.Subtitle1
@@ -65,7 +50,6 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.deleteSpace
 import kotlinx.coroutines.launch
 
 /**
@@ -116,22 +100,16 @@ fun ComicListScreen(
                 MainSmallFab(
                     iconType = MainIconType.COMIC,
                     text = count.toString(),
-                    extraContent = if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
-                        //加载提示
-                        {
-                            CircularProgressCompose()
+                    onClick = {
+                        scope.launch {
+                            try {
+                                pagerState.scrollToPage(0)
+                            } catch (_: Exception) {
+                            }
                         }
-                    } else {
-                        null
-                    }
-                ) {
-                    scope.launch {
-                        try {
-                            pagerState.scrollToPage(0)
-                        } catch (_: Exception) {
-                        }
-                    }
-                }
+                    },
+                    loading = lazyPagingItems.loadState.refresh == LoadState.Loading
+                )
             },
             mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
             onMainFabClick = {
@@ -148,13 +126,16 @@ fun ComicListScreen(
         ) {
             HorizontalPager(
                 modifier = Modifier.align(Alignment.Center),
-                state = pagerState
-            ) { pagerIndex ->
-                if (items[pagerIndex] == null) {
-                    MainText(text = "$pagerIndex")
-                } else {
-                    ComicItem(items[pagerIndex]!!)
+                state = pagerState,
+                key = {
+                    if (items.isEmpty()) {
+                        it
+                    } else {
+                        items[it]?.id ?: it
+                    }
                 }
+            ) { pagerIndex ->
+                items[pagerIndex]?.let { ComicItem(it) }
             }
         }
     }
@@ -238,7 +219,7 @@ private fun ComicIndexChange(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+@OptIn(
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -275,9 +256,6 @@ private fun ComicTocList(
     val input = remember {
         mutableStateOf("")
     }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    val isImeVisible = WindowInsets.isImeVisible
 
 
     Column {
@@ -297,71 +275,28 @@ private fun ComicTocList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(Dimen.mediumPadding),
-                    textAlign = TextAlign.Start
-                ) {
-                    changeSelect(index)
-                    changeDialog(false)
-                }
+                    textAlign = TextAlign.Start,
+                    onClick = {
+                        changeSelect(index)
+                        changeDialog(false)
+                    }
+                )
             }
         }
 
-        //region 输入框
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(Dimen.smallPadding)
-                .fillMaxWidth()
-                .imePadding(),
-            value = input.value,
-            placeholder = {
-                MainContentText(
-                    text = stringResource(id = R.string.comic_input_hint),
-                    color = MaterialTheme.colorScheme.outline
-                )
-            },
-            onValueChange = {
-                var filterStr = ""
-                it.deleteSpace.forEach { ch ->
-                    if (Regex("\\d").matches(ch.toString())) {
-                        filterStr += ch
-                    }
-                }
-                input.value = when {
-                    filterStr == "" -> ""
-                    filterStr.toInt() < 1 -> "1"
-                    filterStr.toInt() in 1..pageCount -> filterStr
-                    else -> pageCount.toString()
+        //目录输入框
+        MainInputText(
+            modifier = Modifier.padding(Dimen.smallPadding),
+            textState = input,
+            onDone = {
+                if (input.value != "") {
+                    changeSelect(pageCount - input.value.toInt())
+                    changeDialog(false)
                 }
             },
-            trailingIcon = {
-                if (isImeVisible) {
-                    MainIcon(
-                        data = MainIconType.OK, size = Dimen.fabIconSize
-                    ) {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        if (input.value != "") {
-                            changeSelect(pageCount - input.value.toInt())
-                        }
-                    }
-                }
-            },
-            shape = MaterialTheme.shapes.medium,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                    if (input.value != "") {
-                        changeSelect(pageCount - input.value.toInt())
-                    }
-                }
-            )
+            placeholder = stringResource(id = R.string.comic_input_hint),
+            hasImePadding = true
         )
-        // endregion
     }
 
 }

@@ -33,24 +33,6 @@ interface EnemyDao {
     suspend fun getEnemyAttr(enemyId: Int): EnemyParameterPro
 
     /**
-     * 获取公会战所有 Boss 信息，测试用
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            enemy_parameter.*,
-            unit_enemy_data.normal_atk_cast_time,
-            COALESCE(unit_enemy_data.comment, "") AS comment,
-            unit_enemy_data.prefab_id
-        FROM
-            enemy_parameter
-            LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
-        """
-    )
-    suspend fun getAllBossIds(): List<EnemyParameterPro>
-
-    /**
      * 获取多目标
      */
     @SkipQueryVerification

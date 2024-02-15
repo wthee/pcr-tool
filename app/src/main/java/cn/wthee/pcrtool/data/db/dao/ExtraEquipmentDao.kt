@@ -167,9 +167,9 @@ interface ExtraEquipmentDao {
             unit_ex_equipment_slot AS a
             LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
         WHERE
-            a.slot_category_1 = :category 
+            (a.slot_category_1 = :category 
             OR a.slot_category_2 = :category 
-            OR a.slot_category_3 = :category
+            OR a.slot_category_3 = :category) AND b.search_area_width > 0
         ORDER BY b.unit_name
     """
     )
@@ -325,29 +325,4 @@ interface ExtraEquipmentDao {
     )
     suspend fun getCharacterExtraEquipList(unitId: Int): List<CharacterExtraEquipData>
 
-    /**
-     * 获取所有装备技能id
-     */
-    @SkipQueryVerification
-    @Query(
-        """
-        SELECT
-            a.passive_skill_id_1 AS skill_id 
-        FROM
-            ex_equipment_data AS a 
-        WHERE
-            a.passive_skill_id_1 <> 0 
-        GROUP BY
-            a.passive_skill_id_1 UNION
-        SELECT
-            a.passive_skill_id_2 AS skill_id 
-        FROM
-            ex_equipment_data AS a 
-        WHERE
-            a.passive_skill_id_2 <> 0 
-        GROUP BY
-            a.passive_skill_id_2
-    """
-    )
-    suspend fun getAllEquipSkillIdList(): List<Int>
 }

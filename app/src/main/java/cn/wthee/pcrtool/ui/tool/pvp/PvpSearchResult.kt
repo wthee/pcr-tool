@@ -139,10 +139,11 @@ fun PvpSearchResult(
                     ) {
                         SubButton(
                             text = stringResource(id = R.string.pvp_research),
-                            modifier = Modifier.padding(top = Dimen.mediumPadding)
-                        ) {
-                            research()
-                        }
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            onClick = {
+                                research()
+                            }
+                        )
                     }
                 }
 
@@ -182,6 +183,8 @@ fun PvpSearchResult(
 
 /**
  * 查询结果 Item
+ *
+ * @param i 序号
  */
 @Composable
 private fun PvpResultItem(
@@ -216,32 +219,40 @@ private fun PvpResultItem(
             //收藏
             if (!placeholder) {
                 MainIcon(
-                    data = if (liked) MainIconType.FAVORITE_FILL else MainIconType.FAVORITE_LINE,
-                    size = Dimen.fabIconSize
-                ) {
-                    scope.launch {
-                        if (liked) {
-                            //已收藏，取消收藏
-                            delete(item.atk, item.def)
-                        } else {
-                            //未收藏，添加收藏
-                            insert(
-                                PvpFavoriteData(
-                                    item.id,
-                                    item.atk,
-                                    item.def,
-                                    getToday(true),
-                                    MainActivity.regionType.value
+                    data = if (liked) {
+                        MainIconType.FAVORITE_FILL
+                    } else {
+                        MainIconType.FAVORITE_LINE
+                    },
+                    size = Dimen.fabIconSize,
+                    onClick = {
+                        scope.launch {
+                            if (liked) {
+                                //已收藏，取消收藏
+                                delete(item.atk, item.def)
+                            } else {
+                                //未收藏，添加收藏
+                                insert(
+                                    PvpFavoriteData(
+                                        item.id,
+                                        item.atk,
+                                        item.def,
+                                        getToday(true),
+                                        MainActivity.regionType.value
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
+                )
             }
         }
 
         MainCard(
-            modifier = Modifier.placeholder(visible = placeholder)
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                shape = MaterialTheme.shapes.medium
+            )
         ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
@@ -274,7 +285,7 @@ private fun PvpResultItem(
             //进攻
             PvpUnitIconLine(
                 modifier = Modifier.padding(bottom = mediumPadding),
-                ids = item.getIdList(0),
+                ids = if (placeholder) arrayListOf(-1) else item.getIdList(0),
                 floatWindow = floatWindow
             ) { }
         }

@@ -117,6 +117,7 @@ enum class ToolMenuType(val id: Int) {
     ALL_QUEST(222),
     UNIQUE_EQUIP(223),
     LOAD_COMIC(224),
+    TALENT_LIST(225),
     ;
 
 
@@ -286,10 +287,10 @@ enum class SkillIndexType(val index: Int) {
 /**
  * 区服
  */
-enum class RegionType(val value: Int) {
-    CN(2),
-    TW(3),
-    JP(4),
+enum class RegionType(val value: Int, val stringId: Int) {
+    CN(2, R.string.db_cn),
+    TW(3, R.string.db_tw),
+    JP(4, R.string.db_jp),
     ;
 
     companion object {
@@ -410,6 +411,7 @@ enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
     GREEN(7, colorGreen, R.string.color_green),
     ORANGE(8, colorOrange, R.string.color_orange),
     CYAN(9, colorCyan, R.string.color_cyan),
+    PINK(10, colorPink, R.string.color_purple),
     ;
 
     companion object {
@@ -458,14 +460,32 @@ enum class ExtraEquipLevelColor(val type: Int, val color: Color, val typeName: S
 /**
  * 攻击类型
  */
-enum class AtkType(val type: Int, val color: Color, val typeNameId: Int) {
-    UNKNOWN(0, colorGray, R.string.unknown),
-    PHYSICAL(1, colorGold, R.string.physical),
-    MAGIC(2, colorPurple, R.string.magic)
+enum class AtkType(val type: Int, val color: Color, val typeNameId: Int, val iconId: Int) {
+    UNKNOWN(0, colorGray, R.string.unknown, R.drawable.unknown_item),
+    PHYSICAL(1, colorGold, R.string.physical, R.drawable.ic_atk_type_1),
+    MAGIC(2, colorPurple, R.string.magic, R.drawable.ic_atk_type_2)
     ;
 
     companion object {
         fun getByType(type: Int) = AtkType.entries
+            .find { it.type == type } ?: UNKNOWN
+    }
+}
+
+/**
+ * 天赋类型
+ */
+enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
+    UNKNOWN(0, colorGray, R.string.none),
+    FIRE(1, colorRed, R.string.fire),
+    WATER(2, colorCyan, R.string.water),
+    WIND(3, colorGreen, R.string.wind),
+    LIGHT(4, colorGold, R.string.light),
+    DARK(5, colorPurple, R.string.dark),
+    ;
+
+    companion object {
+        fun getByType(type: Int) = TalentType.entries
             .find { it.type == type } ?: UNKNOWN
     }
 }

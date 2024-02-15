@@ -1,9 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.leadertier
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,9 +27,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.LeaderTierItem
 import cn.wthee.pcrtool.navigation.navigateUp
-import cn.wthee.pcrtool.ui.LoadingState
+import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.CharacterTagRow
-import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.CommonGroupTitle
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.ExpandableHeader
@@ -37,12 +38,13 @@ import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
-import cn.wthee.pcrtool.ui.components.VerticalStaggeredGrid
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorGray
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.ui.tool.leaderboard.LeaderCharacterIcon
 import cn.wthee.pcrtool.ui.tool.leaderboard.getLeaderUnknownTip
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -74,26 +76,20 @@ fun LeaderTierScreen(
             MainSmallFab(
                 iconType = MainIconType.LEADER_TIER,
                 text = uiState.size.toString(),
-                extraContent = if (uiState.loadingState == LoadingState.Loading) {
-                    //加载提示
-                    {
-                        CircularProgressCompose()
-                    }
-                } else {
-                    null
-                }
-            ) {
-                scope.launch {
-                    try {
-                        scrollState.scrollToItem(0)
-                    } catch (_: Exception) {
+                loading = uiState.loadState == LoadState.Loading,
+                onClick = {
+                    scope.launch {
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (_: Exception) {
+                        }
                     }
                 }
-            }
+            )
 
         },
         secondLineFab = {
-            if (uiState.loadingState == LoadingState.Success) {
+            if (uiState.loadState == LoadState.Success) {
                 //切换类型
                 SelectTypeFab(
                     icon = MainIconType.CLAN_SECTION,
@@ -130,16 +126,31 @@ fun LeaderTierScreen(
             )
 
             StateBox(
-                stateType = uiState.loadingState,
+                stateType = uiState.loadState,
                 loadingContent = {
-                    VerticalStaggeredGrid(
-                        itemWidth = Dimen.iconSize * 4,
-                        contentPadding = Dimen.mediumPadding,
-                    ) {
-                        for (i in 0..10) {
+                    Column {
+                        CommonGroupTitle(
+                            titleStart = "",
+                            titleCenter = "",
+                            titleEnd = "",
+                            modifier = Modifier
+                                .padding(
+                                    start = Dimen.mediumPadding,
+                                    end = Dimen.mediumPadding,
+                                    bottom = Dimen.mediumPadding,
+                                )
+                                .placeholder(true)
+                        )
+
+                        VerticalGridList(
+                            itemCount = 10,
+                            itemWidth = Dimen.iconSize * 4,
+                            contentPadding = Dimen.mediumPadding,
+                        ) {
                             LeaderItem(LeaderTierItem(), null, toCharacterDetail)
                         }
                     }
+
                 }
             ) {
                 LeaderTierContent(
@@ -164,16 +175,17 @@ private fun LeaderTierContent(
     LazyColumn(
         state = scrollState
     ) {
-        groupList.forEach {
+        groupList.forEach { group ->
             stickyHeader {
+
                 //分组标题
                 CommonGroupTitle(
                     titleStart = stringResource(
                         id = R.string.leader_tier_d,
-                        it.tier
+                        group.tier
                     ),
-                    titleCenter = it.desc,
-                    titleEnd = it.leaderList.size.toString(),
+                    titleCenter = group.desc,
+                    titleEnd = group.leaderList.size.toString(),
                     modifier = Modifier.padding(
                         start = Dimen.mediumPadding,
                         end = Dimen.mediumPadding,
@@ -183,21 +195,23 @@ private fun LeaderTierContent(
             }
             item {
                 //分组内容
-                VerticalStaggeredGrid(
+                VerticalGridList(
+                    itemCount = group.leaderList.size,
                     itemWidth = Dimen.iconSize * 4,
                     contentPadding = Dimen.mediumPadding,
+                    minRowHeight = false,
+                    verticalAlignment = Alignment.Top
                 ) {
-                    it.leaderList.forEach { leader ->
-                        //获取角色名
-                        val flow = remember(leader.unitId) {
-                            leaderTierViewModel.getCharacterBasicInfo(
-                                leader.unitId ?: 0
-                            )
-                        }
-                        val basicInfo by flow.collectAsState(initial = null)
-
-                        LeaderItem(leader, basicInfo, toCharacterDetail)
+                    val leader = group.leaderList[it]
+                    //获取角色名
+                    val flow = remember(leader.unitId) {
+                        leaderTierViewModel.getCharacterBasicInfo(
+                            leader.unitId ?: 0
+                        )
                     }
+                    val basicInfo by flow.collectAsState(initial = null)
+
+                    LeaderItem(leader, basicInfo, toCharacterDetail)
                 }
             }
         }
@@ -229,50 +243,50 @@ private fun LeaderItem(
     val tipText = getLeaderUnknownTip(hasUnitId)
 
 
-    Row {
+    Row(
+        modifier = Modifier
+            .fillMaxHeight()
+            .animateContentSize(defaultTween())
+    ) {
         //图标
         LeaderCharacterIcon(
-            hasUnitId,
-            placeholder,
-            leader.unitId,
-            leader.url,
-            unknown,
-            tipText,
-            toCharacterDetail
+            hasUnitId = hasUnitId,
+            placeholder = placeholder,
+            unitId = leader.unitId,
+            url = leader.url,
+            unknown = unknown,
+            tipText = tipText,
+            toCharacterDetail = toCharacterDetail
         )
 
         MainCard(
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
-                .placeholder(placeholder)
-                .heightIn(min = Dimen.cardHeight),
+                .placeholder(placeholder),
             onClick = {
                 if (!unknown) {
                     leader.unitId?.let { toCharacterDetail(it) }
                 } else {
                     ToastUtil.short(tipText)
                 }
-            }
+            },
         ) {
-            Row(
+            //名称
+            MainContentText(
                 modifier = Modifier.padding(
                     horizontal = Dimen.mediumPadding,
                     vertical = Dimen.smallPadding
-                )
-            ) {
-                //名称
-                MainContentText(
-                    text = if (hasUnitId && !unknown) {
-                        basicInfo!!.name
-                    } else {
-                        leader.name
-                    },
-                    textAlign = TextAlign.Start,
-                    color = textColor,
-                    maxLines = 1
-                )
-
-            }
+                ),
+                text = if (hasUnitId && !unknown) {
+                    basicInfo!!.name
+                } else {
+                    leader.name
+                },
+                textAlign = TextAlign.Start,
+                color = textColor,
+                maxLines = 1
+            )
+            //标签
             CharacterTagRow(
                 modifier = Modifier
                     .padding(top = Dimen.mediumPadding, bottom = Dimen.smallPadding),
@@ -290,17 +304,37 @@ private fun LeaderItem(
 @Composable
 private fun LeaderItemPreview() {
     PreviewLayout {
-        LeaderItem(
-            leader = LeaderTierItem(
-                name = stringResource(id = R.string.debug_name),
+        VerticalGridList(
+            itemCount = 2,
+            itemWidth = Dimen.iconSize * 4,
+            fixColumns = 2,
+            contentPadding = Dimen.mediumPadding,
+            minRowHeight = false,
+            verticalAlignment = Alignment.Top
+        ) {
+            if (it == 0) {
+                LeaderItem(
+                    leader = LeaderTierItem(
+                        name = stringResource(id = R.string.debug_name),
+                    ),
+                    basicInfo = CharacterInfo(
+                        id = 1,
+                        name = stringResource(id = R.string.debug_name),
+                        position = 100,
+                        uniqueEquipType = 2
+                    )
+                ) {}
+            } else {
+                LeaderItem(
+                    leader = LeaderTierItem(
+                        name = stringResource(id = R.string.debug_name),
+                    ),
+                    basicInfo = CharacterInfo(
+                        name = stringResource(id = R.string.debug_name)
+                    )
+                ) {}
+            }
+        }
 
-                ),
-            basicInfo = CharacterInfo(
-                id = 1,
-                name = stringResource(id = R.string.debug_name),
-                position = 100,
-                uniqueEquipType = 2
-            )
-        ) {}
     }
 }
