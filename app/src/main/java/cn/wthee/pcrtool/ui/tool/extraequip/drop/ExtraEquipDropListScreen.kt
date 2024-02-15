@@ -69,11 +69,7 @@ private fun ExtraEquipDropListContent(
         dropList.forEach {
             tabs.add(
                 TabData(
-                    tab = stringResource(
-                        id = R.string.extra_area_quest,
-                        it.getAreaOrder(),
-                        it.getQuestName()
-                    )
+                    tab = it.getTitle()
                 )
             )
         }

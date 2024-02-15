@@ -167,9 +167,9 @@ interface ExtraEquipmentDao {
             unit_ex_equipment_slot AS a
             LEFT JOIN unit_data AS b ON a.unit_id = b.unit_id 
         WHERE
-            a.slot_category_1 = :category 
+            (a.slot_category_1 = :category 
             OR a.slot_category_2 = :category 
-            OR a.slot_category_3 = :category
+            OR a.slot_category_3 = :category) AND b.search_area_width > 0
         ORDER BY b.unit_name
     """
     )

@@ -157,7 +157,7 @@ fun TravelQuestHeader(
         //标题
         if (showTitle) {
             Subtitle1(
-                text = questData.getQuestName(),
+                text = questData.getTitle(),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = Dimen.smallPadding)
             )
