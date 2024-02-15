@@ -73,7 +73,7 @@ interface EquipmentDao {
         FROM
             equipment_data AS a
         WHERE a.equipment_name like '%' || :name || '%'
-            AND a.equipment_category <> 0
+            AND a.require_level <> 0
             AND 1 = CASE
                 WHEN  0 = :colorType  THEN 1 
                 WHEN  a.promotion_level = :colorType  THEN 1 
@@ -106,7 +106,7 @@ interface EquipmentDao {
             equipment_data AS a
         LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
-        WHERE a.equipment_category <> 0 AND (a.craft_flg = 1 OR (a.craft_flg = 0 AND a.promotion_level = 1))
+        WHERE a.require_level <> 0 AND (a.craft_flg = 1 OR (a.craft_flg = 0 AND a.promotion_level = 1))
     """
     )
     suspend fun getCount(): Int
@@ -431,7 +431,7 @@ interface EquipmentDao {
         FROM
             equipment_data 
         WHERE
-            equipment_category <> 0
+            require_level <> 0
     """
     )
     suspend fun getEquipColorNum(): Int
