@@ -688,11 +688,16 @@ interface UnitDao {
         """
         SELECT
             setting_id,
-            unit_id,
-            talent_id
+            unit_talent.unit_id,
+            talent_id,
+            search_area_width,
+            atk_type
         FROM
             unit_talent
-        WHERE 0 = :unitId OR unit_id = :unitId
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_talent.unit_id
+        WHERE (0 = :unitId OR unit_talent.unit_id = :unitId) AND unit_talent.unit_id < $maxUnitId
+        AND search_area_width > 0
+        ORDER BY search_area_width, atk_type
         """
     )
     suspend fun getTalentIdList(unitId: Int): List<TalentData>

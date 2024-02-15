@@ -100,5 +100,6 @@ object NavRoute {
     const val STORY_ID = "stroyId"
     const val EVENT_ID = "eventId"
     const val ORIGINAL_EVENT_ID = "originalEventId"
+    const val TALENT_LIST = "talentList"
 
 }

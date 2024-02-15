@@ -251,6 +251,7 @@ fun getAction(
             ToolMenuType.ALL_QUEST -> actions.toAllQuest()
             ToolMenuType.UNIQUE_EQUIP -> actions.toUniqueEquipList()
             ToolMenuType.LOAD_COMIC -> actions.toLoadComicList()
+            ToolMenuType.TALENT_LIST -> actions.toUnitTalentList()
         }
     }
 
@@ -312,6 +313,11 @@ fun getToolMenuData(toolMenuType: ToolMenuType): ToolMenuData {
         ToolMenuType.LOAD_COMIC -> ToolMenuData(
             R.string.tool_load_comic,
             MainIconType.LOAD_COMIC
+        )
+
+        ToolMenuType.TALENT_LIST -> ToolMenuData(
+            R.string.unit_talent,
+            MainIconType.TALENT
         )
     }
     //设置模块类别

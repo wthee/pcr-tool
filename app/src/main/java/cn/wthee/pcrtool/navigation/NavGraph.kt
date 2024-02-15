@@ -71,6 +71,7 @@ import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
 import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
+import cn.wthee.pcrtool.ui.tool.talent.UnitTalentListScreen
 import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import cn.wthee.pcrtool.ui.tool.website.WebsiteScreen
@@ -760,6 +761,15 @@ fun NavGraph(
             ) {
                 LoadComicScreen()
             }
+
+            //角色天赋列表
+            composable(
+                route = NavRoute.TALENT_LIST
+            ) {
+                UnitTalentListScreen(
+                    toCharacterDetail = actions.toCharacterDetail
+                )
+            }
         }
     }
 }
@@ -1154,4 +1164,11 @@ class NavActions(navController: NavHostController) {
         navController.navigate(NavRoute.LOAD_COMIC_LIST)
     }
 
+
+    /**
+     * 角色天赋列表
+     */
+    val toUnitTalentList = {
+        navController.navigate(NavRoute.TALENT_LIST)
+    }
 }

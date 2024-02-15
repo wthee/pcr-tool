@@ -101,6 +101,7 @@ fun AllToolMenuScreen(
     dataList.addItem(ToolMenuType.EXTRA_EQUIP)
     dataList.addItem(ToolMenuType.TRAVEL_AREA)
     dataList.addItem(ToolMenuType.UNIQUE_EQUIP)
+    dataList.addItem(ToolMenuType.TALENT_LIST)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询

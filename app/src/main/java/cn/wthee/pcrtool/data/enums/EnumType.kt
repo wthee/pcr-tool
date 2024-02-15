@@ -117,6 +117,7 @@ enum class ToolMenuType(val id: Int) {
     ALL_QUEST(222),
     UNIQUE_EQUIP(223),
     LOAD_COMIC(224),
+    TALENT_LIST(225),
     ;
 
 
