@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -63,6 +64,7 @@ import cn.wthee.pcrtool.data.enums.AtkType
 import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.navigation.navigateUp
 import cn.wthee.pcrtool.ui.LoadState
@@ -622,55 +624,83 @@ fun CharacterTagRow(
     FlowRow(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         if (!unknown) {
+            val limitType = CharacterLimitType.getByType(basicInfo!!.limitType)
 
-            //专用装备
-            if (showUniqueEquipType && basicInfo!!.uniqueEquipType != 0) {
-                MainIcon(
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+                //专用装备
+                if (showUniqueEquipType && basicInfo.uniqueEquipType != 0) {
+                    MainIcon(
+                        modifier = Modifier
+                            .padding(horizontal = Dimen.exSmallPadding)
+                            .align(Alignment.CenterVertically),
+                        data = if (basicInfo.uniqueEquipType == 1) {
+                            R.drawable.ic_unique_equip
+                        } else {
+                            R.drawable.ic_unique_equip2
+                        },
+                        size = Dimen.smallIconSize,
+                    )
+                }
+
+                //位置
+                CharacterPositionTag(
                     modifier = Modifier
-                        .padding(
-                            start = Dimen.smallPadding
-                        )
+                        .padding(Dimen.exSmallPadding)
                         .align(Alignment.CenterVertically),
-                    data = if (basicInfo.uniqueEquipType == 1) {
-                        R.drawable.ic_unique_equip
-                    } else {
-                        R.drawable.ic_unique_equip2
-                    },
-                    size = Dimen.smallIconSize,
+                    position = basicInfo.position
                 )
             }
 
-            //位置
-            CharacterPositionTag(
-                modifier = Modifier
-                    .padding(
-                        start = Dimen.smallPadding
-                    )
-                    .align(Alignment.CenterVertically),
-                position = basicInfo!!.position
-            )
 
-            val limitType = CharacterLimitType.getByType(basicInfo.limitType)
-            Row(modifier = Modifier.align(Alignment.CenterVertically)) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+
+                //天赋类型
+                val talentType = TalentType.getByType(basicInfo.talentId)
+                //攻击
+                val atkType = AtkType.getByType(basicInfo.atkType)
+
+                CharacterTag(
+                    modifier = Modifier
+                        .padding(horizontal = Dimen.exSmallPadding)
+                        .align(Alignment.CenterVertically),
+                    text = stringResource(
+                        id = if (talentType != TalentType.UNKNOWN) {
+                            talentType.typeNameId
+                        } else {
+                            atkType.typeNameId
+                        }
+                    ),
+                    backgroundColor = if (talentType != TalentType.UNKNOWN) {
+                        talentType.color
+                    } else {
+                        atkType.color
+                    }
+                ) {
+                    MainIcon(
+                        modifier = Modifier.offset(x = -Dimen.smallPadding),
+                        data = atkType.iconId,
+                        size = Dimen.smallIconSize,
+                    )
+                }
+
                 //获取方式
                 CharacterTag(
-                    modifier = Modifier.padding(Dimen.smallPadding),
+                    modifier = Modifier
+                        .padding(horizontal = Dimen.exSmallPadding)
+                        .align(Alignment.CenterVertically),
                     text = stringResource(id = limitType.typeNameId),
                     backgroundColor = limitType.color
                 )
-                //攻击
-                val atkType = AtkType.getByType(basicInfo.atkType)
-                CharacterTag(
-                    modifier = Modifier.padding(
-                        bottom = Dimen.smallPadding,
-                        top = Dimen.smallPadding
-                    ),
-                    text = stringResource(id = atkType.typeNameId),
-                    backgroundColor = atkType.color
-                )
+
             }
 
             //日期
@@ -729,16 +759,16 @@ fun CharacterPositionTag(
     modifier: Modifier = Modifier,
     position: Int
 ) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+    //位置
+    CharacterTag(
+        modifier = modifier,
+        text = position.toString(),
+        backgroundColor = PositionType.getPositionType(position).color
+    ) {
         //位置图标
         PositionIcon(
-            position = position
-        )
-        //位置
-        CharacterTag(
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-            text = position.toString(),
-            backgroundColor = PositionType.getPositionType(position).color
+            position = position,
+            modifier = Modifier.offset(x = -Dimen.smallPadding)
         )
     }
 }
@@ -759,28 +789,26 @@ fun CharacterTag(
     endAlignment: Boolean = false,
     leadingContent: @Composable (() -> Unit)? = null
 ) {
-    Box(
+    Row(
         modifier = modifier
             .clip(CircleShape)
             .background(color = backgroundColor, shape = CircleShape)
             .padding(horizontal = Dimen.mediumPadding),
-        contentAlignment = if (endAlignment) Alignment.CenterEnd else Alignment.Center
+        horizontalArrangement = if (endAlignment) Arrangement.End else Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            leadingContent?.let {
-                it()
-                Spacer(modifier = Modifier.padding(start = Dimen.smallPadding))
-            }
-
-            Text(
-                text = text,
-                color = textColor,
-                style = style,
-                fontWeight = fontWeight,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        leadingContent?.let {
+            it()
         }
+
+        Text(
+            text = text,
+            color = textColor,
+            style = style,
+            fontWeight = fontWeight,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -912,7 +940,8 @@ private fun CharacterTagPreview() {
                 position = 123,
                 atkType = 1,
                 limitType = 2,
-                uniqueEquipType = 2
+                uniqueEquipType = 2,
+                talentId = 1
             ),
             tipText = text,
             endText = text,

@@ -29,7 +29,9 @@ data class CharacterListFilterUiState(
     val guildList: List<GuildData> = emptyList(),
     // 种族信息
     val raceList: List<String> = emptyList(),
-    val filter: FilterCharacter = FilterCharacter()
+    val filter: FilterCharacter = FilterCharacter(),
+    // 是否有天赋类型
+    val hasTalent: Boolean = false
 )
 
 /**
@@ -85,9 +87,11 @@ class CharacterListFilterViewModel @Inject constructor(
     private fun initFilter() {
         viewModelScope.launch {
             val initFilter = filter ?: FilterCharacter()
+            val hasTalent = unitRepository.getTalentIdList(100101).isNotEmpty()
             _uiState.update {
                 it.copy(
-                    filter = initFilter
+                    filter = initFilter,
+                    hasTalent = hasTalent
                 )
             }
         }

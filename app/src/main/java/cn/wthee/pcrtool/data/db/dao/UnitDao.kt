@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.data.db.view.NoGuildMemberInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SummonData
+import cn.wthee.pcrtool.data.db.view.TalentData
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.UnitPromotionStatus
@@ -537,7 +538,17 @@ interface UnitDao {
                 a.chara_id_7,
                 a.chara_id_8,
                 a.chara_id_9,
-                a.chara_id_10 
+                a.chara_id_10,
+                a.chara_id_11,
+                a.chara_id_12,
+                a.chara_id_13,
+                a.chara_id_14,
+                a.chara_id_15,
+                a.chara_id_16,
+                a.chara_id_17,
+                a.chara_id_18,
+                a.chara_id_19,
+                a.chara_id_20 
             )
             LEFT JOIN story_detail AS c ON a.story_id = c.story_id
         WHERE b.unit_id = :unitId
@@ -667,4 +678,22 @@ interface UnitDao {
     """
     )
     suspend fun getAtkCastTime(unitId: Int): Double?
+
+    /**
+     * 获取所有角色天赋id
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            setting_id,
+            unit_id,
+            talent_id
+        FROM
+            unit_talent
+        WHERE 0 = :unitId OR unit_id = :unitId
+        """
+    )
+    suspend fun getTalentIdList(unitId: Int): List<TalentData>
 }

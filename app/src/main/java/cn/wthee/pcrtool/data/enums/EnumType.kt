@@ -458,14 +458,32 @@ enum class ExtraEquipLevelColor(val type: Int, val color: Color, val typeName: S
 /**
  * 攻击类型
  */
-enum class AtkType(val type: Int, val color: Color, val typeNameId: Int) {
-    UNKNOWN(0, colorGray, R.string.unknown),
-    PHYSICAL(1, colorGold, R.string.physical),
-    MAGIC(2, colorPurple, R.string.magic)
+enum class AtkType(val type: Int, val color: Color, val typeNameId: Int, val iconId: Int) {
+    UNKNOWN(0, colorGray, R.string.unknown, R.drawable.unknown_item),
+    PHYSICAL(1, colorGold, R.string.physical, R.drawable.ic_atk_type_1),
+    MAGIC(2, colorPurple, R.string.magic, R.drawable.ic_atk_type_2)
     ;
 
     companion object {
         fun getByType(type: Int) = AtkType.entries
+            .find { it.type == type } ?: UNKNOWN
+    }
+}
+
+/**
+ * 天赋类型
+ */
+enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
+    UNKNOWN(0, colorGray, R.string.none),
+    FIRE(1, colorRed, R.string.fire),
+    WATER(2, colorCyan, R.string.water),
+    WIND(3, colorGreen, R.string.wind),
+    LIGHT(4, colorGold, R.string.light),
+    DARK(5, colorPurple, R.string.dark),
+    ;
+
+    companion object {
+        fun getByType(type: Int) = TalentType.entries
             .find { it.type == type } ?: UNKNOWN
     }
 }

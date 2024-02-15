@@ -23,6 +23,7 @@ import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -62,6 +63,7 @@ fun CharacterListFilterScreen(
             filter = uiState.filter,
             raceList = uiState.raceList,
             guildList = uiState.guildList,
+            hasTalent = uiState.hasTalent,
             updateFilter = characterListFilterViewModel::updateFilter
         )
     }
@@ -72,6 +74,7 @@ private fun CharacterListFilterContent(
     filter: FilterCharacter,
     raceList: List<String>,
     guildList: List<GuildData>,
+    hasTalent: Boolean,
     updateFilter: (FilterCharacter) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -115,6 +118,12 @@ private fun CharacterListFilterContent(
     }
     filter.atk = atkIndex.intValue
 
+    //天赋类型
+    val talentIndex = remember {
+        mutableIntStateOf(filter.talentType)
+    }
+    filter.talentType = talentIndex.intValue
+
     //公会
     val guildIndex = remember {
         mutableIntStateOf(filter.guild)
@@ -144,7 +153,7 @@ private fun CharacterListFilterContent(
     LaunchedEffect(
         textState.value, sortTypeIndex.intValue, sortAscIndex.intValue, favoriteIndex.intValue,
         r6Index.intValue, positionIndex.intValue, atkIndex.intValue, guildIndex.intValue,
-        raceIndex.intValue, typeIndex.intValue, uniqueEquipTypeIndex.intValue
+        raceIndex.intValue, typeIndex.intValue, uniqueEquipTypeIndex.intValue, talentIndex.intValue
     ) {
         updateFilter(filter)
     }
@@ -293,6 +302,32 @@ private fun CharacterListFilterContent(
             selectIndex = positionIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        //天赋类型
+        if (hasTalent) {
+            MainText(
+                text = stringResource(id = R.string.talent_type),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val talentChipData = arrayListOf(
+                ChipData(stringResource(id = R.string.all))
+            )
+            TalentType.entries.forEachIndexed { index, talentType ->
+                if (index != 0) {
+                    talentChipData.add(
+                        ChipData(
+                            text = stringResource(id = talentType.typeNameId),
+                            color = talentType.color
+                        )
+                    )
+                }
+            }
+            ChipGroup(
+                items = talentChipData,
+                selectIndex = talentIndex,
+                modifier = Modifier.padding(Dimen.smallPadding)
+            )
+        }
+
         //攻击类型
         MainText(
             text = stringResource(id = R.string.atk_type),
@@ -388,6 +423,7 @@ private fun CharacterListFilterContentPreview() {
             updateFilter = {},
             guildList = emptyList(),
             raceList = emptyList(),
+            hasTalent = true
         )
     }
 }

@@ -10,7 +10,7 @@
 | chara_identity                | 角色身份            | 同一角色，不同换皮      |
 | chara_story_status            | 角色剧情故事属性        |                |
 | clan_battle_2_map_data        | 公会战各阶段基本信息      |                |
-| clan_battle_schedule          | 公会战日程信          |                |
+| clan_battle_schedule          | 公会战日程           |                |
 | colosseum_schedule_data       | 斗技场日程           |                |
 | daily_mission_data            | 每日任务            |                |
 | enemy_m_parts                 | 敌人多部位信息         |                |
@@ -67,6 +67,7 @@
 | unit_skill_data               | 单位（角色、敌人）技能关联   |                |
 | unit_skill_data_rf            | 单位（角色）重构技能      | tp、回避等技能超过一定等级 |
 | unit_status_coefficient       | 战力系数            |                |
+| unit_talent                   | 角色天赋            | 火水风光暗          |
 | unit_unique_equip             | 角色专用装备          | 日、台已废弃         |
 | unit_unique_equipment         | 角色专用装备          |                |
 | wave_group_data               | 战斗波次            |                |

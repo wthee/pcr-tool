@@ -117,8 +117,15 @@
     <string name="position_1">中卫</string>
     <string name="position_0">前卫</string>
     <string name="atk_type">攻击类型</string>
+    <string name="talent_type">天赋类型</string>
     <string name="physical">物理</string>
     <string name="magic">魔法</string>
+    <string name="element_type">属性</string>
+    <string name="fire">火</string>
+    <string name="water">水</string>
+    <string name="wind">风</string>
+    <string name="light">光</string>
+    <string name="dark">暗</string>
     <string name="unknown">\?</string>
     <string name="all">全部</string>
     <string name="title_favorite">收藏</string>
@@ -385,7 +392,6 @@
     <string name="travel_time">所需时间</string>
     <string name="travel_time_decrease_limit">缩减时间</string>
     <string name="ex_equip_drop_odd">%.2f%%</string>
-    <string name="extra_area_quest">区域%d：%s</string>
 
 
     <!--技能相关-->
