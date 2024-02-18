@@ -47,6 +47,9 @@ class ImageRequestHelper {
         const val ICON_EXTRA_EQUIPMENT_CATEGORY = "icon/ex_equipment/category/"
         const val ICON_EXTRA_EQUIPMENT_TRAVEL_MAP = "icon/ex_equipment/map/"
 
+        //道具
+        const val ICON_ITEM = "icon/item/"
+
         //角色图标
         const val ICON_UNIT = "icon/unit/"
 

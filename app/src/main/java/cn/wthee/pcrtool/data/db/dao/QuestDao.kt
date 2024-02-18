@@ -6,6 +6,8 @@ import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 
+const val minEquipId = 100000
+
 /**
  * 主线地图 DAO
  */
@@ -44,7 +46,8 @@ interface QuestDao {
             FROM 
                 quest_data a 
             LEFT JOIN wave_group_data b ON b.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3 ) 
-            LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 ) AND c.reward_id_1 > 100000  
+            LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 )
+            AND (c.reward_id_1 > $minEquipId  OR c.reward_id_1 LIKE '250%')
             WHERE 
                 a.quest_id < 18000000
             GROUP BY 

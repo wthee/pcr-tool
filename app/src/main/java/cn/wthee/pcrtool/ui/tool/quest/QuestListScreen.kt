@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.dao.minEquipId
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
@@ -343,11 +344,11 @@ fun QuestList(
             }
         ) {
             AreaItem(
-                selectedId,
-                it.getAllOdd(),
-                it.questName,
-                searchEquipIdList,
-                color
+                selectedId = selectedId,
+                odds = it.getAllOdd(),
+                num = it.questName,
+                searchEquipIdList = searchEquipIdList,
+                color = color
             )
         }
         item {
@@ -435,7 +436,13 @@ private fun EquipWithOddCompose(
         Box(contentAlignment = Alignment.Center) {
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, oddData.equipId)
+                    .getUrl(
+                        if (oddData.equipId > minEquipId) {
+                            ImageRequestHelper.ICON_EQUIPMENT
+                        } else {
+                            ImageRequestHelper.ICON_ITEM
+                        }, oddData.equipId
+                    )
             )
             if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd == 0) {
                 SelectText(
