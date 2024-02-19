@@ -108,11 +108,10 @@ class DatabaseDownloadWorker(
             //关闭数据库
             AppBasicDatabase.close()
             //删除旧的wal
-            FileUtil.apply {
-                delete(getDatabaseWalPath(RegionType.CN))
-                delete(getDatabaseWalPath(RegionType.TW))
-                delete(getDatabaseWalPath(RegionType.JP))
-            }
+//            FileUtil.apply {
+//                delete(getDatabaseWalPath(RegionType.getByValue(region)))
+//                delete(getDatabaseShmPath(RegionType.getByValue(region)))
+//            }
             //解压
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
