@@ -694,7 +694,8 @@ interface UnitDao {
             atk_type
         FROM
             unit_talent
-            LEFT JOIN unit_data ON unit_data.unit_id = unit_talent.unit_id
+            LEFT JOIN unit_profile ON unit_profile.unit_id = unit_talent.unit_id
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
         WHERE (0 = :unitId OR unit_talent.unit_id = :unitId) AND unit_talent.unit_id < $maxUnitId
         AND search_area_width > 0
         ORDER BY search_area_width, atk_type

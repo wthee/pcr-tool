@@ -176,6 +176,7 @@ fun GridIconList(
 
 /**
  * 角色、装备图标
+ * @param id 0，1，2显示位置图标
  */
 @Composable
 fun IconItem(
@@ -216,13 +217,23 @@ fun IconItem(
     ) {
         MainIcon(
             modifier = Modifier.placeholder(placeholder),
-            data = url,
-            onClick = if (onClickItem != null) {
+            data = when (id) {
+                0 -> R.drawable.ic_position_0
+                1 -> R.drawable.ic_position_1
+                2 -> R.drawable.ic_position_2
+                else -> url
+            },
+            onClick = if (onClickItem != null && id > 2) {
                 {
                     onClickItem(detailId ?: mId)
                 }
             } else {
                 null
+            },
+            size = if (id > 2) {
+                Dimen.iconSize
+            } else {
+                Dimen.smallIconSize
             }
         )
 

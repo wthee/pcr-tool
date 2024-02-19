@@ -26,8 +26,10 @@ import cn.wthee.pcrtool.data.db.view.TalentData
 import cn.wthee.pcrtool.data.enums.AtkType
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.ui.components.CenterTipText
+import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.GridIconList
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
@@ -155,51 +157,83 @@ private fun UnitTalentContent(
                     .fillMaxWidth()
                     .verticalScroll(scrollStateList[pagerState.currentPage])
             ) {
-                val atkTypeList1 =
-                    list.filter { it.atkType == AtkType.PHYSICAL.type }.map { it.unitId }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        top = Dimen.mediumPadding
-                    )
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.physical))
-                    Spacer(modifier = Modifier.weight(1f))
-                    MainText(text = atkTypeList1.size.toString())
-                }
-
-                GridIconList(
-                    idList = atkTypeList1,
-                    iconResourceType = IconResourceType.CHARACTER,
-                    onClickItem = toCharacterDetail
+                //物理
+                UnitAtkTypeList(
+                    list = list,
+                    atkType = AtkType.PHYSICAL,
+                    toCharacterDetail = toCharacterDetail
                 )
-
-                val atkTypeList2 =
-                    list.filter { it.atkType == AtkType.MAGIC.type }.map { it.unitId }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        top = Dimen.mediumPadding
-                    )
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.magic))
-                    Spacer(modifier = Modifier.weight(1f))
-                    MainText(text = atkTypeList2.size.toString())
-                }
-
-                GridIconList(
-                    idList = atkTypeList2,
-                    iconResourceType = IconResourceType.CHARACTER,
-                    onClickItem = toCharacterDetail
+                //魔法
+                UnitAtkTypeList(
+                    list = list,
+                    atkType = AtkType.MAGIC,
+                    toCharacterDetail = toCharacterDetail
                 )
+                CommonSpacer()
             }
         }
     }
 
+}
+
+
+/**
+ * （物理或魔法）角色列表
+ */
+@Composable
+private fun UnitAtkTypeList(
+    list: List<TalentData>,
+    atkType: AtkType,
+    toCharacterDetail: (Int) -> Unit
+) {
+    val atkTypeList =
+        list.filter { it.atkType == atkType.type }
+    val character0 = arrayListOf(TalentData(unitId = 0))
+    character0.addAll(atkTypeList.filter {
+        PositionType.getPositionType(it.position) == PositionType.POSITION_FRONT
+    })
+    val character1 = arrayListOf(TalentData(unitId = 1))
+    character1.addAll(atkTypeList.filter {
+        PositionType.getPositionType(it.position) == PositionType.POSITION_MIDDLE
+    })
+    val character2 = arrayListOf(TalentData(unitId = 2))
+    character2.addAll(atkTypeList.filter {
+        PositionType.getPositionType(it.position) == PositionType.POSITION_BACK
+    })
+
+    val idList = arrayListOf<Int>()
+    if (character0.size > 1) {
+        idList.addAll(
+            character0.map { it.unitId }
+        )
+    }
+    if (character1.size > 1) {
+        idList.addAll(
+            character1.map { it.unitId }
+        )
+    }
+    if (character2.size > 1) {
+        idList.addAll(
+            character2.map { it.unitId }
+        )
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding,
+            top = Dimen.mediumPadding
+        )
+    ) {
+        MainTitleText(text = stringResource(id = atkType.typeNameId))
+        Spacer(modifier = Modifier.weight(1f))
+        MainText(text = atkTypeList.size.toString())
+    }
+
+    GridIconList(
+        idList = idList,
+        iconResourceType = IconResourceType.CHARACTER,
+        onClickItem = toCharacterDetail
+    )
 }
