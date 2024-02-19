@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.utils.Constants.SERVER_DOMAIN
 import cn.wthee.pcrtool.utils.editOrder
@@ -90,8 +89,8 @@ class OverviewScreenViewModel @Inject constructor(
     }
 
     fun initCheck() {
-        //初始化六星id
-        getR6Ids()
+        //数据文件正常读取判断
+        checkDatabaseFile()
         //数据库校验
         MainScope().launch {
             DatabaseUpdater.checkDBVersion(
@@ -207,23 +206,11 @@ class OverviewScreenViewModel @Inject constructor(
     }
 
     /**
-     * 六星 id 列表
+     * 数据文件正常读取判断
      */
-    private fun getR6Ids() {
+    private fun checkDatabaseFile() {
         viewModelScope.launch {
-            var dbError = false
-            val r6Ids = unitRepository.getR6Ids()
-
-            if (r6Ids == null) {
-                dbError = true
-            } else {
-                MainActivity.r6Ids = r6Ids
-            }
-
-            if (unitRepository.getCountInt() == 0) {
-                dbError = true
-            }
-
+            val dbError = unitRepository.getCountInt() == 0
             _uiState.update {
                 it.copy(
                     dbError = dbError

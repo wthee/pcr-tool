@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavGraph
 import cn.wthee.pcrtool.navigation.NavViewModel
+import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
@@ -28,8 +29,13 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 )
 @Composable
 fun PCRToolApp(
-    mNavViewModel: NavViewModel = hiltViewModel()
+    navViewModel: NavViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
+    AppResumeEffect {
+        mainViewModel.getR6Ids()
+    }
+
     PCRToolComposeTheme {
         //bottom sheet
         val sheetState = rememberModalBottomSheetState(
@@ -46,7 +52,7 @@ fun PCRToolApp(
 
         val actions =
             remember(MainActivity.navController) { NavActions(MainActivity.navController) }
-        MainActivity.navViewModel = mNavViewModel
+        MainActivity.navViewModel = navViewModel
 
         val loading = MainActivity.navViewModel.loading.observeAsState().value ?: false
 
