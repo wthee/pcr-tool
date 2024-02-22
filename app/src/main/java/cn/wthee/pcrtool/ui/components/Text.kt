@@ -55,7 +55,7 @@ fun MainTitleText(
             color = colorWhite,
             style = textStyle,
             maxLines = maxLines,
-            modifier = if (selectable) Modifier else modifier
+            modifier = (if (selectable) Modifier else modifier)
                 .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
                 .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
         )
