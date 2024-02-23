@@ -99,28 +99,25 @@ fun navigateUp() {
  * @param prev 设置上一页面数据
  */
 fun <T> setData(key: String, value: T?, prev: Boolean = false) {
-    if (prev) {
-        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.set(
-            key,
-            value
-        )
+    (if (prev) {
+        MainActivity.navController.previousBackStackEntry
     } else {
-        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.set(
-            key,
-            value
-        )
-    }
+        MainActivity.navController.currentBackStackEntry
+    })?.savedStateHandle?.set(
+        key,
+        value
+    )
 }
 
 /**
  * 获取当前页面数据
  */
 fun <T> getData(key: String, prev: Boolean = false): T? {
-    return if (prev) {
-        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
+    return (if (prev) {
+        MainActivity.navController.previousBackStackEntry
     } else {
-        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.get<T>(key)
-    }
+        MainActivity.navController.currentBackStackEntry
+    })?.savedStateHandle?.get<T>(key)
 }
 
 /**

@@ -405,10 +405,10 @@ fun AreaItem(
             )
             .placeholder(placeholder),
         itemCount = odds.size,
-        itemWidth = Dimen.iconItemWidth,
+        itemWidth = Dimen.iconSize + Dimen.commonItemPadding * 2,
         verticalContentPadding = Dimen.commonItemPadding
     ) {
-        EquipWithOddCompose(
+        EquipIconAndOddText(
             selectedId = selectedId,
             oddData = odds[it],
             searchEquipIdList = searchEquipIdList
@@ -421,7 +421,7 @@ fun AreaItem(
  * 带掉率装备图标
  */
 @Composable
-private fun EquipWithOddCompose(
+private fun EquipIconAndOddText(
     selectedId: Int,
     oddData: EquipmentIdWithOdds,
     searchEquipIdList: List<Int>
@@ -434,6 +434,7 @@ private fun EquipWithOddCompose(
         val selected =
             selectedId == oddData.equipId || searchEquipIdList.contains(oddData.equipId)
         Box(contentAlignment = Alignment.Center) {
+            //判断装备或天赋素材
             MainIcon(
                 data = ImageRequestHelper.getInstance()
                     .getUrl(

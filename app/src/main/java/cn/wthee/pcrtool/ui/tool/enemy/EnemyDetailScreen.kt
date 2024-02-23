@@ -74,7 +74,6 @@ fun EnemyDetailScreen(
         uiState.enemyInfo?.let {
             EnemyDetailContent(
                 enemyData = it,
-                isMultiEnemy = uiState.partInfoList.isNotEmpty(),
                 partEnemyList = uiState.partInfoList,
                 skillList = uiState.skillList,
                 attackPatternList = uiState.attackPatternList,
@@ -91,8 +90,7 @@ fun EnemyDetailScreen(
 @Composable
 fun EnemyDetailContent(
     enemyData: EnemyParameterPro,
-    isMultiEnemy: Boolean,
-    partEnemyList: List<EnemyParameterPro>?,
+    partEnemyList: List<EnemyParameterPro>,
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
     toSummonDetail: ((String) -> Unit)? = null,
@@ -101,6 +99,10 @@ fun EnemyDetailContent(
     val openDialog = remember {
         mutableStateOf(false)
     }
+
+    //是否多目标
+    val isMultiEnemy = partEnemyList.isNotEmpty()
+
     //基础或部位信息
     val attrList = if (isMultiEnemy) {
         enemyData.attr.multiplePartEnemy(context)
@@ -109,7 +111,7 @@ fun EnemyDetailContent(
     }
     //部位最大攻击力
     var partAtk = 0
-    partEnemyList?.forEach {
+    partEnemyList.forEach {
         partAtk = maxOf(partAtk, maxOf(it.attr.atk, it.attr.magicStr))
     }
     enemyData.partAtk = partAtk
@@ -178,7 +180,7 @@ fun EnemyDetailContent(
         //属性
         AttrList(attrs = attrList)
         //多目标部位属性
-        partEnemyList?.forEach {
+        partEnemyList.forEach {
             //名称
             MainText(
                 text = it.name,
@@ -297,8 +299,7 @@ private fun EnemyDetailContentPreview() {
                 comment = stringResource(id = R.string.debug_long_text),
                 level = 100
             ),
-            isMultiEnemy = false,
-            partEnemyList = null,
+            partEnemyList = arrayListOf(),
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
             toSummonDetail = {}

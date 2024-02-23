@@ -167,9 +167,9 @@ fun UniqueEquipListScreen(
 
                             basicInfo?.let {
                                 UniqueEquipItem(
-                                    uniqueEquip,
-                                    it,
-                                    toUniqueEquipDetail
+                                    equip = uniqueEquip,
+                                    basicInfo = it,
+                                    toUniqueEquipDetail = toUniqueEquipDetail
                                 )
                             }
                         }

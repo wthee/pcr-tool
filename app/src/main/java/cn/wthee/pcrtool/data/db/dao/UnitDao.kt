@@ -507,6 +507,18 @@ interface UnitDao {
     /**
      * 获取角色剧情属性
      * @param unitId 角色编号
+     * fixme 日台有以下字段，国服未更新，待更新逻辑
+     * ,
+     *                 a.chara_id_11,
+     *                 a.chara_id_12,
+     *                 a.chara_id_13,
+     *                 a.chara_id_14,
+     *                 a.chara_id_15,
+     *                 a.chara_id_16,
+     *                 a.chara_id_17,
+     *                 a.chara_id_18,
+     *                 a.chara_id_19,
+     *                 a.chara_id_20
      */
     @SkipQueryVerification
     @Transaction
@@ -538,17 +550,7 @@ interface UnitDao {
                 a.chara_id_7,
                 a.chara_id_8,
                 a.chara_id_9,
-                a.chara_id_10,
-                a.chara_id_11,
-                a.chara_id_12,
-                a.chara_id_13,
-                a.chara_id_14,
-                a.chara_id_15,
-                a.chara_id_16,
-                a.chara_id_17,
-                a.chara_id_18,
-                a.chara_id_19,
-                a.chara_id_20 
+                a.chara_id_10 
             )
             LEFT JOIN story_detail AS c ON a.story_id = c.story_id
         WHERE b.unit_id = :unitId
