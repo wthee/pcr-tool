@@ -32,7 +32,12 @@ class UnitRepository @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) {
 
-    suspend fun getUnitIdList() = unitDao.getUnitIdList()
+    suspend fun getUnitIdList() = try {
+        unitDao.getUnitIdList()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUnitIdList")
+        arrayListOf()
+    }
 
     /**
      * 获取角色列表
@@ -194,11 +199,12 @@ class UnitRepository @Inject constructor(
 
         //返回数据
         data
-    } catch (e: Exception) {
-        LogReportUtil.upload(
-            e,
-            Constants.EXCEPTION_UNIT_NULL + "getCharacterBasicInfo#unitId:$unitId"
-        )
+    } catch (_: Exception) {
+        //移除异常上报，排行榜会多次触发异常
+//        LogReportUtil.upload(
+//            e,
+//            Constants.EXCEPTION_UNIT_NULL + "getCharacterBasicInfo#unitId:$unitId"
+//        )
         null
     }
 
