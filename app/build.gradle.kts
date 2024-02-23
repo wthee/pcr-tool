@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2024.02.00"
-val composeCompilerVersion = "1.5.9"
+val composeBom = "2024.02.01"
+val composeCompilerVersion = "1.5.10"
 val appVersionCode = 383
 val appVersionName = "3.8.3"
 val appId = "cn.wthee.pcrtool"
@@ -125,7 +125,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.material:material")
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3")
 
     //Accompanist
     val accompanistVersion = "0.34.0"
@@ -148,7 +148,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     //ktor
     val ktorVersion = "2.3.8"
