@@ -559,10 +559,10 @@ interface UnitDao {
     suspend fun getCharacterStoryAttrList(unitId: Int): List<CharacterStoryAttr>
 
     /**
-     * 获取角色最大等级
+     * 获取角色最大等级（突破等级+10）
      */
     @SkipQueryVerification
-    @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
+    @Query("SELECT MAX( team_level ) + 10 - 1 FROM experience_team")
     suspend fun getMaxLevel(): Int
 
     /**
