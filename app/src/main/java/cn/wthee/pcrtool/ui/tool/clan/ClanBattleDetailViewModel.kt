@@ -108,8 +108,8 @@ class ClanBattleDetailViewModel @Inject constructor(
 
             if (clanBattleList.isNotEmpty()) {
                 val clanBattleValue = clanBattleList[0]
-                getAllBossAttr(clanBattleValue.enemyIdList)
-                getMultiEnemyAttr(clanBattleValue.targetCountDataList)
+                getAllBossAttr(clanBattleValue.bossList.map { it.enemyId })
+                getMultiEnemyAttr(clanBattleValue.bossList.map { it.targetCountData })
             }
         }
     }

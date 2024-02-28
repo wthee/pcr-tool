@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.db.view.EnemyTalentWeaknessData
 import cn.wthee.pcrtool.data.db.view.MultiTargetEnemyInfo
 
 
@@ -66,4 +67,25 @@ interface EnemyDao {
     """
     )
     suspend fun getAtkCastTime(unitId: Int): Double?
+
+    /**
+     * 获取弱点属性
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            a.enemy_id,
+            b.talent_1,
+            b.talent_2,
+            b.talent_3,
+            b.talent_4,
+            b.talent_5 
+        FROM
+            enemy_talent_weakness AS a
+            LEFT JOIN talent_weakness AS b ON a.resist_id = b.resist_id
+        WHERE (a.enemy_id = :enemyId) OR (0 = :enemyId)
+    """
+    )
+    suspend fun getAllEnemyTalentWeaknessList(enemyId: Int): List<EnemyTalentWeaknessData>
 }

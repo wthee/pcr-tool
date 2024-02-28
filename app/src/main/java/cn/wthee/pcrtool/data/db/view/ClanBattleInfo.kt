@@ -16,11 +16,7 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "enemy_ids") var enemyIds: String = "0-0-0-0-0",
     @ColumnInfo(name = "unit_ids") var unitIds: String = "0-0-0-0-0",
     @Ignore
-    var enemyIdList: List<Int> = arrayListOf(0, 0, 0, 0, 0),
-    @Ignore
-    var unitIdList: List<Int> = arrayListOf(0, 0, 0, 0, 0),
-    @Ignore
-    var targetCountDataList: List<ClanBattleTargetCountData> = arrayListOf()
+    var bossList: List<ClanBattleBossData> = arrayListOf()
 ) {
 
     /**
@@ -28,11 +24,21 @@ data class ClanBattleInfo(
      *
      * @param bossIndex boss 下标
      */
-    fun getMultiCount(bossIndex: Int): Int {
-        val targetCountData = targetCountDataList.firstOrNull {
-            it.multiEnemyId % 10 == bossIndex + 1 + it.offset
-        }
-        return targetCountData?.enemyPartIds?.intArrayList?.filter { it > 0 }?.size ?: 0
+    fun getMultiCount(bossIndex: Int) = if (bossList.size == 5) {
+        bossList[bossIndex].targetCountData.enemyPartIds.intArrayList.filter { it > 0 }.size
+    } else {
+        0
+    }
+
+    /**
+     * 获取弱点属性
+     *
+     * @param bossIndex boss 下标
+     */
+    fun getWeakness(bossIndex: Int) = if (bossList.size == 5) {
+        bossList[bossIndex].weaknessData
+    } else {
+        null
     }
 }
 
@@ -44,5 +50,12 @@ data class ClanBattleTargetCountData(
     @ColumnInfo(name = "multi_enemy_id") var multiEnemyId: Int = 0,
     @ColumnInfo(name = "enemy_part_ids") var enemyPartIds: String = "",
     @Ignore
-    var offset:Int = 0
+    var offset: Int = 0
+)
+
+data class ClanBattleBossData(
+    var enemyId: Int = 0,
+    var unitId: Int = 0,
+    var targetCountData: ClanBattleTargetCountData = ClanBattleTargetCountData(),
+    var weaknessData: EnemyTalentWeaknessData? = null,
 )

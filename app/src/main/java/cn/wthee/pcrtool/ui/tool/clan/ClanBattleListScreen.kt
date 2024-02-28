@@ -30,11 +30,11 @@ import cn.wthee.pcrtool.data.model.ClanBattleProperty
 import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.EventTitle
+import cn.wthee.pcrtool.ui.components.HeaderText
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
-import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.getItemWidth
@@ -49,6 +49,7 @@ import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
 import cn.wthee.pcrtool.ui.theme.colorWhite
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyWeaknessContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.fillZero
@@ -224,45 +225,14 @@ fun ClanBattleItem(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                bossUnitIdList.forEachIndexed { index, it ->
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        MainIcon(
-                            data = ImageRequestHelper.getInstance().getUrl(ICON_UNIT, it),
-                            onClick = {
-                                if (!placeholder) {
-                                    toClanBossInfo(
-                                        Json.encodeToString(
-                                            ClanBattleProperty(
-                                                clanBattleId = clanBattleInfo.clanBattleId,
-                                                index = index,
-                                                minPhase = clanBattleInfo.minPhase,
-                                                maxPhase = clanBattleInfo.maxPhase,
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                        )
-                        //多目标提示
-                        val targetCount = clanBattleInfo.getMultiCount(index)
-                        if (targetCount > 0) {
-                            //阴影
-                            MainText(
-                                text = targetCount.toString(),
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(
-                                    start = Dimen.textElevation,
-                                    top = Dimen.textElevation
-                                )
-                            )
-                            MainText(
-                                text = targetCount.toString(),
-                                color = colorWhite,
-                            )
-                        }
-                    }
+                bossUnitIdList.forEachIndexed { index, unitId ->
+                    ClanBattleBossIcon(
+                        unitId = unitId,
+                        placeholder = placeholder,
+                        toClanBossInfo = toClanBossInfo,
+                        clanBattleInfo = clanBattleInfo,
+                        index = index
+                    )
                 }
                 if (placeholder) {
                     MainIcon(
@@ -284,6 +254,65 @@ fun ClanBattleItem(
         }
     }
 
+}
+
+/**
+ * 公会战 boss 图标（包括多目标、弱点属性）
+ */
+@Composable
+private fun ClanBattleBossIcon(
+    unitId: Int,
+    placeholder: Boolean,
+    toClanBossInfo: (String) -> Unit,
+    clanBattleInfo: ClanBattleInfo,
+    index: Int
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            MainIcon(
+                data = ImageRequestHelper.getInstance().getUrl(ICON_UNIT, unitId),
+                onClick = {
+                    if (!placeholder) {
+                        toClanBossInfo(
+                            Json.encodeToString(
+                                ClanBattleProperty(
+                                    clanBattleId = clanBattleInfo.clanBattleId,
+                                    index = index,
+                                    minPhase = clanBattleInfo.minPhase,
+                                    maxPhase = clanBattleInfo.maxPhase,
+                                )
+                            )
+                        )
+                    }
+                }
+            )
+            //多目标提示
+            val targetCount = clanBattleInfo.getMultiCount(index)
+            if (targetCount > 0) {
+                //阴影
+                HeaderText(
+                    text = targetCount.toString(),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        start = Dimen.textElevation * 2,
+                        top = Dimen.textElevation * 2
+                    )
+                )
+                HeaderText(
+                    text = targetCount.toString(),
+                    color = colorWhite,
+                )
+            }
+        }
+        //弱点提示
+        Row {
+            clanBattleInfo.getWeakness(index)?.let {
+                EnemyWeaknessContent(weaknessData = it, showValue = false)
+            }
+        }
+    }
 }
 
 

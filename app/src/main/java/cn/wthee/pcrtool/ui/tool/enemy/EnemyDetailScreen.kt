@@ -1,12 +1,17 @@
 package cn.wthee.pcrtool.ui.tool.enemy
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -27,7 +32,9 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.db.view.EnemyTalentWeaknessData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.components.AttrList
@@ -39,6 +46,7 @@ import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.skill.loop.SkillLoopScreen
@@ -53,6 +61,7 @@ import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.px2dp
+import kotlin.math.abs
 
 
 /**
@@ -75,6 +84,7 @@ fun EnemyDetailScreen(
             EnemyDetailContent(
                 enemyData = it,
                 partEnemyList = uiState.partInfoList,
+                weaknessData = uiState.weaknessData,
                 skillList = uiState.skillList,
                 attackPatternList = uiState.attackPatternList,
                 toSummonDetail = toSummonDetail
@@ -91,6 +101,7 @@ fun EnemyDetailScreen(
 fun EnemyDetailContent(
     enemyData: EnemyParameterPro,
     partEnemyList: List<EnemyParameterPro>,
+    weaknessData: EnemyTalentWeaknessData?,
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
     toSummonDetail: ((String) -> Unit)? = null,
@@ -142,6 +153,17 @@ fun EnemyDetailContent(
                     .align(Alignment.CenterHorizontally)
             )
         }
+
+        //弱点属性
+        weaknessData?.let {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                EnemyWeaknessContent(weaknessData)
+            }
+        }
+
         //名称
         MainText(
             text = enemyData.name,
@@ -155,6 +177,7 @@ fun EnemyDetailContent(
             text = stringResource(id = R.string.unit_level, enemyData.level),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
         //模型预览
         IconTextButton(
             icon = MainIconType.PREVIEW_UNIT_SPINE,
@@ -284,6 +307,56 @@ fun EnemySkillList(
     }
 }
 
+/**
+ * 弱点属性
+ *
+ * @param showValue 是否显示具体数值或圆点
+ */
+@Composable
+fun EnemyWeaknessContent(
+    weaknessData: EnemyTalentWeaknessData,
+    showValue: Boolean = true
+) {
+    val weaknessList = weaknessData.getWeaknessList()
+
+    TalentType.entries.forEachIndexed { index, talentType ->
+        if (index != 0) {
+            val value = weaknessList[index - 1] - 100
+            if (value != 0) {
+                if (showValue) {
+                    //显示文本数值
+                    val valueText = (if (value > 0) {
+                        "+"
+                    } else {
+                        "-"
+                    }) + abs(value) + "%"
+
+                    MainTitleText(
+                        text = stringResource(id = talentType.typeNameId) + valueText,
+                        backgroundColor = talentType.color,
+                        modifier = Modifier.padding(horizontal = Dimen.exSmallPadding)
+                    )
+                } else {
+                    //显示圆点
+                    Box(
+                        modifier = Modifier
+                            .padding(
+                                start = Dimen.exSmallPadding,
+                                end = Dimen.exSmallPadding,
+                                top = Dimen.smallPadding
+                            )
+                            .background(
+                                color = talentType.color,
+                                shape = CircleShape
+                            )
+                            .size(Dimen.indicatorSize)
+                    )
+                }
+
+            }
+        }
+    }
+}
 
 /**
  * @see [SkillLoopScreen] 技能循环预览
@@ -302,6 +375,7 @@ private fun EnemyDetailContentPreview() {
             partEnemyList = arrayListOf(),
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
+            weaknessData = EnemyTalentWeaknessData(),
             toSummonDetail = {}
         )
     }
