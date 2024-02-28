@@ -42,12 +42,12 @@ val colorGold = Color(0xFFEBA827)
 /**
  * 紫、Rank 11 ~ 17
  */
-val colorPurple = Color(0xFFBF76CD)
+val colorPurple = Color(0xFFb86ada)
 
 /**
  * 红、Rank 18 ~ 20
  */
-val colorRed = Color(0xFFE95264)
+val colorRed = Color(0xFFe65d49)
 
 /**
  * 绿、Rank 21 ~ 23
@@ -60,11 +60,11 @@ val colorGreen = Color(0xFF5EB56D)
 val colorOrange = Color(0xFFFF883E)
 
 /**
- * 青、Rank 28 ~
+ * 青、Rank 28 ~ 31
  */
 val colorCyan = Color(0xFF65B0FA)
 
 /**
- * 粉、ex装备4星、Rank 32 ~
+ * 粉、ex装备4星、Rank 32 ~ ？
  */
 val colorPink = Color(0xFFFFB6C1)

@@ -301,12 +301,16 @@ fun SelectText(
  * 头部标题
  */
 @Composable
-fun HeaderText(modifier: Modifier = Modifier, text: String) {
+fun HeaderText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary,
+        color = color,
         modifier = modifier
     )
 }
