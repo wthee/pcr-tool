@@ -42,7 +42,8 @@ interface GachaDao {
         GROUP BY
             a.gacha_id 
         ORDER BY
-            a.start_time DESC
+            a.start_time DESC,
+	        b.id
         LIMIT 0,:limit
     """
     )
