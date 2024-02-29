@@ -350,9 +350,9 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     HP_CHANGE(70,  R.string.skill_type_70),
 
     /**
-     * 71：特殊状态：公主佩可 UB 后不死BUFF
+     * 71：免死
      */
-    KNIGHT_BARRIER(71,  R.string.skill_type_71),
+    EXEMPTION_DEATH(71, R.string.skill_type_71),
 
     /**
      * 72：伤害减免

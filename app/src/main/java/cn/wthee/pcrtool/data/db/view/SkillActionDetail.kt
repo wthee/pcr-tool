@@ -1496,8 +1496,8 @@ data class SkillActionDetail(
                 val time = getTimeText(1, actionValue1, actionValue2)
                 getString(R.string.skill_action_type_desc_69, getTarget(), time)
             }
-            // 71：特殊状态：公主佩可 UB 后不死BUFF
-            SkillActionType.KNIGHT_BARRIER -> {
+            // 71：免死
+            SkillActionType.EXEMPTION_DEATH -> {
                 val value = getValueText(2, actionValue2, actionValue3, actionValue4)
                 val time = getTimeText(6, actionValue6, actionValue7)
                 getString(R.string.skill_action_type_desc_71, getTarget(), value, time)
