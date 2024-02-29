@@ -198,9 +198,7 @@ fun TopBarCompose(
                         changeEditMode()
                     }
                 )
-                Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
-
         }
     }
 
@@ -616,20 +614,22 @@ private fun openAPK(context: Context, apkFile: File) {
 
 @CombinedPreviews
 @Composable
-private fun AppUpdateContentPreview() {
+private fun TopBarComposePreview() {
     PreviewLayout {
-        AppUpdateContent(
-            AppNotice(
-                date = "2022-01-01 01:01:01",
-                title = "3.2.1",
-                message = "- [BUG] BUG\n- [测试] 测试",
-                file_url = "123"
-            ),
+        //下载中
+        TopBarCompose(
+            isEditMode = false,
+            appUpdateData = AppNotice(),
             apkDownloadState = 22,
-            updateApkDownloadState = {}
+            isExpanded = false,
+            updateApkDownloadState = {},
+            changeEditMode = {},
+            updateExpanded = {},
         )
-        AppUpdateContent(
-            AppNotice(
+        //正常
+        TopBarCompose(
+            isEditMode = false,
+            appUpdateData = AppNotice(
                 id = 0,
                 date = "2022-01-01 01:01:01",
                 title = "3.2.1",
@@ -637,7 +637,10 @@ private fun AppUpdateContentPreview() {
                 file_url = "123"
             ),
             apkDownloadState = -2,
-            updateApkDownloadState = {}
+            isExpanded = true,
+            updateApkDownloadState = {},
+            changeEditMode = {},
+            updateExpanded = {},
         )
     }
 }
