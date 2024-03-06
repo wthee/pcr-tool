@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.FilterLeaderboard
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -30,7 +31,12 @@ data class LeaderboardUiState(
     val currentList: List<LeaderboardData> = emptyList(),
     //筛选
     val filterLeader: FilterLeaderboard = FilterLeaderboard(),
-    val loadState: LoadState = LoadState.Loading
+    val loadState: LoadState = LoadState.Loading,
+
+    //天赋筛选相关
+    val talentType: TalentType = TalentType.ALL,
+    val talentUnitMap: HashMap<Int, ArrayList<Int>> = hashMapOf(),
+    val openTalentDialog: Boolean = false,
 )
 
 /**
@@ -51,6 +57,7 @@ class LeaderboardViewModel @Inject constructor(
 
 
     init {
+        getTalentUnitMap()
         initLeader()
     }
 
@@ -90,12 +97,58 @@ class LeaderboardViewModel @Inject constructor(
             var data = _uiState.value.leaderboardResponseData?.data
             data = sortLeaderboardList(filter, data)
 
+            //天赋类型
+            val talentTypeValue = _uiState.value.talentType.type
+            val unitIdList = _uiState.value.talentUnitMap[talentTypeValue] ?: arrayListOf()
+
             data?.let {
                 _uiState.update {
                     it.copy(
-                        currentList = data
+                        currentList = if (unitIdList.isNotEmpty()) {
+                            data.filter { leader ->
+                                unitIdList.contains(leader.unitId)
+                            }
+                        } else {
+                            data
+                        }
                     )
                 }
+            }
+        }
+    }
+
+    /**
+     * 切换天赋类型
+     */
+    fun changeTalentSelect(type: Int) {
+        _uiState.update {
+            it.copy(
+                talentType = TalentType.getByType(type)
+            )
+        }
+    }
+
+    /**
+     * 弹窗状态更新
+     */
+    fun changeTalentDialog(openDialog: Boolean) {
+        _uiState.update {
+            it.copy(
+                openTalentDialog = openDialog
+            )
+        }
+    }
+
+    /**
+     * 获取角色id按天赋分组
+     */
+    private fun getTalentUnitMap() {
+        viewModelScope.launch {
+            val map = unitRepository.getTalentUnitMap()
+            _uiState.update {
+                it.copy(
+                    talentUnitMap = map
+                )
             }
         }
     }

@@ -168,25 +168,37 @@ fun ExpandableFab(
     tint: Color = MaterialTheme.colorScheme.primary,
     text: String = "",
     isSecondLineFab: Boolean = false,
+    noPadding: Boolean = false,
     paddingValues: PaddingValues? = null,
     animateContent: Boolean = true,
     customFabContent: @Composable (() -> Unit)? = null,
     expandedContent: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val mPaddingValues = paddingValues ?: PaddingValues(
-        start = Dimen.fabMargin,
-        end = if (isSecondLineFab) {
+    val endPadding = if (noPadding) {
+        0.dp
+    } else {
+        if (isSecondLineFab) {
             Dimen.fabMargin
         } else {
             Dimen.fabMarginEnd
-        },
-        top = Dimen.largePadding,
-        bottom = if (isSecondLineFab) {
+        }
+    }
+    val bottomPadding = if (noPadding) {
+        0.dp
+    } else {
+        if (isSecondLineFab) {
             Dimen.fabMarginLargeBottom
         } else {
             Dimen.fabMargin
         }
+    }
+
+    val mPaddingValues = paddingValues ?: PaddingValues(
+        start = if (noPadding) 0.dp else Dimen.fabMargin,
+        end = endPadding,
+        top = Dimen.largePadding,
+        bottom = bottomPadding
     )
 
     SmallFloatingActionButton(
@@ -266,6 +278,7 @@ fun SelectTypeFab(
     selectedIndex: Int,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     isSecondLineFab: Boolean = false,
+    noPadding: Boolean = false,
     changeSelect: (Int) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -280,7 +293,8 @@ fun SelectTypeFab(
         icon = icon,
         tint = selectedColor,
         text = tabs[selectedIndex],
-        isSecondLineFab = isSecondLineFab
+        isSecondLineFab = isSecondLineFab,
+        noPadding = noPadding
     ) {
         Column(
             modifier = Modifier

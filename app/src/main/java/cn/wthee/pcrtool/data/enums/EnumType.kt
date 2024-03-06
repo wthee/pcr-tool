@@ -476,7 +476,7 @@ enum class AtkType(val type: Int, val color: Color, val typeNameId: Int, val ico
  * 天赋类型
  */
 enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
-    UNKNOWN(0, colorGray, R.string.none),
+    ALL(0, Color.Unspecified, R.string.all),
     FIRE(1, colorRed, R.string.fire),
     WATER(2, colorCyan, R.string.water),
     WIND(3, colorGreen, R.string.wind),
@@ -486,6 +486,6 @@ enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
 
     companion object {
         fun getByType(type: Int) = TalentType.entries
-            .find { it.type == type } ?: UNKNOWN
+            .find { it.type == type } ?: ALL
     }
 }

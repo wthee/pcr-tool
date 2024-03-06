@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.MainActivity
@@ -47,6 +49,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -77,6 +80,7 @@ fun LeaderboardScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val uiState by leaderBoardViewModel.uiState.collectAsStateWithLifecycle()
+    val hasTalent = (uiState.talentUnitMap[1] ?: arrayListOf()).isNotEmpty()
 
     val filter = uiState.filterLeader
     val sort = remember {
@@ -92,22 +96,43 @@ fun LeaderboardScreen(
     }
     filter.onlyLast = onlyLast.value
 
-    LaunchedEffect(sort.intValue, asc.value, onlyLast.value) {
+    LaunchedEffect(sort.intValue, asc.value, onlyLast.value, uiState.talentType) {
         leaderBoardViewModel.refreshLeader(filter)
+    }
+
+    //天赋类型
+    val talentTabs = arrayListOf<String>()
+    TalentType.entries.forEachIndexed { _, talentType ->
+        talentTabs.add(
+            stringResource(id = talentType.typeNameId)
+        )
     }
 
 
     MainScaffold(
         fab = {
             //重置
-            if (sort.intValue != 0 || asc.value || onlyLast.value) {
+            if (sort.intValue != 0 || asc.value || onlyLast.value || uiState.talentType != TalentType.ALL) {
                 MainSmallFab(
                     iconType = MainIconType.RESET,
                     onClick = {
                         sort.intValue = 0
                         asc.value = false
                         onlyLast.value = false
+                        leaderBoardViewModel.changeTalentSelect(TalentType.ALL.type)
                     }
+                )
+            }
+
+            if (hasTalent && uiState.loadState == LoadState.Success) {
+                SelectTypeFab(
+                    icon = MainIconType.TALENT,
+                    tabs = talentTabs,
+                    selectedIndex = uiState.talentType.type,
+                    openDialog = uiState.openTalentDialog,
+                    changeDialog = leaderBoardViewModel::changeTalentDialog,
+                    changeSelect = leaderBoardViewModel::changeTalentSelect,
+                    noPadding = true
                 )
             }
 
@@ -146,6 +171,10 @@ fun LeaderboardScreen(
                     }
                 )
             }
+        },
+        enableClickClose = uiState.openTalentDialog,
+        onCloseClick = {
+            leaderBoardViewModel.changeTalentDialog(false)
         }
     ) {
         Column {
@@ -169,35 +198,51 @@ fun LeaderboardScreen(
                     }
                 }
             ) {
-                LazyColumn(
-                    state = scrollState
-                ) {
-                    itemsIndexed(
-                        items = uiState.currentList,
-                        key = { _, it ->
-                            it.name
-                        }
-                    ) { index, it ->
-                        //获取角色名
-                        val flow = remember(it.unitId) {
-                            leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
-                        }
-                        val basicInfo by flow.collectAsState(initial = null)
-                        LeaderboardItem(
-                            leader = it,
-                            index = index,
-                            basicInfo = basicInfo,
-                            toCharacterDetail = toCharacterDetail
-                        )
-                    }
-                    items(count = 2) {
-                        CommonSpacer()
-                    }
-                }
+                LeaderboardContent(
+                    scrollState = scrollState,
+                    leaderList = uiState.currentList,
+                    leaderBoardViewModel = leaderBoardViewModel,
+                    toCharacterDetail = toCharacterDetail
+                )
             }
         }
     }
 
+}
+
+@Composable
+private fun LeaderboardContent(
+    scrollState: LazyListState,
+    leaderList: List<LeaderboardData>,
+    leaderBoardViewModel: LeaderboardViewModel,
+    toCharacterDetail: (Int) -> Unit
+) {
+
+    LazyColumn(
+        state = scrollState
+    ) {
+        itemsIndexed(
+            items = leaderList,
+            key = { _, it ->
+                it.name
+            }
+        ) { index, it ->
+            //获取角色名
+            val flow = remember(it.unitId) {
+                leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
+            }
+            val basicInfo by flow.collectAsState(initial = null)
+            LeaderboardItem(
+                leader = it,
+                index = index,
+                basicInfo = basicInfo,
+                toCharacterDetail = toCharacterDetail
+            )
+        }
+        items(count = 2) {
+            CommonSpacer()
+        }
+    }
 }
 
 /**

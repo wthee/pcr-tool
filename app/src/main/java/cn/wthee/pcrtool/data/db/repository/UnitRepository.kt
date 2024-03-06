@@ -595,4 +595,19 @@ class UnitRepository @Inject constructor(
         arrayListOf()
     }
 
+    /**
+     * 获取角色id按天赋分组
+     */
+    suspend fun getTalentUnitMap(): HashMap<Int, ArrayList<Int>> {
+        val list = getTalentIdList(0)
+        val map = hashMapOf<Int, ArrayList<Int>>()
+        list.forEach {
+            if (map[it.talentId] == null) {
+                map[it.talentId] = arrayListOf()
+            } else {
+                map[it.talentId]?.add(it.unitId)
+            }
+        }
+        return map
+    }
 }
