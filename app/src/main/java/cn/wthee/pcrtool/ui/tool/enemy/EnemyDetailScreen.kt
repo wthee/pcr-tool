@@ -46,8 +46,8 @@ import cn.wthee.pcrtool.ui.components.MainContentText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.Tag
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.skill.loop.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -158,7 +158,8 @@ fun EnemyDetailContent(
         weaknessData?.let {
             Row(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 EnemyWeaknessContent(weaknessData)
             }
@@ -310,12 +311,12 @@ fun EnemySkillList(
 /**
  * 弱点属性
  *
- * @param showValue 是否显示具体数值或圆点
+ * @param showText 是否显示具体数值或圆点
  */
 @Composable
 fun EnemyWeaknessContent(
     weaknessData: EnemyTalentWeaknessData,
-    showValue: Boolean = true
+    showText: Boolean = true
 ) {
     val weaknessList = weaknessData.getWeaknessList()
 
@@ -323,7 +324,7 @@ fun EnemyWeaknessContent(
         if (index != 0) {
             val value = weaknessList[index - 1] - 100
             if (value != 0) {
-                if (showValue) {
+                if (showText) {
                     //显示文本数值
                     val valueText = (if (value > 0) {
                         "+"
@@ -331,10 +332,10 @@ fun EnemyWeaknessContent(
                         "-"
                     }) + abs(value) + "%"
 
-                    MainTitleText(
+                    Tag(
                         text = stringResource(id = talentType.typeNameId) + valueText,
                         backgroundColor = talentType.color,
-                        modifier = Modifier.padding(horizontal = Dimen.exSmallPadding)
+                        modifier = Modifier.padding(start = Dimen.exSmallPadding)
                     )
                 } else {
                     //显示圆点
@@ -355,6 +356,24 @@ fun EnemyWeaknessContent(
 
             }
         }
+    }
+    if (showText) {
+        val openDialog = remember {
+            mutableStateOf(false)
+        }
+        IconTextButton(
+            text = "",
+            icon = MainIconType.HELP,
+            onClick = {
+                openDialog.value = true
+            }
+        )
+
+        MainAlertDialog(
+            openDialog = openDialog,
+            title = stringResource(id = R.string.talent_weakness),
+            text = stringResource(id = R.string.talent_weakness_tip)
+        )
     }
 }
 

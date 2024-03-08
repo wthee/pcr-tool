@@ -855,4 +855,7 @@
     <string name="preview_spine_battle">战斗</string>
     <string name="preview_spine_room">小屋</string>
 
+    <string name="talent_weakness">弱点属性</string>
+    <string name="talent_weakness_tip">弱点属性加成数值为最大值，即相同天赋人数 ≥ 4 人时的数值</string>
+
 </resources>
