@@ -309,7 +309,7 @@ private fun ClanBattleBossIcon(
         //弱点提示
         Row {
             clanBattleInfo.getWeakness(index)?.let {
-                EnemyWeaknessContent(weaknessData = it, showValue = false)
+                EnemyWeaknessContent(weaknessData = it, showText = false)
             }
         }
     }

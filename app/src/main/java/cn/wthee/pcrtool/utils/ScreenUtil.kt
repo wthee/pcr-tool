@@ -3,8 +3,6 @@ package cn.wthee.pcrtool.utils
 import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.MyApplication
@@ -59,17 +57,6 @@ fun px2dp(context: Context, px: Int): Dp {
     val scale: Float = context.resources.displayMetrics.density
     return (px / scale).dp
 }
-
-/**
- *  获取dp的像素，Composable
- */
-val Float.dp2px: Int
-    @Composable
-    get() {
-        val context = LocalContext.current
-        val scale: Float = context.resources.displayMetrics.density
-        return (this * scale + 0.5f).toInt()
-    }
 
 /**
  *  获取dp的像素，非 Composable

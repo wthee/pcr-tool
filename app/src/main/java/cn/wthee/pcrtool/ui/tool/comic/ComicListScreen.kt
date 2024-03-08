@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.comic
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -55,7 +54,6 @@ import kotlinx.coroutines.launch
 /**
  * 漫画列表
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ComicListScreen(
     comicListViewModel: ComicListViewModel = hiltViewModel()
@@ -187,7 +185,6 @@ private fun ComicItem(data: ComicData) {
 /**
  * 漫画目录
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ComicIndexChange(
     scrollState: LazyListState,
@@ -219,9 +216,6 @@ private fun ComicIndexChange(
     }
 }
 
-@OptIn(
-    ExperimentalFoundationApi::class
-)
 @Composable
 private fun ComicTocList(
     scrollState: LazyListState,
@@ -310,7 +304,6 @@ private fun ComicItemPreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun ComicIndexChangePreview() {

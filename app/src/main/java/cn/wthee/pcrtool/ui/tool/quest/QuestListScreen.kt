@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -84,7 +83,6 @@ fun QuestListScreen(
  * 装备掉落主线地图信息
  */
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,

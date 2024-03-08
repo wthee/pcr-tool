@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -111,7 +110,6 @@ fun IconHorizontalPagerIndicator(
 /**
  * 指示器
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainHorizontalPagerIndicator(
     modifier: Modifier = Modifier,
@@ -173,7 +171,6 @@ fun MainHorizontalPagerIndicator(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun IconHorizontalPagerIndicatorPreview() {

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +35,6 @@ import cn.wthee.pcrtool.utils.getZhNumberText
 /**
  * 公会战 BOSS 详情
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClanBattleDetailScreen(
     toSummonDetail: (String) -> Unit,
@@ -89,7 +87,6 @@ fun ClanBattleDetailScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun ClanBattleDetailContent(
     clanBattleInfo: ClanBattleInfo,
     bossDataList: List<EnemyParameterPro>,
@@ -152,7 +149,6 @@ private fun ClanBattleDetailContent(
 /**
  * @see [EnemyDetailScreen] 属性布局预览
  */
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun ClanBattleDetailContentPreview() {

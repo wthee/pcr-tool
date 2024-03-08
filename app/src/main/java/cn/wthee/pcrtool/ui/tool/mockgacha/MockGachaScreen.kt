@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool.mockgacha
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +62,6 @@ import java.util.UUID
 /**
  * 模拟卡池
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MockGachaScreen(
     pagerState: PagerState = rememberPagerState { 2 },
@@ -154,7 +152,6 @@ fun MockGachaScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun MockGachaContent(
     gachaId: String,
     pickUpList: List<GachaUnitInfo>,
@@ -434,7 +431,6 @@ private fun ToSelectMockGachaUnitGroup(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun MockGachaContentPreview() {

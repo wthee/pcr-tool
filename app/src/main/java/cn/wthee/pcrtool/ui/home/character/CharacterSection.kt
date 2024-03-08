@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
@@ -31,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
 
 
 /**
@@ -59,7 +58,6 @@ fun CharacterSection(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun CharacterSectionContent(
     uiState: CharacterSectionUiState,
     isEditMode: Boolean,
@@ -89,7 +87,8 @@ private fun CharacterSectionContent(
         if (uiState.characterList?.isNotEmpty() == true) {
             val characterList = uiState.characterList
             //避免角色图片高度过高
-            if (ScreenUtil.getWidth() / RATIO < (Dimen.iconSize * 5).value.dp2px) {
+            val itemWidthPx = LocalDensity.current.run { (Dimen.iconSize * 5).toPx() }
+            if (ScreenUtil.getWidth() / RATIO < itemWidthPx) {
                 HorizontalPager(
                     state = rememberPagerState { characterList.size },
                     modifier = Modifier

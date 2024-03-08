@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.uniqueequip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -52,7 +51,6 @@ import kotlinx.coroutines.launch
 /**
  * 专用装备列表
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UniqueEquipListScreen(
     uniqueEquipListViewModel: UniqueEquipListViewModel = hiltViewModel(),

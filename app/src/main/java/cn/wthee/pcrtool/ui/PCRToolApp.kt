@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.ui
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,16 +17,10 @@ import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 
 /**
  * 应用
  */
-
-@OptIn(
-    ExperimentalMaterialNavigationApi::class, ExperimentalMaterialApi::class
-)
 @Composable
 fun PCRToolApp(
     navViewModel: NavViewModel = hiltViewModel(),
@@ -43,7 +37,7 @@ fun PCRToolApp(
             skipHalfExpanded = true
         )
         MainActivity.navSheetState = sheetState
-        //bottom sheet 导航  fixme accompanist navigation 未使用 material3
+        //bottom sheet 导航  fixme 未使用 material3
         val bottomSheetNavigator = remember {
             BottomSheetNavigator(sheetState)
         }

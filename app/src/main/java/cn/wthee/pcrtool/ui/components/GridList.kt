@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -294,8 +295,8 @@ fun VerticalStaggeredGrid(
     verticalContentPadding: Dp = contentPadding,
     children: @Composable () -> Unit
 ) {
-    val contentPaddingPx = contentPadding.value.dp2px
-    val verticalContentPaddingPx = verticalContentPadding.value.dp2px
+    val contentPaddingPx = LocalDensity.current.run { contentPadding.roundToPx() }
+    val verticalContentPaddingPx = LocalDensity.current.run { verticalContentPadding.roundToPx() }
     val context = LocalContext.current
 
     Layout(

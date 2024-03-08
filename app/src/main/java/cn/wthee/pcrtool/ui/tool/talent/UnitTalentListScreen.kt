@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.talent
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +43,6 @@ import kotlinx.coroutines.launch
 /**
  * 角色天赋列表
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UnitTalentListScreen(
     toCharacterDetail: (Int) -> Unit,
@@ -102,7 +100,6 @@ fun UnitTalentListScreen(
 
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun UnitTalentContent(
     unitTalentList: List<TalentData>?,
     pagerState: PagerState,

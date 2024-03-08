@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.media
 
 import android.Manifest
 import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -94,7 +93,6 @@ fun PictureScreen(
  *
  */
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun PictureScreenContent(uiState: PictureUiState) {
     val pagerState = rememberPagerState {
         uiState.pageCount
