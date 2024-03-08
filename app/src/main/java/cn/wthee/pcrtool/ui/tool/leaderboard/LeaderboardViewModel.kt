@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.enums.LeaderboardSortType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.FilterLeaderboard
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -167,44 +168,50 @@ class LeaderboardViewModel @Inject constructor(
             }
         }
 
-        //排序
+        //排序，降低露娜塔、主线的权重
+        val towerWeight = 0.5
+        val questWeight = 0.5
         data = data?.sortedWith { o1, o2 ->
             (if (filter.asc) 1 else -1) * when (filter.sort) {
-                1 -> {
+                LeaderboardSortType.MAIN_QUEST.type -> {
                     //主线
                     val quest = (o1.questScore).compareTo(o2.questScore)
                     if (quest == 0) {
-                        (o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(o2.towerScore + o2.pvpScore + o2.clanScore)
+                        (o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(o2.towerScore * towerWeight + o2.pvpScore + o2.clanScore)
                     } else {
                         quest
                     }
                 }
 
-                2 -> {
+                LeaderboardSortType.TOWER.type -> {
                     //露娜塔
                     val tower = (o1.towerScore).compareTo(o2.towerScore)
                     if (tower == 0) {
-                        (o1.questScore + o1.pvpScore + o1.clanScore).compareTo(o2.questScore + o2.pvpScore + o2.clanScore)
+                        (o1.questScore * questWeight + o1.pvpScore + o1.clanScore).compareTo(o2.questScore * questWeight + o2.pvpScore + o2.clanScore)
                     } else {
                         tower
                     }
                 }
 
-                3 -> {
+                LeaderboardSortType.PVP.type -> {
                     //pvp
                     val pvp = (o1.pvpScore).compareTo(o2.pvpScore)
                     if (pvp == 0) {
-                        (o1.questScore + o1.towerScore + o1.clanScore).compareTo(o2.questScore + o2.towerScore + o2.clanScore)
+                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.clanScore).compareTo(
+                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.clanScore
+                        )
                     } else {
                         pvp
                     }
                 }
 
-                4 -> {
+                LeaderboardSortType.CLAN_BATTLE.type -> {
                     //公会战
                     val clan = (o1.clanScore).compareTo(o2.clanScore)
                     if (clan == 0) {
-                        (o1.questScore + o1.towerScore + o1.pvpScore).compareTo(o2.questScore + o2.towerScore + o2.pvpScore)
+                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.pvpScore).compareTo(
+                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.pvpScore
+                        )
                     } else {
                         clan
                     }
@@ -213,13 +220,13 @@ class LeaderboardViewModel @Inject constructor(
                 else -> {
                     //综合
                     val all =
-                        (o1.questScore + o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(
-                            o2.questScore + o2.towerScore + o2.pvpScore + o2.clanScore
+                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(
+                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.pvpScore + o2.clanScore
                         )
                     //综合分数相等时
                     if (all == 0) {
                         val sub =
-                            (o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(o1.towerScore + o2.pvpScore + o2.clanScore)
+                            (o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(o1.towerScore * towerWeight + o2.pvpScore + o2.clanScore)
                         //露娜塔、pvp、公会战总分相同时
                         if (sub == 0) {
                             (o1.pvpScore + o1.clanScore).compareTo(o2.pvpScore + o2.clanScore)

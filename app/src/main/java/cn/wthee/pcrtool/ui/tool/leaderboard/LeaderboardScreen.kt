@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.LeaderboardSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -178,7 +179,7 @@ fun LeaderboardScreen(
         }
     ) {
         Column {
-
+            //标题、排序
             ExpandableHeader(
                 scrollState = scrollState,
                 title = stringResource(id = R.string.leader_source),
@@ -252,10 +253,10 @@ private fun LeaderboardContent(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-        stringResource(id = R.string.quest),
-        stringResource(id = R.string.tower),
-        stringResource(id = R.string.jjc),
-        stringResource(id = R.string.clan),
+        LeaderboardSortType.MAIN_QUEST,
+        LeaderboardSortType.TOWER,
+        LeaderboardSortType.PVP,
+        LeaderboardSortType.CLAN_BATTLE
     )
 
     Row(
@@ -265,12 +266,12 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
         )
     ) {
         Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediumPadding * 2))
-        titles.forEachIndexed { index, title ->
+        titles.forEach {
             SortTitleButton(
                 modifier = Modifier.weight(1f),
-                index = index + 1,
-                text = title,
-                sort = sort,
+                sortType = it.type,
+                text = stringResource(id = it.titleId),
+                currentSortType = sort,
                 asc = asc
             )
         }
@@ -285,13 +286,13 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
 @Composable
 private fun SortTitleButton(
     modifier: Modifier,
-    index: Int,
     text: String,
-    sort: MutableState<Int>,
-    asc: MutableState<Boolean>
+    currentSortType: MutableState<Int>,
+    asc: MutableState<Boolean>,
+    sortType: Int
 ) {
     val context = LocalContext.current
-    val color = if (sort.value == index) {
+    val color = if (currentSortType.value == sortType) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onSurface
@@ -302,10 +303,10 @@ private fun SortTitleButton(
             .clip(MaterialTheme.shapes.small)
             .clickable {
                 VibrateUtil(context).single()
-                if (sort.value == index) {
+                if (currentSortType.value == sortType) {
                     asc.value = !asc.value
                 } else {
-                    sort.value = index
+                    currentSortType.value = sortType
                     asc.value = false
                 }
             },
@@ -318,8 +319,8 @@ private fun SortTitleButton(
             style = MaterialTheme.typography.titleSmall
         )
         MainIcon(
-            data = when (sort.value) {
-                index -> {
+            data = when (currentSortType.value) {
+                sortType -> {
                     if (asc.value) {
                         MainIconType.SORT_ASC
                     } else {
