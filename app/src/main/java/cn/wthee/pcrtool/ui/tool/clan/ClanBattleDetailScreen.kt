@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -28,6 +29,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyWeaknessContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 
@@ -113,10 +115,21 @@ private fun ClanBattleDetailContent(
                     .getUrl(ImageRequestHelper.ICON_UNIT, it)
             )
         }
-        //图标指示器
-        IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList)
+
         //BOSS信息
         if (bossDataList.isNotEmpty()) {
+            //图标指示器
+            IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList) { index ->
+                clanBattleInfo.getWeakness(index)?.let {
+                    Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                        EnemyWeaknessContent(
+                            weaknessData = it,
+                            showText = false
+                        )
+                    }
+                }
+            }
+
             HorizontalPager(state = pagerState) {
                 /**
                  * fixme 页面滑动问题
