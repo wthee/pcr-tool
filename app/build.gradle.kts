@@ -12,7 +12,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2024.02.01"
+val composeBom = "2024.02.02"
 val composeCompilerVersion = "1.5.10"
 val appVersionCode = 383
 val appVersionName = "3.8.3"
@@ -115,7 +115,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     //compose BOM
     implementation(platform("androidx.compose:compose-bom:${composeBom}"))
@@ -124,26 +124,23 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material:1.7.0-alpha04")
+    implementation("androidx.compose.material:material-navigation:1.7.0-alpha04")
     implementation("androidx.compose.material3:material3")
 
-    //Accompanist
-    val accompanistVersion = "0.34.0"
-    implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
-
     //Browser
-    implementation("androidx.browser:browser:1.7.0")
+    implementation("androidx.browser:browser:1.8.0")
 
     //Bugly
     implementation("com.tencent.bugly:crashreport:4.1.9.3")
 
     //Coil
-    val coilVersion = "3.0.0-alpha04"
+    val coilVersion = "3.0.0-alpha06"
     implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
     implementation("io.coil-kt.coil3:coil-network-ktor:$coilVersion")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.0-beta01")
+    implementation("androidx.datastore:datastore-preferences:1.1.0-beta02")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
@@ -151,7 +148,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     //ktor
-    val ktorVersion = "2.3.8"
+    val ktorVersion = "2.3.9"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
