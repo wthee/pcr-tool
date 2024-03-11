@@ -35,8 +35,10 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
             } catch (_: Exception) {
 
             }
-        } else if (lv > Constants.TP_LIMIT_LEVEL) {
-            //等级大于260时，查询新技能信息
+        }
+
+        //等级大于260时，查询新技能信息
+        if (lv > Constants.TP_LIMIT_LEVEL) {
             try {
                 val tpRfSkillId = skillDao.getRfSkillId(
                     skillId = skillId,
