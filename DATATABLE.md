@@ -24,7 +24,7 @@
 | event_story_detail            | 剧情活动详情          |                |
 | ex_equipment_category         | ex 装备类型         |                |
 | ex_equipment_data             | ex 装备           |                |
-| experience_unit               | 经验              |                |
+| experience_team               | 经验（账号）          | 不含等级突破         |
 | gacha_data                    | 卡池              |                |
 | gacha_exchange_lineup         | 卡池交换信息          |                |
 | guild                         | 角色公会            |                |
