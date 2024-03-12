@@ -16,7 +16,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -29,7 +28,6 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
-import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
@@ -39,8 +37,6 @@ import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 /**
  * 本地存储：收藏信息
@@ -71,7 +67,6 @@ class MainActivity : ComponentActivity() {
 
         lateinit var navViewModel: NavViewModel
 
-        @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
 
         @SuppressLint("StaticFieldLeak")
@@ -90,16 +85,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //系统栏适配
         enableEdgeToEdge()
-        //用户设置信息
-        runBlocking {
-            val preferences = dataStoreSetting.data.first()
-            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
-            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
-            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
-            regionType = RegionType.getByValue(
-                preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
-            )
-        }
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
