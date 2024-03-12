@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.second
 import javax.inject.Inject
 
@@ -121,14 +120,12 @@ class UnitRepository @Inject constructor(
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
-                    val sd1 = o1.startTime.formatTime
-                    val sd2 = o2.startTime.formatTime
+                    val second = o1.startTime.second(o2.startTime)
                     when {
-                        sd1.second(sd2) > 0 -> 1
-                        sd1.second(sd2) == 0L -> {
+                        second > 0 -> 1
+                        second == 0L -> {
                             o1.id.compareTo(o2.id)
                         }
-
                         else -> -1
                     } * (if (filter.asc) 1 else -1)
                 }

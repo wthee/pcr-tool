@@ -76,7 +76,7 @@ interface UnitDao {
             unit_data.atk_type,
             COALESCE(quest_data.quest_id, 0 ) AS r6Id,
             (
-                CASE WHEN unit_data.cutin_1 = 0 AND (unit_data.start_time = '2088/01/01 0:00:00' OR unit_data.start_time = "2015/4/1 15:00") 
+                CASE WHEN unit_data.cutin_1 = 0 AND (unit_data.start_time = '2088/01/01 0:00:00' OR unit_data.start_time = '2015/4/1 15:00') 
                 THEN '2000/01/01 00:00:00' 
                 ELSE COALESCE(unit_data.start_time, '2015/01/01 00:00:00') END
             ) AS unit_start_time,

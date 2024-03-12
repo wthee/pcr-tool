@@ -22,24 +22,30 @@ val df2: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.CHINESE
  */
 val String.formatTime: String
     get() {
-        var list = this.split(" ")[0].split("/")
-        if (list.size == 1) {
-            list = this.split(" ")[0].split("-")
-        }
-        return try {
-            "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-                var hms = this.split(" ")[1]
-                hms = hms.replace(' ', '0')
-                if (hms.length < 6) {
-                    hms = "$hms:00"
-                }
-                " $hms"
-            } else {
-                ""
+        //分隔“年月日”和“时分秒”
+        val dateList = this.replace("  ", " ")
+            .replace("-", "/")
+            .split(" ")
+        //年月日
+        val ymsList = dateList[0].split("/")
+        //时分秒默认00
+        val hmsList = arrayListOf("00", "00", "00")
+        //重新填充时分秒
+        if (dateList.size > 1) {
+            val newHmsList = dateList[1].split(":")
+            if (newHmsList.isNotEmpty()) {
+                hmsList[0] = newHmsList[0]
             }
-        } catch (_: Exception) {
-            ""
+            if (newHmsList.size > 1) {
+                hmsList[1] = newHmsList[1]
+            }
+            if (newHmsList.size > 2) {
+                hmsList[2] = newHmsList[2]
+            }
         }
+        val ymdStr = "${ymsList[0]}/${ymsList[1].fillZero()}/${ymsList[2].fillZero()}"
+        val hmsStr = "${hmsList[0].fillZero()}:${hmsList[1].fillZero()}:${hmsList[2].fillZero()}"
+        return "$ymdStr $hmsStr"
     }
 
 /**
@@ -184,8 +190,7 @@ fun String.second(str2: String): Long {
     return try {
         val d1 = df1.parse(this.formatTime)!!
         val d2 = df1.parse(str2.formatTime)!!
-        // + 1s
-        val time = d1.time - d2.time + 1000
+        val time = d1.time - d2.time
         time / 1000
     } catch (e: Exception) {
         0L
