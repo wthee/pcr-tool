@@ -72,6 +72,9 @@ class ImageRequestHelper {
         //过场漫画
         const val COMIC = "comic/"
         const val COMIC_ZH = "comic_zh/"
+
+        //错误链接
+        const val ERROR_URL = "/.webp"
     }
 
     /**
