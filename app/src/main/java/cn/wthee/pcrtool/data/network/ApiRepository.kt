@@ -247,7 +247,7 @@ class ApiRepository {
      * 排行信息
      */
     suspend fun getLeader(): ResponseData<List<LeaderboardData>> =
-        postCatching("leaders/score")
+        postCatching("leaders/score/v2")
 
     /**
      * 排行评级信息

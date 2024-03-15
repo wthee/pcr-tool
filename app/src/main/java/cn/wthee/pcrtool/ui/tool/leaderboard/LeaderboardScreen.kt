@@ -81,7 +81,7 @@ fun LeaderboardScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val uiState by leaderBoardViewModel.uiState.collectAsStateWithLifecycle()
-    val hasTalent = (uiState.talentUnitMap[1] ?: arrayListOf()).isNotEmpty()
+    val hasTalent = (uiState.talentUnitMap[TalentType.FIRE.type] ?: arrayListOf()).isNotEmpty()
 
     val filter = uiState.filterLeader
     val sort = remember {
@@ -253,10 +253,9 @@ private fun LeaderboardContent(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-        LeaderboardSortType.MAIN_QUEST,
-        LeaderboardSortType.TOWER,
+        LeaderboardSortType.TALENT,
         LeaderboardSortType.PVP,
-        LeaderboardSortType.CLAN_BATTLE
+        LeaderboardSortType.CLAN_BATTLE,
     )
 
     Row(
@@ -412,8 +411,7 @@ private fun LeaderboardItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                GradeText(leader.quest, modifier = Modifier.weight(1f))
-                GradeText(leader.tower, modifier = Modifier.weight(1f))
+                GradeText(leader.talent, modifier = Modifier.weight(1f))
                 GradeText(leader.pvp, modifier = Modifier.weight(1f))
                 GradeText(leader.clan, modifier = Modifier.weight(1f))
             }
@@ -558,10 +556,9 @@ private fun LeaderboardItemPreview() {
         LeaderboardItem(
             leader = LeaderboardData(
                 unitId = 1,
-                quest = "SS+",
                 pvp = "S",
                 clan = "A",
-                tower = "A",
+                talent = "A",
                 updateTime = "2023-02-02 22:33:44"
             ),
             index = 1,

@@ -495,11 +495,11 @@ enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
  * 角色排行排序类型枚举
  */
 enum class LeaderboardSortType(val type: Int, val titleId: Int) {
-    ALL(type = 0, titleId = R.string.quest),
-    MAIN_QUEST(type = 1, titleId = R.string.quest),
-    TOWER(type = 2, titleId = R.string.tower),
-    PVP(type = 3, titleId = R.string.jjc),
-    CLAN_BATTLE(type = 4, titleId = R.string.clan);
+    ALL(type = 0, titleId = R.string.all),
+    TALENT(type = 1, titleId = R.string.talent),
+    PVP(type = 2, titleId = R.string.jjc),
+    CLAN_BATTLE(type = 3, titleId = R.string.clan),
+    ;
 
     companion object {
         fun getByType(type: Int) = entries

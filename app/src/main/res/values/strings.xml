@@ -119,6 +119,7 @@
     <string name="atk_type">攻击类型</string>
     <string name="talent_type">天赋类型</string>
     <string name="unit_talent">角色天赋</string>
+    <string name="talent">天赋</string>
     <string name="physical">物理</string>
     <string name="magic">魔法</string>
     <string name="element_type">属性</string>

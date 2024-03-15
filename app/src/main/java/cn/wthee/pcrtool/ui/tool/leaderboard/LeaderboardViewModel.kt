@@ -168,37 +168,15 @@ class LeaderboardViewModel @Inject constructor(
             }
         }
 
-        //排序，降低露娜塔、主线的权重
-        val towerWeight = 0.5
-        val questWeight = 0.5
         data = data?.sortedWith { o1, o2 ->
             (if (filter.asc) 1 else -1) * when (filter.sort) {
-                LeaderboardSortType.MAIN_QUEST.type -> {
-                    //主线
-                    val quest = (o1.questScore).compareTo(o2.questScore)
-                    if (quest == 0) {
-                        (o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(o2.towerScore * towerWeight + o2.pvpScore + o2.clanScore)
-                    } else {
-                        quest
-                    }
-                }
-
-                LeaderboardSortType.TOWER.type -> {
-                    //露娜塔
-                    val tower = (o1.towerScore).compareTo(o2.towerScore)
-                    if (tower == 0) {
-                        (o1.questScore * questWeight + o1.pvpScore + o1.clanScore).compareTo(o2.questScore * questWeight + o2.pvpScore + o2.clanScore)
-                    } else {
-                        tower
-                    }
-                }
 
                 LeaderboardSortType.PVP.type -> {
                     //pvp
                     val pvp = (o1.pvpScore).compareTo(o2.pvpScore)
                     if (pvp == 0) {
-                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.clanScore).compareTo(
-                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.clanScore
+                        (o1.clanScore + o1.talentScore).compareTo(
+                            o2.clanScore + o2.talentScore
                         )
                     } else {
                         pvp
@@ -209,8 +187,20 @@ class LeaderboardViewModel @Inject constructor(
                     //公会战
                     val clan = (o1.clanScore).compareTo(o2.clanScore)
                     if (clan == 0) {
-                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.pvpScore).compareTo(
-                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.pvpScore
+                        (o1.talentScore + o1.pvpScore).compareTo(
+                            o2.talentScore + o2.pvpScore
+                        )
+                    } else {
+                        clan
+                    }
+                }
+
+                LeaderboardSortType.TALENT.type -> {
+                    //天赋
+                    val clan = (o1.talentScore).compareTo(o2.talentScore)
+                    if (clan == 0) {
+                        (o1.clanScore + o1.pvpScore).compareTo(
+                            o2.clanScore + o2.pvpScore
                         )
                     } else {
                         clan
@@ -220,16 +210,16 @@ class LeaderboardViewModel @Inject constructor(
                 else -> {
                     //综合
                     val all =
-                        (o1.questScore * questWeight + o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(
-                            o2.questScore * questWeight + o2.towerScore * towerWeight + o2.pvpScore + o2.clanScore
+                        (o1.talentScore + o1.pvpScore + o1.clanScore).compareTo(
+                            o2.talentScore + o2.pvpScore + o2.clanScore
                         )
                     //综合分数相等时
                     if (all == 0) {
                         val sub =
-                            (o1.towerScore * towerWeight + o1.pvpScore + o1.clanScore).compareTo(o1.towerScore * towerWeight + o2.pvpScore + o2.clanScore)
-                        //露娜塔、pvp、公会战总分相同时
-                        if (sub == 0) {
                             (o1.pvpScore + o1.clanScore).compareTo(o2.pvpScore + o2.clanScore)
+                        //pvp、公会战总分相同时
+                        if (sub == 0) {
+                            (o1.talentScore).compareTo(o2.talentScore)
                         } else {
                             sub
                         }
