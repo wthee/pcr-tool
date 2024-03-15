@@ -27,7 +27,7 @@ fun PCRToolApp(
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     AppResumeEffect {
-        mainViewModel.loadSetting()
+        mainViewModel.getR6Ids()
     }
 
     PCRToolComposeTheme {

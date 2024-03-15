@@ -28,6 +28,7 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.navigation.NavViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatService
@@ -37,6 +38,8 @@ import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 /**
  * 本地存储：收藏信息
@@ -77,6 +80,8 @@ class MainActivity : ComponentActivity() {
         var dynamicColorOnFlag = true
         var r6Ids = listOf<Int>()
         var regionType = RegionType.CN
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +91,8 @@ class MainActivity : ComponentActivity() {
         //系统栏适配
         enableEdgeToEdge()
         ActivityHelper.instance.currentActivity = this
+        //用户设置信息
+        initUserPreferences()
         //设置 handler
         setHandler()
 
@@ -110,6 +117,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(context, PvpFloatService::class.java))
@@ -117,6 +125,21 @@ class MainActivity : ComponentActivity() {
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll()
+    }
+
+    /**
+     * 加载设置
+     */
+    private fun initUserPreferences() {
+        runBlocking {
+            val preferences = context.dataStoreSetting.data.first()
+            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
+            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
+            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
+            regionType = RegionType.getByValue(
+                preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
+            )
+        }
     }
 
     /**
