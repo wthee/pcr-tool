@@ -65,7 +65,7 @@ fun LeaderTierScreen(
     val scope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val uiState by leaderTierViewModel.uiState.collectAsStateWithLifecycle()
-    val hasTalent = (uiState.talentUnitMap[1] ?: arrayListOf()).isNotEmpty()
+    val hasTalent = (uiState.talentUnitMap[TalentType.FIRE.type] ?: arrayListOf()).isNotEmpty()
 
     //评级类型
     val tabs = arrayListOf(
