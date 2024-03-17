@@ -6,14 +6,14 @@ plugins {
 
 buildscript {
     val kotlinVersion by extra("1.9.22")
-    val hiltVersion by extra("2.50")
+    val hiltVersion by extra("2.51")
 
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.3.0-rc02")
+        classpath("com.android.tools.build:gradle:8.3.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
 
