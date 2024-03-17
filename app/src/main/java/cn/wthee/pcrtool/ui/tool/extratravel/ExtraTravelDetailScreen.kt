@@ -160,8 +160,8 @@ private fun ExtraEquipRewardIconGrid(
             horizontal = Dimen.commonItemPadding
         ),
         itemCount = equipIdList.size,
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.commonItemPadding
+        itemWidth = Dimen.iconSize + Dimen.commonItemPadding * 2,
+        verticalContentPadding = Dimen.commonItemPadding
     ) {
         val equipId = equipIdList[it]
         val selected = selectedId == equipId
@@ -189,7 +189,6 @@ private fun ExtraEquipRewardIconGrid(
                     )
                 )
             }
-
         }
     }
 }
@@ -202,8 +201,8 @@ private fun ExtraEquipSubGroupPreview() {
         ExtraEquipGroup(
             category = 1,
             categoryName = stringResource(id = R.string.debug_short_text),
-            equipIdList = arrayListOf(1, 2, 3, 4),
-            dropOddsList = arrayListOf(1000, 20000, 3333, 444444),
+            equipIdList = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8),
+            dropOddsList = arrayListOf(750000, 120000, 120000, 120000, 6640, 4500, 3333, 3333),
             selectedId = 2
         ) { }
     }

@@ -668,18 +668,18 @@ fun CharacterTagRow(
                 //攻击
                 val atkType = AtkType.getByType(basicInfo.atkType)
 
-                CharacterTag(
+                Tag(
                     modifier = Modifier
                         .padding(horizontal = Dimen.exSmallPadding)
                         .align(Alignment.CenterVertically),
                     text = stringResource(
-                        id = if (talentType != TalentType.UNKNOWN) {
+                        id = if (talentType != TalentType.ALL) {
                             talentType.typeNameId
                         } else {
                             atkType.typeNameId
                         }
                     ),
-                    backgroundColor = if (talentType != TalentType.UNKNOWN) {
+                    backgroundColor = if (talentType != TalentType.ALL) {
                         talentType.color
                     } else {
                         atkType.color
@@ -693,7 +693,7 @@ fun CharacterTagRow(
                 }
 
                 //获取方式
-                CharacterTag(
+                Tag(
                     modifier = Modifier
                         .padding(horizontal = Dimen.exSmallPadding)
                         .align(Alignment.CenterVertically),
@@ -705,7 +705,7 @@ fun CharacterTagRow(
 
             //日期
             if (endText != null && endTextColor != null) {
-                CharacterTag(
+                Tag(
                     text = endText,
                     backgroundColor = Color.Transparent,
                     textColor = endTextColor,
@@ -725,7 +725,7 @@ fun CharacterTagRow(
             ) {
                 if (tipText != null) {
                     //提示
-                    CharacterTag(
+                    Tag(
                         modifier = Modifier.padding(start = Dimen.smallPadding),
                         text = tipText,
                         backgroundColor = Color.Transparent,
@@ -736,7 +736,7 @@ fun CharacterTagRow(
 
                 //日期
                 if (endText != null && endTextColor != null) {
-                    CharacterTag(
+                    Tag(
                         text = endText,
                         backgroundColor = Color.Transparent,
                         textColor = endTextColor,
@@ -760,7 +760,7 @@ fun CharacterPositionTag(
     position: Int
 ) {
     //位置
-    CharacterTag(
+    Tag(
         modifier = modifier,
         text = position.toString(),
         backgroundColor = PositionType.getPositionType(position).color
@@ -774,12 +774,12 @@ fun CharacterPositionTag(
 }
 
 /**
- * 角色属性标签
+ * 标签
  *
  * @param leadingContent 开头内容
  */
 @Composable
-fun CharacterTag(
+fun Tag(
     modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,

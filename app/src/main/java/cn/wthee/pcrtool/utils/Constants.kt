@@ -40,17 +40,14 @@ object Constants {
     //国服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_CN = "redive_cn.db.br"
     const val DATABASE_NAME_CN = "redive_cn.db"
-    const val DATABASE_WAL_CN = "redive_cn.db-wal"
 
     //台服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_TW = "redive_tw.db.br"
     const val DATABASE_NAME_TW = "redive_tw.db"
-    const val DATABASE_WAL_TW = "redive_tw.db-wal"
 
     //日服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
     const val DATABASE_NAME_JP = "redive_jp.db"
-    const val DATABASE_WAL_JP = "redive_jp.db-wal"
 
     //安装包名称
     const val DOWNLOAD_APK_NAME = "pcrtool.apk"

@@ -55,7 +55,7 @@ fun MainTitleText(
             color = colorWhite,
             style = textStyle,
             maxLines = maxLines,
-            modifier = if (selectable) Modifier else modifier
+            modifier = (if (selectable) Modifier else modifier)
                 .background(color = backgroundColor, shape = MaterialTheme.shapes.extraSmall)
                 .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
         )
@@ -301,12 +301,16 @@ fun SelectText(
  * 头部标题
  */
 @Composable
-fun HeaderText(modifier: Modifier = Modifier, text: String) {
+fun HeaderText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary,
+        color = color,
         modifier = modifier
     )
 }

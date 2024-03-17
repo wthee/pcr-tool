@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.enums.LeaderboardSortType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.FilterLeaderboard
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -30,7 +32,12 @@ data class LeaderboardUiState(
     val currentList: List<LeaderboardData> = emptyList(),
     //筛选
     val filterLeader: FilterLeaderboard = FilterLeaderboard(),
-    val loadState: LoadState = LoadState.Loading
+    val loadState: LoadState = LoadState.Loading,
+
+    //天赋筛选相关
+    val talentType: TalentType = TalentType.ALL,
+    val talentUnitMap: HashMap<Int, ArrayList<Int>> = hashMapOf(),
+    val openTalentDialog: Boolean = false,
 )
 
 /**
@@ -51,6 +58,7 @@ class LeaderboardViewModel @Inject constructor(
 
 
     init {
+        getTalentUnitMap()
         initLeader()
     }
 
@@ -90,12 +98,58 @@ class LeaderboardViewModel @Inject constructor(
             var data = _uiState.value.leaderboardResponseData?.data
             data = sortLeaderboardList(filter, data)
 
+            //天赋类型
+            val talentTypeValue = _uiState.value.talentType.type
+            val unitIdList = _uiState.value.talentUnitMap[talentTypeValue] ?: arrayListOf()
+
             data?.let {
                 _uiState.update {
                     it.copy(
-                        currentList = data
+                        currentList = if (unitIdList.isNotEmpty()) {
+                            data.filter { leader ->
+                                unitIdList.contains(leader.unitId)
+                            }
+                        } else {
+                            data
+                        }
                     )
                 }
+            }
+        }
+    }
+
+    /**
+     * 切换天赋类型
+     */
+    fun changeTalentSelect(type: Int) {
+        _uiState.update {
+            it.copy(
+                talentType = TalentType.getByType(type)
+            )
+        }
+    }
+
+    /**
+     * 弹窗状态更新
+     */
+    fun changeTalentDialog(openDialog: Boolean) {
+        _uiState.update {
+            it.copy(
+                openTalentDialog = openDialog
+            )
+        }
+    }
+
+    /**
+     * 获取角色id按天赋分组
+     */
+    private fun getTalentUnitMap() {
+        viewModelScope.launch {
+            val map = unitRepository.getTalentUnitMap()
+            _uiState.update {
+                it.copy(
+                    talentUnitMap = map
+                )
             }
         }
     }
@@ -114,44 +168,40 @@ class LeaderboardViewModel @Inject constructor(
             }
         }
 
-        //排序
         data = data?.sortedWith { o1, o2 ->
             (if (filter.asc) 1 else -1) * when (filter.sort) {
-                1 -> {
-                    //主线
-                    val quest = (o1.questScore).compareTo(o2.questScore)
-                    if (quest == 0) {
-                        (o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(o2.towerScore + o2.pvpScore + o2.clanScore)
-                    } else {
-                        quest
-                    }
-                }
 
-                2 -> {
-                    //露娜塔
-                    val tower = (o1.towerScore).compareTo(o2.towerScore)
-                    if (tower == 0) {
-                        (o1.questScore + o1.pvpScore + o1.clanScore).compareTo(o2.questScore + o2.pvpScore + o2.clanScore)
-                    } else {
-                        tower
-                    }
-                }
-
-                3 -> {
+                LeaderboardSortType.PVP.type -> {
                     //pvp
                     val pvp = (o1.pvpScore).compareTo(o2.pvpScore)
                     if (pvp == 0) {
-                        (o1.questScore + o1.towerScore + o1.clanScore).compareTo(o2.questScore + o2.towerScore + o2.clanScore)
+                        (o1.clanScore + o1.talentScore).compareTo(
+                            o2.clanScore + o2.talentScore
+                        )
                     } else {
                         pvp
                     }
                 }
 
-                4 -> {
+                LeaderboardSortType.CLAN_BATTLE.type -> {
                     //公会战
                     val clan = (o1.clanScore).compareTo(o2.clanScore)
                     if (clan == 0) {
-                        (o1.questScore + o1.towerScore + o1.pvpScore).compareTo(o2.questScore + o2.towerScore + o2.pvpScore)
+                        (o1.talentScore + o1.pvpScore).compareTo(
+                            o2.talentScore + o2.pvpScore
+                        )
+                    } else {
+                        clan
+                    }
+                }
+
+                LeaderboardSortType.TALENT.type -> {
+                    //天赋
+                    val clan = (o1.talentScore).compareTo(o2.talentScore)
+                    if (clan == 0) {
+                        (o1.clanScore + o1.pvpScore).compareTo(
+                            o2.clanScore + o2.pvpScore
+                        )
                     } else {
                         clan
                     }
@@ -160,16 +210,16 @@ class LeaderboardViewModel @Inject constructor(
                 else -> {
                     //综合
                     val all =
-                        (o1.questScore + o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(
-                            o2.questScore + o2.towerScore + o2.pvpScore + o2.clanScore
+                        (o1.talentScore + o1.pvpScore + o1.clanScore).compareTo(
+                            o2.talentScore + o2.pvpScore + o2.clanScore
                         )
                     //综合分数相等时
                     if (all == 0) {
                         val sub =
-                            (o1.towerScore + o1.pvpScore + o1.clanScore).compareTo(o1.towerScore + o2.pvpScore + o2.clanScore)
-                        //露娜塔、pvp、公会战总分相同时
-                        if (sub == 0) {
                             (o1.pvpScore + o1.clanScore).compareTo(o2.pvpScore + o2.clanScore)
+                        //pvp、公会战总分相同时
+                        if (sub == 0) {
+                            (o1.talentScore).compareTo(o2.talentScore)
                         } else {
                             sub
                         }

@@ -85,5 +85,4 @@ interface ClanBattleDao {
         clanBattleId: Int,
         phase: Int
     ): List<ClanBattleTargetCountData>
-
 }

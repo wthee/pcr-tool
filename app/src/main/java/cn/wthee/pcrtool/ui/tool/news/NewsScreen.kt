@@ -50,6 +50,7 @@ import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.toDate
 
 /**
  * 公告列表
@@ -188,7 +189,7 @@ fun NewsItem(
                 modifier = Modifier.placeholder(visible = placeholder)
             )
             MainTitleText(
-                text = news.date.formatTime,
+                text = news.date.formatTime.toDate,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding)
                     .placeholder(visible = placeholder)

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +34,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.LeaderboardSortType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.MainActivity
@@ -47,6 +50,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainText
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -77,6 +81,7 @@ fun LeaderboardScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val uiState by leaderBoardViewModel.uiState.collectAsStateWithLifecycle()
+    val hasTalent = (uiState.talentUnitMap[TalentType.FIRE.type] ?: arrayListOf()).isNotEmpty()
 
     val filter = uiState.filterLeader
     val sort = remember {
@@ -92,22 +97,43 @@ fun LeaderboardScreen(
     }
     filter.onlyLast = onlyLast.value
 
-    LaunchedEffect(sort.intValue, asc.value, onlyLast.value) {
+    LaunchedEffect(sort.intValue, asc.value, onlyLast.value, uiState.talentType) {
         leaderBoardViewModel.refreshLeader(filter)
+    }
+
+    //天赋类型
+    val talentTabs = arrayListOf<String>()
+    TalentType.entries.forEachIndexed { _, talentType ->
+        talentTabs.add(
+            stringResource(id = talentType.typeNameId)
+        )
     }
 
 
     MainScaffold(
         fab = {
             //重置
-            if (sort.intValue != 0 || asc.value || onlyLast.value) {
+            if (sort.intValue != 0 || asc.value || onlyLast.value || uiState.talentType != TalentType.ALL) {
                 MainSmallFab(
                     iconType = MainIconType.RESET,
                     onClick = {
                         sort.intValue = 0
                         asc.value = false
                         onlyLast.value = false
+                        leaderBoardViewModel.changeTalentSelect(TalentType.ALL.type)
                     }
+                )
+            }
+
+            if (hasTalent && uiState.loadState == LoadState.Success) {
+                SelectTypeFab(
+                    icon = MainIconType.TALENT,
+                    tabs = talentTabs,
+                    selectedIndex = uiState.talentType.type,
+                    openDialog = uiState.openTalentDialog,
+                    changeDialog = leaderBoardViewModel::changeTalentDialog,
+                    changeSelect = leaderBoardViewModel::changeTalentSelect,
+                    noPadding = true
                 )
             }
 
@@ -126,30 +152,34 @@ fun LeaderboardScreen(
                 }
             )
         },
-        secondLineFab = {
-            if (uiState.loadState == LoadState.Success) {
-                //切换显示
-                MainSmallFab(
-                    iconType = MainIconType.FILTER,
-                    text = if (onlyLast.value) {
-                        stringResource(id = R.string.last_update)
-                    } else {
-                        stringResource(id = R.string.all)
-                    },
-                    modifier = Modifier
-                        .padding(
-                            end = Dimen.fabMargin,
-                            bottom = Dimen.fabMarginLargeBottom
-                        ),
-                    onClick = {
-                        onlyLast.value = !onlyLast.value
-                    }
-                )
-            }
+//        secondLineFab = {
+//            if (uiState.loadState == LoadState.Success) {
+//                //切换显示
+//                MainSmallFab(
+//                    iconType = MainIconType.FILTER,
+//                    text = if (onlyLast.value) {
+//                        stringResource(id = R.string.last_update)
+//                    } else {
+//                        stringResource(id = R.string.all)
+//                    },
+//                    modifier = Modifier
+//                        .padding(
+//                            end = Dimen.fabMargin,
+//                            bottom = Dimen.fabMarginLargeBottom
+//                        ),
+//                    onClick = {
+//                        onlyLast.value = !onlyLast.value
+//                    }
+//                )
+//            }
+//        },
+        enableClickClose = uiState.openTalentDialog,
+        onCloseClick = {
+            leaderBoardViewModel.changeTalentDialog(false)
         }
     ) {
         Column {
-
+            //标题、排序
             ExpandableHeader(
                 scrollState = scrollState,
                 title = stringResource(id = R.string.leader_source),
@@ -169,35 +199,51 @@ fun LeaderboardScreen(
                     }
                 }
             ) {
-                LazyColumn(
-                    state = scrollState
-                ) {
-                    itemsIndexed(
-                        items = uiState.currentList,
-                        key = { _, it ->
-                            it.name
-                        }
-                    ) { index, it ->
-                        //获取角色名
-                        val flow = remember(it.unitId) {
-                            leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
-                        }
-                        val basicInfo by flow.collectAsState(initial = null)
-                        LeaderboardItem(
-                            leader = it,
-                            index = index,
-                            basicInfo = basicInfo,
-                            toCharacterDetail = toCharacterDetail
-                        )
-                    }
-                    items(count = 2) {
-                        CommonSpacer()
-                    }
-                }
+                LeaderboardContent(
+                    scrollState = scrollState,
+                    leaderList = uiState.currentList,
+                    leaderBoardViewModel = leaderBoardViewModel,
+                    toCharacterDetail = toCharacterDetail
+                )
             }
         }
     }
 
+}
+
+@Composable
+private fun LeaderboardContent(
+    scrollState: LazyListState,
+    leaderList: List<LeaderboardData>,
+    leaderBoardViewModel: LeaderboardViewModel,
+    toCharacterDetail: (Int) -> Unit
+) {
+
+    LazyColumn(
+        state = scrollState
+    ) {
+        itemsIndexed(
+            items = leaderList,
+            key = { _, it ->
+                it.name
+            }
+        ) { index, it ->
+            //获取角色名
+            val flow = remember(it.unitId) {
+                leaderBoardViewModel.getCharacterBasicInfo(it.unitId ?: 0)
+            }
+            val basicInfo by flow.collectAsState(initial = null)
+            LeaderboardItem(
+                leader = it,
+                index = index,
+                basicInfo = basicInfo,
+                toCharacterDetail = toCharacterDetail
+            )
+        }
+        items(count = 2) {
+            CommonSpacer()
+        }
+    }
 }
 
 /**
@@ -207,10 +253,9 @@ fun LeaderboardScreen(
 private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) {
 
     val titles = arrayListOf(
-        stringResource(id = R.string.quest),
-        stringResource(id = R.string.tower),
-        stringResource(id = R.string.jjc),
-        stringResource(id = R.string.clan),
+        LeaderboardSortType.TALENT,
+        LeaderboardSortType.PVP,
+        LeaderboardSortType.CLAN_BATTLE,
     )
 
     Row(
@@ -220,12 +265,12 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
         )
     ) {
         Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediumPadding * 2))
-        titles.forEachIndexed { index, title ->
+        titles.forEach {
             SortTitleButton(
                 modifier = Modifier.weight(1f),
-                index = index + 1,
-                text = title,
-                sort = sort,
+                sortType = it.type,
+                text = stringResource(id = it.titleId),
+                currentSortType = sort,
                 asc = asc
             )
         }
@@ -240,13 +285,13 @@ private fun SortTitleGroup(sort: MutableState<Int>, asc: MutableState<Boolean>) 
 @Composable
 private fun SortTitleButton(
     modifier: Modifier,
-    index: Int,
     text: String,
-    sort: MutableState<Int>,
-    asc: MutableState<Boolean>
+    currentSortType: MutableState<Int>,
+    asc: MutableState<Boolean>,
+    sortType: Int
 ) {
     val context = LocalContext.current
-    val color = if (sort.value == index) {
+    val color = if (currentSortType.value == sortType) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onSurface
@@ -257,10 +302,10 @@ private fun SortTitleButton(
             .clip(MaterialTheme.shapes.small)
             .clickable {
                 VibrateUtil(context).single()
-                if (sort.value == index) {
+                if (currentSortType.value == sortType) {
                     asc.value = !asc.value
                 } else {
-                    sort.value = index
+                    currentSortType.value = sortType
                     asc.value = false
                 }
             },
@@ -273,8 +318,8 @@ private fun SortTitleButton(
             style = MaterialTheme.typography.titleSmall
         )
         MainIcon(
-            data = when (sort.value) {
-                index -> {
+            data = when (currentSortType.value) {
+                sortType -> {
                     if (asc.value) {
                         MainIconType.SORT_ASC
                     } else {
@@ -366,8 +411,7 @@ private fun LeaderboardItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                GradeText(leader.quest, modifier = Modifier.weight(1f))
-                GradeText(leader.tower, modifier = Modifier.weight(1f))
+                GradeText(leader.talent, modifier = Modifier.weight(1f))
                 GradeText(leader.pvp, modifier = Modifier.weight(1f))
                 GradeText(leader.clan, modifier = Modifier.weight(1f))
             }
@@ -512,10 +556,9 @@ private fun LeaderboardItemPreview() {
         LeaderboardItem(
             leader = LeaderboardData(
                 unitId = 1,
-                quest = "SS+",
                 pvp = "S",
                 clan = "A",
-                tower = "A",
+                talent = "A",
                 updateTime = "2023-02-02 22:33:44"
             ),
             index = 1,

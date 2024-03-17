@@ -1,14 +1,20 @@
 package cn.wthee.pcrtool.ui.tool.enemy
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -27,7 +34,9 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.AttackPattern
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
+import cn.wthee.pcrtool.data.db.view.EnemyTalentWeaknessData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.ui.components.AttrList
@@ -40,6 +49,7 @@ import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.Tag
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.skill.loop.SkillLoopScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -53,6 +63,7 @@ import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.copyText
 import cn.wthee.pcrtool.utils.px2dp
+import kotlin.math.abs
 
 
 /**
@@ -74,8 +85,8 @@ fun EnemyDetailScreen(
         uiState.enemyInfo?.let {
             EnemyDetailContent(
                 enemyData = it,
-                isMultiEnemy = uiState.partInfoList.isNotEmpty(),
                 partEnemyList = uiState.partInfoList,
+                weaknessData = uiState.weaknessData,
                 skillList = uiState.skillList,
                 attackPatternList = uiState.attackPatternList,
                 toSummonDetail = toSummonDetail
@@ -91,8 +102,8 @@ fun EnemyDetailScreen(
 @Composable
 fun EnemyDetailContent(
     enemyData: EnemyParameterPro,
-    isMultiEnemy: Boolean,
-    partEnemyList: List<EnemyParameterPro>?,
+    partEnemyList: List<EnemyParameterPro>,
+    weaknessData: EnemyTalentWeaknessData?,
     skillList: List<SkillDetail>?,
     attackPatternList: List<AttackPattern>?,
     toSummonDetail: ((String) -> Unit)? = null,
@@ -101,6 +112,10 @@ fun EnemyDetailContent(
     val openDialog = remember {
         mutableStateOf(false)
     }
+
+    //是否多目标
+    val isMultiEnemy = partEnemyList.isNotEmpty()
+
     //基础或部位信息
     val attrList = if (isMultiEnemy) {
         enemyData.attr.multiplePartEnemy(context)
@@ -109,7 +124,7 @@ fun EnemyDetailContent(
     }
     //部位最大攻击力
     var partAtk = 0
-    partEnemyList?.forEach {
+    partEnemyList.forEach {
         partAtk = maxOf(partAtk, maxOf(it.attr.atk, it.attr.magicStr))
     }
     enemyData.partAtk = partAtk
@@ -140,6 +155,18 @@ fun EnemyDetailContent(
                     .align(Alignment.CenterHorizontally)
             )
         }
+
+        //弱点属性
+        weaknessData?.let {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                EnemyWeaknessContent(weaknessData)
+            }
+        }
+
         //名称
         MainText(
             text = enemyData.name,
@@ -153,6 +180,7 @@ fun EnemyDetailContent(
             text = stringResource(id = R.string.unit_level, enemyData.level),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
         //模型预览
         IconTextButton(
             icon = MainIconType.PREVIEW_UNIT_SPINE,
@@ -178,7 +206,7 @@ fun EnemyDetailContent(
         //属性
         AttrList(attrs = attrList)
         //多目标部位属性
-        partEnemyList?.forEach {
+        partEnemyList.forEach {
             //名称
             MainText(
                 text = it.name,
@@ -282,6 +310,82 @@ fun EnemySkillList(
     }
 }
 
+/**
+ * 弱点属性
+ *
+ * @param showText 是否显示具体数值或圆点
+ */
+@Composable
+fun EnemyWeaknessContent(
+    weaknessData: EnemyTalentWeaknessData,
+    showText: Boolean = true
+) {
+    val weaknessList = weaknessData.getWeaknessList()
+    val context = LocalContext.current
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
+
+
+    TalentType.entries.forEachIndexed { index, talentType ->
+        if (index != 0) {
+            val value = weaknessList[index - 1] - 100
+            if (value != 0) {
+                if (showText) {
+                    //显示文本数值
+                    val valueText = (if (value > 0) {
+                        "+"
+                    } else {
+                        "-"
+                    }) + abs(value) + "%"
+
+                    Tag(
+                        text = stringResource(id = talentType.typeNameId) + valueText,
+                        backgroundColor = talentType.color,
+                        modifier = Modifier
+                            .padding(start = Dimen.exSmallPadding)
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable {
+                                VibrateUtil(context).single()
+                                openDialog.value = true
+                            }
+                    )
+                } else {
+                    //显示圆点
+                    Box(
+                        modifier = Modifier
+                            .padding(
+                                start = Dimen.exSmallPadding,
+                                end = Dimen.exSmallPadding,
+                                top = Dimen.smallPadding
+                            )
+                            .background(
+                                color = talentType.color,
+                                shape = CircleShape
+                            )
+                            .size(Dimen.indicatorSize)
+                    )
+                }
+
+            }
+        }
+    }
+    if (showText) {
+
+        IconTextButton(
+            text = "",
+            icon = MainIconType.HELP,
+            onClick = {
+            }
+        )
+
+        MainAlertDialog(
+            openDialog = openDialog,
+            title = stringResource(id = R.string.talent_weakness),
+            text = stringResource(id = R.string.talent_weakness_tip)
+        )
+    }
+}
 
 /**
  * @see [SkillLoopScreen] 技能循环预览
@@ -297,10 +401,10 @@ private fun EnemyDetailContentPreview() {
                 comment = stringResource(id = R.string.debug_long_text),
                 level = 100
             ),
-            isMultiEnemy = false,
-            partEnemyList = null,
+            partEnemyList = arrayListOf(),
             skillList = arrayListOf(),
             attackPatternList = arrayListOf(),
+            weaknessData = EnemyTalentWeaknessData(),
             toSummonDetail = {}
         )
     }

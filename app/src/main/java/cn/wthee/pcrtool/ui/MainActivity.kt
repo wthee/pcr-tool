@@ -16,7 +16,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -71,7 +70,6 @@ class MainActivity : ComponentActivity() {
 
         lateinit var navViewModel: NavViewModel
 
-        @OptIn(ExperimentalMaterialApi::class)
         lateinit var navSheetState: ModalBottomSheetState
 
         @SuppressLint("StaticFieldLeak")
@@ -82,6 +80,8 @@ class MainActivity : ComponentActivity() {
         var dynamicColorOnFlag = true
         var r6Ids = listOf<Int>()
         var regionType = RegionType.CN
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,17 +90,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //系统栏适配
         enableEdgeToEdge()
-        //用户设置信息
-        runBlocking {
-            val preferences = dataStoreSetting.data.first()
-            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
-            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
-            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
-            regionType = RegionType.getByValue(
-                preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
-            )
-        }
         ActivityHelper.instance.currentActivity = this
+        //用户设置信息
+        initUserPreferences()
         //设置 handler
         setHandler()
 
@@ -125,6 +117,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(context, PvpFloatService::class.java))
@@ -132,6 +125,21 @@ class MainActivity : ComponentActivity() {
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll()
+    }
+
+    /**
+     * 加载设置
+     */
+    private fun initUserPreferences() {
+        runBlocking {
+            val preferences = context.dataStoreSetting.data.first()
+            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
+            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
+            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
+            regionType = RegionType.getByValue(
+                preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
+            )
+        }
     }
 
     /**

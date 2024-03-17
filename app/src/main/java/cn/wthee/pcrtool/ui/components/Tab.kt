@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
@@ -39,7 +38,6 @@ data class TabData(
  *
  * @param onClickCurrentTab 在当前页面再次点击 tab
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainTabRow(
     modifier: Modifier = Modifier,
@@ -87,7 +85,6 @@ fun MainTabRow(
 /**
  * 通用 Tab
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TabItemList(
     pagerState: PagerState,
@@ -146,7 +143,6 @@ private fun TabItemList(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun TabRowPreview() {

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.extraequip.drop
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -57,7 +56,6 @@ fun ExtraEquipDropListScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun ExtraEquipDropListContent(
     equipId: Int,
     dropList: List<ExtraEquipQuestData>,

@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
-import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.second
 import javax.inject.Inject
 
@@ -32,7 +31,12 @@ class UnitRepository @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) {
 
-    suspend fun getUnitIdList() = unitDao.getUnitIdList()
+    suspend fun getUnitIdList() = try {
+        unitDao.getUnitIdList()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUnitIdList")
+        arrayListOf()
+    }
 
     /**
      * 获取角色列表
@@ -116,14 +120,12 @@ class UnitRepository @Inject constructor(
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
-                    val sd1 = o1.startTime.formatTime
-                    val sd2 = o2.startTime.formatTime
+                    val second = o1.startTime.second(o2.startTime)
                     when {
-                        sd1.second(sd2) > 0 -> 1
-                        sd1.second(sd2) == 0L -> {
+                        second > 0 -> 1
+                        second == 0L -> {
                             o1.id.compareTo(o2.id)
                         }
-
                         else -> -1
                     } * (if (filter.asc) 1 else -1)
                 }
@@ -194,11 +196,12 @@ class UnitRepository @Inject constructor(
 
         //返回数据
         data
-    } catch (e: Exception) {
-        LogReportUtil.upload(
-            e,
-            Constants.EXCEPTION_UNIT_NULL + "getCharacterBasicInfo#unitId:$unitId"
-        )
+    } catch (_: Exception) {
+        //移除异常上报，排行榜会多次触发异常
+//        LogReportUtil.upload(
+//            e,
+//            Constants.EXCEPTION_UNIT_NULL + "getCharacterBasicInfo#unitId:$unitId"
+//        )
         null
     }
 
@@ -589,4 +592,19 @@ class UnitRepository @Inject constructor(
         arrayListOf()
     }
 
+    /**
+     * 获取角色id按天赋分组
+     */
+    suspend fun getTalentUnitMap(): HashMap<Int, ArrayList<Int>> {
+        val list = getTalentIdList(0)
+        val map = hashMapOf<Int, ArrayList<Int>>()
+        list.forEach {
+            if (map[it.talentId] == null) {
+                map[it.talentId] = arrayListOf()
+            } else {
+                map[it.talentId]?.add(it.unitId)
+            }
+        }
+        return map
+    }
 }

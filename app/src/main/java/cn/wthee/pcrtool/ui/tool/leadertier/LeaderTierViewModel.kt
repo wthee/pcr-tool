@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.LeaderTierType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.LeaderTierData
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -26,15 +27,21 @@ import javax.inject.Inject
  */
 @Immutable
 data class LeaderTierUiState(
-    val groupList: List<LeaderTierGroup> = arrayListOf(),
-    val size: Int = 0,
+    val currentGroupList: List<LeaderTierGroup> = arrayListOf(),
+    val count: Int = 0,
     val date: String = "",
     //角色评级类型
     val leaderTierType: LeaderTierType = LeaderTierType.ALL,
     val leaderTierMap: HashMap<Int, ResponseData<LeaderTierData>> = hashMapOf(),
     val openDialog: Boolean = false,
-    val loadState: LoadState = LoadState.Loading
-)
+    val loadState: LoadState = LoadState.Loading,
+
+    //天赋筛选相关
+    val talentType: TalentType = TalentType.ALL,
+    val talentUnitMap: HashMap<Int, ArrayList<Int>> = hashMapOf(),
+    val openTalentDialog: Boolean = false,
+
+    )
 
 /**
  * 角色评级 ViewModel
@@ -51,7 +58,8 @@ class LeaderTierViewModel @Inject constructor(
     val uiState: StateFlow<LeaderTierUiState> = _uiState.asStateFlow()
 
     init {
-        getLeaderTier(LeaderTierType.ALL.type)
+        getTalentUnitMap()
+        getLeaderTier(LeaderTierType.ALL.type, TalentType.ALL.type)
     }
 
     /**
@@ -66,7 +74,10 @@ class LeaderTierViewModel @Inject constructor(
     /**
      * 获取排行评级
      */
-    private fun getLeaderTier(type: Int) {
+    private fun getLeaderTier(
+        type: Int = _uiState.value.leaderTierType.type,
+        talentType: Int = _uiState.value.talentType.type
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -79,8 +90,12 @@ class LeaderTierViewModel @Inject constructor(
                 leaderTierMap[type] = apiRepository.getLeaderTier(type)
             }
 
+            //角色id（按天赋筛选）
+            val unitIdList = _uiState.value.talentUnitMap[talentType] ?: arrayListOf()
+
             //分组
             val groupList = arrayListOf<LeaderTierGroup>()
+            var count = 0
             leaderTierMap[type]?.data?.let { data ->
                 data.leader.forEach { leaderItem ->
                     var group = groupList.find {
@@ -94,17 +109,29 @@ class LeaderTierViewModel @Inject constructor(
                             LeaderTierGroup(leaderItem.tier, arrayListOf(), descInfo?.desc ?: "")
                         groupList.add(group)
                     }
-                    group.leaderList.add(leaderItem)
+                    if (unitIdList.isNotEmpty()) {
+                        //天赋筛选
+                        if (unitIdList.contains(leaderItem.unitId)) {
+                            group.leaderList.add(leaderItem)
+                            count++
+                        }
+                    } else {
+                        group.leaderList.add(leaderItem)
+                        count++
+                    }
                 }
             }
 
+
+
             _uiState.update {
                 it.copy(
-                    groupList = groupList,
-                    size = leaderTierMap[type]?.data?.leader?.size ?: 0,
+                    currentGroupList = groupList,
+                    count = count,
                     date = leaderTierMap[type]?.data?.desc?.fixedLeaderDate ?: "",
                     leaderTierMap = leaderTierMap,
                     leaderTierType = LeaderTierType.getByValue(type),
+                    talentType = TalentType.getByType(talentType),
                     loadState = it.loadState.isSuccess(leaderTierMap[type]?.data != null)
                 )
             }
@@ -125,7 +152,54 @@ class LeaderTierViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openDialog = openDialog
+                    openDialog = openDialog,
+                    openTalentDialog = false
+                )
+            }
+        }
+    }
+
+    /**
+     * 弹窗状态更新
+     */
+    fun updateCount(count: Int) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    count = count
+                )
+            }
+        }
+    }
+
+    /**
+     * 切换天赋类型
+     */
+    fun changeTalentSelect(type: Int) {
+        getLeaderTier(talentType = type)
+    }
+
+    /**
+     * 弹窗状态更新
+     */
+    fun changeTalentDialog(openDialog: Boolean) {
+        _uiState.update {
+            it.copy(
+                openTalentDialog = openDialog,
+                openDialog = false
+            )
+        }
+    }
+
+    /**
+     * 获取角色id按天赋分组
+     */
+    private fun getTalentUnitMap() {
+        viewModelScope.launch {
+            val map = unitRepository.getTalentUnitMap()
+            _uiState.update {
+                it.copy(
+                    talentUnitMap = map
                 )
             }
         }

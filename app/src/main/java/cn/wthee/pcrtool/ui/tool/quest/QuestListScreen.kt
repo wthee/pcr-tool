@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.quest
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.dao.minEquipId
 import cn.wthee.pcrtool.data.db.view.QuestDetail
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdds
 import cn.wthee.pcrtool.data.model.RandomEquipDropArea
@@ -83,7 +83,6 @@ fun QuestListScreen(
  * 装备掉落主线地图信息
  */
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 fun QuestPager(
     questList: List<QuestDetail>,
     equipId: Int,
@@ -343,11 +342,11 @@ fun QuestList(
             }
         ) {
             AreaItem(
-                selectedId,
-                it.getAllOdd(),
-                it.questName,
-                searchEquipIdList,
-                color
+                selectedId = selectedId,
+                odds = it.getAllOdd(),
+                num = it.questName,
+                searchEquipIdList = searchEquipIdList,
+                color = color
             )
         }
         item {
@@ -404,10 +403,10 @@ fun AreaItem(
             )
             .placeholder(placeholder),
         itemCount = odds.size,
-        itemWidth = Dimen.iconItemWidth,
+        itemWidth = Dimen.iconSize + Dimen.commonItemPadding * 2,
         verticalContentPadding = Dimen.commonItemPadding
     ) {
-        EquipWithOddCompose(
+        EquipIconAndOddText(
             selectedId = selectedId,
             oddData = odds[it],
             searchEquipIdList = searchEquipIdList
@@ -420,7 +419,7 @@ fun AreaItem(
  * 带掉率装备图标
  */
 @Composable
-private fun EquipWithOddCompose(
+private fun EquipIconAndOddText(
     selectedId: Int,
     oddData: EquipmentIdWithOdds,
     searchEquipIdList: List<Int>
@@ -433,9 +432,16 @@ private fun EquipWithOddCompose(
         val selected =
             selectedId == oddData.equipId || searchEquipIdList.contains(oddData.equipId)
         Box(contentAlignment = Alignment.Center) {
+            //判断装备或天赋素材
             MainIcon(
                 data = ImageRequestHelper.getInstance()
-                    .getUrl(ImageRequestHelper.ICON_EQUIPMENT, oddData.equipId)
+                    .getUrl(
+                        if (oddData.equipId > minEquipId) {
+                            ImageRequestHelper.ICON_EQUIPMENT
+                        } else {
+                            ImageRequestHelper.ICON_ITEM
+                        }, oddData.equipId
+                    )
             )
             if (selectedId != ImageRequestHelper.UNKNOWN_EQUIP_ID && oddData.odd == 0) {
                 SelectText(

@@ -37,7 +37,7 @@ object FileUtil {
     /**
      * 数据库路径
      */
-    fun getDatabasePath(region: RegionType) =
+    private fun getDatabasePath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
             RegionType.CN -> Constants.DATABASE_NAME_CN
             RegionType.TW -> Constants.DATABASE_NAME_TW
@@ -59,10 +59,20 @@ object FileUtil {
      */
     fun getDatabaseWalPath(region: RegionType) =
         getDatabaseDir() + "/" + when (region) {
-            RegionType.CN -> Constants.DATABASE_WAL_CN
-            RegionType.TW -> Constants.DATABASE_WAL_TW
-            RegionType.JP -> Constants.DATABASE_WAL_JP
-        }
+            RegionType.CN -> Constants.DATABASE_NAME_CN
+            RegionType.TW -> Constants.DATABASE_NAME_TW
+            RegionType.JP -> Constants.DATABASE_NAME_JP
+        } + "-wal"
+
+    /**
+     * shm 文件路径
+     */
+    fun getDatabaseShmPath(region: RegionType) =
+        getDatabaseDir() + "/" + when (region) {
+            RegionType.CN -> Constants.DATABASE_NAME_CN
+            RegionType.TW -> Constants.DATABASE_NAME_TW
+            RegionType.JP -> Constants.DATABASE_NAME_JP
+        } + "-shm"
 
     /**
      * 数据库是否需要判断

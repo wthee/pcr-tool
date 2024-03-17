@@ -1,7 +1,8 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -27,13 +28,13 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDetailScreen
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyWeaknessContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.getZhNumberText
 
 /**
  * 公会战 BOSS 详情
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClanBattleDetailScreen(
     toSummonDetail: (String) -> Unit,
@@ -86,7 +87,6 @@ fun ClanBattleDetailScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun ClanBattleDetailContent(
     clanBattleInfo: ClanBattleInfo,
     bossDataList: List<EnemyParameterPro>,
@@ -96,7 +96,8 @@ private fun ClanBattleDetailContent(
 
     //图标列表
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
     ) {
         //日期
         MainTitleText(
@@ -111,10 +112,21 @@ private fun ClanBattleDetailContent(
                     .getUrl(ImageRequestHelper.ICON_UNIT, it)
             )
         }
-        //图标指示器
-        IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList)
+
         //BOSS信息
         if (bossDataList.isNotEmpty()) {
+            //图标指示器
+            IconHorizontalPagerIndicator(pagerState = pagerState, urlList = urlList) { index ->
+                clanBattleInfo.getWeakness(index)?.let {
+                    Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                        EnemyWeaknessContent(
+                            weaknessData = it,
+                            showText = false
+                        )
+                    }
+                }
+            }
+
             HorizontalPager(state = pagerState) {
                 /**
                  * fixme 页面滑动问题
@@ -137,7 +149,6 @@ private fun ClanBattleDetailContent(
 /**
  * @see [EnemyDetailScreen] 属性布局预览
  */
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun ClanBattleDetailContentPreview() {

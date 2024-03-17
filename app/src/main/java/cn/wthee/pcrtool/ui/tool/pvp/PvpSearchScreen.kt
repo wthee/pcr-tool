@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -95,7 +94,6 @@ import kotlin.math.max
  * @param favoritesListState 收藏列表滚动状态
  * @param historyListState 历史查询列表滚动状态
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PvpSearchScreen(
     floatWindow: Boolean,
@@ -192,7 +190,6 @@ fun PvpSearchScreen(
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun PvpSearchContent(
     floatWindow: Boolean,
     showResult: Boolean,
@@ -500,7 +497,7 @@ private fun PvpToSelectList(
                     ) {
                         MainIcon(
                             data = iconId,
-                            size = Dimen.smallIconSize
+                            size = Dimen.positionIconSize
                         )
                     }
 
@@ -699,7 +696,6 @@ fun comparePvpCharacterData() = Comparator<PvpCharacterData> { o1, o2 ->
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun PvpSearchScreenContentPreview() {

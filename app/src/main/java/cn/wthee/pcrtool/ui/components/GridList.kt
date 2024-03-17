@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -176,6 +177,7 @@ fun GridIconList(
 
 /**
  * 角色、装备图标
+ * @param id 0，1，2显示位置图标
  */
 @Composable
 fun IconItem(
@@ -216,13 +218,23 @@ fun IconItem(
     ) {
         MainIcon(
             modifier = Modifier.placeholder(placeholder),
-            data = url,
-            onClick = if (onClickItem != null) {
+            data = when (id) {
+                0 -> R.drawable.ic_position_0
+                1 -> R.drawable.ic_position_1
+                2 -> R.drawable.ic_position_2
+                else -> url
+            },
+            onClick = if (onClickItem != null && id > 2) {
                 {
                     onClickItem(detailId ?: mId)
                 }
             } else {
                 null
+            },
+            size = if (id > 2) {
+                Dimen.iconSize
+            } else {
+                Dimen.positionIconSize
             }
         )
 
@@ -283,8 +295,8 @@ fun VerticalStaggeredGrid(
     verticalContentPadding: Dp = contentPadding,
     children: @Composable () -> Unit
 ) {
-    val contentPaddingPx = contentPadding.value.dp2px
-    val verticalContentPaddingPx = verticalContentPadding.value.dp2px
+    val contentPaddingPx = LocalDensity.current.run { contentPadding.roundToPx() }
+    val verticalContentPaddingPx = LocalDensity.current.run { verticalContentPadding.roundToPx() }
     val context = LocalContext.current
 
     Layout(

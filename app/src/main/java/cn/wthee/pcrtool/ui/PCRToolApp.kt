@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.ui
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,23 +13,23 @@ import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavGraph
 import cn.wthee.pcrtool.navigation.NavViewModel
+import cn.wthee.pcrtool.ui.components.AppResumeEffect
 import cn.wthee.pcrtool.ui.components.CircularProgressCompose
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 
 /**
  * 应用
  */
-
-@OptIn(
-    ExperimentalMaterialNavigationApi::class, ExperimentalMaterialApi::class
-)
 @Composable
 fun PCRToolApp(
-    mNavViewModel: NavViewModel = hiltViewModel()
+    navViewModel: NavViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
+    AppResumeEffect {
+        mainViewModel.getR6Ids()
+    }
+
     PCRToolComposeTheme {
         //bottom sheet
         val sheetState = rememberModalBottomSheetState(
@@ -37,7 +37,7 @@ fun PCRToolApp(
             skipHalfExpanded = true
         )
         MainActivity.navSheetState = sheetState
-        //bottom sheet 导航  fixme accompanist navigation 未使用 material3
+        //bottom sheet 导航  fixme 未使用 material3
         val bottomSheetNavigator = remember {
             BottomSheetNavigator(sheetState)
         }
@@ -46,7 +46,7 @@ fun PCRToolApp(
 
         val actions =
             remember(MainActivity.navController) { NavActions(MainActivity.navController) }
-        MainActivity.navViewModel = mNavViewModel
+        MainActivity.navViewModel = navViewModel
 
         val loading = MainActivity.navViewModel.loading.observeAsState().value ?: false
 

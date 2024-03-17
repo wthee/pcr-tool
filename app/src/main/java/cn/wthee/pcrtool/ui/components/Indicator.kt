@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,15 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.invertedTriangleShape
 import cn.wthee.pcrtool.utils.px2dp
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -41,9 +43,12 @@ import kotlin.math.sign
  * 带指示器图标
  * @param urlList 最大5个
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IconHorizontalPagerIndicator(pagerState: PagerState, urlList: List<String>) {
+fun IconHorizontalPagerIndicator(
+    pagerState: PagerState,
+    urlList: List<String>,
+    extraContent: @Composable (Int) -> Unit = {}
+) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -51,17 +56,39 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urlList: List<String>) 
         mutableStateOf(0.dp)
     }
     val indicatorSize = Dimen.indicatorSize
+    val spacing = max(0.dp, itemWidth - indicatorSize)
 
-    Column(modifier = Modifier.fillMaxWidth(urlList.size * 0.2f)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(urlList.size * 0.2f)
+            .onSizeChanged {
+                itemWidth = px2dp(context, it.width) / urlList.size.toFloat()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        //fixme 未居中对齐
+        MainHorizontalPagerIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    bottom = Dimen.smallPadding,
+                    start = spacing / 2f
+                ),
+            pagerState = pagerState,
+            pageCount = urlList.size,
+            indicatorSize = indicatorSize,
+            inactiveColor = Color.Transparent,
+            spacing = spacing,
+            indicatorShape = invertedTriangleShape
+        )
+
         Row(modifier = Modifier.fillMaxWidth()) {
             urlList.forEachIndexed { index, url ->
-                Box(
+                Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .onSizeChanged {
-                            itemWidth = px2dp(context, it.width)
-                        },
-                    contentAlignment = Alignment.Center
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     MainIcon(
                         data = url,
@@ -71,26 +98,18 @@ fun IconHorizontalPagerIndicator(pagerState: PagerState, urlList: List<String>) 
                             }
                         }
                     )
+
+                    extraContent(index)
                 }
             }
         }
-        MainHorizontalPagerIndicator(
-            modifier = Modifier.padding(
-                top = Dimen.smallPadding,
-                start = maxOf(0.dp, itemWidth / 2 - Dimen.indicatorSize / 2)
-            ),
-            pagerState = pagerState,
-            pageCount = urlList.size,
-            inactiveColor = Color.Transparent,
-            spacing = itemWidth - indicatorSize
-        )
+
     }
 }
 
 /**
  * 指示器
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainHorizontalPagerIndicator(
     modifier: Modifier = Modifier,
@@ -99,16 +118,14 @@ fun MainHorizontalPagerIndicator(
     activeColor: Color = MaterialTheme.colorScheme.primary,
     inactiveColor: Color = activeColor.copy(alpha = 0.5f),
     indicatorSize: Dp = Dimen.indicatorSize,
-    spacing: Dp = 1.dp
+    spacing: Dp = 1.dp,
+    indicatorShape: Shape = CutCornerShape(45)
 ) {
-    val indicatorShape = CutCornerShape(45)
-
-    val indicatorWidthPx = LocalDensity.current.run { indicatorSize.roundToPx() }
-    val spacingPx = LocalDensity.current.run { spacing.roundToPx() }
+    val indicatorWidthPx = LocalDensity.current.run { indicatorSize.toPx() }
+    val spacingPx = LocalDensity.current.run { spacing.toPx() }
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.CenterStart
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(spacing),
@@ -154,7 +171,6 @@ fun MainHorizontalPagerIndicator(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @CombinedPreviews
 @Composable
 private fun IconHorizontalPagerIndicatorPreview() {

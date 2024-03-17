@@ -62,4 +62,10 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
         LogReportUtil.upload(e, "getMultiEnemyAttr#targetCountDataList:$targetCountDataList")
         hashMapOf()
     }
+
+    suspend fun getEnemyWeaknessData(enemyId: Int) = try {
+        enemyDao.getAllEnemyTalentWeaknessList(enemyId)
+    } catch (_: Exception) {
+        null
+    }
 }

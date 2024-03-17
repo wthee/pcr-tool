@@ -12,15 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
@@ -57,11 +58,15 @@ fun MainImage(
     val loader = LocalContext.current.imageLoader
 
     AsyncImage(
-        model = data,
+        model = if (data.contains(ImageRequestHelper.ERROR_URL)) {
+            //忽略错误请求
+            null
+        } else {
+            data
+        },
         contentDescription = null,
         contentScale = contentScale,
-        filterQuality = FilterQuality.None,
-        error = rememberAsyncImagePainter(R.drawable.error, contentScale = contentScale),
+        error = painterResource(R.drawable.error),
         onSuccess = {
             loading.value = false
             onSuccess(it.result)
@@ -179,7 +184,6 @@ fun MainIcon(
                 colorFilter = colorFilter,
                 contentDescription = null,
                 contentScale = contentScale,
-                filterQuality = FilterQuality.None,
                 error = rememberAsyncImagePainter(
                     R.drawable.unknown_item,
                     contentScale = contentScale

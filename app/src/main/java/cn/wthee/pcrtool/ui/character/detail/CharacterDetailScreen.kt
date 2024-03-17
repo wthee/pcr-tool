@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.character.detail
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -91,7 +90,6 @@ import cn.wthee.pcrtool.utils.int
 /**
  * 角色信息
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterDetailScreen(
     actions: NavActions,
@@ -276,7 +274,6 @@ private fun ChangeCutinFabContent(
 
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun CharacterDetailContent(
     uiState: CharacterDetailUiState,
     pagerState: PagerState,

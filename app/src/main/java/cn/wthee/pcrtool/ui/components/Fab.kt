@@ -52,9 +52,9 @@ import kotlinx.coroutines.launch
  * 通用悬浮按钮
  *
  * @param hasNavBarPadding 适配导航栏
- * @param loading true 显示圆形加载中进度条
  * @param iconScale 图标缩放，非ImageVector才生效
  * @param vibrate 点击振动
+ * @param loading true 显示圆形加载中进度条
  */
 @Composable
 fun MainSmallFab(
@@ -155,6 +155,7 @@ fun MainSmallFab(
  * @param tint 按钮图标和文本颜色
  * @param text 按钮文本
  * @param isSecondLineFab fab 所在行，是否在第二行
+ * @param noPadding 不使用默认的 padding
  * @param paddingValues 自定义边距
  * @param customFabContent 自定义未展开布局
  * @param expandedContent 展开布局具体内容
@@ -168,25 +169,37 @@ fun ExpandableFab(
     tint: Color = MaterialTheme.colorScheme.primary,
     text: String = "",
     isSecondLineFab: Boolean = false,
+    noPadding: Boolean = false,
     paddingValues: PaddingValues? = null,
     animateContent: Boolean = true,
     customFabContent: @Composable (() -> Unit)? = null,
     expandedContent: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val mPaddingValues = paddingValues ?: PaddingValues(
-        start = Dimen.fabMargin,
-        end = if (isSecondLineFab) {
+    val endPadding = if (noPadding) {
+        0.dp
+    } else {
+        if (isSecondLineFab) {
             Dimen.fabMargin
         } else {
             Dimen.fabMarginEnd
-        },
-        top = Dimen.largePadding,
-        bottom = if (isSecondLineFab) {
+        }
+    }
+    val bottomPadding = if (noPadding) {
+        0.dp
+    } else {
+        if (isSecondLineFab) {
             Dimen.fabMarginLargeBottom
         } else {
             Dimen.fabMargin
         }
+    }
+
+    val mPaddingValues = paddingValues ?: PaddingValues(
+        start = if (noPadding) 0.dp else Dimen.fabMargin,
+        end = endPadding,
+        top = Dimen.largePadding,
+        bottom = bottomPadding
     )
 
     SmallFloatingActionButton(
@@ -255,6 +268,9 @@ fun ExpandableFab(
 
 /**
  * 切换
+ *
+ * @param isSecondLineFab fab 所在行，是否在第二行
+ * @param noPadding 不使用默认的 padding
  */
 @Composable
 fun SelectTypeFab(
@@ -266,6 +282,7 @@ fun SelectTypeFab(
     selectedIndex: Int,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     isSecondLineFab: Boolean = false,
+    noPadding: Boolean = false,
     changeSelect: (Int) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -280,7 +297,8 @@ fun SelectTypeFab(
         icon = icon,
         tint = selectedColor,
         text = tabs[selectedIndex],
-        isSecondLineFab = isSecondLineFab
+        isSecondLineFab = isSecondLineFab,
+        noPadding = noPadding
     ) {
         Column(
             modifier = Modifier

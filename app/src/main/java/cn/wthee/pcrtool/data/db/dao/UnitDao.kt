@@ -76,7 +76,7 @@ interface UnitDao {
             unit_data.atk_type,
             COALESCE(quest_data.quest_id, 0 ) AS r6Id,
             (
-                CASE WHEN unit_data.cutin_1 = 0 AND (unit_data.start_time = '2088/01/01 0:00:00' OR unit_data.start_time = "2015/4/1 15:00") 
+                CASE WHEN unit_data.cutin_1 = 0 AND (unit_data.start_time = '2088/01/01 0:00:00' OR unit_data.start_time = '2015/4/1 15:00') 
                 THEN '2000/01/01 00:00:00' 
                 ELSE COALESCE(unit_data.start_time, '2015/01/01 00:00:00') END
             ) AS unit_start_time,
@@ -507,6 +507,18 @@ interface UnitDao {
     /**
      * 获取角色剧情属性
      * @param unitId 角色编号
+     * fixme 日台有以下字段，国服未更新，待更新逻辑
+     * ,
+     *                 a.chara_id_11,
+     *                 a.chara_id_12,
+     *                 a.chara_id_13,
+     *                 a.chara_id_14,
+     *                 a.chara_id_15,
+     *                 a.chara_id_16,
+     *                 a.chara_id_17,
+     *                 a.chara_id_18,
+     *                 a.chara_id_19,
+     *                 a.chara_id_20
      */
     @SkipQueryVerification
     @Transaction
@@ -538,17 +550,7 @@ interface UnitDao {
                 a.chara_id_7,
                 a.chara_id_8,
                 a.chara_id_9,
-                a.chara_id_10,
-                a.chara_id_11,
-                a.chara_id_12,
-                a.chara_id_13,
-                a.chara_id_14,
-                a.chara_id_15,
-                a.chara_id_16,
-                a.chara_id_17,
-                a.chara_id_18,
-                a.chara_id_19,
-                a.chara_id_20 
+                a.chara_id_10 
             )
             LEFT JOIN story_detail AS c ON a.story_id = c.story_id
         WHERE b.unit_id = :unitId
@@ -557,10 +559,10 @@ interface UnitDao {
     suspend fun getCharacterStoryAttrList(unitId: Int): List<CharacterStoryAttr>
 
     /**
-     * 获取角色最大等级
+     * 获取角色最大等级（突破等级+10）
      */
     @SkipQueryVerification
-    @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
+    @Query("SELECT MAX( team_level ) + 10 - 1 FROM experience_team")
     suspend fun getMaxLevel(): Int
 
     /**
@@ -694,7 +696,8 @@ interface UnitDao {
             atk_type
         FROM
             unit_talent
-            LEFT JOIN unit_data ON unit_data.unit_id = unit_talent.unit_id
+            LEFT JOIN unit_profile ON unit_profile.unit_id = unit_talent.unit_id
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
         WHERE (0 = :unitId OR unit_talent.unit_id = :unitId) AND unit_talent.unit_id < $maxUnitId
         AND search_area_width > 0
         ORDER BY search_area_width, atk_type

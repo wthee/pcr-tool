@@ -411,7 +411,7 @@ enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
     GREEN(7, colorGreen, R.string.color_green),
     ORANGE(8, colorOrange, R.string.color_orange),
     CYAN(9, colorCyan, R.string.color_cyan),
-    PINK(10, colorPink, R.string.color_purple),
+    PINK(10, colorPink, R.string.color_pink),
     ;
 
     companion object {
@@ -476,7 +476,7 @@ enum class AtkType(val type: Int, val color: Color, val typeNameId: Int, val ico
  * 天赋类型
  */
 enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
-    UNKNOWN(0, colorGray, R.string.none),
+    ALL(0, Color.Unspecified, R.string.talent),
     FIRE(1, colorRed, R.string.fire),
     WATER(2, colorCyan, R.string.water),
     WIND(3, colorGreen, R.string.wind),
@@ -486,6 +486,23 @@ enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
 
     companion object {
         fun getByType(type: Int) = TalentType.entries
-            .find { it.type == type } ?: UNKNOWN
+            .find { it.type == type } ?: ALL
+    }
+}
+
+
+/**
+ * 角色排行排序类型枚举
+ */
+enum class LeaderboardSortType(val type: Int, val titleId: Int) {
+    ALL(type = 0, titleId = R.string.all),
+    TALENT(type = 1, titleId = R.string.talent),
+    PVP(type = 2, titleId = R.string.jjc),
+    CLAN_BATTLE(type = 3, titleId = R.string.clan),
+    ;
+
+    companion object {
+        fun getByType(type: Int) = entries
+            .find { it.type == type } ?: ALL
     }
 }

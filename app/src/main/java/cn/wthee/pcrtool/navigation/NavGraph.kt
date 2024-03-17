@@ -1,12 +1,13 @@
 package cn.wthee.pcrtool.navigation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.navigation.BottomSheetNavigator
+import androidx.compose.material.navigation.ModalBottomSheetLayout
+import androidx.compose.material.navigation.bottomSheet
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -76,14 +77,9 @@ import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import cn.wthee.pcrtool.ui.tool.website.WebsiteScreen
 import cn.wthee.pcrtool.utils.JsonUtil
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.bottomSheet
 
 
 //返回上一级
-@OptIn(ExperimentalMaterialApi::class)
 suspend fun navigateUpSheet() {
     MainActivity.navSheetState.hide()
 }
@@ -99,37 +95,30 @@ fun navigateUp() {
  * @param prev 设置上一页面数据
  */
 fun <T> setData(key: String, value: T?, prev: Boolean = false) {
-    if (prev) {
-        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.set(
-            key,
-            value
-        )
+    (if (prev) {
+        MainActivity.navController.previousBackStackEntry
     } else {
-        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.set(
-            key,
-            value
-        )
-    }
+        MainActivity.navController.currentBackStackEntry
+    })?.savedStateHandle?.set(
+        key,
+        value
+    )
 }
 
 /**
  * 获取当前页面数据
  */
 fun <T> getData(key: String, prev: Boolean = false): T? {
-    return if (prev) {
-        MainActivity.navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
+    return (if (prev) {
+        MainActivity.navController.previousBackStackEntry
     } else {
-        MainActivity.navController.currentBackStackEntry?.savedStateHandle?.get<T>(key)
-    }
+        MainActivity.navController.currentBackStackEntry
+    })?.savedStateHandle?.get<T>(key)
 }
 
 /**
  * 导航内容
  */
-@OptIn(
-    ExperimentalMaterialNavigationApi::class,
-    ExperimentalFoundationApi::class
-)
 @Composable
 fun NavGraph(
     bottomSheetNavigator: BottomSheetNavigator,

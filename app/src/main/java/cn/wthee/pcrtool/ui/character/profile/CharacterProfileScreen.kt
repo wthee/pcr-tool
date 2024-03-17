@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character.profile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -144,7 +143,6 @@ private fun ProfileInfoContent(info: CharacterProfileInfo) {
 /**
  * 主页交流信息
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomePageCommentContent(
     selfText: String?,
@@ -224,7 +222,6 @@ private fun HomePageCommentContent(
 /**
  * 小屋交流文本
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RoomCommentContent(roomCommentList: List<RoomCommentData>) {
     Row(

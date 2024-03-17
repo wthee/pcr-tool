@@ -119,6 +119,7 @@
     <string name="atk_type">攻击类型</string>
     <string name="talent_type">天赋类型</string>
     <string name="unit_talent">角色天赋</string>
+    <string name="talent">天赋</string>
     <string name="physical">物理</string>
     <string name="magic">魔法</string>
     <string name="element_type">属性</string>
@@ -308,8 +309,8 @@
     <string name="title_ub_coe">连结爆发+ 系数</string>
     <string name="attr_all_value">战力：%s</string>
     <string name="title_attr_tip">属性数值说明</string>
-    <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
-    <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
+    <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + RANK 奖励属性</string>
+    <string name="tip_status_coe">※ 数值与游戏数值可能存在一定误差，请以游戏内为准</string>
 
     <!--提示相关-->
     <string name="no_more">暂无更多</string>
@@ -464,7 +465,7 @@
     <string name="skill_type_63">持续效果</string>
     <string name="skill_type_69">变身</string>
     <string name="skill_type_70">HP变化</string>
-    <string name="skill_type_71">骑士</string>
+    <string name="skill_type_71">免死</string>
     <string name="skill_type_72">减伤</string>
     <string name="skill_type_73">伤害护盾</string>
     <string name="skill_type_75">次数触发</string>
@@ -854,5 +855,8 @@
     <string name="preview_spine_type">预览类型</string>
     <string name="preview_spine_battle">战斗</string>
     <string name="preview_spine_room">小屋</string>
+
+    <string name="talent_weakness">弱点属性</string>
+    <string name="talent_weakness_tip">弱点属性加成数值为最大值，即队伍中相同天赋角色数量为 5 时的数值</string>
 
 </resources>
