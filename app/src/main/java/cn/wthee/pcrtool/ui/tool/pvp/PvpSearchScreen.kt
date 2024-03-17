@@ -497,7 +497,7 @@ private fun PvpToSelectList(
                     ) {
                         MainIcon(
                             data = iconId,
-                            size = Dimen.smallIconSize
+                            size = Dimen.positionIconSize
                         )
                     }
 

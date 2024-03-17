@@ -215,7 +215,7 @@ private fun UniqueEquipItem(
             //装备名称
             MainTitleText(
                 text = equip.equipName,
-                modifier = Modifier.padding(start = Dimen.smallPadding),
+                modifier = Modifier.padding(start = Dimen.mediumPadding),
                 selectable = true
             )
 

@@ -234,7 +234,7 @@ fun IconItem(
             size = if (id > 2) {
                 Dimen.iconSize
             } else {
-                Dimen.smallIconSize
+                Dimen.positionIconSize
             }
         )
 

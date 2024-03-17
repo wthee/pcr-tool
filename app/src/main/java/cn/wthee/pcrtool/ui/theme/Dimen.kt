@@ -39,6 +39,8 @@ object Dimen {
 
     val textIconSize = 20.dp
 
+    val positionIconSize = 24.dp
+
     val mediumIconSize = 32.dp
 
     val iconSize = 48.dp

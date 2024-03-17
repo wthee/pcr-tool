@@ -152,7 +152,8 @@ class LeaderTierViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openDialog = openDialog
+                    openDialog = openDialog,
+                    openTalentDialog = false
                 )
             }
         }
@@ -184,7 +185,8 @@ class LeaderTierViewModel @Inject constructor(
     fun changeTalentDialog(openDialog: Boolean) {
         _uiState.update {
             it.copy(
-                openTalentDialog = openDialog
+                openTalentDialog = openDialog,
+                openDialog = false
             )
         }
     }

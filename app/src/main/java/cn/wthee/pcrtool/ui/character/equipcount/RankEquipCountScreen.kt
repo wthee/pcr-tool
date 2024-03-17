@@ -158,7 +158,7 @@ private fun RankEquipCountContent(
 
 
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding),
+            columns = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
             contentPadding = PaddingValues(horizontal = Dimen.mediumPadding),
             state = scrollState
         ) {

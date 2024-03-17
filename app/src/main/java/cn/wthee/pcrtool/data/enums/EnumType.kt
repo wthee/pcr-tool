@@ -476,7 +476,7 @@ enum class AtkType(val type: Int, val color: Color, val typeNameId: Int, val ico
  * 天赋类型
  */
 enum class TalentType(val type: Int, val color: Color, val typeNameId: Int) {
-    ALL(0, Color.Unspecified, R.string.all),
+    ALL(0, Color.Unspecified, R.string.talent),
     FIRE(1, colorRed, R.string.fire),
     WATER(2, colorCyan, R.string.water),
     WIND(3, colorGreen, R.string.wind),

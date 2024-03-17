@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -319,6 +321,11 @@ fun EnemyWeaknessContent(
     showText: Boolean = true
 ) {
     val weaknessList = weaknessData.getWeaknessList()
+    val context = LocalContext.current
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
+
 
     TalentType.entries.forEachIndexed { index, talentType ->
         if (index != 0) {
@@ -335,7 +342,13 @@ fun EnemyWeaknessContent(
                     Tag(
                         text = stringResource(id = talentType.typeNameId) + valueText,
                         backgroundColor = talentType.color,
-                        modifier = Modifier.padding(start = Dimen.exSmallPadding)
+                        modifier = Modifier
+                            .padding(start = Dimen.exSmallPadding)
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable {
+                                VibrateUtil(context).single()
+                                openDialog.value = true
+                            }
                     )
                 } else {
                     //显示圆点
@@ -358,14 +371,11 @@ fun EnemyWeaknessContent(
         }
     }
     if (showText) {
-        val openDialog = remember {
-            mutableStateOf(false)
-        }
+
         IconTextButton(
             text = "",
             icon = MainIconType.HELP,
             onClick = {
-                openDialog.value = true
             }
         )
 

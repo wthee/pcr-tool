@@ -152,27 +152,27 @@ fun LeaderboardScreen(
                 }
             )
         },
-        secondLineFab = {
-            if (uiState.loadState == LoadState.Success) {
-                //切换显示
-                MainSmallFab(
-                    iconType = MainIconType.FILTER,
-                    text = if (onlyLast.value) {
-                        stringResource(id = R.string.last_update)
-                    } else {
-                        stringResource(id = R.string.all)
-                    },
-                    modifier = Modifier
-                        .padding(
-                            end = Dimen.fabMargin,
-                            bottom = Dimen.fabMarginLargeBottom
-                        ),
-                    onClick = {
-                        onlyLast.value = !onlyLast.value
-                    }
-                )
-            }
-        },
+//        secondLineFab = {
+//            if (uiState.loadState == LoadState.Success) {
+//                //切换显示
+//                MainSmallFab(
+//                    iconType = MainIconType.FILTER,
+//                    text = if (onlyLast.value) {
+//                        stringResource(id = R.string.last_update)
+//                    } else {
+//                        stringResource(id = R.string.all)
+//                    },
+//                    modifier = Modifier
+//                        .padding(
+//                            end = Dimen.fabMargin,
+//                            bottom = Dimen.fabMarginLargeBottom
+//                        ),
+//                    onClick = {
+//                        onlyLast.value = !onlyLast.value
+//                    }
+//                )
+//            }
+//        },
         enableClickClose = uiState.openTalentDialog,
         onCloseClick = {
             leaderBoardViewModel.changeTalentDialog(false)

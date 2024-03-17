@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -307,7 +308,7 @@ private fun LeaderItem(
         MainCard(
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
-                .placeholder(placeholder),
+                .placeholder(placeholder, shape = MaterialTheme.shapes.medium),
             onClick = {
                 if (!unknown) {
                     leader.unitId?.let { toCharacterDetail(it) }
