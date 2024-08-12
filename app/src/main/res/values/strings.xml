@@ -627,6 +627,7 @@
     <string name="skill_debuff">减益</string>
     <string name="skill_barrier">护盾</string>
     <string name="skill_damage">伤害</string>
+    <string name="skill_status_down">状态下降</string>
     <string name="skill_action_type_desc_10_break">BREAK 期间，%s%s</string>
     <string name="skill_charm_0">魅惑</string>
     <string name="skill_charm_1">混乱</string>
@@ -658,6 +659,7 @@
     <string name="skill_action_type_desc_21_1">无敌</string>
     <string name="skill_action_type_desc_21_2">回避物理攻击</string>
     <string name="skill_action_type_desc_21_3">回避所有攻击</string>
+    <string name="skill_action_type_desc_21_8">回避魔法攻击</string>
     <string name="skill_action_skill_anim_change">技能动画改变%s</string>
     <string name="skill_action_if_status">当%s在[%s]时，使用动作(%d)</string>
     <string name="skill_action_if_status_not">当%s不在[%s]时，使用动作(%d)</string>
@@ -785,6 +787,8 @@
     <string name="skill_action_type_desc_111">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
     <string name="skill_action_type_desc_114">对%s追加 [%d] 层标记，%s，受到伤害时，减少 [1] 层标记，并使用动作(%d)和动作(%d)%s</string>
     <string name="skill_action_type_desc_114_aura">己方受到的伤害降低 [%d%%]</string>
+    <string name="skill_action_type_desc_116">使%s进入%s状态%s</string>
+    <string name="skill_action_type_desc_116_1">执着</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>

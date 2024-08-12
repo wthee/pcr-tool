@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.ui.components.CommonSpacer
 import cn.wthee.pcrtool.ui.components.MainTitleText
+import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 
 /**
@@ -27,8 +28,10 @@ fun UnknownSkillListScreen(
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         MainTitleText(text = "${uiState.unitSkillList.size} | ${uiState.enemySkillList.size}")
 
-        uiState.unitSkillList.forEach {
-            SkillItemContent(skillDetail = it, unitType = UnitType.CHARACTER)
+        StateBox(stateType = uiState.unitSKillLoadState) {
+            uiState.unitSkillList.forEach {
+                SkillItemContent(skillDetail = it, unitType = UnitType.CHARACTER)
+            }
         }
 
         CommonSpacer()
