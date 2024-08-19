@@ -12,7 +12,6 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeCompilerVersion = "1.5.14"
 val appVersionCode = 387
 val appVersionName = "3.8.7"
 val appId = "cn.wthee.pcrtool"
@@ -99,10 +98,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
 }
