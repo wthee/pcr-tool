@@ -20,48 +20,46 @@ import kotlinx.serialization.json.Json
 /**
  * 接口请求 client
  */
-object ApiClient {
-
-    // 配置 HttpClient
-    @OptIn(ExperimentalSerializationApi::class)
-    var client = HttpClient(Android) {
-        // 请求配置
-        defaultRequest {
-            // 请求路径
-            url(Constants.API_URL)
-        }
-
-        // 请求重试配置
-        install(HttpRequestRetry) {
-            maxRetries = 3
-        }
-
-        // 超时设置
-        install(HttpTimeout) {
-            requestTimeoutMillis = 10 * 1000L
-            connectTimeoutMillis = 5 * 1000L
-            socketTimeoutMillis = 5 * 1000L
-        }
-
-        // 响应 JSON 配置
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    isLenient = true
-                    explicitNulls = false
-                }
-            )
-        }
-
-        // 请求配置
-        install(DefaultRequest) {
-            header(HttpHeaders.ContentType, ContentType.Application.Json)
-            //应用版本
-            header(Constants.APP_VERSION, BuildConfig.VERSION_NAME)
-            accept(ContentType.Application.Json)
-        }
-
+// 配置 HttpClient
+@OptIn(ExperimentalSerializationApi::class)
+var apiHttpClient = HttpClient(Android) {
+    // 请求配置
+    defaultRequest {
+        // 请求路径
+        url(Constants.API_URL)
     }
+
+    // 请求重试配置
+    install(HttpRequestRetry) {
+        retryOnExceptionOrServerErrors(maxRetries = 1)
+        exponentialDelay()
+    }
+
+    // 超时设置
+    install(HttpTimeout) {
+        requestTimeoutMillis = 10 * 1000L
+        connectTimeoutMillis = 5 * 1000L
+        socketTimeoutMillis = 5 * 1000L
+    }
+
+    // 响应 JSON 配置
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+                explicitNulls = false
+            }
+        )
+    }
+
+    // 请求配置
+    install(DefaultRequest) {
+        header(HttpHeaders.ContentType, ContentType.Application.Json)
+        //应用版本
+        header(Constants.APP_VERSION, BuildConfig.VERSION_NAME)
+        accept(ContentType.Application.Json)
+    }
+
 }

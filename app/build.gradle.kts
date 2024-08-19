@@ -1,11 +1,10 @@
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("dagger.hilt.android.plugin")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("kotlinx-serialization")
-    id("org.jetbrains.kotlin.plugin.compose")
+    id(libs.plugins.android.get().pluginId)
+    id(libs.plugins.application.get().pluginId)
+    id(libs.plugins.hilt.get().pluginId)
+    id(libs.plugins.ksp.get().pluginId)
+    id(libs.plugins.compose.get().pluginId)
+    id(libs.plugins.serialization.get().pluginId)
 }
 
 
@@ -13,10 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeBom = "2024.05.00"
-val composeCompilerVersion = "1.5.14"
-val appVersionCode = 386
-val appVersionName = "3.8.6"
+val appVersionCode = 387
+val appVersionName = "3.8.7"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -103,109 +100,88 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
-    }
-
 }
 
 dependencies {
 
-    implementation("androidx.activity:activity-ktx:1.9.0")
-    implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.1")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.multidex)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.android)
 
-    //compose BOM
-//    implementation(platform("androidx.compose:compose-bom:${composeBom}"))
-//    debugImplementation("androidx.compose.ui:ui-tooling")
-//    implementation("androidx.compose.ui:ui-util")
-//    implementation("androidx.compose.ui:ui-tooling-preview")
-//    implementation("androidx.compose.material:material-icons-extended")
-//    implementation("androidx.compose.runtime:runtime-livedata")
-//    implementation("androidx.compose.material3:material3")
     //compose unstable
-    val composeUnstableVersion = "1.7.0-beta05"
-    implementation("androidx.compose.animation:animation:${composeUnstableVersion}")
-    implementation("androidx.compose.material:material:${composeUnstableVersion}")
-    implementation("androidx.compose.material:material-navigation:1.7.0-beta01")
-//    implementation("androidx.compose.material:material-navigation:${composeUnstableVersion}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${composeUnstableVersion}")
-    implementation("androidx.compose.ui:ui-util:${composeUnstableVersion}")
-    implementation("androidx.compose.ui:ui-tooling-preview:${composeUnstableVersion}")
-    implementation("androidx.compose.material:material-icons-extended:${composeUnstableVersion}")
-    implementation("androidx.compose.runtime:runtime-livedata:${composeUnstableVersion}")
-    implementation("androidx.compose.material3:material3:1.3.0-beta04")
+    implementation(libs.compose.animation)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.navigation)
+    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.util)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.material3)
 
     //Browser
-    implementation("androidx.browser:browser:1.8.0")
+    implementation(libs.browser)
 
     //Bugly
-    implementation("com.tencent.bugly:crashreport:4.1.9.3")
+    implementation(libs.crashreport)
 
     //Coil
-    val coilVersion = "3.0.0-alpha08"
-    implementation("io.coil-kt.coil3:coil-compose:$coilVersion")
-    implementation("io.coil-kt.coil3:coil-network-ktor:$coilVersion")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor2)
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.datastore.preferences)
 
     //Hilt
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
-    ksp("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     //ktor
-    val ktorVersion = "2.3.12"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-    implementation("io.ktor:ktor-client-android:$ktorVersion")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.android)
 
     //Lifecycle
-    val lifecycleVersion = "2.8.3"
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.service)
+    implementation(libs.lifecycle.viewmodel.compose)
 
     //media3
-    val media3Version = "1.3.1"
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
-    implementation("androidx.media3:media3-ui:$media3Version")
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui)
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta05")
+    implementation(libs.navigation.compose)
 
     //Paging3
-    val pagingVersion = "3.3.0"
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
-    implementation("androidx.paging:paging-compose:$pagingVersion")
+    implementation(libs.paging.runtime.ktx)
+    implementation(libs.paging.compose)
 
     //Room
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.room:room-paging:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
 
     //splashscreen
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.splashscreen)
 
     //startup
-    implementation("androidx.startup:startup-runtime:1.1.1")
+    implementation(libs.startup.runtime)
 
     //palette 取色
-    implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation(libs.palette.ktx)
 
     //Work
-    val workVersion = "2.9.0"
-    implementation("androidx.work:work-runtime:$workVersion")
+    implementation(libs.work.runtime)
 
     implementation(files("libs/commons-compress-1.19.jar"))
     implementation(files("libs/dec-0.1.2.jar"))

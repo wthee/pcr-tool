@@ -495,6 +495,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 115：debuff？
      */
     AURA_V2(115, R.string.none),
+
+    /**
+     * 116：执着状态
+     */
+    PERSISTENT(116, R.string.skill_action_type_desc_116_1),
     ;
 
     companion object {

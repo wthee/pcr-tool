@@ -19,6 +19,7 @@ enum class CharacterDetailModuleType(val id: Int, val titleId: Int) {
     SKILL_LOOP(309, R.string.tip_skill_loop),
     SKILL(310, R.string.skill),
     UNIT_ICON(311, R.string.character_icon_info),
+    LEADER(312, R.string.character_leader),
     ;
 
     companion object {

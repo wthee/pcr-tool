@@ -9,6 +9,7 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.network.downloadFileClient
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
 import cn.wthee.pcrtool.utils.FileUtil
@@ -55,7 +56,6 @@ class FileDownloadWorker(
         return@coroutineScope download(downloadUrl, rename)
     }
 
-
     /**
      * 下载文件并保存
      * @param downloadUrl 文件url
@@ -72,7 +72,7 @@ class FileDownloadWorker(
                 folder.mkdir()
             }
             //创建下载请求
-            val httpResponse: HttpResponse = DownloadFileClient.client.get(downloadUrl) {
+            val httpResponse: HttpResponse = downloadFileClient.get(downloadUrl) {
                 onDownload { bytesSentTotal, contentLength ->
                     val progress = (bytesSentTotal * 100.0 / contentLength).toInt()
                     //更新下载进度

@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.SkillType
 import cn.wthee.pcrtool.data.model.SkillDetail
+import cn.wthee.pcrtool.ui.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ data class UnknownSkillListUiState(
     val unitSkillList: List<SkillDetail> = arrayListOf(),
     //敌人技能信息
     val enemySkillList: List<SkillDetail> = arrayListOf(),
+    val unitSKillLoadState: LoadState = LoadState.Loading
 )
 
 @HiltViewModel
@@ -67,7 +69,8 @@ class UnknownSkillListViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    unitSkillList = resultList
+                    unitSkillList = resultList,
+                    unitSKillLoadState = LoadState.Success
                 )
             }
         }

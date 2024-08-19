@@ -45,12 +45,16 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.RankColor
 import cn.wthee.pcrtool.data.enums.UnitType
 import cn.wthee.pcrtool.data.enums.VideoType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
+import cn.wthee.pcrtool.data.model.LeaderTierData
+import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.navigation.getData
@@ -60,8 +64,10 @@ import cn.wthee.pcrtool.ui.character.CharacterItemContent
 import cn.wthee.pcrtool.ui.character.CharacterItemPreview
 import cn.wthee.pcrtool.ui.character.skillloop.CharacterSkillLoopScreen
 import cn.wthee.pcrtool.ui.components.AttrList
+import cn.wthee.pcrtool.ui.components.CaptionText
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
+import cn.wthee.pcrtool.ui.components.CommonTitleContentText
 import cn.wthee.pcrtool.ui.components.IconTextButton
 import cn.wthee.pcrtool.ui.components.LevelInputText
 import cn.wthee.pcrtool.ui.components.LifecycleEffect
@@ -74,6 +80,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.SubButton
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.home.Section
 import cn.wthee.pcrtool.ui.skill.SkillListScreen
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -88,6 +95,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
+import cn.wthee.pcrtool.utils.toDate
 
 
 /**
@@ -159,7 +167,9 @@ fun SharedTransitionScope.CharacterDetailScreen(
                 pagerState = pagerState,
                 updateOrderData = characterDetailViewModel::updateOrderData,
                 updateCurrentValue = characterDetailViewModel::updateCurrentValue,
-                actions = actions
+                actions = actions,
+                getLeader = characterDetailViewModel::getLeader,
+                getLeaderTier = characterDetailViewModel::getLeaderTier,
             )
         }
 
@@ -288,6 +298,8 @@ private fun SharedTransitionScope.CharacterDetailContent(
     actions: NavActions,
     updateOrderData: (Int) -> Unit,
     updateCurrentValue: (CharacterProperty) -> Unit,
+    getLeader: (Int) -> Unit,
+    getLeaderTier: (Int) -> Unit,
 ) {
 
     val scrollState0 = rememberScrollState()
@@ -296,20 +308,11 @@ private fun SharedTransitionScope.CharacterDetailContent(
 
     if (uiState.isEditMode) {
         //编辑模式
-        val typeList = arrayListOf(
-            CharacterDetailModuleType.CARD,
-            CharacterDetailModuleType.COE,
-            CharacterDetailModuleType.TOOLS,
-            CharacterDetailModuleType.STAR,
-            CharacterDetailModuleType.LEVEL,
-            CharacterDetailModuleType.ATTR,
-            CharacterDetailModuleType.OTHER_TOOLS,
-            CharacterDetailModuleType.EQUIP,
-            CharacterDetailModuleType.UNIQUE_EQUIP,
-            CharacterDetailModuleType.SKILL_LOOP,
-            CharacterDetailModuleType.SKILL,
-            CharacterDetailModuleType.UNIT_ICON,
-        )
+        val typeList = arrayListOf<CharacterDetailModuleType>()
+        CharacterDetailModuleType.entries.forEach {
+            if (it != CharacterDetailModuleType.UNKNOWN)
+                typeList.add(it)
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -478,6 +481,17 @@ private fun SharedTransitionScope.CharacterDetailContent(
                         CharacterDetailModuleType.SKILL_LOOP -> CharacterSkillLoopScreen(
                             unitId = uiState.currentId,
                             scrollable = false
+                        )
+
+                        //角色排行、梯队
+                        CharacterDetailModuleType.LEADER -> LeaderScoreAndTierContent(
+                            unitId = uiState.unitId,
+                            leaderboardResponseData = uiState.leaderboardResponseData,
+                            leaderboardTierResponseData = uiState.leaderboardTierResponseData,
+                            leaderLoadState = uiState.leaderLoadState,
+                            leaderTierLoadState = uiState.leaderTierLoadState,
+                            getLeader = getLeader,
+                            getLeaderTier = getLeaderTier,
                         )
 
                         CharacterDetailModuleType.UNKNOWN -> {
@@ -1031,6 +1045,122 @@ private fun StarSelectContent(
                 }
             )
 
+        }
+    }
+}
+
+/**
+ * 角色排行、梯队信息
+ */
+@Composable
+private fun LeaderScoreAndTierContent(
+    unitId: Int,
+    leaderboardResponseData: ResponseData<List<LeaderboardData>>?,
+    leaderboardTierResponseData: ResponseData<LeaderTierData>?,
+    leaderLoadState: LoadState,
+    leaderTierLoadState: LoadState,
+    getLeader: (Int) -> Unit,
+    getLeaderTier: (Int) -> Unit,
+) {
+    MainText(
+        text = stringResource(id = R.string.leader_score)
+    )
+
+    leaderboardResponseData?.data?.firstOrNull()?.let { leader ->
+        //更新时间
+        val updateTime = if (leader.updateTime != null) {
+            "(${leader.updateTime.toDate})"
+        } else {
+            ""
+        }
+        CaptionText(
+            text = stringResource(id = R.string.only_jp) + updateTime
+        )
+
+        //跳转 wiki
+        IconTextButton(
+            icon = MainIconType.BROWSER,
+            text = stringResource(id = R.string.wiki),
+            onClick = {
+                BrowserUtil.open(leader.url)
+            }
+        )
+    }
+
+    //评价
+    StateBox(
+        stateType = leaderLoadState,
+        errorContent = {
+            SubButton(
+                text = stringResource(id = R.string.research),
+                modifier = Modifier.padding(top = Dimen.mediumPadding),
+                onClick = {
+                    getLeader(unitId)
+                }
+            )
+        }
+    ) {
+        VerticalGridList(
+            modifier = Modifier.padding(horizontal = Dimen.smallPadding),
+            itemCount = 3,
+            itemWidth = Dimen.attrItemWidth
+        ) { index ->
+            val leader = leaderboardResponseData?.data?.firstOrNull()
+
+            leader?.let {
+                when (index) {
+                    0 -> CommonTitleContentText(
+                        title = stringResource(id = R.string.talent),
+                        content = leader.talent
+                    )
+
+                    1 -> CommonTitleContentText(
+                        title = stringResource(id = R.string.jjc),
+                        content = leader.pvp
+                    )
+
+                    2 -> CommonTitleContentText(
+                        title = stringResource(id = R.string.clan),
+                        content = leader.clan
+                    )
+                }
+            }
+        }
+    }
+
+    MainText(
+        modifier = Modifier.padding(top = Dimen.mediumPadding),
+        text = stringResource(id = R.string.tool_leader_tier)
+    )
+
+    //梯队
+    StateBox(
+        stateType = leaderTierLoadState,
+        errorContent = {
+            SubButton(
+                text = stringResource(id = R.string.research),
+                modifier = Modifier.padding(top = Dimen.mediumPadding),
+                onClick = {
+                    getLeaderTier(unitId)
+                }
+            )
+        }
+    ) {
+        leaderboardTierResponseData?.data?.leader?.let { list ->
+            val sortedList = list.sortedBy { it.type }
+            VerticalGridList(
+                modifier = Modifier.padding(Dimen.smallPadding),
+                itemCount = list.size,
+                itemWidth = Dimen.attrItemWidth
+            ) { index ->
+                CommonTitleContentText(
+                    title = stringResource(id = LeaderTierType.getByValue(sortedList[index].type).typeNameId),
+                    content = stringResource(
+                        id = R.string.leader_tier_d,
+                        sortedList[index].tier
+                    )
+                )
+            }
         }
     }
 }

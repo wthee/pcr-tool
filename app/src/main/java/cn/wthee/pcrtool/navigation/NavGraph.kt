@@ -477,7 +477,7 @@ fun NavGraph(
                     LeaderboardScreen(actions.toCharacterDetail)
                 }
 
-                //角色排行评级
+                //角色梯队
                 composable(
                     route = NavRoute.TOOL_LEADER_TIER
                 ) {
@@ -1146,7 +1146,7 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 角色评级
+     * 角色梯队
      */
     val toLeaderTier = {
         navController.navigate(NavRoute.TOOL_LEADER_TIER)

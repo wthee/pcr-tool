@@ -499,7 +499,7 @@ enum class MainIconType(val icon: ImageVector) {
     WEBSITE_BOOKMARK(Icons.Rounded.Bookmarks),
 
     /**
-     * 角色评级
+     * 角色梯队
      */
     LEADER_TIER(Icons.Rounded.WorkspacePremium),
 

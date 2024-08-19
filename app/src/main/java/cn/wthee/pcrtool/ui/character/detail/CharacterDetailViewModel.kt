@@ -15,10 +15,15 @@ import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.LeaderTierData
+import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.data.model.ResponseData
+import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.dataStoreMain
+import cn.wthee.pcrtool.ui.updateLoadState
 import cn.wthee.pcrtool.utils.JsonUtil
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -81,7 +86,15 @@ data class CharacterDetailUiState(
     //页面数量
     val pageCount: Int = 0,
     //多人卡id
-    val idList: ArrayList<Int> = arrayListOf()
+    val idList: ArrayList<Int> = arrayListOf(),
+    //排行信息
+    val leaderboardResponseData: ResponseData<List<LeaderboardData>>? = null,
+    //加载状态
+    val leaderLoadState: LoadState = LoadState.Loading,
+    //梯队信息
+    val leaderboardTierResponseData: ResponseData<LeaderTierData>? = null,
+    //加载状态
+    val leaderTierLoadState: LoadState = LoadState.Loading,
 )
 
 
@@ -94,9 +107,19 @@ data class CharacterDetailUiState(
 class CharacterDetailViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
     private val equipmentRepository: EquipmentRepository,
+    private val apiRepository: ApiRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val defaultOrder = "300-301-302-303-304-305-306-307-308-310-"
+    private val defaultOrder = "${CharacterDetailModuleType.CARD.id}-" +
+            "${CharacterDetailModuleType.COE.id}-" +
+            "${CharacterDetailModuleType.TOOLS.id}-" +
+            "${CharacterDetailModuleType.STAR.id}-" +
+            "${CharacterDetailModuleType.LEVEL.id}-" +
+            "${CharacterDetailModuleType.ATTR.id}-" +
+            "${CharacterDetailModuleType.OTHER_TOOLS.id}-" +
+            "${CharacterDetailModuleType.EQUIP.id}-" +
+            "${CharacterDetailModuleType.UNIQUE_EQUIP.id}-" +
+            "${CharacterDetailModuleType.SKILL.id}-"
 
     private val unitId: Int? = savedStateHandle[NavRoute.UNIT_ID]
     private val showAllInfo: Boolean = savedStateHandle[NavRoute.SHOW_ALL_INFO] ?: true
@@ -119,6 +142,8 @@ class CharacterDetailViewModel @Inject constructor(
             getMaxRankAndRarity(unitId)
             getFavoriteState(unitId)
             getMultiIds(unitId)
+            getLeader(unitId)
+            getLeaderTier(unitId)
         }
     }
 
@@ -285,20 +310,13 @@ class CharacterDetailViewModel @Inject constructor(
         //选中的
         val mainList = orderData.intArrayList
         //未选中的
-        val subList = arrayListOf(
-            CharacterDetailModuleType.UNIT_ICON.id,
-            CharacterDetailModuleType.CARD.id,
-            CharacterDetailModuleType.COE.id,
-            CharacterDetailModuleType.TOOLS.id,
-            CharacterDetailModuleType.STAR.id,
-            CharacterDetailModuleType.LEVEL.id,
-            CharacterDetailModuleType.ATTR.id,
-            CharacterDetailModuleType.OTHER_TOOLS.id,
-            CharacterDetailModuleType.EQUIP.id,
-            CharacterDetailModuleType.UNIQUE_EQUIP.id,
-            CharacterDetailModuleType.SKILL.id,
-        ).filter {
-            !orderData.intArrayList.contains(it)
+        val subList = arrayListOf<Int>()
+        CharacterDetailModuleType.entries.forEach {
+            if (!orderData.intArrayList.contains(it.id) && it != CharacterDetailModuleType.UNKNOWN
+                && it != CharacterDetailModuleType.SKILL_LOOP
+            ) {
+                subList.add(it.id)
+            }
         }
         _uiState.update {
             it.copy(
@@ -318,6 +336,58 @@ class CharacterDetailViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     coeValue = unitRepository.getCoefficient()
+                )
+            }
+        }
+    }
+
+    /**
+     * 初始加载排行信息
+     */
+    fun getLeader(unitId: Int) {
+        viewModelScope.launch {
+            //重新加载
+            if (_uiState.value.leaderLoadState != LoadState.Success) {
+                _uiState.update {
+                    it.copy(
+                        leaderLoadState = LoadState.Loading
+                    )
+                }
+            }
+
+            val responseData = apiRepository.getLeader(unitId)
+            _uiState.update {
+                it.copy(
+                    leaderboardResponseData = responseData,
+                    leaderLoadState = updateLoadState(responseData.data)
+                )
+            }
+        }
+    }
+
+    /**
+     * 初始加载梯队信息
+     */
+    fun getLeaderTier(unitId: Int) {
+        viewModelScope.launch {
+            //重新加载
+            if (_uiState.value.leaderTierLoadState != LoadState.Success) {
+                _uiState.update {
+                    it.copy(
+                        leaderTierLoadState = LoadState.Loading
+                    )
+                }
+            }
+
+            val tierResponseData = apiRepository.getLeaderTier(null, unitId)
+            _uiState.update {
+                it.copy(
+                    leaderboardTierResponseData = tierResponseData,
+                    leaderTierLoadState = if (tierResponseData.data != null) {
+                        updateLoadState(tierResponseData.data!!.leader)
+                    } else {
+                        LoadState.Error
+                    }
                 )
             }
         }

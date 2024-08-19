@@ -23,7 +23,6 @@ import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
-import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
@@ -120,7 +119,6 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(context, PvpFloatService::class.java))
-        WorkManager.getInstance(context).cancelAllWork()
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll()

@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.LeaderTierType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.LeaderTierGroup
@@ -56,7 +57,7 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch
 
 /**
- * 角色评级
+ * 角色梯队
  */
 @Composable
 fun LeaderTierScreen(
@@ -68,13 +69,11 @@ fun LeaderTierScreen(
     val uiState by leaderTierViewModel.uiState.collectAsStateWithLifecycle()
     val hasTalent = (uiState.talentUnitMap[TalentType.FIRE.type] ?: arrayListOf()).isNotEmpty()
 
-    //评级类型
-    val tabs = arrayListOf(
-        stringResource(id = R.string.leader_tier_0),
-        stringResource(id = R.string.leader_tier_1),
-        stringResource(id = R.string.leader_tier_2),
-        stringResource(id = R.string.clan),
-    )
+    //梯队类型
+    val tabs = arrayListOf<String>()
+    LeaderTierType.entries.forEach {
+        tabs.add(stringResource(id = it.typeNameId))
+    }
     //天赋类型
     val talentTabs = arrayListOf<String>()
     TalentType.entries.forEachIndexed { _, talentType ->

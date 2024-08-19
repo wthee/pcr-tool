@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.ApiRepository
+import cn.wthee.pcrtool.data.network.apiHttpClient
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
@@ -32,7 +33,7 @@ import kotlinx.coroutines.runBlocking
 /**
  * 数据库更新
  */
-object DatabaseUpdater {
+object AppBasicDatabaseUpdater {
 
 
     /**
@@ -60,7 +61,7 @@ object DatabaseUpdater {
         //加载中
         updateDbDownloadState(DbDownloadState.LOADING.state)
         //获取远程数据版本
-        val version = ApiRepository().getDbVersion(MainActivity.regionType.code)
+        val version = ApiRepository(apiHttpClient).getDbVersion(MainActivity.regionType.code)
         if (version.status == -1) {
             ToastUtil.short(getString(R.string.check_db_error))
             updateDbDownloadState(DbDownloadState.NORMAL.state)
@@ -105,7 +106,6 @@ object DatabaseUpdater {
                 RegionType.TW -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
                 RegionType.JP -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
             }
-            val workName = region.code + DOWNLOAD_DB_WORK
             //开始下载
             try {
                 //强制加载时，删除wal和shm
@@ -126,9 +126,9 @@ object DatabaseUpdater {
                         .build()
                 val workManager = WorkManager.getInstance(MyApplication.context)
                 workManager.enqueueUniqueWork(
-                    workName,
-                    ExistingWorkPolicy.KEEP,
-                    updateDbRequest
+                    DOWNLOAD_DB_WORK,
+                    ExistingWorkPolicy.REPLACE,
+                    updateDbRequest,
                 )
                 //监听下载进度
                 ActivityHelper.instance.currentActivity?.let {
@@ -136,8 +136,9 @@ object DatabaseUpdater {
                         .observe(it) { workInfo: WorkInfo? ->
                             if (workInfo != null) {
                                 when (workInfo.state) {
+
+                                    //下载成功，更新版本号，并重新加载
                                     WorkInfo.State.SUCCEEDED -> {
-                                        //下载成功，更新版本号，并重新加载
                                         MainScope().launch {
                                             //更新版本文本内容
                                             updateDbVersion(versionData)
@@ -145,15 +146,16 @@ object DatabaseUpdater {
                                         }
                                     }
 
+                                    //更新下载进度
                                     WorkInfo.State.RUNNING -> {
-                                        //更新下载进度
                                         val value =
                                             workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
                                         updateDbDownloadState(value)
                                     }
 
+                                    //下载失败、取消
                                     WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> {
-                                        //下载失败
+                                        workManager.cancelUniqueWork(DOWNLOAD_DB_WORK)
                                         updateDbDownloadState(DbDownloadState.NORMAL.state)
                                     }
 
@@ -164,7 +166,7 @@ object DatabaseUpdater {
                 }
 
             } catch (e: Exception) {
-                WorkManager.getInstance(MyApplication.context).cancelUniqueWork(workName)
+                WorkManager.getInstance(MyApplication.context).cancelUniqueWork(DOWNLOAD_DB_WORK)
                 LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_WORK_DB)
                 ToastUtil.short(getString(R.string.db_download_exception))
                 updateDbDownloadState(DbDownloadState.NORMAL.state)

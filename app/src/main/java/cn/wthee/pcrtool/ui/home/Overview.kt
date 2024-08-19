@@ -45,7 +45,7 @@ import cn.wthee.pcrtool.data.enums.OverviewType
 import cn.wthee.pcrtool.data.enums.RegionType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.AppBasicDatabaseUpdater
 import cn.wthee.pcrtool.navigation.NavActions
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
@@ -345,7 +345,10 @@ private fun ChangeDbCompose(
             ),
             expanded = showChangeDb,
             onClick = {
-                if (downloadState == DbDownloadState.NORMAL.state || remoteDbSizeError) {
+                if (downloadState == DbDownloadState.NORMAL.state
+                    || downloadState == DbDownloadState.LOADING.state
+                    || remoteDbSizeError
+                ) {
                     onClick()
                 }
             },
@@ -432,7 +435,7 @@ private fun DbVersionSelectContent(
                 onClick = {
                     coroutineScope.launch {
                         //正常切换
-                        DatabaseUpdater.changeDatabase(regionType)
+                        AppBasicDatabaseUpdater.changeDatabase(regionType)
                     }
                 }
             )
@@ -529,7 +532,7 @@ private fun DbVersionOtherContent(
                     if (remoteDbSizeError) {
                         joinQQGroup(context)
                     } else {
-                        DatabaseUpdater.checkDBVersion(
+                        AppBasicDatabaseUpdater.checkDBVersion(
                             fixDb = true,
                             updateDbDownloadState = updateDbDownloadState,
                             updateDbVersion = updateDbVersion,

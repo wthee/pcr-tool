@@ -69,6 +69,7 @@
     <string name="character_power">战力</string>
     <string name="tip_skill_loop">技能循环（未选中时显示悬浮按钮）</string>
     <string name="character_icon_info">角色图标</string>
+    <string name="character_leader">角色评分、梯队</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>
@@ -162,6 +163,8 @@
 
     <!--其它工具-->
     <string name="tool_leader">角色排行</string>
+    <string name="leader_score">角色评分</string>
+    <string name="wiki">wiki</string>
     <string name="tool_calendar_inprogress">进行中活动</string>
     <string name="tool_calendar_coming">活动预告</string>
     <string name="tool_calendar_event">活动记录</string>
@@ -211,7 +214,7 @@
     <string name="github">GitHub</string>
     <string name="afd">爱发电</string>
     <string name="sponsor">支持</string>
-    <string name="afd_url">https://afdian.net/a/wthee</string>
+    <string name="afd_url">https://afdian.com/a/wthee</string>
     <string name="tip_afd">期待你的关注与支持</string>
     <string name="please">✪ ω ✪</string>
     <string name="github_project_url">https://github.com/wthee/pcr-tool</string>
@@ -249,7 +252,7 @@
     <string name="pvp_search">查询</string>
     <string name="pvp_upload">上传记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
-    <string name="pvp_research">重新查询</string>
+    <string name="research">重新查询</string>
     <string name="pvp_search_on_web">去网站查询</string>
     <string name="team_no">进攻队伍 %s</string>
     <string name="team_win">进攻</string>
@@ -337,6 +340,7 @@
     <string name="remote_db_file_error">远程数据异常\n请[加群反馈]</string>
     <string name="re_download_db_file">若数据加载或下载异常\n请点此[重新下载]数据</string>
     <string name="title_db_downloading">正在下载数据</string>
+    <string name="db_download_cancel">下载因未知原因中断，请重新下载</string>
     <string name="update_database">数据更新</string>
     <string name="db_download_failure">数据下载失败，请重新下载</string>
     <string name="db_download_exception">数据下载出现异常，请重新下载</string>
@@ -623,6 +627,7 @@
     <string name="skill_debuff">减益</string>
     <string name="skill_barrier">护盾</string>
     <string name="skill_damage">伤害</string>
+    <string name="skill_status_down">状态下降</string>
     <string name="skill_action_type_desc_10_break">BREAK 期间，%s%s</string>
     <string name="skill_charm_0">魅惑</string>
     <string name="skill_charm_1">混乱</string>
@@ -654,6 +659,7 @@
     <string name="skill_action_type_desc_21_1">无敌</string>
     <string name="skill_action_type_desc_21_2">回避物理攻击</string>
     <string name="skill_action_type_desc_21_3">回避所有攻击</string>
+    <string name="skill_action_type_desc_21_8">回避魔法攻击</string>
     <string name="skill_action_skill_anim_change">技能动画改变%s</string>
     <string name="skill_action_if_status">当%s在[%s]时，使用动作(%d)</string>
     <string name="skill_action_if_status_not">当%s不在[%s]时，使用动作(%d)</string>
@@ -781,6 +787,8 @@
     <string name="skill_action_type_desc_111">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
     <string name="skill_action_type_desc_114">对%s追加 [%d] 层标记，%s，受到伤害时，减少 [1] 层标记，并使用动作(%d)和动作(%d)%s</string>
     <string name="skill_action_type_desc_114_aura">己方受到的伤害降低 [%d%%]</string>
+    <string name="skill_action_type_desc_116">使%s进入%s状态%s</string>
+    <string name="skill_action_type_desc_116_1">执着</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>
@@ -836,11 +844,11 @@
     <string name="response_error">未正常获取数据，请切换网络后重试</string>
     <string name="response_cancel">查询取消</string>
 
-    <!--排行评级查询-->
+    <!--角色梯队查询-->
     <string name="leader_need_sync">未关联</string>
-    <string name="only_jp">日服评价，仅供参考</string>
-    <string name="tool_leader_tier">角色评级</string>
-    <string name="leader_tier_0">综合评级</string>
+    <string name="only_jp">基于日服版本的评价，仅供参考</string>
+    <string name="tool_leader_tier">角色梯队</string>
+    <string name="leader_tier_0">综合</string>
     <string name="leader_tier_1">竞技场进攻</string>
     <string name="leader_tier_2">竞技场防守</string>
     <string name="leader_tier_d">T%s</string>

@@ -62,6 +62,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.move
 import cn.wthee.pcrtool.data.db.view.skilltype.movePart
 import cn.wthee.pcrtool.data.db.view.skilltype.noTarget
 import cn.wthee.pcrtool.data.db.view.skilltype.noUB
+import cn.wthee.pcrtool.data.db.view.skilltype.persistent
 import cn.wthee.pcrtool.data.db.view.skilltype.rateDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.reindeer
 import cn.wthee.pcrtool.data.db.view.skilltype.revival
@@ -379,6 +380,8 @@ data class SkillActionDetail(
             SkillActionType.SUM_CRITICAL -> sumCritical()
             // 114：特殊标记计数？
             SkillActionType.SEAL_COUNT -> sealCount()
+            // 116：特殊标记计数？
+            SkillActionType.PERSISTENT -> persistent()
             else -> unknownType()
         }
     }

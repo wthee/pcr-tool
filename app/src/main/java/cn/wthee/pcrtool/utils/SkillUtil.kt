@@ -320,6 +320,7 @@ fun SkillActionDetail.getTargetType() = getString(
         43 -> R.string.skill_target_43
         44 -> R.string.skill_target_44
         45 -> R.string.skill_target_45
+        46 -> R.string.skill_target_46
         else -> R.string.unknown
     }
 )
@@ -388,6 +389,7 @@ fun SkillActionDetail.getStatus(value: Int) = getString(
         1900 -> R.string.skill_status_1900
         3137 -> R.string.skill_status_3137
         3162 -> R.string.skill_status_3162
+        6160 -> R.string.skill_status_6160
         else -> R.string.unknown
     }
 )

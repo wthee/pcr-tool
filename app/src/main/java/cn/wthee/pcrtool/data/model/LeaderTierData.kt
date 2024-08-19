@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.model
 import kotlinx.serialization.Serializable
 
 /**
- * 角色评级
+ * 角色梯队
  */
 @Serializable
 data class LeaderTierData(

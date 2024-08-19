@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.data.model.error
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.post
@@ -25,22 +26,22 @@ import io.ktor.client.request.setBody
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * 接口请求
  */
-class ApiRepository {
+class ApiRepository @Inject constructor(private val client: HttpClient) {
 
     /**
      * 请求异常捕获
      */
     private suspend inline fun <reified T> postCatching(
-        urlString: String,
-        block: HttpRequestBuilder.() -> Unit = {}
+        urlString: String, block: HttpRequestBuilder.() -> Unit = {}
     ): ResponseData<T> {
         try {
-            val response = ApiClient.client.post(urlString) {
+            val response = client.post(urlString) {
                 block()
             }
             val body = response.body<ResponseData<T>>()
@@ -242,17 +243,30 @@ class ApiRepository {
     /**
      * 排行信息
      */
-    suspend fun getLeader(): ResponseData<List<LeaderboardData>> =
-        postCatching("leaders/score/v2")
+    suspend fun getLeader(unitId: Int? = null): ResponseData<List<LeaderboardData>> =
+        postCatching("leaders/score/v2") {
+            setBody(
+                buildJsonObject {
+                    unitId?.let {
+                        put("unitId", unitId)
+                    }
+                }
+            )
+        }
 
     /**
-     * 排行评级信息
+     * 排行梯队信息
      */
-    suspend fun getLeaderTier(type: Int): ResponseData<LeaderTierData> =
+    suspend fun getLeaderTier(type: Int?, unitId: Int? = null): ResponseData<LeaderTierData> =
         postCatching("leaders/tier/v2") {
             setBody(
                 buildJsonObject {
-                    put("type", type)
+                    type?.let {
+                        put("type", type)
+                    }
+                    unitId?.let {
+                        put("unitId", unitId)
+                    }
                 }
             )
         }

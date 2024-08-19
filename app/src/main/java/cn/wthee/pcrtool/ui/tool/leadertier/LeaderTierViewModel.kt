@@ -23,14 +23,14 @@ import javax.inject.Inject
 
 
 /**
- * 页面状态：角色评级
+ * 页面状态：角色梯队
  */
 @Immutable
 data class LeaderTierUiState(
     val currentGroupList: List<LeaderTierGroup> = arrayListOf(),
     val count: Int = 0,
     val date: String = "",
-    //角色评级类型
+    //角色梯队类型
     val leaderTierType: LeaderTierType = LeaderTierType.ALL,
     val leaderTierMap: HashMap<Int, ResponseData<LeaderTierData>> = hashMapOf(),
     val openDialog: Boolean = false,
@@ -44,7 +44,7 @@ data class LeaderTierUiState(
     )
 
 /**
- * 角色评级 ViewModel
+ * 角色梯队 ViewModel
  *
  * @param apiRepository
  */
@@ -72,7 +72,7 @@ class LeaderTierViewModel @Inject constructor(
     }
 
     /**
-     * 获取排行评级
+     * 获取角色梯队
      */
     private fun getLeaderTier(
         type: Int = _uiState.value.leaderTierType.type,

@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.ApiRepository
 import cn.wthee.pcrtool.data.preferences.MainPreferencesKeys
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.AppBasicDatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.dataStoreMain
 import cn.wthee.pcrtool.ui.dataStoreSetting
@@ -119,7 +119,7 @@ class OverviewScreenViewModel @Inject constructor(
         checkDatabaseFile()
         //数据库校验
         MainScope().launch {
-            DatabaseUpdater.checkDBVersion(
+            AppBasicDatabaseUpdater.checkDBVersion(
                 fixDb = false,
                 updateDbDownloadState = this@OverviewScreenViewModel::updateDbDownloadState,
                 updateDbVersion = this@OverviewScreenViewModel::updateDbVersion

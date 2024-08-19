@@ -150,7 +150,7 @@ fun PvpSearchResult(
                         text = stringResource(id = R.string.data_get_error)
                     ) {
                         SubButton(
-                            text = stringResource(id = R.string.pvp_research),
+                            text = stringResource(id = R.string.research),
                             modifier = Modifier.padding(top = Dimen.mediumPadding),
                             onClick = {
                                 research()

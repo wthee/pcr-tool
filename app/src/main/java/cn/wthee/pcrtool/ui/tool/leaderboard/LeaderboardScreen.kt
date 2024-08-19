@@ -477,7 +477,7 @@ fun LeaderCharacterIcon(
         //wiki页面
         if (!placeholder) {
             CaptionText(
-                text = "wiki",
+                text = stringResource(id = R.string.wiki),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(top = Dimen.exSmallPadding)

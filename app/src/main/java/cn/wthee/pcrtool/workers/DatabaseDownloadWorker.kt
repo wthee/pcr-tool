@@ -10,8 +10,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.network.downloadFileClient
 import cn.wthee.pcrtool.database.AppBasicDatabase
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.home.DbDownloadState
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
@@ -21,14 +21,12 @@ import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.UnzippedUtil
 import cn.wthee.pcrtool.utils.getString
-import com.tencent.bugly.crashreport.CrashReport
 import io.ktor.client.call.body
 import io.ktor.client.plugins.onDownload
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -36,8 +34,8 @@ import java.io.File
  */
 class DatabaseDownloadWorker(
     context: Context,
-    parameters: WorkerParameters?,
-) : CoroutineWorker(context, parameters!!) {
+    parameters: WorkerParameters,
+) : CoroutineWorker(context, parameters) {
 
     private val downloadNotice = getString(R.string.title_db_downloading)
 
@@ -81,7 +79,7 @@ class DatabaseDownloadWorker(
         try {
             //创建下载请求
             val httpResponse: HttpResponse =
-                DownloadFileClient.client.get(Constants.DATABASE_URL + fileName) {
+                downloadFileClient.get(Constants.DATABASE_URL + fileName) {
                     onDownload { bytesSentTotal, contentLength ->
                         progress = (bytesSentTotal * 100.0 / contentLength).toInt()
                         if (contentLength < 1000) {
@@ -98,15 +96,11 @@ class DatabaseDownloadWorker(
                 }
             responseBody = httpResponse.body()!!
         } catch (e: Exception) {
-            // fixme 异常问题排查 job was cancel
-//            LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
-            ToastUtil.launchShort(getString(R.string.db_download_failure))
-//            ToastUtil.launchShort(e.message)
-            MainScope().launch {
-                val exception =
-                    Exception("${getString(R.string.db_download_failure)}; dbVersion: ${MainActivity.regionType.name}\n${e.message}")
-                exception.stackTrace = e.stackTrace
-                CrashReport.postCatchedException(exception)
+            if (e is CancellationException) {
+                ToastUtil.launchShort(getString(R.string.db_download_cancel))
+            } else {
+                ToastUtil.launchShort(getString(R.string.db_download_failure))
+                LogReportUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
             return Result.failure()
         }
