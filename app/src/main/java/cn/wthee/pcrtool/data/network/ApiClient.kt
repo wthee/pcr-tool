@@ -31,7 +31,8 @@ var apiHttpClient = HttpClient(Android) {
 
     // 请求重试配置
     install(HttpRequestRetry) {
-        maxRetries = 3
+        retryOnExceptionOrServerErrors(maxRetries = 1)
+        exponentialDelay()
     }
 
     // 超时设置

@@ -9,6 +9,7 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.network.downloadFileClient
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.KEY_PROGRESS
 import cn.wthee.pcrtool.utils.FileUtil

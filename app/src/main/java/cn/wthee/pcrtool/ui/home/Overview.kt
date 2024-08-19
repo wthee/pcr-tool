@@ -345,7 +345,10 @@ private fun ChangeDbCompose(
             ),
             expanded = showChangeDb,
             onClick = {
-                if (downloadState == DbDownloadState.NORMAL.state || remoteDbSizeError) {
+                if (downloadState == DbDownloadState.NORMAL.state
+                    || downloadState == DbDownloadState.LOADING.state
+                    || remoteDbSizeError
+                ) {
                     onClick()
                 }
             },

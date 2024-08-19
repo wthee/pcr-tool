@@ -10,6 +10,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.RegionType
+import cn.wthee.pcrtool.data.network.downloadFileClient
 import cn.wthee.pcrtool.database.AppBasicDatabase
 import cn.wthee.pcrtool.ui.home.DbDownloadState
 import cn.wthee.pcrtool.utils.Constants
