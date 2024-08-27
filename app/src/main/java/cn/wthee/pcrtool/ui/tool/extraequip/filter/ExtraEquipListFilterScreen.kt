@@ -97,7 +97,11 @@ private fun ExtraEquipListFilterContent(
 
     //更新信息
     LaunchedEffect(
-        textState.value, rarityIndex.intValue, favoriteIndex.intValue, categoryIndex.intValue
+        textState.value,
+        flagIndex.intValue,
+        rarityIndex.intValue,
+        favoriteIndex.intValue,
+        categoryIndex.intValue
     ) {
         updateFilter(filter)
     }
