@@ -473,19 +473,6 @@ private fun DbVersionOtherContent(
             )
     ) {
 
-        //数据更新内容
-        DbVersionContentItem(
-            title = stringResource(id = R.string.db_diff_content),
-            content = if (dbVersion == null || dbVersion.desc == "") {
-                stringResource(R.string.db_diff_content_none)
-            } else {
-                dbVersion.desc
-            },
-            color = color
-        )
-
-        Spacer(modifier = Modifier.height(Dimen.commonItemPadding * 2))
-
         Row(
             modifier = Modifier
                 .height(IntrinsicSize.Min)
