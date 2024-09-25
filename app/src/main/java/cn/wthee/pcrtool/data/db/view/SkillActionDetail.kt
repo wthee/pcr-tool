@@ -58,6 +58,8 @@ import cn.wthee.pcrtool.data.db.view.skilltype.limitAttack
 import cn.wthee.pcrtool.data.db.view.skilltype.logBarrier
 import cn.wthee.pcrtool.data.db.view.skilltype.loop
 import cn.wthee.pcrtool.data.db.view.skilltype.loopTrigger
+import cn.wthee.pcrtool.data.db.view.skilltype.magicChange
+import cn.wthee.pcrtool.data.db.view.skilltype.magicChangeReduceDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.move
 import cn.wthee.pcrtool.data.db.view.skilltype.movePart
 import cn.wthee.pcrtool.data.db.view.skilltype.noTarget
@@ -380,8 +382,12 @@ data class SkillActionDetail(
             SkillActionType.SUM_CRITICAL -> sumCritical()
             // 114：特殊标记计数？
             SkillActionType.SEAL_COUNT -> sealCount()
-            // 116：特殊标记计数？
+            // 116：执着状态
             SkillActionType.PERSISTENT -> persistent()
+            // 121：幻化状态
+            SkillActionType.MAGIC_CHANGE -> magicChange()
+            // 123：减伤状态
+            SkillActionType.MAGIC_CHANGE_REDUCE_DAMAGE -> magicChangeReduceDamage()
             else -> unknownType()
         }
     }

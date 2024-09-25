@@ -9,6 +9,6 @@ import cn.wthee.pcrtool.utils.getTimeText
 //116：执着状态
 fun SkillActionDetail.persistent(): String {
     val time = getTimeText(1, actionValue1)
-    val status = getString(R.string.skill_action_type_desc_116_1)
-    return getString(R.string.skill_action_type_desc_116, getTarget(), status, time)
+    val status = getString(R.string.skill_action_type_116)
+    return getString(R.string.skill_action_type_desc_116_121_123, getTarget(), status, time)
 }

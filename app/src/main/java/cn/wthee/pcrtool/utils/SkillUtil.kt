@@ -389,6 +389,7 @@ fun SkillActionDetail.getStatus(value: Int) = getString(
         1900 -> R.string.skill_status_1900
         3137 -> R.string.skill_status_3137
         3162 -> R.string.skill_status_3162
+        3175 -> R.string.skill_status_3175
         6160 -> R.string.skill_status_6160
         else -> R.string.unknown
     }
