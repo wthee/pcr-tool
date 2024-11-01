@@ -74,11 +74,13 @@ class FileDownloadWorker(
             //创建下载请求
             val httpResponse: HttpResponse = downloadFileClient.get(downloadUrl) {
                 onDownload { bytesSentTotal, contentLength ->
-                    val progress = (bytesSentTotal * 100.0 / contentLength).toInt()
-                    //更新下载进度
-                    setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
-                    if (progress == 100) {
-                        notificationManager.cancelAll()
+                    if (contentLength != null) {
+                        val progress = (bytesSentTotal * 100.0 / contentLength).toInt()
+                        //更新下载进度
+                        setProgressAsync(Data.Builder().putInt(KEY_PROGRESS, progress).build())
+                        if (progress == 100) {
+                            notificationManager.cancelAll()
+                        }
                     }
                 }
             }
