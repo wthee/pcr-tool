@@ -84,6 +84,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.tp
 import cn.wthee.pcrtool.data.db.view.skilltype.tpField
 import cn.wthee.pcrtool.data.db.view.skilltype.tpHit
 import cn.wthee.pcrtool.data.db.view.skilltype.tpHitReduce
+import cn.wthee.pcrtool.data.db.view.skilltype.transferDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.trigger
 import cn.wthee.pcrtool.data.db.view.skilltype.triggerV2
 import cn.wthee.pcrtool.data.db.view.skilltype.unknownType
@@ -388,6 +389,8 @@ data class SkillActionDetail(
             SkillActionType.MAGIC_CHANGE -> magicChange()
             // 123：减伤状态
             SkillActionType.MAGIC_CHANGE_REDUCE_DAMAGE -> magicChangeReduceDamage()
+            // 124：护盾（转移伤害）
+            SkillActionType.TRANSFER_DAMAGE -> transferDamage()
             else -> unknownType()
         }
     }

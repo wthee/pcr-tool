@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.utils.getValueText
 fun SkillActionDetail.magicChange(): String {
     val time = getTimeText(5, actionValue5)
     val status = getString(R.string.skill_action_type_121)
-    return getString(R.string.skill_action_type_desc_116_121_123, getTarget(), status, time)
+    return getString(R.string.skill_action_type_desc_116_121_123_124, getTarget(), status, time)
 }
 
 // 123：减伤状态
@@ -19,5 +19,5 @@ fun SkillActionDetail.magicChangeReduceDamage(): String {
     val time = getTimeText(3, actionValue3)
     val value = getValueText(1, v1 = actionValue1, v2 = actionValue2, percent = "%")
     val desc = getString(R.string.skill_action_type_desc_123_1, value)
-    return getString(R.string.skill_action_type_desc_116_121_123, getTarget(), desc, time)
+    return getString(R.string.skill_action_type_desc_116_121_123_124, getTarget(), desc, time)
 }

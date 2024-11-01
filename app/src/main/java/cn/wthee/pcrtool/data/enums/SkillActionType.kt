@@ -510,6 +510,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 123：减伤状态
      */
     MAGIC_CHANGE_REDUCE_DAMAGE(123, R.string.skill_action_type_123),
+
+    /**
+     * 124：护盾（转移伤害）
+     */
+    TRANSFER_DAMAGE(124, R.string.skill_action_type_124),
     ;
 
     companion object {
