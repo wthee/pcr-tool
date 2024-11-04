@@ -27,7 +27,7 @@ android {
 //    }
 
     namespace = appId
-    compileSdk = 34
+    compileSdk = 35
     buildToolsVersion = "35.0.0"
     flavorDimensions += listOf("version")
 
@@ -91,8 +91,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -130,7 +130,7 @@ dependencies {
 
     //Coil
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.ktor2)
+    implementation(libs.coil.network.ktor3)
 
     //datastore
     implementation(libs.datastore.preferences)
