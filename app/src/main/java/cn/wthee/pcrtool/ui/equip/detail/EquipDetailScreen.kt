@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.equip.detail
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
@@ -218,21 +221,28 @@ private fun EquipMaterialListContent(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun EquipDetailPreview() {
     PreviewLayout {
-//        EquipDetailContent(
-//            equipId = 0,
-//            equipMaxData = EquipmentMaxData(
-//                equipmentId = 1001,
-//                equipmentName = stringResource(id = R.string.debug_short_text),
-//                description = stringResource(id = R.string.debug_long_text),
-//                craftFlg = 1,
-//                attr = Attr()
-//            ),
-//            favorite = true
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                EquipDetailContent(
+                    animatedVisibilityScope = this,
+                    equipId = 0,
+                    equipMaxData = EquipmentMaxData(
+                        equipmentId = 1001,
+                        equipmentName = stringResource(id = R.string.debug_short_text),
+                        description = stringResource(id = R.string.debug_long_text),
+                        craftFlg = 1,
+                        attr = Attr()
+                    ),
+                    favorite = true
+                )
+            }
+        }
+
         EquipMaterialListContent(
             materialList = arrayListOf(EquipmentMaterial(id = 1)),
             favoriteIdList = arrayListOf(1),

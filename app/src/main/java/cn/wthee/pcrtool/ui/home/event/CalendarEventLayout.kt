@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.home.event
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,13 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.BirthdayData
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.ClanBattleEvent
+import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.FreeGachaInfo
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.db.view.StoryEventData
+import cn.wthee.pcrtool.data.enums.CalendarEventType
 import cn.wthee.pcrtool.data.enums.EventType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.OverviewType
@@ -183,42 +188,81 @@ private fun CalendarEventOperation(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun CalendarEventLayoutPreview() {
     PreviewLayout {
-//        val text = stringResource(id = R.string.debug_long_text)
-//        CalendarEventLayout(
-//            animatedVisibilityScope = null,
-//            isEditMode = false,
-//            calendarType = EventType.COMING_SOON,
-//            eventExpandState = 2,
-//            actions = NavActions(NavHostController(LocalContext.current)),
-//            orderStr = "${OverviewType.COMING_SOON_EVENT.id}",
-//            eventList = arrayListOf(
-//                CalendarEvent(
-//                    type = CalendarEventType.H_DROP.type.toString(),
-//                    value = 3000,
-//                    startTime = "2030-01-01 00:00:00",
-//                    endTime = "2031-01-01 00:00:00"
-//                )
-//            ),
-//            storyEventList = arrayListOf(
-//                StoryEventData(
-//                    title = text
-//                )
-//            ),
-//            gachaList = arrayListOf(GachaInfo()),
-//            freeGachaList = arrayListOf(FreeGachaInfo()),
-//            birthdayList = arrayListOf(BirthdayData(unitIds = "1-2-3", unitNames = "1-2-3")),
-//            clanBattleList = arrayListOf(
-//                ClanBattleEvent(
-//                    clanBattleInfo = ClanBattleInfo(1)
-//                )
-//            ),
-//            fesUnitIdList = arrayListOf(1),
-//            updateOrderData = {},
-//            updateEventLayoutState = {}
-//        )
+        val eventList = arrayListOf(
+            CalendarEvent(
+                type = CalendarEventType.H_DROP.type.toString(),
+                value = 3000,
+                startTime = "2030-01-01 00:00:00",
+                endTime = "2031-01-01 00:00:00"
+            )
+        )
+        val text = stringResource(id = R.string.debug_long_text)
+        val storyEventList = arrayListOf(
+            StoryEventData(
+                title = text
+            )
+        )
+        val gachaList = arrayListOf(GachaInfo())
+        val freeGachaList = arrayListOf(FreeGachaInfo())
+        val birthdayList = arrayListOf(
+            BirthdayData(
+                unitIds = "1-2-3",
+                unitNames = "1-2-3"
+            )
+        )
+        val clanBattleList = arrayListOf(
+            ClanBattleEvent(
+                clanBattleInfo = ClanBattleInfo(1)
+            )
+        )
+        val fesUnitIdList = arrayListOf(1)
+
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+//                CalendarEventOperation(NavActions(NavHostController(LocalContext.current)))
+                VerticalStaggeredGrid(
+                    itemWidth = getItemWidth() + Dimen.largePadding * 2,
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+                ) {
+                    clanBattleList.forEach {
+                        ClanBattleOverviewItemContent(
+                            animatedVisibilityScope = this,
+                            clanBattleEvent = it,
+                            toClanBossInfo = {}
+                        )
+                    }
+                    gachaList.forEach {
+                        GachaItem(
+                            gachaInfo = it,
+                            fesUnitIdList = fesUnitIdList,
+                            toCharacterDetail = { },
+                            toMockGachaFromList = { _, _ -> }
+                        )
+                    }
+                    freeGachaList.forEach {
+                        FreeGachaItem(it)
+                    }
+                    storyEventList.forEach {
+                        StoryEventItemContent(
+                            event = it,
+                            toCharacterDetail = {},
+                            toEventEnemyDetail = { },
+                            toAllStoryEventPics = { _, _, _, _ -> }
+                        )
+                    }
+                    eventList.forEach {
+                        CalendarEventItem(it)
+                    }
+                    birthdayList.forEach {
+                        BirthdayItem(it, { })
+                    }
+                }
+            }
+        }
     }
 }

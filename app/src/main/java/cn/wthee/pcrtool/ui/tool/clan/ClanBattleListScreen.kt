@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -375,18 +377,24 @@ fun getClanBattleDate(clanBattleInfo: ClanBattleInfo): String {
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun ClanBattleListContentPreview() {
     PreviewLayout {
-//        ClanBattleListContent(
-//            scrollState = rememberLazyGridState(),
-//            clanBattleList = arrayListOf(
-//                ClanBattleInfo(1),
-//                ClanBattleInfo(2),
-//                ClanBattleInfo(3),
-//            ),
-//            toClanBossInfo = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                ClanBattleListContent(
+                    animatedVisibilityScope = this,
+                    scrollState = rememberLazyGridState(),
+                    clanBattleList = arrayListOf(
+                        ClanBattleInfo(1),
+                        ClanBattleInfo(2),
+                        ClanBattleInfo(3),
+                    ),
+                    toClanBossInfo = {}
+                )
+            }
+        }
     }
 }

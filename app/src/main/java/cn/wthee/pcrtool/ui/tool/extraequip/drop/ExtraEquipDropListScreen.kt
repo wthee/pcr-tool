@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.extraequip.drop
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -92,42 +94,48 @@ private fun SharedTransitionScope.ExtraEquipDropListContent(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun ExtraEquipDropListContentPreview() {
     PreviewLayout {
-//        val data = hashMapOf<Int, List<ExtraEquipSubRewardData>>()
-//        data[1] = arrayListOf(
-//            ExtraEquipSubRewardData(
-//                travelQuestId = 1,
-//                category = 1,
-//                categoryName = stringResource(id = R.string.debug_short_text),
-//                subRewardIds = "1-2-3",
-//                subRewardDrops = "1234-2323-4567"
-//            )
-//        )
-//        val questData = ExtraEquipQuestData(
-//            travelQuestId = 1,
-//            travelAreaId = 1,
-//            travelQuestName = stringResource(id = R.string.debug_short_text),
-//            limitUnitNum = 10,
-//            travelTime = 1000,
-//            travelTimeDecreaseLimit = 2000,
-//            travelDecreaseFlag = 1,
-//            needPower = 1,
-//            iconId = 1
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                val data = hashMapOf<Int, List<ExtraEquipSubRewardData>>()
+                data[1] = arrayListOf(
+                    ExtraEquipSubRewardData(
+                        travelQuestId = 1,
+                        category = 1,
+                        categoryName = stringResource(id = R.string.debug_short_text),
+                        subRewardIds = "1-2-3",
+                        subRewardDrops = "1234-2323-4567"
+                    )
+                )
+                val questData = ExtraEquipQuestData(
+                    travelQuestId = 1,
+                    travelAreaId = 1,
+                    travelQuestName = stringResource(id = R.string.debug_short_text),
+                    limitUnitNum = 10,
+                    travelTime = 1000,
+                    travelTimeDecreaseLimit = 2000,
+                    travelDecreaseFlag = 1,
+                    needPower = 1,
+                    iconId = 1
+                )
 
-//        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//            ExtraEquipDropListContent(
-//                dropList = arrayListOf(
-//                    questData,
-//                    questData,
-//                    questData
-//                ),
-//                equipId = 1,
-//                subRewardListMap = data
-//            )
-//        }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    ExtraEquipDropListContent(
+                        animatedVisibilityScope = this@AnimatedVisibility,
+                        dropList = arrayListOf(
+                            questData,
+                            questData,
+                            questData
+                        ),
+                        equipId = 1,
+                        subRewardListMap = data
+                    )
+                }
+            }
+        }
     }
 }

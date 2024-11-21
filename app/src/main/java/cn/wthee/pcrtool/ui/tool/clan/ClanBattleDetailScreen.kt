@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -185,23 +187,29 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
 /**
  * @see [EnemyDetailScreen] 属性布局预览
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun ClanBattleDetailContentPreview() {
     PreviewLayout {
-//        ClanBattleDetailContent(
-//            clanBattleInfo = ClanBattleInfo(),
-//            bossDataList = arrayListOf(
-//                EnemyParameterPro(),
-//                EnemyParameterPro(),
-//                EnemyParameterPro(),
-//                EnemyParameterPro(),
-//                EnemyParameterPro(),
-//            ),
-//            pagerState = rememberPagerState {
-//                5
-//            },
-//            toSummonDetail = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                ClanBattleDetailContent(
+                    animatedVisibilityScope = this,
+                    clanBattleInfo = ClanBattleInfo(),
+                    bossDataList = arrayListOf(
+                        EnemyParameterPro(),
+                        EnemyParameterPro(),
+                        EnemyParameterPro(),
+                        EnemyParameterPro(),
+                        EnemyParameterPro(),
+                    ),
+                    pagerState = rememberPagerState {
+                        5
+                    },
+                    toSummonDetail = {}
+                )
+            }
+        }
     }
 }

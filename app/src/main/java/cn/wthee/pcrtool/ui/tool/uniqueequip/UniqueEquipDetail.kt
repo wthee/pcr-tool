@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.uniqueequip
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.getIndex
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -136,20 +139,26 @@ fun SharedTransitionScope.UniqueEquipDetail(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun UniqueEquipPreview() {
     PreviewLayout {
-//        UniqueEquipDetail(
-//            1,
-//            currentValue = CharacterProperty(),
-//            uniqueEquipLevelMax = 100,
-//            uniqueEquipmentMaxData = UniqueEquipmentMaxData(
-//                equipmentName = stringResource(id = R.string.debug_short_text),
-//                description = stringResource(id = R.string.debug_long_text),
-//                attr = Attr().random()
-//            ),
-//            updateCurrentValue = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                UniqueEquipDetail(
+                    animatedVisibilityScope = this,
+                    slot = 1,
+                    currentValue = CharacterProperty(),
+                    uniqueEquipLevelMax = 100,
+                    uniqueEquipmentMaxData = UniqueEquipmentMaxData(
+                        equipmentName = stringResource(id = R.string.debug_short_text),
+                        description = stringResource(id = R.string.debug_long_text),
+                        attr = Attr().random()
+                    ),
+                    updateCurrentValue = {}
+                )
+            }
+        }
     }
 }

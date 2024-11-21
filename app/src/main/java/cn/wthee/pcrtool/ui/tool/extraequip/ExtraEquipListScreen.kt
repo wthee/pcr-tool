@@ -1,9 +1,12 @@
 package cn.wthee.pcrtool.ui.tool.extraequip
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -286,23 +289,31 @@ private fun SharedTransitionScope.ExtraEquipItem(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun ExtraEquipGroupPreview() {
     val text = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
-//        ExtraEquipGroup(
-//            ExtraEquipGroupData(
-//                rarity = 3,
-//                category = 1,
-//                categoryName = text,
-//                equipIdList = arrayListOf(
-//                    ExtraEquipmentBasicInfo(equipmentId = 1, equipmentName = text),
-//                    ExtraEquipmentBasicInfo(equipmentName = text),
-//                    ExtraEquipmentBasicInfo(equipmentName = text)
-//                )
-//            ),
-//            favoriteIdList = arrayListOf(1)
-//        ) { }
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                Column {
+                    ExtraEquipGroup(
+                        animatedVisibilityScope = this@AnimatedVisibility,
+                        ExtraEquipGroupData(
+                            rarity = 3,
+                            category = 1,
+                            categoryName = text,
+                            equipIdList = arrayListOf(
+                                ExtraEquipmentBasicInfo(equipmentId = 1, equipmentName = text),
+                                ExtraEquipmentBasicInfo(equipmentName = text),
+                                ExtraEquipmentBasicInfo(equipmentName = text)
+                            )
+                        ),
+                        favoriteIdList = arrayListOf(1)
+                    ) { }
+                }
+            }
+        }
     }
 }
