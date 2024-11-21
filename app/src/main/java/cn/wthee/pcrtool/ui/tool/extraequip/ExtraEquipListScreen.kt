@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +49,7 @@ import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
+import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.launch
@@ -200,6 +202,7 @@ private fun SharedTransitionScope.ExtraEquipGroup(
     favoriteIdList: List<Int>,
     toExtraEquipDetail: (Int) -> Unit
 ) {
+    val color = ExtraEquipLevelColor.getByType(equipGroupData.rarity).color
     //分组标题
     CommonGroupTitle(
         iconData = ImageRequestHelper.getInstance()
@@ -208,7 +211,17 @@ private fun SharedTransitionScope.ExtraEquipGroup(
                 equipGroupData.category
             ),
         iconSize = Dimen.smallIconSize,
-        backgroundColor = ExtraEquipLevelColor.getByType(equipGroupData.rarity).color,
+        backgroundColor = color,
+        brush = if (equipGroupData.rarity == ExtraEquipLevelColor.RARITY_5.type) {
+            Brush.linearGradient(
+                colors = listOf(
+                    colorPink,
+                    colorPink.copy(alpha = 0.5f),
+                    color.copy(alpha = 0.5f),
+                    color
+                )
+            )
+        } else null,
         titleStart = stringResource(
             id = R.string.extra_equip_rarity_and_type,
             equipGroupData.rarity,
