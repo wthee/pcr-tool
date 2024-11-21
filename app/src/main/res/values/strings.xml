@@ -555,6 +555,7 @@
     <string name="skill_target_44">剩余HP最低(自身除外)的</string>
     <string name="skill_target_45">物理防御力最低的</string>
     <string name="skill_target_46">魔法防御力最低的</string>
+    <string name="skill_target_13195">召唤者</string>
 
     <!--技能目标分配-->
     <string name="skill_target_assignment_0">自身</string>
@@ -658,7 +659,7 @@
     <string name="skill_action_type_desc_17_10">受到持续伤害时 [%d%%] 概率</string>
     <string name="skill_action_type_desc_17_11">所有部位 BREAK</string>
     <string name="skill_action_type_desc_17_13">HP减少 [%d] 时</string>
-    <string name="skill_action_type_desc_17_17">黏着时 [%d%%] 概率触发</string>
+    <string name="skill_action_type_desc_17_17">被击时 [%d%%] 概率触发</string>
     <string name="skill_action_type_desc_18_19">蓄力 [%s] 秒</string>
     <string name="skill_action_type_desc_18_19_detail">，动作(%d)效果增加 %s * 蓄力中受到的伤害</string>
     <string name="skill_action_type_desc_20">使%s进入%s状态%s</string>
@@ -671,6 +672,8 @@
     <string name="skill_action_if_status_not">当%s不在[%s]时，使用动作(%d)</string>
     <string name="skill_action_if_mark">%s持有标记时，使用动作(%d)</string>
     <string name="skill_action_if_mark_not">%s未持有标记时，使用动作(%d)</string>
+    <string name="skill_action_if_mark_count">%s持有标记数量为 [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_if_mark_count_not">%s持有标记数量不为 [%d] 时，使用动作(%d)</string>
     <string name="skill_action_if_alone">%s仅剩一名时，使用动作(%d)</string>
     <string name="skill_action_if_alone_not">%s多于一名时，使用动作(%d)</string>
     <string name="skill_action_if_hp_below">%s的HP在 [%d%%] 以下时，使用动作(%d)</string>
@@ -788,6 +791,7 @@
     <string name="skill_action_type_unknown">%s目标：%s；类型：%d；数值：%s%s</string>
     <string name="skill_action_type_desc_105">发动 [%s] 环境效果%s</string>
     <string name="skill_action_type_desc_106">赋予%s [%s] 状态，并代替其承受伤害%s</string>
+    <string name="skill_action_type_desc_106_type_common">守护</string>
     <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
     <string name="skill_action_type_desc_107">动作(%d)暴击率依据物理暴击与魔法暴击之和</string>
     <string name="skill_action_type_desc_111">当%s标记数量 %s [%d] 时，使用动作(%d)</string>

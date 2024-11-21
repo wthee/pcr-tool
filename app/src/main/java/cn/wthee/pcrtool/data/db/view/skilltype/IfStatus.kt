@@ -30,6 +30,15 @@ fun SkillActionDetail.ifStatus(): String {
                     )
                 }
 
+                6194 -> {
+                    getString(
+                        R.string.skill_action_if_mark_count,
+                        getTarget(),
+                        actionValue3.toInt(),
+                        actionDetail2 % 100
+                    )
+                }
+
                 700 -> {
                     getString(
                         R.string.skill_action_if_alone,
@@ -83,6 +92,15 @@ fun SkillActionDetail.ifStatus(): String {
                     getString(
                         R.string.skill_action_if_mark_not,
                         getTarget(),
+                        actionDetail3 % 100
+                    )
+                }
+
+                6194 -> {
+                    getString(
+                        R.string.skill_action_if_mark_count_not,
+                        getTarget(),
+                        actionValue3.toInt(),
                         actionDetail3 % 100
                     )
                 }
