@@ -81,11 +81,11 @@ class DatabaseDownloadWorker(
             val httpResponse: HttpResponse =
                 downloadFileClient.get(Constants.DATABASE_URL + fileName) {
                     onDownload { bytesSentTotal, contentLength ->
-                        if (contentLength == null || contentLength < 1000) {
+                        progress = if (contentLength == null || contentLength < 1000) {
                             //文件大小异常
-                            progress = DbDownloadState.SIZE_ERROR.state
+                            DbDownloadState.SIZE_ERROR.state
                         } else {
-                            progress = (bytesSentTotal * 100.0 / contentLength).toInt()
+                            (bytesSentTotal * 100.0 / contentLength).toInt()
                         }
 
                         //更新下载进度

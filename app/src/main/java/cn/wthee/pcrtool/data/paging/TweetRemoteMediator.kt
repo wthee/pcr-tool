@@ -49,7 +49,7 @@ class TweetRemoteMediator(
                 dateRange.startDate,
                 dateRange.endDate
             ).data
-            val isEndOfList = response?.isEmpty() ?: false
+            val isEndOfList = response?.isEmpty() == true
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {

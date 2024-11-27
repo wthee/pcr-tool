@@ -76,7 +76,7 @@ object AppBasicDatabaseUpdater {
      * @param versionData 版本信息
      * @param fixDb 修复数据库（强制重新下载）
      */
-    private suspend fun downloadDB(
+    private fun downloadDB(
         versionData: DatabaseVersion,
         fixDb: Boolean,
         updateDbVersion: (DatabaseVersion?) -> Unit,
