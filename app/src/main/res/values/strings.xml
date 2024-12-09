@@ -555,7 +555,9 @@
     <string name="skill_target_44">剩余HP最低(自身除外)的</string>
     <string name="skill_target_45">物理防御力最低的</string>
     <string name="skill_target_46">魔法防御力最低的</string>
+    <string name="skill_target_50">魔法攻击力最高(自身除外)的</string>
     <string name="skill_target_13195">召唤者</string>
+    <string name="skill_target_13196">恶魔之吻</string>
 
     <!--技能目标分配-->
     <string name="skill_target_assignment_0">自身</string>
