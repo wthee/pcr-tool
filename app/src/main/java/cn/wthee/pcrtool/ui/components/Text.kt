@@ -385,7 +385,7 @@ fun CommonGroupTitle(
     iconData: Any? = null,
     titleStart: String,
     titleCenter: String = "",
-    titleEnd: String,
+    titleEnd: String = "",
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     brush: Brush? = null,
     textColor: Color = colorWhite,

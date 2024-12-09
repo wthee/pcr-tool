@@ -67,6 +67,7 @@ import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.NotificationsNone
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.Pentagon
 import androidx.compose.material.icons.rounded.Pets
 import androidx.compose.material.icons.rounded.PhoneAndroid
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -402,6 +403,16 @@ enum class MainIconType(val icon: ImageVector) {
      * 天赋
      */
     TALENT(Icons.Rounded.EmojiObjects),
+
+    /**
+     * 深域关卡
+     */
+    TALENT_QUEST(Icons.Rounded.Pentagon),
+
+    /**
+     * 深域关卡奖励
+     */
+    TALENT_QUEST_REWARD(Icons.Rounded.Map),
 
     /**
      * 漫画目录

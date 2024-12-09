@@ -187,7 +187,11 @@ fun EnemyDetailContent(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
             onClick = {
-                BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
+                if (enemyData.prefabId / 100000 == 1) {
+                    BrowserUtil.open(Constants.PREVIEW_UNIT_URL + enemyData.prefabId)
+                } else {
+                    BrowserUtil.open(Constants.PREVIEW_ENEMY_URL + enemyData.prefabId)
+                }
             }
         )
         //描述

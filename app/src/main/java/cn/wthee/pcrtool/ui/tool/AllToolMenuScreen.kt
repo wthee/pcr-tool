@@ -73,6 +73,13 @@ private data class ToolMenuGroup(
 
 /**
  * 全部工具
+ *
+ * 新增工具步骤：
+ * 0、完成工具页面功能
+ * 1、[ToolMenuType]中添加枚举
+ * 2、[AllToolMenuScreen]设置分组
+ * 3、[NavActions]添加action、[NavGraph]添加页面
+ * 4、[ToolSection]添加跳转
  */
 @Composable
 fun AllToolMenuScreen(
@@ -101,6 +108,7 @@ fun AllToolMenuScreen(
     dataList.add(ToolMenuType.TRAVEL_AREA)
     dataList.add(ToolMenuType.UNIQUE_EQUIP)
     dataList.add(ToolMenuType.TALENT_LIST)
+    dataList.add(ToolMenuType.TALENT_QUEST)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询

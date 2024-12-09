@@ -892,7 +892,11 @@
     <string name="preview_spine_battle">战斗</string>
     <string name="preview_spine_room">小屋</string>
 
+    <!--天赋、深域相关-->
+    <string name="talent_quest">深域关卡</string>
     <string name="talent_weakness">弱点属性</string>
     <string name="talent_weakness_tip">弱点属性加成数值为最大值，即队伍中相同天赋角色数量为 5 时的数值</string>
+    <string name="talent_item_1">星素碎片*%1$s</string>
+    <string name="talnet_item_2">水晶球*%1$s</string>
 
 </resources>

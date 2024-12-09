@@ -34,6 +34,7 @@ enum class ToolMenuType(val id: Int, @StringRes val titleId: Int, val iconType: 
     UNIQUE_EQUIP(223, R.string.tool_unique_equip, MainIconType.UNIQUE_EQUIP),
     LOAD_COMIC(224, R.string.tool_load_comic, MainIconType.LOAD_COMIC),
     TALENT_LIST(225, R.string.unit_talent, MainIconType.TALENT),
+    TALENT_QUEST(226, R.string.talent_quest, MainIconType.TALENT_QUEST),
     UNKNOWN_SKILL_LIST(999, R.string.skill, MainIconType.SKILL_LOOP),
     ;
 
