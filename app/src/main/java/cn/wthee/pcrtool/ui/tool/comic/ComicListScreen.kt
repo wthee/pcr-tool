@@ -225,7 +225,7 @@ private fun ComicTocList(
     changeDialog: (Boolean) -> Unit,
 ) {
     val tabs = arrayListOf<String>()
-    if (items.size > 0) {
+    if (items.isNotEmpty()) {
         for (i in 0 until items.size) {
             val title = if (items[i] == null) {
                 "${items.size - i}"

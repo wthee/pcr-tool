@@ -219,7 +219,7 @@ private fun PictureScreenContent(uiState: PictureUiState) {
                         loadState = LoadState.Success,
                         showTitle = false
                     ) {
-                        val isBanner = it?.contains(ImageRequestHelper.EVENT_BANNER) ?: false
+                        val isBanner = it?.contains(ImageRequestHelper.EVENT_BANNER) == true
                         PictureItem(
                             picUrl = it,
                             modifier = Modifier

@@ -16,7 +16,7 @@ fun SkillActionDetail.invincible(): String {
             2 -> R.string.skill_action_type_desc_21_2
             3 -> R.string.skill_action_type_desc_21_3
             8 -> R.string.skill_action_type_desc_21_8
-            else -> cn.wthee.pcrtool.R.string.unknown
+            else -> R.string.unknown
         }
     )
     return if (actionValue1 > 0) {

@@ -38,7 +38,7 @@ class ComicRemoteMediator(
                 after,
                 keyword
             ).data
-            val isEndOfList = response?.isEmpty() ?: false
+            val isEndOfList = response?.isEmpty() == true
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {

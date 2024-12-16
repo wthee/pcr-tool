@@ -5,6 +5,8 @@ import androidx.room.Query
 import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.QuestDetail
+import cn.wthee.pcrtool.data.db.view.TalentQuestData
+import cn.wthee.pcrtool.data.db.view.TalentQuestRewardData
 
 const val minEquipId = 100000
 
@@ -62,4 +64,59 @@ interface QuestDao {
     )
     suspend fun getEquipDropQuestList(equipId: String): List<QuestDetail>
 
+
+    /**
+     * 获取深域关卡掉落
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            talent_quest_data.quest_id,
+            talent_quest_data.quest_name,
+            reward.reward_id_2,
+            reward.reward_num_2,
+            reward.reward_id_3,
+            reward.reward_num_3 
+        FROM
+            talent_quest_data
+            LEFT JOIN talent_quest_clear_reward_01 AS reward ON reward.reward_group_id = talent_quest_data.clear_reward_group 
+        WHERE
+            reward.reward_group_id IS NOT NULL 
+            AND talent_quest_data.area_id = 81001 
+        ORDER BY
+            talent_quest_data.area_id,
+            talent_quest_data.quest_id DESC
+    """
+    )
+    suspend fun getTalentQuestRewardList(): List<TalentQuestRewardData>
+
+    /**
+     * 获取深域关卡敌人信息
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            quest.area_id / 1000 % 10 AS talent_id,
+            quest.quest_id,
+            quest.quest_name,
+            wave.enemy_id_1,
+            (SELECT unit_id FROM talent_quest_enemy_parameter WHERE talent_quest_enemy_parameter.enemy_id = wave.enemy_id_1) AS unit_id_1,
+            wave.enemy_id_2,
+            (SELECT unit_id FROM talent_quest_enemy_parameter WHERE talent_quest_enemy_parameter.enemy_id = wave.enemy_id_2) AS unit_id_2,
+            wave.enemy_id_3,
+            (SELECT unit_id FROM talent_quest_enemy_parameter WHERE talent_quest_enemy_parameter.enemy_id = wave.enemy_id_3) AS unit_id_3,
+            wave.enemy_id_4,
+            (SELECT unit_id FROM talent_quest_enemy_parameter WHERE talent_quest_enemy_parameter.enemy_id = wave.enemy_id_4) AS unit_id_4,
+            wave.enemy_id_5,
+            (SELECT unit_id FROM talent_quest_enemy_parameter WHERE talent_quest_enemy_parameter.enemy_id = wave.enemy_id_5) AS unit_id_5
+        FROM
+            talent_quest_data AS quest
+            LEFT JOIN talent_quest_wave_group_data AS wave ON quest.wave_group_id_1 = wave.wave_group_id
+        WHERE quest.area_id / 1000 % 10 = :talentType
+        ORDER BY quest.quest_id DESC
+    """
+    )
+    suspend fun getTalentQuestList(talentType: Int): List<TalentQuestData>
 }

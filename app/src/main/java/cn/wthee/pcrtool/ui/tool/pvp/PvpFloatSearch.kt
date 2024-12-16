@@ -29,8 +29,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val scope = rememberCoroutineScope()
-    val min = navViewModel.floatSearchMin.observeAsState().value ?: false
-    val showResult = navViewModel.showResult.observeAsState().value ?: false
+    val min = navViewModel.floatSearchMin.observeAsState().value == true
+    val showResult = navViewModel.showResult.observeAsState().value == true
     val pagerState = rememberPagerState { 4 }
     val selectListState = rememberLazyGridState()
     val usedListState = rememberLazyGridState()

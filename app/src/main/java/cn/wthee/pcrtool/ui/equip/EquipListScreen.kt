@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.equip
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -453,26 +455,48 @@ private fun getEquipColor(colorType: Int): Color {
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun EquipListContentPreview() {
     val name = stringResource(id = R.string.debug_short_text)
     PreviewLayout {
-//        EquipListContent(
-//            equipList = arrayListOf(
-//                EquipmentBasicInfo(equipmentId = 1, equipmentName = name, promotionLevel = 1),
-//                EquipmentBasicInfo(equipmentId = 2, equipmentName = name, promotionLevel = 2),
-//                EquipmentBasicInfo(equipmentId = 3, equipmentName = name, promotionLevel = 2),
-//                EquipmentBasicInfo(equipmentId = 4, equipmentName = name, promotionLevel = 2),
-//            ),
-//            scrollState = rememberLazyListState(),
-//            favoriteIdList = arrayListOf(1),
-//            toEquipDetail = { },
-//            toEquipMaterial = { _, _ -> },
-//            searchEquipMode = false,
-//            searchEquipIdList = arrayListOf(),
-//            selectEquip = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                EquipListContent(
+                    animatedVisibilityScope = this,
+                    equipList = arrayListOf(
+                        EquipmentBasicInfo(
+                            equipmentId = 1,
+                            equipmentName = name,
+                            promotionLevel = 1
+                        ),
+                        EquipmentBasicInfo(
+                            equipmentId = 2,
+                            equipmentName = name,
+                            promotionLevel = 2
+                        ),
+                        EquipmentBasicInfo(
+                            equipmentId = 3,
+                            equipmentName = name,
+                            promotionLevel = 2
+                        ),
+                        EquipmentBasicInfo(
+                            equipmentId = 4,
+                            equipmentName = name,
+                            promotionLevel = 2
+                        ),
+                    ),
+                    scrollState = rememberLazyListState(),
+                    favoriteIdList = arrayListOf(1),
+                    toEquipDetail = { },
+                    toEquipMaterial = { _, _ -> },
+                    searchEquipMode = false,
+                    searchEquipIdList = arrayListOf(),
+                    selectEquip = {}
+                )
+            }
+        }
     }
 }
 
@@ -480,14 +504,17 @@ private fun EquipListContentPreview() {
 @Composable
 private fun EquipSearchFabContentPreview() {
     PreviewLayout {
-        EquipSearchFabContent(
-            openSearchDialog = true,
-            searchEquipMode = true,
-            searchEquipIdList = arrayListOf(1, 2, 3, 4, 5),
-            toSearchEquipQuest = {},
-            changeSearchMode = {},
-            selectEquip = {},
-            changeSearchDialog = {}
-        )
+        Row {
+            EquipSearchFabContent(
+                openSearchDialog = true,
+                searchEquipMode = true,
+                searchEquipIdList = arrayListOf(1, 2, 3, 4, 5),
+                toSearchEquipQuest = {},
+                changeSearchMode = {},
+                selectEquip = {},
+                changeSearchDialog = {}
+            )
+
+        }
     }
 }

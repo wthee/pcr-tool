@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.tool.extratravel
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -214,33 +216,42 @@ fun SharedTransitionScope.TravelQuestHeader(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 private fun TravelItemPreview() {
     PreviewLayout {
-//        val quest = ExtraEquipQuestData(
-//            1,
-//            1,
-//            stringResource(id = R.string.debug_short_text),
-//            10,
-//            1000,
-//            2000,
-//            1,
-//            1,
-//            1
-//        )
-//
-//        TravelItem(
-//            travelData = ExtraTravelData(
-//                travelAreaId = 1,
-//                travelAreaName = stringResource(id = R.string.debug_short_text),
-//                questCount = 1,
-//                questList = arrayListOf(
-//                    quest, quest, quest
-//                )
-//            ),
-//            toExtraEquipTravelAreaDetail = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                val quest = ExtraEquipQuestData(
+                    travelQuestId = 1,
+                    travelAreaId = 1,
+                    travelQuestName = stringResource(id = R.string.debug_short_text),
+                    limitUnitNum = 10,
+                    travelTime = 1000,
+                    travelTimeDecreaseLimit = 2000,
+                    travelDecreaseFlag = 1,
+                    needPower = 1,
+                    iconId = 1
+                )
+
+                Column {
+                    TravelItem(
+                        animatedVisibilityScope = this@AnimatedVisibility,
+                        travelData = ExtraTravelData(
+                            travelAreaId = 1,
+                            travelAreaName = stringResource(id = R.string.debug_short_text),
+                            questCount = 1,
+                            questList = arrayListOf(
+                                quest, quest, quest
+                            )
+                        ),
+                        toExtraEquipTravelAreaDetail = {}
+                    )
+                }
+
+            }
+        }
     }
 }
 

@@ -13,6 +13,8 @@ import javax.inject.Inject
  * @param enemyDao
  */
 class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
+    //用于区分是否为深域
+    private val minTalentEnemyId = 800000000
 
     suspend fun getClanBossList() = try {
         enemyDao.getClanBossList()
@@ -28,7 +30,11 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
         val list = arrayListOf<EnemyParameterPro>()
         enemyPartIds.forEach {
             if (it != 0) {
-                val data = enemyDao.getEnemyAttr(it)
+                val data = if (it > minTalentEnemyId) {
+                    enemyDao.getTalnetEnemyAttr(it)
+                } else {
+                    enemyDao.getEnemyAttr(it)
+                }
                 list.add(data)
             }
         }
@@ -39,7 +45,11 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
     }
 
     suspend fun getEnemyAttr(enemyId: Int) = try {
-        enemyDao.getEnemyAttr(enemyId)
+        if (enemyId > minTalentEnemyId) {
+            enemyDao.getTalnetEnemyAttr(enemyId)
+        } else {
+            enemyDao.getEnemyAttr(enemyId)
+        }
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getEnemyAttr#enemyId:$enemyId")
         null

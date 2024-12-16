@@ -98,4 +98,8 @@ object NavRoute {
 
     //未知技能
     const val UNKNOWN_SKILL = "unknownSkill"
+
+    //深域关卡
+    const val TALENT_QUEST = "talentQuest"
+    const val TALENT_QUEST_REWARD = "talentQuestReward"
 }

@@ -113,7 +113,7 @@ fun PvpSearchScreen(
     val uiState by pvpViewModel.uiState.collectAsStateWithLifecycle()
 
     //显示类型
-    val showResult = navViewModel.showResult.observeAsState().value ?: false
+    val showResult = navViewModel.showResult.observeAsState().value == true
     //已选择的id
     val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
 

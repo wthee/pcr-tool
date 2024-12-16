@@ -76,6 +76,7 @@ import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
 import cn.wthee.pcrtool.ui.tool.talent.UnitTalentListScreen
+import cn.wthee.pcrtool.ui.tool.talentquest.TalentQuestScreen
 import cn.wthee.pcrtool.ui.tool.tweet.TweetList
 import cn.wthee.pcrtool.ui.tool.uniqueequip.UniqueEquipListScreen
 import cn.wthee.pcrtool.ui.tool.unknownskill.UnknownSkillListScreen
@@ -812,6 +813,16 @@ fun NavGraph(
                         UnknownSkillListScreen()
                     }
                 }
+
+                //深域关卡
+                composable(
+                    route = NavRoute.TALENT_QUEST
+                ) {
+                    TalentQuestScreen(
+                        toEnemyDetail = actions.toEnemyDetail
+                    )
+                }
+
             }
         }
 
@@ -1132,6 +1143,13 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
+     * 怪物详情信息
+     */
+    val toEnemyDetail: (Int) -> Unit = { enemyId ->
+        navController.navigate("${NavRoute.ENEMY_DETAIL}/${enemyId}")
+    }
+
+    /**
      * 活动剧情怪物详情信息
      */
     val toEventEnemyDetail: (Int) -> Unit = { enemyId ->
@@ -1227,5 +1245,12 @@ class NavActions(navController: NavHostController) {
      */
     val toUnknownSkillList = {
         navController.navigate(NavRoute.UNKNOWN_SKILL)
+    }
+
+    /**
+     * 深域关卡
+     */
+    val toTalentQuest = {
+        navController.navigate(NavRoute.TALENT_QUEST)
     }
 }

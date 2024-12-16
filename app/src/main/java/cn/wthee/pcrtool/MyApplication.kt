@@ -52,7 +52,7 @@ class MyApplication : Application(), SingletonImageLoader.Factory {
         //使用ip或域名访问
         runBlocking {
             val preferences = dataStoreSetting.data.first()
-            useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] ?: false
+            useIpOnFlag = preferences[SettingPreferencesKeys.SP_USE_IP] == true
             //使用ip访问
             if (useIpOnFlag) {
                 URL_DOMAIN = SERVER_IP

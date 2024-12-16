@@ -58,6 +58,8 @@ import cn.wthee.pcrtool.data.db.view.skilltype.limitAttack
 import cn.wthee.pcrtool.data.db.view.skilltype.logBarrier
 import cn.wthee.pcrtool.data.db.view.skilltype.loop
 import cn.wthee.pcrtool.data.db.view.skilltype.loopTrigger
+import cn.wthee.pcrtool.data.db.view.skilltype.magicChange
+import cn.wthee.pcrtool.data.db.view.skilltype.magicChangeReduceDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.move
 import cn.wthee.pcrtool.data.db.view.skilltype.movePart
 import cn.wthee.pcrtool.data.db.view.skilltype.noTarget
@@ -82,6 +84,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.tp
 import cn.wthee.pcrtool.data.db.view.skilltype.tpField
 import cn.wthee.pcrtool.data.db.view.skilltype.tpHit
 import cn.wthee.pcrtool.data.db.view.skilltype.tpHitReduce
+import cn.wthee.pcrtool.data.db.view.skilltype.transferDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.trigger
 import cn.wthee.pcrtool.data.db.view.skilltype.triggerV2
 import cn.wthee.pcrtool.data.db.view.skilltype.unknownType
@@ -380,8 +383,14 @@ data class SkillActionDetail(
             SkillActionType.SUM_CRITICAL -> sumCritical()
             // 114：特殊标记计数？
             SkillActionType.SEAL_COUNT -> sealCount()
-            // 116：特殊标记计数？
+            // 116：执着状态
             SkillActionType.PERSISTENT -> persistent()
+            // 121：幻化状态
+            SkillActionType.MAGIC_CHANGE -> magicChange()
+            // 123：减伤状态
+            SkillActionType.MAGIC_CHANGE_REDUCE_DAMAGE -> magicChangeReduceDamage()
+            // 124：护盾（转移伤害）
+            SkillActionType.TRANSFER_DAMAGE -> transferDamage()
             else -> unknownType()
         }
     }

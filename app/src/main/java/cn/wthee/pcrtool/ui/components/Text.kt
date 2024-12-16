@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -384,8 +385,9 @@ fun CommonGroupTitle(
     iconData: Any? = null,
     titleStart: String,
     titleCenter: String = "",
-    titleEnd: String,
+    titleEnd: String = "",
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    brush: Brush? = null,
     textColor: Color = colorWhite,
     iconSize: Dp = Dimen.iconSize
 ) {
@@ -410,9 +412,18 @@ fun CommonGroupTitle(
             modifier = Modifier
                 .padding(start = startPadding)
                 .weight(1f)
-                .background(
-                    color = backgroundColor,
-                    shape = MaterialTheme.shapes.extraSmall
+                .then(
+                    if (brush != null) {
+                        Modifier.background(
+                            brush = brush,
+                            shape = MaterialTheme.shapes.extraSmall
+                        )
+                    } else {
+                        Modifier.background(
+                            color = backgroundColor,
+                            shape = MaterialTheme.shapes.extraSmall
+                        )
+                    }
                 )
                 .padding(horizontal = Dimen.mediumPadding)
         ) {

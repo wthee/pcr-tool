@@ -52,7 +52,7 @@ fun SkillLoopScreen(
 
     //处理技能循环数据
     attackPatternList.forEach { attackPattern ->
-        if (attackPattern.getBefore().size > 0) {
+        if (attackPattern.getBefore().isNotEmpty()) {
             loopList.addAll(attackPattern.getBefore())
             loops.add(
                 SkillLoop(
@@ -63,7 +63,7 @@ fun SkillLoopScreen(
                 )
             )
         }
-        if (attackPattern.getLoop().size > 0) {
+        if (attackPattern.getLoop().isNotEmpty()) {
             loopList.addAll(attackPattern.getLoop())
             loops.add(
                 SkillLoop(

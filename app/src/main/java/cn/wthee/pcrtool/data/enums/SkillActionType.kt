@@ -499,7 +499,22 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 116：执着状态
      */
-    PERSISTENT(116, R.string.skill_action_type_desc_116_1),
+    PERSISTENT(116, R.string.skill_action_type_116),
+
+    /**
+     * 121：幻化状态
+     */
+    MAGIC_CHANGE(121, R.string.skill_action_type_121),
+
+    /**
+     * 123：减伤状态
+     */
+    MAGIC_CHANGE_REDUCE_DAMAGE(123, R.string.skill_action_type_123),
+
+    /**
+     * 124：护盾（转移伤害）
+     */
+    TRANSFER_DAMAGE(124, R.string.skill_action_type_124),
     ;
 
     companion object {

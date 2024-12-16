@@ -54,7 +54,7 @@ fun SkillActionDetail.ifBuffSeal(): String {
     val effect = when (actionDetail1) {
         1 -> getString(R.string.skill_buff)
         2 -> getString(R.string.skill_damage)
-        2 -> getString(R.string.skill_status_down)
+        3 -> getString(R.string.skill_status_down)
         else -> UNKNOWN
     }
     val limit =

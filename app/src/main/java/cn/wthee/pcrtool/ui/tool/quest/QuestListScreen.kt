@@ -150,7 +150,7 @@ fun QuestPager(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        if (tabs.size == 0) {
+        if (tabs.isEmpty()) {
             CircularProgressCompose()
         } else {
             if (searchEquipIdList.isNotEmpty()) {

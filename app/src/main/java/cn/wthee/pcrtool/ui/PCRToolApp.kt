@@ -48,7 +48,7 @@ fun PCRToolApp(
             remember(MainActivity.navController) { NavActions(MainActivity.navController) }
         MainActivity.navViewModel = navViewModel
 
-        val loading = MainActivity.navViewModel.loading.observeAsState().value ?: false
+        val loading = MainActivity.navViewModel.loading.observeAsState().value == true
 
 
         MainScaffold(

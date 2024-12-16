@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -842,22 +844,28 @@ private fun CharacterName(
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @CombinedPreviews
 @Composable
 fun CharacterItemPreview() {
     PreviewLayout {
-//        CharacterItemContent(
-//            unitId = 100101,
-//            character = CharacterInfo(
-//                id = 100101,
-//                position = 100,
-//                name = stringResource(id = R.string.debug_name),
-//                startTime = "2022-02-03 22:22:22",
-//                uniqueEquipType = 2
-//            ),
-//            favorite = true,
-//            onClick = {}
-//        )
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                CharacterItemContent(
+                    animatedVisibilityScope = this,
+                    unitId = 100101,
+                    characterInfo = CharacterInfo(
+                        id = 100101,
+                        position = 100,
+                        name = stringResource(id = R.string.debug_name),
+                        startTime = "2022-02-03 22:22:22",
+                        uniqueEquipType = 2
+                    ),
+                    favorite = true,
+                    onClick = {}
+                )
+            }
+        }
     }
 }
 
