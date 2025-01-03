@@ -515,6 +515,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 124：护盾（转移伤害）
      */
     TRANSFER_DAMAGE(124, R.string.skill_action_type_124),
+
+    /**
+     * 125：无法选中
+     */
+    CANNOT_SELECTED(125, R.string.skill_action_type_125),
     ;
 
     companion object {

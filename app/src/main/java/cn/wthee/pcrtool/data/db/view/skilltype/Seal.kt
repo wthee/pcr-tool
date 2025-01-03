@@ -52,9 +52,10 @@ fun SkillActionDetail.attackSeal(): String {
 fun SkillActionDetail.ifBuffSeal(): String {
     val time = getTimeText(3, actionValue3, actionValue4)
     val effect = when (actionDetail1) {
-        1 -> getString(R.string.skill_buff)
-        2 -> getString(R.string.skill_damage)
-        3 -> getString(R.string.skill_status_down)
+        1 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_buff)
+        2 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_damage)
+        3 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_status_down)
+        4 -> getString(R.string.skill_status_ub)
         else -> UNKNOWN
     }
     val limit =
@@ -62,7 +63,7 @@ fun SkillActionDetail.ifBuffSeal(): String {
 
     return getString(
         R.string.skill_action_type_desc_77,
-        getTarget(),
+        if (actionDetail1 != 4) getTarget() else "",
         effect,
         actionDetail2,
         time,
