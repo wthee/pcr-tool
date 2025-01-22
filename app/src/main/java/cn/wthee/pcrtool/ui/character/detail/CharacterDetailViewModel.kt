@@ -315,7 +315,12 @@ class CharacterDetailViewModel @Inject constructor(
             if (!orderData.intArrayList.contains(it.id) && it != CharacterDetailModuleType.UNKNOWN
                 && it != CharacterDetailModuleType.SKILL_LOOP
             ) {
-                subList.add(it.id)
+                //把角色图标设为置顶
+                if (it == CharacterDetailModuleType.UNIT_ICON) {
+                    subList.add(0, it.id)
+                } else {
+                    subList.add(it.id)
+                }
             }
         }
         _uiState.update {
