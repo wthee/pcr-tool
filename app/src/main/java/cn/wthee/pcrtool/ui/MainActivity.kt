@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
         var vibrateOnFlag = true
         var animOnFlag = true
         var dynamicColorOnFlag = true
+        var autoTimeZone = true
         var r6Ids = listOf<Int>()
         var regionType = RegionType.CN
 
@@ -133,6 +134,7 @@ class MainActivity : ComponentActivity() {
             vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
             animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
             dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
+            autoTimeZone = preferences[SettingPreferencesKeys.SP_TIME_ZONE] ?: true
             regionType = RegionType.getByValue(
                 preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
             )

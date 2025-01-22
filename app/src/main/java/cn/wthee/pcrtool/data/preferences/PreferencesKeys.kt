@@ -36,4 +36,5 @@ object SettingPreferencesKeys {
     val SP_ANIM_STATE = booleanPreferencesKey("animation_state")
     val SP_COLOR_STATE = booleanPreferencesKey("dynamic_color_state")
     val SP_USE_IP = booleanPreferencesKey("use_ip")
+    val SP_TIME_ZONE = booleanPreferencesKey("time_zone")
 }

@@ -61,7 +61,7 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.EVENT_TEASER
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
@@ -194,8 +194,8 @@ fun StoryEventItemContent(
     val typeColor: Color
     var showDays = true
     val today = getToday()
-    val sd = event.startTime.formatTime.fixJpTime
-    val ed = event.endTime.formatTime.fixJpTime
+    val sd = event.startTime.formatTime.fixTimeZone
+    val ed = event.endTime.formatTime.fixTimeZone
     val previewEvent = sd.toDate == "2030/12/30"
     val days = ed.days(sd, showDay = false)
     if (days == "0") {

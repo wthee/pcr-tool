@@ -59,7 +59,7 @@ import cn.wthee.pcrtool.ui.tool.enemy.EnemyWeaknessContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.fillZero
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
@@ -281,7 +281,7 @@ fun SharedTransitionScope.ClanBattleItem(
             if (clanBattleEvent != null) {
                 //结束日期
                 CaptionText(
-                    text = clanBattleEvent.getFixedEndTime().fixJpTime,
+                    text = clanBattleEvent.getFixedEndTime().fixTimeZone,
                     modifier = Modifier
                         .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
                         .fillMaxWidth()

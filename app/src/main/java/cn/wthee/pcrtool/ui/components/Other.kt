@@ -82,7 +82,7 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
@@ -507,8 +507,8 @@ fun FlowRowScope.EventTitle(
     showOverdueColor: Boolean = false
 ) {
     val today = getToday()
-    val sd = startTime.fixJpTime
-    val ed = endTime.fixJpTime
+    val sd = startTime.fixTimeZone
+    val ed = endTime.fixTimeZone
     val inProgress = isInProgress(today, startTime, endTime)
     val comingSoon = isComingSoon(today, startTime)
 

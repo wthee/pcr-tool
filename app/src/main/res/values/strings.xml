@@ -106,6 +106,8 @@
     <string name="random_drop_source">蘭德索爾圖書館</string>
     <string name="random_drop_tip">额外掉落数据来源</string>
     <string name="random_drop_source_url">https://pcredivewiki.tw/Other/MapExtraDrop</string>
+    <string name="time_zone">自动时区</string>
+    <string name="time_zone_tip">\n手动变更设备时区后，请重新打开应用</string>
 
     <!-- 筛选  -->
     <string name="title_sort">排序类型</string>

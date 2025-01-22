@@ -44,6 +44,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.SettingSwitchType
 import cn.wthee.pcrtool.data.preferences.SettingPreferencesKeys
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.autoTimeZone
 import cn.wthee.pcrtool.ui.MainActivity.Companion.dynamicColorOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.components.CommonSpacer
@@ -60,12 +61,14 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.DateUtil
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.joinQQGroup
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.TimeZone
 
 /**
  * 设置页面
@@ -130,6 +133,8 @@ fun MainSettings() {
             }
             //- 使用ip访问
             SettingSwitchCompose(type = SettingSwitchType.USE_IP, showSummary = true)
+            //- 中国时区/自动时区
+            SettingSwitchCompose(type = SettingSwitchType.AUTO_TIME_ZONE, showSummary = true)
             //- 清除图片缓存
             SettingCommonItem(
                 iconType = MainIconType.DELETE,
@@ -354,6 +359,22 @@ fun SettingSwitchCompose(
             summaryOff = if (showSummary) stringResource(R.string.use_ip_tip_off) else ""
             spKey = SettingPreferencesKeys.SP_USE_IP
         }
+
+        SettingSwitchType.AUTO_TIME_ZONE -> {
+            title = stringResource(id = R.string.time_zone)
+            iconType = MainIconType.TIME_ZONE
+            summaryOn = if (showSummary) {
+                TimeZone.getDefault().displayName + stringResource(R.string.time_zone_tip)
+            } else {
+                ""
+            }
+            summaryOff = if (showSummary) {
+                TimeZone.getTimeZone(DateUtil.CN_TIME_ZONE).displayName + stringResource(R.string.time_zone_tip)
+            } else {
+                ""
+            }
+            spKey = SettingPreferencesKeys.SP_TIME_ZONE
+        }
     }
 
     val spValue = runBlocking {
@@ -382,6 +403,10 @@ fun SettingSwitchCompose(
             SettingSwitchType.USE_IP -> {
                 useIpOnFlag = checkedState
             }
+
+            SettingSwitchType.AUTO_TIME_ZONE -> {
+                autoTimeZone = checkedState
+            }
         }
     }
 
@@ -396,13 +421,19 @@ fun SettingSwitchCompose(
                 it[spKey] = checkedState
             }
 
-            //动态色彩变更后，重启应用
-            if (type == SettingSwitchType.DYNAMIC_COLOR) {
-                MainActivity.handler.sendEmptyMessage(1)
-            }
-            //ip变更，结束应用
-            if (type == SettingSwitchType.USE_IP) {
-                MainActivity.handler.sendEmptyMessage(404)
+            when (type) {
+                SettingSwitchType.DYNAMIC_COLOR -> {
+                    //动态色彩变更后，重启应用
+                    MainActivity.handler.sendEmptyMessage(1)
+                }
+
+                SettingSwitchType.USE_IP,
+                SettingSwitchType.AUTO_TIME_ZONE -> {
+                    //ip、自动时区，变更后结束应用
+                    MainActivity.handler.sendEmptyMessage(404)
+                }
+
+                else -> {}
             }
         }
     }

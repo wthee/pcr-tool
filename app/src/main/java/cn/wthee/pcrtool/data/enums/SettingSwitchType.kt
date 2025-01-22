@@ -22,5 +22,11 @@ enum class SettingSwitchType {
     /**
      * 使用ip访问（仅网络异常使用）
      */
-    USE_IP
+
+    USE_IP,
+
+    /**
+     * 时区
+     */
+    AUTO_TIME_ZONE
 }
