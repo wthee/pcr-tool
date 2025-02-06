@@ -16,6 +16,7 @@
 | enemy_m_parts                 | 敌人多部位信息         |                |
 | enemy_parameter               | 敌人参数信息          |                |
 | enemy_reward_data             | 敌人掉落奖励信息        |                |
+| enemy_talent_weakness         | 敌人弱点信息          |                |
 | equipment_craft               | 装备合成            |                |
 | equipment_data                | 装备              |                |
 | equipment_enhance_data        | 装备提升            |                |
@@ -45,6 +46,11 @@
 | skill_data                    | 技能详情            |                |
 | spskill_label_data            | 特殊技能标签          |                |
 | story_detail                  | 角色剧情详情          |                |
+| talent_quest_clear_reward_01  | 深域关卡通关奖励        |                |
+| talent_quest_data             | 深域关卡信息          |                |
+| talent_quest_enemy_parameter  | 深域关卡敌人数值        |                |
+| talent_quest_wave_group_data  | 深域关卡敌人信息        |                |
+| talent_weakness               | 天赋弱点信息          |                |
 | tdf_schedule                  | 次元断层日程          |                |
 | tower_schedule                | 露娜塔日程           |                |
 | travel_area_data              | ex 冒险区域         |                |
