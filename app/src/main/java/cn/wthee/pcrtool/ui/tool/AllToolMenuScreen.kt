@@ -109,6 +109,7 @@ fun AllToolMenuScreen(
     dataList.add(ToolMenuType.UNIQUE_EQUIP)
     dataList.add(ToolMenuType.TALENT_LIST)
     dataList.add(ToolMenuType.TALENT_QUEST)
+    dataList.add(ToolMenuType.ROLE)
     itemGroupList.add(ToolMenuGroup(stringResource(id = R.string.basic_info), dataList))
 
     //查询

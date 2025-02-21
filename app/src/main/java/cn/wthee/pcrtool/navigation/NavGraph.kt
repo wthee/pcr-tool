@@ -73,6 +73,7 @@ import cn.wthee.pcrtool.ui.tool.news.NewsScreen
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchScreen
 import cn.wthee.pcrtool.ui.tool.quest.QuestListScreen
 import cn.wthee.pcrtool.ui.tool.randomdrop.RandomDropAreaListScreen
+import cn.wthee.pcrtool.ui.tool.role.UnitRoleListScreen
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventBossDetail
 import cn.wthee.pcrtool.ui.tool.storyevent.StoryEventListScreen
 import cn.wthee.pcrtool.ui.tool.talent.UnitTalentListScreen
@@ -805,6 +806,29 @@ fun NavGraph(
                     )
                 }
 
+                //角色职能列表
+                composable(
+                    route = NavRoute.ROLE_LIST
+                ) {
+                    UnitRoleListScreen(
+                        toCharacterDetail = actions.toCharacterDetail
+                    )
+                }
+
+                //角色职能列表（指定类型）
+                bottomSheet(
+                    route = "${NavRoute.ROLE_LIST}/{${NavRoute.UNIT_ID}}/{${NavRoute.ROLE_TYPE}}",
+                    arguments = listOf(navArgument(NavRoute.UNIT_ID) {
+                        type = NavType.IntType
+                    }, navArgument(NavRoute.ROLE_TYPE) {
+                        type = NavType.IntType
+                    })
+                ) {
+                    UnitRoleListScreen(
+                        toCharacterDetail = actions.toCharacterDetail
+                    )
+                }
+
                 if (BuildConfig.DEBUG) {
                     //未知技能列表
                     composable(
@@ -1238,6 +1262,20 @@ class NavActions(navController: NavHostController) {
      */
     val toUnitTalentFilterList: (Int, Int) -> Unit = { unitId, talentType ->
         navController.navigate("${NavRoute.TALENT_LIST}/$unitId/$talentType")
+    }
+
+    /**
+     * 角色职能列表
+     */
+    val toUnitRoleList = {
+        navController.navigate(NavRoute.ROLE_LIST)
+    }
+
+    /**
+     * 角色职能列表（按选中角色筛选列表）
+     */
+    val toUnitRoleFilterList: (Int, Int) -> Unit = { unitId, roleType ->
+        navController.navigate("${NavRoute.ROLE_LIST}/$unitId/$roleType")
     }
 
     /**

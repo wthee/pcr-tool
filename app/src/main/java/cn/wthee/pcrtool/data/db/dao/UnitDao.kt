@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildData
 import cn.wthee.pcrtool.data.db.view.NoGuildMemberInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.RoleData
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SummonData
 import cn.wthee.pcrtool.data.db.view.TalentData
@@ -726,4 +727,28 @@ interface UnitDao {
         """
     )
     suspend fun getTalentIdList(unitId: Int, talentType: Int): List<TalentData>
+
+    /**
+     * 获取所有角色职能id
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_role_data.unit_id,
+            unit_role_data.unit_role_id,
+            search_area_width,
+            atk_type
+        FROM
+            unit_role_data
+            LEFT JOIN unit_profile ON unit_profile.unit_id = unit_role_data.unit_id
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+        WHERE (0 = :unitId OR unit_role_data.unit_id = :unitId) AND unit_role_data.unit_id < $maxUnitId
+        AND (0 = :roleId OR unit_role_data.unit_role_id = :roleId) 
+        AND search_area_width > 0
+        ORDER BY search_area_width, atk_type
+        """
+    )
+    suspend fun getRoleIdList(unitId: Int, roleId: Int): List<RoleData>
 }

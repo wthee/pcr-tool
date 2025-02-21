@@ -866,6 +866,25 @@ fun CharacterItemPreview() {
                 )
             }
         }
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                CharacterItemContent(
+                    animatedVisibilityScope = this,
+                    unitId = 100101,
+                    characterInfo = CharacterInfo(
+                        id = 100101,
+                        position = 100,
+                        name = stringResource(id = R.string.debug_name),
+                        startTime = "2022-02-03 22:22:22",
+                        uniqueEquipType = 2,
+                        talentId = 2,
+                        roleId = 2,
+                    ),
+                    favorite = true,
+                    onClick = {}
+                )
+            }
+        }
     }
 }
 

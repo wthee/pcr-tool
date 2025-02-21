@@ -31,7 +31,9 @@ data class CharacterListFilterUiState(
     val raceList: List<String> = emptyList(),
     val filter: FilterCharacter? = null,
     // 是否有天赋类型
-    val hasTalent: Boolean = false
+    val hasTalent: Boolean = false,
+    // 是否有职能
+    val hasRole: Boolean = false
 )
 
 /**
@@ -88,10 +90,12 @@ class CharacterListFilterViewModel @Inject constructor(
         viewModelScope.launch {
             val initFilter = filter ?: FilterCharacter()
             val hasTalent = unitRepository.getTalentIdList(100101).isNotEmpty()
+            val hasRole = unitRepository.getRoleIdList(100101).isNotEmpty()
             _uiState.update {
                 it.copy(
                     filter = initFilter,
-                    hasTalent = hasTalent
+                    hasTalent = hasTalent,
+                    hasRole = hasRole,
                 )
             }
         }

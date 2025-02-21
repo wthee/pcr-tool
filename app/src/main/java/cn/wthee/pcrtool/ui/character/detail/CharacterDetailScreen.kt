@@ -390,7 +390,8 @@ private fun SharedTransitionScope.CharacterDetailContent(
                                 toCharacterBasicInfo = actions.toCharacterBasicInfo,
                                 toAllPics = actions.toAllPics,
                                 toCharacterVideo = actions.toCharacterVideo,
-                                toUnitTalentFilterList = actions.toUnitTalentFilterList
+                                toUnitTalentFilterList = actions.toUnitTalentFilterList,
+                                toUnitRoleFilterList = actions.toUnitRoleFilterList,
                             )
 
                         //星级
@@ -560,6 +561,7 @@ private fun ToolsContent(
     toAllPics: (Int, Int) -> Unit,
     toCharacterVideo: (Int, Int) -> Unit,
     toUnitTalentFilterList: (Int, Int) -> Unit,
+    toUnitRoleFilterList: (Int, Int) -> Unit,
 ) {
     val openDialog = remember {
         mutableStateOf(false)
@@ -618,6 +620,15 @@ private fun ToolsContent(
             modifier = Modifier.padding(end = Dimen.smallPadding),
             onClick = {
                 toUnitTalentFilterList(unitId, talentType)
+            }
+        )
+        //相同职能角色
+        IconTextButton(
+            icon = MainIconType.ROLE,
+            text = stringResource(id = R.string.role),
+            modifier = Modifier.padding(end = Dimen.smallPadding),
+            onClick = {
+                toUnitRoleFilterList(unitId, talentType)
             }
         )
     }
@@ -1205,6 +1216,7 @@ private fun ToolsContentPreview() {
             toAllPics = { _, _ -> },
             toCharacterVideo = { _, _ -> },
             toUnitTalentFilterList = { _, _ -> },
+            toUnitRoleFilterList = { _, _ -> },
         )
     }
 }

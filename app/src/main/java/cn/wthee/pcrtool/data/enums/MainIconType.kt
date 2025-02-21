@@ -96,6 +96,7 @@ import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material.icons.rounded.ViewCompact
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WorkspacePremium
+import androidx.compose.material.icons.rounded.Workspaces
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -599,4 +600,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 时区
      */
     TIME_ZONE(Icons.Rounded.MoreTime),
+
+    /**
+     * 职能
+     */
+    ROLE(Icons.Rounded.Workspaces),
 }

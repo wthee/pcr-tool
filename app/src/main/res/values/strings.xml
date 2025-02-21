@@ -42,11 +42,11 @@
     <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_card_video">动态卡面</string>
-    <string name="character_basic_info">资料</string>
+    <string name="character_basic_info">角色资料</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">剧情立绘</string>
     <string name="to_summon">召唤物</string>
-    <string name="spine_preview">模型</string>
+    <string name="spine_preview">模型预览</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action_desc">等级 > 260，TP数值不会继续增加</string>
@@ -117,6 +117,7 @@
     <string name="position_0">前卫</string>
     <string name="atk_type">攻击类型</string>
     <string name="talent_type">天赋类型</string>
+    <string name="role_type">职能类型</string>
     <string name="unit_talent">角色天赋</string>
     <string name="talent">天赋</string>
     <string name="physical">物理</string>
@@ -149,6 +150,18 @@
     <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
     <string name="id">编号</string>
+
+    <!--职能相关-->
+    <string name="unit_role">角色职能</string>
+    <string name="role">职能</string>
+    <string name="attacker">攻击</string>
+    <string name="breaker">破坏</string>
+    <string name="buffer">增益</string>
+    <string name="debuffer">减益</string>
+    <string name="booster">加速</string>
+    <string name="healer">治疗</string>
+    <string name="tank">坦克</string>
+    <string name="jammer">干扰</string>
 
     <!--装备相关-->
     <string name="equip_require_level">需求等级：%s</string>

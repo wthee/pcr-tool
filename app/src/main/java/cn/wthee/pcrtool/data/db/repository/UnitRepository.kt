@@ -117,6 +117,23 @@ class UnitRepository @Inject constructor(
                 else -> filterList
             }
 
+            //筛选职能
+            val roleIdList = getRoleIdList(0)
+            filterList.forEach {
+                it.roleId = if (roleIdList.isNotEmpty()) {
+                    roleIdList.find { role -> role.unitId == it.id }?.roleId ?: 0
+                } else {
+                    0
+                }
+            }
+            filterList = when (filter.roleType) {
+                in 1..8 -> filterList.filter {
+                    it.roleId == filter.roleType
+                }
+
+                else -> filterList
+            }
+
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
@@ -126,6 +143,7 @@ class UnitRepository @Inject constructor(
                         second == 0L -> {
                             o2.gachaId.compareTo(o1.gachaId)
                         }
+
                         else -> -1
                     } * (if (filter.asc) 1 else -1)
                 }
@@ -194,7 +212,13 @@ class UnitRepository @Inject constructor(
         } else {
             0
         }
-
+        //获取职能类型
+        val roleIdList = getRoleIdList(unitId)
+        data.roleId = if (roleIdList.isNotEmpty()) {
+            roleIdList[0].roleId
+        } else {
+            0
+        }
         //返回数据
         data
     } catch (_: Exception) {
@@ -596,5 +620,11 @@ class UnitRepository @Inject constructor(
             }
         }
         return map
+    }
+
+    suspend fun getRoleIdList(unitId: Int, roleId: Int = 0) = try {
+        unitDao.getRoleIdList(unitId, roleId)
+    } catch (_: Exception) {
+        arrayListOf()
     }
 }
