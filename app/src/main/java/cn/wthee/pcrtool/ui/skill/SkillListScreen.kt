@@ -457,49 +457,30 @@ fun SkillActionItem(
         mutableStateOf(false)
     }
 
-    //详细描述
-    val mark0 = arrayListOf<ColorTextIndex>()
-    val mark1 = arrayListOf<ColorTextIndex>()
-    val mark2 = arrayListOf<ColorTextIndex>()
-    val mark3 = arrayListOf<ColorTextIndex>()
-    val colors =
-        arrayListOf(
-            colorGreen,
-            if (isSystemInDarkTheme()) colorWhite else Color.Black,
-            colorPurple,
-            MaterialTheme.colorScheme.primary
-        )
+    //需替换的符合、颜色
+    val markDataList = arrayListOf(
+        MarkData('[', ']', colorGreen),
+        MarkData('(', ')', if (isSystemInDarkTheme()) colorWhite else Color.Black),
+        MarkData('{', '}', colorPurple),
+        MarkData('<', '>', MaterialTheme.colorScheme.primary),
+        MarkData('⌈', '⌋', MaterialTheme.colorScheme.primary),
+    )
+
+
+    //遍历设置符号颜色下标
     skillAction.actionDesc.forEachIndexed { index, c ->
-        if (c == '[') {
-            mark0.add(ColorTextIndex(start = index))
-        }
-        if (c == ']') {
-            mark0[mark0.size - 1].end = index
-        }
-        if (c == '(') {
-            mark1.add(ColorTextIndex(start = index))
-        }
-        if (c == ')') {
-            mark1[mark1.size - 1].end = index
-        }
-        if (c == '{') {
-            mark2.add(ColorTextIndex(start = index))
-        }
-        if (c == '}') {
-            mark2[mark2.size - 1].end = index
-        }
-        if (c == '<') {
-            mark3.add(ColorTextIndex(start = index))
-        }
-        if (c == '>') {
-            mark3[mark3.size - 1].end = index
+        markDataList.forEachIndexed { i, markData ->
+            val mark = markData.indexList
+            if (c == markData.startChar) {
+                mark.add(ColorTextIndex(start = index))
+                return@forEachIndexed
+            }
+            if (c == markData.endChar) {
+                mark[mark.size - 1].end = index
+                return@forEachIndexed
+            }
         }
     }
-    val map = hashMapOf<Int, ArrayList<ColorTextIndex>>()
-    map[0] = mark0
-    map[1] = mark1
-    map[2] = mark2
-    map[3] = mark3
 
 
     Column(
@@ -526,10 +507,10 @@ fun SkillActionItem(
             text = buildAnnotatedString {
                 skillAction.actionDesc.forEachIndexed { index, char ->
                     //替换括号及括号内字体颜色
-                    for (i in 0..3) {
-                        map[i]?.forEach {
+                    markDataList.forEach { mark ->
+                        mark.indexList.forEach {
                             if (index >= it.start && index <= it.end) {
-                                withStyle(style = SpanStyle(color = colors[i])) {
+                                withStyle(style = SpanStyle(color = mark.color)) {
                                     append(char)
                                 }
                                 return@forEachIndexed
@@ -615,9 +596,22 @@ fun getSkillColor(type: String): Color {
     }
 }
 
+/**
+ * 下标信息
+ */
 data class ColorTextIndex(
     var start: Int = 0,
     var end: Int = 0
+)
+
+/**
+ * 需替换的起始标记，及颜色数据
+ */
+private data class MarkData(
+    var startChar: Char,
+    var endChar: Char,
+    var color: Color,
+    var indexList: ArrayList<ColorTextIndex> = arrayListOf<ColorTextIndex>()
 )
 
 
