@@ -45,6 +45,7 @@ import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.TabData
 import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -171,14 +172,12 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                             }
                             val characterInfo by flow.collectAsState(initial = CharacterInfo())
 
-                            characterInfo?.let {
-                                UniqueEquipItem(
-                                    animatedVisibilityScope = animatedVisibilityScope,
-                                    equip = uniqueEquip,
-                                    characterInfo = it,
-                                    toUniqueEquipDetail = toUniqueEquipDetail
-                                )
-                            }
+                            UniqueEquipItem(
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                equip = uniqueEquip,
+                                characterInfo = characterInfo,
+                                toUniqueEquipDetail = toUniqueEquipDetail
+                            )
                         }
                         item {
                             CommonSpacer()
@@ -201,12 +200,13 @@ fun SharedTransitionScope.UniqueEquipListScreen(
 private fun SharedTransitionScope.UniqueEquipItem(
     animatedVisibilityScope: AnimatedVisibilityScope,
     equip: UniqueEquipBasicData,
-    characterInfo: CharacterInfo,
+    characterInfo: CharacterInfo?,
     toUniqueEquipDetail: (Int) -> Unit
 ) {
 
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(
                 top = Dimen.largePadding,
                 start = Dimen.largePadding,
@@ -216,7 +216,7 @@ private fun SharedTransitionScope.UniqueEquipItem(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "item-${equip.equipId}"
+                            key = "${SharedElementKey.UNIQUE_EQUIP}${equip.equipId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -262,11 +262,13 @@ private fun SharedTransitionScope.UniqueEquipItem(
                     selectable = true
                 )
 
-                UnitIconAndTag(
-                    characterInfo = characterInfo,
-                    showUniqueEquipType = false,
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
+                characterInfo?.let {
+                    UnitIconAndTag(
+                        characterInfo = it,
+                        showUniqueEquipType = false,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                }
 
             }
         }
@@ -295,7 +297,7 @@ fun SharedTransitionScope.UnitIconAndTag(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
                             state = rememberSharedContentState(
-                                key = "UnitIconAndTag-${characterInfo.id}"
+                                key = "${SharedElementKey.UNIT_ICON_TAG}${characterInfo.id}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         )

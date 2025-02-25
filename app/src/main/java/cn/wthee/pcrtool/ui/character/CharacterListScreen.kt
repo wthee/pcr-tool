@@ -80,6 +80,7 @@ import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -355,7 +356,7 @@ fun SharedTransitionScope.CharacterItemContent(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "CharacterItemContent-$unitId"
+                            key = "${SharedElementKey.CHARACTER_ITEM}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -552,7 +553,7 @@ fun SharedTransitionScope.CharacterIconAndTextContent(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "UnitIconAndTag-$unitId"
+                            key = "${SharedElementKey.UNIT_ICON_TAG}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -698,7 +699,7 @@ private fun SharedTransitionScope.CharacterIcon(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "UnitIconAndTag-${character.id}"
+                            key = "${SharedElementKey.UNIT_ICON_TAG}${character.id}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )

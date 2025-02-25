@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.ui.components.LevelInputText
 import cn.wthee.pcrtool.ui.components.MainIcon
 import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -62,7 +63,7 @@ fun SharedTransitionScope.UniqueEquipDetail(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
                             state = rememberSharedContentState(
-                                key = "item-${it.equipmentId}"
+                                key = "${SharedElementKey.UNIQUE_EQUIP}${it.equipmentId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         )

@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -114,7 +115,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
                             state = rememberSharedContentState(
-                                key = "item-${clanBattleInfo.clanBattleId}"
+                                key = "${SharedElementKey.CLAN_BATTLE}${clanBattleInfo.clanBattleId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         )
@@ -132,7 +133,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                         if (MainActivity.animOnFlag) {
                             Modifier.sharedElement(
                                 state = rememberSharedContentState(
-                                    key = "text-${clanBattleInfo.clanBattleId}"
+                                    key = "${SharedElementKey.CLAN_DATE}${clanBattleInfo.clanBattleId}"
                                 ),
                                 animatedVisibilityScope = animatedVisibilityScope,
                             )
