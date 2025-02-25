@@ -279,10 +279,11 @@ fun SkillActionDetail.getTargetRange() = when (targetRange) {
 /**
  * 目标类型
  */
-fun SkillActionDetail.getTargetType() = getString(
-    when (targetType) {
-        0, 1, 3, 40, 41 -> R.string.none
-        2, 8 -> R.string.skill_target_2_8
+fun SkillActionDetail.getTargetType(): String {
+    val target = getString(
+        when (targetType) {
+            0, 1, 3, 40, 41 -> R.string.none
+            2, 8 -> R.string.skill_target_2_8
 //            3 -> {
 //                //非范围技能时，显示生效目标类型：最近的
 //                if(targetRange == 0 || targetRange == 2160){
@@ -291,41 +292,52 @@ fun SkillActionDetail.getTargetType() = getString(
 //                    R.string.none
 //                }
 //            }
-        4 -> R.string.skill_target_4
-        5, 25 -> R.string.skill_target_5_25
-        6, 26 -> R.string.skill_target_6_26
-        7 -> R.string.skill_target_7
-        9 -> R.string.skill_target_9
-        10 -> R.string.skill_target_10
-        11 -> R.string.skill_target_11
-        12, 27, 37 -> R.string.skill_target_12_27_37
-        13, 19, 28 -> R.string.skill_target_13_19_28
-        14, 29 -> R.string.skill_target_14_29
-        15, 30 -> R.string.skill_target_15_30
-        16, 31 -> R.string.skill_target_16_31
-        17, 32 -> R.string.skill_target_17_32
-        18 -> R.string.skill_target_18
-        20 -> R.string.skill_target_20
-        21 -> R.string.skill_target_21
-        22 -> R.string.skill_target_22
-        23 -> R.string.skill_target_23
-        24 -> R.string.skill_target_24
-        33 -> R.string.skill_target_33
-        34 -> R.string.skill_target_34
-        35 -> R.string.skill_target_35
-        36 -> R.string.skill_target_36
-        38 -> R.string.skill_target_38
-        39 -> R.string.skill_target_39
-        42 -> R.string.skill_target_42
-        43 -> R.string.skill_target_43
-        44 -> R.string.skill_target_44
-        45 -> R.string.skill_target_45
-        46 -> R.string.skill_target_46
-        50 -> R.string.skill_target_50
-        in 13195..14000 -> R.string.skill_target_13xxx
-        else -> R.string.unknown
+            4 -> R.string.skill_target_4
+            5, 25 -> R.string.skill_target_5_25
+            6, 26 -> R.string.skill_target_6_26
+            7 -> R.string.skill_target_7
+            9 -> R.string.skill_target_9
+            10 -> R.string.skill_target_10
+            11 -> R.string.skill_target_11
+            12, 27, 37 -> R.string.skill_target_12_27_37
+            13, 19, 28 -> R.string.skill_target_13_19_28
+            14, 29 -> R.string.skill_target_14_29
+            15, 30 -> R.string.skill_target_15_30
+            16, 31 -> R.string.skill_target_16_31
+            17, 32 -> R.string.skill_target_17_32
+            18 -> R.string.skill_target_18
+            20 -> R.string.skill_target_20
+            21 -> R.string.skill_target_21
+            22 -> R.string.skill_target_22
+            23 -> R.string.skill_target_23
+            24 -> R.string.skill_target_24
+            33 -> R.string.skill_target_33
+            34 -> R.string.skill_target_34
+            35 -> R.string.skill_target_35
+            36 -> R.string.skill_target_36
+            38 -> R.string.skill_target_38
+            39 -> R.string.skill_target_39
+            42 -> R.string.skill_target_42
+            43 -> R.string.skill_target_43
+            44 -> R.string.skill_target_44
+            45 -> R.string.skill_target_45
+            46 -> R.string.skill_target_46
+            50 -> R.string.skill_target_50
+            in 13195..14000 -> R.string.skill_target_13xxx
+            14001 -> R.string.skill_target_fire
+            14002 -> R.string.skill_target_water
+            14003 -> R.string.skill_target_wind
+            14004 -> R.string.skill_target_light
+            15005, 14005 -> R.string.skill_target_dark
+            else -> R.string.unknown
+        }
+    )
+    return if (target != "") {
+        "⌈${target}⌋"
+    } else {
+        ""
     }
-)
+}
 
 /**
  * 获取目标具体描述

@@ -6,7 +6,6 @@ import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
-import cn.wthee.pcrtool.utils.getTargetType
 import cn.wthee.pcrtool.utils.getValueText
 
 // 26：系数提升
@@ -61,7 +60,7 @@ fun SkillActionDetail.coefficient(): String {
         0 -> getString(R.string.skill_action_change_coe_0, commonDesc)
         1 -> getString(R.string.skill_action_change_coe_1, commonDesc)
         4 -> {
-            val targetStr = getTargetType()
+            val targetStr = getTarget()
             val targetType = if (targetStr != "") {
                 targetStr
             } else {
@@ -83,6 +82,7 @@ fun SkillActionDetail.coefficient(): String {
         12 -> getString(R.string.skill_action_change_coe_12, commonDesc, getTarget())
         13 -> getString(R.string.skill_action_change_coe_13, commonDesc)
         15 -> getString(R.string.skill_action_change_coe_15, commonDesc)
+        16 -> getString(R.string.skill_action_change_coe_16, commonDesc)
         102 -> getString(R.string.skill_action_change_coe_102, commonDesc)
         in 20 until 30 -> getString(
             R.string.skill_action_change_coe_skill_count,
