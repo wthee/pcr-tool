@@ -156,6 +156,7 @@ dependencies {
 
     //media3
     implementation(libs.media3.exoplayer)
+    implementation(libs.media3.datasource)
     implementation(libs.media3.ui)
 
     //Navigation
