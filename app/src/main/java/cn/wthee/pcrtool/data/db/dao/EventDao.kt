@@ -66,6 +66,41 @@ interface EventDao {
     suspend fun getAllEvents(limit: Int): List<StoryEventData>
 
     /**
+     * 获取所有活动记录V2（适配日服7周年）
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            s.event_id,
+            s.title,
+            s.event_id AS original_event_id,
+            ( s.event_id % 10000 + 5000 ) AS story_id,
+            ss.start_time,
+            ss.end_time,
+            enemy.enemy_id AS boss_enemy_id,
+            enemy.unit_id AS boss_unit_id,
+            "" AS unit_ids
+        FROM
+            seven_story_data AS s
+            LEFT JOIN seven_schedule AS ss ON s.event_id = ss.event_id -- 	LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
+            LEFT JOIN seven_special_battle_detail AS battle ON battle.quest_id / 1000 = s.event_id 
+            AND battle.mode = 1
+            LEFT JOIN seven_wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
+            LEFT JOIN seven_enemy_parameter AS enemy ON wave.enemy_id_1 = enemy.enemy_id 
+        WHERE
+            s.story_type = 2 
+        GROUP BY
+            s.event_id 
+        ORDER BY
+            start_time DESC
+        LIMIT 0,:limit
+        """
+    )
+    suspend fun getAllEventsV2(limit: Int): List<StoryEventData>
+
+    /**
      * 获取加倍活动信息
      */
     @SkipQueryVerification

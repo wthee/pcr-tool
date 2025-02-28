@@ -16,6 +16,9 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
     //用于区分是否为深域
     private val minTalentEnemyId = 800000000
 
+    //用于区分是否为剧情活动（日服7周年新版）
+    private val minEventEnemyId = 600000000
+
     suspend fun getClanBossList() = try {
         enemyDao.getClanBossList()
     } catch (e: Exception) {
@@ -31,7 +34,7 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
         enemyPartIds.forEach {
             if (it != 0) {
                 val data = if (it > minTalentEnemyId) {
-                    enemyDao.getTalnetEnemyAttr(it)
+                    enemyDao.getTalentEnemyAttr(it)
                 } else {
                     enemyDao.getEnemyAttr(it)
                 }
@@ -46,7 +49,9 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
 
     suspend fun getEnemyAttr(enemyId: Int) = try {
         if (enemyId > minTalentEnemyId) {
-            enemyDao.getTalnetEnemyAttr(enemyId)
+            enemyDao.getTalentEnemyAttr(enemyId)
+        } else if (enemyId > minEventEnemyId) {
+            enemyDao.getNewEventEnemyAttr(enemyId)
         } else {
             enemyDao.getEnemyAttr(enemyId)
         }

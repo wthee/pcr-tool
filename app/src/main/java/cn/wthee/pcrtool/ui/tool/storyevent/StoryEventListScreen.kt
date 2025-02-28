@@ -315,22 +315,23 @@ fun StoryEventItemContent(
             )
 
             //boss、掉落角色图标
-            if (event.getUnitIdList().isNotEmpty()) {
-                Row {
-                    //sp boss 图标，处理id 311403 -> 311400
-                    if (!isSub && event.bossUnitId != 0) {
-                        MainIcon(
-                            data = ImageRequestHelper.getInstance()
-                                .getUrl(
-                                    ImageRequestHelper.ICON_UNIT,
-                                    event.bossUnitId / 10 * 10
-                                ),
-                            modifier = Modifier.padding(start = Dimen.mediumPadding),
-                            onClick = {
-                                toEventEnemyDetail(event.bossEnemyId)
-                            }
-                        )
-                    }
+
+            Row {
+                //sp boss 图标，处理id 311403 -> 311400
+                if (!isSub && event.bossUnitId != 0) {
+                    MainIcon(
+                        data = ImageRequestHelper.getInstance()
+                            .getUrl(
+                                ImageRequestHelper.ICON_UNIT,
+                                event.bossUnitId / 10 * 10
+                            ),
+                        modifier = Modifier.padding(start = Dimen.mediumPadding),
+                        onClick = {
+                            toEventEnemyDetail(event.bossEnemyId)
+                        }
+                    )
+                }
+                if (event.getUnitIdList().isNotEmpty()) {
                     Spacer(modifier = Modifier.weight(1f))
                     //活动掉落角色图标
                     event.getUnitIdList().forEach { itemId ->

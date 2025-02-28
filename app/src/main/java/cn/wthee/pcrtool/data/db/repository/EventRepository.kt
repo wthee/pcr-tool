@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.db.repository
 
+import android.util.Log
 import cn.wthee.pcrtool.data.db.dao.EventDao
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareAllTypeEvent
@@ -13,10 +14,18 @@ import javax.inject.Inject
 class EventRepository @Inject constructor(private val eventDao: EventDao) {
 
     suspend fun getAllEvents(limit: Int) = try {
-        eventDao.getAllEvents(limit)
+        //适配日服
+        val allEventList = eventDao.getAllEventsV2(limit) + eventDao.getAllEvents(limit)
+        allEventList.sortedByDescending { it.startTime }
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getAllEvents")
-        emptyList()
+        Log.e("", e.message ?: "")
+        try {
+            //正常获取
+            eventDao.getAllEvents(limit)
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getAllEvents")
+            emptyList()
+        }
     }
 
     suspend fun getDropEvent(limit: Int) = try {
