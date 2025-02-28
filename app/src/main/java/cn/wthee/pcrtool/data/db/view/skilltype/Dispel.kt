@@ -13,12 +13,8 @@ fun SkillActionDetail.dispel(): String {
     val type = when (actionDetail1) {
         1, 3 -> getString(R.string.skill_buff)
         2 -> getString(R.string.skill_debuff)
-        10 -> getString(R.string.skill_barrier)
+        10, 20 -> getString(R.string.skill_barrier)
         else -> UNKNOWN
     }
-    return if (type != UNKNOWN) {
-        getString(R.string.skill_action_type_desc_49, value, getTarget(), type)
-    } else {
-        UNKNOWN
-    }
+    return getString(R.string.skill_action_type_desc_49, value, getTarget(), type)
 }

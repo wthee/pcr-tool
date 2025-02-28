@@ -27,7 +27,7 @@ fun UnknownSkillListScreen(
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         MainTitleText(text = "${uiState.unitSkillList.size} | ${uiState.enemySkillList.size}")
-
+        //角色技能
         StateBox(stateType = uiState.unitSKillLoadState) {
             uiState.unitSkillList.forEach {
                 SkillItemContent(skillDetail = it, unitType = UnitType.CHARACTER)
@@ -35,7 +35,7 @@ fun UnknownSkillListScreen(
         }
 
         CommonSpacer()
-
+        //公会战boss仅能
         uiState.enemySkillList.forEach {
             SkillItemContent(skillDetail = it, unitType = UnitType.ENEMY)
         }

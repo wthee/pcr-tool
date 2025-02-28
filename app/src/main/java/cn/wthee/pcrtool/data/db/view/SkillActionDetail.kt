@@ -32,6 +32,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.damageTakenUp
 import cn.wthee.pcrtool.data.db.view.skilltype.dispel
 import cn.wthee.pcrtool.data.db.view.skilltype.dot
 import cn.wthee.pcrtool.data.db.view.skilltype.dotField
+import cn.wthee.pcrtool.data.db.view.skilltype.dotUp
 import cn.wthee.pcrtool.data.db.view.skilltype.environment
 import cn.wthee.pcrtool.data.db.view.skilltype.ex
 import cn.wthee.pcrtool.data.db.view.skilltype.exEquipFull
@@ -382,6 +383,8 @@ data class SkillActionDetail(
             SkillActionType.GUARD -> guard()
             // 107：暴击率合计
             SkillActionType.SUM_CRITICAL -> sumCritical()
+            // 110：持续伤害易伤
+            SkillActionType.DOT_UP -> dotUp()
             // 114：特殊标记计数？
             SkillActionType.SEAL_COUNT -> sealCount()
             // 116：执着状态

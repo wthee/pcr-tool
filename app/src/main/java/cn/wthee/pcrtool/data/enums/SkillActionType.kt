@@ -479,7 +479,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      */
     SUM_CRITICAL(107, R.string.none),
 
-    //fixme 110 技能描述
+    /**
+     * 110：持续伤害易伤
+     */
+    DOT_UP(110, R.string.skill_type_110),
+
     //fixme 111 技能描述
     /**
      * 111：

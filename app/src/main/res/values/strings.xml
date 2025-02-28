@@ -501,6 +501,7 @@
     <string name="skill_type_100">免疫</string>
     <string name="skill_type_105">环境</string>
     <string name="skill_type_106">守护</string>
+    <string name="skill_type_110">持续伤害易伤</string>
     <string name="skill_action_type_116">执着</string>
     <string name="skill_action_type_121">幻化</string>
     <string name="skill_action_type_123">减伤</string>
@@ -612,7 +613,7 @@
     <string name="skill_magic_damage">造成的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
-    <string name="skill_target_count">(%d 名)</string>
+    <string name="skill_target_count">(%d名)</string>
     <string name="skill_target_all">(全体)</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
@@ -690,6 +691,7 @@
     <string name="skill_action_type_desc_21_1">无敌</string>
     <string name="skill_action_type_desc_21_2">回避物理攻击</string>
     <string name="skill_action_type_desc_21_3">回避所有攻击</string>
+    <string name="skill_action_type_desc_21_6">回避 BREAK</string>
     <string name="skill_action_type_desc_21_8">回避魔法攻击</string>
     <string name="skill_action_skill_anim_change">技能动画改变%s</string>
     <string name="skill_action_if_status">当%s在[%s]时，使用动作(%d)</string>
@@ -820,7 +822,10 @@
     <string name="skill_action_type_desc_106_type_common">守护</string>
     <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
     <string name="skill_action_type_desc_107">动作(%d)暴击率依据物理暴击与魔法暴击之和</string>
-    <string name="skill_action_type_desc_111">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_110">使%s受到持续伤害时，额外承受 %s 的伤害%s</string>
+    <string name="skill_action_type_desc_111">当%s%s时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_111_1">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_111_2">受到暴击伤害</string>
     <string name="skill_action_type_desc_114">对%s追加 [%d] 层标记，%s，受到伤害时，减少 [1] 层标记，并使用动作(%d)和动作(%d)%s</string>
     <string name="skill_action_type_desc_114_aura">己方受到的伤害降低 [%d%%]</string>
     <string name="skill_action_type_desc_116_121_123_124">使%s进入 [%s] 状态%s</string>
