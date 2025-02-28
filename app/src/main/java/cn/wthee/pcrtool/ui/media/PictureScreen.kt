@@ -443,11 +443,12 @@ private fun PreviewPictureDialog(
                         VibrateUtil(context).single()
                         openPreviewDialog.value = false
                     },
-            ) {
-                //获取本地原图缓存
-                loadedPic.value = (it.image as BitmapImage).bitmap
-                success = true
-            }
+                onSuccess = {
+                    //获取本地原图缓存
+                    loadedPic.value = (it.image as BitmapImage).bitmap
+                    success = true
+                }
+            )
         }
     }
 
