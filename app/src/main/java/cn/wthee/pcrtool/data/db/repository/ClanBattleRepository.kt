@@ -86,7 +86,8 @@ class ClanBattleRepository @Inject constructor(
 
     private suspend fun getAllEnemyTalentWeaknessList() = try {
         enemyDao.getAllEnemyTalentWeaknessList(0)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAllEnemyTalentWeaknessList")
         emptyList()
     }
 }

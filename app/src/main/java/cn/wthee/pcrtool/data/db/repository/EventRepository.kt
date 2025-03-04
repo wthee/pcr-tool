@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.db.repository
 
-import android.util.Log
 import cn.wthee.pcrtool.data.db.dao.EventDao
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.compareAllTypeEvent
@@ -18,12 +17,11 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
         val allEventList = eventDao.getAllEventsV2(limit) + eventDao.getAllEvents(limit)
         allEventList.sortedByDescending { it.startTime }
     } catch (e: Exception) {
-        Log.e("", e.message ?: "")
         try {
             //正常获取
             eventDao.getAllEvents(limit)
         } catch (e: Exception) {
-            LogReportUtil.upload(e, "getAllEvents")
+            LogReportUtil.upload(e, "getAllEvents#limit:$limit")
             emptyList()
         }
     }
@@ -31,55 +29,56 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
     suspend fun getDropEvent(limit: Int) = try {
         eventDao.getDropEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getDropEvent")
+        LogReportUtil.upload(e, "getDropEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getMissionEvent(limit: Int) = try {
         eventDao.getMissionEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getMissionEvent")
+        LogReportUtil.upload(e, "getMissionEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getLoginEvent(limit: Int) = try {
         eventDao.getLoginEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getLoginEvent")
+        LogReportUtil.upload(e, "getLoginEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getFortuneEvent(limit: Int) = try {
         eventDao.getFortuneEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getFortuneEvent")
+        LogReportUtil.upload(e, "getFortuneEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getTowerEvent(limit: Int) = try {
         eventDao.getTowerEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getTowerEvent")
+        LogReportUtil.upload(e, "getTowerEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getSpDungeonEvent(limit: Int) = try {
         eventDao.getSpDungeonEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getSpDungeonEvent")
+        LogReportUtil.upload(e, "getSpDungeonEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getFaultEvent(limit: Int) = try {
         eventDao.getFaultEvent(limit)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getFaultEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getFreeGachaEvent(limit: Int) = try {
         eventDao.getFreeGachaEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getFreeGachaList#type")
+        LogReportUtil.upload(e, "getFreeGachaList#limit:$limit")
         emptyList()
     }
 
@@ -93,14 +92,14 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
     suspend fun getClanBattleEvent(limit: Int) = try {
         eventDao.getClanBattleEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getClanBattleEvent")
+        LogReportUtil.upload(e, "getClanBattleEvent#limit:$limit")
         emptyList()
     }
 
     suspend fun getColosseumEvent(limit: Int) = try {
         eventDao.getColosseumEvent(limit)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getColosseumEvent")
+        LogReportUtil.upload(e, "getColosseumEvent#limit:$limit")
         emptyList()
     }
 }

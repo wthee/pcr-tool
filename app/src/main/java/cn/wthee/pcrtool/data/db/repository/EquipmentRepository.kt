@@ -50,7 +50,8 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getCount() = try {
         equipmentDao.getCount()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCount")
         0
     }
 
@@ -61,7 +62,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * @param lv 专用装备1等级
      * @param lv2 专用装备2等级
      */
-    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int, lv2: Int) =
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int, lv2: Int) = try {
         if (lv > Constants.TP_LIMIT_LEVEL) {
             //tp相关261 ~ 300
             val tpBonusAttr =
@@ -106,6 +107,10 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         } else {
             getFixedUniqueEquip(unitId = unitId, lv = lv, lv2 = lv2)
         }
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUniqueEquipInfo#unitId:$unitId,lv:$lv,lv2:$lv2")
+        emptyList()
+    }
 
 
     /**
@@ -127,7 +132,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                 list.add(it)
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, "getUniqueEquip#unitId:$unitId")
+            LogReportUtil.upload(e, "getUniqueEquip#unitId:$unitId,lv:$lv,lv2:$lv2")
         }
         return list
     }
@@ -145,7 +150,12 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         Attr()
     }
 
-    suspend fun getUniqueEquipMaxLv(slot: Int) = equipmentDao.getUniqueEquipMaxLv(slot)
+    suspend fun getUniqueEquipMaxLv(slot: Int) = try {
+        equipmentDao.getUniqueEquipMaxLv(slot)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUniqueEquipMaxLv#slot:$slot")
+        null
+    }
 
     /**
      * 获取所有角色所需的装备统计
@@ -200,19 +210,31 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         null
     }
 
-    suspend fun getMaxArea() = equipmentDao.getMaxArea()
+    suspend fun getMaxArea() = try {
+        equipmentDao.getMaxArea()
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMaxArea")
+        0
+    }
 
-    suspend fun getEquipUnitList(equipId: Int) = equipmentDao.getEquipUnitList(equipId)
+    suspend fun getEquipUnitList(equipId: Int) = try {
+        equipmentDao.getEquipUnitList(equipId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipUnitList#equipId:$equipId")
+        emptyList()
+    }
 
     suspend fun getEquipColorNum() = try {
         equipmentDao.getEquipColorNum()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipColorNum")
         0
     }
 
     suspend fun getMaxRank() = try {
         equipmentDao.getMaxRank()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getMaxRank")
         0
     }
 
@@ -335,8 +357,8 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
                     materials[flag].count += material.count
                 }
             }
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "getAllMaterial#equipmentId:$equipmentId")
         }
     }
 }

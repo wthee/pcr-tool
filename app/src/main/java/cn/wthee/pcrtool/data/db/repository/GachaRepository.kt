@@ -20,7 +20,7 @@ class GachaRepository @Inject constructor(private val gachaDao: GachaDao) {
         }
         resultList
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getGachaHistory")
+        LogReportUtil.upload(e, "getGachaHistory#limit:$limit")
         emptyList()
     }
 

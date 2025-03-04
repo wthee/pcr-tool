@@ -27,7 +27,11 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
         emptyList()
     }
 
-    suspend fun insert(data: PvpFavoriteData) = pvpDao.insert(data)
+    suspend fun insert(data: PvpFavoriteData) = try {
+        pvpDao.insert(data)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "insert#data:$data")
+    }
 
     suspend fun getHistory(region: Int, limit: Int) = try {
         pvpDao.getHistory(region = region, limit = limit)
@@ -36,15 +40,25 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
         emptyList()
     }
 
-    suspend fun insert(data: PvpHistoryData) = pvpDao.insert(data)
+    suspend fun insert(data: PvpHistoryData) = try {
+        pvpDao.insert(data)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "insert#data:$data")
+    }
 
-    suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(
-        atks = atks,
-        defs = defs,
-        region = region
-    )
+    suspend fun delete(atks: String, defs: String, region: Int) = try {
+        pvpDao.delete(
+            atks = atks,
+            defs = defs,
+            region = region
+        )
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "delete#atks:$atks,defs:$defs,region:$region")
+    }
 
-    suspend fun deleteOldHistory(region: Int, endDate: String) =
+    suspend fun deleteOldHistory(region: Int, endDate: String) = try {
         pvpDao.deleteOldHistory(region = region, endDate = endDate)
-
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "deleteOldHistory#region:$region,endDate:$endDate")
+    }
 }

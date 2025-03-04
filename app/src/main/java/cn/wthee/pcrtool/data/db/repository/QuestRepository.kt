@@ -45,7 +45,7 @@ class QuestRepository @Inject constructor(private val questDao: QuestDao) {
         }
         questList
     } catch (e: Exception) {
-        LogReportUtil.upload(e, "getTalentQuestList")
+        LogReportUtil.upload(e, "getTalentQuestList#talentType:$talentType")
         emptyList()
     }
 }

@@ -67,8 +67,12 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
         null
     }
 
-    suspend fun getAtkCastTime(unitId: Int) = enemyDao.getAtkCastTime(unitId)
-
+    suspend fun getAtkCastTime(unitId: Int) = try {
+        enemyDao.getAtkCastTime(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAtkCastTime#unitId:$unitId")
+        null
+    }
     /**
      * 获取多目标部位属性
      */
@@ -87,7 +91,8 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
 
     suspend fun getEnemyWeaknessData(enemyId: Int) = try {
         enemyDao.getAllEnemyTalentWeaknessList(enemyId)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEnemyWeaknessData#enemyId:$enemyId")
         null
     }
 }

@@ -19,10 +19,11 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
     suspend fun getUnitSkill(unitId: Int) = try {
         skillDao.getUnitSkill(unitId)
     } catch (e: Exception) {
+        LogReportUtil.upload(e, "getUnitSkill#unitId:$unitId")
         null
     }
 
-    private suspend fun getSkillData(skillId: Int, lv: Int): SkillData? {
+    private suspend fun getSkillData(skillId: Int, lv: Int): SkillData? = try {
         val skillData = skillDao.getSkillData(skillId)
         //等级大于300时，查询新技能信息
         if (lv > Constants.OTHER_LIMIT_LEVEL) {
@@ -57,10 +58,18 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
             }
         }
-        return skillData
+        skillData
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getSkillData#skillId:$skillId,lv:$lv")
+        null
     }
 
-    suspend fun getSkillIconType(skillId: Int) = skillDao.getSkillIconType(skillId)
+    suspend fun getSkillIconType(skillId: Int) = try {
+        skillDao.getSkillIconType(skillId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getSkillIconType#skillId:$skillId")
+        null
+    }
 
     private suspend fun getSkillActions(
         lv: Int,
@@ -77,16 +86,28 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
             isOtherRfSkill = isOtherRfSkill
         )
     } catch (e: Exception) {
-        LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSkillActions#actionIds:$actionIds")
+        LogReportUtil.upload(
+            e, "getSkillActions#" +
+                    "lv:$lv," +
+                    "atk:$atk" +
+                    "actionIds:$actionIds" +
+                    "isRfSkill:$isRfSkill" +
+                    "isOtherRfSkill:$isOtherRfSkill"
+        )
         emptyList()
     }
 
-    suspend fun getAttackPattern(unitId: Int) = skillDao.getAttackPattern(unitId)
+    suspend fun getAttackPattern(unitId: Int) = try {
+        skillDao.getAttackPattern(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAttackPattern#unitId:$unitId")
+        emptyList()
+    }
 
     suspend fun getSpSkillLabel(unitId: Int) = try {
         skillDao.getSpSkillLabel(unitId)
     } catch (e: Exception) {
-        LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "getSpSkillLabel#unitId:$unitId")
+        LogReportUtil.upload(e, "getSpSkillLabel#unitId:$unitId")
         null
     }
 
@@ -108,52 +129,50 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
             val infoList = mutableListOf<SkillDetail>()
             //技能编号信息
             val unitSkillData = getUnitSkill(unitId)
-
             //技能信息
             skillIds.forEachIndexed { index, skillId ->
                 val lv = if (lvs.size == 1) lvs[0] else lvs[index]
-                if (skillId != 0) {
-                    val skill = getSkillData(skillId, lv)
-                    if (skill != null) {
-                        val info = SkillDetail(
-                            skillId = skill.skillId,
-                            name = skill.name ?: "",
-                            desc = skill.description,
-                            iconType = skill.iconType,
-                            castTime = skill.skillCastTime,
-                            level = lv,
-                            atk = atk,
-                            bossUbCooltime = skill.bossUbCoolTime,
-                            enemySkillIndex = index,
-                        )
-                        val actions = getSkillActions(
-                            lv = lv,
-                            atk = atk,
-                            actionIds = skill.getAllActionId(),
-                            isRfSkill = skill.isRfSkill,
-                            isOtherRfSkill = skill.isOtherRfSkill
-                        )
-                        val dependIds = skill.getSkillDependData()
-                        actions.forEachIndexed { i, action ->
-                            if (i != 0) {
-                                action.dependId = dependIds[action.actionId] ?: 0
-                            }
-                        }
-                        info.actions = actions
-                        //获取类型，ub或其它
-                        if (unitSkillData != null) {
-                            info.skillIndexType = unitSkillData.getSkillIndexType(skillId)
-                        }
-                        infoList.add(info)
+                if (skillId == 0) {
+                    return@forEachIndexed
+                }
+                val skill = getSkillData(skillId, lv)
+                if (skill == null) {
+                    return@forEachIndexed
+                }
+                val info = SkillDetail(
+                    skillId = skill.skillId,
+                    name = skill.name ?: "",
+                    desc = skill.description,
+                    iconType = skill.iconType,
+                    castTime = skill.skillCastTime,
+                    level = lv,
+                    atk = atk,
+                    bossUbCooltime = skill.bossUbCoolTime,
+                    enemySkillIndex = index,
+                )
+                val actions = getSkillActions(
+                    lv = lv,
+                    atk = atk,
+                    actionIds = skill.getAllActionId(),
+                    isRfSkill = skill.isRfSkill,
+                    isOtherRfSkill = skill.isOtherRfSkill
+                )
+                val dependIds = skill.getSkillDependData()
+                actions.forEachIndexed { i, action ->
+                    if (i != 0) {
+                        action.dependId = dependIds[action.actionId] ?: 0
                     }
                 }
+                info.actions = actions
+                //获取类型，ub或其它
+                if (unitSkillData != null) {
+                    info.skillIndexType = unitSkillData.getSkillIndexType(skillId)
+                }
+                infoList.add(info)
             }
             return infoList
         } catch (e: Exception) {
-            LogReportUtil.upload(
-                e,
-                Constants.EXCEPTION_SKILL + "getSkills#unit_id:$unitId;skillId:${skillIds}"
-            )
+            LogReportUtil.upload(e, "getSkills#unit_id:$unitId;skillId:$skillIds")
             return emptyList()
         }
     }
@@ -172,10 +191,7 @@ class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
                 SkillType.SP -> spList
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(
-                e,
-                Constants.EXCEPTION_SKILL + "getSkillIds#unit_id:$unitId type:${skillType.name}"
-            )
+            LogReportUtil.upload(e, "getSkillIds#unit_id:$unitId type:$skillType")
         }
         return arrayListOf()
     }

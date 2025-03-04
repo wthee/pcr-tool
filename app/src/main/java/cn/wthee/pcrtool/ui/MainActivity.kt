@@ -131,10 +131,10 @@ class MainActivity : ComponentActivity() {
     private fun initUserPreferences() {
         runBlocking {
             val preferences = context.dataStoreSetting.data.first()
-            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] ?: true
-            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] ?: true
-            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] ?: true
-            autoTimeZone = preferences[SettingPreferencesKeys.SP_TIME_ZONE] ?: true
+            vibrateOnFlag = preferences[SettingPreferencesKeys.SP_VIBRATE_STATE] != false
+            animOnFlag = preferences[SettingPreferencesKeys.SP_ANIM_STATE] != false
+            dynamicColorOnFlag = preferences[SettingPreferencesKeys.SP_COLOR_STATE] != false
+            autoTimeZone = preferences[SettingPreferencesKeys.SP_TIME_ZONE] != false
             regionType = RegionType.getByValue(
                 preferences[SettingPreferencesKeys.SP_DATABASE_TYPE] ?: RegionType.CN.value
             )

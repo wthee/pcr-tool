@@ -41,36 +41,46 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
                 favoriteIdList.contains(it.equipmentId)
             }
         }
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipmentList#filter:$filter")
         null
     }
 
 
     suspend fun getEquipColorNum() = try {
         equipmentDao.getEquipColorNum()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipColorNum")
         0
     }
 
     suspend fun getEquipCategoryList() = try {
         equipmentDao.getEquipCategoryList()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipCategoryList")
         arrayListOf()
     }
 
     suspend fun getEquipUnitList(category: Int) = try {
         equipmentDao.getEquipUnitList(category)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getEquipUnitList")
         emptyList()
     }
 
     suspend fun getDropQuestList(equipId: Int) = try {
         equipmentDao.getDropQuestList(equipId)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getDropQuestList")
         null
     }
 
-    suspend fun getSubRewardList(questId: Int) = equipmentDao.getSubRewardList(questId)
+    suspend fun getSubRewardList(questId: Int) = try {
+        equipmentDao.getSubRewardList(questId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getSubRewardList#questId:$questId")
+        emptyList()
+    }
 
     suspend fun getTravelAreaList() = try {
         val areaList = equipmentDao.getTravelAreaList()
@@ -78,15 +88,21 @@ class ExtraEquipmentRepository @Inject constructor(private val equipmentDao: Ext
             it.questList = equipmentDao.getTravelQuestList(it.travelAreaId)
         }
         areaList
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getTravelAreaList")
         null
     }
 
-    suspend fun getTravelQuest(questId: Int) = equipmentDao.getTravelQuest(questId)
-
+    suspend fun getTravelQuest(questId: Int) = try {
+        equipmentDao.getTravelQuest(questId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getTravelQuest#questId:$questId")
+        null
+    }
     suspend fun getCharacterExtraEquipList(unitId: Int) = try {
         equipmentDao.getCharacterExtraEquipList(unitId)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getCharacterExtraEquipList#unitId:$unitId")
         null
     }
 

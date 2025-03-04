@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.second
@@ -160,10 +159,7 @@ class UnitRepository @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(
-                e,
-                Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList#params:${filter}"
-            )
+            LogReportUtil.upload(e, "getCharacterInfoList#params:${filter}")
             return null
         }
     }
@@ -228,16 +224,11 @@ class UnitRepository @Inject constructor(
     /**
      * 获取角色资料
      */
-    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? {
-        //校验是否未多角色卡
-        val data = unitDao.getProfileInfo(unitId)
-        if (data == null) {
-            LogReportUtil.upload(
-                NullPointerException(),
-                Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
-            )
-        }
-        return data
+    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? = try {
+        unitDao.getProfileInfo(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getProfileInfo#unitId:$unitId")
+        null
     }
 
     /**
@@ -441,7 +432,7 @@ class UnitRepository @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
+                LogReportUtil.upload(e, "getAttrs#equip_error#unitId:$unitId,rank:$rank")
             }
 
             //专武
@@ -463,7 +454,10 @@ class UnitRepository @Inject constructor(
                     allData.uniqueEquipList = uniqueEquipList
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
+                LogReportUtil.upload(
+                    e,
+                    "getAttrs#uq_error#unitId$unitId,lv:$uniqueEquipLevel,lv2:$uniqueEquipLevel2"
+                )
             }
 
             //故事剧情
@@ -488,8 +482,8 @@ class UnitRepository @Inject constructor(
             allData.sumAttr = info
         } catch (e: Exception) {
             LogReportUtil.upload(
-                e, Constants.EXCEPTION_LOAD_ATTR +
-                        "getAttrs#uid:$unitId," +
+                e,
+                "getAttrs#uid:$unitId," +
                         "rank:${rank}," +
                         "rarity:${rarity}" +
                         "lv:${level}" +
@@ -624,7 +618,8 @@ class UnitRepository @Inject constructor(
 
     suspend fun getRoleIdList(unitId: Int, roleId: Int = 0) = try {
         unitDao.getRoleIdList(unitId, roleId)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getRoleIdList#unitId:$unitId,roleId:$roleId")
         arrayListOf()
     }
 }
