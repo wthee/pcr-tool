@@ -22,7 +22,7 @@ val downloadFileClient = HttpClient(Android) {
 
     // 超时设置
     install(HttpTimeout) {
-        requestTimeoutMillis = 30 * 1000L
+        requestTimeoutMillis = 60 * 1000L
         connectTimeoutMillis = 5 * 1000L
         socketTimeoutMillis = 5 * 1000L
     }
