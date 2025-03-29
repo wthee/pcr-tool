@@ -70,6 +70,7 @@
 | unit_promotion                | 角色 Rank 装备槽     |                |
 | unit_promotion_status         | 单位（角色）Rank 提升数值 |                |
 | unit_rarity                   | 单位（角色）角色星级      |                |
+| unit_role_data                | 单位（角色）角色职能      |                |
 | unit_skill_data               | 单位（角色、敌人）技能关联   |                |
 | unit_skill_data_rf            | 单位（角色）重构技能      | tp、回避等技能超过一定等级 |
 | unit_status_coefficient       | 战力系数            |                |
