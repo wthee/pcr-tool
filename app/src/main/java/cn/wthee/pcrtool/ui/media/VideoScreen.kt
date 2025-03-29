@@ -118,6 +118,10 @@ fun VideoPlayer(url: String) {
     var loading by remember(url) {
         mutableStateOf(true)
     }
+    //缓存中
+    var caching by remember(url) {
+        mutableStateOf(true)
+    }
     //播放中
     var playing by remember(url) {
         mutableStateOf(false)
@@ -159,6 +163,7 @@ fun VideoPlayer(url: String) {
                         if (isPlaying) {
                             loading = false
                         }
+                        checkIfBufferingCompleted()
                     }
 
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -167,6 +172,7 @@ fun VideoPlayer(url: String) {
                         if (isPlaying) {
                             loading = false
                         }
+                        checkIfBufferingCompleted()
                     }
 
                     override fun onPlayerError(error: PlaybackException) {
@@ -175,6 +181,14 @@ fun VideoPlayer(url: String) {
                         playError = true
                     }
 
+                    private fun checkIfBufferingCompleted() {
+                        val duration = getDuration()
+                        val bufferedPosition = getBufferedPosition()
+                        if (bufferedPosition >= duration && duration > 0) {
+                            // 缓冲完成（整个媒体已加载）
+                            caching = false
+                        }
+                    }
                 })
             }
     }
@@ -214,7 +228,8 @@ fun VideoPlayer(url: String) {
                     exoPlayer = exoPlayer,
                     loading = loading,
                     playing = playing,
-                    playError = playError
+                    playError = playError,
+                    caching = caching
                 )
             }
         }
@@ -232,7 +247,8 @@ private fun ToolButtonContent(
     exoPlayer: ExoPlayer?,
     loading: Boolean,
     playing: Boolean,
-    playError: Boolean
+    playError: Boolean,
+    caching: Boolean,
 ) {
     val context = LocalContext.current
 
@@ -326,9 +342,16 @@ private fun ToolButtonContent(
 
         val videoLoading = stringResource(id = R.string.wait_video_load)
         val videoError = stringResource(R.string.video_resource_error)
+        val videoCaching = stringResource(id = R.string.video_caching)
         //保存视频按钮
         IconTextButton(
-            text = stringResource(id = if (saved) R.string.saved else R.string.save_video),
+            text = stringResource(
+                id = if (saved) {
+                    R.string.saved
+                } else {
+                    if (caching) R.string.video_caching else R.string.save_video
+                }
+            ),
             icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
             modifier = Modifier
                 .padding(end = Dimen.smallPadding)
@@ -351,11 +374,14 @@ private fun ToolButtonContent(
                         ToastUtil.short(videoLoading)
                     } else if (playError) {
                         ToastUtil.short(videoError)
+                    } else if (caching) {
+                        ToastUtil.short(videoCaching)
                     } else {
                         //是否保存确认弹窗
                         openDialog.value = true
                     }
                 }
+
             }
         )
     }
@@ -495,7 +521,8 @@ private fun VideoScreenPreview() {
             exoPlayer = null,
             loading = false,
             playing = true,
-            playError = false
+            playError = false,
+            caching = false
         )
     }
 }
