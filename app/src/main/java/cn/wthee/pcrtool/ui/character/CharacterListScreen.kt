@@ -51,6 +51,7 @@ import cn.wthee.pcrtool.data.enums.CharacterListShowType
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RoleType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
@@ -78,6 +79,7 @@ import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.Tag
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.shared.SharedElementKey
@@ -756,6 +758,18 @@ private fun SharedTransitionScope.CharacterIcon(
                 else -> StarText(character)
             }
         }
+
+        //职能
+        if (character.roleId != 0) {
+            val roleType = RoleType.getByType(character.roleId)
+            Tag(
+                text = stringResource(id = roleType.typeNameId),
+                backgroundColor = roleType.color,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+
+        //天赋
         if (character.talentId != 0) {
             Dot(color = TalentType.getByType(character.talentId).color)
         }

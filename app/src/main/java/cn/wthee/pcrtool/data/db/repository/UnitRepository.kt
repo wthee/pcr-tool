@@ -595,7 +595,15 @@ class UnitRepository @Inject constructor(
     }
 
     suspend fun getTalentIdList(unitId: Int, talentType: Int = 0) = try {
-        unitDao.getTalentIdList(unitId, talentType)
+        val roleList = getRoleIdList(unitId)
+        val talentList = unitDao.getTalentIdList(unitId, talentType)
+        //获取天赋是尝试设置职能id
+        if (roleList.isNotEmpty()) {
+            talentList.forEach { talent ->
+                talent.roleId = roleList.find { it.unitId == talent.unitId }?.roleId ?: 0
+            }
+        }
+        talentList
     } catch (_: Exception) {
         arrayListOf()
     }

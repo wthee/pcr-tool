@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.TalentData
+import cn.wthee.pcrtool.data.db.view.CharacterTalentRoleInfo
 import cn.wthee.pcrtool.navigation.NavRoute
 import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.updateLoadState
@@ -28,7 +28,7 @@ data class UnitTalentListUiState(
     val selectedUnitId: Int = 0,
     val talentType: Int = 0,
     //角色天赋列表
-    val unitTalentList: List<TalentData>? = null,
+    val unitTalentList: List<CharacterTalentRoleInfo>? = null,
     val loadState: LoadState = LoadState.Loading
 )
 
