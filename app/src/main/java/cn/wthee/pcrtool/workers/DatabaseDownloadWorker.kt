@@ -109,9 +109,9 @@ class DatabaseDownloadWorker(
 
         try {
             //创建数据库文件夹
-            val file = File(folderPath)
-            if (!file.exists()) {
-                file.mkdir()
+            val dbFolder = File(folderPath)
+            if (!dbFolder.exists()) {
+                dbFolder.mkdir()
             }
             //br压缩包路径
             val dbBrPath = FileUtil.getDatabaseDir() + File.separator + fileName

@@ -42,6 +42,7 @@ import cn.wthee.pcrtool.ui.components.MainText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.skill.SkillItemContent
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -176,7 +177,7 @@ private fun SharedTransitionScope.ExtraEquipBasicInfo(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "item-${extraEquipmentData.equipmentId}"
+                            key = "${SharedElementKey.EX_EQUIP}${extraEquipmentData.equipmentId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )

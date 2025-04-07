@@ -8,16 +8,13 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.OptIn
-import androidx.lifecycle.LifecycleOwner
 import androidx.media3.common.util.UnstableApi
-import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import cn.wthee.pcrtool.MyApplication
+import androidx.media3.datasource.DataSourceInputStream
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.workers.FileDownloadWorker
 import com.google.common.io.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -52,67 +49,46 @@ class MediaDownloadHelper(private val context: Context) {
 
 
     /**
-     * 下载视频
-     *
-     * @param url 下载地址
-     * @param fileName 保存后的文件名
-     * @param lifecycleOwner
-     * @param onDownloadFinished 下载成功监听
-     * @param onDownloading 下载进度监听
-     * @param onDownloadFailure 下载失败监听
+     * 使用缓存保存视频文件
      */
-    fun downloadVideo(
-        url: String,
+    fun saveCachedVideo(
+        context: Context,
+        videoUrl: String,
         fileName: String,
-        lifecycleOwner: LifecycleOwner,
-        onDownloadFinished: () -> Unit,
-        onDownloading: (Int) -> Unit,
-        onDownloadFailure: () -> Unit
+        cache: Cache
     ) {
+        MainScope().launch(Dispatchers.IO) {
+            try {
+                val dataSource = CacheDataSource.Factory()
+                    .setCache(cache)
+                    .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
+                    .createDataSource()
 
-        //创建 work
-        val data = Data.Builder()
-            .putString(FileDownloadWorker.KEY_URL, url)
-            .putString(FileDownloadWorker.KEY_FILE_NAME, fileName)
-            .build()
-        val request =
-            OneTimeWorkRequestBuilder<FileDownloadWorker>()
-                .setInputData(data)
-                .build()
-
-        val workManager = WorkManager.getInstance(MyApplication.context)
-        workManager.enqueueUniqueWork(
-            Constants.DOWNLOAD_FILE_WORK,
-            ExistingWorkPolicy.APPEND,
-            request
-        )
-
-        //监听下载进度
-        workManager.getWorkInfoByIdLiveData(request.id)
-            .observe(lifecycleOwner) { workInfo: WorkInfo? ->
-                if (workInfo != null) {
-                    when (workInfo.state) {
-                        WorkInfo.State.SUCCEEDED -> {
-                            //下载成功，保存
-                            onDownloadFinished()
-                            val sourceFile =
-                                File(FileUtil.getDownloadDir() + File.separator + fileName)
-                            saveMedia(videoFile = sourceFile, displayName = fileName) {}
-                        }
-
-                        WorkInfo.State.RUNNING -> {
-                            val value = workInfo.progress.getInt(Constants.KEY_PROGRESS, -1)
-                            onDownloading(value)
-                        }
-
-                        WorkInfo.State.FAILED -> {
-                            onDownloadFailure()
-                        }
-
-                        else -> Unit
+                val dataSpec = DataSpec(Uri.parse(videoUrl))
+                val inputStream = DataSourceInputStream(dataSource, dataSpec)
+                //创建文件夹
+                val folder = File(FileUtil.getDownloadDir())
+                if (!folder.exists()) {
+                    folder.mkdir()
+                }
+                //把缓存写入文件
+                val sourceFile = File(FileUtil.getDownloadDir() + File.separator + fileName)
+                if (!sourceFile.exists()) {
+                    sourceFile.createNewFile()
+                }
+                inputStream.use { input ->
+                    sourceFile.outputStream().use { output ->
+                        input.copyTo(output)
                     }
                 }
+                //保存文件
+                saveMedia(videoFile = sourceFile, displayName = fileName) {}
+            } catch (e: Exception) {
+                LogReportUtil.upload(e, Constants.EXCEPTION_FILE_SAVE + fileName)
+                VibrateUtil(context).error()
+                ToastUtil.launchShort(getString(R.string.save_failure))
             }
+        }
     }
 
     /**
@@ -232,7 +208,7 @@ class MediaDownloadHelper(private val context: Context) {
                 videoFile?.delete()
             }
             return row > 0
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             if (uri != null) {
                 resolver.delete(uri, null, null)
             }

@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.SkillBasicData
 import cn.wthee.pcrtool.data.enums.UnitType
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -92,7 +91,9 @@ class SkillLoopViewModel @Inject constructor(
                             else -> null
                         }
                         skillId?.let {
-                            map[loopId] = skillRepository.getSkillIconType(skillId)
+                            skillRepository.getSkillIconType(skillId)?.let { iconTypeData ->
+                                map[loopId] = iconTypeData
+                            }
                         }
                     }
                 }
@@ -103,10 +104,7 @@ class SkillLoopViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(
-                    e,
-                    Constants.EXCEPTION_SKILL + "getSkillIconTypes#loopIdList:$loopIdList,unitId:$unitId"
-                )
+                LogReportUtil.upload(e, "getSkillIconTypes#loopIdList:$loopIdList,unitId:$unitId")
             }
         }
     }

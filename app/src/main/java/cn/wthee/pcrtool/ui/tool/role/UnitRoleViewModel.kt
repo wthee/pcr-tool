@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.talent
+package cn.wthee.pcrtool.ui.tool.role
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
@@ -20,59 +20,59 @@ import javax.inject.Inject
 
 
 /**
- * 页面状态：角色天赋
+ * 页面状态：角色职能
  */
 @Immutable
-data class UnitTalentListUiState(
+data class UnitRoleListUiState(
     val showAllType: Boolean = true,
     val selectedUnitId: Int = 0,
-    val talentType: Int = 0,
-    //角色天赋列表
-    val unitTalentList: List<CharacterTalentRoleInfo>? = null,
+    val roleType: Int = 0,
+    //角色职能列表
+    val unitRoleList: List<CharacterTalentRoleInfo>? = null,
     val loadState: LoadState = LoadState.Loading
 )
 
 /**
- * 角色天赋 ViewModel
+ * 角色职能 ViewModel
  */
 @HiltViewModel
-class UnitTalentViewModel @Inject constructor(
+class UnitRoleViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    //角色id，天赋类型
+    //角色id，职能类型
     private val selectedUnitId: Int = savedStateHandle[NavRoute.UNIT_ID] ?: 0
-    private val talentType: Int = savedStateHandle[NavRoute.TALENT_TYPE] ?: 0
+    private val roleType: Int = savedStateHandle[NavRoute.ROLE_TYPE] ?: 0
 
-    private val _uiState = MutableStateFlow(UnitTalentListUiState())
-    val uiState: StateFlow<UnitTalentListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UnitRoleListUiState())
+    val uiState: StateFlow<UnitRoleListUiState> = _uiState.asStateFlow()
 
     init {
-        getUnitTalentList(selectedUnitId, talentType)
+        getUnitRoleList(selectedUnitId, roleType)
     }
 
     /**
-     * 获取角色天赋记录
+     * 获取角色职能记录
      *
      * @param selectedUnitId 选中的角色id
-     * @param talentType 天赋类型
+     * @param roleType 职能类型
      */
-    private fun getUnitTalentList(selectedUnitId: Int, talentType: Int) {
+    private fun getUnitRoleList(selectedUnitId: Int, roleType: Int) {
         viewModelScope.launch {
             try {
-                val list = unitRepository.getTalentIdList(0, talentType)
+                val list = unitRepository.getRoleIdList(0, roleType)
 
                 _uiState.update {
                     it.copy(
-                        unitTalentList = list,
-                        talentType = talentType,
+                        unitRoleList = list,
+                        roleType = roleType,
                         loadState = updateLoadState(list),
                         showAllType = selectedUnitId == 0,
                         selectedUnitId = selectedUnitId
                     )
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, "getUnitTalentList")
+                LogReportUtil.upload(e, "getUnitRoleList")
             }
         }
     }

@@ -69,9 +69,7 @@ abstract class AppBasicDatabase : RoomDatabase() {
          */
         fun close() {
             instance?.let {
-                if (it.isOpen) {
-                    it.close()
-                }
+                it.close()
                 instance = null
             }
         }

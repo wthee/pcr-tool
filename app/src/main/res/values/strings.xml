@@ -42,11 +42,11 @@
     <string name="calc_equip_count">装备统计</string>
     <string name="character_pic">立绘</string>
     <string name="character_card_video">动态卡面</string>
-    <string name="character_basic_info">资料</string>
+    <string name="character_basic_info">角色资料</string>
     <string name="basic_info">基本信息</string>
     <string name="story_pic">剧情立绘</string>
     <string name="to_summon">召唤物</string>
-    <string name="spine_preview">模型</string>
+    <string name="spine_preview">模型预览</string>
     <string name="no_guild">无公会</string>
     <string name="sp_skill">SP技能</string>
     <string name="tp_limit_level_action_desc">等级 > 260，TP数值不会继续增加</string>
@@ -106,6 +106,8 @@
     <string name="random_drop_source">蘭德索爾圖書館</string>
     <string name="random_drop_tip">额外掉落数据来源</string>
     <string name="random_drop_source_url">https://pcredivewiki.tw/Other/MapExtraDrop</string>
+    <string name="time_zone">自动时区</string>
+    <string name="time_zone_tip">\n手动变更设备时区后，请重新打开应用</string>
 
     <!-- 筛选  -->
     <string name="title_sort">排序类型</string>
@@ -115,6 +117,7 @@
     <string name="position_0">前卫</string>
     <string name="atk_type">攻击类型</string>
     <string name="talent_type">天赋类型</string>
+    <string name="role_type">职能类型</string>
     <string name="unit_talent">角色天赋</string>
     <string name="talent">天赋</string>
     <string name="physical">物理</string>
@@ -147,6 +150,18 @@
     <string name="type_extra_character">额外</string>
     <string name="name">名字</string>
     <string name="id">编号</string>
+
+    <!--职能相关-->
+    <string name="unit_role">角色职能</string>
+    <string name="role">职能</string>
+    <string name="attacker">攻击</string>
+    <string name="breaker">破坏</string>
+    <string name="buffer">增益</string>
+    <string name="debuffer">减益</string>
+    <string name="booster">加速</string>
+    <string name="healer">治疗</string>
+    <string name="tank">坦克</string>
+    <string name="jammer">干扰</string>
 
     <!--装备相关-->
     <string name="equip_require_level">需求等级：%s</string>
@@ -486,10 +501,12 @@
     <string name="skill_type_100">免疫</string>
     <string name="skill_type_105">环境</string>
     <string name="skill_type_106">守护</string>
+    <string name="skill_type_110">持续伤害易伤</string>
     <string name="skill_action_type_116">执着</string>
     <string name="skill_action_type_121">幻化</string>
     <string name="skill_action_type_123">减伤</string>
     <string name="skill_action_type_124">转移伤害</string>
+    <string name="skill_action_type_125">无法选中</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -524,40 +541,45 @@
 
     <!--技能目标类型相关-->
     <string name="skill_target_none">目标</string>
-    <string name="skill_target_2_8">随机的</string>
-    <string name="skill_target_3">最近的</string>
-    <string name="skill_target_4">最远的</string>
-    <string name="skill_target_5_25">HP最低的</string>
-    <string name="skill_target_6_26">HP最高的</string>
+    <string name="skill_target_2_8">随机</string>
+    <string name="skill_target_3">最近</string>
+    <string name="skill_target_4">最远</string>
+    <string name="skill_target_5_25">HP最低</string>
+    <string name="skill_target_6_26">HP最高</string>
     <string name="skill_target_7">自身</string>
-    <string name="skill_target_9">最后方的</string>
-    <string name="skill_target_10">最前方的</string>
-    <string name="skill_target_11">范围内的</string>
-    <string name="skill_target_12_27_37">TP最高的</string>
-    <string name="skill_target_13_19_28">TP最低的</string>
-    <string name="skill_target_14_29">物理攻击力最高的</string>
-    <string name="skill_target_15_30">物理攻击力最低的</string>
-    <string name="skill_target_16_31">魔法攻击力最高的</string>
-    <string name="skill_target_17_32">魔法攻击力最低的</string>
+    <string name="skill_target_9">最后方</string>
+    <string name="skill_target_10">最前方</string>
+    <string name="skill_target_11">范围内</string>
+    <string name="skill_target_12_27_37">TP最高</string>
+    <string name="skill_target_13_19_28">TP最低</string>
+    <string name="skill_target_14_29">物理攻击力最高</string>
+    <string name="skill_target_15_30">物理攻击力最低</string>
+    <string name="skill_target_16_31">魔法攻击力最高</string>
+    <string name="skill_target_17_32">魔法攻击力最低</string>
     <string name="skill_target_18">召唤物</string>
-    <string name="skill_target_20">物理攻击的</string>
-    <string name="skill_target_21">魔法攻击的</string>
-    <string name="skill_target_22">随机的召唤物</string>
-    <string name="skill_target_23">自身的召唤物</string>
+    <string name="skill_target_20">物理</string>
+    <string name="skill_target_21">魔法</string>
+    <string name="skill_target_22">随机召唤物</string>
+    <string name="skill_target_23">自身召唤物</string>
     <string name="skill_target_24">领主</string>
     <string name="skill_target_33">暗影</string>
     <string name="skill_target_34">除自身以外</string>
-    <string name="skill_target_35">剩余HP最高的</string>
-    <string name="skill_target_36">剩余HP最低的</string>
-    <string name="skill_target_38">攻击力最高的</string>
-    <string name="skill_target_39">攻击力最低的</string>
+    <string name="skill_target_35">剩余HP最高</string>
+    <string name="skill_target_36">剩余HP最低</string>
+    <string name="skill_target_38">攻击力最高</string>
+    <string name="skill_target_39">攻击力最低</string>
     <string name="skill_target_42">多目标</string>
-    <string name="skill_target_43">物理攻击力最高(自身除外)的</string>
-    <string name="skill_target_44">剩余HP最低(自身除外)的</string>
-    <string name="skill_target_45">物理防御力最低的</string>
-    <string name="skill_target_46">魔法防御力最低的</string>
-    <string name="skill_target_50">魔法攻击力最高(自身除外)的</string>
-    <string name="skill_target_13xxx">被标记的</string>
+    <string name="skill_target_43">物理攻击力最高(自身除外)</string>
+    <string name="skill_target_44">剩余HP最低(自身除外)</string>
+    <string name="skill_target_45">物理防御力最低</string>
+    <string name="skill_target_46">魔法防御力最低</string>
+    <string name="skill_target_50">魔法攻击力最高(自身除外)</string>
+    <string name="skill_target_13xxx">被标记</string>
+    <string name="skill_target_fire">火天赋</string>
+    <string name="skill_target_water">水天赋</string>
+    <string name="skill_target_wind">风天赋</string>
+    <string name="skill_target_light">光天赋</string>
+    <string name="skill_target_dark">暗天赋</string>
 
     <!--技能目标分配-->
     <string name="skill_target_assignment_0">自身</string>
@@ -591,7 +613,7 @@
     <string name="skill_magic_damage">造成的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
     <string name="skill_range">范围 [%d] 内</string>
-    <string name="skill_target_count">(%d 名)</string>
+    <string name="skill_target_count">(%d名)</string>
     <string name="skill_target_all">(全体)</string>
     <string name="skill_target_order_num">(第%s近)</string>
     <string name="skill_target_order_1">(最近)</string>
@@ -637,6 +659,7 @@
     <string name="skill_barrier">护盾</string>
     <string name="skill_damage">伤害</string>
     <string name="skill_status_down">状态下降</string>
+    <string name="skill_status_ub">己方使用连结爆发技能</string>
     <string name="skill_action_type_desc_10_break">BREAK 期间，%s%s</string>
     <string name="skill_charm_0">魅惑</string>
     <string name="skill_charm_1">混乱</string>
@@ -668,6 +691,7 @@
     <string name="skill_action_type_desc_21_1">无敌</string>
     <string name="skill_action_type_desc_21_2">回避物理攻击</string>
     <string name="skill_action_type_desc_21_3">回避所有攻击</string>
+    <string name="skill_action_type_desc_21_6">回避 BREAK</string>
     <string name="skill_action_type_desc_21_8">回避魔法攻击</string>
     <string name="skill_action_skill_anim_change">技能动画改变%s</string>
     <string name="skill_action_if_status">当%s在[%s]时，使用动作(%d)</string>
@@ -702,6 +726,7 @@
     <string name="skill_action_change_coe_12">%s * [后方%s数量]</string>
     <string name="skill_action_change_coe_13">%s * [损失的HP比例]</string>
     <string name="skill_action_change_coe_15">%s * [自身除外的己方剩余HP]</string>
+    <string name="skill_action_change_coe_16">%s * [自身消耗的TP]</string>
     <string name="skill_action_change_coe_102">%s * [小眼球数量]</string>
     <string name="skill_action_change_coe_skill_count">%s * [技能计数]</string>
     <string name="skill_action_change_coe_mark_count">%s * [标记层数]</string>
@@ -770,12 +795,13 @@
     <string name="skill_action_type_desc_73">为%s展开护盾，在单个动作中受到的伤害超过 [%d] 时，伤害值将衰减%s</string>
     <string name="skill_action_type_desc_75">每造成 [%d] 次伤害时，触发动作(%d) %s</string>
     <string name="skill_action_type_desc_76">%s治疗量变为原来的 %s%s</string>
-    <string name="skill_action_type_desc_77">每当%s受到 [%s] 时，为自身追加 [%d] 层标记%s%s</string>
+    <string name="skill_action_type_desc_77">每当%s [%s] 时，为自身追加 [%d] 层标记%s%s</string>
+    <string name="skill_action_type_desc_77_1">受到</string>
     <string name="skill_action_type_desc_78">使%s受到的伤害额外%s %s 倍%s%s</string>
     <string name="skill_action_type_desc_78_1">减益和异常状态数量</string>
     <string name="skill_action_type_desc_79">%s行动时，受到%s %s 伤害%s%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
-    <string name="skill_action_type_desc_90">自身的%s提升 %s</string>
+    <string name="skill_action_type_desc_90">%s%s提升 %s</string>
     <string name="skill_action_type_desc_901">战斗开始时生效</string>
     <string name="skill_action_type_desc_902">战斗时间剩余%s秒时生效</string>
     <string name="skill_action_type_desc_92">使%s受击获得的TP变更为初始值的 [%s] 倍</string>
@@ -796,11 +822,15 @@
     <string name="skill_action_type_desc_106_type_common">守护</string>
     <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
     <string name="skill_action_type_desc_107">动作(%d)暴击率依据物理暴击与魔法暴击之和</string>
-    <string name="skill_action_type_desc_111">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_110">使%s受到持续伤害时，额外承受 %s 的伤害%s</string>
+    <string name="skill_action_type_desc_111">当%s%s时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_111_1">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
+    <string name="skill_action_type_desc_111_2">受到暴击伤害</string>
     <string name="skill_action_type_desc_114">对%s追加 [%d] 层标记，%s，受到伤害时，减少 [1] 层标记，并使用动作(%d)和动作(%d)%s</string>
     <string name="skill_action_type_desc_114_aura">己方受到的伤害降低 [%d%%]</string>
     <string name="skill_action_type_desc_116_121_123_124">使%s进入 [%s] 状态%s</string>
     <string name="skill_action_type_desc_123_1">受到的伤害减少%s</string>
+    <string name="skill_action_type_desc_125">使%s进入 [%s] 状态（持有标记时，不会成为攻击目标）</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>
@@ -885,7 +915,8 @@
     <string name="video_play_speed">倍速:</string>
     <string name="play_error">播放出错或资源不存在</string>
     <string name="video_resource_error">资源不存在</string>
-    <string name="download_video">下载视频</string>
+    <string name="save_video">保存视频</string>
+    <string name="video_caching">视频缓存中...</string>
     <string name="saved">已保存</string>
 
     <string name="title_download_file">正在下载</string>

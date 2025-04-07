@@ -103,16 +103,12 @@ object Constants {
     const val EXCEPTION_DOWNLOAD_FILE = "file download exception: "
     const val EXCEPTION_SAVE_DB = "db file save exception: "
     const val EXCEPTION_FILE_SAVE = "file save exception: "
-    const val EXCEPTION_LOAD_ATTR = "character attr exception: "
-    const val EXCEPTION_UNIT_NULL = "character info exception: "
-    const val EXCEPTION_SKILL = "skill exception: "
     const val EXCEPTION_PVP_SERVICE = "pvp search exception: "
     const val EXCEPTION_DATA_CHANGE = "db change exception: "
 
     //任务
     const val DOWNLOAD_DB_WORK = "updateDatabase"
     const val DOWNLOAD_APK_WORK = "updateApk"
-    const val DOWNLOAD_FILE_WORK = "downloadFile"
 
     //应用版本
     const val APP_VERSION = "app-version"

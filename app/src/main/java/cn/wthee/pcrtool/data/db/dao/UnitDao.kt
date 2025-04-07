@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.db.view.CharacterHomePageComment
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterProfileInfo
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
+import cn.wthee.pcrtool.data.db.view.CharacterTalentRoleInfo
 import cn.wthee.pcrtool.data.db.view.GachaUnitInfo
 import cn.wthee.pcrtool.data.db.view.GuildAllMember
 import cn.wthee.pcrtool.data.db.view.GuildData
@@ -15,7 +16,6 @@ import cn.wthee.pcrtool.data.db.view.NoGuildMemberInfo
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.RoomCommentData
 import cn.wthee.pcrtool.data.db.view.SummonData
-import cn.wthee.pcrtool.data.db.view.TalentData
 import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.UnitPromotionStatus
@@ -704,17 +704,18 @@ interface UnitDao {
 
     /**
      * 获取所有角色天赋id
+     * fixme 后续合并getRoleIdList
      */
     @SkipQueryVerification
     @Transaction
     @Query(
         """
         SELECT
-            setting_id,
             unit_talent.unit_id,
             talent_id,
             search_area_width,
-            atk_type
+            atk_type,
+            0 AS unit_role_id
         FROM
             unit_talent
             LEFT JOIN unit_profile ON unit_profile.unit_id = unit_talent.unit_id
@@ -725,5 +726,32 @@ interface UnitDao {
         ORDER BY search_area_width, atk_type
         """
     )
-    suspend fun getTalentIdList(unitId: Int, talentType: Int): List<TalentData>
+    suspend fun getTalentIdList(unitId: Int, talentType: Int): List<CharacterTalentRoleInfo>
+
+    /**
+     * 获取所有角色职能id
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_role_data.unit_id,
+            unit_role_data.unit_role_id,
+            search_area_width,
+            atk_type,
+            unit_talent.talent_id
+        FROM
+            unit_role_data
+            LEFT JOIN unit_profile ON unit_profile.unit_id = unit_role_data.unit_id
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+						LEFT JOIN unit_talent ON unit_data.unit_id = unit_talent.unit_id
+        WHERE (0 = :unitId OR unit_role_data.unit_id = :unitId) 
+        AND unit_role_data.unit_id < $maxUnitId
+        AND (0 = :roleId OR unit_role_data.unit_role_id = :roleId) 
+        AND search_area_width > 0
+        ORDER BY search_area_width, atk_type
+        """
+    )
+    suspend fun getRoleIdList(unitId: Int, roleId: Int): List<CharacterTalentRoleInfo>
 }

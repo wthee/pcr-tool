@@ -246,6 +246,7 @@ fun getAction(
             ToolMenuType.TALENT_LIST -> actions.toUnitTalentList()
             ToolMenuType.UNKNOWN_SKILL_LIST -> actions.toUnknownSkillList()
             ToolMenuType.TALENT_QUEST -> actions.toTalentQuest()
+            ToolMenuType.ROLE -> actions.toUnitRoleList()
         }
     }
 

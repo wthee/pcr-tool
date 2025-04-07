@@ -386,11 +386,13 @@ private fun SharedTransitionScope.CharacterDetailContent(
                                 unitId = uiState.unitId,
                                 cutinId = uiState.cutinId,
                                 talentType = uiState.characterInfo?.talentId ?: 0,
+                                roleType = uiState.characterInfo?.roleId ?: 0,
                                 idList = uiState.idList,
                                 toCharacterBasicInfo = actions.toCharacterBasicInfo,
                                 toAllPics = actions.toAllPics,
                                 toCharacterVideo = actions.toCharacterVideo,
-                                toUnitTalentFilterList = actions.toUnitTalentFilterList
+                                toUnitTalentFilterList = actions.toUnitTalentFilterList,
+                                toUnitRoleFilterList = actions.toUnitRoleFilterList,
                             )
 
                         //星级
@@ -548,6 +550,11 @@ private fun SharedTransitionScope.CharacterCard(
 
 /**
  * 角色功能
+ *
+ * @param unitId 角色id
+ * @param cutinId 角色转换id
+ * @param talentType 天赋类型id
+ * @param roleType 职能类型id
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -555,11 +562,13 @@ private fun ToolsContent(
     unitId: Int,
     cutinId: Int,
     talentType: Int,
+    roleType: Int,
     idList: ArrayList<Int>,
     toCharacterBasicInfo: (Int) -> Unit,
     toAllPics: (Int, Int) -> Unit,
     toCharacterVideo: (Int, Int) -> Unit,
     toUnitTalentFilterList: (Int, Int) -> Unit,
+    toUnitRoleFilterList: (Int, Int) -> Unit,
 ) {
     val openDialog = remember {
         mutableStateOf(false)
@@ -618,6 +627,15 @@ private fun ToolsContent(
             modifier = Modifier.padding(end = Dimen.smallPadding),
             onClick = {
                 toUnitTalentFilterList(unitId, talentType)
+            }
+        )
+        //相同职能角色
+        IconTextButton(
+            icon = MainIconType.ROLE,
+            text = stringResource(id = R.string.role),
+            modifier = Modifier.padding(end = Dimen.smallPadding),
+            onClick = {
+                toUnitRoleFilterList(unitId, roleType)
             }
         )
     }
@@ -1199,12 +1217,14 @@ private fun ToolsContentPreview() {
         ToolsContent(
             unitId = 100101,
             cutinId = 0,
-            talentType = 0,
+            talentType = 1,
+            roleType = 2,
             idList = arrayListOf(),
             toCharacterBasicInfo = {},
             toAllPics = { _, _ -> },
             toCharacterVideo = { _, _ -> },
             toUnitTalentFilterList = { _, _ -> },
+            toUnitRoleFilterList = { _, _ -> },
         )
     }
 }

@@ -45,6 +45,7 @@ import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -59,7 +60,7 @@ import cn.wthee.pcrtool.ui.tool.enemy.EnemyWeaknessContent
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.fillZero
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
@@ -196,7 +197,7 @@ fun SharedTransitionScope.ClanBattleItem(
                 } else {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "item-${clanBattleInfo.clanBattleId}"
+                            key = "${SharedElementKey.CLAN_BATTLE}${clanBattleInfo.clanBattleId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -216,7 +217,7 @@ fun SharedTransitionScope.ClanBattleItem(
                         .align(Alignment.CenterVertically)
                         .sharedElement(
                             state = rememberSharedContentState(
-                                key = "text-${clanBattleInfo.clanBattleId}"
+                                key = "${SharedElementKey.CLAN_DATE}${clanBattleInfo.clanBattleId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         ),
@@ -281,7 +282,7 @@ fun SharedTransitionScope.ClanBattleItem(
             if (clanBattleEvent != null) {
                 //结束日期
                 CaptionText(
-                    text = clanBattleEvent.getFixedEndTime().fixJpTime,
+                    text = clanBattleEvent.getFixedEndTime().fixTimeZone,
                     modifier = Modifier
                         .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
                         .fillMaxWidth()

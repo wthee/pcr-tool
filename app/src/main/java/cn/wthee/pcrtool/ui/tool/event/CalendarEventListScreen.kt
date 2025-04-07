@@ -41,7 +41,7 @@ import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import kotlinx.coroutines.launch
 
@@ -181,7 +181,7 @@ fun CalendarEventItem(calendar: CalendarEvent) {
                 }
                 //结束日期
                 CaptionText(
-                    text = calendar.endTime.formatTime.fixJpTime,
+                    text = calendar.endTime.formatTime.fixTimeZone,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

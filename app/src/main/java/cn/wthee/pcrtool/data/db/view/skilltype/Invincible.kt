@@ -15,6 +15,7 @@ fun SkillActionDetail.invincible(): String {
             1 -> R.string.skill_action_type_desc_21_1
             2 -> R.string.skill_action_type_desc_21_2
             3 -> R.string.skill_action_type_desc_21_3
+            6 -> R.string.skill_action_type_desc_21_6
             8 -> R.string.skill_action_type_desc_21_8
             else -> R.string.unknown
         }

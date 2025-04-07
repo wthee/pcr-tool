@@ -63,6 +63,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Looks4
 import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material.icons.rounded.MiscellaneousServices
+import androidx.compose.material.icons.rounded.MoreTime
 import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.NotificationsNone
 import androidx.compose.material.icons.rounded.Palette
@@ -95,6 +96,7 @@ import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material.icons.rounded.ViewCompact
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WorkspacePremium
+import androidx.compose.material.icons.rounded.Workspaces
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -593,4 +595,14 @@ enum class MainIconType(val icon: ImageVector) {
      * 列表显示模式（卡片）
      */
     VIEW_CARD(Icons.Rounded.ViewAgenda),
+
+    /**
+     * 时区
+     */
+    TIME_ZONE(Icons.Rounded.MoreTime),
+
+    /**
+     * 职能
+     */
+    ROLE(Icons.Rounded.Workspaces),
 }

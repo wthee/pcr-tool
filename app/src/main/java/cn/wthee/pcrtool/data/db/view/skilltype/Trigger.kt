@@ -22,11 +22,11 @@ fun SkillActionDetail.trigger(): String {
             actionValue1.toInt(),
             getTimeText(3, actionValue3)
         )
+
         10 -> getString(R.string.skill_action_type_desc_17_10, actionValue1.toInt())
         11 -> getString(R.string.skill_action_type_desc_17_11)
         13 -> getString(R.string.skill_action_type_desc_17_13, actionValue3.toInt())
         14 -> getString(R.string.skill_action_type_desc_17_17, actionValue1.toInt())
-
 
 
         else -> UNKNOWN
@@ -70,10 +70,20 @@ fun SkillActionDetail.loopTrigger() = when (actionDetail1) {
 }
 
 //111：触发条件？??
-fun SkillActionDetail.triggerV2() = getString(
-    R.string.skill_action_type_desc_111,
-    getTarget(),
-    "<",
-    actionValue3.toInt(),
-    actionDetail2 % 100
-)
+fun SkillActionDetail.triggerV2(): String {
+    val effect = when (actionDetail1) {
+        1 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_buff)
+        2 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_action_type_desc_111_2)
+//        3 -> getString(R.string.skill_action_type_desc_77_1) + getString(R.string.skill_status_down)
+//        4 -> getString(R.string.skill_status_ub)
+        else -> UNKNOWN
+    }
+    return getString(
+        R.string.skill_action_type_desc_111,
+        getTarget(),
+//        "<",
+//        actionValue3.toInt(),
+        effect,
+        actionDetail2 % 100
+    )
+}

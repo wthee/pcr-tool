@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val appVersionCode = 388
-val appVersionName = "3.8.8"
+val appVersionCode = 389
+val appVersionName = "3.8.9"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -156,6 +156,7 @@ dependencies {
 
     //media3
     implementation(libs.media3.exoplayer)
+    implementation(libs.media3.datasource)
     implementation(libs.media3.ui)
 
     //Navigation

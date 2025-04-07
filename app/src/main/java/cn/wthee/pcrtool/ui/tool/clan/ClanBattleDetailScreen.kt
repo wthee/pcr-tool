@@ -7,8 +7,8 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -30,6 +30,8 @@ import cn.wthee.pcrtool.ui.components.IconHorizontalPagerIndicator
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.SelectTypeFab
+import cn.wthee.pcrtool.ui.components.getItemWidth
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -105,8 +107,8 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
     toSummonDetail: (String) -> Unit
 ) {
 
-    //图标列表
-    Column(modifier = Modifier.fillMaxWidth()) {
+    //图标列表（限制宽度）
+    Column(modifier = Modifier.widthIn(max = getItemWidth())) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -114,7 +116,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
                             state = rememberSharedContentState(
-                                key = "item-${clanBattleInfo.clanBattleId}"
+                                key = "${SharedElementKey.CLAN_BATTLE}${clanBattleInfo.clanBattleId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
                         )
@@ -132,7 +134,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                         if (MainActivity.animOnFlag) {
                             Modifier.sharedElement(
                                 state = rememberSharedContentState(
-                                    key = "text-${clanBattleInfo.clanBattleId}"
+                                    key = "${SharedElementKey.CLAN_DATE}${clanBattleInfo.clanBattleId}"
                                 ),
                                 animatedVisibilityScope = animatedVisibilityScope,
                             )

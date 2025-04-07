@@ -1,9 +1,7 @@
-package cn.wthee.pcrtool.ui.tool.talent
+package cn.wthee.pcrtool.ui.tool.role
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,7 +10,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,41 +21,33 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterTalentRoleInfo
 import cn.wthee.pcrtool.data.enums.AtkType
-import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.PositionType
 import cn.wthee.pcrtool.data.enums.RoleType
 import cn.wthee.pcrtool.data.enums.TalentRoleListType
-import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.ui.components.CenterTipText
 import cn.wthee.pcrtool.ui.components.CommonSpacer
-import cn.wthee.pcrtool.ui.components.Dot
-import cn.wthee.pcrtool.ui.components.IconItem
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
 import cn.wthee.pcrtool.ui.components.MainTabRow
-import cn.wthee.pcrtool.ui.components.MainText
-import cn.wthee.pcrtool.ui.components.MainTitleText
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.TabData
-import cn.wthee.pcrtool.ui.components.Tag
-import cn.wthee.pcrtool.ui.components.VerticalGridList
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.tool.talent.UnitAtkTypeList
 import kotlinx.coroutines.launch
 
 /**
- * 角色天赋列表
+ * 角色职能列表
  */
 @Composable
-fun UnitTalentListScreen(
+fun UnitRoleListScreen(
     toCharacterDetail: (Int) -> Unit,
-    unitTalentListViewModel: UnitTalentViewModel = hiltViewModel()
+    unitRoleListViewModel: UnitRoleViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val uiState by unitTalentListViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by unitRoleListViewModel.uiState.collectAsStateWithLifecycle()
     //页面状态
     val pagerState = rememberPagerState {
-        5
+        8
     }
     //列表状态
     val scrollStateList = arrayListOf(
@@ -67,17 +56,20 @@ fun UnitTalentListScreen(
         rememberScrollState(),
         rememberScrollState(),
         rememberScrollState(),
+        rememberScrollState(),
+        rememberScrollState(),
+        rememberScrollState(),
     )
-    //筛选的天赋
-    val talentType = TalentType.getByType(uiState.talentType)
+    //筛选的职能
+    val roleType = RoleType.getByType(uiState.roleType)
 
     MainScaffold(
         fab = {
             //回到顶部
             if (uiState.showAllType) {
                 MainSmallFab(
-                    iconType = MainIconType.TALENT,
-                    text = stringResource(id = R.string.unit_talent),
+                    iconType = MainIconType.ROLE,
+                    text = stringResource(id = R.string.unit_role),
                     onClick = {
                         coroutineScope.launch {
                             try {
@@ -89,9 +81,9 @@ fun UnitTalentListScreen(
                 )
             } else {
                 MainSmallFab(
-                    iconType = MainIconType.TALENT,
-                    text = stringResource(id = talentType.typeNameId) + " ${uiState.unitTalentList?.size ?: 0}",
-                    tintColor = talentType.color,
+                    iconType = MainIconType.ROLE,
+                    text = stringResource(id = roleType.typeNameId) + " ${uiState.unitRoleList?.size ?: 0}",
+                    tintColor = roleType.color,
                     onClick = {
                         coroutineScope.launch {
                             try {
@@ -111,16 +103,16 @@ fun UnitTalentListScreen(
             }
         ) {
             if (uiState.showAllType) {
-                UnitTalentPagerContent(
-                    unitTalentList = uiState.unitTalentList,
+                UnitRolePagerContent(
+                    unitRoleList = uiState.unitRoleList,
                     pagerState = pagerState,
                     scrollStateList = scrollStateList,
                     toCharacterDetail = toCharacterDetail
                 )
             } else {
-                UnitTalentListItemContent(
+                UnitRoleListItemContent(
                     scrollState = scrollStateList[0],
-                    list = uiState.unitTalentList ?: arrayListOf(),
+                    list = uiState.unitRoleList ?: arrayListOf(),
                     selectedUnitId = uiState.selectedUnitId,
                     toCharacterDetail = toCharacterDetail
                 )
@@ -131,8 +123,8 @@ fun UnitTalentListScreen(
 }
 
 @Composable
-private fun UnitTalentPagerContent(
-    unitTalentList: List<CharacterTalentRoleInfo>?,
+private fun UnitRolePagerContent(
+    unitRoleList: List<CharacterTalentRoleInfo>?,
     pagerState: PagerState,
     scrollStateList: List<ScrollState>,
     toCharacterDetail: (Int) -> Unit
@@ -140,14 +132,14 @@ private fun UnitTalentPagerContent(
 
     //类型
     val pageTabs = arrayListOf<TabData>()
-    TalentType.entries.forEachIndexed { index, talentType ->
+    RoleType.entries.forEachIndexed { index, roleType ->
         if (index != 0) {
             pageTabs.add(
                 TabData(
-                    tab = stringResource(id = talentType.typeNameId),
-                    color = talentType.color,
-                    count = unitTalentList?.count { talentData ->
-                        talentData.talentId == talentType.type
+                    tab = stringResource(id = roleType.typeNameId),
+                    color = roleType.color,
+                    count = unitRoleList?.count { roleData ->
+                        roleData.roleId == roleType.type
                     }
                 )
             )
@@ -163,6 +155,7 @@ private fun UnitTalentPagerContent(
         MainTabRow(
             pagerState = pagerState,
             tabs = pageTabs,
+            scrollable = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
@@ -177,10 +170,10 @@ private fun UnitTalentPagerContent(
                 .fillMaxSize(),
             verticalAlignment = Alignment.Top
         ) {
-            val list = unitTalentList?.filter { it.talentId == pagerState.currentPage + 1 }
+            val list = unitRoleList?.filter { it.roleId == pagerState.currentPage + 1 }
                 ?: arrayListOf()
 
-            UnitTalentListItemContent(
+            UnitRoleListItemContent(
                 scrollState = scrollStateList[pagerState.currentPage],
                 list = list,
                 toCharacterDetail = toCharacterDetail
@@ -191,7 +184,7 @@ private fun UnitTalentPagerContent(
 }
 
 @Composable
-private fun UnitTalentListItemContent(
+private fun UnitRoleListItemContent(
     scrollState: ScrollState,
     list: List<CharacterTalentRoleInfo>,
     selectedUnitId: Int? = null,
@@ -206,7 +199,7 @@ private fun UnitTalentListItemContent(
         UnitAtkTypeList(
             list = list,
             atkType = AtkType.PHYSICAL,
-            listType = TalentRoleListType.TALENT,
+            listType = TalentRoleListType.ROLE,
             selectedUnitId = selectedUnitId,
             toCharacterDetail = toCharacterDetail
         )
@@ -214,110 +207,10 @@ private fun UnitTalentListItemContent(
         UnitAtkTypeList(
             list = list,
             atkType = AtkType.MAGIC,
-            listType = TalentRoleListType.TALENT,
+            listType = TalentRoleListType.ROLE,
             selectedUnitId = selectedUnitId,
             toCharacterDetail = toCharacterDetail
         )
         CommonSpacer()
-    }
-}
-
-
-/**
- * （物理或魔法）角色列表
- * 1
- */
-@Composable
-fun UnitAtkTypeList(
-    list: List<CharacterTalentRoleInfo>,
-    atkType: AtkType,
-    selectedUnitId: Int? = null,
-    listType: TalentRoleListType,
-    toCharacterDetail: (Int) -> Unit
-) {
-    val atkTypeList =
-        list.filter { it.atkType == atkType.type }
-    val character0 = arrayListOf(CharacterTalentRoleInfo(unitId = 0))
-    character0.addAll(atkTypeList.filter {
-        PositionType.getPositionType(it.position) == PositionType.POSITION_FRONT
-    })
-    val character1 = arrayListOf(CharacterTalentRoleInfo(unitId = 1))
-    character1.addAll(atkTypeList.filter {
-        PositionType.getPositionType(it.position) == PositionType.POSITION_MIDDLE
-    })
-    val character2 = arrayListOf(CharacterTalentRoleInfo(unitId = 2))
-    character2.addAll(atkTypeList.filter {
-        PositionType.getPositionType(it.position) == PositionType.POSITION_BACK
-    })
-
-    val unitList = arrayListOf<CharacterTalentRoleInfo>()
-    if (character0.size > 1) {
-        unitList.addAll(
-            character0.map { it }
-        )
-    }
-    if (character1.size > 1) {
-        unitList.addAll(
-            character1.map { it }
-        )
-    }
-    if (character2.size > 1) {
-        unitList.addAll(
-            character2.map { it }
-        )
-    }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding,
-            top = Dimen.mediumPadding
-        )
-    ) {
-        MainTitleText(text = stringResource(id = atkType.typeNameId))
-        Spacer(modifier = Modifier.weight(1f))
-        MainText(text = atkTypeList.size.toString())
-    }
-
-    VerticalGridList(
-        itemCount = unitList.size,
-        itemWidth = Dimen.iconSize,
-        contentPadding = Dimen.exSmallPadding,
-        verticalContentPadding = Dimen.smallPadding
-    ) {
-        val unit = unitList[it]
-        val selected = selectedUnitId == unit.unitId
-
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            IconItem(
-                id = unit.unitId,
-                selected = selected,
-                iconResourceType = IconResourceType.CHARACTER,
-                onClickItem = if (selected) null else toCharacterDetail
-            )
-
-            if (listType == TalentRoleListType.TALENT) {
-                // 职能信息
-                if (unit.roleId != 0) {
-                    val roleType = RoleType.getByType(unit.roleId)
-                    Tag(
-                        modifier = Modifier
-                            .padding(top = Dimen.exSmallPadding),
-                        text = stringResource(id = roleType.typeNameId),
-                        backgroundColor = roleType.color,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            } else if (listType == TalentRoleListType.ROLE) {
-                //天赋信息
-                if (unit.talentId != 0) {
-                    Dot(color = TalentType.getByType(unit.talentId).color)
-                }
-
-            }
-
-        }
     }
 }

@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.data.enums.SkillIndexType
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.getString
 
@@ -70,7 +69,7 @@ data class SkillDetail(
                 }
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
+            LogReportUtil.upload(e, "getActionIndexWithCoe#skillDetail:$this")
         }
 
         return list

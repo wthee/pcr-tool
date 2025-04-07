@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.media
 
 import androidx.annotation.OptIn
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -119,6 +118,10 @@ fun VideoPlayer(url: String) {
     var loading by remember(url) {
         mutableStateOf(true)
     }
+    //缓存中
+    var caching by remember(url) {
+        mutableStateOf(true)
+    }
     //播放中
     var playing by remember(url) {
         mutableStateOf(false)
@@ -160,6 +163,7 @@ fun VideoPlayer(url: String) {
                         if (isPlaying) {
                             loading = false
                         }
+                        checkIfBufferingCompleted()
                     }
 
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -168,6 +172,7 @@ fun VideoPlayer(url: String) {
                         if (isPlaying) {
                             loading = false
                         }
+                        checkIfBufferingCompleted()
                     }
 
                     override fun onPlayerError(error: PlaybackException) {
@@ -176,6 +181,14 @@ fun VideoPlayer(url: String) {
                         playError = true
                     }
 
+                    private fun checkIfBufferingCompleted() {
+                        val duration = getDuration()
+                        val bufferedPosition = getBufferedPosition()
+                        if (bufferedPosition >= duration && duration > 0) {
+                            // 缓冲完成（整个媒体已加载）
+                            caching = false
+                        }
+                    }
                 })
             }
     }
@@ -215,7 +228,8 @@ fun VideoPlayer(url: String) {
                     exoPlayer = exoPlayer,
                     loading = loading,
                     playing = playing,
-                    playError = playError
+                    playError = playError,
+                    caching = caching
                 )
             }
         }
@@ -233,19 +247,15 @@ private fun ToolButtonContent(
     exoPlayer: ExoPlayer?,
     loading: Boolean,
     playing: Boolean,
-    playError: Boolean
+    playError: Boolean,
+    caching: Boolean,
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
 
-    //下载弹窗
+    //保存视频弹窗提示
     val openDialog = remember { mutableStateOf(false) }
     //是否已存在
     var saved by remember {
-        mutableStateOf(false)
-    }
-    //下载状态
-    var downloading by remember(url) {
         mutableStateOf(false)
     }
 
@@ -285,11 +295,6 @@ private fun ToolButtonContent(
         mutableFloatStateOf(1f)
     }
     exoPlayer?.setPlaybackSpeed(selectedSpeed)
-
-    //下载进度
-    var downloadProgress by remember {
-        mutableIntStateOf(0)
-    }
 
 
     Row(
@@ -335,45 +340,50 @@ private fun ToolButtonContent(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        //下载视频
         val videoLoading = stringResource(id = R.string.wait_video_load)
         val videoError = stringResource(R.string.video_resource_error)
-        if (!downloading) {
-            IconTextButton(
-                text = stringResource(id = if (saved) R.string.saved else R.string.download_video),
-                icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
-                modifier = Modifier.padding(end = Dimen.smallPadding),
-                onClick = {
-                    //权限校验
-                    checkPermissions(context, permissions) {
-                        //已保存
-                        if (saved) {
-                            ToastUtil.short(
-                                getString(
-                                    R.string.video_exist,
-                                    targetFile.absolutePath.replace(MediaDownloadHelper.DIR, "")
-                                )
+        val videoCaching = stringResource(id = R.string.video_caching)
+        //保存视频按钮
+        IconTextButton(
+            text = stringResource(
+                id = if (saved) {
+                    R.string.saved
+                } else {
+                    if (caching) R.string.video_caching else R.string.save_video
+                }
+            ),
+            icon = if (saved) MainIconType.DOWNLOAD_DONE else MainIconType.DOWNLOAD,
+            modifier = Modifier
+                .padding(end = Dimen.smallPadding)
+                .animateContentSize(),
+            onClick = {
+                //权限校验
+                checkPermissions(context, permissions) {
+                    //已保存
+                    if (saved) {
+                        ToastUtil.short(
+                            getString(
+                                R.string.video_exist,
+                                targetFile.absolutePath.replace(MediaDownloadHelper.DIR, "")
                             )
-                            return@checkPermissions
-                        }
+                        )
+                        return@checkPermissions
+                    }
 
-                        if (loading) {
-                            ToastUtil.short(videoLoading)
-                        } else if (playError) {
-                            ToastUtil.short(videoError)
-                        } else {
-                            openDialog.value = true
-                        }
+                    if (loading) {
+                        ToastUtil.short(videoLoading)
+                    } else if (playError) {
+                        ToastUtil.short(videoError)
+                    } else if (caching) {
+                        ToastUtil.short(videoCaching)
+                    } else {
+                        //是否保存确认弹窗
+                        openDialog.value = true
                     }
                 }
-            )
-        } else {
-            //下载中
-            CircularProgressCompose(
-                modifier = Modifier.padding(end = Dimen.smallPadding),
-                progress = maxOf(0f, downloadProgress / 100f)
-            )
-        }
+
+            }
+        )
     }
 
     //倍速选择
@@ -408,34 +418,23 @@ private fun ToolButtonContent(
     }
 
 
-    //下载确认
-    val videoDownloadError = stringResource(R.string.download_failure)
+    //保存确认弹窗
     MainAlertDialog(
         openDialog = openDialog,
         icon = MainIconType.DOWNLOAD,
-        title = stringResource(R.string.download_video),
+        title = stringResource(R.string.save_video),
         text = stringResource(R.string.tip_save_to_gallery),
         onDismissRequest = {
             openDialog.value = false
         }
     ) {
-        downloading = true
         openDialog.value = false
-        //开始下载
-        MediaDownloadHelper(MyApplication.context).downloadVideo(
-            url = url,
+        //保存缓存文件
+        MediaDownloadHelper(MyApplication.context).saveCachedVideo(
+            videoUrl = url,
+            context = context,
             fileName = fileName,
-            lifecycleOwner = lifecycleOwner,
-            onDownloadFinished = {
-                downloading = false
-            },
-            onDownloading = {
-                downloadProgress = it
-            },
-            onDownloadFailure = {
-                downloading = false
-                ToastUtil.short(videoDownloadError)
-            }
+            cache = MyApplication.videoCache
         )
     }
 }
@@ -491,7 +490,7 @@ private fun getVideoFileName(url: String): String {
             else -> Constants.UNKNOWN
         } + "_"
         type + url.split('/').last().split('.')[0] + ".mp4"
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         System.currentTimeMillis().toString()
     }
 }
@@ -522,7 +521,8 @@ private fun VideoScreenPreview() {
             exoPlayer = null,
             loading = false,
             playing = true,
-            playError = false
+            playError = false,
+            caching = false
         )
     }
 }

@@ -51,6 +51,7 @@ import cn.wthee.pcrtool.data.enums.CharacterListShowType
 import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.enums.IconResourceType
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.RoleType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
@@ -78,8 +79,10 @@ import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.Subtitle2
+import cn.wthee.pcrtool.ui.components.Tag
 import cn.wthee.pcrtool.ui.components.getItemWidth
 import cn.wthee.pcrtool.ui.components.placeholder
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.ExpandAnimation
@@ -355,7 +358,7 @@ fun SharedTransitionScope.CharacterItemContent(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "CharacterItemContent-$unitId"
+                            key = "${SharedElementKey.CHARACTER_ITEM}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -552,7 +555,7 @@ fun SharedTransitionScope.CharacterIconAndTextContent(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "UnitIconAndTag-$unitId"
+                            key = "${SharedElementKey.UNIT_ICON_TAG}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -698,7 +701,7 @@ private fun SharedTransitionScope.CharacterIcon(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "UnitIconAndTag-${character.id}"
+                            key = "${SharedElementKey.UNIT_ICON_TAG}${character.id}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )
@@ -755,6 +758,18 @@ private fun SharedTransitionScope.CharacterIcon(
                 else -> StarText(character)
             }
         }
+
+        //职能
+        if (character.roleId != 0) {
+            val roleType = RoleType.getByType(character.roleId)
+            Tag(
+                text = stringResource(id = roleType.typeNameId),
+                backgroundColor = roleType.color,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+
+        //天赋
         if (character.talentId != 0) {
             Dot(color = TalentType.getByType(character.talentId).color)
         }
@@ -860,6 +875,25 @@ fun CharacterItemPreview() {
                         name = stringResource(id = R.string.debug_name),
                         startTime = "2022-02-03 22:22:22",
                         uniqueEquipType = 2
+                    ),
+                    favorite = true,
+                    onClick = {}
+                )
+            }
+        }
+        SharedTransitionLayout {
+            AnimatedVisibility(visible = true) {
+                CharacterItemContent(
+                    animatedVisibilityScope = this,
+                    unitId = 100101,
+                    characterInfo = CharacterInfo(
+                        id = 100101,
+                        position = 100,
+                        name = stringResource(id = R.string.debug_name),
+                        startTime = "2022-02-03 22:22:22",
+                        uniqueEquipType = 2,
+                        talentId = 2,
+                        roleId = 2,
                     ),
                     favorite = true,
                     onClick = {}

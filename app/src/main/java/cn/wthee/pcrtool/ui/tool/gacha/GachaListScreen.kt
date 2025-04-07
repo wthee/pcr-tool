@@ -51,7 +51,7 @@ import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorOrange
 import cn.wthee.pcrtool.ui.theme.colorRed
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -272,7 +272,7 @@ fun GachaItem(
                 }
                 //结束日期
                 CaptionText(
-                    text = gachaInfo.endTime.formatTime.fixJpTime,
+                    text = gachaInfo.endTime.formatTime.fixTimeZone,
                     modifier = Modifier.weight(1f)
                 )
             }

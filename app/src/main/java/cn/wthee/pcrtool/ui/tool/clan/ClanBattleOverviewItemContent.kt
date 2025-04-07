@@ -28,7 +28,7 @@ import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
 import cn.wthee.pcrtool.ui.theme.colorOrange
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 
 
@@ -98,7 +98,7 @@ private fun ClanBattleNoBossContent(clanBattleEvent: ClanBattleEvent) {
 
             //结束日期
             CaptionText(
-                text = clanBattleEvent.getFixedEndTime().fixJpTime,
+                text = clanBattleEvent.getFixedEndTime().fixTimeZone,
                 modifier = Modifier
                     .padding(end = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
                     .fillMaxWidth()

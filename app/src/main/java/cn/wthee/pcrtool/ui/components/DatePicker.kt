@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getYear
 import cn.wthee.pcrtool.utils.second
@@ -129,11 +129,11 @@ data class DateRange(
         var endFlag = true
         //大于开始时间
         if (startDate != "") {
-            startFlag = start.formatTime.fixJpTime.second(startDate) > 0
+            startFlag = start.formatTime.fixTimeZone.second(startDate) > 0
         }
         //小于结束时间
         if (endDate != "") {
-            endFlag = start.formatTime.fixJpTime.second(endDate) < 0
+            endFlag = start.formatTime.fixTimeZone.second(endDate) < 0
         }
 
         return startFlag && endFlag

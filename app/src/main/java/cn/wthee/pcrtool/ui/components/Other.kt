@@ -64,6 +64,7 @@ import cn.wthee.pcrtool.data.enums.AtkType
 import cn.wthee.pcrtool.data.enums.CharacterLimitType
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.PositionType
+import cn.wthee.pcrtool.data.enums.RoleType
 import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.data.model.KeywordData
 import cn.wthee.pcrtool.navigation.navigateUp
@@ -82,7 +83,7 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.isComingSoon
 import cn.wthee.pcrtool.utils.isInProgress
@@ -507,8 +508,8 @@ fun FlowRowScope.EventTitle(
     showOverdueColor: Boolean = false
 ) {
     val today = getToday()
-    val sd = startTime.fixJpTime
-    val ed = endTime.fixJpTime
+    val sd = startTime.fixTimeZone
+    val ed = endTime.fixTimeZone
     val inProgress = isInProgress(today, startTime, endTime)
     val comingSoon = isComingSoon(today, startTime)
 
@@ -633,7 +634,7 @@ fun CharacterTagRow(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
             ) {
-                //专用装备
+                //专用装备 TODO 调整显示位置
                 if (showUniqueEquipType && characterInfo.uniqueEquipType != 0) {
                     MainIcon(
                         modifier = Modifier
@@ -647,16 +648,28 @@ fun CharacterTagRow(
                         size = Dimen.smallIconSize,
                     )
                 }
+                //职能类型
+                val roleType = RoleType.getByType(characterInfo.roleId)
 
-                //位置
-                CharacterPositionTag(
+                if (roleType != RoleType.ALL) {
+                    Tag(
+                        modifier = Modifier
+                            .padding(Dimen.exSmallPadding)
+                            .align(Alignment.CenterVertically),
+                        text = stringResource(id = roleType.typeNameId),
+                        backgroundColor = roleType.color
+                    )
+                }
+
+                //获取方式
+                Tag(
                     modifier = Modifier
-                        .padding(Dimen.exSmallPadding)
+                        .padding(horizontal = Dimen.exSmallPadding)
                         .align(Alignment.CenterVertically),
-                    position = characterInfo.position
+                    text = stringResource(id = limitType.typeNameId),
+                    backgroundColor = limitType.color
                 )
             }
-
 
             Row(
                 modifier = Modifier
@@ -667,6 +680,14 @@ fun CharacterTagRow(
                 val talentType = TalentType.getByType(characterInfo.talentId)
                 //攻击
                 val atkType = AtkType.getByType(characterInfo.atkType)
+
+                //位置
+                CharacterPositionTag(
+                    modifier = Modifier
+                        .padding(Dimen.exSmallPadding)
+                        .align(Alignment.CenterVertically),
+                    position = characterInfo.position
+                )
 
                 Tag(
                     modifier = Modifier
@@ -692,14 +713,6 @@ fun CharacterTagRow(
                     )
                 }
 
-                //获取方式
-                Tag(
-                    modifier = Modifier
-                        .padding(horizontal = Dimen.exSmallPadding)
-                        .align(Alignment.CenterVertically),
-                    text = stringResource(id = limitType.typeNameId),
-                    backgroundColor = limitType.color
-                )
 
             }
 
@@ -941,7 +954,8 @@ private fun CharacterTagPreview() {
                 atkType = 1,
                 limitType = 2,
                 uniqueEquipType = 2,
-                talentId = 1
+                talentId = 1,
+                roleId = 1,
             ),
             tipText = text,
             endText = text,

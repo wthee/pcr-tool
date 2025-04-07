@@ -30,6 +30,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "gacha_id") var gachaId: Int = 0,
     @Ignore var talentId: Int = 0,
     @Ignore var uniqueEquipType: Int = 0,
+    @Ignore var roleId: Int = 0,
 ) {
     constructor() : this(-1, "", 3, "", "", "", "", "", "", "", "", "", "", "", 0, 1, "", 1, 0, 0)
 

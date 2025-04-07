@@ -32,6 +32,7 @@ import cn.wthee.pcrtool.ui.components.MainImage
 import cn.wthee.pcrtool.ui.components.RATIO
 import cn.wthee.pcrtool.ui.components.placeholder
 import cn.wthee.pcrtool.ui.home.Section
+import cn.wthee.pcrtool.ui.shared.SharedElementKey
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PreviewLayout
@@ -161,7 +162,7 @@ private fun SharedTransitionScope.CharacterImageItem(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
                         state = rememberSharedContentState(
-                            key = "CharacterItemContent-$unitId"
+                            key = "${SharedElementKey.CHARACTER_ITEM}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
                     )

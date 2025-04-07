@@ -95,7 +95,8 @@ object NavRoute {
     const val ORIGINAL_EVENT_ID = "originalEventId"
     const val TALENT_LIST = "talentList"
     const val TALENT_TYPE = "talentType"
-
+    const val ROLE_LIST = "roleList"
+    const val ROLE_TYPE = "roleType"
     //未知技能
     const val UNKNOWN_SKILL = "unknownSkill"
 

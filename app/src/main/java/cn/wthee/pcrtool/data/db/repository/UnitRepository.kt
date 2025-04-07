@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.enums.CharacterSortType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.LogReportUtil
 import cn.wthee.pcrtool.utils.second
@@ -117,6 +116,23 @@ class UnitRepository @Inject constructor(
                 else -> filterList
             }
 
+            //筛选职能
+            val roleIdList = getRoleIdList(0)
+            filterList.forEach {
+                it.roleId = if (roleIdList.isNotEmpty()) {
+                    roleIdList.find { role -> role.unitId == it.id }?.roleId ?: 0
+                } else {
+                    0
+                }
+            }
+            filterList = when (filter.roleType) {
+                in 1..8 -> filterList.filter {
+                    it.roleId == filter.roleType
+                }
+
+                else -> filterList
+            }
+
             //按日期排序时，由于数据库部分日期格式有问题，导致排序不对，需要重新排序
             if (filter.sortType == CharacterSortType.SORT_DATE) {
                 filterList = filterList.sortedWith { o1, o2 ->
@@ -126,6 +142,7 @@ class UnitRepository @Inject constructor(
                         second == 0L -> {
                             o2.gachaId.compareTo(o1.gachaId)
                         }
+
                         else -> -1
                     } * (if (filter.asc) 1 else -1)
                 }
@@ -142,10 +159,7 @@ class UnitRepository @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            LogReportUtil.upload(
-                e,
-                Constants.EXCEPTION_UNIT_NULL + "getCharacterInfoList#params:${filter}"
-            )
+            LogReportUtil.upload(e, "getCharacterInfoList#params:${filter}")
             return null
         }
     }
@@ -194,7 +208,13 @@ class UnitRepository @Inject constructor(
         } else {
             0
         }
-
+        //获取职能类型
+        val roleIdList = getRoleIdList(unitId)
+        data.roleId = if (roleIdList.isNotEmpty()) {
+            roleIdList[0].roleId
+        } else {
+            0
+        }
         //返回数据
         data
     } catch (_: Exception) {
@@ -204,16 +224,11 @@ class UnitRepository @Inject constructor(
     /**
      * 获取角色资料
      */
-    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? {
-        //校验是否未多角色卡
-        val data = unitDao.getProfileInfo(unitId)
-        if (data == null) {
-            LogReportUtil.upload(
-                NullPointerException(),
-                Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
-            )
-        }
-        return data
+    suspend fun getProfileInfo(unitId: Int): CharacterProfileInfo? = try {
+        unitDao.getProfileInfo(unitId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getProfileInfo#unitId:$unitId")
+        null
     }
 
     /**
@@ -417,7 +432,7 @@ class UnitRepository @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "equip_error:$unitId")
+                LogReportUtil.upload(e, "getAttrs#equip_error#unitId:$unitId,rank:$rank")
             }
 
             //专武
@@ -439,7 +454,10 @@ class UnitRepository @Inject constructor(
                     allData.uniqueEquipList = uniqueEquipList
                 }
             } catch (e: Exception) {
-                LogReportUtil.upload(e, Constants.EXCEPTION_LOAD_ATTR + "uq_error:$unitId")
+                LogReportUtil.upload(
+                    e,
+                    "getAttrs#uq_error#unitId$unitId,lv:$uniqueEquipLevel,lv2:$uniqueEquipLevel2"
+                )
             }
 
             //故事剧情
@@ -464,8 +482,8 @@ class UnitRepository @Inject constructor(
             allData.sumAttr = info
         } catch (e: Exception) {
             LogReportUtil.upload(
-                e, Constants.EXCEPTION_LOAD_ATTR +
-                        "getAttrs#uid:$unitId," +
+                e,
+                "getAttrs#uid:$unitId," +
                         "rank:${rank}," +
                         "rarity:${rarity}" +
                         "lv:${level}" +
@@ -577,7 +595,15 @@ class UnitRepository @Inject constructor(
     }
 
     suspend fun getTalentIdList(unitId: Int, talentType: Int = 0) = try {
-        unitDao.getTalentIdList(unitId, talentType)
+        val roleList = getRoleIdList(unitId)
+        val talentList = unitDao.getTalentIdList(unitId, talentType)
+        //获取天赋是尝试设置职能id
+        if (roleList.isNotEmpty()) {
+            talentList.forEach { talent ->
+                talent.roleId = roleList.find { it.unitId == talent.unitId }?.roleId ?: 0
+            }
+        }
+        talentList
     } catch (_: Exception) {
         arrayListOf()
     }
@@ -596,5 +622,12 @@ class UnitRepository @Inject constructor(
             }
         }
         return map
+    }
+
+    suspend fun getRoleIdList(unitId: Int, roleId: Int = 0) = try {
+        unitDao.getRoleIdList(unitId, roleId)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getRoleIdList#unitId:$unitId,roleId:$roleId")
+        arrayListOf()
     }
 }
