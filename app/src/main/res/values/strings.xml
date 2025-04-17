@@ -665,7 +665,8 @@
     <string name="skill_charm_1">混乱</string>
     <string name="skill_action_type_desc_12_13">以 %s 的概率使%s进入%s状态%s</string>
     <string name="skill_action_atk_miss">；对象进行物理攻击时有 [%d%%] 的概率被回避</string>
-    <string name="skill_action_loop_change">技能循环改变%s</string>
+    <string name="skill_action_loop_change">技能循环改变%s%s</string>
+    <string name="skill_action_loop_change_flight_status">，进入[飞行]状态，</string>
     <string name="skill_action_type_desc_14_2">技能循环改变，每秒降低 [%d] TP</string>
     <string name="skill_action_type_desc_14_3">效果结束后，切换回原技能循环</string>
     <string name="skill_action_type_desc_15">在%s%s [%d] 的位置%s</string>
