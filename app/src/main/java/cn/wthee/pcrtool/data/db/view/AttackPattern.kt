@@ -34,18 +34,26 @@ data class AttackPattern(
     @ColumnInfo(name = "atk_pattern_20") val atkPattern20: Int
 ) {
 
+    /**
+     * 获取初始动作id
+     */
     fun getBefore(): MutableList<Int> {
         val list = getList()
         return list.subList(0, loopStart - 1)
     }
 
+    /**
+     * 获取循环动作id
+     */
     fun getLoop(): MutableList<Int> {
         val list = getList()
         return list.subList(loopStart - 1, loopEnd)
     }
 
-
-    private fun getList(): ArrayList<Int> {
+    /**
+     * 获取所有id
+     */
+    fun getList(): ArrayList<Int> {
         val list = arrayListOf<Int>()
         list.add(atkPattern1)
         list.add(atkPattern2)

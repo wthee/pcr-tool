@@ -81,8 +81,8 @@ fun SkillActionDetail.coefficient(): String {
 
         12 -> getString(R.string.skill_action_change_coe_12, commonDesc, getTarget())
         13 -> getString(R.string.skill_action_change_coe_13, commonDesc)
-        15 -> getString(R.string.skill_action_change_coe_15, commonDesc)
-        16 -> getString(R.string.skill_action_change_coe_16, commonDesc)
+        15 -> getString(R.string.skill_action_change_coe_15, commonDesc, getTarget())
+        16 -> getString(R.string.skill_action_change_coe_16, commonDesc, getTarget())
         102 -> getString(R.string.skill_action_change_coe_102, commonDesc)
         in 20 until 30 -> getString(
             R.string.skill_action_change_coe_skill_count,

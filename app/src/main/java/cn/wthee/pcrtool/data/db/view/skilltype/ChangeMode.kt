@@ -10,11 +10,11 @@ import cn.wthee.pcrtool.utils.getTimeText
 fun SkillActionDetail.changeMode() = when (actionDetail1) {
     1 -> {
         val status = when (actionValue5.toInt()) {
-            1 -> getString(R.string.skill_action_loop_change_flight_status)
+            1 -> getString(R.string.skill_action_change_to_flight_status)
             else -> getString(R.string.none)
         }
         getString(
-            R.string.skill_action_loop_change,
+            R.string.skill_action_change_mode,
             status,
             getTimeText(1, actionValue1)
         )

@@ -43,7 +43,7 @@ fun SkillActionDetail.move(): String {
         //方向
         4, 7 -> directionText + moveText
         //方向、速度
-        5 -> moveText + positionText + speedText
+        5 -> moveText + speedText
         6 -> directionText + moveText + speedText
         else -> UNKNOWN
     }

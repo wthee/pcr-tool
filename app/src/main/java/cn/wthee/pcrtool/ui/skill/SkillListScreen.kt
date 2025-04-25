@@ -459,11 +459,11 @@ fun SkillActionItem(
 
     //需替换的符合、颜色
     val markDataList = arrayListOf(
-        MarkData('(', ')', if (isSystemInDarkTheme()) colorWhite else Color.Black),
         MarkData('{', '}', colorPurple),
         MarkData('⌈', '⌋', MaterialTheme.colorScheme.primary),
         MarkData('<', '>', MaterialTheme.colorScheme.primary),
         MarkData('[', ']', colorGreen),
+        MarkData('(', ')', if (isSystemInDarkTheme()) colorWhite else Color.Black),
     )
 
 

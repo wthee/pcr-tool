@@ -229,22 +229,29 @@ fun SkillActionDetail.getTargetAssignment() = getString(
 /**
  * 首个目标位置
  */
-fun SkillActionDetail.getTargetNumber() = if (targetAssignment == 1) {
-    when (targetNumber) {
-        in 1..10 -> {
-            getString(R.string.skill_target_order_num, targetNumber + 1)
-        }
+fun SkillActionDetail.getTargetNumber(): String {
+    val order = if (targetAssignment == 1) {
+        when (targetNumber) {
+            in 1..10 -> {
+                getString(R.string.skill_target_order_num, targetNumber + 1)
+            }
 
-        else -> ""
+            else -> ""
+        }
+    } else {
+        when (targetNumber) {
+            1 -> getString(R.string.skill_target_order_1)
+            in 2..10 -> {
+                getString(R.string.skill_target_order_num, targetNumber)
+            }
+
+            else -> ""
+        }
     }
-} else {
-    when (targetNumber) {
-        1 -> getString(R.string.skill_target_order_1)
-        in 2..10 -> {
-            getString(R.string.skill_target_order_num, targetNumber)
-        }
-
-        else -> ""
+    return if (order != "") {
+        "⌈${order}⌋"
+    } else {
+        ""
     }
 }
 
@@ -252,16 +259,17 @@ fun SkillActionDetail.getTargetNumber() = if (targetAssignment == 1) {
  * 作用对象数量
  */
 fun SkillActionDetail.getTargetCount() = when (targetCount) {
-    0, 1, 99 -> ""
-//        1 -> {
-//            //目标是敌人时，显示生效目标数量
-//            if(targetAssignment == 1){
-//                getString(R.string.skill_target_count, targetCount)
-//            }else{
-//                ""
-//            }
-//        }
-//        99 -> getString(R.string.n)
+    0 -> ""
+    1 -> {
+        //目标是敌人时，显示生效目标数量
+        if (targetAssignment == 1) {
+            getString(R.string.skill_target_single)
+        } else {
+            ""
+        }
+    }
+
+    99 -> getString(R.string.skill_target_all)
     else -> getString(R.string.skill_target_count, targetCount)
 }
 
@@ -270,7 +278,8 @@ fun SkillActionDetail.getTargetCount() = when (targetCount) {
  */
 fun SkillActionDetail.getTargetRange() = when (targetRange) {
     in 1 until 2160 -> {
-        getString(R.string.skill_range, targetRange)
+        val range = getString(R.string.skill_range, targetRange)
+        "⌈${range}⌋"
     }
 
     else -> ""
@@ -324,7 +333,7 @@ fun SkillActionDetail.getTargetType(): String {
             46 -> R.string.skill_target_46
             50 -> R.string.skill_target_50
             in 13195..14000 -> R.string.skill_target_13xxx
-            14001 -> R.string.skill_target_fire
+            14001, 15001 -> R.string.skill_target_fire
             14002 -> R.string.skill_target_water
             14003 -> R.string.skill_target_wind
             14004 -> R.string.skill_target_light

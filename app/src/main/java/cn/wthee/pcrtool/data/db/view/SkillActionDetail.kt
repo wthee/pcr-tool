@@ -249,7 +249,7 @@ data class SkillActionDetail(
             SkillActionType.TAUNT -> taunt(ailmentName)
             // 21：回避
             SkillActionType.INVINCIBLE -> invincible()
-            // 22：改变模式
+            // 22：循环变更
             SkillActionType.CHANGE_PATTERN -> changePattern()
             // 23：判定对象状态
             SkillActionType.IF_STATUS -> ifStatus()

@@ -119,7 +119,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     INVINCIBLE(21, R.string.skill_type_21),
 
     /**
-     * 22：改变模式
+     * 22：循环变更
      */
     CHANGE_PATTERN(22, R.string.skill_type_22),
 
