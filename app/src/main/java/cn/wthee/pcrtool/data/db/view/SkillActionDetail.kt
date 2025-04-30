@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.aura
 import cn.wthee.pcrtool.data.db.view.skilltype.auraField
 import cn.wthee.pcrtool.data.db.view.skilltype.awe
 import cn.wthee.pcrtool.data.db.view.skilltype.barrier
+import cn.wthee.pcrtool.data.db.view.skilltype.buffDot
 import cn.wthee.pcrtool.data.db.view.skilltype.cannotSelected
 import cn.wthee.pcrtool.data.db.view.skilltype.changeMode
 import cn.wthee.pcrtool.data.db.view.skilltype.changePattern
@@ -29,6 +30,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.countDown
 import cn.wthee.pcrtool.data.db.view.skilltype.damage
 import cn.wthee.pcrtool.data.db.view.skilltype.damageReduce
 import cn.wthee.pcrtool.data.db.view.skilltype.damageTakenUp
+import cn.wthee.pcrtool.data.db.view.skilltype.damageToDot
 import cn.wthee.pcrtool.data.db.view.skilltype.dispel
 import cn.wthee.pcrtool.data.db.view.skilltype.dot
 import cn.wthee.pcrtool.data.db.view.skilltype.dotField
@@ -397,6 +399,10 @@ data class SkillActionDetail(
             SkillActionType.TRANSFER_DAMAGE -> transferDamage()
             // 125：无法选中
             SkillActionType.CANNOT_SELECTED -> cannotSelected()
+            // 128：持续伤害增强
+            SkillActionType.BUFF_DOT -> buffDot()
+            // 129：伤害转化
+            SkillActionType.DAMAGE_TO_DOT -> damageToDot()
             else -> unknownType()
         }
     }

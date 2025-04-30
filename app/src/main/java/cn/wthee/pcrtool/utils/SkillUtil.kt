@@ -47,6 +47,7 @@ fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)
     SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (actionDetail2 == 2) "%" else ""
     SkillActionType.DAMAGE_REDUCE -> "%"
     SkillActionType.ACTION_DOT -> if (actionDetail1 == 10) "%" else ""
+    SkillActionType.DOT -> if (actionDetail1 == 11) "%" else ""
     else -> ""
 }
 
@@ -415,6 +416,7 @@ fun SkillActionDetail.getStatus(value: Int) = getString(
         3137 -> R.string.skill_status_3137
         3162 -> R.string.skill_status_3162
         3175 -> R.string.skill_status_3175
+        3207 -> R.string.skill_status_3207
         6160 -> R.string.skill_status_6160
         else -> R.string.unknown
     }

@@ -18,10 +18,11 @@ fun SkillActionDetail.dot(): String {
             3, 8 -> R.string.skill_dot_3_8
             4 -> R.string.skill_dot_4
             5 -> R.string.skill_dot_5
+            11 -> R.string.skill_dot_11
             else -> R.string.unknown
         }
     )
-    val value = getValueText(1, actionValue1, actionValue2)
+    val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
     val time = getTimeText(3, actionValue3, actionValue4)
     val dotIncrease = if (actionDetail1 == 5) {
         getString(R.string.skill_action_dot_increase, actionValue5.toInt())
