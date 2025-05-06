@@ -74,27 +74,26 @@ interface EventDao {
         """
         SELECT
             s.event_id,
-            s.title,
+            setting.title,
             s.event_id AS original_event_id,
             ( s.event_id % 10000 + 5000 ) AS story_id,
             ss.start_time,
             ss.end_time,
             enemy.enemy_id AS boss_enemy_id,
             enemy.unit_id AS boss_unit_id,
-            "" AS unit_ids
+            '' AS unit_ids 
         FROM
-            seven_story_data AS s
-            LEFT JOIN seven_schedule AS ss ON s.event_id = ss.event_id -- 	LEFT JOIN ( SELECT d.story_group_id, GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids FROM event_story_detail AS d GROUP BY d.story_group_id ) AS e ON c.story_group_id = e.story_group_id
+            seven_schedule AS s
+            LEFT JOIN seven_event_setting AS setting ON s.event_id = setting.event_id
+            LEFT JOIN seven_schedule AS ss ON s.event_id = ss.event_id
             LEFT JOIN seven_special_battle_detail AS battle ON battle.quest_id / 1000 = s.event_id 
             AND battle.mode = 1
             LEFT JOIN seven_wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
             LEFT JOIN seven_enemy_parameter AS enemy ON wave.enemy_id_1 = enemy.enemy_id 
-        WHERE
-            s.story_type = 2 
         GROUP BY
             s.event_id 
         ORDER BY
-            start_time DESC
+            s.start_time DESC
         LIMIT 0,:limit
         """
     )
