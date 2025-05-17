@@ -509,6 +509,7 @@
     <string name="skill_action_type_125">无法选中</string>
     <string name="skill_action_type_128">持续伤害增强</string>
     <string name="skill_action_type_129">伤害转化</string>
+    <string name="skill_action_type_130">调和</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -839,6 +840,7 @@
     <string name="skill_action_type_desc_125">使%s进入 [%s] 状态（持有标记时，不会成为攻击目标）</string>
     <string name="skill_action_type_desc_128">使%s受到的持续伤害的间隔和时间延长 [%d] 倍%s</string>
     <string name="skill_action_type_desc_129">使%s受到的 [%d] 伤害转化为持续伤害%s；该持续伤害不回复 TP</string>
+    <string name="skill_action_type_desc_130">使%s受到伤害时，按物理/魔法防御中较高的防御计算伤害</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>

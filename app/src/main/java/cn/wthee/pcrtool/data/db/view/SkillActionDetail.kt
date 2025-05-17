@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.awe
 import cn.wthee.pcrtool.data.db.view.skilltype.barrier
 import cn.wthee.pcrtool.data.db.view.skilltype.buffDot
 import cn.wthee.pcrtool.data.db.view.skilltype.cannotSelected
+import cn.wthee.pcrtool.data.db.view.skilltype.changeDefMax
 import cn.wthee.pcrtool.data.db.view.skilltype.changeMode
 import cn.wthee.pcrtool.data.db.view.skilltype.changePattern
 import cn.wthee.pcrtool.data.db.view.skilltype.changePosition
@@ -403,6 +404,8 @@ data class SkillActionDetail(
             SkillActionType.BUFF_DOT -> buffDot()
             // 129：伤害转化
             SkillActionType.DAMAGE_TO_DOT -> damageToDot()
+            // 130：调和
+            SkillActionType.CHANGE_DEF_MAX -> changeDefMax()
             else -> unknownType()
         }
     }

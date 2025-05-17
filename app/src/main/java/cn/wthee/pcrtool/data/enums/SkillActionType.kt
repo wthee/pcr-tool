@@ -534,6 +534,11 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 129：伤害转化
      */
     DAMAGE_TO_DOT(129, R.string.skill_action_type_129),
+
+    /**
+     * 130：调和
+     */
+    CHANGE_DEF_MAX(130, R.string.skill_action_type_130),
     ;
 
     companion object {
