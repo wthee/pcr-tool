@@ -7,6 +7,7 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -108,10 +109,11 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
 ) {
 
     //图标列表（限制宽度）
-    Column(modifier = Modifier.widthIn(max = getItemWidth())) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
+                .widthIn(max = getItemWidth())
                 .then(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
