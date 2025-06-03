@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.utils.simpleDateFormatUTC
 
 /**
  * 选择日期范围组件
+ * fixme 放到fab时背景颜色调整
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,21 +123,28 @@ data class DateRange(
     fun hasFilter() = startDate != "" || endDate != ""
 
     /**
-     * 筛选条件，判断开始时间是否在范围内
+     * 筛选条件，判断开始时间~结束时间，是否在选择的开始时间结束时间范围内
      */
-    fun predicate(start: String): Boolean {
-        var startFlag = true
-        var endFlag = true
-        //大于开始时间
-        if (startDate != "") {
-            startFlag = start.formatTime.fixTimeZone.second(startDate) > 0
-        }
-        //小于结束时间
-        if (endDate != "") {
-            endFlag = start.formatTime.fixTimeZone.second(endDate) < 0
+    fun predicate(start: String, end: String): Boolean {
+        var inRange = false
+
+        if (startDate != "" && endDate == "") {
+            //进选择开始时间，只展示当前日期的
+            //开始时间<= 选择的时间 <=结束时间
+            inRange = start.formatTime.fixTimeZone.second(startDate) <= 0
+                    && end.formatTime.fixTimeZone.second(startDate) >= 0
+        } else if (startDate != "") {
+            //结束时间在选择范围内：选择的开始时间<= 结束时间 <= 选择的结束时间
+            var flag1 = (end.formatTime.fixTimeZone.second(endDate) <= 0
+                    && end.formatTime.fixTimeZone.second(startDate) >= 0)
+            //开始时间在选择范围内：选择的开始时间<= 开始时间 <= 选择的结束时间
+            var flag2 = (start.formatTime.fixTimeZone.second(endDate) <= 0
+                    && end.formatTime.fixTimeZone.second(startDate) >= 0)
+
+            inRange = flag1 || flag2
         }
 
-        return startFlag && endFlag
+        return inRange
     }
 
     override fun toString(): String {

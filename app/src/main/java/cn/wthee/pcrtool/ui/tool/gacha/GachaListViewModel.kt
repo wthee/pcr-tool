@@ -84,7 +84,7 @@ class GachaListViewModel @Inject constructor(
                 var list = gachaRepository.getGachaHistory(Int.MAX_VALUE)
                 if (dateRange.hasFilter()) {
                     list = list.filter {
-                        dateRange.predicate(it.startTime)
+                        dateRange.predicate(it.startTime, it.endTime)
                     }
                 }
                 list = list.sortedWith(compareAllTypeEvent())

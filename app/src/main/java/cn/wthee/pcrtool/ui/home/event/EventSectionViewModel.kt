@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home.event
 
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -234,6 +235,7 @@ class EventSectionViewModel @Inject constructor(
                 if (type == EventType.IN_PROGRESS) {
                     state.copy(
                         inProgressEventList = data.filter {
+                            Log.e("TAG", "getCalendarEventList: $it")
                             isInProgress(today, it.startTime, it.endTime)
                         }.sortedWith(compareAllTypeEvent(today))
                     )

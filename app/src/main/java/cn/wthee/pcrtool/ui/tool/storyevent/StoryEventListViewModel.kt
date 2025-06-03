@@ -82,7 +82,7 @@ class StoryEventListViewModel @Inject constructor(
                 var list = eventRepository.getAllEvents(Int.MAX_VALUE)
                 if (dateRange.hasFilter()) {
                     list = list.filter {
-                        dateRange.predicate(it.startTime)
+                        dateRange.predicate(it.startTime, it.endTime)
                     }
                 }
 
