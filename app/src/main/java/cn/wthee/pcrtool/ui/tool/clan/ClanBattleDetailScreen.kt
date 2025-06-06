@@ -117,7 +117,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                 .then(
                     if (MainActivity.animOnFlag) {
                         Modifier.sharedElement(
-                            state = rememberSharedContentState(
+                            sharedContentState = rememberSharedContentState(
                                 key = "${SharedElementKey.CLAN_BATTLE}${clanBattleInfo.clanBattleId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,
@@ -135,7 +135,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
                     .then(
                         if (MainActivity.animOnFlag) {
                             Modifier.sharedElement(
-                                state = rememberSharedContentState(
+                                sharedContentState = rememberSharedContentState(
                                     key = "${SharedElementKey.CLAN_DATE}${clanBattleInfo.clanBattleId}"
                                 ),
                                 animatedVisibilityScope = animatedVisibilityScope,

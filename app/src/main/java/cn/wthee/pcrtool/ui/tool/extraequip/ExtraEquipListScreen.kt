@@ -54,7 +54,6 @@ import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -274,7 +273,7 @@ private fun SharedTransitionScope.ExtraEquipItem(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.EX_EQUIP}${equip.equipmentId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

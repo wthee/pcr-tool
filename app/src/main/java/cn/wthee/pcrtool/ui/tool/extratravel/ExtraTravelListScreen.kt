@@ -168,7 +168,7 @@ fun SharedTransitionScope.TravelQuestHeader(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.TRAVEL}${questData.travelQuestId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

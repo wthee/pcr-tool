@@ -132,7 +132,7 @@ private fun SharedTransitionScope.EquipDetailContent(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.EQUIP}$equipId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

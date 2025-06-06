@@ -74,7 +74,6 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.listJoinStr
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
@@ -380,7 +379,7 @@ private fun SharedTransitionScope.EquipItem(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.EQUIP}${equip.equipmentId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
