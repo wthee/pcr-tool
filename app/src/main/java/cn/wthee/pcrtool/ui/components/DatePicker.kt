@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.CombinedPreviews
@@ -82,6 +82,10 @@ fun DateRangePickerCompose(
         //日期选择
         DateRangePicker(
             modifier = Modifier.padding(Dimen.smallPadding),
+            colors = DatePickerDefaults.colors(
+                //设置内部透明
+                containerColor = Color.Transparent
+            ),
             state = dateRangePickerState,
             showModeToggle = true,
             title = {},
@@ -98,8 +102,8 @@ fun DateRangePickerCompose(
                         modifier = Modifier.padding(
                             PaddingValues(
                                 start = Dimen.largePadding,
-                                end = 12.dp,
-                                bottom = 12.dp
+                                end = Dimen.mediumPadding,
+                                bottom = Dimen.mediumPadding
                             )
                         )
                     )
