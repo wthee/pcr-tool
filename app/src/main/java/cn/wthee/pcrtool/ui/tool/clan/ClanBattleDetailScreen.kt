@@ -109,7 +109,7 @@ private fun SharedTransitionScope.ClanBattleDetailContent(
 ) {
 
     //图标列表（限制宽度）
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
