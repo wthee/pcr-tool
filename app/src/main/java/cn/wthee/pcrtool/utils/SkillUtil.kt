@@ -335,9 +335,9 @@ fun SkillActionDetail.getTargetType(): String {
             50 -> R.string.skill_target_50
             in 13195..14000 -> R.string.skill_target_13xxx
             14001, 15001 -> R.string.skill_target_fire
-            14002 -> R.string.skill_target_water
-            14003 -> R.string.skill_target_wind
-            14004 -> R.string.skill_target_light
+            14002, 15002 -> R.string.skill_target_water
+            14003, 15003 -> R.string.skill_target_wind
+            14004, 15004 -> R.string.skill_target_light
             15005, 14005 -> R.string.skill_target_dark
             else -> R.string.unknown
         }
@@ -418,6 +418,11 @@ fun SkillActionDetail.getStatus(value: Int) = getString(
         3175 -> R.string.skill_status_3175
         3207 -> R.string.skill_status_3207
         6160 -> R.string.skill_status_6160
+        4001 -> R.string.skill_target_fire
+        4002 -> R.string.skill_target_water
+        4003 -> R.string.skill_target_wind
+        4004 -> R.string.skill_target_light
+        4005 -> R.string.skill_target_dark
         else -> R.string.unknown
     }
 )
