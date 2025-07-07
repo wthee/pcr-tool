@@ -15,6 +15,7 @@ import java.util.TimeZone
 
 object DateUtil {
     const val CN_TIME_ZONE = "Asia/Shanghai"
+    const val DEFAULT_DATE = "2000/01/01 00:00:00"
 }
 
 
@@ -80,7 +81,7 @@ val String.formatTime: String
             return "$ymdStr $hmsStr"
         } catch (e: Exception) {
             LogReportUtil.upload(e, "formatTime error: $this")
-            return ""
+            return DateUtil.DEFAULT_DATE
         }
     }
 
@@ -118,23 +119,28 @@ val Long.simpleDateFormatUTC: String
  */
 val String.fixTimeZone: String
     get() {
-        val date = if (this != "") {
-            // 处理日服日期（+9 > +8）小时 - 1
-            if (MainActivity.regionType == RegionType.JP) {
-                try {
-                    val d = basicDf.parse(this)!!.time - 60 * 60 * 1000
-                    basicDf.format(Date(d))
-                } catch (e: Exception) {
+        try {
+            val date = if (this != "") {
+                // 处理日服日期（+9 > +8）小时 - 1
+                if (MainActivity.regionType == RegionType.JP) {
+                    try {
+                        val d = basicDf.parse(this)!!.time - 60 * 60 * 1000
+                        basicDf.format(Date(d))
+                    } catch (e: Exception) {
+                        this
+                    }
+                } else {
                     this
                 }
             } else {
                 this
             }
-        } else {
-            this
+            //统一修改时区
+            return df1.format(Date(basicDf.parse(date)!!.time))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "fixTimeZone error: $this")
+            return DateUtil.DEFAULT_DATE
         }
-        //统一修改时区
-        return df1.format(Date(basicDf.parse(date)!!.time))
     }
 
 
