@@ -304,7 +304,6 @@ fun PictureItem(
 
 /**
  * 图片预览弹窗
- * fixme 小窗模式底部显示异常（dialog导致问题）
  */
 @Composable
 @OptIn(ExperimentalCoilApi::class)
@@ -354,7 +353,9 @@ private fun PreviewPictureDialog(
             openPreviewDialog.value = false
         },
         properties = DialogProperties(
-            usePlatformDefaultWidth = false
+            usePlatformDefaultWidth = false,
+            // 避免底部显示异常
+            decorFitsSystemWindows = false
         ),
     ) {
         MainScaffold(
