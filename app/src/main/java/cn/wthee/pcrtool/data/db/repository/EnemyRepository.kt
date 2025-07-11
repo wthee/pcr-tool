@@ -50,10 +50,12 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
     suspend fun getEnemyAttr(enemyId: Int) = try {
         if (enemyId > minTalentEnemyId) {
             enemyDao.getTalentEnemyAttr(enemyId)
-        } else if (enemyId > minEventEnemyId) {
-            enemyDao.getNewEventEnemyAttr(enemyId)
         } else {
-            enemyDao.getEnemyAttr(enemyId)
+            try {
+                enemyDao.getEnemyAttr(enemyId)
+            } catch (_: Exception) {
+                enemyDao.getNewEventEnemyAttr(enemyId)
+            }
         }
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getEnemyAttr#enemyId:$enemyId")
