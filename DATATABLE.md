@@ -41,6 +41,11 @@
 | redeem_unit                   | 额外角色            | 花凛等            |
 | room_unit_comments            | 小屋交流文本          |                |
 | secret_dungeon_schedule       | 特殊地下城日程         |                |
+| seven_enemy_parameter         | 剧情活动怪物信息        | 七周年后的活动        |
+| seven_event_setting           | 剧情活动信息          |                |
+| seven_schedule                | 剧情活动日常信息        |                |
+| seven_special_battle_detail   | 剧情活动战斗信息        |                |
+| seven_wave_group_data         | 剧情活动副本信息        |                |
 | shiori_event_list             | 支线活动            |                |
 | skill_action                  | 技能动作            |                |
 | skill_data                    | 技能详情            |                |
@@ -50,7 +55,7 @@
 | talent_quest_data             | 深域关卡信息          |                |
 | talent_quest_enemy_parameter  | 深域关卡敌人数值        |                |
 | talent_quest_wave_group_data  | 深域关卡敌人信息        |                |
-| talent_weakness               | 天赋弱点信息          |                |
+| talents_weakness              | 天赋弱点信息          |                |
 | tdf_schedule                  | 次元断层日程          |                |
 | tower_schedule                | 露娜塔日程           |                |
 | travel_area_data              | ex 冒险区域         |                |
