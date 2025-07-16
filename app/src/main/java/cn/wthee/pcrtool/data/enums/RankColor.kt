@@ -16,19 +16,26 @@ import cn.wthee.pcrtool.ui.theme.colorSilver
 
 /**
  * 装备品级、RANk 颜色
+ * @
  */
-enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
-    UNKNOWN(0, colorGray, R.string.unknown),
-    BLUE(1, colorBlue, R.string.color_blue),
-    COPPER(2, colorCopper, R.string.color_copper),
-    SILVER(3, colorSilver, R.string.color_silver),
-    GOLD(4, colorGold, R.string.color_gold),
-    PURPLE(5, colorPurple, R.string.color_purple),
-    RED(6, colorRed, R.string.color_red),
-    GREEN(7, colorGreen, R.string.color_green),
-    ORANGE(8, colorOrange, R.string.color_orange),
-    CYAN(9, colorCyan, R.string.color_cyan),
-    PINK(10, colorPink, R.string.color_pink),
+enum class RankColor(
+    val type: Int,
+    val color: Color,
+    val typeNameId: Int,
+    val startRank: Int,
+    val endRank: Int
+) {
+    UNKNOWN(0, colorGray, R.string.unknown, 0, 0),
+    BLUE(1, colorBlue, R.string.color_blue, 1, 1),
+    COPPER(2, colorCopper, R.string.color_copper, 2, 3),
+    SILVER(3, colorSilver, R.string.color_silver, 4, 6),
+    GOLD(4, colorGold, R.string.color_gold, 7, 10),
+    PURPLE(5, colorPurple, R.string.color_purple, 11, 17),
+    RED(6, colorRed, R.string.color_red, 18, 20),
+    GREEN(7, colorGreen, R.string.color_green, 21, 23),
+    ORANGE(8, colorOrange, R.string.color_orange, 24, 27),
+    CYAN(9, colorCyan, R.string.color_cyan, 28, 31),
+    PINK(10, colorPink, R.string.color_pink, 32, 99),
     ;
 
     companion object {
@@ -41,18 +48,12 @@ enum class RankColor(val type: Int, val color: Color, val typeNameId: Int) {
          * @param rank rank数值
          */
         fun getRankColor(rank: Int): Color {
-            return when (rank) {
-                1 -> BLUE.color
-                in 2..3 -> COPPER.color
-                in 4..6 -> SILVER.color
-                in 7..10 -> GOLD.color
-                in 11..17 -> PURPLE.color
-                in 18..20 -> RED.color
-                in 21..23 -> GREEN.color
-                in 24..27 -> ORANGE.color
-                in 28..99 -> CYAN.color
-                else -> UNKNOWN.color
+            RankColor.entries.forEach {
+                if (rank in it.startRank..it.endRank) {
+                    return it.color
+                }
             }
+            return UNKNOWN.color
         }
     }
 }
