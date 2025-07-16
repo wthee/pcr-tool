@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTimeText
 
-// 22：改变模式
+// 22：循环变更
 fun SkillActionDetail.changePattern() = when (actionDetail1) {
     1 -> getString(
         R.string.skill_action_loop_change,

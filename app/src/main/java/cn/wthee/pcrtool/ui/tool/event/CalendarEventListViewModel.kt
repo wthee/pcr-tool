@@ -91,7 +91,7 @@ class CalendarEventListViewModel @Inject constructor(
                 var list = data.toList()
                 if (dateRange.hasFilter()) {
                     list = data.filter {
-                        dateRange.predicate(it.startTime)
+                        dateRange.predicate(it.startTime, it.endTime)
                     }
                 }
 

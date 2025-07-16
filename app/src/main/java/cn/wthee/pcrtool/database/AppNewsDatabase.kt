@@ -43,7 +43,7 @@ abstract class AppNewsDatabase : RoomDatabase() {
                 MyApplication.context,
                 AppNewsDatabase::class.java,
                 DATABASE_NEWS
-            ).fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration(false)
                 .build()
         }
     }

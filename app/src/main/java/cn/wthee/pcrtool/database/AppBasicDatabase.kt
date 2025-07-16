@@ -78,7 +78,7 @@ abstract class AppBasicDatabase : RoomDatabase() {
         @SuppressLint("UnsafeOptInUsageError")
         fun buildDatabase(name: String): AppBasicDatabase {
             return Room.databaseBuilder(MyApplication.context, AppBasicDatabase::class.java, name)
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(false)
                 .build()
         }
     }

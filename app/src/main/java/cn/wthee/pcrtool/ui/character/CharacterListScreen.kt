@@ -99,7 +99,6 @@ import cn.wthee.pcrtool.utils.toDate
 import coil3.BitmapImage
 import coil3.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -357,7 +356,7 @@ fun SharedTransitionScope.CharacterItemContent(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.CHARACTER_ITEM}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -554,7 +553,7 @@ fun SharedTransitionScope.CharacterIconAndTextContent(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.UNIT_ICON_TAG}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -700,7 +699,7 @@ private fun SharedTransitionScope.CharacterIcon(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.UNIT_ICON_TAG}${character.id}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

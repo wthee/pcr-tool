@@ -176,7 +176,7 @@ private fun SharedTransitionScope.ExtraEquipBasicInfo(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.EX_EQUIP}${extraEquipmentData.equipmentId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

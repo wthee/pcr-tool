@@ -12,7 +12,9 @@ import cn.wthee.pcrtool.data.db.view.skilltype.aura
 import cn.wthee.pcrtool.data.db.view.skilltype.auraField
 import cn.wthee.pcrtool.data.db.view.skilltype.awe
 import cn.wthee.pcrtool.data.db.view.skilltype.barrier
+import cn.wthee.pcrtool.data.db.view.skilltype.buffDot
 import cn.wthee.pcrtool.data.db.view.skilltype.cannotSelected
+import cn.wthee.pcrtool.data.db.view.skilltype.changeDefMax
 import cn.wthee.pcrtool.data.db.view.skilltype.changeMode
 import cn.wthee.pcrtool.data.db.view.skilltype.changePattern
 import cn.wthee.pcrtool.data.db.view.skilltype.changePosition
@@ -29,6 +31,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.countDown
 import cn.wthee.pcrtool.data.db.view.skilltype.damage
 import cn.wthee.pcrtool.data.db.view.skilltype.damageReduce
 import cn.wthee.pcrtool.data.db.view.skilltype.damageTakenUp
+import cn.wthee.pcrtool.data.db.view.skilltype.damageToDot
 import cn.wthee.pcrtool.data.db.view.skilltype.dispel
 import cn.wthee.pcrtool.data.db.view.skilltype.dot
 import cn.wthee.pcrtool.data.db.view.skilltype.dotField
@@ -249,7 +252,7 @@ data class SkillActionDetail(
             SkillActionType.TAUNT -> taunt(ailmentName)
             // 21：回避
             SkillActionType.INVINCIBLE -> invincible()
-            // 22：改变模式
+            // 22：循环变更
             SkillActionType.CHANGE_PATTERN -> changePattern()
             // 23：判定对象状态
             SkillActionType.IF_STATUS -> ifStatus()
@@ -397,6 +400,12 @@ data class SkillActionDetail(
             SkillActionType.TRANSFER_DAMAGE -> transferDamage()
             // 125：无法选中
             SkillActionType.CANNOT_SELECTED -> cannotSelected()
+            // 128：持续伤害增强
+            SkillActionType.BUFF_DOT -> buffDot()
+            // 129：伤害转化
+            SkillActionType.DAMAGE_TO_DOT -> damageToDot()
+            // 130：调和
+            SkillActionType.CHANGE_DEF_MAX -> changeDefMax()
             else -> unknownType()
         }
     }

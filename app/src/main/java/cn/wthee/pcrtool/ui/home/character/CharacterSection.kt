@@ -161,7 +161,7 @@ private fun SharedTransitionScope.CharacterImageItem(
             .then(
                 if (MainActivity.animOnFlag) {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.CHARACTER_ITEM}$unitId"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,

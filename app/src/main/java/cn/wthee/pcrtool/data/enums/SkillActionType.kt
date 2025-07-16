@@ -119,7 +119,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     INVINCIBLE(21, R.string.skill_type_21),
 
     /**
-     * 22：改变模式
+     * 22：循环变更
      */
     CHANGE_PATTERN(22, R.string.skill_type_22),
 
@@ -524,6 +524,21 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 125：无法选中
      */
     CANNOT_SELECTED(125, R.string.skill_action_type_125),
+
+    /**
+     * 128：持续伤害增强
+     */
+    BUFF_DOT(128, R.string.skill_action_type_128),
+
+    /**
+     * 129：伤害转化
+     */
+    DAMAGE_TO_DOT(129, R.string.skill_action_type_129),
+
+    /**
+     * 130：调和
+     */
+    CHANGE_DEF_MAX(130, R.string.skill_action_type_130),
     ;
 
     companion object {

@@ -43,7 +43,7 @@ abstract class AppComicDatabase : RoomDatabase() {
                 MyApplication.context,
                 AppComicDatabase::class.java,
                 DATABASE_COMIC
-            ).fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration(false)
                 .build()
         }
     }

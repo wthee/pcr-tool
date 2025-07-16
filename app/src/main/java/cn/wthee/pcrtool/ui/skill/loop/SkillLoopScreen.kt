@@ -45,43 +45,22 @@ fun SkillLoopScreen(
 ) {
     val uiState by skillLoopViewModel.uiState.collectAsStateWithLifecycle()
 
-
-    val loops = arrayListOf<SkillLoop>()
     val loopList = arrayListOf<Int>()
-    var unitId = 0
 
-    //处理技能循环数据
-    attackPatternList.forEach { attackPattern ->
-        if (attackPattern.getBefore().isNotEmpty()) {
-            loopList.addAll(attackPattern.getBefore())
-            loops.add(
-                SkillLoop(
-                    attackPattern.unitId,
-                    attackPattern.patternId,
-                    stringResource(R.string.before_loop),
-                    attackPattern.getBefore()
-                )
-            )
-        }
-        if (attackPattern.getLoop().isNotEmpty()) {
-            loopList.addAll(attackPattern.getLoop())
-            loops.add(
-                SkillLoop(
-                    attackPattern.unitId,
-                    attackPattern.patternId,
-                    stringResource(R.string.looping),
-                    attackPattern.getLoop()
-                )
-            )
-        }
-        unitId = attackPattern.unitId
-    }
-
+    //加载图标id、普通攻击时间
     LaunchedEffect(attackPatternList) {
+        val unitId = try {
+            attackPatternList[0].unitId
+        } catch (_: Exception) {
+            0
+        }
+        attackPatternList.forEach {
+            loopList.addAll(it.getList())
+        }
         skillLoopViewModel.loadData(loopList, unitId, unitType)
     }
 
-
+    //技能循环数据
     Column(
         modifier = if (scrollable) {
             modifier.verticalScroll(rememberScrollState())
@@ -89,20 +68,48 @@ fun SkillLoopScreen(
             modifier
         }
     ) {
+        attackPatternList.forEach { attackPattern ->
+            //多于一组技能循环时，显示循环模组编号
+            val orderId = if (attackPatternList.size > 1) {
+                attackPattern.patternId % 10
+            } else {
+                ""
+            }
 
-        if (loops.isNotEmpty()) {
-            loops.forEach {
+            //初始动作
+            if (attackPattern.getBefore().isNotEmpty()) {
                 SkillLoopItemContent(
-                    loop = it,
+                    SkillLoop(
+                        unitId = attackPattern.unitId,
+                        patternId = attackPattern.patternId,
+                        loopTitle = stringResource(R.string.before_loop) + orderId,
+                        loopList = attackPattern.getBefore()
+                    ), uiState.skillMap, uiState.atkCastTime
+                )
+
+            }
+
+            //循环动作
+            if (attackPattern.getLoop().isNotEmpty()) {
+                SkillLoopItemContent(
+                    loop = SkillLoop(
+                        unitId = attackPattern.unitId,
+                        patternId = attackPattern.patternId,
+                        loopTitle = stringResource(R.string.looping) + orderId,
+                        loopList = attackPattern.getLoop()
+                    ),
                     skillMap = uiState.skillMap,
                     atkCastTime = uiState.atkCastTime
                 )
             }
         }
+
         if (scrollable) {
             CommonSpacer()
         }
     }
+
+
 }
 
 /**

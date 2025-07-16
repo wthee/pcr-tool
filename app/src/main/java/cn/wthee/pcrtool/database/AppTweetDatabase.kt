@@ -43,7 +43,7 @@ abstract class AppTweetDatabase : RoomDatabase() {
                 MyApplication.context,
                 AppTweetDatabase::class.java,
                 DATABASE_TWEET
-            ).fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration(false)
                 .build()
         }
     }

@@ -15,6 +15,7 @@ import java.util.TimeZone
 
 object DateUtil {
     const val CN_TIME_ZONE = "Asia/Shanghai"
+    const val DEFAULT_DATE = "2000/01/01 00:00:00"
 }
 
 
@@ -52,30 +53,36 @@ val df2: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", locale).apply 
  */
 val String.formatTime: String
     get() {
-        //分隔“年月日”和“时分秒”
-        val dateList = this.replace("  ", " ")
-            .replace("-", "/")
-            .split(" ")
-        //年月日
-        val ymsList = dateList[0].split("/")
-        //时分秒默认00
-        val hmsList = arrayListOf("00", "00", "00")
-        //重新填充时分秒
-        if (dateList.size > 1) {
-            val newHmsList = dateList[1].split(":")
-            if (newHmsList.isNotEmpty()) {
-                hmsList[0] = newHmsList[0]
+        try {
+            //分隔“年月日”和“时分秒”
+            val dateList = this.replace("  ", " ")
+                .replace("-", "/")
+                .split(" ")
+            //年月日
+            val ymsList = dateList[0].split("/")
+            //时分秒默认00
+            val hmsList = arrayListOf("00", "00", "00")
+            //重新填充时分秒
+            if (dateList.size > 1) {
+                val newHmsList = dateList[1].split(":")
+                if (newHmsList.isNotEmpty()) {
+                    hmsList[0] = newHmsList[0]
+                }
+                if (newHmsList.size > 1) {
+                    hmsList[1] = newHmsList[1]
+                }
+                if (newHmsList.size > 2) {
+                    hmsList[2] = newHmsList[2]
+                }
             }
-            if (newHmsList.size > 1) {
-                hmsList[1] = newHmsList[1]
-            }
-            if (newHmsList.size > 2) {
-                hmsList[2] = newHmsList[2]
-            }
+            val ymdStr = "${ymsList[0]}/${ymsList[1].fillZero()}/${ymsList[2].fillZero()}"
+            val hmsStr =
+                "${hmsList[0].fillZero()}:${hmsList[1].fillZero()}:${hmsList[2].fillZero()}"
+            return "$ymdStr $hmsStr"
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "formatTime error: $this")
+            return DateUtil.DEFAULT_DATE
         }
-        val ymdStr = "${ymsList[0]}/${ymsList[1].fillZero()}/${ymsList[2].fillZero()}"
-        val hmsStr = "${hmsList[0].fillZero()}:${hmsList[1].fillZero()}:${hmsList[2].fillZero()}"
-        return "$ymdStr $hmsStr"
     }
 
 /**
@@ -112,23 +119,28 @@ val Long.simpleDateFormatUTC: String
  */
 val String.fixTimeZone: String
     get() {
-        val date = if (this != "") {
-            // 处理日服日期（+9 > +8）小时 - 1
-            if (MainActivity.regionType == RegionType.JP) {
-                try {
-                    val d = basicDf.parse(this)!!.time - 60 * 60 * 1000
-                    basicDf.format(Date(d))
-                } catch (e: Exception) {
+        try {
+            val date = if (this != "") {
+                // 处理日服日期（+9 > +8）小时 - 1
+                if (MainActivity.regionType == RegionType.JP) {
+                    try {
+                        val d = basicDf.parse(this)!!.time - 60 * 60 * 1000
+                        basicDf.format(Date(d))
+                    } catch (e: Exception) {
+                        this
+                    }
+                } else {
                     this
                 }
             } else {
                 this
             }
-        } else {
-            this
+            //统一修改时区
+            return df1.format(Date(basicDf.parse(date)!!.time))
+        } catch (e: Exception) {
+            LogReportUtil.upload(e, "fixTimeZone error: $this")
+            return DateUtil.DEFAULT_DATE
         }
-        //统一修改时区
-        return df1.format(Date(basicDf.parse(date)!!.time))
     }
 
 

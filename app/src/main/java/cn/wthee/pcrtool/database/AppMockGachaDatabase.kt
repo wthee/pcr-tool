@@ -45,7 +45,7 @@ abstract class AppMockGachaDatabase : RoomDatabase() {
                 MyApplication.context,
                 AppMockGachaDatabase::class.java,
                 DATABASE_MOCK_GACHA
-            ).fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration(false)
                 .build()
         }
     }

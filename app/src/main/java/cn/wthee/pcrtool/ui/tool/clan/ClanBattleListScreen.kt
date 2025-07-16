@@ -65,7 +65,6 @@ import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.intArrayList
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -196,7 +195,7 @@ fun SharedTransitionScope.ClanBattleItem(
                     Modifier
                 } else {
                     Modifier.sharedElement(
-                        state = rememberSharedContentState(
+                        sharedContentState = rememberSharedContentState(
                             key = "${SharedElementKey.CLAN_BATTLE}${clanBattleInfo.clanBattleId}"
                         ),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -216,7 +215,7 @@ fun SharedTransitionScope.ClanBattleItem(
                         .placeholder(visible = placeholder)
                         .align(Alignment.CenterVertically)
                         .sharedElement(
-                            state = rememberSharedContentState(
+                            sharedContentState = rememberSharedContentState(
                                 key = "${SharedElementKey.CLAN_DATE}${clanBattleInfo.clanBattleId}"
                             ),
                             animatedVisibilityScope = animatedVisibilityScope,

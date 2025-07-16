@@ -463,7 +463,7 @@
     <string name="skill_type_18_19">蓄力</string>
     <string name="skill_type_20">挑衅</string>
     <string name="skill_type_21">回避</string>
-    <string name="skill_type_22">行动变更</string>
+    <string name="skill_type_22">循环变更</string>
     <string name="skill_type_24">复活</string>
     <string name="skill_type_30">即死</string>
     <string name="skill_type_32">HP吸收</string>
@@ -507,6 +507,9 @@
     <string name="skill_action_type_123">减伤</string>
     <string name="skill_action_type_124">转移伤害</string>
     <string name="skill_action_type_125">无法选中</string>
+    <string name="skill_action_type_128">持续伤害增强</string>
+    <string name="skill_action_type_129">伤害转化</string>
+    <string name="skill_action_type_130">调和</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -535,6 +538,7 @@
     <string name="skill_status_3137">界雷</string>
     <string name="skill_status_3162">妨魔塵</string>
     <string name="skill_status_3175">绝冰</string>
+    <string name="skill_status_3207">忌火</string>
     <string name="skill_status_6160">黏着状态</string>
     <string name="skill_status_physical_atk">物理攻击</string>
     <string name="skill_status_magic_atk">魔法攻击</string>
@@ -612,11 +616,12 @@
     <string name="skill_physical_damage">造成的物理伤害</string>
     <string name="skill_magic_damage">造成的魔法伤害</string>
     <string name="skill_depend_action">受到动作(%d)影响的</string>
-    <string name="skill_range">范围 [%d] 内</string>
-    <string name="skill_target_count">(%d名)</string>
-    <string name="skill_target_all">(全体)</string>
-    <string name="skill_target_order_num">(第%s近)</string>
-    <string name="skill_target_order_1">(最近)</string>
+    <string name="skill_range">范围%d内</string>
+    <string name="skill_target_single">单体</string>
+    <string name="skill_target_count">%d名</string>
+    <string name="skill_target_all">全体</string>
+    <string name="skill_target_order_num">第%s近</string>
+    <string name="skill_target_order_1">最近</string>
     <string name="skill_physical">物理</string>
     <string name="skill_physical_str">物理攻击力</string>
     <string name="skill_physical_def">物理防御力</string>
@@ -636,14 +641,14 @@
     <string name="skill_backward">向后</string>
     <string name="skill_ahead">前方</string>
     <string name="skill_rear">后方</string>
-    <string name="skill_move">移动至%s%s[%d]</string>
+    <string name="skill_move">移动至%s%s [%d]</string>
     <string name="skill_return">，动作结束后回到原来位置</string>
     <string name="skill_move_speed">，移动速度 [%d]</string>
     <string name="skill_hit_up">击飞</string>
-    <string name="skill_action_type_desc_3_up">%s%s，高度[%d]</string>
+    <string name="skill_action_type_desc_3_up">%s%s，高度 [%d]</string>
     <string name="skill_push">击退</string>
     <string name="skill_pull">拉近</string>
-    <string name="skill_action_type_desc_3_move">%s%s，距离[%d]</string>
+    <string name="skill_action_type_desc_3_move">%s%s，距离 [%d]</string>
     <string name="skill_action_type_desc_3_pull">将%s%s身前 [%d]</string>
     <string name="skill_action_type_desc_4">使%sHP回复 %s</string>
     <string name="skill_action_type_desc_6">对%s展开%s %s%s</string>
@@ -653,7 +658,7 @@
     <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>
-    <string name="skill_action_type_desc_9">使%s进入%s状态，每秒造成伤害 %s%s%s</string>
+    <string name="skill_action_type_desc_9">使%s进入 [%s] 状态，每秒造成伤害 %s%s%s</string>
     <string name="skill_buff">增益</string>
     <string name="skill_debuff">减益</string>
     <string name="skill_barrier">护盾</string>
@@ -666,8 +671,10 @@
     <string name="skill_action_type_desc_12_13">以 %s 的概率使%s进入%s状态%s</string>
     <string name="skill_action_atk_miss">；对象进行物理攻击时有 [%d%%] 的概率被回避</string>
     <string name="skill_action_loop_change">技能循环改变%s</string>
-    <string name="skill_action_type_desc_14_2">技能循环改变，每秒降低 [%d] TP</string>
-    <string name="skill_action_type_desc_14_3">效果结束后，切换回原技能循环</string>
+    <string name="skill_action_change_mode">行动模式改变%s%s</string>
+    <string name="skill_action_change_to_flight_status">，进入 [飞行] 状态</string>
+    <string name="skill_action_type_desc_14_2">行动模式改变，每秒降低 [%d] TP</string>
+    <string name="skill_action_type_desc_14_3">效果结束后，切换回原行动模式</string>
     <string name="skill_action_type_desc_15">在%s%s [%d] 的位置%s</string>
     <string name="skill_action_summon_target">在%s%s</string>
     <string name="skill_action_summon_unit">，召唤友方单位</string>
@@ -694,8 +701,8 @@
     <string name="skill_action_type_desc_21_6">回避 BREAK</string>
     <string name="skill_action_type_desc_21_8">回避魔法攻击</string>
     <string name="skill_action_skill_anim_change">技能动画改变%s</string>
-    <string name="skill_action_if_status">当%s在[%s]时，使用动作(%d)</string>
-    <string name="skill_action_if_status_not">当%s不在[%s]时，使用动作(%d)</string>
+    <string name="skill_action_if_status">当%s在 [%s] 时，使用动作(%d)</string>
+    <string name="skill_action_if_status_not">当%s不在 [%s] 时，使用动作(%d)</string>
     <string name="skill_action_if_mark">%s持有标记时，使用动作(%d)</string>
     <string name="skill_action_if_mark_not">%s未持有标记时，使用动作(%d)</string>
     <string name="skill_action_if_mark_count">%s持有标记数量为 [%d] 时，使用动作(%d)</string>
@@ -707,7 +714,7 @@
     <string name="skill_action_if_unit_atk_type">%s是 [%s] 对象时，使用动作(%d)</string>
     <string name="skill_action_random_1">随机：[%d%%] 的概率使用动作(%d)，否则使用动作(%d)</string>
     <string name="skill_action_random_2">随机：[%d%%] 的概率使用动作(%d)</string>
-    <string name="skill_action_type_desc_24">复活%s，并回复其 [%d%%]HP</string>
+    <string name="skill_action_type_desc_24">复活%s，并回复其 [%d%%] HP</string>
     <string name="skill_action_type_desc_additive">增加</string>
     <string name="skill_action_type_desc_subtract">减少</string>
     <string name="skill_action_type_desc_multiple">乘以</string>
@@ -725,8 +732,8 @@
     <string name="skill_action_change_coe_7_10">%s * [%s的%s]</string>
     <string name="skill_action_change_coe_12">%s * [后方%s数量]</string>
     <string name="skill_action_change_coe_13">%s * [损失的HP比例]</string>
-    <string name="skill_action_change_coe_15">%s * [自身除外的己方剩余HP]</string>
-    <string name="skill_action_change_coe_16">%s * [自身消耗的TP]</string>
+    <string name="skill_action_change_coe_15">%s * [%s剩余HP]</string>
+    <string name="skill_action_change_coe_16">%s * [%s消耗的TP]</string>
     <string name="skill_action_change_coe_102">%s * [小眼球数量]</string>
     <string name="skill_action_change_coe_skill_count">%s * [技能计数]</string>
     <string name="skill_action_change_coe_mark_count">%s * [标记层数]</string>
@@ -748,19 +755,19 @@
     <string name="skill_action_type_desc_29">无 UB 技能</string>
     <string name="skill_action_type_desc_30">%s死亡</string>
     <string name="skill_action_type_desc_32">为%s的下 [%d] 次攻击附加%s %s 的效果</string>
-    <string name="skill_action_type_desc_33">%s，受到%s伤害时反弹 %s 伤害%s， 生效 [%d] 次</string>
+    <string name="skill_action_type_desc_33">%s，受到%s伤害时反弹 %s 伤害%s，生效 [%d] 次</string>
     <string name="skill_action_type_desc_33_hp">，并回复HP</string>
     <string name="skill_action_type_desc_34">每次攻击当前的目标，将会追加伤害 %s%s</string>
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">每秒造成 %s %s伤害</string>
-    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
+    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>//TODO
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
     <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s</string>
     <string name="skill_action_type_desc_44">战斗开始 [%d] 秒后入场</string>
-    <string name="skill_action_type_desc_45">技能计数加 [1]%s</string>
+    <string name="skill_action_type_desc_45">技能计数加 [1] %s</string>
     <string name="skill_action_type_desc_46_1">对%s造成最大HP %s 伤害</string>
     <string name="skill_action_type_desc_46_2">对%s造成剩余HP %s 伤害</string>
     <string name="skill_action_type_desc_46_3">对%s造成初始最大HP %s 伤害</string>
@@ -768,7 +775,7 @@
     <string name="skill_action_type_desc_48">每秒回复%s的 %s %s%s</string>
     <string name="skill_action_type_desc_49">%s 概率移除%s的%s</string>
     <string name="skill_action_type_desc_50">%s%s%s，受到 [%d] 次伤害时中断</string>
-    <string name="skill_action_type_desc_52">将模型的宽度变为[%d]</string>
+    <string name="skill_action_type_desc_52">将模型的宽度变为 [%d]</string>
     <string name="skill_action_type_desc_53">特定的领域效果存在时使用动作(%d)%s</string>
     <string name="skill_action_type_desc_53_2">，否则使用动作(%d)</string>
     <string name="skill_action_type_desc_54">进入隐身状态%s</string>
@@ -777,7 +784,7 @@
     <string name="skill_action_type_desc_56_2">使%s的下 %s 次物理攻击必定被回避</string>
     <string name="skill_action_type_desc_57">对%s设置倒计时，[%d] 秒后触发动作(%d)</string>
     <string name="skill_action_type_desc_58">解除第%d个技能的动作(%d)展开的领域</string>
-    <string name="skill_action_type_desc_59">%s，HP回复效果减少 [%d%%]%s</string>
+    <string name="skill_action_type_desc_59">%s，HP回复效果减少 [%d%%] %s</string>
     <string name="skill_action_type_desc_60_0">，追加 [1] 层标记%s%s</string>
     <string name="skill_action_type_desc_60_1">自身每次攻击%s时%s</string>
     <string name="skill_action_type_desc_60_2">%s每次造成伤害时%s</string>
@@ -831,6 +838,9 @@
     <string name="skill_action_type_desc_116_121_123_124">使%s进入 [%s] 状态%s</string>
     <string name="skill_action_type_desc_123_1">受到的伤害减少%s</string>
     <string name="skill_action_type_desc_125">使%s进入 [%s] 状态（持有标记时，不会成为攻击目标）</string>
+    <string name="skill_action_type_desc_128">使%s受到的持续伤害的间隔和时间延长 [%d] 倍%s</string>
+    <string name="skill_action_type_desc_129">使%s受到的 %s 伤害转化为持续伤害%s；该持续伤害不回复 TP</string>
+    <string name="skill_action_type_desc_130">使%s受到伤害时，按物理/魔法防御中较高的防御计算伤害</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>
@@ -855,6 +865,7 @@
     <string name="skill_dot_3_8">诅咒</string>
     <string name="skill_dot_4">猛毒</string>
     <string name="skill_dot_5">咒术</string>
+    <string name="skill_dot_11">绝怠灵度</string>
 
 
     <!--属性-->
