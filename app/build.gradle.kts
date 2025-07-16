@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val appVersionCode = 389
-val appVersionName = "3.8.9"
+val appVersionCode = 390
+val appVersionName = "3.9.0"
 val appId = "cn.wthee.pcrtool"
 
 android {
