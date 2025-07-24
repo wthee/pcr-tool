@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
+import cn.wthee.pcrtool.data.enums.CalendarEventType
 import cn.wthee.pcrtool.ui.LoadState
 import cn.wthee.pcrtool.ui.components.DateRange
 import cn.wthee.pcrtool.ui.updateLoadState
@@ -27,7 +28,11 @@ data class CalendarEventListUiState(
     //日期
     val dateRange: DateRange = DateRange(),
     //日期选择弹窗
-    val openDialog: Boolean = false,
+    val openDatePickDialog: Boolean = false,
+    //类型选择弹窗
+    val openTypeDialog: Boolean = false,
+    //类型筛选
+    val eventType: CalendarEventType = CalendarEventType.ALL,
     //活动列表
     val calendarEventList: List<CalendarEvent>? = null,
     val loadState: LoadState = LoadState.Loading
@@ -57,17 +62,31 @@ class CalendarEventListViewModel @Inject constructor(
                 )
             }
         }
-        getCalendarEventList(dateRange)
+        getCalendarEventList(dateRange, _uiState.value.eventType)
     }
 
     /**
-     * 弹窗状态更新
+     * 日期弹窗状态更新
      */
-    fun changeDialog(openDialog: Boolean) {
+    fun changeDatePickDialog(openDialog: Boolean) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    openDialog = openDialog
+                    openDatePickDialog = openDialog
+                )
+            }
+        }
+    }
+
+
+    /**
+     * 类型弹窗状态更新
+     */
+    fun changeTypeDialog(openDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    openTypeDialog = openDialog
                 )
             }
         }
@@ -76,17 +95,30 @@ class CalendarEventListViewModel @Inject constructor(
     /**
      * 获取活动列表
      */
-    private fun getCalendarEventList(dateRange: DateRange) {
+    private fun getCalendarEventList(dateRange: DateRange, type: CalendarEventType) {
         viewModelScope.launch {
             try {
-                val data = eventRepository.getDropEvent(Int.MAX_VALUE).toMutableList()
-                data += eventRepository.getMissionEvent(Int.MAX_VALUE)
-                data += eventRepository.getLoginEvent(Int.MAX_VALUE)
-                data += eventRepository.getFortuneEvent(Int.MAX_VALUE)
-                data += eventRepository.getTowerEvent(Int.MAX_VALUE)
-                data += eventRepository.getSpDungeonEvent(Int.MAX_VALUE)
-                data += eventRepository.getFaultEvent(Int.MAX_VALUE)
-                data += eventRepository.getColosseumEvent(Int.MAX_VALUE)
+                val data = arrayListOf<CalendarEvent>()
+                if (type == CalendarEventType.ALL || type == CalendarEventType.ABYSS) {
+                    data += eventRepository.getAbyssEvent(Int.MAX_VALUE)
+                }
+                if (type == CalendarEventType.ALL || type == CalendarEventType.COLOSSEUM) {
+                    data += eventRepository.getColosseumEvent(Int.MAX_VALUE)
+                }
+                if (type == CalendarEventType.ALL || type == CalendarEventType.SP_DUNGEON) {
+                    data += eventRepository.getSpDungeonEvent(Int.MAX_VALUE)
+                }
+                if (type == CalendarEventType.ALL || type == CalendarEventType.TDF) {
+                    data += eventRepository.getFaultEvent(Int.MAX_VALUE)
+                }
+                if (type == CalendarEventType.ALL) {
+                    data += eventRepository.getLoginEvent(Int.MAX_VALUE)
+                    data += eventRepository.getFortuneEvent(Int.MAX_VALUE)
+                    data += eventRepository.getTowerEvent(Int.MAX_VALUE)
+                    data += eventRepository.getDropEvent(Int.MAX_VALUE)
+                    data += eventRepository.getMissionEvent(Int.MAX_VALUE)
+                }
+                
 
                 var list = data.toList()
                 if (dateRange.hasFilter()) {
@@ -121,6 +153,21 @@ class CalendarEventListViewModel @Inject constructor(
                 )
             }
         }
-        getCalendarEventList(DateRange())
+        getCalendarEventList(dateRange = DateRange(), type = CalendarEventType.ALL)
     }
+
+    /**
+     * 切换活动类型
+     */
+    fun changeTypeSelect(index: Int) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    eventType = CalendarEventType.getByIndex(index)
+                )
+            }
+        }
+        getCalendarEventList(dateRange = _uiState.value.dateRange, type = _uiState.value.eventType)
+    }
+
 }

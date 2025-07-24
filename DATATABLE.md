@@ -2,6 +2,7 @@
 
 | 表名                            | 中文名             | 备注             |
 |-------------------------------|-----------------|----------------|
+| abyss_schedule                | 深域讨伐战日程         |                |
 | actual_unit_background        | 角色现实背景          |                |
 | ailment_data                  | 异常状态            |                |
 | campaign_freegacha            | 免费十连日程          |                |

@@ -102,4 +102,11 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
         LogReportUtil.upload(e, "getColosseumEvent#limit:$limit")
         emptyList()
     }
+
+    suspend fun getAbyssEvent(limit: Int) = try {
+        eventDao.getAbyssEvent(limit)
+    } catch (e: Exception) {
+        LogReportUtil.upload(e, "getAbyssEvent#limit:$limit")
+        emptyList()
+    }
 }
