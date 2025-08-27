@@ -182,7 +182,7 @@ class EventSectionViewModel @Inject constructor(
      * 设置公会战详情信息
      */
     private suspend fun ClanBattleEvent.addClanBattleInfo() = this.also {
-        val clanList = clanBattleRepository.getClanBattleList(id, 2)
+        val clanList = clanBattleRepository.getClanBattleList(clanBattleId = id, phase = 2)
         if (clanList.isNotEmpty()) {
             clanBattleInfo = clanList[0]
         }
