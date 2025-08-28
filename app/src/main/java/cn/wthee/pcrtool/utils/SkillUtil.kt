@@ -290,6 +290,10 @@ fun SkillActionDetail.getTargetRange() = when (targetRange) {
  * 目标类型
  */
 fun SkillActionDetail.getTargetType(): String {
+    val targetArea = when (targetArea) {
+        7, 8, 9 -> getString(R.string.skill_area_exclude_summon)
+        else -> ""
+    }
     val target = getString(
         when (targetType) {
             0, 1, 3, 40, 41 -> R.string.none
@@ -343,7 +347,9 @@ fun SkillActionDetail.getTargetType(): String {
         }
     )
     return if (target != "") {
-        "⌈${target}⌋"
+        "⌈$targetArea$target⌋"
+    } else if (targetArea != "") {
+        "⌈$targetArea⌋"
     } else {
         ""
     }

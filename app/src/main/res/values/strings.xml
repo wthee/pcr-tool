@@ -545,6 +545,7 @@
     <string name="skill_status_magic_atk">魔法攻击</string>
 
     <!--技能目标类型相关-->
+    <string name="skill_area_exclude_summon">召唤物、分身除外</string>
     <string name="skill_target_none">目标</string>
     <string name="skill_target_2_8">随机</string>
     <string name="skill_target_3">最近</string>
