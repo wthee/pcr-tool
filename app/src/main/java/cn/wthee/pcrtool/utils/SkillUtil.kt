@@ -406,11 +406,13 @@ fun SkillActionDetail.getStatus(value: Int) = getString(
         1400 -> R.string.skill_status_1400
         1600 -> R.string.skill_status_1600
         1601 -> R.string.skill_status_1601
-        //防御减少
+        //debuff
         1700 -> {
             when (actionValue3.toInt()) {
                 21 -> R.string.skill_status_1700_21
+                31 -> R.string.skill_status_1700_31
                 41 -> R.string.skill_status_1700_41
+                81 -> R.string.skill_status_1700_81
                 else -> R.string.unknown
             }
         }

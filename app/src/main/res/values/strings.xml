@@ -530,8 +530,11 @@
     <string name="skill_status_1400">变身状态</string>
     <string name="skill_status_1600">恐慌状态</string>
     <string name="skill_status_1601">隐匿状态</string>
+    <string name="skill_status_1700_11">物理攻击减少状态</string>
     <string name="skill_status_1700_21">物理防御减少状态</string>
+    <string name="skill_status_1700_31">魔法攻击减少状态</string>
     <string name="skill_status_1700_41">魔法防御减少状态</string>
+    <string name="skill_status_1700_81">TP上升减少状态</string>
     <string name="skill_status_721">特殊标记状态</string>
     <string name="skill_status_6107">龙之眼状态</string>
     <string name="skill_status_1800">多目标状态</string>
