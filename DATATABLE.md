@@ -56,7 +56,7 @@
 | talent_quest_data             | 深域关卡信息          |                |
 | talent_quest_enemy_parameter  | 深域关卡敌人数值        |                |
 | talent_quest_wave_group_data  | 深域关卡敌人信息        |                |
-| talents_weakness              | 天赋弱点信息          |                |
+| talent_weakness               | 天赋弱点信息          |                |
 | tdf_schedule                  | 次元断层日程          |                |
 | tower_schedule                | 露娜塔日程           |                |
 | travel_area_data              | ex 冒险区域         |                |
