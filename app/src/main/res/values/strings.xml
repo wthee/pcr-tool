@@ -832,7 +832,7 @@
     <string name="skill_action_type_desc_106_type_common">守护</string>
     <string name="skill_action_type_desc_106_type_141">堕天使的守护</string>
     <string name="skill_action_type_desc_107">动作(%d)暴击率依据物理暴击与魔法暴击之和</string>
-    <string name="skill_action_type_desc_110">使%s受到持续伤害时，额外承受 %s 的伤害%s</string>
+    <string name="skill_action_type_desc_110">使%s受到持续伤害%s时，伤害提升 [%d] 倍%s</string>
     <string name="skill_action_type_desc_111">当%s%s时，使用动作(%d)</string>
     <string name="skill_action_type_desc_111_1">当%s标记数量 %s [%d] 时，使用动作(%d)</string>
     <string name="skill_action_type_desc_111_2">受到暴击伤害</string>
@@ -868,6 +868,7 @@
     <string name="skill_dot_3_8">诅咒</string>
     <string name="skill_dot_4">猛毒</string>
     <string name="skill_dot_5">咒术</string>
+    <string name="skill_dot_9">黑炎</string>
     <string name="skill_dot_11">绝怠灵度</string>
 
 

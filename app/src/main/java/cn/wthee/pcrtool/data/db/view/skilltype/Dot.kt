@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view.skilltype
 
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.enums.DotType
 import cn.wthee.pcrtool.utils.getPercent
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
@@ -10,18 +11,7 @@ import cn.wthee.pcrtool.utils.getValueText
 
 // 9：持续伤害
 fun SkillActionDetail.dot(): String {
-    tag = getString(
-        when (actionDetail1) {
-            0 -> R.string.skill_dot_0
-            1, 7 -> R.string.skill_dot_1_7
-            2 -> R.string.skill_dot_2
-            3, 8 -> R.string.skill_dot_3_8
-            4 -> R.string.skill_dot_4
-            5 -> R.string.skill_dot_5
-            11 -> R.string.skill_dot_11
-            else -> R.string.unknown
-        }
-    )
+    tag = getString(DotType.getByType(actionDetail1).typeNameId)
     val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
     val time = getTimeText(3, actionValue3, actionValue4)
     val dotIncrease = if (actionDetail1 == 5) {
