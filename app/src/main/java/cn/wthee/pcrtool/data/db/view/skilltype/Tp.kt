@@ -17,8 +17,11 @@ fun SkillActionDetail.tp(): String {
     val value = getValueText(1, actionValue1, actionValue2)
     tag = getString(
         when (actionDetail1) {
-            1, 4 -> R.string.skill_action_tp_recovery
-            else -> R.string.skill_action_tp_reduce
+            1 -> R.string.skill_action_tp_recovery
+            4 -> R.string.skill_action_tp_recovery_fix
+            2, 3 -> R.string.skill_action_tp_reduce
+            //fixme #140: actionDetail1 = 3 按比例减少
+            else -> R.string.unknown
         }
     )
     return "${getTarget()}${tag} $value"

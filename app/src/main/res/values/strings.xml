@@ -682,6 +682,7 @@
     <string name="skill_action_summon_target">在%s%s</string>
     <string name="skill_action_summon_unit">，召唤友方单位</string>
     <string name="skill_action_tp_recovery">TP回复</string>
+    <string name="skill_action_tp_recovery_fix">TP回复（固定）</string>
     <string name="skill_action_tp_reduce">TP减少</string>
     <string name="skill_action_condition">条件：%s</string>
     <string name="skill_action_type_desc_17_2">受到伤害时 [%d%%] 概率</string>
