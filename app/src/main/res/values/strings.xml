@@ -530,11 +530,7 @@
     <string name="skill_status_1400">变身状态</string>
     <string name="skill_status_1600">恐慌状态</string>
     <string name="skill_status_1601">隐匿状态</string>
-    <string name="skill_status_1700_11">物理攻击减少状态</string>
-    <string name="skill_status_1700_21">物理防御减少状态</string>
-    <string name="skill_status_1700_31">魔法攻击减少状态</string>
-    <string name="skill_status_1700_41">魔法防御减少状态</string>
-    <string name="skill_status_1700_81">TP上升减少状态</string>
+    <string name="skill_status_1700">%s状态</string>
     <string name="skill_status_721">特殊标记状态</string>
     <string name="skill_status_6107">龙之眼状态</string>
     <string name="skill_status_1800">多目标状态</string>
@@ -617,6 +613,7 @@
     <string name="skill_physical_critical_damage">物理暴击伤害</string>
     <string name="skill_magic_critical_damage">魔法暴击伤害</string>
     <string name="skill_critical_damage_take">受到的暴击伤害</string>
+    <string name="skill_damage_take">受到的伤害</string>
     <string name="skill_physical_damage_take">受到的物理伤害</string>
     <string name="skill_magic_damage_take">受到的魔法伤害</string>
     <string name="skill_physical_damage">造成的物理伤害</string>

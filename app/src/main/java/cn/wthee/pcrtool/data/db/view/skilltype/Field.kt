@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
 import cn.wthee.pcrtool.utils.getAtkType
-import cn.wthee.pcrtool.utils.getAura
+import cn.wthee.pcrtool.utils.getBuffText
 import cn.wthee.pcrtool.utils.getPercent
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
@@ -44,7 +44,7 @@ fun SkillActionDetail.healField(): String {
 fun SkillActionDetail.auraField(): String {
     val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
     val time = getTimeText(3, actionValue3, actionValue4)
-    val aura = getAura(actionDetail1, value)
+    val aura = getBuffText(actionDetail1, value)
 
     return getTarget() + getString(
         R.string.skill_action_type_desc_field,
