@@ -44,7 +44,7 @@ fun SkillActionDetail.healField(): String {
 fun SkillActionDetail.auraField(): String {
     val value = getValueText(1, actionValue1, actionValue2, percent = getPercent())
     val time = getTimeText(3, actionValue3, actionValue4)
-    val aura = getBuffText(actionDetail1, value)
+    val aura = getBuffText(actionDetail1, value, actionValue7)
 
     return getTarget() + getString(
         R.string.skill_action_type_desc_field,

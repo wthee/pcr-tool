@@ -143,8 +143,9 @@ fun SkillActionDetail.getValueText(
  *
  * @param value action_detail
  * @param valueText 数值描述文本
+ * @param actionValue7 是否可驱散判断
  */
-fun getBuffText(value: Int, valueText: String = ""): String {
+fun getBuffText(value: Int, valueText: String = "", actionValue7: Double = 0.0): String {
     //获取实际类型，1021 -> 2 10 -> 1
     val typeValue = value % 1000 / 10
     val buffText = getString(
@@ -185,8 +186,11 @@ fun getBuffText(value: Int, valueText: String = ""): String {
     }
     //固定buff，不受其他效果影响
     //参考(台服数据)： action_id = 217307201 action_detail_1 = 1020 description=提升自身的物理防禦力（不可降低）
-    if (value > 1000) {
+    if (value / 1000 == 1) {
         changeDesc += getString(R.string.skill_fixed)
+    }
+    if (actionValue7.toInt() == 2) {
+        changeDesc += getString(R.string.skill_cannot_dispel)
     }
 
     return buffText + changeDesc

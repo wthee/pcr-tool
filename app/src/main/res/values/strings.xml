@@ -609,7 +609,8 @@
     <string name="skill_hp_max">HP最大值</string>
     <string name="skill_increase">提升</string>
     <string name="skill_reduce">减少</string>
-    <string name="skill_fixed">(固定数值，无法被其他技能效果改变)</string>
+    <string name="skill_fixed">(固定数值)</string>
+    <string name="skill_cannot_dispel">(不可驱散)</string>
     <string name="skill_physical_critical_damage">物理暴击伤害</string>
     <string name="skill_magic_critical_damage">魔法暴击伤害</string>
     <string name="skill_critical_damage_take">受到的暴击伤害</string>
