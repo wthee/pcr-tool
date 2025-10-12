@@ -34,6 +34,7 @@ import cn.wthee.pcrtool.ui.components.EventTitle
 import cn.wthee.pcrtool.ui.components.MainCard
 import cn.wthee.pcrtool.ui.components.MainScaffold
 import cn.wthee.pcrtool.ui.components.MainSmallFab
+import cn.wthee.pcrtool.ui.components.SelectTypeFab
 import cn.wthee.pcrtool.ui.components.StateBox
 import cn.wthee.pcrtool.ui.components.Subtitle1
 import cn.wthee.pcrtool.ui.components.getDatePickerYearRange
@@ -59,20 +60,27 @@ fun CalendarEventListScreen(
     val uiState by calendarEventListViewModel.uiState.collectAsStateWithLifecycle()
     val dateRangePickerState = rememberDateRangePickerState(yearRange = getDatePickerYearRange())
 
+    //类型
+    val tabs = arrayListOf<String>()
+    CalendarEventType.entries.forEach {
+        if (it.index >= 0) {
+            tabs.add(stringResource(id = it.typeNameId))
+        }
+    }
 
     MainScaffold(
-        enableClickClose = uiState.openDialog,
+        enableClickClose = uiState.openDatePickDialog,
         onCloseClick = {
-            calendarEventListViewModel.changeDialog(false)
+            calendarEventListViewModel.changeDatePickDialog(false)
         },
         secondLineFab = {
             //日期选择
             DateRangePickerCompose(
                 dateRangePickerState = dateRangePickerState,
                 dateRange = uiState.dateRange,
-                openDialog = uiState.openDialog,
+                openDialog = uiState.openDatePickDialog,
                 changeRange = calendarEventListViewModel::changeRange,
-                changeDialog = calendarEventListViewModel::changeDialog
+                changeDialog = calendarEventListViewModel::changeDatePickDialog
             )
         },
         fab = {
@@ -86,7 +94,15 @@ fun CalendarEventListScreen(
                     }
                 )
             }
-
+            SelectTypeFab(
+                icon = MainIconType.FILTER,
+                tabs = tabs,
+                selectedIndex = uiState.eventType.index,
+                openDialog = uiState.openTypeDialog,
+                changeDialog = calendarEventListViewModel::changeTypeDialog,
+                changeSelect = calendarEventListViewModel::changeTypeSelect,
+                noPadding = true
+            )
             //回到顶部
             MainSmallFab(
                 iconType = MainIconType.CALENDAR,
@@ -101,10 +117,10 @@ fun CalendarEventListScreen(
                 }
             )
         },
-        mainFabIcon = if (uiState.openDialog) MainIconType.CLOSE else MainIconType.BACK,
+        mainFabIcon = if (uiState.openDatePickDialog) MainIconType.CLOSE else MainIconType.BACK,
         onMainFabClick = {
-            if (uiState.openDialog) {
-                calendarEventListViewModel.changeDialog(false)
+            if (uiState.openDatePickDialog) {
+                calendarEventListViewModel.changeDatePickDialog(false)
             } else {
                 navigateUp()
             }
@@ -169,10 +185,10 @@ fun CalendarEventItem(calendar: CalendarEvent) {
                 //内容
                 calendar.getEventList().forEach {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Subtitle1(text = it.title + it.info)
-                        if (it.multiple != "") {
+                        Subtitle1(text = it.title)
+                        if (it.value != "") {
                             Subtitle1(
-                                text = it.multiple,
+                                text = it.value,
                                 color = it.color,
                                 modifier = Modifier.padding(horizontal = Dimen.smallPadding)
                             )

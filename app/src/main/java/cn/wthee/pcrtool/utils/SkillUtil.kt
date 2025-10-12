@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.enums.BuffType
 import cn.wthee.pcrtool.data.enums.SkillActionType
 
 
@@ -17,8 +18,7 @@ fun SkillActionDetail.getAtkType() = getString(
         2 -> R.string.skill_magic
         3 -> R.string.skill_must_hit_physical
         4 -> R.string.skill_must_hit_magic
-        5 -> R.string.skill_sum_atk_physical
-        6 -> R.string.skill_sum_atk_magic
+        5 -> R.string.skill_adaptive_lower_defense_change_atk_type
         else -> R.string.unknown
     }
 )
@@ -29,13 +29,14 @@ fun SkillActionDetail.getAtkType() = getString(
 fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)) {
     SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
         if (actionValue1.toInt() == 2 || actionDetail1 / 10 in setOf(
-                11,
-                12,
-                14,
-                16,
-                17,
-                18,
-                19
+                BuffType.PHYSICAL_CRITICAL_DAMAGE.type,
+                BuffType.MAGIC_CRITICAL_DAMAGE.type,
+                BuffType.CRITICAL_DAMAGE_TAKE.type,
+                BuffType.DAMAGE_TAKE.type,
+                BuffType.PHYSICAL_DAMAGE_TAKE.type,
+                BuffType.MAGIC_DAMAGE_TAKE.type,
+                BuffType.PHYSICAL_DAMAGE.type,
+                BuffType.MAGIC_DAMAGE.type
             )
         ) {
             "%"
@@ -44,7 +45,24 @@ fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)
         }
     }
 
-    SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (actionDetail2 == 2) "%" else ""
+    SkillActionType.AURA_FIELD -> {
+        if (actionDetail2.toInt() == 2 || actionDetail1 / 10 in setOf(
+                BuffType.PHYSICAL_CRITICAL_DAMAGE.type,
+                BuffType.MAGIC_CRITICAL_DAMAGE.type,
+                BuffType.CRITICAL_DAMAGE_TAKE.type,
+                BuffType.DAMAGE_TAKE.type,
+                BuffType.PHYSICAL_DAMAGE_TAKE.type,
+                BuffType.MAGIC_DAMAGE_TAKE.type,
+                BuffType.PHYSICAL_DAMAGE.type,
+                BuffType.MAGIC_DAMAGE.type
+            )
+        ) {
+            "%"
+        } else {
+            ""
+        }
+    }
+
     SkillActionType.DAMAGE_REDUCE -> "%"
     SkillActionType.ACTION_DOT -> if (actionDetail1 == 10) "%" else ""
     SkillActionType.DOT -> if (actionDetail1 == 11) "%" else ""
@@ -121,60 +139,60 @@ fun SkillActionDetail.getValueText(
 
 /**
  * 效果
+ *
+ * @param value action_detail
+ * @param valueText 数值描述文本
+ * @param actionValue7 是否可驱散判断
  */
-fun getAura(v: Int, valueText: String): String {
-    val action = getString(
-        if (v == 1) {
+fun getBuffText(value: Int, valueText: String = "", actionValue7: Double = 0.0): String {
+    //获取实际类型，1021 -> 2 10 -> 1
+    val typeValue = value % 1000 / 10
+    val buffText = getString(
+        if (value == 1) {
             R.string.skill_hp_max
         } else {
-            when (v % 1000 / 10) {
-                1 -> R.string.attr_atk
-                2 -> R.string.attr_def
-                3 -> R.string.attr_magic_str
-                4 -> R.string.attr_magic_def
-                5 -> R.string.attr_dodge
-                6 -> R.string.attr_physical_critical
-                7 -> R.string.attr_magic_critical
-                8 -> R.string.attr_energy_recovery_rate
-                9 -> R.string.attr_life_steal
-                10 -> R.string.skill_speed
-                11 -> R.string.skill_physical_critical_damage
-                12 -> R.string.skill_magic_critical_damage
-                13 -> R.string.attr_accuracy
-                14 -> R.string.skill_critical_damage_take
-                16 -> R.string.skill_physical_damage_take
-                17 -> R.string.skill_magic_damage_take
-                18 -> R.string.skill_physical_damage
-                19 -> R.string.skill_magic_damage
-                else -> R.string.unknown
-            }
+            BuffType.getByValue(typeValue).nameId
         }
     )
-
-    var type =
-        if (v / 10 == 14 || v / 10 == 16 || v / 10 == 17) {
+    //提升/减少
+    var changeDesc = when (BuffType.getByValue(typeValue)) {
+        BuffType.CRITICAL_DAMAGE_TAKE,
+        BuffType.DAMAGE_TAKE,
+        BuffType.PHYSICAL_DAMAGE_TAKE,
+        BuffType.MAGIC_DAMAGE_TAKE,
+            -> {
             getString(
-                if (v % 10 == 0) {
+                if (value % 10 == 0) {
                     R.string.skill_reduce
                 } else {
                     R.string.skill_increase
                 }
-            ) + " " + valueText
-        } else {
-            getString(
-                if (v % 10 == 0) {
-                    R.string.skill_increase
-                } else {
-                    R.string.skill_reduce
-                }
-            ) + " " + valueText
+            )
         }
-    //固定buff，不受其他效果影响
-    if (v > 1000) {
-        type += getString(R.string.skill_fixed)
+
+        else -> getString(
+            if (value % 10 == 0) {
+                R.string.skill_increase
+            } else {
+                R.string.skill_reduce
+            }
+        )
     }
 
-    return action + type
+    //数值
+    if (valueText != "") {
+        changeDesc += " $valueText"
+    }
+    //固定buff，不受其他效果影响
+    //参考(台服数据)： action_id = 217307201 action_detail_1 = 1020 description=提升自身的物理防禦力（不可降低）
+    if (value / 1000 == 1) {
+        changeDesc += getString(R.string.skill_fixed)
+    }
+    if (actionValue7.toInt() == 2) {
+        changeDesc += getString(R.string.skill_cannot_dispel)
+    }
+
+    return buffText + changeDesc
 }
 
 /**
@@ -290,6 +308,11 @@ fun SkillActionDetail.getTargetRange() = when (targetRange) {
  * 目标类型
  */
 fun SkillActionDetail.getTargetType(): String {
+    val targetArea = when (targetArea) {
+        4, 5, 6 -> getString(R.string.skill_area_include_flight)
+        7, 8, 9 -> getString(R.string.skill_area_without_summon)
+        else -> ""
+    }
     val target = getString(
         when (targetType) {
             0, 1, 3, 40, 41 -> R.string.none
@@ -343,7 +366,9 @@ fun SkillActionDetail.getTargetType(): String {
         }
     )
     return if (target != "") {
-        "⌈${target}⌋"
+        "⌈$targetArea$target⌋"
+    } else if (targetArea != "") {
+        "⌈$targetArea⌋"
     } else {
         ""
     }
@@ -380,52 +405,42 @@ fun SkillActionDetail.getTarget(): String {
 /**
  * 获取技能附带的状态
  */
-fun SkillActionDetail.getStatus(value: Int) = getString(
-    when (value) {
-        100 -> R.string.skill_status_100
-        101 -> R.string.skill_status_101
-        200 -> R.string.skill_status_200
-        300 -> R.string.skill_status_300
-        400 -> R.string.skill_status_400
-        500 -> R.string.skill_status_500
-        501 -> R.string.skill_status_501
-        502 -> R.string.skill_status_502
-        503 -> R.string.skill_status_503
-        504 -> R.string.skill_status_504
-        511 -> R.string.skill_status_511
-        512 -> R.string.skill_status_512
-        710 -> R.string.skill_status_710
-        900 -> R.string.skill_status_900
-        1400 -> R.string.skill_status_1400
-        1600 -> R.string.skill_status_1600
-        1601 -> R.string.skill_status_1601
-        //防御减少
-        1700 -> {
-            when (actionValue3.toInt()) {
-                21 -> R.string.skill_status_1700_21
-                41 -> R.string.skill_status_1700_41
-                else -> R.string.unknown
-            }
-        }
-
-        721 -> R.string.skill_status_721
-        6107 -> R.string.skill_status_6107
-        1513 -> R.string.skill_ailment_13
-        1800 -> R.string.skill_status_1800
-        1900 -> R.string.skill_status_1900
-        3137 -> R.string.skill_status_3137
-        3162 -> R.string.skill_status_3162
-        3175 -> R.string.skill_status_3175
-        3207 -> R.string.skill_status_3207
-        6160 -> R.string.skill_status_6160
-        4001 -> R.string.skill_target_fire
-        4002 -> R.string.skill_target_water
-        4003 -> R.string.skill_target_wind
-        4004 -> R.string.skill_target_light
-        4005 -> R.string.skill_target_dark
-        else -> R.string.unknown
-    }
-)
+fun SkillActionDetail.getStatus(value: Int) = when (value) {
+    100 -> getString(R.string.skill_status_100)
+    101 -> getString(R.string.skill_status_101)
+    200 -> getString(R.string.skill_status_200)
+    300 -> getString(R.string.skill_status_300)
+    400 -> getString(R.string.skill_status_400)
+    500 -> getString(R.string.skill_status_500)
+    501 -> getString(R.string.skill_status_501)
+    502 -> getString(R.string.skill_status_502)
+    503 -> getString(R.string.skill_status_503)
+    504 -> getString(R.string.skill_status_504)
+    511 -> getString(R.string.skill_status_511)
+    512 -> getString(R.string.skill_status_512)
+    710 -> getString(R.string.skill_status_710)
+    900 -> getString(R.string.skill_status_900)
+    1400 -> getString(R.string.skill_status_1400)
+    1600 -> getString(R.string.skill_status_1600)
+    1601 -> getString(R.string.skill_status_1601)
+    1700 -> getString(R.string.skill_status_1700, getBuffText(actionValue3.toInt()))
+    721 -> getString(R.string.skill_status_721)
+    6107 -> getString(R.string.skill_status_6107)
+    1513 -> getString(R.string.skill_ailment_13)
+    1800 -> getString(R.string.skill_status_1800)
+    1900 -> getString(R.string.skill_status_1900)
+    3137 -> getString(R.string.skill_status_3137)
+    3162 -> getString(R.string.skill_status_3162)
+    3175 -> getString(R.string.skill_status_3175)
+    3207 -> getString(R.string.skill_status_3207)
+    6160 -> getString(R.string.skill_status_6160)
+    4001 -> getString(R.string.skill_target_fire)
+    4002 -> getString(R.string.skill_target_water)
+    4003 -> getString(R.string.skill_target_wind)
+    4004 -> getString(R.string.skill_target_light)
+    4005 -> getString(R.string.skill_target_dark)
+    else -> getString(R.string.unknown)
+}
 
 
 /**
@@ -435,4 +450,19 @@ fun SkillActionDetail.initOtherLimit() {
     if (level > Constants.OTHER_LIMIT_LEVEL && isOtherRfSkill) {
         isOtherLimitAction = true
     }
+}
+
+/**
+ * 受击 tp 回复
+ */
+fun SkillActionDetail.takeDamageTp() = if (actionDetail3.toInt() != 0) {
+    val multiple = 1 - actionDetail3.toInt() / 100
+    if (multiple == 0) {
+        //不回复 tp
+        getString(R.string.skill_action_take_damage_tp_0)
+    } else {
+        getString(R.string.skill_action_take_damage_tp_multiple, multiple)
+    }
+} else {
+    ""
 }

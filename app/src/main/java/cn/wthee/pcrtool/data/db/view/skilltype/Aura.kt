@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.db.view.skilltype
 
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
-import cn.wthee.pcrtool.utils.getAura
+import cn.wthee.pcrtool.utils.getBuffText
 import cn.wthee.pcrtool.utils.getPercent
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
@@ -24,7 +24,7 @@ fun SkillActionDetail.aura(): String {
         initOtherLimit()
     }
     val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
-    val aura = getAura(actionDetail1, value)
+    val aura = getBuffText(actionDetail1, value, actionValue7)
     val time = getTimeText(4, actionValue4, actionValue5)
 
     return if (actionDetail2 == 2) {

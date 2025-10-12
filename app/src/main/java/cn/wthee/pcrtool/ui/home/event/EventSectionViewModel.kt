@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home.event
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -183,7 +182,7 @@ class EventSectionViewModel @Inject constructor(
      * 设置公会战详情信息
      */
     private suspend fun ClanBattleEvent.addClanBattleInfo() = this.also {
-        val clanList = clanBattleRepository.getClanBattleList(id, 2)
+        val clanList = clanBattleRepository.getClanBattleList(clanBattleId = id, phase = 2)
         if (clanList.isNotEmpty()) {
             clanBattleInfo = clanList[0]
         }
@@ -235,7 +234,6 @@ class EventSectionViewModel @Inject constructor(
                 if (type == EventType.IN_PROGRESS) {
                     state.copy(
                         inProgressEventList = data.filter {
-                            Log.e("TAG", "getCalendarEventList: $it")
                             isInProgress(today, it.startTime, it.endTime)
                         }.sortedWith(compareAllTypeEvent(today))
                     )

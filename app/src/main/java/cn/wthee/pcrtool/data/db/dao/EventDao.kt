@@ -114,8 +114,7 @@ interface EventDao {
         FROM
             campaign_schedule 
         WHERE
-            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45 )
-            AND id < 5000
+            campaign_category IN ( 31, 41, 32, 42, 39, 49, 34, 37, 38, 45 )  AND lv_to = -1
         GROUP BY
             start_time,
             end_time,
@@ -220,6 +219,7 @@ interface EventDao {
 
     /**
      * 获取特殊地下城信息
+     * @see [cn.wthee.pcrtool.data.enums.CalendarEventType]
      */
     @SkipQueryVerification
     @Transaction
@@ -241,6 +241,7 @@ interface EventDao {
 
     /**
      * 获取次元断层信息
+     * @see [cn.wthee.pcrtool.data.enums.CalendarEventType]
      */
     @SkipQueryVerification
     @Transaction
@@ -308,6 +309,7 @@ interface EventDao {
 
     /**
      * 获取斗技场最新日程
+     * @see [cn.wthee.pcrtool.data.enums.CalendarEventType]
      */
     @SkipQueryVerification
     @Transaction
@@ -326,6 +328,28 @@ interface EventDao {
     """
     )
     suspend fun getColosseumEvent(limit: Int): List<CalendarEvent>
+
+    /**
+     * 获取深渊讨伐战最新日程
+     * @see [cn.wthee.pcrtool.data.enums.CalendarEventType]
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+        SELECT
+            -4 AS type,
+            talent_id AS value,
+            start_time,
+            end_time
+        FROM
+            abyss_schedule 
+        ORDER BY
+            abyss_schedule.abyss_id DESC
+        LIMIT 0,:limit
+    """
+    )
+    suspend fun getAbyssEvent(limit: Int): List<CalendarEvent>
 
     /**
      * 获取生日信息

@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.CalendarEventType
+import cn.wthee.pcrtool.data.enums.TalentType
 import cn.wthee.pcrtool.ui.theme.colorGold
 import cn.wthee.pcrtool.ui.theme.colorGreen
 import cn.wthee.pcrtool.ui.theme.colorOrange
@@ -45,43 +46,38 @@ data class CalendarEvent(
             CalendarEventType.TOWER -> {
                 //露娜塔
                 events.add(
-                    CalendarEventData(
-                        stringResource(id = R.string.tower),
-                        "",
-                        ""
-                    )
+                    CalendarEventData(stringResource(id = R.string.tower))
                 )
             }
 
             CalendarEventType.SP_DUNGEON -> {
                 //特殊地下城
                 events.add(
-                    CalendarEventData(
-                        stringResource(id = R.string.sp_dungeon),
-                        "",
-                        ""
-                    )
+                    CalendarEventData(stringResource(id = R.string.sp_dungeon))
                 )
             }
 
             CalendarEventType.TDF -> {
                 //次元断层
                 events.add(
-                    CalendarEventData(
-                        stringResource(id = R.string.fault),
-                        "",
-                        ""
-                    )
+                    CalendarEventData(stringResource(id = R.string.tdf))
                 )
             }
 
             CalendarEventType.COLOSSEUM -> {
                 //次元断层
                 events.add(
+                    CalendarEventData(stringResource(id = R.string.colosseum))
+                )
+            }
+
+            CalendarEventType.ABYSS -> {
+                //深渊讨伐战
+                events.add(
                     CalendarEventData(
-                        stringResource(id = R.string.colosseum),
-                        "",
-                        ""
+                        title = stringResource(id = R.string.abyss),
+                        value = "⌈" + stringResource(id = TalentType.getByType(this.value).typeNameId) + "⌋",
+                        color = TalentType.getByType(this.value).color,
                     )
                 )
             }
@@ -114,8 +110,11 @@ data class CalendarEvent(
                     val multiple = getFixedValue()
                     events.add(
                         CalendarEventData(
-                            title,
-                            when (CalendarEventType.getByValue(type)) {
+                            title = title + when (CalendarEventType.getByValue(type)) {
+                                CalendarEventType.DAILY, CalendarEventType.LOGIN, CalendarEventType.FORTUNE -> ""
+                                else -> stringResource(id = if (type > 40) R.string.mana else R.string.drop)
+                            },
+                            value = when (CalendarEventType.getByValue(type)) {
                                 CalendarEventType.LOGIN -> {
                                     //登录宝石
                                     value.toString()
@@ -135,11 +134,7 @@ data class CalendarEvent(
                                     }
                                 )
                             },
-                            when (CalendarEventType.getByValue(type)) {
-                                CalendarEventType.DAILY, CalendarEventType.LOGIN, CalendarEventType.FORTUNE -> ""
-                                else -> stringResource(id = if (type > 40) R.string.mana else R.string.drop)
-                            },
-                            dropMumColor
+                            color = dropMumColor
                         )
                     )
                 }
@@ -153,7 +148,6 @@ data class CalendarEvent(
 
 data class CalendarEventData(
     val title: String,
-    val multiple: String,
-    val info: String,
+    val value: String = "",
     val color: Color = Color.Unspecified,
 )

@@ -323,7 +323,7 @@ fun SelectTypeFab(
                 SelectText(
                     selected = selectedIndex == index,
                     text = tab,
-                    textStyle = MaterialTheme.typography.titleLarge,
+                    textStyle = MaterialTheme.typography.titleMedium,
                     selectedColor = selectedColor,
                     modifier = Modifier
                         .fillMaxWidth()
