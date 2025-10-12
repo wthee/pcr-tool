@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val appVersionCode = 390
-val appVersionName = "3.9.0"
+val appVersionCode = 391
+val appVersionName = "3.9.1"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -27,14 +27,14 @@ android {
 //    }
 
     namespace = appId
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
     flavorDimensions += listOf("version")
 
     defaultConfig {
         applicationId = appId
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
 
