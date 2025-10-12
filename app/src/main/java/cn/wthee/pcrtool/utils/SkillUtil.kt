@@ -18,8 +18,7 @@ fun SkillActionDetail.getAtkType() = getString(
         2 -> R.string.skill_magic
         3 -> R.string.skill_must_hit_physical
         4 -> R.string.skill_must_hit_magic
-        5 -> R.string.skill_sum_atk_physical
-        6 -> R.string.skill_sum_atk_magic
+        5 -> R.string.skill_adaptive_lower_defense_change_atk_type
         else -> R.string.unknown
     }
 )
@@ -451,4 +450,19 @@ fun SkillActionDetail.initOtherLimit() {
     if (level > Constants.OTHER_LIMIT_LEVEL && isOtherRfSkill) {
         isOtherLimitAction = true
     }
+}
+
+/**
+ * 受击 tp 回复
+ */
+fun SkillActionDetail.takeDamageTp() = if (actionDetail3.toInt() != 0) {
+    val multiple = 1 - actionDetail3.toInt() / 100
+    if (multiple == 0) {
+        //不回复 tp
+        getString(R.string.skill_action_take_damage_tp_0)
+    } else {
+        getString(R.string.skill_action_take_damage_tp_multiple, multiple)
+    }
+} else {
+    ""
 }

@@ -634,13 +634,12 @@
     <string name="skill_magic_def">魔法防御力</string>
     <string name="skill_must_hit_physical">必定命中的物理</string>
     <string name="skill_must_hit_magic">必定命中的魔法</string>
-    <string name="skill_sum_atk_physical">(物理、魔法攻击力合计)物理</string>
-    <string name="skill_sum_atk_magic">(物理、魔法攻击力合计)魔法</string>
+    <string name="skill_adaptive_lower_defense_change_atk_type">(依据目标较低的防御改变伤害类型)</string>
     <string name="skill_adaptive_lower_defense">(适应物理/魔法防御中较低的防御)</string>
     <string name="skill_critical_damage_multiple">；暴击时，造成 {6}%s 倍伤害</string>
     <string name="skill_must_critical">；必定暴击</string>
     <string name="skill_ignore_def">；无视目标{7}%s防御力 </string>
-    <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s%s%s</string>
+    <string name="skill_action_type_desc_1">对%s造成 %s 的%s伤害%s%s%s%s%s</string>
     <string name="skill_forward">向前</string>
     <string name="skill_backward">向后</string>
     <string name="skill_ahead">前方</string>
@@ -662,7 +661,7 @@
     <string name="skill_action_type_desc_8">使%s进入%s状态%s%s</string>
     <string name="skill_action_hit_remove">，本效果将会在受到伤害时解除</string>
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>
-    <string name="skill_action_type_desc_9">使%s进入 [%s] 状态，每秒造成伤害 %s%s%s</string>
+    <string name="skill_action_type_desc_9">使%s进入 [%s] 状态，每秒造成伤害 %s%s%s%s</string>
     <string name="skill_buff">增益</string>
     <string name="skill_debuff">减益</string>
     <string name="skill_barrier">护盾</string>
@@ -766,7 +765,7 @@
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">每秒造成 %s %s伤害</string>
-    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>//TODO
+    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
@@ -811,7 +810,7 @@
     <string name="skill_action_type_desc_77_1">受到</string>
     <string name="skill_action_type_desc_78">使%s受到的伤害额外%s %s 倍%s%s</string>
     <string name="skill_action_type_desc_78_1">减益和异常状态数量</string>
-    <string name="skill_action_type_desc_79">%s行动时，受到%s %s 伤害%s%s</string>
+    <string name="skill_action_type_desc_79">%s行动时，受到%s %s 伤害%s%s%s</string>
     <string name="skill_action_type_desc_81">%s变更为无法被攻击的目标</string>
     <string name="skill_action_type_desc_90">%s%s提升 %s</string>
     <string name="skill_action_type_desc_901">战斗开始时生效</string>
@@ -846,6 +845,8 @@
     <string name="skill_action_type_desc_128">使%s受到的持续伤害的间隔和时间延长 [%d] 倍%s</string>
     <string name="skill_action_type_desc_129">使%s受到的 %s 伤害转化为持续伤害%s；该持续伤害不回复 TP</string>
     <string name="skill_action_type_desc_130">使%s受到伤害时，按物理/魔法防御中较高的防御计算伤害</string>
+    <string name="skill_action_take_damage_tp_0">，受击时不回复 TP</string>
+    <string name="skill_action_take_damage_tp_multiple">，受击 TP 变更为初始值的 [%d] 倍</string>
 
     <!--异常状态-->
     <string name="skill_ailment_1">减速</string>

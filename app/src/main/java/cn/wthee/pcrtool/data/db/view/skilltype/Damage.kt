@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.utils.getAtkType
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
 import cn.wthee.pcrtool.utils.getValueText
+import cn.wthee.pcrtool.utils.takeDamageTp
 
 // 1：造成伤害
 fun SkillActionDetail.damage(): String {
@@ -53,6 +54,8 @@ fun SkillActionDetail.damage(): String {
     val value =
         getValueText(1, actionValue1, actionValue2, actionValue3, v4 = actionValue4)
 
+    val tp = takeDamageTp()
+
     return getString(
         R.string.skill_action_type_desc_1,
         getTarget(),
@@ -61,7 +64,8 @@ fun SkillActionDetail.damage(): String {
         adaptive,
         multipleDamage,
         mustCritical,
-        ignoreDef
+        ignoreDef,
+        tp
     )
 }
 
@@ -70,12 +74,14 @@ fun SkillActionDetail.rateDamage(): String {
     val value = getValueText(1, actionValue1, actionValue2, percent = "%")
     val limit =
         getString(R.string.skill_action_damage_limit_int, actionValue3.toInt())
+    val tp = takeDamageTp()
+
     return when (actionDetail1) {
         1 -> getString(R.string.skill_action_type_desc_46_1, getTarget(), value)
         2 -> getString(R.string.skill_action_type_desc_46_2, getTarget(), value)
         3 -> getString(R.string.skill_action_type_desc_46_3, getTarget(), value)
         else -> UNKNOWN
-    } + (if (actionValue3 != 0.0) limit else "")
+    } + (if (actionValue3 != 0.0) limit else "") + tp
 }
 
 // 34、102：伤害递增

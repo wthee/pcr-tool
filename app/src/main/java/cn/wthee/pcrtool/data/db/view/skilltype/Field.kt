@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
 import cn.wthee.pcrtool.utils.getTimeText
 import cn.wthee.pcrtool.utils.getValueText
+import cn.wthee.pcrtool.utils.takeDamageTp
 
 // 36：攻击领域展开
 fun SkillActionDetail.attackField(): String {
@@ -22,12 +23,13 @@ fun SkillActionDetail.attackField(): String {
     )
     val time = getTimeText(5, actionValue5, actionValue6)
     val damage = getString(R.string.skill_action_type_desc_36_damage, value, atkType)
+    val tp = takeDamageTp()
 
     return getString(
         R.string.skill_action_type_desc_field,
         actionValue7.toInt(),
         damage,
-        time
+        tp + time
     )
 }
 

@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
 import cn.wthee.pcrtool.utils.getTimeText
 import cn.wthee.pcrtool.utils.getValueText
+import cn.wthee.pcrtool.utils.takeDamageTp
 
 // 9：持续伤害
 fun SkillActionDetail.dot(): String {
@@ -19,12 +20,15 @@ fun SkillActionDetail.dot(): String {
     } else {
         ""
     }
+    val tp = takeDamageTp()
+
     return getString(
         R.string.skill_action_type_desc_9,
         getTarget(),
         tag,
         value,
         dotIncrease,
+        tp,
         time
     )
 }
@@ -43,12 +47,15 @@ fun SkillActionDetail.actionDot(): String {
         type = ""
         limit = ""
     }
+    val tp = takeDamageTp()
+
     return getString(
         R.string.skill_action_type_desc_79,
         getTarget(),
         type,
         value,
         time,
+        tp,
         limit
     )
 }
