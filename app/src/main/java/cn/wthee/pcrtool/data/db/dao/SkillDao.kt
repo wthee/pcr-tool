@@ -3,7 +3,12 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.AttackPattern
+import cn.wthee.pcrtool.data.db.view.SkillActionDetail
+import cn.wthee.pcrtool.data.db.view.SkillBasicData
+import cn.wthee.pcrtool.data.db.view.SkillData
+import cn.wthee.pcrtool.data.db.view.SpSkillLabelData
+import cn.wthee.pcrtool.data.db.view.UnitSkillData
 
 /**
  * 技能数据 DAO
@@ -78,7 +83,7 @@ interface SkillDao {
      */
     @SkipQueryVerification
     @Query("SELECT * FROM spskill_label_data where unit_id = :unitId")
-    suspend fun getSpSkillLabel(unitId: Int): SpSkillLabelData
+    suspend fun getSpSkillLabel(unitId: Int): SpSkillLabelData?
 
     /**
      * 获取受tp限制的技能信息
