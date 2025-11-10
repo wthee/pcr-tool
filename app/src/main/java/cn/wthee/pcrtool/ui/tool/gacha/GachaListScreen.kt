@@ -54,7 +54,6 @@ import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.utils.fixTimeZone
 import cn.wthee.pcrtool.utils.formatTime
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -183,7 +182,7 @@ fun GachaItem(
     val idList = gachaInfo.unitList.map { it.unitId }
     val type = gachaInfo.getType()
     val color = when (type) {
-        GachaType.LIMIT, GachaType.NORMAL -> colorRed
+        GachaType.LIMIT, GachaType.NORMAL, GachaType.LIMIT_PICK -> colorRed
         GachaType.RE_LIMIT, GachaType.RE_NORMAL, GachaType.RE_LIMIT_PICK -> colorGold
         GachaType.FES -> colorGreen
         GachaType.ANNIV -> colorOrange
@@ -198,7 +197,7 @@ fun GachaItem(
         } != null
     val mockGachaType = when (type) {
         GachaType.FES -> MockGachaType.FES
-        GachaType.RE_LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
+        GachaType.RE_LIMIT_PICK, GachaType.LIMIT_PICK -> MockGachaType.PICK_UP_SINGLE
         else -> MockGachaType.PICK_UP
     }
     Column(

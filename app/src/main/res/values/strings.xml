@@ -372,6 +372,7 @@
     <!--模拟抽卡-->
     <string name="limit_re">复刻限定</string>
     <string name="limit_re_pick">复刻自选</string>
+    <string name="limit_pick">自选</string>
     <string name="normal_re">复刻常驻</string>
     <string name="fes">公主庆典</string>
     <string name="anv">周年</string>
