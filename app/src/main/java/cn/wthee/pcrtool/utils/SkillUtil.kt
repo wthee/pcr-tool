@@ -351,7 +351,7 @@ fun SkillActionDetail.getTargetType(): String {
             38 -> R.string.skill_target_38
             39 -> R.string.skill_target_39
             42 -> R.string.skill_target_42
-            43 -> R.string.skill_target_43
+            43, 51 -> R.string.skill_target_43_51
             44 -> R.string.skill_target_44
             45 -> R.string.skill_target_45
             46 -> R.string.skill_target_46

@@ -576,7 +576,7 @@
     <string name="skill_target_38">攻击力最高</string>
     <string name="skill_target_39">攻击力最低</string>
     <string name="skill_target_42">多目标</string>
-    <string name="skill_target_43">物理攻击力最高(自身除外)</string>
+    <string name="skill_target_43_51">物理攻击力最高(自身除外)</string>
     <string name="skill_target_44">剩余HP最低(自身除外)</string>
     <string name="skill_target_45">物理防御力最低</string>
     <string name="skill_target_46">魔法防御力最低</string>
