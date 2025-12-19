@@ -576,11 +576,13 @@
     <string name="skill_target_38">攻击力最高</string>
     <string name="skill_target_39">攻击力最低</string>
     <string name="skill_target_42">多目标</string>
-    <string name="skill_target_43_51">物理攻击力最高(自身除外)</string>
+    <string name="skill_target_43">物理攻击力最高(自身除外)</string>
     <string name="skill_target_44">剩余HP最低(自身除外)</string>
     <string name="skill_target_45">物理防御力最低</string>
     <string name="skill_target_46">魔法防御力最低</string>
+    <string name="skill_target_47">飞行状态</string>
     <string name="skill_target_50">魔法攻击力最高(自身除外)</string>
+    <string name="skill_target_51">物理攻击力最高(自身和魔法角色除外)</string>
     <string name="skill_target_13xxx">被标记</string>
     <string name="skill_target_fire">火天赋</string>
     <string name="skill_target_water">水天赋</string>
@@ -760,7 +762,9 @@
     <string name="skill_action_type_desc_29">无 UB 技能</string>
     <string name="skill_action_type_desc_30">%s死亡</string>
     <string name="skill_action_type_desc_32">为%s的下 [%d] 次攻击附加%s %s 的效果</string>
-    <string name="skill_action_type_desc_33">%s，受到%s伤害时反弹 %s 伤害%s，生效 [%d] 次</string>
+    <string name="skill_action_type_desc_33">%s，受到%s伤害时%s%s，生效 [%d] 次</string>
+    <string name="skill_action_type_desc_33_value">反弹 %s 伤害%s</string>
+    <string name="skill_action_type_desc_33_action">使用动作(%d)</string>
     <string name="skill_action_type_desc_33_hp">，并回复HP</string>
     <string name="skill_action_type_desc_34">每次攻击当前的目标，将会追加伤害 %s%s</string>
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
