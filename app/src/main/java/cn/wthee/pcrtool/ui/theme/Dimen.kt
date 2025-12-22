@@ -10,6 +10,7 @@ object Dimen {
     val fabElevation = 6.dp
     val popupMenuElevation = 8.dp
     val textElevation = 2.dp
+    val chipElevation = 4.dp
 
 
     //边距相关

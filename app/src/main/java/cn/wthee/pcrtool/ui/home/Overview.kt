@@ -544,7 +544,7 @@ private fun DbVersionOtherContent(
                 ),
                 contentColor = color,
                 textStyle = MaterialTheme.typography.bodySmall,
-                maxLines = 2
+                maxLines = 4
             )
         }
     }
