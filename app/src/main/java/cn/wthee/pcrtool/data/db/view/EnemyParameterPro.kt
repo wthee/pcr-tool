@@ -55,4 +55,18 @@ data class EnemyParameterPro(
         .replace("‧", "\n\n- ")
         .replace("　", "")
 
+    //剧情活动、深域展示图标
+    fun showIcon(): Boolean {
+        val idType = enemyId.toString()[0]
+        return idType == '6' || idType == '8'
+    }
+
+    //是否为角色
+    fun formatUnitId() = if(prefabId / 100000 == 1){
+        //角色
+        TalentQuestData.formatUnitId(unitId)
+    }else{
+        //敌人
+        prefabId
+    }
 }

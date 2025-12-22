@@ -134,13 +134,13 @@ fun EnemyDetailContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //图标，仅剧情活动boss显示
-        if (enemyData.enemyId.toString()[0] == '6') {
+        //图标，剧情活动boss、深域显示
+        if (enemyData.showIcon()) {
             MainIcon(
                 data = ImageRequestHelper.getInstance()
                     .getUrl(
                         ImageRequestHelper.ICON_UNIT,
-                        enemyData.prefabId
+                        enemyData.formatUnitId()
                     ),
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)

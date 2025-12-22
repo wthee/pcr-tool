@@ -53,10 +53,13 @@ data class TalentQuestData(
         formatUnitId(unitId5),
     )
 
-    //处理角色id
-    private fun formatUnitId(unitId: Int) = if (unitId > 600000) {
-        (unitId - 500000 + 30) / 10 * 10 + 1
-    } else {
-        unitId
+    companion object {
+        //处理深域角色id
+        fun formatUnitId(unitId: Int) = if (unitId / 100000 == 6) {
+            (unitId - 500000 + 30) / 10 * 10 + 1
+        } else {
+            unitId
+        }
     }
+
 }
