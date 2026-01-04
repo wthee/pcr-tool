@@ -104,3 +104,18 @@ fun SkillActionDetail.sealCount(): String {
         time
     )
 }
+
+
+// 133：标记消耗
+fun SkillActionDetail.sealConsume(): String {
+    val action1 = actionDetail1 % 100
+    val time = getTimeText(4, actionValue4, hideIndex = true)
+    // 使用 UB 时？
+    return getString(
+        R.string.skill_action_type_desc_133,
+        getTarget(),
+        actionValue2.toInt(),
+        action1,
+        time
+    )
+}

@@ -23,8 +23,8 @@ fun SkillActionDetail.aura(): String {
         //回避等技能限制
         initOtherLimit()
     }
-    val value = getValueText(2, actionValue2, actionValue3, percent = getPercent())
-    val aura = getBuffText(actionDetail1, value, actionValue7)
+    val valueText = getValueText(2, actionValue2, actionValue3, percent = getPercent())
+    val aura = getBuffText(actionDetail1, valueText, actionValue7)
     val time = getTimeText(4, actionValue4, actionValue5)
 
     return if (actionDetail2 == 2) {

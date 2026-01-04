@@ -29,7 +29,7 @@ fun SkillActionDetail.strikeBack(): String {
      */
     val action = if (actionValue3.toInt() != 0) {
         // 动作
-        getString(R.string.skill_action_type_desc_33_action, actionDetail3.toInt() % 100)
+        getString(R.string.skill_action_type_desc_33_action, actionDetail3 % 100)
     } else {
         // 数值
         getString(R.string.skill_action_type_desc_33_value, value)

@@ -471,7 +471,7 @@
     <string name="skill_type_32">HP吸收</string>
     <string name="skill_type_33">反伤</string>
     <string name="skill_type_34">伤害递增</string>
-    <string name="skill_type_35_43_60_77">标记</string>
+    <string name="skill_type_35_43_60_77_133">标记</string>
     <string name="skill_type_36_37_38_39_40">领域</string>
     <string name="skill_type_42">触发</string>
     <string name="skill_type_44">进场</string>
@@ -512,6 +512,7 @@
     <string name="skill_action_type_128">持续伤害增强</string>
     <string name="skill_action_type_129">伤害转化</string>
     <string name="skill_action_type_130">调和</string>
+    <string name="skill_action_type_132">伤害变更</string>
 
     <!--技能状态相关-->
     <string name="skill_status_100">无法行动</string>
@@ -610,6 +611,7 @@
     <string name="skill_atk_text">攻击力</string>
     <string name="skill_speed">速度</string>
     <string name="skill_hp_max">HP最大值</string>
+    <string name="skill_buff_effect">增益效果</string>
     <string name="skill_increase">提升</string>
     <string name="skill_reduce">减少</string>
     <string name="skill_fixed">(固定数值)</string>
@@ -850,6 +852,8 @@
     <string name="skill_action_type_desc_128">使%s受到的持续伤害的间隔和时间延长 [%d] 倍%s</string>
     <string name="skill_action_type_desc_129">使%s受到的 %s 伤害转化为持续伤害%s；该持续伤害不回复 TP</string>
     <string name="skill_action_type_desc_130">使%s受到伤害时，按物理/魔法防御中较高的防御计算伤害</string>
+    <string name="skill_action_type_desc_132">使%s造成的伤害%s%s%s%s</string>
+    <string name="skill_action_type_desc_133">对%s追加 [%d] 层标记，使用 UB 时，减少 [1] 层标记，并使用动作(%d)%s</string>
     <string name="skill_action_take_damage_tp_0">，受击时不回复 TP</string>
     <string name="skill_action_take_damage_tp_multiple">，受击 TP 变更为初始值的 [%d] 倍</string>
 

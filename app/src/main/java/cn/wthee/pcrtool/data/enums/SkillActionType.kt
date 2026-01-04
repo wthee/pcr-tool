@@ -191,12 +191,12 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 35：特殊标记
      */
-    SEAL(35, R.string.skill_type_35_43_60_77),
+    SEAL(35, R.string.skill_type_35_43_60_77_133),
 
     /**
      * 101：特殊标记v2
      */
-    SEAL_V2(101, R.string.skill_type_35_43_60_77),
+    SEAL_V2(101, R.string.skill_type_35_43_60_77_133),
 
     /**
      * 36：攻击领域展开
@@ -236,7 +236,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 43：拥有标记时触发
      */
-    IF_TARGETED(43, R.string.skill_type_35_43_60_77),
+    IF_TARGETED(43, R.string.skill_type_35_43_60_77_133),
 
     /**
      * 44：每场战斗开始时
@@ -321,7 +321,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 60：标记赋予
      */
-    ATTACK_SEAL(60, R.string.skill_type_35_43_60_77),
+    ATTACK_SEAL(60, R.string.skill_type_35_43_60_77_133),
 
     /**
      * 61：恐慌
@@ -381,7 +381,7 @@ enum class SkillActionType(val type: Int, val descId: Int) {
     /**
      * 77：被动叠加标记
      */
-    IF_BUFF_SEAL(77, R.string.skill_type_35_43_60_77),
+    IF_BUFF_SEAL(77, R.string.skill_type_35_43_60_77_133),
 
     /**
      * 78：被击伤害上升
@@ -539,6 +539,16 @@ enum class SkillActionType(val type: Int, val descId: Int) {
      * 130：调和
      */
     CHANGE_DEF_MAX(130, R.string.skill_action_type_130),
+
+    /**
+     * 132：伤害变更
+     */
+    DAMAGE_CHANGE(132, R.string.skill_action_type_132),
+
+    /**
+     * 133：标记消耗
+     */
+    SEAL_CONSUME(133, R.string.skill_type_35_43_60_77_133),
     ;
 
     companion object {

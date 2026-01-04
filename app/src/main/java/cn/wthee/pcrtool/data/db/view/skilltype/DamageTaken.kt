@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.view.skilltype
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionDetail
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN
+import cn.wthee.pcrtool.utils.getEffectType
 import cn.wthee.pcrtool.utils.getString
 import cn.wthee.pcrtool.utils.getTarget
 import cn.wthee.pcrtool.utils.getTimeText
@@ -18,11 +19,7 @@ fun SkillActionDetail.damageTakenUp(): String {
         else -> getString(R.string.unknown)
     }
     //增加或减少
-    val effectType = when (actionDetail2) {
-        1 -> getString(R.string.skill_action_type_desc_additive)
-        2 -> getString(R.string.skill_action_type_desc_subtract)
-        else -> getString(R.string.unknown)
-    }
+    val effectType = getEffectType(actionDetail2)
     //倍数计算公式
     val valueText = "<${actionValue1} * ${countType}>"
     return getString(

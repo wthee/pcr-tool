@@ -470,3 +470,12 @@ fun SkillActionDetail.takeDamageTp() = if (actionDetail3.toInt() != 0) {
 } else {
     ""
 }
+
+/**
+ * 增加或减少
+ */
+fun getEffectType(value: Int) = when (value) {
+    1 -> getString(R.string.skill_action_type_desc_additive)
+    2 -> getString(R.string.skill_action_type_desc_subtract)
+    else -> getString(R.string.unknown)
+}
