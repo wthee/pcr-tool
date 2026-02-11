@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.R
 /**
  *菜单
  */
-enum class ToolMenuType(val id: Int, @StringRes val titleId: Int, val iconType: MainIconType) {
+enum class ToolMenuType(val id: Int, @param:StringRes val titleId: Int, val iconType: MainIconType) {
     CHARACTER(200, R.string.character, MainIconType.CHARACTER),
     EQUIP(201, R.string.tool_equip, MainIconType.EQUIP),
     GUILD(202, R.string.tool_guild, MainIconType.GUILD),

@@ -12,10 +12,7 @@ import javax.inject.Inject
 class QuestRepository @Inject constructor(private val questDao: QuestDao) {
 
     suspend fun getEquipDropQuestList(equipId: Int) = try {
-        var query = ""
-        if (equipId != 0) {
-            query = equipId.toString()
-        }
+        val query = if (equipId != 0) equipId.toString() else ""
         questDao.getEquipDropQuestList(query)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getEquipDropQuestList#equipId:$equipId")
@@ -25,18 +22,21 @@ class QuestRepository @Inject constructor(private val questDao: QuestDao) {
     suspend fun getTalentQuestList(talentType: Int) = try {
         val pattern = Regex("(\\d+)-(\\d+)")
 
-        var rewardList = questDao.getTalentQuestRewardList()
+        val rewardList = questDao.getTalentQuestRewardList()
         val questList = questDao.getTalentQuestList(talentType)
+        
+        // 使用 Map 优化查找性能
+        val rewardMap = rewardList.associateBy { it.questId % 1000 }
+        
         questList.forEach { quest ->
-            //设置掉落信息
-            val reward = rewardList.find { it.questId % 1000 == quest.questId % 1000 }
-            reward?.let {
+            // 设置掉落信息
+            rewardMap[quest.questId % 1000]?.let { reward ->
                 quest.rewardId2 = reward.rewardId2
                 quest.rewardId3 = reward.rewardId3
                 quest.rewardNum2 = reward.rewardNum2
                 quest.rewardNum3 = reward.rewardNum3
             }
-            //格式化关卡名
+            // 格式化关卡名
             val matchResult = pattern.find(quest.questName)
             if (matchResult != null) {
                 val (x, y) = matchResult.destructured
