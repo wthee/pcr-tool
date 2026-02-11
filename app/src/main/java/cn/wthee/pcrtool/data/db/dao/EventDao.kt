@@ -321,9 +321,9 @@ interface EventDao {
             start_time,
             end_time
         FROM
-            colosseum_schedule_data 
+            dome_schedule_data 
         ORDER BY
-            colosseum_schedule_data.schedule_id DESC
+            dome_schedule_data.schedule_id DESC
         LIMIT 0,:limit
     """
     )

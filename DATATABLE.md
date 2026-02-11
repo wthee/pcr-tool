@@ -2,7 +2,7 @@
 
 | 表名                            | 中文名             | 备注             |
 |-------------------------------|-----------------|----------------|
-| abyss_schedule                | 深域讨伐战日程         |                |
+| abyss_schedule                | 深渊讨伐战日程         |                |
 | actual_unit_background        | 角色现实背景          |                |
 | ailment_data                  | 异常状态            |                |
 | campaign_freegacha            | 免费十连日程          |                |
@@ -12,8 +12,8 @@
 | chara_story_status            | 角色剧情故事属性        |                |
 | clan_battle_2_map_data        | 公会战各阶段基本信息      |                |
 | clan_battle_schedule          | 公会战日程           |                |
-| colosseum_schedule_data       | 斗技场日程           |                |
 | daily_mission_data            | 每日任务            |                |
+| dome_schedule_data            | 斗技场日程           |                |
 | enemy_m_parts                 | 敌人多部位信息         |                |
 | enemy_parameter               | 敌人参数信息          |                |
 | enemy_reward_data             | 敌人掉落奖励信息        |                |
