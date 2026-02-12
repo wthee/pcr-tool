@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.utils.formatEnemyUnitId
 
 /**
  * 敌人参数
@@ -64,7 +65,7 @@ data class EnemyParameterPro(
     //是否为角色
     fun formatUnitId() = if(prefabId / 100000 == 1){
         //角色
-        TalentQuestData.formatUnitId(unitId)
+        formatEnemyUnitId(unitId)
     }else{
         //敌人
         prefabId

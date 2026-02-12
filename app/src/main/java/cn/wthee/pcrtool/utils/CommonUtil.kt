@@ -198,3 +198,12 @@ fun getZhNumberText(section: Int): String {
         else -> section.toString()
     }
 }
+
+
+
+//处理角色id
+fun formatEnemyUnitId(unitId: Int) = if (unitId / 100000 == 6) {
+    (unitId - 500000 + 30) / 10 * 10 + 1
+} else {
+    unitId
+}

@@ -80,7 +80,7 @@ interface EventDao {
             ss.start_time,
             ss.end_time,
             enemy.enemy_id AS boss_enemy_id,
-            enemy.unit_id AS boss_unit_id,
+            unit_enemy_data.prefab_id AS boss_unit_id,
             '' AS unit_ids 
         FROM
             seven_schedule AS s
@@ -90,6 +90,7 @@ interface EventDao {
             AND battle.mode = 1
             LEFT JOIN seven_wave_group_data AS wave ON wave.wave_group_id = battle.wave_group_id
             LEFT JOIN seven_enemy_parameter AS enemy ON wave.enemy_id_1 = enemy.enemy_id 
+            LEFT JOIN unit_enemy_data ON enemy.unit_id = unit_enemy_data.unit_id
         GROUP BY
             s.event_id 
         ORDER BY

@@ -315,15 +315,14 @@ fun StoryEventItemContent(
             )
 
             //boss、掉落角色图标
-
             Row {
                 //sp boss 图标，处理id 311403 -> 311400
-                if (!isSub && event.bossUnitId != 0) {
+                if (event.bossUnitId != 0) {
                     MainIcon(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(
                                 ImageRequestHelper.ICON_UNIT,
-                                event.bossUnitId / 10 * 10
+                                event.bossUnitId
                             ),
                         modifier = Modifier.padding(start = Dimen.mediumPadding),
                         onClick = {
