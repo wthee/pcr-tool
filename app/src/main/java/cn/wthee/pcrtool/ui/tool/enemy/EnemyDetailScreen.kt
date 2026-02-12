@@ -302,7 +302,7 @@ fun EnemySkillList(
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
 
         skillList?.let {
-            skillList.filter { it.level > 0 }.forEach { skillDetail ->
+            skillList.forEach { skillDetail ->
                 SkillItemContent(
                     skillDetail = skillDetail,
                     unitType = unitType,
