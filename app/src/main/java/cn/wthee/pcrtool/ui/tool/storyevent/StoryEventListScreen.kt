@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.StoryEventData
@@ -315,15 +315,14 @@ fun StoryEventItemContent(
             )
 
             //boss、掉落角色图标
-
             Row {
                 //sp boss 图标，处理id 311403 -> 311400
-                if (!isSub && event.bossUnitId != 0) {
+                if (event.bossUnitId != 0) {
                     MainIcon(
                         data = ImageRequestHelper.getInstance()
                             .getUrl(
                                 ImageRequestHelper.ICON_UNIT,
-                                event.bossUnitId / 10 * 10
+                                event.bossUnitId
                             ),
                         modifier = Modifier.padding(start = Dimen.mediumPadding),
                         onClick = {

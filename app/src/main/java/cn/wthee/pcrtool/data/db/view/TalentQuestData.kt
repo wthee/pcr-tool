@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
+import cn.wthee.pcrtool.utils.formatEnemyUnitId
 
 /**
  * 深域关卡
@@ -46,17 +47,11 @@ data class TalentQuestData(
     }
 
     fun getUnitIdList(): List<Int> = arrayListOf(
-        formatUnitId(unitId1),
-        formatUnitId(unitId2),
-        formatUnitId(unitId3),
-        formatUnitId(unitId4),
-        formatUnitId(unitId5),
+        formatEnemyUnitId(unitId1),
+        formatEnemyUnitId(unitId2),
+        formatEnemyUnitId(unitId3),
+        formatEnemyUnitId(unitId4),
+        formatEnemyUnitId(unitId5),
     )
 
-    //处理角色id
-    private fun formatUnitId(unitId: Int) = if (unitId > 600000) {
-        (unitId - 500000 + 30) / 10 * 10 + 1
-    } else {
-        unitId
-    }
 }

@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.copyAtk
 import cn.wthee.pcrtool.data.db.view.skilltype.countBlind
 import cn.wthee.pcrtool.data.db.view.skilltype.countDown
 import cn.wthee.pcrtool.data.db.view.skilltype.damage
+import cn.wthee.pcrtool.data.db.view.skilltype.damageChange
 import cn.wthee.pcrtool.data.db.view.skilltype.damageReduce
 import cn.wthee.pcrtool.data.db.view.skilltype.damageTakenUp
 import cn.wthee.pcrtool.data.db.view.skilltype.damageToDot
@@ -74,6 +75,7 @@ import cn.wthee.pcrtool.data.db.view.skilltype.rateDamage
 import cn.wthee.pcrtool.data.db.view.skilltype.reindeer
 import cn.wthee.pcrtool.data.db.view.skilltype.revival
 import cn.wthee.pcrtool.data.db.view.skilltype.seal
+import cn.wthee.pcrtool.data.db.view.skilltype.sealConsume
 import cn.wthee.pcrtool.data.db.view.skilltype.sealCount
 import cn.wthee.pcrtool.data.db.view.skilltype.sealV2
 import cn.wthee.pcrtool.data.db.view.skilltype.skillCount
@@ -406,6 +408,10 @@ data class SkillActionDetail(
             SkillActionType.DAMAGE_TO_DOT -> damageToDot()
             // 130：调和
             SkillActionType.CHANGE_DEF_MAX -> changeDefMax()
+            // 132：伤害变更
+            SkillActionType.DAMAGE_CHANGE -> damageChange()
+            // 133：标记消耗
+            SkillActionType.SEAL_CONSUME -> sealConsume()
             else -> unknownType()
         }
     }

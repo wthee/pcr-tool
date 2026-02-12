@@ -26,6 +26,7 @@ enum class BuffType(val type: Int, val nameId: Int) {
     MAGIC_DAMAGE_TAKE(17, R.string.skill_magic_damage_take),
     PHYSICAL_DAMAGE(18, R.string.skill_physical_damage),
     MAGIC_DAMAGE(19, R.string.skill_magic_damage),
+    BUFF(20, R.string.skill_buff_effect),
     MAX_HP(100, R.string.skill_hp_max),
     ;
 

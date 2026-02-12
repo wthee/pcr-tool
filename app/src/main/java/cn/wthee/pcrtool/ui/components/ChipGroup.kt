@@ -118,9 +118,9 @@ fun MainChip(
                 }
             )
         },
-//        border = FilterChipDefaults.filterChipBorder(
-//            borderColor = selectedColor ?: MaterialTheme.colorScheme.onSurface
-//        )
+        elevation = FilterChipDefaults.elevatedFilterChipElevation(
+            elevation = Dimen.chipElevation
+        )
     )
 }
 

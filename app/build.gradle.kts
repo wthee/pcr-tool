@@ -1,10 +1,10 @@
 plugins {
-    id(libs.plugins.android.get().pluginId)
-    id(libs.plugins.application.get().pluginId)
-    id(libs.plugins.hilt.get().pluginId)
-    id(libs.plugins.ksp.get().pluginId)
-    id(libs.plugins.compose.get().pluginId)
-    id(libs.plugins.serialization.get().pluginId)
+    alias(libs.plugins.application)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
 }
 
 
@@ -12,8 +12,8 @@ hilt {
     enableAggregatingTask = true
 }
 
-val appVersionCode = 391
-val appVersionName = "3.9.1"
+val appVersionCode = 392
+val appVersionName = "3.9.2"
 val appId = "cn.wthee.pcrtool"
 
 android {
@@ -103,88 +103,47 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
 
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.multidex)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.bundles.androidx)
 
-    //compose unstable
-    implementation(libs.compose.animation)
-    implementation(libs.compose.material)
-    implementation(libs.compose.material.navigation)
+    implementation(libs.bundles.kotlin)
+
+    // Compose
+    implementation(libs.bundles.compose)
     debugImplementation(libs.compose.ui.tooling)
-    implementation(libs.compose.ui.util)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material.icons.extended)
-    implementation(libs.compose.runtime.livedata)
-    implementation(libs.compose.material3)
 
-    //Browser
-    implementation(libs.browser)
+    // Coil
+    implementation(libs.bundles.coil)
 
-    //Bugly
-    implementation(libs.crashreport)
-
-    //Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.ktor3)
-
-    //datastore
-    implementation(libs.datastore.preferences)
-
-    //Hilt
-    implementation(libs.hilt.android)
+    // Hilt
+    implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
 
-    //ktor
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.client.android)
+    // Lifecycle
+    implementation(libs.bundles.lifecycle)
 
-    //Lifecycle
-    implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.lifecycle.livedata.ktx)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.lifecycle.service)
-    implementation(libs.lifecycle.viewmodel.compose)
+    // Ktor
+    implementation(libs.bundles.ktor)
 
-    //media3
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.datasource)
-    implementation(libs.media3.ui)
+    // Media3
+    implementation(libs.bundles.media3)
 
-    //Navigation
+    // Navigation
     implementation(libs.navigation.compose)
 
-    //Paging3
-    implementation(libs.paging.runtime.ktx)
-    implementation(libs.paging.compose)
+    // Paging
+    implementation(libs.bundles.paging)
 
-    //Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    implementation(libs.room.paging)
+    // Room
+    implementation(libs.bundles.room)
     ksp(libs.room.compiler)
 
-    //splashscreen
-    implementation(libs.splashscreen)
-
-    //startup
-    implementation(libs.startup.runtime)
-
-    //palette 取色
-    implementation(libs.palette.ktx)
-
-    //Work
+    // Work
     implementation(libs.work.runtime)
 
+    // Others
+    implementation(libs.crashreport)
     implementation(files("libs/commons-compress-1.19.jar"))
     implementation(files("libs/dec-0.1.2.jar"))
-
 }

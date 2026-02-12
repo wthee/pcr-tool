@@ -72,7 +72,7 @@ class GachaInfo(
 
 
     /**
-     * 获取卡池描述
+     * 获取卡池描述 fixme 优化判断逻辑
      */
     fun getDesc() = description.deleteSpace
 
@@ -105,7 +105,11 @@ class GachaInfo(
                 || gachaName.contains("自选")
                 || gachaName.contains("自選")
             ) {
-                GachaType.RE_LIMIT_PICK
+                if (gachaName.contains("自选精选")) {
+                    GachaType.LIMIT_PICK
+                } else {
+                    GachaType.RE_LIMIT_PICK
+                }
             } else {
                 GachaType.UNKNOWN
             }

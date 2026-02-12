@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -134,13 +134,13 @@ fun EnemyDetailContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //图标，仅剧情活动boss显示
-        if (enemyData.enemyId.toString()[0] == '6') {
+        //图标，剧情活动boss、深域显示
+        if (enemyData.showIcon()) {
             MainIcon(
                 data = ImageRequestHelper.getInstance()
                     .getUrl(
                         ImageRequestHelper.ICON_UNIT,
-                        enemyData.prefabId
+                        enemyData.formatUnitId()
                     ),
                 modifier = Modifier
                     .padding(vertical = Dimen.mediumPadding)
@@ -302,7 +302,7 @@ fun EnemySkillList(
         Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
 
         skillList?.let {
-            skillList.filter { it.level > 0 }.forEach { skillDetail ->
+            skillList.forEach { skillDetail ->
                 SkillItemContent(
                     skillDetail = skillDetail,
                     unitType = unitType,

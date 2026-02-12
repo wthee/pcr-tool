@@ -24,12 +24,22 @@ fun SkillActionDetail.strikeBack(): String {
         else -> ""
     }
 
+    /**
+     * @see <a href="https://github.com/wthee/pcr-tool/issues/147">issue #147</a>
+     */
+    val action = if (actionValue3.toInt() != 0) {
+        // 动作
+        getString(R.string.skill_action_type_desc_33_action, actionDetail3 % 100)
+    } else {
+        // 数值
+        getString(R.string.skill_action_type_desc_33_value, value)
+    }
     return if (actionDetail1 <= 6) {
         getString(
             R.string.skill_action_type_desc_33,
             shieldText,
             backType,
-            value,
+            action,
             hpRecovery,
             actionValue3.toInt()
         )

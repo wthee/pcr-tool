@@ -82,8 +82,7 @@ interface QuestDao {
             talent_quest_data
             LEFT JOIN talent_quest_clear_reward_01 AS reward ON reward.reward_group_id = talent_quest_data.clear_reward_group 
         WHERE
-            reward.reward_group_id IS NOT NULL 
-            AND talent_quest_data.area_id = 81001 
+            reward.reward_group_id IS NOT NULL
         ORDER BY
             talent_quest_data.area_id,
             talent_quest_data.quest_id DESC

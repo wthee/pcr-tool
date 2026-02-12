@@ -68,7 +68,8 @@ data class ExtraEquipmentData(
                 AttrCompareData(
                     title = attrValue.title,
                     attr0 = attrValue.value,
-                    attr1 = this.attr.allNotZero(context)[index].value,
+                    attr1 = this.attr.allNotZero(context).getOrNull(index)?.value
+                        ?: attrValue.value,
                     attrCompare = 0.0
                 )
             )

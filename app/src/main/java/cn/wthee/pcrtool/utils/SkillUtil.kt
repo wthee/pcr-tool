@@ -306,6 +306,8 @@ fun SkillActionDetail.getTargetRange() = when (targetRange) {
 
 /**
  * 目标类型
+ *
+ * @see <a href="https://github.com/wthee/pcr-tool/issues/148#issuecomment-3671555051">issue #148</a>
  */
 fun SkillActionDetail.getTargetType(): String {
     val targetArea = when (targetArea) {
@@ -355,7 +357,9 @@ fun SkillActionDetail.getTargetType(): String {
             44 -> R.string.skill_target_44
             45 -> R.string.skill_target_45
             46 -> R.string.skill_target_46
+            47 -> R.string.skill_target_47
             50 -> R.string.skill_target_50
+            51 -> R.string.skill_target_51
             in 13195..14000 -> R.string.skill_target_13xxx
             14001, 15001 -> R.string.skill_target_fire
             14002, 15002 -> R.string.skill_target_water
@@ -465,4 +469,13 @@ fun SkillActionDetail.takeDamageTp() = if (actionDetail3.toInt() != 0) {
     }
 } else {
     ""
+}
+
+/**
+ * 增加或减少
+ */
+fun getEffectType(value: Int) = when (value) {
+    1 -> getString(R.string.skill_action_type_desc_additive)
+    2 -> getString(R.string.skill_action_type_desc_subtract)
+    else -> getString(R.string.unknown)
 }
