@@ -18,6 +18,11 @@ data class UniqueEquipBasicData(
 /**
  * 获取专用装备标识
  */
-fun getIndex(index: Int) = if (index == 1) "①" else "②"
+fun getIndex(index: Int) = when(index){
+    1 -> "①"
+    2 -> "②"
+    3 -> "SP①"
+    else -> ""
+}
 
 

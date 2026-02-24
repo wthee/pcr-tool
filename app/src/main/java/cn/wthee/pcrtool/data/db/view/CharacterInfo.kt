@@ -29,7 +29,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "limit_type") var limitType: Int = 0,
     @ColumnInfo(name = "gacha_id") var gachaId: Int = 0,
     @Ignore var talentId: Int = 0,
-    @Ignore var uniqueEquipType: Int = 0,
+    @Ignore var uniqueEquipSlotList: List<Int> = emptyList(),
     @Ignore var roleId: Int = 0,
 ) {
     constructor() : this(-1, "", 3, "", "", "", "", "", "", "", "", "", "", "", 0, 1, "", 1, 0, 0)

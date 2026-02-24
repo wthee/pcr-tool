@@ -27,6 +27,7 @@
 | ex_equipment_category         | ex 装备类型         |                |
 | ex_equipment_data             | ex 装备           |                |
 | experience_team               | 经验（账号）          | 不含等级突破         |
+| ex_unique_equipment_1               | 专用装备1 SP        |          |
 | gacha_data                    | 卡池              |                |
 | gacha_exchange_lineup         | 卡池交换信息          |                |
 | guild                         | 角色公会            |                |
@@ -79,7 +80,7 @@
 | unit_role_data                | 单位（角色）角色职能      |                |
 | unit_skill_data               | 单位（角色、敌人）技能关联   |                |
 | unit_skill_data_rf            | 单位（角色）重构技能      | tp、回避等技能超过一定等级 |
-| ~~unit_status_coefficient~~       | ~~战力系数~~            | v3.9.2 后移除相关功能 |
+| ~~unit_status_coefficient~~       | ~~战力系数~~        | v3.9.2 后移除相关功能 |
 | unit_talent                   | 角色天赋            | 火水风光暗          |
 | unit_unique_equip             | 角色专用装备          | 日、台已废弃         |
 | unit_unique_equipment         | 角色专用装备          |                |

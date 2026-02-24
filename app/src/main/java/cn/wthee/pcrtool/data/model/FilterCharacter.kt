@@ -55,7 +55,7 @@ data class FilterCharacter(
      */
     var type: Int = 0,
     /**
-     * 六星：0全部、1专用装备1、2专用装备2
+     * 六星：0全部、1专用装备1、2专用装备2、3专用装备1 ex、4未开专
      */
     var uniqueEquipType: Int = 0,
     /**

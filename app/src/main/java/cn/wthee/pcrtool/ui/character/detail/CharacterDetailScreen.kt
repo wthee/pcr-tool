@@ -432,21 +432,31 @@ private fun SharedTransitionScope.CharacterDetailContent(
                         )
 
                         //专武
-                        CharacterDetailModuleType.UNIQUE_EQUIP -> uiState.allAttr.uniqueEquipList
-                            .forEachIndexed { index, uniqueEquipmentMaxData ->
-                                UniqueEquipDetail(
-                                    animatedVisibilityScope = animatedVisibilityScope,
-                                    slot = index + 1,
-                                    currentValue = uiState.currentValue,
-                                    uniqueEquipLevelMax = if (index == 0) {
-                                        uiState.maxValue.uniqueEquipmentLevel
-                                    } else {
-                                        5
-                                    },
-                                    uniqueEquipmentMaxData = uniqueEquipmentMaxData,
-                                    updateCurrentValue = updateCurrentValue,
-                                )
-                            }
+                        CharacterDetailModuleType.UNIQUE_EQUIP -> {
+                            // 专用装备1sp属性
+                            val sp1Data = uiState.allAttr.uniqueEquipList.findLast { it.equipSlot == 3 }
+                            uiState.allAttr.uniqueEquipList
+                                .filter { it.equipSlot != 3 }
+                                .forEach { equipData ->
+                                    UniqueEquipDetail(
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                        slot = equipData.equipSlot,
+                                        currentValue = uiState.currentValue,
+                                        uniqueEquipLevelMax = if (equipData.equipSlot == 1) {
+                                            uiState.maxValue.uniqueEquipmentLevel
+                                        } else {
+                                            5
+                                        },
+                                        uniqueEquipmentMaxData = equipData,
+                                        sp1Data = if (equipData.equipSlot == 1) {
+                                            sp1Data
+                                        } else {
+                                            null
+                                        },
+                                        updateCurrentValue = updateCurrentValue,
+                                    )
+                                }
+                        }
 
                         //技能列表
                         CharacterDetailModuleType.SKILL -> SkillListScreen(

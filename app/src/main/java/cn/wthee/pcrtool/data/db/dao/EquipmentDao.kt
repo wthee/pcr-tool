@@ -188,15 +188,60 @@ interface EquipmentDao {
             ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy,
             0 AS isTpLimitAction
         FROM
-            ( SELECT unit_id, equip_id FROM unit_unique_equipment UNION SELECT unit_id, equip_id FROM unit_unique_equip ) AS r
-            LEFT OUTER JOIN unit_unique_equip AS s ON r.equip_id = s.equip_id
+            ( SELECT unit_id, equip_id FROM unit_unique_equipment) AS r
             LEFT OUTER JOIN unique_equipment_data AS a ON r.equip_id = a.equipment_id
             LEFT OUTER JOIN unique_equip_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND (r.unit_id = :unitId OR s.unit_id = :unitId) AND b.min_lv <= 2 AND a.equipment_id % 10 = :slot
+            a.equipment_id IS NOT NULL AND r.unit_id = :unitId AND b.min_lv <= 2 AND a.equipment_id % 10 = :slot
     """
     )
     suspend fun getUniqueEquipInfo(unitId: Int, lv: Int, slot: Int): UniqueEquipmentMaxData?
+
+
+    /**
+     * 获取专武1sp信息
+     * @param unitId 角色编号
+     * @param lv 装备等级
+     */
+    @SkipQueryVerification
+    @Transaction
+    @Query(
+        """
+            SELECT
+            ud.unit_id,
+            ued.equipment_id,
+            ued.equipment_name,
+            ued.description,
+            a.hp,
+            a.attack AS atk ,
+            a.magic_attack AS magic_str,
+            a.defense AS def,
+            a.magic_defense AS magic_def ,
+            a.critical AS physical_critical,
+            a.magic_critical ,
+            a.wave_hp_recovery ,
+            a.wave_energy_recovery ,
+            a.dodge ,
+            a.penetration AS physical_penetrate,
+            a.magic_penetration AS magic_penetrate,
+            a.life_steal,
+            a.hp_recovery_rate,
+            a.energy_recovery_rate,
+            a.energy_reduce_rate,
+            a.accuracy,
+            0 AS isTpLimitAction
+        FROM
+            ex_unique_equipment_1 AS a
+            LEFT JOIN unit_unique_equipment as uue ON uue.equip_id = a.equipment_id
+            LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = a.equipment_id
+            LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
+        WHERE
+            a.equipment_id IS NOT NULL AND ud.unit_id = :unitId
+    """
+    )
+    suspend fun getUniqueEquip1SpInfo(unitId: Int): UniqueEquipmentMaxData?
+
+
 
     /**
      * 获取专武信息（等级大于260或300）
@@ -227,8 +272,7 @@ interface EquipmentDao {
         FROM
             unique_equip_enhance_rate AS a
             LEFT JOIN unit_unique_equipment AS r ON r.equip_id = a.equipment_id
-            LEFT JOIN unit_unique_equip AS s ON s.equip_id = a.equipment_id
-        WHERE (r.unit_id = :unitId OR s.unit_id = :unitId) AND a.min_lv = :minLv + 1
+        WHERE r.unit_id = :unitId  AND a.min_lv = :minLv + 1
     """
     )
     suspend fun getUniqueEquipBonus(unitId: Int, lv: Int, minLv: Int): Attr?
@@ -418,19 +462,8 @@ interface EquipmentDao {
             ud.unit_name,
             uue.equip_slot
         FROM
-            ( 
-            -- fixme 兼容国服，后续优化
-            SELECT unit_id, equip_id,equip_slot FROM unit_unique_equipment 
-            UNION ALL
-            SELECT
-                unit_unique_equip.unit_id,
-                unit_unique_equip.equip_id,
-                unit_unique_equip.equip_slot
-            FROM
-                unit_unique_equip
-                LEFT JOIN unit_unique_equipment ON unit_unique_equipment.unit_id = unit_unique_equip.unit_id 
-            WHERE
-                unit_unique_equipment.unit_id IS NULL
+            (
+            SELECT unit_id, equip_id,equip_slot FROM unit_unique_equipment
             ) AS uue
             LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
             LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = uue.equip_id
@@ -444,4 +477,31 @@ interface EquipmentDao {
         unitId: Int
     ): List<UniqueEquipBasicData>
 
+    /**
+     * 获取专用装备列表（专武1ex）
+     * @param name 装备或角色名称
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            ued.equipment_id,
+            ued.equipment_name,
+            ued.description,
+            ud.unit_id,
+            ud.unit_name,
+            3 as equip_slot
+        FROM
+            ex_unique_equipment_1 AS ex_ue
+            LEFT JOIN unit_unique_equipment as uue ON uue.equip_id = ex_ue.equipment_id
+            LEFT JOIN unique_equipment_data as ued ON ued.equipment_id = ex_ue.equipment_id
+            LEFT JOIN unit_data AS ud ON ud.unit_id = uue.unit_id
+        WHERE (equipment_name LIKE '%' || :name || '%'  OR  unit_name LIKE '%' || :name || '%') 
+            AND  (0 = :unitId OR ud.unit_id = :unitId)
+        """
+    )
+    suspend fun getUniqueEquip1SpList(
+        name: String,
+        unitId: Int
+    ): List<UniqueEquipBasicData>
 }

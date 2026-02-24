@@ -71,26 +71,35 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     val uniqueEquips = uiState.uniqueEquipList
 
     //专用装备1
-    val uniqueEquips1 = uniqueEquips?.filter {
+    val uniqueEquipList1 = uniqueEquips.filter {
         it.equipSlot == 1
     }
     //专用装备2
-    val uniqueEquips2 = uniqueEquips?.filter {
+    val uniqueEquipList2 = uniqueEquips.filter {
         it.equipSlot == 2
+    }
+    //专用装备1ex
+    val uniqueEquipSpList1 = uniqueEquips.filter {
+        it.equipSlot == 3
     }
 
     //列表状态
     val gridState1 = rememberLazyGridState()
     val gridState2 = rememberLazyGridState()
+    val gridState3 = rememberLazyGridState()
 
     //计算页数
     var pagerCount = 0
-    if (uniqueEquips1?.isNotEmpty() == true) {
+    if (uniqueEquipList1.isNotEmpty() == true) {
         pagerCount = 1
     }
-    if (uniqueEquips2?.isNotEmpty() == true) {
+    if (uniqueEquipList2.isNotEmpty() == true) {
         pagerCount = 2
     }
+    if (uniqueEquipSpList1.isNotEmpty() == true) {
+        pagerCount = 3
+    }
+
 
     //页面状态
     val pagerState = rememberPagerState {
@@ -101,7 +110,7 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     MainScaffold(
         fabWithCustomPadding = {
             //搜索栏
-            val count = uniqueEquips?.size ?: 0
+            val count = uniqueEquips.size
 
             BottomSearchBar(
                 labelStringId = R.string.search_unique_equip,
@@ -115,11 +124,14 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                 fabText = count.toString(),
                 onTopClick = {
                     scope.launch {
-                        if (uniqueEquips1?.isNotEmpty() == true) {
+                        if (uniqueEquipList1.isNotEmpty() == true) {
                             gridState1.scrollToItem(0)
                         }
-                        if (uniqueEquips2?.isNotEmpty() == true) {
+                        if (uniqueEquipList2.isNotEmpty() == true) {
                             gridState2.scrollToItem(0)
+                        }
+                        if (uniqueEquipSpList1.isNotEmpty() == true) {
+                            gridState3.scrollToItem(0)
                         }
                     }
                 },
@@ -135,22 +147,25 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     ) {
         StateBox(stateType = uiState.loadState) {
             Column {
-                if (pagerCount == 2) {
-                    MainTabRow(
-                        pagerState = pagerState,
-                        tabs = arrayListOf(
-                            TabData(tab = getIndex(1), count = uniqueEquips1!!.size),
-                            TabData(tab = getIndex(2), count = uniqueEquips2!!.size)
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(RATIO_GOLDEN)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        if (it == 0) {
-                            gridState1.scrollToItem(0)
-                        } else {
-                            gridState2.scrollToItem(0)
-                        }
+                val tabList = arrayListOf(
+                    TabData(tab = getIndex(1), count = uniqueEquipList1.size),
+                    TabData(tab = getIndex(2), count = uniqueEquipList2.size)
+                )
+                //专用装备ex
+                if (pagerCount == 3) {
+                    tabList.add(TabData(tab = getIndex(3), count = uniqueEquipSpList1.size))
+                }
+                MainTabRow(
+                    pagerState = pagerState,
+                    tabs = tabList,
+                    modifier = Modifier
+                        .fillMaxWidth(RATIO_GOLDEN)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    when (it) {
+                        0 -> gridState1.scrollToItem(0)
+                        1 -> gridState2.scrollToItem(0)
+                        2 -> gridState3.scrollToItem(0)
                     }
                 }
 
@@ -161,9 +176,13 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                         state = if (index == 0) gridState1 else gridState2
                     ) {
                         items(
-                            if (index == 0) uniqueEquips1!! else uniqueEquips2!!,
+                            items = when (index) {
+                                0 -> uniqueEquipList1
+                                1 -> uniqueEquipList2
+                                else -> uniqueEquipSpList1
+                            },
                             key = {
-                                it.equipId
+                                "${it.equipSlot}-${it.equipId}"
                             }
                         ) { uniqueEquip ->
                             //获取角色名

@@ -24,7 +24,7 @@ import javax.inject.Inject
  */
 @Immutable
 data class UniqueEquipListUiState(
-    val uniqueEquipList: List<UniqueEquipBasicData>? = null,
+    val uniqueEquipList: List<UniqueEquipBasicData> = emptyList(),
     val loadState: LoadState = LoadState.Loading,
     //搜索弹窗
     val openSearch: Boolean = false,

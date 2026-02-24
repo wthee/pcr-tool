@@ -41,6 +41,7 @@ import cn.wthee.pcrtool.utils.deleteSpace
  * @param currentValue 当前属性
  * @param uniqueEquipLevelMax 等级
  * @param uniqueEquipmentMaxData 专武数值信息
+ * @param sp1Data 专用装备1sp数值信息
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -50,10 +51,10 @@ fun SharedTransitionScope.UniqueEquipDetail(
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
+    sp1Data: UniqueEquipmentMaxData? = null,
     updateCurrentValue: ((CharacterProperty) -> Unit)
 ) {
     val context = LocalContext.current
-
 
     uniqueEquipmentMaxData?.let {
         Column(
@@ -134,6 +135,13 @@ fun SharedTransitionScope.UniqueEquipDetail(
             }
             //属性
             AttrList(attrs = it.attr.allNotZero(context))
+            //专用装备1 sp 额外属性
+            if (sp1Data != null){
+                Subtitle2(
+                    text = stringResource(R.string.sp_unique_equip1_attr)
+                )
+                AttrList(attrs = sp1Data.attr.allNotZero(context))
+            }
         }
     }
 
