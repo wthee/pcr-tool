@@ -33,7 +33,6 @@ import cn.wthee.pcrtool.ui.character.profile.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.rankcompare.RankCompareScreen
 import cn.wthee.pcrtool.ui.character.rankequip.RankEquipListScreen
 import cn.wthee.pcrtool.ui.character.skillloop.CharacterSkillLoopScreen
-import cn.wthee.pcrtool.ui.character.statuscoe.CharacterStatusCoeScreen
 import cn.wthee.pcrtool.ui.character.story.CharacterStoryAttrScreen
 import cn.wthee.pcrtool.ui.equip.EquipListScreen
 import cn.wthee.pcrtool.ui.equip.detail.EquipDetailScreen
@@ -592,13 +591,6 @@ fun NavGraph(
                     ComicListScreen()
                 }
 
-                //战力系数
-                bottomSheet(
-                    route = NavRoute.ATTR_COE
-                ) {
-                    CharacterStatusCoeScreen()
-                }
-
                 //召唤物信息
                 bottomSheet(
                     route = "${NavRoute.SUMMON_DETAIL}/{${NavRoute.SUMMON_PROPERTY}}",
@@ -1094,13 +1086,6 @@ class NavActions(navController: NavHostController) {
      */
     val toComicList = {
         navController.navigate(NavRoute.COMIC)
-    }
-
-    /**
-     * 战力系数
-     */
-    val toCoe = {
-        navController.navigate(NavRoute.ATTR_COE)
     }
 
     /**

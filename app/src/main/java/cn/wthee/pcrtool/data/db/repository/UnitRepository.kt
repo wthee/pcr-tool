@@ -308,13 +308,6 @@ class UnitRepository @Inject constructor(
         0
     }
 
-    suspend fun getCoefficient() = try {
-        unitDao.getCoefficient()
-    } catch (e: Exception) {
-        LogReportUtil.upload(e, "getCoefficient")
-        null
-    }
-
     suspend fun getCutinId(unitId: Int) = try {
         unitDao.getCutinId(unitId) ?: 0
     } catch (e: Exception) {

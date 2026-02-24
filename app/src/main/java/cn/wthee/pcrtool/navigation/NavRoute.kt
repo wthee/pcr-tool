@@ -35,7 +35,6 @@ object NavRoute {
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_EQUIP = "allEquip"
-    const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
     const val EQUIP_NAME = "equipName"

@@ -79,7 +79,7 @@
 | unit_role_data                | 单位（角色）角色职能      |                |
 | unit_skill_data               | 单位（角色、敌人）技能关联   |                |
 | unit_skill_data_rf            | 单位（角色）重构技能      | tp、回避等技能超过一定等级 |
-| unit_status_coefficient       | 战力系数            |                |
+| ~~unit_status_coefficient~~       | ~~战力系数~~            | v3.9.2 后移除相关功能 |
 | unit_talent                   | 角色天赋            | 火水风光暗          |
 | unit_unique_equip             | 角色专用装备          | 日、台已废弃         |
 | unit_unique_equipment         | 角色专用装备          |                |

@@ -27,9 +27,6 @@
     <string name="title_room_comments">小屋</string>
     <string name="character_attr">属性</string>
     <string name="title_story_attr">剧情属性</string>
-    <string name="title_basic_coe">基本系数</string>
-    <string name="title_skill_coe">技能基本系数</string>
-    <string name="title_skill_basic_coe">技能相关系数</string>
     <string name="title_rank_bonus">RANK 奖励属性</string>
     <string name="cur_rank">当前 RANK</string>
     <string name="target_rank">目标 RANK</string>
@@ -314,17 +311,6 @@
     <string name="story_event_preview">预告</string>
     <string name="story_event_new">活动</string>
     <string name="clan_battle_month">%d月公会战</string>
-
-    <!--战力系数-->
-    <string name="title_ex_skill_add">EX+ 额外数值</string>
-    <string name="title_skill_1_add">技能+ 额外数值</string>
-    <string name="title_skill_1_coe">技能+ 系数</string>
-    <string name="title_ub_add">连结爆发+ 额外数值</string>
-    <string name="title_ub_coe">连结爆发+ 系数</string>
-    <string name="attr_all_value">战力：%s</string>
-    <string name="title_attr_tip">属性数值说明</string>
-    <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + RANK 奖励属性</string>
-    <string name="tip_status_coe">※ 数值与游戏数值可能存在一定误差，请以游戏内为准</string>
 
     <!--提示相关-->
     <string name="no_more">暂无更多</string>

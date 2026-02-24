@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.data.db.view.UnitPromotion
 import cn.wthee.pcrtool.data.db.view.UnitPromotionBonus
 import cn.wthee.pcrtool.data.db.view.UnitPromotionStatus
 import cn.wthee.pcrtool.data.db.view.UnitRarity
-import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 
 //角色最大编号
 const val maxUnitId = 200000
@@ -588,13 +587,6 @@ interface UnitDao {
     @SkipQueryVerification
     @Query("SELECT * FROM promotion_bonus WHERE unit_id = :unitId AND promotion_level = :rank")
     suspend fun getRankBonus(rank: Int, unitId: Int): UnitPromotionBonus?
-
-    /**
-     * 获取战力系数
-     */
-    @SkipQueryVerification
-    @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
-    suspend fun getCoefficient(): UnitStatusCoefficient
 
     /**
      * 获取特殊六星 id

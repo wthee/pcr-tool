@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
@@ -79,8 +78,6 @@ data class CharacterDetailUiState(
     val subList: List<Int> = emptyList(),
     //展示所有信息
     val showAllInfo: Boolean = true,
-    //战力系数
-    val coeValue: UnitStatusCoefficient? = null,
     //加载状态
     val loadState: LoadState = LoadState.Loading,
     //页面数量
@@ -111,7 +108,6 @@ class CharacterDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val defaultOrder = "${CharacterDetailModuleType.CARD.id}-" +
-            "${CharacterDetailModuleType.COE.id}-" +
             "${CharacterDetailModuleType.TOOLS.id}-" +
             "${CharacterDetailModuleType.STAR.id}-" +
             "${CharacterDetailModuleType.LEVEL.id}-" +
@@ -136,7 +132,6 @@ class CharacterDetailViewModel @Inject constructor(
                 )
             }
             updateOrderList(getOrderData(showAllInfo))
-            getCoefficient()
             getCutinId(unitId)
             getCharacterInfo(unitId)
             getMaxRankAndRarity(unitId)
@@ -330,19 +325,6 @@ class CharacterDetailViewModel @Inject constructor(
                 orderData = orderData,
                 pageCount = if (it.showAllInfo && subList.isNotEmpty()) 2 else 1
             )
-        }
-    }
-
-    /**
-     * 获取战力系数
-     */
-    private fun getCoefficient() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    coeValue = unitRepository.getCoefficient()
-                )
-            }
         }
     }
 
