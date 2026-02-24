@@ -46,7 +46,7 @@ fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)
     }
 
     SkillActionType.AURA_FIELD -> {
-        if (actionDetail2.toInt() == 2 || actionDetail1 / 10 in setOf(
+        if (actionDetail2 == 2 || actionDetail1 / 10 in setOf(
                 BuffType.PHYSICAL_CRITICAL_DAMAGE.type,
                 BuffType.MAGIC_CRITICAL_DAMAGE.type,
                 BuffType.CRITICAL_DAMAGE_TAKE.type,
@@ -459,8 +459,8 @@ fun SkillActionDetail.initOtherLimit() {
 /**
  * 受击 tp 回复
  */
-fun SkillActionDetail.takeDamageTp() = if (actionDetail3.toInt() != 0) {
-    val multiple = 1 - actionDetail3.toInt() / 100
+fun SkillActionDetail.takeDamageTp() = if (actionDetail3 != 0) {
+    val multiple = 1 - actionDetail3 / 100
     if (multiple == 0) {
         //不回复 tp
         getString(R.string.skill_action_take_damage_tp_0)
