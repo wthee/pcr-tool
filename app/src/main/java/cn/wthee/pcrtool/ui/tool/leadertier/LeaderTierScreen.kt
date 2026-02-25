@@ -366,7 +366,7 @@ private fun LeaderItemPreview() {
                         id = 1,
                         name = stringResource(id = R.string.debug_name),
                         position = 100,
-                        uniqueEquipType = 2
+                        uniqueEquipSlotList = arrayListOf(1, 2)
                     )
                 ) {}
             } else {

@@ -943,7 +943,7 @@ private fun CharacterTagPreview() {
                     position = 123,
                     atkType = 1,
                     limitType = 2,
-                    uniqueEquipType = 2
+                    uniqueEquipSlotList = arrayListOf(1)
                 ),
                 tipText = text,
                 endText = text,
@@ -955,7 +955,7 @@ private fun CharacterTagPreview() {
                 position = 123,
                 atkType = 1,
                 limitType = 2,
-                uniqueEquipType = 2,
+                uniqueEquipSlotList = arrayListOf(1, 2),
                 talentId = 1,
                 roleId = 1,
             ),
