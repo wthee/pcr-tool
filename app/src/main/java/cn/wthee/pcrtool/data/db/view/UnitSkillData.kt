@@ -42,6 +42,8 @@ data class UnitSkillData(
     @ColumnInfo(name = "main_skill_evolution_2") val main_skill_evolution_2: Int,
     @ColumnInfo(name = "sp_skill_evolution_1") val sp_skill_evolution_1: Int,
     @ColumnInfo(name = "sp_skill_evolution_2") val sp_skill_evolution_2: Int,
+    @ColumnInfo(name = "sp_skill_evolution_1_pro") val sp_skill_evolution_1_pro: Int,
+    @ColumnInfo(name = "main_skill_evolution_1_pro") val main_skill_evolution_1_pro: Int,
 ) {
 
     fun getNormalSkillId(): ArrayList<Int> {
@@ -60,6 +62,9 @@ data class UnitSkillData(
             if ((sp_skill_1 != 1064101 || it != 1065012) && it != 0) {
                 list.add(it)
             }
+        }
+        main_skill_evolution_1_pro.also {
+            if (it != 0) list.add(it)
         }
         main_skill_2.also {
             if (it != 0) list.add(it)
@@ -86,6 +91,9 @@ data class UnitSkillData(
             if (it != 0) list.add(it)
         }
         sp_skill_evolution_1.also {
+            if (it != 0) list.add(it)
+        }
+        sp_skill_evolution_1_pro.also {
             if (it != 0) list.add(it)
         }
         sp_skill_2.also {
@@ -128,6 +136,7 @@ data class UnitSkillData(
         main_skill_9 -> SkillIndexType.MAIN_SKILL_9
         main_skill_10 -> SkillIndexType.MAIN_SKILL_10
         main_skill_evolution_1 -> SkillIndexType.MAIN_SKILL_1_PLUS
+        main_skill_evolution_1_pro -> SkillIndexType.MAIN_SKILL_1_PLUS_PLUS
         main_skill_evolution_2 -> SkillIndexType.MAIN_SKILL_2_PLUS
         ex_skill_1 -> SkillIndexType.EX_1
         ex_skill_2 -> SkillIndexType.EX_2
@@ -146,6 +155,7 @@ data class UnitSkillData(
         sp_skill_4 -> SkillIndexType.SP_SKILL_4
         sp_skill_5 -> SkillIndexType.SP_SKILL_5
         sp_skill_evolution_1 -> SkillIndexType.SP_SKILL_1_PLUS
+        sp_skill_evolution_1_pro -> SkillIndexType.SP_SKILL_1_PLUS_PLUS
         sp_skill_evolution_2 -> SkillIndexType.SP_SKILL_2_PLUS
         else -> SkillIndexType.UNKNOWN
     }

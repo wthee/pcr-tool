@@ -5,11 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -49,13 +48,13 @@ fun MainTabRow(
     val contentColor = tabs[pagerState.currentPage].color ?: MaterialTheme.colorScheme.primary
 
     if (scrollable) {
-        ScrollableTabRow(
+        SecondaryScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             containerColor = Color.Transparent,
             contentColor = contentColor,
-            indicator = { tabPositions ->
+            indicator = {
                 TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = false),
                     color = contentColor
                 )
             },
@@ -64,13 +63,13 @@ fun MainTabRow(
             TabItemList(pagerState, tabs, onClickCurrentTab)
         }
     } else {
-        TabRow(
+        SecondaryTabRow(
             selectedTabIndex = pagerState.currentPage,
             containerColor = Color.Transparent,
             contentColor = contentColor,
-            indicator = { tabPositions ->
+            indicator = {
                 TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = false),
                     color = contentColor
                 )
             },

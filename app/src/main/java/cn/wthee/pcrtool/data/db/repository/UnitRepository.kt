@@ -81,19 +81,18 @@ class UnitRepository @Inject constructor(
 
             //筛选专用装备
             val uniqueEquipList = equipmentRepository.getUniqueEquipList("", 0)
+            val unitMap = uniqueEquipList.groupBy { it.unitId }
             filterList.forEach {
-                val uniqueEquipType = uniqueEquipList.count { equip ->
-                    equip.unitId == it.id
-                }
-                it.uniqueEquipType = uniqueEquipType
+                val uniqueEquipSlotList = unitMap.get(it.id)?.map { it.equipSlot } ?: emptyList()
+                it.uniqueEquipSlotList = uniqueEquipSlotList
             }
             filterList = when (filter.uniqueEquipType) {
-                1, 2 -> filterList.filter {
-                    it.uniqueEquipType == filter.uniqueEquipType
+                1, 2, 3 -> filterList.filter {
+                    it.uniqueEquipSlotList.contains(filter.uniqueEquipType)
                 }
 
-                3 -> filterList.filter {
-                    it.uniqueEquipType == 0
+                4 -> filterList.filter {
+                    it.uniqueEquipSlotList.isEmpty()
                 }
 
                 else -> filterList
@@ -199,8 +198,8 @@ class UnitRepository @Inject constructor(
         val data = unitDao.getCharacterInfo(unitId = unitId, exUnitIdList = exUnitIdList)!!
         //获取专用装备信息
         val uniqueEquipList = equipmentRepository.getUniqueEquipList("", 0, unitId = data.id)
-        //根据专用装备数量，设置类型
-        data.uniqueEquipType = uniqueEquipList.size
+        //专用装备信息
+        data.uniqueEquipSlotList = uniqueEquipList.map { it.equipSlot }
         //获取天赋类型
         val talentIdList = getTalentIdList(unitId)
         data.talentId = if (talentIdList.isNotEmpty()) {
@@ -306,13 +305,6 @@ class UnitRepository @Inject constructor(
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getMaxLevel")
         0
-    }
-
-    suspend fun getCoefficient() = try {
-        unitDao.getCoefficient()
-    } catch (e: Exception) {
-        LogReportUtil.upload(e, "getCoefficient")
-        null
     }
 
     suspend fun getCutinId(unitId: Int) = try {

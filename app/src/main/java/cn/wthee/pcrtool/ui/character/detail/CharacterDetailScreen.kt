@@ -42,7 +42,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UnitStatusCoefficient
 import cn.wthee.pcrtool.data.enums.AllPicsType
 import cn.wthee.pcrtool.data.enums.CharacterDetailModuleType
 import cn.wthee.pcrtool.data.enums.LeaderTierType
@@ -94,7 +93,6 @@ import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ImageRequestHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.utils.toDate
 
 
@@ -371,14 +369,6 @@ private fun SharedTransitionScope.CharacterDetailContent(
                             toAllPics = actions.toAllPics
                         )
 
-                        //战力
-                        CharacterDetailModuleType.COE ->
-                            CharacterCoeContent(
-                                coeValue = uiState.coeValue,
-                                allAttr = uiState.allAttr,
-                                currentValue = uiState.currentValue,
-                                toCoe = actions.toCoe
-                            )
 
                         //资料
                         CharacterDetailModuleType.TOOLS ->
@@ -442,21 +432,31 @@ private fun SharedTransitionScope.CharacterDetailContent(
                         )
 
                         //专武
-                        CharacterDetailModuleType.UNIQUE_EQUIP -> uiState.allAttr.uniqueEquipList
-                            .forEachIndexed { index, uniqueEquipmentMaxData ->
-                                UniqueEquipDetail(
-                                    animatedVisibilityScope = animatedVisibilityScope,
-                                    slot = index + 1,
-                                    currentValue = uiState.currentValue,
-                                    uniqueEquipLevelMax = if (index == 0) {
-                                        uiState.maxValue.uniqueEquipmentLevel
-                                    } else {
-                                        5
-                                    },
-                                    uniqueEquipmentMaxData = uniqueEquipmentMaxData,
-                                    updateCurrentValue = updateCurrentValue,
-                                )
-                            }
+                        CharacterDetailModuleType.UNIQUE_EQUIP -> {
+                            // 专用装备1sp属性
+                            val sp1Data = uiState.allAttr.uniqueEquipList.findLast { it.equipSlot == 3 }
+                            uiState.allAttr.uniqueEquipList
+                                .filter { it.equipSlot != 3 }
+                                .forEach { equipData ->
+                                    UniqueEquipDetail(
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                        slot = equipData.equipSlot,
+                                        currentValue = uiState.currentValue,
+                                        uniqueEquipLevelMax = if (equipData.equipSlot == 1) {
+                                            uiState.maxValue.uniqueEquipmentLevel
+                                        } else {
+                                            5
+                                        },
+                                        uniqueEquipmentMaxData = equipData,
+                                        sp1Data = if (equipData.equipSlot == 1) {
+                                            sp1Data
+                                        } else {
+                                            null
+                                        },
+                                        updateCurrentValue = updateCurrentValue,
+                                    )
+                                }
+                        }
 
                         //技能列表
                         CharacterDetailModuleType.SKILL -> SkillListScreen(
@@ -497,7 +497,7 @@ private fun SharedTransitionScope.CharacterDetailContent(
                         )
 
                         CharacterDetailModuleType.UNKNOWN -> {
-                            CenterTipText(stringResource(id = R.string.unknown))
+
                         }
                     }
                 }
@@ -808,7 +808,7 @@ private fun ColumnScope.AttrListContent(
         ) {
             MainText(
                 text = stringResource(id = R.string.title_rank_bonus),
-                modifier = Modifier.Companion.padding(
+                modifier = Modifier.padding(
                     top = Dimen.largePadding, bottom = Dimen.smallPadding
                 ),
                 textAlign = TextAlign.Center
@@ -819,74 +819,6 @@ private fun ColumnScope.AttrListContent(
     Spacer(modifier = Modifier.height(Dimen.largePadding))
 }
 
-
-/**
- * 战力计算
- */
-@Composable
-private fun CharacterCoeContent(
-    coeValue: UnitStatusCoefficient?,
-    allAttr: AllAttrData,
-    currentValue: CharacterProperty,
-    toCoe: () -> Unit
-) {
-    val context = LocalContext.current
-
-
-    Row(
-        modifier = Modifier
-            .padding(start = Dimen.smallPadding)
-            .clip(MaterialTheme.shapes.extraSmall)
-            .clickable {
-                VibrateUtil(context).single()
-                toCoe()
-            }
-            .padding(horizontal = Dimen.smallPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        var value = ""
-
-        coeValue?.let { coe ->
-            val basicAttr = allAttr.sumAttr.copy().sub(allAttr.exSkillAttr)
-            val basic =
-                basicAttr.hp * coe.hp_coefficient + basicAttr.atk * coe.atk_coefficient + basicAttr.magicStr * coe.magic_str_coefficient + basicAttr.def * coe.def_coefficient + basicAttr.magicDef * coe.magic_def_coefficient + basicAttr.physicalCritical * coe.physical_critical_coefficient + basicAttr.magicCritical * coe.magic_critical_coefficient + basicAttr.waveHpRecovery * coe.wave_hp_recovery_coefficient + basicAttr.waveEnergyRecovery * coe.wave_energy_recovery_coefficient + basicAttr.dodge * coe.dodge_coefficient + basicAttr.physicalPenetrate * coe.physical_penetrate_coefficient + basicAttr.magicPenetrate * coe.magic_penetrate_coefficient + basicAttr.lifeSteal * coe.life_steal_coefficient + basicAttr.hpRecoveryRate * coe.hp_recovery_rate_coefficient + basicAttr.energyRecoveryRate * coe.energy_recovery_rate_coefficient + basicAttr.energyReduceRate * coe.energy_reduce_rate_coefficient + basicAttr.accuracy * coe.accuracy_coefficient
-            //技能2：默认加上技能2
-            var skill = currentValue.level * coe.skill_lv_coefficient
-            //技能1：解锁专武，技能1系数提升
-            if (allAttr.uniqueEquipList.isNotEmpty()) {
-                skill += coe.skill1_evolution_coefficient * allAttr.uniqueEquipList.size
-                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient * allAttr.uniqueEquipList.size
-            } else {
-                skill += currentValue.level * coe.skill_lv_coefficient
-            }
-            //不同星级处理
-            if (currentValue.rarity >= 5) {
-                //ex+:大于等于五星，技能 ex+
-                skill += coe.exskill_evolution_coefficient
-                skill += currentValue.level * coe.skill_lv_coefficient
-                if (currentValue.rarity == 6) {
-                    //ub+
-                    skill += coe.ub_evolution_coefficient
-                    skill += currentValue.level * coe.skill_lv_coefficient * coe.ub_evolution_slv_coefficient
-                } else {
-                    //ub
-                    skill += currentValue.level * coe.skill_lv_coefficient
-                }
-            } else {
-                //ub、ex
-                skill += currentValue.level * coe.skill_lv_coefficient * 2
-            }
-            value = (basic + skill).int.toString()
-        }
-        //战力数值
-        MainText(
-            text = stringResource(id = R.string.attr_all_value, value),
-        )
-        MainIcon(
-            data = MainIconType.HELP, size = Dimen.smallIconSize
-        )
-    }
-}
 
 /**
  * 角色 RANK 装备
@@ -1257,18 +1189,6 @@ private fun AttrListContentPreview() {
     }
 }
 
-@CombinedPreviews
-@Composable
-private fun CharacterCoeContentPreview() {
-    PreviewLayout {
-        CharacterCoeContent(
-            coeValue = UnitStatusCoefficient(),
-            allAttr = AllAttrData(),
-            currentValue = CharacterProperty(),
-            toCoe = { },
-        )
-    }
-}
 
 @CombinedPreviews
 @Composable

@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.R
 enum class CharacterDetailModuleType(val id: Int, val titleId: Int) {
     UNKNOWN(299, R.string.unknown),
     CARD(300, R.string.character_card),
-    COE(301, R.string.character_power),
     TOOLS(302, R.string.character_tool),
     STAR(303, R.string.title_rarity),
     LEVEL(304, R.string.title_unit_level),

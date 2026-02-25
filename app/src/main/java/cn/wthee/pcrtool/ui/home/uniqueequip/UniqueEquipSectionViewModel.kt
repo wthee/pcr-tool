@@ -25,6 +25,8 @@ data class UniqueEquipSectionUiState(
     val uniqueEquipList1: List<UniqueEquipBasicData>? = null,
     //专用装备2列表
     val uniqueEquipList2: List<UniqueEquipBasicData>? = null,
+    //专用装备1sp列表
+    val uniqueEquipSpList1: List<UniqueEquipBasicData>? = null,
 )
 
 /**
@@ -64,12 +66,16 @@ class UniqueEquipSectionViewModel @Inject constructor(
         viewModelScope.launch {
             val filterList1 = equipmentRepository.getUniqueEquipList("", 1)
             val filterList2 = equipmentRepository.getUniqueEquipList("", 2)
+            val filterList3 = equipmentRepository.getUniqueEquipList("", 3)
 
             _uiState.update {
                 it.copy(
                     uniqueEquipList1 = filterList1.subList(0, min(limit, filterList1.size)),
                     uniqueEquipList2 = filterList2.subList(0, min(limit, filterList2.size)),
-                    uniqueEquipCount = if (filterList2.isNotEmpty()) {
+                    uniqueEquipSpList1 = filterList3.subList(0, min(limit, filterList3.size)),
+                    uniqueEquipCount =if (filterList3.isNotEmpty()) {
+                        "${filterList1.size} · ${filterList2.size} · ${filterList3.size}"
+                    }else if (filterList2.isNotEmpty()) {
                         "${filterList1.size} · ${filterList2.size}"
                     } else {
                         "${filterList1.size}"

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -71,26 +72,32 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     val uniqueEquips = uiState.uniqueEquipList
 
     //专用装备1
-    val uniqueEquips1 = uniqueEquips?.filter {
+    val uniqueEquipList1 = uniqueEquips.filter {
         it.equipSlot == 1
     }
     //专用装备2
-    val uniqueEquips2 = uniqueEquips?.filter {
+    val uniqueEquipList2 = uniqueEquips.filter {
         it.equipSlot == 2
+    }
+    //专用装备1 sp
+    val uniqueEquipSpList1 = uniqueEquips.filter {
+        it.equipSlot == 3
     }
 
     //列表状态
-    val gridState1 = rememberLazyGridState()
-    val gridState2 = rememberLazyGridState()
+    val gridStateList = arrayListOf<LazyGridState>()
+    if (uniqueEquipList1.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
+    if (uniqueEquipList2.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
+    if (uniqueEquipSpList1.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
 
     //计算页数
-    var pagerCount = 0
-    if (uniqueEquips1?.isNotEmpty() == true) {
-        pagerCount = 1
-    }
-    if (uniqueEquips2?.isNotEmpty() == true) {
-        pagerCount = 2
-    }
+    val pagerCount = gridStateList.size
 
     //页面状态
     val pagerState = rememberPagerState {
@@ -101,7 +108,7 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     MainScaffold(
         fabWithCustomPadding = {
             //搜索栏
-            val count = uniqueEquips?.size ?: 0
+            val count = uniqueEquips.size
 
             BottomSearchBar(
                 labelStringId = R.string.search_unique_equip,
@@ -115,12 +122,7 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                 fabText = count.toString(),
                 onTopClick = {
                     scope.launch {
-                        if (uniqueEquips1?.isNotEmpty() == true) {
-                            gridState1.scrollToItem(0)
-                        }
-                        if (uniqueEquips2?.isNotEmpty() == true) {
-                            gridState2.scrollToItem(0)
-                        }
+                        gridStateList[pagerState.currentPage].scrollToItem(0)
                     }
                 },
                 onResetClick = {
@@ -135,35 +137,38 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     ) {
         StateBox(stateType = uiState.loadState) {
             Column {
-                if (pagerCount == 2) {
-                    MainTabRow(
-                        pagerState = pagerState,
-                        tabs = arrayListOf(
-                            TabData(tab = getIndex(1), count = uniqueEquips1!!.size),
-                            TabData(tab = getIndex(2), count = uniqueEquips2!!.size)
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(RATIO_GOLDEN)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        if (it == 0) {
-                            gridState1.scrollToItem(0)
-                        } else {
-                            gridState2.scrollToItem(0)
-                        }
-                    }
+                val tabList = arrayListOf(
+                    TabData(tab = getIndex(1), count = uniqueEquipList1.size),
+                    TabData(tab = getIndex(2), count = uniqueEquipList2.size)
+                )
+                //专用装备1 sp
+                if (pagerCount == 3) {
+                    tabList.add(TabData(tab = getIndex(3), count = uniqueEquipSpList1.size))
+                }
+                MainTabRow(
+                    pagerState = pagerState,
+                    tabs = tabList,
+                    modifier = Modifier
+                        .fillMaxWidth(RATIO_GOLDEN)
+                        .align(Alignment.CenterHorizontally)
+                ) { index ->
+                   gridStateList[index].scrollToItem(0)
                 }
 
                 HorizontalPager(state = pagerState) { index ->
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(getItemWidth()),
                         modifier = Modifier.fillMaxHeight(),
-                        state = if (index == 0) gridState1 else gridState2
+                        state =  gridStateList[index]
                     ) {
                         items(
-                            if (index == 0) uniqueEquips1!! else uniqueEquips2!!,
+                            items = when (index) {
+                                0 -> uniqueEquipList1
+                                1 -> uniqueEquipList2
+                                else -> uniqueEquipSpList1
+                            },
                             key = {
-                                it.equipId
+                                "${it.equipSlot}-${it.equipId}"
                             }
                         ) { uniqueEquip ->
                             //获取角色名

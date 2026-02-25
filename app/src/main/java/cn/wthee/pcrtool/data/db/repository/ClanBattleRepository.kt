@@ -19,11 +19,10 @@ class ClanBattleRepository @Inject constructor(
     private val clanBattleDao: ClanBattleDao,
     private val enemyDao: EnemyDao
 ) {
-    // fixme 台服需要 -1，不清楚为什么，先这样处理吧
-    private val clanIdOffset = if (MainActivity.regionType == RegionType.TW) 1 else 0
+
 
     private suspend fun getAllClanBattleData(clanBattleId: Int) = try {
-        clanBattleDao.getAllClanBattleData(clanBattleId = clanBattleId, clanIdOffset = clanIdOffset)
+        clanBattleDao.getAllClanBattleData(clanBattleId = clanBattleId)
     } catch (e: Exception) {
         LogReportUtil.upload(e, "getAllClanBattleData#clanBattleId:$clanBattleId")
         emptyList()
@@ -42,16 +41,11 @@ class ClanBattleRepository @Inject constructor(
 
     /**
      * 获取公会战列表
-     * @param fixed 获取详情是不再次修正
      */
-    suspend fun getClanBattleList(clanBattleId: Int, phase: Int, fixed: Boolean = true) = try {
-        val fixedId = if (clanBattleId != 0 && fixed) {
-            clanBattleId + clanIdOffset
-        } else {
-            clanBattleId
-        }
-        val targetList = getAllClanBattleTargetCount(clanBattleId = fixedId, phase = phase)
-        val clanList = getAllClanBattleData(clanBattleId = fixedId)
+    suspend fun getClanBattleList(clanBattleId: Int, phase: Int) = try {
+
+        val targetList = getAllClanBattleTargetCount(clanBattleId = clanBattleId, phase = phase)
+        val clanList = getAllClanBattleData(clanBattleId = clanBattleId)
         val weaknessDataList = getAllEnemyTalentWeaknessList()
         //设置多目标数
         clanList.forEach { info ->

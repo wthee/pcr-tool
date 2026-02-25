@@ -16,4 +16,5 @@ data class UniqueEquipmentMaxData(
     @Embedded var attr: Attr = Attr(),
     @Ignore var isTpLimitAction: Boolean = false,
     @Ignore var isOtherLimitAction: Boolean = false,
+    @Ignore var equipSlot: Int = 0,
 )

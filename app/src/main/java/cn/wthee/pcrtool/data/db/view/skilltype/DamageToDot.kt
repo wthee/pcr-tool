@@ -12,5 +12,6 @@ fun SkillActionDetail.damageToDot() = getString(
     R.string.skill_action_type_desc_129,
     getTarget(),
     getValueText(1, v1 = actionValue1, v2 = 0.0, percent = "%"),
+    actionValue3.toInt(),
     getTimeText(2, actionValue2)
 )

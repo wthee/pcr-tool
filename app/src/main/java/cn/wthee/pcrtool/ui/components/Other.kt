@@ -634,16 +634,18 @@ fun CharacterTagRow(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
             ) {
-                //专用装备 TODO 调整显示位置
-                if (showUniqueEquipType && characterInfo.uniqueEquipType != 0) {
+                //专用装备
+                if (showUniqueEquipType && characterInfo.uniqueEquipSlotList.isNotEmpty()) {
                     MainIcon(
                         modifier = Modifier
                             .padding(horizontal = Dimen.exSmallPadding)
                             .align(Alignment.CenterVertically),
-                        data = if (characterInfo.uniqueEquipType == 1) {
-                            R.drawable.ic_unique_equip
-                        } else {
+                        data = if (characterInfo.uniqueEquipSlotList.contains(2)) {
+                            //开通了专2
                             R.drawable.ic_unique_equip2
+                        } else {
+                            // TODO 优化专用装备图标，区分是否已开SP
+                            R.drawable.ic_unique_equip
                         },
                         size = Dimen.smallIconSize,
                     )
@@ -941,7 +943,7 @@ private fun CharacterTagPreview() {
                     position = 123,
                     atkType = 1,
                     limitType = 2,
-                    uniqueEquipType = 2
+                    uniqueEquipSlotList = arrayListOf(1)
                 ),
                 tipText = text,
                 endText = text,
@@ -953,7 +955,7 @@ private fun CharacterTagPreview() {
                 position = 123,
                 atkType = 1,
                 limitType = 2,
-                uniqueEquipType = 2,
+                uniqueEquipSlotList = arrayListOf(1, 2),
                 talentId = 1,
                 roleId = 1,
             ),

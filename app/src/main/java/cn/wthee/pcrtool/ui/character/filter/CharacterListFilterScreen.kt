@@ -400,6 +400,9 @@ private fun CharacterListFilterContent(
                 text = stringResource(id = R.string.tool_unique_equip) + 2
             ),
             ChipData(
+                text = stringResource(id = R.string.tool_unique_equip) + "1 SP"
+            ),
+            ChipData(
                 text = stringResource(id = R.string.other)
             ),
         )

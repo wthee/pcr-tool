@@ -125,10 +125,17 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
         try {
             //专用装备1
             equipmentDao.getUniqueEquipInfo(unitId = unitId, lv = lv, slot = 1)?.let {
+                it.equipSlot = 1
                 list.add(it)
             }
             //专用装备2
             equipmentDao.getUniqueEquipInfo(unitId = unitId, lv = lv2 + 1, slot = 2)?.let {
+                it.equipSlot = 2
+                list.add(it)
+            }
+            //专用装备1 sp
+            equipmentDao.getUniqueEquip1SpInfo(unitId = unitId)?.let {
+                it.equipSlot = 3
                 list.add(it)
             }
         } catch (e: Exception) {
@@ -242,11 +249,22 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * 获取排序后的专用装备列表
      */
     suspend fun getUniqueEquipList(name: String, slot: Int, unitId: Int = 0) = try {
-        val data = (try {
+        var data = (try {
             equipmentDao.getUniqueEquipList(name = name, slot = slot, unitId = unitId)
         } catch (_: Exception) {
             emptyList()
         }).reversed()
+        //  获取 ex_unique_equipment_1 表
+        if (slot == 0 || slot == 3) {
+            try {
+                val uniqueEquip1SpList =
+                    equipmentDao.getUniqueEquip1SpList(name = name, unitId = unitId).reversed()
+                data += uniqueEquip1SpList
+            } catch (_: Exception) {
+
+            }
+        }
+
 
         when (MainActivity.regionType) {
             RegionType.CN -> {

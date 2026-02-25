@@ -27,9 +27,6 @@
     <string name="title_room_comments">小屋</string>
     <string name="character_attr">属性</string>
     <string name="title_story_attr">剧情属性</string>
-    <string name="title_basic_coe">基本系数</string>
-    <string name="title_skill_coe">技能基本系数</string>
-    <string name="title_skill_basic_coe">技能相关系数</string>
     <string name="title_rank_bonus">RANK 奖励属性</string>
     <string name="cur_rank">当前 RANK</string>
     <string name="target_rank">目标 RANK</string>
@@ -70,6 +67,7 @@
     <string name="tip_skill_loop">技能循环（未选中时显示悬浮按钮）</string>
     <string name="character_icon_info">角色图标</string>
     <string name="character_leader">角色评分、梯队</string>
+    <string name="sp_unique_equip1_attr">SP 属性</string>
 
     <!--设置页面-->
     <string name="app_setting">设置</string>
@@ -315,17 +313,6 @@
     <string name="story_event_new">活动</string>
     <string name="clan_battle_month">%d月公会战</string>
 
-    <!--战力系数-->
-    <string name="title_ex_skill_add">EX+ 额外数值</string>
-    <string name="title_skill_1_add">技能+ 额外数值</string>
-    <string name="title_skill_1_coe">技能+ 系数</string>
-    <string name="title_ub_add">连结爆发+ 额外数值</string>
-    <string name="title_ub_coe">连结爆发+ 系数</string>
-    <string name="attr_all_value">战力：%s</string>
-    <string name="title_attr_tip">属性数值说明</string>
-    <string name="attr_calc">角色属性数值 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + RANK 奖励属性</string>
-    <string name="tip_status_coe">※ 数值与游戏数值可能存在一定误差，请以游戏内为准</string>
-
     <!--提示相关-->
     <string name="no_more">暂无更多</string>
     <string name="no_data">暂无数据</string>
@@ -439,6 +426,7 @@
     <string name="color_orange">橙</string>
     <string name="color_cyan">青</string>
     <string name="color_pink">粉</string>
+    <string name="color_yellow">黄</string>
 
 
     <!--中文数字-->
@@ -776,7 +764,7 @@
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
-    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s</string>
+    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s，动作生效期间免疫无法行动、击飞、拉近效果</string>
     <string name="skill_action_type_desc_44">战斗开始 [%d] 秒后入场</string>
     <string name="skill_action_type_desc_45">技能计数加 [1] %s</string>
     <string name="skill_action_type_desc_46_1">对%s造成最大HP %s 伤害</string>
@@ -850,7 +838,7 @@
     <string name="skill_action_type_desc_123_1">受到的伤害减少%s</string>
     <string name="skill_action_type_desc_125">使%s进入 [%s] 状态（持有标记时，不会成为攻击目标）</string>
     <string name="skill_action_type_desc_128">使%s受到的持续伤害的间隔和时间延长 [%d] 倍%s</string>
-    <string name="skill_action_type_desc_129">使%s受到的 %s 伤害转化为持续伤害%s；该持续伤害不回复 TP</string>
+    <string name="skill_action_type_desc_129">使%s受到的 %s 伤害转化为持续伤害，伤害间隔 [1] 秒，共计触发 [%d] 次%s；该持续伤害不回复 TP</string>
     <string name="skill_action_type_desc_130">使%s受到伤害时，按物理/魔法防御中较高的防御计算伤害</string>
     <string name="skill_action_type_desc_132">使%s造成的伤害%s%s%s%s</string>
     <string name="skill_action_type_desc_133">对%s追加 [%d] 层标记，使用 UB 时，减少 [1] 层标记，并使用动作(%d)%s</string>

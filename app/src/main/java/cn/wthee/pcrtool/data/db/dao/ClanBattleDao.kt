@@ -31,7 +31,7 @@ interface ClanBattleDao {
             GROUP_CONCAT(f.unit_id, '-') as unit_ids
         FROM
             clan_battle_2_map_data AS a
-            LEFT JOIN clan_battle_schedule AS b ON b.clan_battle_id + :clanIdOffset = a.clan_battle_id 
+            LEFT JOIN clan_battle_schedule AS b ON b.clan_battle_id  = a.clan_battle_id 
             LEFT JOIN wave_group_data AS c ON c.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3, a.wave_group_id_4, a.wave_group_id_5 )
             LEFT JOIN enemy_parameter as e on c.enemy_id_1 = e.enemy_id
             LEFT JOIN unit_enemy_data as f on e.unit_id = f.unit_id
@@ -49,7 +49,7 @@ interface ClanBattleDao {
             a.lap_num_from
     """
     )
-    suspend fun getAllClanBattleData(clanBattleId: Int, clanIdOffset: Int): List<ClanBattleInfo>
+    suspend fun getAllClanBattleData(clanBattleId: Int): List<ClanBattleInfo>
 
 
     /**

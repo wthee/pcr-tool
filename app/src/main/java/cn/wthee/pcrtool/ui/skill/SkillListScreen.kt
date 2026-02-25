@@ -139,7 +139,8 @@ private fun SkillListContent(
         (if (isFilterSkill) {
             //过滤专用装备影响的技能
             uiState.normalSkillList.filter {
-                val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
+                val skill1 = it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS_PLUS
+                        || it.skillIndexType == SkillIndexType.MAIN_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.MAIN_SKILL_2_PLUS
                         || it.skillIndexType == SkillIndexType.MAIN_SKILL_2
@@ -173,7 +174,8 @@ private fun SkillListContent(
         (if (isFilterSkill) {
             //过滤专用装备影响的技能
             uiState.spSkillList.filter {
-                val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
+                val skill1 = it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS_PLUS
+                        || it.skillIndexType == SkillIndexType.SP_SKILL_1_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_1
                 val skill2 = it.skillIndexType == SkillIndexType.SP_SKILL_2_PLUS
                         || it.skillIndexType == SkillIndexType.SP_SKILL_2
@@ -282,6 +284,9 @@ fun SkillItemContent(
         SkillIndexType.MAIN_SKILL_2_PLUS -> {
             stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
         }
+        SkillIndexType.MAIN_SKILL_1_PLUS_PLUS-> {
+            stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "++"
+        }
 
         SkillIndexType.EX_1,
         SkillIndexType.EX_2,
@@ -317,6 +322,9 @@ fun SkillItemContent(
         SkillIndexType.SP_SKILL_1_PLUS,
         SkillIndexType.SP_SKILL_2_PLUS -> {
             "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "+"
+        }
+        SkillIndexType.SP_SKILL_1_PLUS_PLUS-> {
+            "SP" + stringResource(id = R.string.skill_index, skillDetail.skillIndexType.index) + "++"
         }
 
         else -> ""

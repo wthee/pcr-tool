@@ -115,6 +115,18 @@ private fun UniqueEquipSectionContent(
                 onClickItem = toUniqueEquipDetail
             )
         }
+        //专用装备1sp
+        uiState.uniqueEquipSpList1?.let { list ->
+            GridIconList(
+                paddingValues = PaddingValues(top = Dimen.mediumPadding),
+                idList = list.map { it.equipId },
+                detailIdList = list.map { it.unitId },
+                iconResourceType = IconResourceType.UNIQUE_EQUIP,
+                fixColumns = equipSpanCount,
+                contentPadding = 0.dp,
+                onClickItem = toUniqueEquipDetail
+            )
+        }
     }
 }
 
