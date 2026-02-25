@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -78,28 +79,25 @@ fun SharedTransitionScope.UniqueEquipListScreen(
     val uniqueEquipList2 = uniqueEquips.filter {
         it.equipSlot == 2
     }
-    //专用装备1ex
+    //专用装备1 sp
     val uniqueEquipSpList1 = uniqueEquips.filter {
         it.equipSlot == 3
     }
 
     //列表状态
-    val gridState1 = rememberLazyGridState()
-    val gridState2 = rememberLazyGridState()
-    val gridState3 = rememberLazyGridState()
+    val gridStateList = arrayListOf<LazyGridState>()
+    if (uniqueEquipList1.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
+    if (uniqueEquipList2.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
+    if (uniqueEquipSpList1.isNotEmpty()) {
+        gridStateList.add(rememberLazyGridState())
+    }
 
     //计算页数
-    var pagerCount = 0
-    if (uniqueEquipList1.isNotEmpty() == true) {
-        pagerCount = 1
-    }
-    if (uniqueEquipList2.isNotEmpty() == true) {
-        pagerCount = 2
-    }
-    if (uniqueEquipSpList1.isNotEmpty() == true) {
-        pagerCount = 3
-    }
-
+    val pagerCount = gridStateList.size
 
     //页面状态
     val pagerState = rememberPagerState {
@@ -124,15 +122,7 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                 fabText = count.toString(),
                 onTopClick = {
                     scope.launch {
-                        if (uniqueEquipList1.isNotEmpty() == true) {
-                            gridState1.scrollToItem(0)
-                        }
-                        if (uniqueEquipList2.isNotEmpty() == true) {
-                            gridState2.scrollToItem(0)
-                        }
-                        if (uniqueEquipSpList1.isNotEmpty() == true) {
-                            gridState3.scrollToItem(0)
-                        }
+                        gridStateList[pagerState.currentPage].scrollToItem(0)
                     }
                 },
                 onResetClick = {
@@ -151,7 +141,7 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                     TabData(tab = getIndex(1), count = uniqueEquipList1.size),
                     TabData(tab = getIndex(2), count = uniqueEquipList2.size)
                 )
-                //专用装备ex
+                //专用装备1 sp
                 if (pagerCount == 3) {
                     tabList.add(TabData(tab = getIndex(3), count = uniqueEquipSpList1.size))
                 }
@@ -161,19 +151,15 @@ fun SharedTransitionScope.UniqueEquipListScreen(
                     modifier = Modifier
                         .fillMaxWidth(RATIO_GOLDEN)
                         .align(Alignment.CenterHorizontally)
-                ) {
-                    when (it) {
-                        0 -> gridState1.scrollToItem(0)
-                        1 -> gridState2.scrollToItem(0)
-                        2 -> gridState3.scrollToItem(0)
-                    }
+                ) { index ->
+                   gridStateList[index].scrollToItem(0)
                 }
 
                 HorizontalPager(state = pagerState) { index ->
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(getItemWidth()),
                         modifier = Modifier.fillMaxHeight(),
-                        state = if (index == 0) gridState1 else gridState2
+                        state =  gridStateList[index]
                     ) {
                         items(
                             items = when (index) {
