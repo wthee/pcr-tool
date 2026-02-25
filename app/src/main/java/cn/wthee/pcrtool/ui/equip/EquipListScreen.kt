@@ -68,6 +68,7 @@ import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.colorYellow
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ImageRequestHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -450,6 +451,7 @@ private fun getEquipColor(colorType: Int): Color {
         8 -> colorOrange
         9 -> colorCyan
         10 -> colorPink
+        11 -> colorYellow
         else -> colorGray
     }
 }

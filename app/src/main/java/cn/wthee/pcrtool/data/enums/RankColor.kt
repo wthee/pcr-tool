@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.ui.theme.colorPink
 import cn.wthee.pcrtool.ui.theme.colorPurple
 import cn.wthee.pcrtool.ui.theme.colorRed
 import cn.wthee.pcrtool.ui.theme.colorSilver
+import cn.wthee.pcrtool.ui.theme.colorYellow
 
 /**
  * 装备品级、RANk 颜色
@@ -35,7 +36,8 @@ enum class RankColor(
     GREEN(7, colorGreen, R.string.color_green, 21, 23),
     ORANGE(8, colorOrange, R.string.color_orange, 24, 27),
     CYAN(9, colorCyan, R.string.color_cyan, 28, 31),
-    PINK(10, colorPink, R.string.color_pink, 32, 99),
+    PINK(10, colorPink, R.string.color_pink, 32, 39),
+    YELLOW(11, colorYellow, R.string.color_yellow, 40, 99),
     ;
 
     companion object {
