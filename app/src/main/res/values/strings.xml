@@ -764,7 +764,7 @@
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
-    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s</string>
+    <string name="skill_action_type_desc_42_14">[%d] 秒内受到无法行动、击飞、拉近伤害时，以 %s 的概率使用%s，动作生效期间免疫无法行动、击飞、拉近效果</string>
     <string name="skill_action_type_desc_44">战斗开始 [%d] 秒后入场</string>
     <string name="skill_action_type_desc_45">技能计数加 [1] %s</string>
     <string name="skill_action_type_desc_46_1">对%s造成最大HP %s 伤害</string>
