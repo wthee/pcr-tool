@@ -62,8 +62,8 @@ fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)
             ""
         }
     }
-
-    SkillActionType.DAMAGE_REDUCE -> "%"
+    //日服新吃货 actionDetail1 = 4、5 固定减伤
+    SkillActionType.DAMAGE_REDUCE -> if (actionDetail1 <= 3) "%" else ""
     SkillActionType.ACTION_DOT -> if (actionDetail1 == 10) "%" else ""
     SkillActionType.DOT -> if (actionDetail1 == 11) "%" else ""
     else -> ""
@@ -216,14 +216,17 @@ fun getBarrierType(v1: Int): String {
             //无效
             getString(R.string.skill_barrier_no_effect)
         }
+
         3, 4, 6 -> {
             //吸收
             getString(R.string.skill_barrier_defense)
         }
+
         7, 8, 9 -> {
             //无效和吸收
             getString(R.string.skill_barrier_both)
         }
+
         else -> {
             getString(R.string.unknown)
         }
