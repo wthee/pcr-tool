@@ -197,34 +197,58 @@ fun getBuffText(value: Int, valueText: String = "", actionValue7: Double = 0.0):
 
 /**
  * 护盾类型
+ *
  */
 fun getBarrierType(v1: Int): String {
+    //	GUARD_ATK_BARRIER = 11,
+    //	GUARD_MGC_BARRIER = 12,
+    //	DRAIN_ATK_BARRIER = 13,
+    //	DRAIN_MGC_BARRIER = 14,
+    //	GUARD_BOTH_BARRIER = 15,
+    //	DRAIN_BOTH_BARRIER = 16,
+    //	ALL_ATK_BARRIER = 17,
+    //	ALL_MGC_BARRIER = 18,
+    //	ALL_BOTH_BARRIER = 19,
+
     //作用
-    val f = if (v1 == 1 || v1 == 2 || v1 == 5) {
-        getString(R.string.skill_shield_no_effect)
-    } else {
-        getString(R.string.skill_shield_defense)
+    val function = when (v1) {
+        1, 2, 5 -> {
+            //无效
+            getString(R.string.skill_barrier_no_effect)
+        }
+        3, 4, 6 -> {
+            //吸收
+            getString(R.string.skill_barrier_defense)
+        }
+        7, 8, 9 -> {
+            //无效和吸收
+            getString(R.string.skill_barrier_both)
+        }
+        else -> {
+            getString(R.string.unknown)
+        }
     }
+
     //类型
     val type = when (v1) {
-        1, 3 -> {
+        1, 3, 7 -> {
             getString(R.string.physical)
         }
 
-        2, 4 -> {
+        2, 4, 8 -> {
             getString(R.string.magic)
         }
 
-        else -> {
+        5, 6, 9 -> {
             getString(R.string.skill_all)
+        }
+
+        else -> {
+            getString(R.string.unknown)
         }
     }
 
-    return if (v1 <= 6) {
-        getString(R.string.skill_shield, f, type)
-    } else {
-        Constants.UNKNOWN
-    }
+    return getString(R.string.skill_barrier_detail, function, type)
 }
 
 /**

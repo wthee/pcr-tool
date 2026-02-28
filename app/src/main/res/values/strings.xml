@@ -586,9 +586,10 @@
     <string name="skill_target_assignment_3">敌人和己方</string>
 
     <!--技能护盾相关描述-->
-    <string name="skill_shield_no_effect">无效</string>
-    <string name="skill_shield_defense">吸收</string>
-    <string name="skill_shield">%s%s伤害的护盾</string>
+    <string name="skill_barrier_no_effect">无效</string>
+    <string name="skill_barrier_defense">吸收</string>
+    <string name="skill_barrier_both">无效和吸收</string>
+    <string name="skill_barrier_detail">%s%s伤害的护盾</string>
 
     <!--技能描述相关-->
     <string name="skill_action">动作</string>
@@ -600,6 +601,7 @@
     <string name="skill_speed">速度</string>
     <string name="skill_hp_max">HP最大值</string>
     <string name="skill_buff_effect">增益效果</string>
+    <string name="skill_effect">效果</string>
     <string name="skill_increase">提升</string>
     <string name="skill_reduce">减少</string>
     <string name="skill_fixed">(固定数值)</string>
@@ -656,6 +658,7 @@
     <string name="skill_action_dot_increase">，伤害每秒增加基础数值的 [%d%%]</string>
     <string name="skill_action_type_desc_9">使%s进入 [%s] 状态，每秒造成伤害 %s%s%s%s</string>
     <string name="skill_buff">增益</string>
+    <string name="skill_buff_without_field">增益（领域除外）</string>
     <string name="skill_debuff">减益</string>
     <string name="skill_barrier">护盾</string>
     <string name="skill_damage">伤害</string>
