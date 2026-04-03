@@ -506,3 +506,23 @@ fun getEffectType(value: Int) = when (value) {
     2 -> getString(R.string.skill_action_type_desc_subtract)
     else -> getString(R.string.unknown)
 }
+
+
+/**
+ * 获取天赋类型
+ */
+fun getTalentType(value: Int):String {
+    val talent = when (value) {
+        1 -> getString(R.string.skill_target_fire)
+        2 -> getString(R.string.skill_target_water)
+        3 -> getString(R.string.skill_target_wind)
+        4 -> getString(R.string.skill_target_light)
+        5 -> getString(R.string.skill_target_dark)
+        else -> getString(R.string.none)
+    }
+    return if (talent != "") {
+        "⌈${talent}${getString(R.string.character)}⌋"
+    } else {
+        ""
+    }
+}

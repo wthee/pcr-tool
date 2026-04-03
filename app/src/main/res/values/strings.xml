@@ -763,7 +763,7 @@
     <string name="skill_action_type_desc_35">对%s追加 [%d] 层标记%s%s</string>
     <string name="skill_action_type_desc_35_reduce">%s减少 [%d] 层标记</string>
     <string name="skill_action_type_desc_36_damage">每秒造成 %s %s伤害</string>
-    <string name="skill_action_type_desc_field">展开%2$s的领域，范围 [%1$d]%3$s</string>
+    <string name="skill_action_type_desc_field">展开%4$s%2$s的领域，范围 [%1$d]%3$s</string>
     <string name="skill_action_type_desc_37_heal">每秒回复 %s HP</string>
     <string name="skill_action_type_desc_38_action">，持续施放动作(%d)</string>
     <string name="skill_action_type_desc_42_2">[%d] 秒内受到伤害时，以 %s 的概率使用动作(%d)</string>
