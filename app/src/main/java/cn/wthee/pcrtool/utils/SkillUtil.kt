@@ -62,8 +62,8 @@ fun SkillActionDetail.getPercent() = when (SkillActionType.getByType(actionType)
             ""
         }
     }
-
-    SkillActionType.DAMAGE_REDUCE -> "%"
+    //日服新吃货 actionDetail1 = 4、5 固定减伤
+    SkillActionType.DAMAGE_REDUCE -> if (actionDetail1 <= 3) "%" else ""
     SkillActionType.ACTION_DOT -> if (actionDetail1 == 10) "%" else ""
     SkillActionType.DOT -> if (actionDetail1 == 11) "%" else ""
     else -> ""
@@ -197,34 +197,61 @@ fun getBuffText(value: Int, valueText: String = "", actionValue7: Double = 0.0):
 
 /**
  * 护盾类型
+ *
  */
 fun getBarrierType(v1: Int): String {
+    //	GUARD_ATK_BARRIER = 11,
+    //	GUARD_MGC_BARRIER = 12,
+    //	DRAIN_ATK_BARRIER = 13,
+    //	DRAIN_MGC_BARRIER = 14,
+    //	GUARD_BOTH_BARRIER = 15,
+    //	DRAIN_BOTH_BARRIER = 16,
+    //	ALL_ATK_BARRIER = 17,
+    //	ALL_MGC_BARRIER = 18,
+    //	ALL_BOTH_BARRIER = 19,
+
     //作用
-    val f = if (v1 == 1 || v1 == 2 || v1 == 5) {
-        getString(R.string.skill_shield_no_effect)
-    } else {
-        getString(R.string.skill_shield_defense)
-    }
-    //类型
-    val type = when (v1) {
-        1, 3 -> {
-            getString(R.string.physical)
+    val function = when (v1) {
+        1, 2, 5 -> {
+            //无效
+            getString(R.string.skill_barrier_no_effect)
         }
 
-        2, 4 -> {
-            getString(R.string.magic)
+        3, 4, 6 -> {
+            //吸收
+            getString(R.string.skill_barrier_defense)
+        }
+
+        7, 8, 9 -> {
+            //无效和吸收
+            getString(R.string.skill_barrier_both)
         }
 
         else -> {
-            getString(R.string.skill_all)
+            getString(R.string.unknown)
         }
     }
 
-    return if (v1 <= 6) {
-        getString(R.string.skill_shield, f, type)
-    } else {
-        Constants.UNKNOWN
+    //类型
+    val type = when (v1) {
+        1, 3, 7 -> {
+            getString(R.string.physical)
+        }
+
+        2, 4, 8 -> {
+            getString(R.string.magic)
+        }
+
+        5, 6, 9 -> {
+            getString(R.string.skill_all)
+        }
+
+        else -> {
+            getString(R.string.unknown)
+        }
     }
+
+    return getString(R.string.skill_barrier_detail, function, type)
 }
 
 /**
@@ -478,4 +505,24 @@ fun getEffectType(value: Int) = when (value) {
     1 -> getString(R.string.skill_action_type_desc_additive)
     2 -> getString(R.string.skill_action_type_desc_subtract)
     else -> getString(R.string.unknown)
+}
+
+
+/**
+ * 获取天赋类型
+ */
+fun getTalentType(value: Int):String {
+    val talent = when (value) {
+        1 -> getString(R.string.skill_target_fire)
+        2 -> getString(R.string.skill_target_water)
+        3 -> getString(R.string.skill_target_wind)
+        4 -> getString(R.string.skill_target_light)
+        5 -> getString(R.string.skill_target_dark)
+        else -> getString(R.string.none)
+    }
+    return if (talent != "") {
+        "⌈${talent}${getString(R.string.character)}⌋"
+    } else {
+        ""
+    }
 }

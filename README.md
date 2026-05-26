@@ -18,7 +18,7 @@
 
 ## 支持
 
-- [爱发电](https://afdian.com/a/wthee)
+- [爱发电](https://ifdian.net/a/wthee)
 
 ## 其他
 
