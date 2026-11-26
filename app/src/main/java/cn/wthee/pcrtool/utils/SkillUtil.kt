@@ -407,8 +407,12 @@ fun SkillActionDetail.getTargetType(): String {
 
 /**
  * 获取目标具体描述
+ *
+ * @param keepSelfRange 位置类动作（召唤 / 位移）传 true：
+ *   `targetRange` 本身是「落点信息」（在自身范围 N 内 M 的位置召唤），
+ *   不能被 targetType == 7 的短路吃掉。
  */
-fun SkillActionDetail.getTarget(): String {
+fun SkillActionDetail.getTarget(keepSelfRange: Boolean = false): String {
     //依赖
     val depend = if (dependId != 0) {
         getString(R.string.skill_depend_action, dependId % 100)
@@ -425,11 +429,21 @@ fun SkillActionDetail.getTarget(): String {
         getTargetNumber() + getTargetRange() + getTargetAssignment()
     }
 
+    // targetType == 7 是 PriorityPattern.OWNER（对象就是自己），
+    // 数量 / 范围 / 选目标三段对它都不成立，必须短路。
+    // 不短路会产出三种病句：
+    //   targetCount=99  ->「使自身全体进入睡眠状态」（应为「自身」）
+    //   targetAssign=1  ->「以自身单体为中心…」（应为「自身」）
+    //   targetRange=800 ->「自身范围800内物理攻击力提升」（应为「自身」）
+    // 以前用下面几行注释掉的 replace 只治了第一种，而且会误伤正常文本。
+    if (targetType == 7) {
+        if (keepSelfRange && targetRange in 1 until 2160) {
+            return depend + getTargetType() + getTargetRange()
+        }
+        return depend + getTargetType()
+    }
+
     return depend + getTargetType() + range + getTargetCount()
-//            .replace("己方自身", "自身")
-//            .replace("自身己方", "自身")
-//            .replace("自身全体", "自身")
-//            .replace("自身敌人", "自身")
 }
 
 

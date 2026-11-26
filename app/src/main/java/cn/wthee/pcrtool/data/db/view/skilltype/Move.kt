@@ -27,7 +27,8 @@ fun SkillActionDetail.move(): String {
     val moveText =
         getString(
             R.string.skill_move,
-            getTarget(),
+            // 移动的参照点也在 targetRange 里，同 Summon
+            getTarget(keepSelfRange = true),
             positionText,
             abs(actionValue1).toInt()
         )
