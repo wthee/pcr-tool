@@ -26,11 +26,15 @@ fun SkillActionDetail.attackField(): String {
     val damage = getString(R.string.skill_action_type_desc_36_damage, value, atkType)
     val tp = takeDamageTp()
 
-    return getString(
+    // skill_action_type_desc_field 是 4 个位置化占位符（%4$s 是天赋），
+    // 这里没有天赋限定，必须显式补第 4 个空串，否则 String.format 抛
+    // MissingFormatArgumentException，被 getActionDesc() 兜成 UNKNOWN。
+    return getTarget() + getString(
         R.string.skill_action_type_desc_field,
         actionValue7.toInt(),
         damage,
-        tp + time
+        tp + time,
+        ""
     )
 }
 
@@ -39,7 +43,14 @@ fun SkillActionDetail.healField(): String {
     val value = getValueText(1, actionValue1, actionValue2, actionValue3)
     val heal = getString(R.string.skill_action_type_desc_37_heal, value)
     val time = getTimeText(5, actionValue5, actionValue6)
-    return getString(R.string.skill_action_type_desc_field, actionValue7.toInt(), heal, time)
+    // 同上：补齐第 4 个占位符（天赋）
+    return getTarget() + getString(
+        R.string.skill_action_type_desc_field,
+        actionValue7.toInt(),
+        heal,
+        time,
+        ""
+    )
 }
 
 // 38：buff/debuff领域展开
@@ -64,11 +75,14 @@ fun SkillActionDetail.dotField(): String {
     val action =
         getString(R.string.skill_action_type_desc_38_action, actionDetail1 % 100)
 
+    // 同上：补齐第 4 个占位符（天赋）；另外 38_action 自带前导逗号，
+    // 直接当正文会产出「展开，持续施放…」。
     return getTarget() + getString(
         R.string.skill_action_type_desc_field,
         actionValue3.toInt(),
-        action,
-        time
+        action.removePrefix("，"),
+        time,
+        ""
     )
 }
 
@@ -99,5 +113,12 @@ fun SkillActionDetail.tpField(): String {
     val tp = getString(R.string.skill_action_type_desc_96_tp, value)
     val time = getTimeText(3, actionValue3, actionValue4)
 
-    return getString(R.string.skill_action_type_desc_field, actionValue5.toInt(), tp, time)
+    // 同上：补齐第 4 个占位符（天赋）
+    return getTarget() + getString(
+        R.string.skill_action_type_desc_field,
+        actionValue5.toInt(),
+        tp,
+        time,
+        ""
+    )
 }
